@@ -44,7 +44,7 @@ Lemma Z1_mul_nat_beta {A : AbGroup} (a : A) (n : nat)
   : Z1_rec a (nat_to_Z1 n) = ab_mul n a.
 Proof.
   induction n as [|n H].
-  1: easy.
+  1: done.
   exact (grp_pow_natural _ _ _).
 Defined.
 

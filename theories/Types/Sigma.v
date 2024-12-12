@@ -265,6 +265,17 @@ Proof.
   destruct p. reflexivity.
 Defined.
 
+(** Doubly dependent transport is the same as transport along a [path_sigma]. *)
+Definition transportDD_is_transport {A : Type} (B : A -> Type) (C : forall a : A, B a -> Type)
+  {a1 a2 : A} (pA : a1 = a2)
+  {b1 : B a1} {b2 : B a2} (pB : transport B pA b1 = b2)
+  (c1 : C a1 b1)
+  : transportDD B C pA pB c1
+    = transport (fun (ab : sig B) => C ab.1 ab.2) (path_sigma' B pA pB) c1.
+Proof.
+  by destruct pB, pA.
+Defined.
+
 (** Applying a two variable function to a [path_sigma]. *)
 Definition ap_path_sigma {A B} (P : A -> Type) (F : forall a : A, P a -> B)
   {x x' : A} {y : P x} {y' : P x'} (p : x = x') (q : p # y = y')
@@ -290,7 +301,7 @@ Defined.
 Definition ap_sig_rec_path_sigma {A : Type} (P : A -> Type) {Q : Type}
   (x1 x2 : A) (p : x1 = x2) (y1 : P x1) (y2 : P x2) (q : p # y1 = y2)
   (d : forall a, P a -> Q)
-  : ap (sig_rec _ _ Q d) (path_sigma' P p q)
+  : ap (sig_rec d) (path_sigma' P p q)
     = (transport_const p _)^
         @ (ap ((transport (fun _ => Q) p) o (d x1)) (transport_Vp _ p y1))^
           @ (transport_arrow p _ _)^
@@ -381,6 +392,7 @@ Defined.
 
 (** ** Equivalences *)
 
+(** The converse to [isequiv_functor_sigma] when [f] is [idmap] is [isequiv_from_functor_sigma] in Types/Equiv.v, which also contains Theorem 4.7.7 *)
 Global Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
   : IsEquiv (functor_sigma f g) | 1000.
@@ -730,7 +742,6 @@ Proof.
            (fun (w:hfiber idmap b) => hfiber (g w.1) (transport Q (w.2)^ v))).
 Defined.
 
-(** The converse and Theorem 4.7.7 can be found in Types/Equiv.v *)
 Definition istruncmap_from_functor_sigma n {A P Q}
   (g : forall a : A, P a -> Q a)
   `{!IsTruncMap n (functor_sigma idmap g)}

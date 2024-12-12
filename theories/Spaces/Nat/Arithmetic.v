@@ -29,7 +29,7 @@ Proof.
   - destruct (nat_add_succ_r n k)^.
     refine (leq_trans (nataddsub_comm_ineq_lemma (n+k) m) _).
     destruct (nat_add_succ_r (n - m) k)^.
-    now apply leq_succ.
+    by apply leq_succ.
 Defined.
 
 (** TODO: move, rename *)
@@ -114,7 +114,7 @@ Proof.
   intros l ineq.
   destruct j.
   - contradiction (not_lt_zero_r i).
-  - now simpl; apply leq_pred'.
+  - by simpl; apply leq_pred'.
 Defined.
 
 (** TODO: move, rename *)
@@ -191,7 +191,7 @@ Proof.
   intro a.
   induction a.
   - constructor.
-  - now constructor.
+  - by constructor.
 Defined.
 
 Proposition increasing_geq_n_0 (n : nat) : increasing_geq n 0.
@@ -199,8 +199,8 @@ Proof.
   simple_induction n n IHn.
   - constructor.
   - induction IHn.
-    + constructor; now constructor.
-    + constructor; now assumption.
+    + constructor; by constructor.
+    + constructor; by assumption.
 Defined.
 
 Lemma increasing_geq_minus (n k : nat)
@@ -218,7 +218,7 @@ Proof.
       apply increasing_geq_S.
       unfold ">", "<" in *.
       apply equiv_lt_lt_sub in g. 
-      now (destruct (symmetric_paths _ _ (nat_succ_pred (n - k) _))).
+      by (destruct (symmetric_paths _ _ (nat_succ_pred (n - k) _))).
 Defined.
 
 Lemma ineq_sub' (n k : nat) : k < n -> n - k = (n - k.+1).+1.

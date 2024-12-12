@@ -419,7 +419,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
     (** Here's the final definition of [code]. *)
 
     Definition code (p : P) (r : left x0 = p) : Type
-        := SPushout_ind Q (fun p => left x0 = p -> Type)
+        := spushout_ind Q (fun p => left x0 = p -> Type)
                         (@codeleft x0) (@coderight x0)
                         ap_code_glue p r.
 
@@ -437,7 +437,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
                  (r @ (glue q11)^) (transport_paths_r (glue q11)^ r)).
     Proof.
       refine (ap (fun h => ap10 h r)
-             (spushout_ind_beta_sglue Q (fun p => left x0 = p -> Type)
+             (spushout_ind_beta_spglue Q (fun p => left x0 = p -> Type)
                                   (@codeleft x0) (@coderight x0)
                                   ap_code_glue
                                   x1 y1 q11) @ _).

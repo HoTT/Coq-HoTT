@@ -67,10 +67,7 @@ Section BoolDecidable.
                     | false, true => inr false_ne_true
                   end.
 
-  Corollary hset_bool : IsHSet Bool.
-  Proof.
-    exact _.
-  Defined.
+  Definition hset_bool : IsHSet Bool := _.
 End BoolDecidable.
 
 (** In particular, [negb] has no fixed points *)

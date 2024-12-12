@@ -228,13 +228,13 @@ Section Hartogs_Number.
         * intros [a <-]. cbn. apply tr. exists a. cbn. apply ap. apply path_ishprop.
       + apply isembedding_isinj_hset. intros a b. intros H % pr1_path. cbn in H.
         specialize (injective_uni_fix (hartogs_number'_injection.1 a) (hartogs_number'_injection.1 b)).
-        intros H'. apply H' in H. now apply hartogs_number'_injection.2.
+        intros H'. apply H' in H. by apply hartogs_number'_injection.2.
   Qed.
 
   Definition hartogs_number : Ordinal@{A _}
     := resize_ordinal hartogs_number' hartogs_number_carrier hartogs_equiv.
 
-  (* This final definition now satisfies the expected cardinality properties. *)
+  (* This final definition by satisfies the expected cardinality properties. *)
 
   Lemma hartogs_number_injection
     : exists f : hartogs_number -> 𝒫 (𝒫 (𝒫 A)), IsInjective f.
@@ -247,7 +247,7 @@ Section Hartogs_Number.
     : ~ (exists f : hartogs_number -> A, IsInjective f).
   Proof.
     cbn. intros [f Hf]. cbn in f.
-    assert (HN : card hartogs_number <= card A). { apply tr. now exists f. }
+    assert (HN : card hartogs_number <= card A). { apply tr. by exists f. }
     transparent assert (HNO : hartogs_number'). { exists hartogs_number. apply HN. }
     apply (ordinal_initial hartogs_number' HNO).
     eapply (transitive_Isomorphism hartogs_number' hartogs_number).

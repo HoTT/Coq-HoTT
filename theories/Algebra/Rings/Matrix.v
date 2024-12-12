@@ -5,6 +5,7 @@ Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
   Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
 Require Import WildCat.Core WildCat.Paths.
+Require Import Modalities.ReflectiveSubuniverse.
 
 Set Universe Minimization ToSet.
 
@@ -218,14 +219,12 @@ Defined.
 Definition matrix_ring (R : Ring@{i}) (n : nat) : Ring.
 Proof.
   snrapply Build_Ring.
-  6: repeat split.
   - exact (abgroup_matrix R n n).
   - exact matrix_mult.
   - exact (identity_matrix R n).
+  - exact (associative_matrix_mult R n n n n).
   - exact (left_distribute_matrix_mult R n n n).
   - exact (right_distribute_matrix_mult R n n n).
-  - exact _.
-  - exact (associative_matrix_mult R n n n n).
   - exact (left_identity_matrix_mult R n n).
   - exact (right_identity_matrix_mult R n n).
 Defined.
@@ -694,12 +693,13 @@ Proof.
 Defined.
 
 (** The sum of two upper triangular matrices is upper triangular. *)
-Global Instance upper_triangular_plus {R : Ring@{i}} {n : nat} (M N : Matrix R n n)
+Global Instance upper_triangular_plus@{i} {R : Ring@{i}} {n : nat} (M N : Matrix R n n)
   {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
   : IsUpperTriangular (matrix_plus M N).
 Proof.
   unfold IsUpperTriangular.
-  strip_truncations; apply tr.
+  (* We use [strip_reflections] rather than [strip_truncations] here and below because it generates fewer universe variables in some versions of Coq. *)
+  strip_reflections; apply tr.
   intros i j Hi Hj lt_i_j.
   specialize (H1 i j Hi Hj lt_i_j).
   specialize (H2 i j Hi Hj lt_i_j).
@@ -720,12 +720,12 @@ Proof.
 Defined.
 
 (** The negation of an upper triangular matrix is upper triangular. *)
-Global Instance upper_triangular_negate {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+Global Instance upper_triangular_negate@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   {H : IsUpperTriangular M}
   : IsUpperTriangular (matrix_negate M).
 Proof.
   unfold IsUpperTriangular.
-  strip_truncations; apply tr.
+  strip_reflections; apply tr.
   intros i j Hi Hj lt_i_j.
   rewrite entry_Build_Matrix.
   rewrite <- rng_negate_zero; f_ap.
@@ -743,12 +743,12 @@ Proof.
 Defined.
 
 (** The product of two upper triangular matrices is upper triangular. *)
-Global Instance upper_triangular_mult {R : Ring@{i}} {n : nat}
+Global Instance upper_triangular_mult@{i} {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
   : IsUpperTriangular (matrix_mult M N).
 Proof.
   unfold IsUpperTriangular.
-  strip_truncations; apply tr.
+  strip_reflections; apply tr.
   intros i j Hi Hj lt_i_j.
   rewrite entry_Build_Matrix.
   apply ab_sum_zero.

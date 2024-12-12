@@ -39,7 +39,7 @@ Definition equiv_empty_rec@{u} `{Funext} (A : Type@{u})
 
 Global Instance istrunc_Empty@{} (n : trunc_index) : IsTrunc n.+1 Empty.
 Proof.
-  refine (@istrunc_leq (-1)%trunc n.+1 tt _ _).
+  refine (@istrunc_leq (-1) n.+1 tt _ _).
   apply istrunc_S.
   intros [].
 Defined.
@@ -47,9 +47,9 @@ Defined.
 Global Instance isequiv_all_to_empty (T : Type) (f : T -> Empty) : IsEquiv f.
 Proof.
   refine (Build_IsEquiv _ _ _ 
-    (Empty_ind (fun _ => T))                (* := equiv_inf *)
-    (fun fals:Empty => match fals with end) (* : f o equiv_inf == idmap *)
-    (fun t:T => match (f t) with end)       (* : equiv_inf o f == idmap *)
+    (Empty_ind (fun _ => T))                (* := equiv_inv *)
+    (fun fals:Empty => match fals with end) (* : f o equiv_inv == idmap *)
+    (fun t:T => match (f t) with end)       (* : equiv_inv o f == idmap *)
     (_)                                     (* adjointify part *)  ).
   intro t. 
   exact (Empty_rec (f t)).
@@ -60,7 +60,4 @@ Definition equiv_to_empty {T : Type} (f : T -> Empty) : T <~> Empty
 
 (** ** Paths *)
 
-(** We could probably prove some theorems about non-existing paths in
-   [Empty], but this is really quite useless. As soon as an element
-   of [Empty] is hypothesized, we can prove whatever we like with
-   a simple elimination. *)
+(** We could probably prove some theorems about non-existing paths in [Empty], but this is really quite useless. As soon as an element of [Empty] is hypothesized, we can prove whatever we like with a simple elimination. *)

@@ -201,12 +201,18 @@ Definition Build_RingIsomorphism'' (A B : Ring) (e : GroupIsomorphism A B)
   : RingIsomorphism A B
   := @Build_RingIsomorphism' A B e (Build_IsSemiRingPreserving e _ H).
 
-(** Here is an alternative way to build a commutative ring using the underlying abelian group. *)
+(** Here is an alternative way to build a ring using the underlying abelian group. *)
 Definition Build_Ring (R : AbGroup)
-  `(Mult R, One R, LeftDistribute R mult (@group_sgop R), RightDistribute R mult (@group_sgop R))
-  (iscomm : @IsMonoid R mult one)
-  : Ring
-  := Build_Ring' R _ _ (Build_IsRing _ _ _  _ _) (fun z y x => (associativity x y z)^).
+  `(Mult R, One R, !Associative (.*.),
+    !LeftDistribute (.*.) (+), !RightDistribute (.*.) (+),
+    !LeftIdentity (.*.) 1, !RightIdentity (.*.) 1)
+  : Ring.
+Proof.
+  rapply (Build_Ring' R).
+  2: exact (fun z y x => (associativity x y z)^).
+  split; only 1,3,4: exact _.
+  repeat split; exact _.
+Defined.
 
 (** Scalar multiplication on the left is a group homomorphism. *)
 Definition grp_homo_rng_left_mult {R : Ring} (r : R)
@@ -382,17 +388,14 @@ Coercion subgroup_subring {R} : Subring R -> Subgroup R
 Coercion ring_subring {R : Ring} (S : Subring R) : Ring.
 Proof.
   snrapply (Build_Ring (subgroup_subring S)).
-  5: repeat split.
-  { intros [r ?] [s ?].
-    exists (r * s).
-    by apply issubring_mult. }
-  { exists 1.
-    apply issubring_one. }
-  3: exact _.
-  all: hnf; intros; srapply path_sigma_hprop.
+  3-7: hnf; intros; srapply path_sigma_hprop.
+  - intros [r ?] [s ?]; exists (r * s).
+    by apply issubring_mult.
+  - exists 1.
+    apply issubring_one.
+  - snrapply rng_mult_assoc.
   - snrapply rng_dist_l.
   - snrapply rng_dist_r.
-  - snrapply rng_mult_assoc.
   - snrapply rng_mult_one_l.
   - snrapply rng_mult_one_r.
 Defined.
@@ -403,19 +406,17 @@ Definition ring_product : Ring -> Ring -> Ring.
 Proof.
   intros R S.
   snrapply Build_Ring.
-  1: exact (ab_biprod R S).
-  1: exact (fun '(r1 , s1) '(r2 , s2) => (r1 * r2 , s1 * s2)).
-  1: exact (ring_one , ring_one).
-  { intros [r1 s1] [r2 s2] [r3 s3].
-    apply path_prod; cbn; apply rng_dist_l. }
-  { intros [r1 s1] [r2 s2] [r3 s3].
-    apply path_prod; cbn; apply rng_dist_r. }
-  repeat split.
-  1: exact _.
-  { intros [r1 s1] [r2 s2] [r3 s3].
-    apply path_prod; cbn; apply rng_mult_assoc. }
-  1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_l.
-  1: intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_r.
+  - exact (ab_biprod R S).
+  - exact (fun '(r1 , s1) '(r2 , s2) => (r1 * r2 , s1 * s2)).
+  - exact (ring_one , ring_one).
+  - intros [r1 s1] [r2 s2] [r3 s3].
+    apply path_prod; cbn; apply rng_mult_assoc.
+  - intros [r1 s1] [r2 s2] [r3 s3].
+    apply path_prod; cbn; apply rng_dist_l.
+  - intros [r1 s1] [r2 s2] [r3 s3].
+    apply path_prod; cbn; apply rng_dist_r.
+  - intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_l.
+  - intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_r.
 Defined.
 
 Infix "×" := ring_product : ring_scope.

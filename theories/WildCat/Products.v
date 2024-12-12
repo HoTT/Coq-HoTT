@@ -3,7 +3,7 @@ Require Import Types.Bool Types.Prod Types.Forall.
 Require Import WildCat.Bifunctor WildCat.Core WildCat.Equiv WildCat.EquivGpd
                WildCat.Forall WildCat.NatTrans WildCat.Opposite
                WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid
-               WildCat.Monoidal.
+               WildCat.Monoidal WildCat.MonoidalTwistConstruction.
 
 (** * Categories with products *)
 
@@ -797,7 +797,7 @@ Section Associativity.
   Definition cat_pr1_pr1_associator_binprod x y z
     : cat_pr1 $o cat_pr1 $o associator_cat_binprod x y z $== cat_pr1.
   Proof.
-    nrefine ((_ $@L Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
+    nrefine ((_ $@L associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
     nrefine (cat_assoc _ _ _ $@ (_ $@L (cat_assoc_opp _ _ _ $@ (_ $@R _))) $@ _).
     1: nrapply cat_binprod_beta_pr1.
     do 2 nrefine (cat_assoc_opp _ _ _ $@ _).
@@ -808,7 +808,7 @@ Section Associativity.
   Definition cat_pr2_pr1_associator_binprod x y z
     : cat_pr2 $o cat_pr1 $o associator_cat_binprod x y z $== cat_pr1 $o cat_pr2.
   Proof.
-    nrefine ((_ $@L Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
+    nrefine ((_ $@L associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
     nrefine (cat_assoc _ _ _ $@ (_ $@L (cat_assoc_opp _ _ _ $@ (_ $@R _))) $@ _).
     1: nrapply cat_binprod_beta_pr1.
     do 2 nrefine (cat_assoc_opp _ _ _ $@ _).
@@ -820,7 +820,7 @@ Section Associativity.
   Definition cat_pr2_associator_binprod x y z
     : cat_pr2 $o associator_cat_binprod x y z $== cat_pr2 $o cat_pr2.
   Proof.
-    nrefine ((_ $@L Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
+    nrefine ((_ $@L associator_twist'_unfold _ _ _ _ _ _ _ _) $@ _).
     nrefine (cat_assoc_opp _ _ _ $@ (cat_binprod_beta_pr2 _ _ $@R _) $@ _).
     nrefine (cat_assoc_opp _ _ _ $@ (cat_binprod_pr1_twist _ _ _ $@R _) $@ _).
     nrefine (cat_assoc _ _ _ $@ (_ $@L cat_pr2_fmap01_binprod _ _) $@ _).
@@ -832,7 +832,7 @@ Section Associativity.
     : associator_cat_binprod x y z $o cat_binprod_corec f (cat_binprod_corec g h)
       $== cat_binprod_corec (cat_binprod_corec f g) h. 
   Proof.
-    nrefine ((Monoidal.associator_twist'_unfold _ _ _ _ _ _ _ _ $@R _) $@ _).
+    nrefine ((associator_twist'_unfold _ _ _ _ _ _ _ _ $@R _) $@ _).
     nrefine ((cat_assoc_opp _ _ _ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L (_ $@ _)) $@ _). 
     1: nrapply cat_binprod_fmap01_corec.
     1: rapply (cat_binprod_corec_eta _ _ _ _ (Id _)).

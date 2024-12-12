@@ -59,12 +59,49 @@ Definition Susp_ind_FlFr {X Y : Type} (f g : Susp X -> Y)
   (Hmerid : forall x, ap f (merid x) @ HS = HN @ ap g (merid x))
   : f == g.
 Proof.
-  snrapply Susp_ind.
-  - exact HN.
-  - exact HS.
-  - intro x.
-    nrapply transport_paths_FlFr'.
-    apply Hmerid.
+  snrapply (Susp_ind _ HN HS).
+  intros x.
+  nrapply transport_paths_FlFr'.
+  exact (Hmerid x).
+Defined.
+
+(** A version of [Susp_ind] specifically for proving that the composition of two functions to and from a suspension are homotopic to the identity map. *)
+Definition Susp_ind_FFlr {X Y : Type} (f : Susp X -> Y) (g : Y -> Susp X)
+  (HN : g (f North) = North)
+  (HS : g (f South) = South)
+  (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ merid x)
+  : g o f == idmap.
+Proof.
+  snrapply (Susp_ind _ HN HS).
+  intros x.
+  snrapply (transport_paths_FFlr' (f:=f) (g:=g)).
+  exact (Hmerid x).
+Defined.
+
+Definition Susp_ind_FFlFr {X Y Z : Type}
+  (f : Susp X -> Y) (g : Y -> Z) (h : Susp X -> Z)
+  (HN : g (f North) = h North)
+  (HS : g (f South) = h South)
+  (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ ap h (merid x))
+  : g o f == h.
+Proof.
+  snrapply (Susp_ind _ HN HS).
+  intros x.
+  snrapply (transport_paths_FFlFr' (f:=f) (g:=g) (h:=h)).
+  exact (Hmerid x).
+Defined.
+
+(** A version of [Susp_ind] specifically for proving a composition square from a suspension. *)
+Definition Susp_ind_FFlFFr {X Y Y' Z : Type}
+  (f : Susp X -> Y) (f' : Susp X -> Y') (g : Y -> Z) (g' : Y' -> Z)
+  (HN : g (f North) = g' (f' North)) (HS : g (f South) = g' (f' South))
+  (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ ap g' (ap f' (merid x)))
+  : g o f == g' o f'.
+Proof.
+  snrapply (Susp_ind _ HN HS).
+  intros x.
+  snrapply (transport_paths_FFlFFr' (f:=f) (f':=f') (g:=g) (g':=g')).
+  exact (Hmerid x).
 Defined.
 
 (* ** Non-dependent eliminator. *)
@@ -86,7 +123,7 @@ Defined.
 (** ** Eta-rule. *)
 
 (** The eta-rule for suspension states that any function out of a suspension is equal to one defined by [Susp_ind] in the obvious way. We give it first in a weak form, producing just a pointwise equality, and then turn this into an actual equality using [Funext]. *)
-Definition Susp_eta_homot {X : Type} {P : Susp X -> Type} (f : forall y, P y)
+Definition Susp_ind_eta_homotopic {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f == Susp_ind P (f North) (f South) (fun x => apD f (merid x)).
 Proof.
   unfold pointwise_paths. refine (Susp_ind _ 1 1 _).
@@ -99,7 +136,7 @@ Proof.
   apply ap, inverse. refine (Susp_ind_beta_merid _ _ _ _ _).
 Defined.
 
-Definition Susp_rec_eta_homot {X Y : Type} (f : Susp X -> Y)
+Definition Susp_rec_eta_homotopic {X Y : Type} (f : Susp X -> Y)
   : f == Susp_rec (f North) (f South) (fun x => ap f (merid x)).
 Proof.
   snrapply Susp_ind_FlFr.
@@ -109,14 +146,14 @@ Proof.
   exact (Susp_rec_beta_merid _)^.
 Defined.
 
-Definition Susp_eta `{Funext}
+Definition Susp_ind_eta `{Funext}
   {X : Type} {P : Susp X -> Type} (f : forall y, P y)
   : f = Susp_ind P (f North) (f South) (fun x => apD f (merid x))
-  := path_forall _ _ (Susp_eta_homot f).
+  := path_forall _ _ (Susp_ind_eta_homotopic f).
 
 Definition Susp_rec_eta `{Funext} {X Y : Type} (f : Susp X -> Y)
   : f = Susp_rec (f North) (f South) (fun x => ap f (merid x))
-  := path_forall _ _ (Susp_rec_eta_homot f).
+  := path_forall _ _ (Susp_rec_eta_homotopic f).
 
 (** ** Functoriality *)
 
@@ -512,4 +549,76 @@ Proof.
   apply (concat (transport_paths_Fl _ _)).
   apply (concat (concat_p1 _)).
   apply ap, allpath_p0.
+Defined.
+
+(** ** Negation map *)
+
+(** The negation map on the suspension is defined by sending [North] to [South] and vice versa, and acting by flipping on the meridians. *)
+Definition susp_neg (A : Type) : Susp A -> Susp A
+  := Susp_rec South North (fun a => (merid a)^).
+
+(** The negation map is an involution. *)
+Definition susp_neg_inv (A : Type) : susp_neg A o susp_neg A == idmap.
+Proof.
+  snrapply Susp_ind_FFlr.
+  1, 2: reflexivity.
+  intro a.
+  apply equiv_p1_1q.
+  lhs nrapply ap.
+  1: snrapply Susp_rec_beta_merid.
+  lhs nrapply (ap_V _ (merid a)).
+  lhs nrapply ap.
+  1: snrapply Susp_rec_beta_merid.
+  nrapply inv_V.
+Defined.
+
+Global Instance isequiv_susp_neg (A : Type) : IsEquiv (susp_neg A)
+  := isequiv_involution (susp_neg A) (susp_neg_inv A).
+
+Definition equiv_susp_neg (A : Type) : Susp A <~> Susp A
+  := Build_Equiv _ _ (susp_neg A) _.
+
+(** By using the suspension functor, we can also define another negation map on [Susp (Susp A))]. It turns out these are homotopic. *)
+Definition susp_neg_stable (A : Type)
+  : functor_susp (susp_neg A) == susp_neg (Susp A).
+Proof.
+  snrapply Susp_ind_FlFr; simpl.
+  - exact (merid North).
+  - exact (merid South)^.
+  - intro x.
+    lhs nrapply whiskerR.
+    1: nrapply functor_susp_beta_merid.
+    rhs nrapply whiskerL.
+    2: nrapply Susp_rec_beta_merid.
+    revert x; snrapply Susp_ind_FlFr; simpl.
+    + exact (concat_pV _ @ (concat_pV _)^).
+    + reflexivity.
+    + intro a.
+      lhs nrapply concat_p1.
+      lhs nrapply (ap_compose _ (fun y => merid y @ _) (merid a)).
+      lhs nrapply ap.
+      1: nrapply Susp_rec_beta_merid.
+      simpl.
+      generalize (merid a) as p.
+      generalize (@South A) as s.
+      intros s p; destruct p.
+      simpl.
+      symmetry.
+      lhs nrapply concat_p1.
+      apply concat_pV.
+Defined.
+
+(** [susp_neg] is a natural equivalence on the suspension functor. *)
+Definition susp_neg_natural {A B : Type} (f : A -> B)
+  : susp_neg B o functor_susp f == functor_susp f o susp_neg A.
+Proof.
+  snrapply Susp_ind_FFlFFr.
+  1, 2: reflexivity.
+  intro a.
+  apply equiv_p1_1q.
+  lhs nrapply (ap _ (Susp_rec_beta_merid _)).
+  rhs nrapply (ap _ (Susp_rec_beta_merid _)).
+  rhs nrapply (ap_V _ (merid a)).
+  rhs nrapply (ap _ (Susp_rec_beta_merid _)).
+  nrapply Susp_rec_beta_merid.
 Defined.

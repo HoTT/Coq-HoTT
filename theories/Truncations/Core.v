@@ -1,9 +1,9 @@
-Require Import Basics Types WildCat.Core WildCat.Universe.
+Require Import Basics Types WildCat.Core WildCat.Universe HFiber.
 Require Import Modalities.Modality.
-(* Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)
+(** Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)
 Require Export (coercions) Modalities.Modality.
 
-(** * Truncations of types, in all dimensions *)
+(** * Truncations of types *)
 
 Local Open Scope path_scope.
 Generalizable Variables A X n.
@@ -12,7 +12,7 @@ Generalizable Variables A X n.
 
 (** The definition of [Trunc n], the n-truncation of a type.
 
-If Coq supported higher inductive types natively, we would construct this as somthing like:
+If Coq supported higher inductive types natively, we would construct this as something like:
 
    Inductive Trunc n (A : Type) : Type :=
    | tr : A -> Trunc n A
@@ -23,22 +23,20 @@ However, while we are faking our higher-inductives anyway, we can take some shor
 *)
 
 Module Export Trunc.
-Delimit Scope trunc_scope with trunc.
 
-Cumulative Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
-  tr : A -> Trunc n A.
-Bind Scope trunc_scope with Trunc.
-Arguments tr {n A} a.
+  Cumulative Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
+    tr : A -> Trunc n A.
+  Arguments tr {n A} a.
 
-(** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
-Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
-: IsTrunc@{j} n (Trunc@{i} n A).
-Admitted.
+  (** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
+  Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
+    : IsTrunc@{j} n (Trunc@{i} n A).
+  Admitted.
 
-Definition Trunc_ind {n A}
-  (P : Trunc n A -> Type) {Pt : forall aa, IsTrunc n (P aa)}
-  : (forall a, P (tr a)) -> (forall aa, P aa)
-:= (fun f aa => match aa with tr a => fun _ => f a end Pt).
+  Definition Trunc_ind {n A}
+    (P : Trunc n A -> Type) {Pt : forall aa, IsTrunc n (P aa)}
+    : (forall a, P (tr a)) -> (forall aa, P aa)
+    := fun f aa => match aa with tr a => fun _ => f a end Pt.
 
 End Trunc.
 
@@ -46,7 +44,7 @@ End Trunc.
 
 Definition Trunc_rec {n A X} `{IsTrunc n X}
   : (A -> X) -> (Trunc n A -> X)
-:= Trunc_ind (fun _ => X).
+  := Trunc_ind (fun _ => X).
 
 Definition Trunc_rec_tr n {A : Type}
   : Trunc_rec (A:=A) (tr (n:=n)) == idmap
@@ -93,7 +91,7 @@ Section TruncationModality.
   (** ** Functoriality *)
 
   (** Since a modality lives on a single universe, by default if we simply define [Trunc_functor] to be [O_functor] then it would force [X] and [Y] to live in the same universe.  But since we defined [Trunc] as a cumulative inductive, if we add universe annotations we can make [Trunc_functor] more universe-polymorphic than [O_functor] is.  This is sometimes useful.  *)
-  Definition Trunc_functor@{i j k} {X : Type@{i}} {Y : Type@{j}} (f : X -> Y)
+  Definition Trunc_functor@{i j k | i <= k, j <= k} {X : Type@{i}} {Y : Type@{j}} (f : X -> Y)
     : Tr@{i} n X -> Tr@{j} n Y
     := O_functor@{k k k} (Tr n) f.
 
@@ -116,10 +114,6 @@ Section TruncationModality.
   Definition Trunc_functor_idmap (X : Type)
     : @Trunc_functor X X idmap == idmap
     := O_functor_idmap (Tr n) X.
-
-  Definition isequiv_Trunc_functor {X Y} (f : X -> Y) `{IsEquiv _ _ f}
-    : IsEquiv (Trunc_functor f)
-    := isequiv_O_functor (Tr n) f.
 
   Definition equiv_Trunc_prod_cmp {X Y}
     : Tr n (X * Y) <~> Tr n X * Tr n Y
@@ -209,6 +203,8 @@ Proof.
   revert ma; rapply Trunc_ind; exact na.
 Defined.
 
+(** ** Surjections *)
+
 (** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)
 Notation IsSurjection := (IsConnMap (Tr (-1))).
 
@@ -256,12 +252,25 @@ Proof.
   exact (tr (s y; h y)).
 Defined.
 
+(** ** Embeddings *)
+
 (** Since embeddings are the (-1)-truncated maps, a map that is both a surjection and an embedding is an equivalence. *)
 Definition isequiv_surj_emb {A B} (f : A -> B)
   `{IsSurjection f} `{IsEmbedding f}
   : IsEquiv f.
 Proof.
   apply (@isequiv_conn_ino_map (Tr (-1))); assumption.
+Defined.
+
+(** As a corollary, it follows that if [i o f] is an equivalence and [i] is an embedding, then [f] is an equivalence. *)
+Definition isequiv_isequiv_compose_embedding {X Y Z : Type}
+  {f : X -> Y} (i : Y -> Z) `{IsEmbedding i}
+  `{!IsEquiv (i o f)}
+  : IsEquiv f.
+Proof.
+  rapply (cancelL_isequiv i).
+  refine (isequiv_surj_emb i).
+  rapply (cancelR_issurjection f).
 Defined.
 
 (** If [X] is a set and [f : Y -> Z] is a surjection, then [- o f] is an embedding. *)
@@ -277,9 +286,45 @@ Proof.
   exact (ap10 (g0.2 @ g1.2^) y).
 Defined.
 
-(** ** Tactic to remove truncations in hypotheses if possible
+(** We next prove that [paths : X -> (X -> Type)] is an embedding. This was proved by Escardo as Lemma 15 in "Injective types in univalent mathematics", but we give an argument similar to the proof of Thm 2.25 of CORS. *)
 
-  See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities. *)
+(** This will be an inverse to [ap paths].  We'll want to show that it is an embedding, so we'll construct it out of pieces that are clearly equivalences, except for one step, [equiv_fun]. *)
+Definition ap_paths_inverse `{Univalence} {X : Type} (x1 x2 : X)
+  : paths x1 = paths x2 -> x1 = x2.
+Proof.
+  refine (_ o @equiv_ap10 _ X Type (paths x1) (paths x2)).
+  refine (_ o equiv_functor_forall_id (fun y => equiv_equiv_path (x1 = y) (x2 = y))).
+  refine (_ o functor_forall_id (fun y => @equiv_fun (x1 = y) (x2 = y))).
+  refine (_ o (equiv_paths_ind x1 (fun y p => x2 = y))^-1%equiv).
+  exact (equiv_path_inverse x2 x1).
+Defined.
+
+(** A Yoneda-like embedding for path types: [paths : X -> (X -> Type)] is an embedding. *)
+Definition isembedding_paths `{Univalence} {X : Type@{u}} : IsEmbedding (@paths X).
+Proof.
+  (* To show that [paths] is an embedding, it suffices to show that [ap paths : x1 = x2 -> (paths x1) = (paths x2)] is an equivalence. *)
+  snrapply isembedding_isequiv_ap.
+  intros x1 x2.
+  (* And for that, it suffices to show that [i o (ap paths)] is an equivalence for a well-chosen embedding [i]. *)
+  snrapply (isequiv_isequiv_compose_embedding (ap_paths_inverse x1 x2)).
+  - (* [ap_paths_inverse x1 x2] is an embedding since it is a composite of four equivalences and one embedding.  We can group these into three parts. *)
+    unfold ap_paths_inverse.
+    nrefine (mapinO_compose (O:=Tr (-1)) _ (equiv_path_inverse x2 x1 oE _)).
+    2: exact _. (* The second part is an equivalence, so it's an embedding. *)
+    nrefine (mapinO_compose _ (functor_forall_id _)).
+    1: exact _. (* The first part is an equivalence, so it's an embedding. *)
+    rapply mapinO_functor_forall_id.
+    intro y.
+    apply isembedding_equiv_fun.
+  - (* The composite is an equivalence because it is homotopic to the identity. *)
+    simpl.
+    srapply (isequiv_homotopic idmap).
+    intros [].
+    reflexivity.
+Defined.
+
+(** ** Tactic to remove truncations in hypotheses if possible *)
+
 Ltac strip_truncations :=
   (** search for truncated hypotheses *)
   progress repeat
@@ -291,8 +336,8 @@ Ltac strip_truncations :=
         [];
         intro T
   end.
-(** We would like to define this in terms of the [strip_modalities] tactic, however [O_ind] uses more universes than [Trunc_ind] which causes some problems down the line. *)
-(* Ltac strip_truncations := strip_modalities. *)
+
+(** See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities.  We provide this version because it sometimes needs fewer universes (due to the cumulativity of [Trunc]).  However, that same cumulativity sometimes causes free universe variables.  For a hypothesis of type [Trunc@{i} X], we can use [Trunc_ind@{i j}], but sometimes Coq uses [Trunc_ind@{k j}] with [i <= k] and [k] otherwise free.  In these cases, [strip_reflections] and/or [strip_modalities] may generate fewer universe variables. *)
 
 (** ** Iterated truncations *)
 

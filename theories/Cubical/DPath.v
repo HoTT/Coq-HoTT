@@ -134,6 +134,28 @@ Proof.
   by destruct p.
 Defined. 
 
+(** Horizontal composition and whiskering of dependent paths *)
+Definition dp_concat2 {A} {P : A -> Type} {a0 a1 a2}
+  {p : a0 = a1} {q : a1 = a2} {b0 : P a0} {b1 : P a1} {b2 : P a2}
+  {r r' : DPath P p b0 b1} {s s' : DPath P q b1 b2}
+  (h : r = r') (k : s = s')
+  : r @Dp s = r' @Dp s'.
+Proof.
+  by destruct h, k.
+Defined.
+
+Definition dp_whiskerL {A: Type} {P : A -> Type} {a0 a1 a2 : A}
+  {p : a0 = a1} {q : a1 = a2} {b0 : P a0} {b1 : P a1} {b2 : P a2}
+  (r : DPath P p b0 b1) {s s' : DPath P q b1 b2} (h : s = s')
+  : r @Dp s = r @Dp s'
+  := dp_concat2 1 h.
+
+Definition dp_whiskerR {A: Type} {P : A -> Type} {a0 a1 a2 : A}
+  {p : a0 = a1} {q : a1 = a2} {b0 : P a0} {b1 : P a1} {b2 : P a2}
+  {r r' : DPath P p b0 b1} (s : DPath P q b1 b2) (h : r = r')
+  : r @Dp s = r' @Dp s
+  := dp_concat2 h 1.
+
 Section DGroupoid.
 
   Context {A} {P : A -> Type} {a0 a1} {p : a0 = a1}
@@ -300,6 +322,18 @@ Definition dp_apD_compose {A B : Type} (f : A -> B) (P : B -> Type)
            {x y : A} (p : x = y) (g : forall b:B, P b)
   : apD (g o f) p = (dp_compose f P p)^-1 (apD g (ap f p))
   := dp_apD_compose' f P (idpath (ap f p)) g.
+
+Definition dp_apD_compose_inv' {A B : Type} (f : A -> B) (P : B -> Type)
+  {x y : A} {p : x = y} {q : f x = f y} (r : ap f p = q) (g : forall b:B, P b)
+  : apD g q = (dp_compose' f P r) (apD (g o f) p).
+Proof.
+  by destruct r, p.
+Defined.
+
+Definition dp_apD_compose_inv {A B : Type} (f : A -> B) (P : B -> Type)
+  {x y : A} {p : x = y} (g : forall b:B, P b)
+  : apD g (ap f p) = (dp_compose f P p) (apD (g o f) p)
+  := dp_apD_compose_inv' f P (idpath (ap f p)) g.
 
 (** Type constructors *)
 

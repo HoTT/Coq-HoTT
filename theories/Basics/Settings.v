@@ -7,9 +7,9 @@
 (** ** Plugins *)
 
 (** Load the Ltac plugin. This is the tactic language we use for proofs. *)
-Declare ML Module "ltac_plugin".
+Declare ML Module "ltac_plugin:coq-core.plugins.ltac".
 (** Load the number string notation plugin. Allowing us to write numbers like [1234]. *)
-Declare ML Module "number_string_notation_plugin".
+Declare ML Module "number_string_notation_plugin:coq-core.plugins.number_string_notation".
 
 (** ** Proofs *)
 

@@ -12,6 +12,7 @@ Require Export WildCat.Square.
 Require Export WildCat.PointedCat.
 Require Export WildCat.Bifunctor.
 Require Export WildCat.Monoidal.
+Require Export WildCat.MonoidalTwistConstruction.
 Require Export WildCat.Products.
 Require Export WildCat.Coproducts.
 Require Export WildCat.Displayed.

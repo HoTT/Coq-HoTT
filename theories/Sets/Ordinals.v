@@ -235,10 +235,10 @@ Proof.
   - apply tr. exists a. split; try apply Ha. intros b Hb.
     specialize (trichotomy_ordinal a b). intros H1.
     eapply merely_destruct; try apply H1.
-    intros [H2|H2]. { apply tr. now left. }
+    intros [H2|H2]. { apply tr. by left. }
     eapply merely_destruct; try apply H2.
-    intros [H3|H3]. { apply tr. now right. }
-    apply Empty_rec, H, tr. exists b. now split.
+    intros [H3|H3]. { apply tr. by right. }
+    apply Empty_rec, H, tr. exists b. by split.
 Qed.
 
 (** * Simulations *)

@@ -769,7 +769,10 @@ Definition Book_4_9_5 := @HoTT.Metatheory.FunextVarieties.WeakFunext_implies_Fun
 (* ================================================== thm:identity-systems *)
 (** Theorem 5.8.2 *)
 
-Definition Book_5_8_2_iv_implies_iii := @HoTT.PathAny.equiv_path_from_contr.
+Definition Book_5_8_2_i_implies_ii := @HoTT.Homotopy.IdentitySystems.homocontr_pfammap_identitysystem.
+Definition Book_5_8_2_ii_implies_iii := @HoTT.Homotopy.IdentitySystems.equiv_path_homocontr_pfammap.
+Definition Book_5_8_2_iii_implies_iv := @HoTT.Homotopy.IdentitySystems.contr_sigma_equiv_path.
+Definition Book_5_8_2_iv_implies_i := @HoTT.Homotopy.IdentitySystems.identitysystem_contr_sigma.
 
 (* ================================================== thm:ML-identity-systems *)
 (** Theorem 5.8.4 *)

@@ -84,6 +84,7 @@ Section EquivTransport.
 
   Context {A : Type} (P : A -> Type) {x y : A} (p : x = y).
 
+  (** The inverse and the homotopies of transport are defined explicitly.  This allows us to reason about the inverse when the input is not [idpath]. *)
   Global Instance isequiv_transport : IsEquiv (transport P p) | 0
     := Build_IsEquiv (P x) (P y) (transport P p) (transport P p^)
     (transport_pV P p) (transport_Vp P p) (transport_pVp P p).
@@ -92,6 +93,30 @@ Section EquivTransport.
     := Build_Equiv _ _ (transport P p) _.
 
 End EquivTransport.
+
+(** Doubly dependent transport is an equivalence. *)
+Section EquivTransportD.
+
+    Context {A : Type} (P : A -> Type) (Q : forall a : A, P a -> Type)
+      {x y : A} (p : x = y) {px : P x}.
+
+    (** The inverse of transportD is defined explicitly.  This allows us to reason about the inverse when the input is not [idpath]. *)
+    Global Instance isequiv_transportD : IsEquiv (transportD P Q p px).
+    Proof.
+      snrapply Build_IsEquiv.
+      { refine (_ o transportD P Q p^ (transport P p px)).
+        exact (transport (Q x) (transport_Vp _ p px)). }
+      all: by destruct p.
+    Defined.
+
+    Definition equiv_transportD : Q x px <~> Q y (transport P p px)
+      := Build_Equiv _ _ (transportD P Q p px) _.
+
+    Definition equiv_transportDD {py : P y} (q : transport P p px = py)
+      : Q x px <~> Q y py
+      := Build_Equiv _ _ (transportDD P Q p q) _.
+
+  End EquivTransportD.
 
 (** In all the above cases, we were able to directly construct all the structure of an equivalence.  However, as is evident, sometimes it is quite difficult to prove the adjoint law.
 
@@ -505,8 +530,7 @@ Proof.
   exact (apD df (eissect f x)).
 Defined.
 
-(** Using [equiv_ind], we define a handy little tactic which introduces a variable and simultaneously substitutes it along an equivalence. *)
-
+(** Using [equiv_ind], we define a handy little tactic which introduces a variable [x] and simultaneously substitutes it along an equivalence [E]. *)
 Ltac equiv_intro E x :=
   match goal with
     | |- forall y, @?Q y =>
@@ -522,7 +546,7 @@ Tactic Notation "equiv_intros" constr(E) ident(x) ident(y)
 Tactic Notation "equiv_intros" constr(E) ident(x) ident(y) ident(z)
   := equiv_intro E x; equiv_intro E y; equiv_intro E z.
 
-(** A lemma that combines equivalence induction with path induction.  If [e] is an equivalence from [a = b] to [X], then to prove [forall x, P x] it is enough to prove [forall p : a = b, P (e p)], and so by path induction it suffices to prove [P (e 1)]. The idiom for using this is to first [revert b X], which allows Coq to determine the family [P]. After using this, [b] will be replaced by [a] in the goal. *)
+(** A lemma that combines equivalence induction with path induction.  If [e] is an equivalence from [a = b] to [X], then to prove [forall x, P x] it is enough to prove [forall p : a = b, P (e p)], and so by path induction it suffices to prove [P (e 1)]. The idiom for using this is to first [revert b X], which allows Coq to determine the family [P]. After using this, [b] will be replaced by [a] in the goal. This is a more general version of Theorem 5.8.2 (iii) implies (i), see Homotopy/IdentitySystems.v. *)
 Definition equiv_path_ind {A} {a : A} {X : A -> Type}
            (e : forall (b : A), a = b <~> X b)
            (P : forall (b : A), X b -> Type)
@@ -632,7 +656,7 @@ Goal forall (A : Type) (B : A -> Type) (C : forall a:A, B a -> Type) (D : forall
     intros b; cbn in b.
     intros x; cbn in x.
     elim x; clear x.
-    intros c; cbn in c. 
+    intros c; cbn in c.
     intros d; cbn in d.
     (** Here begins [build_record] *)
     cbn; unshelve econstructor.
@@ -648,7 +672,7 @@ Goal forall (A : Type) (B : A -> Type) (C : forall a:A, B a -> Type) (D : forall
     intros x; cbn in x.
     elim x; clear x.
     intros x; cbn in x.
-    elim x; clear x. 
+    elim x; clear x.
     intros b; cbn in b.
     intros c; cbn in c.
     intros d; cbn in d.
@@ -665,7 +689,7 @@ Goal forall (A : Type) (B : A -> Type) (C : forall a:A, B a -> Type) (D : forall
     intros x; cbn in x.
     elim x; clear x.
     intros x; cbn in x.
-    elim x; clear x. 
+    elim x; clear x.
     intros b; cbn in b.
     intros c; cbn in c.
     intros d; cbn in d.
@@ -678,7 +702,7 @@ Goal forall (A : Type) (B : A -> Type) (C : forall a:A, B a -> Type) (D : forall
     intros b; cbn in b.
     intros x; cbn in x.
     elim x; clear x.
-    intros c; cbn in c. 
+    intros c; cbn in c.
     intros d; cbn in d.
     cbn; exact idpath.
 Defined.
@@ -702,7 +726,7 @@ Goal forall (A:Type) (R:A->A->Type),
     intros a2; cbn in a2.
     intros r; cbn in r.
     cbn; unshelve econstructor.
-    { cbn; unshelve econstructor. 
+    { cbn; unshelve econstructor.
       { (** [build_record] can't guess at this point that it needs to use [a1] instead of [a2], and in fact it tries [a2] first; but later on, [exact r] fails in that case, causing backtracking to this point and a re-try with [a1].  *)
         cbn; exact a1. }
       { cbn; exact a2. } }
@@ -803,7 +827,7 @@ Section Examples.
       intros x; cbn in x.
       elim x; clear x.
       intros a; cbn in a.
-      intros x; cbn in x. 
+      intros x; cbn in x.
       elim x; clear x.
       intros b; cbn in b.
       intros p; cbn in p.
@@ -829,7 +853,7 @@ Section Examples.
     - intros x; cbn in x.
       elim x; clear x.
       intros a; cbn in a.
-      intros x; cbn in x. 
+      intros x; cbn in x.
       elim x; clear x.
       intros b; cbn in b.
       intros p; cbn in p.

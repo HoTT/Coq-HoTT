@@ -111,7 +111,7 @@ Proof.
   refine ((equiv_functor_forall'
              (P := fun Z => { f : (Z=X) -> P Z & WeaklyConstant f })
              1
-             (fun Z => equiv_merely_rec_hset _ _)) oE _); simpl.
+             (fun Z => equiv_merely_rec_hset_if_domain _ _)) oE _); simpl.
   { intros p. change (IsHSet (P (BAut_pr1 X (Z ; tr p)))). exact _. }
   unfold WeaklyConstant.
   (** Now we peel away a bunch of contractible types. *)

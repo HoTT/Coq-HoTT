@@ -58,6 +58,19 @@ Section Join.
       apply Hglue.
   Defined.
 
+  Definition Join_ind_Flr {A B : Type} (f : Join A B -> Join A B)
+    (Hl : forall a, f (joinl a) = joinl a)
+    (Hr : forall b, f (joinr b) = joinr b)
+    (Hglue : forall a b, ap f (jglue a b) @ Hr b = Hl a @ jglue a b)
+    : forall x, f x = x.
+  Proof.
+    snrapply (Join_ind_FlFr _ _ Hl Hr).
+    intros a b.
+    lhs nrapply Hglue.
+    apply ap; symmetry.
+    apply ap_idmap.
+  Defined.
+
   (** And a version for showing that a composite is homotopic to the identity. *)
   Definition Join_ind_FFlr {A B P : Type} (f : Join A B -> P) (g : P -> Join A B)
     (Hl : forall a, g (f (joinl a)) = joinl a)
@@ -883,3 +896,36 @@ Section JoinPower.
   Defined.
 
 End JoinPower.
+
+(** ** Doulbe recursion for Join *)
+
+Section Rec2.
+  Context {A B C D : Type} (P : Type)
+    (P_AC : A -> C -> P) (P_AD : A -> D -> P) (P_BC : B -> C -> P) (P_BD : B -> D -> P)
+    (P_gAx : forall a c d, P_AC a c = P_AD a d)
+    (P_gBx : forall b c d, P_BC b c = P_BD b d)
+    (P_gxC : forall c a b, P_AC a c = P_BC b c)
+    (P_gxD : forall d a b, P_AD a d = P_BD b d)
+    (P_g : forall a b c d, P_gAx a c d @ P_gxD d a b = P_gxC c a b @ P_gBx b c d).
+
+  Definition Join_rec2 : Join A B -> Join C D -> P.
+  Proof.
+    intros x y; revert x.
+    snrapply Join_rec.
+    1: intros a; exact (Join_rec (P_AC a) (P_AD a) (P_gAx a) y).
+    1: intros b; exact (Join_rec (P_BC b) (P_BD b) (P_gBx b) y).
+    intros a b.
+    revert y.
+    snrapply Join_ind_FlFr.
+    1: intros c; exact (P_gxC c a b).
+    1: intros d; exact (P_gxD d a b).
+    intros c d.
+    simpl.
+    lhs nrapply whiskerR.
+    1: apply Join_rec_beta_jglue.
+    rhs nrapply whiskerL.
+    2: apply Join_rec_beta_jglue.
+    exact (P_g a b c d).
+  Defined.
+
+End Rec2.

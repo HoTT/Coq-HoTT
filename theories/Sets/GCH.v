@@ -22,7 +22,7 @@ Lemma Cantor_inj {PR : PropResizing} {FE : Funext} X :
 Proof.
   intros [i HI]. pose (p n := Build_HProp (smalltype (forall q, i q = n -> ~ q n))).
   enough (Hp : p (i p) <-> ~ p (i p)).
-  { apply Hp; apply Hp; intros H; now apply Hp. }
+  { apply Hp; apply Hp; intros H; by apply Hp. }
   unfold p at 1. split.
   - intros H. apply equiv_smalltype in H. apply H. reflexivity.
   - intros H. apply equiv_smalltype. intros q -> % HI. apply H.
@@ -36,8 +36,8 @@ Proof.
   repeat (nrapply istrunc_forall; intros).
   apply hprop_allpath. intros [H|H] [H'|H'].
   - enough (H = H') as ->; trivial. apply path_ishprop.
-  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply InjectsInto_trans with a0.
-  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. now apply InjectsInto_trans with a0.
+  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. by apply InjectsInto_trans with a0.
+  - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. by apply InjectsInto_trans with a0.
   - enough (H = H') as ->; trivial. apply path_ishprop.
 Qed.
 
@@ -71,10 +71,10 @@ Section LEM.
   Proof.
     intros HI. pose (p n := Build_HProp (smalltype (forall q, i q = hpaths n -> ~ q n))).
     exists p. intros [n HN]. enough (Hp : p n <-> ~ p n).
-    { apply Hp; apply Hp; intros H; now apply Hp. }
+    { apply Hp; apply Hp; intros H; by apply Hp. }
     unfold p at 1. split.
     - intros H. apply equiv_smalltype in H. apply H, HN.
-    - intros H. apply equiv_smalltype. intros q HQ. rewrite <- HN in HQ. now apply HI in HQ as ->.
+    - intros H. apply equiv_smalltype. intros q HQ. rewrite <- HN in HQ. by apply HI in HQ as ->.
   Qed.
 
   Lemma injective_proj1 {Z} (r : Z -> HProp) :
@@ -90,7 +90,7 @@ Section LEM.
     (P + ~ P) -> Injection (X -> HProp) sings.
   Proof.
     intros HP. unshelve eexists.
-    - intros p. exists p. apply tr. now right.
+    - intros p. exists p. apply tr. by right.
     - intros p q. intros H. change p with ((exist (fun r => sing r \/ (P + ~ P)) p (tr (inr HP))).1).
       rewrite H. cbn. reflexivity.
   Qed.
@@ -102,17 +102,17 @@ Section LEM.
     intros ch. eapply merely_destruct; try apply ch.
     - unshelve eexists.
       + intros x. exists (hpaths x). apply tr. left. exists x. reflexivity.
-      + intros x y. intros H % pr1_path. cbn in H. change (hpaths x y). now rewrite H.
-    - exists (@proj1 _ _). now apply injective_proj1.
+      + intros x y. intros H % pr1_path. cbn in H. change (hpaths x y). by rewrite H.
+    - exists (@proj1 _ _). by apply injective_proj1.
     - intros H. assert (HP' : ~ ~ (P + ~ P)).
-      { intros HP. apply HP. right. intros p. apply HP. now left. }
+      { intros HP. apply HP. right. intros p. apply HP. by left. }
       apply HP'. intros HP % inject_sings. clear HP'.
-      apply Cantor_inj with X. now eapply (Injection_trans _ _ _ HP).
+      apply Cantor_inj with X. by eapply (Injection_trans _ _ _ HP).
     - intros [i Hi]. destruct (Cantor_sing (fun p => @proj1 _ _ (i p))) as [p HP].
-      + intros x y H % injective_proj1. now apply Hi.
+      + intros x y H % injective_proj1. by apply Hi.
       + destruct (i p) as [q Hq]; cbn in *.
         eapply merely_destruct; try apply Hq.
-        intros [H|H]; [destruct (HP H)|now apply tr].
+        intros [H|H]; [destruct (HP H)|by apply tr].
   Qed.
 
 End LEM.

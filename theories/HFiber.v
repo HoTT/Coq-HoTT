@@ -200,6 +200,17 @@ Section UnstableOctahedral.
 
 End UnstableOctahedral.
 
+(** We characterize the fibers of [functor_forall], but only in the special case where the base map is [idmap]. This doesn't depend on anything else in this file, but can't be put in Types/Forall.v, because it requires results from Types/Sigma.v. *)
+Definition hfiber_functor_forall_id `{Funext} {A : Type} {P Q : A -> Type}
+  (h : forall a, P a -> Q a) (g : forall a, Q a)
+  : hfiber (functor_forall_id h) g <~> (forall a, hfiber (h a) (g a)).
+Proof.
+  unfold hfiber, functor_forall_id, functor_forall.
+  nrefine (equiv_sig_coind _ _ oE _).
+  apply equiv_functor_sigma_id; intro f.
+  apply equiv_apD10.
+Defined.
+
 (** ** Fibers of constant functions *)
 Definition hfiber_const A {B} (y y' : B)
   : hfiber (fun _ : A => y) y' <~> A * (y = y')
@@ -249,6 +260,13 @@ Definition equiv_isequiv_ap_isembedding `{Funext} {A B} (f : A -> B)
   : IsEmbedding f <~> (forall x y, IsEquiv (@ap _ _ f x y)).
 Proof.
   exact (equiv_iff_hprop (@isequiv_ap_isembedding _ _ f) (@isembedding_isequiv_ap _ _ f)).
+Defined.
+
+(** It follows from [isembedding_isequiv_ap] and [isequiv_ap_equiv_fun] that [equiv_fun] is an embedding. *)
+Global Instance isembedding_equiv_fun `{Funext} {A B : Type}
+  : IsEmbedding (@equiv_fun A B).
+Proof.
+  rapply isembedding_isequiv_ap.
 Defined.
 
 Lemma ap_isinj_embedding_beta {X Y : Type} (f : X -> Y) {I : IsEmbedding f} {x0 x1 : X}

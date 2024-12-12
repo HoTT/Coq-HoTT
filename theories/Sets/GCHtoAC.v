@@ -51,8 +51,8 @@ Proof.
   apply path_universe_uncurried. srapply equiv_adjointify.
   - exact (fun x => match x with inl _ => O | inr n => S n end).
   - exact (fun n => match n with O => inl tt | S n => inr n end).
-  - now intros [].
-  - now intros [[]|n]. 
+  - by intros [].
+  - by intros [[]|n]. 
 Qed.
 
 Lemma path_unit_fun X :
@@ -74,10 +74,10 @@ Proof.
   - exact (fun b : Bool => if b then merely Unit else merely Empty).
   - intros []; destruct LEM as [H|H]; auto.
     + destruct (H (tr tt)).
-    + apply (@merely_destruct Empty); try easy. exact _.
+    + apply (@merely_destruct Empty); try done. exact _.
   - intros P. destruct LEM as [H|H]; apply equiv_path_iff_hprop.
     + split; auto. intros _. apply tr. exact tt.
-    + split; try easy. intros HE. apply (@merely_destruct Empty); try easy. exact _.
+    + split; try done. intros HE. apply (@merely_destruct Empty); try done. exact _.
 Qed.
 
 Lemma path_bool_subsingleton :
@@ -90,12 +90,12 @@ Lemma path_pred_sum X (p : X -> HProp) :
   X = sig p + sig (fun x => ~ p x).
 Proof.
   apply path_universe_uncurried. srapply equiv_adjointify.
-  - intros x. destruct (LEM (p x) _) as [H|H]; [left | right]; now exists x.
+  - intros x. destruct (LEM (p x) _) as [H|H]; [left | right]; by exists x.
   - intros [[x _]|[x _]]; exact x.
   - cbn. intros [[x Hx]|[x Hx]]; destruct LEM as [H|H]; try contradiction.
     + enough (H = Hx) as -> by reflexivity. apply path_ishprop.
-    + enough (H = Hx) as -> by reflexivity. apply path_forall. now intros HP.
-  - cbn. intros x. now destruct LEM.
+    + enough (H = Hx) as -> by reflexivity. apply path_forall. by intros HP.
+  - cbn. intros x. by destruct LEM.
 Qed.
 
 Definition ran {X Y : Type} (f : X -> Y) :=
@@ -106,9 +106,9 @@ Lemma path_ran {X} {Y : HSet} (f : X -> Y) :
 Proof.
   intros Hf. apply path_universe_uncurried. srapply equiv_adjointify.
   - intros [y H]. destruct (iota (fun x => f x = y) _) as [x Hx]; try exact x.
-    split; try apply H. intros x x'. cbn. intros Hy Hy'. rewrite <- Hy' in Hy. now apply Hf.
+    split; try apply H. intros x x'. cbn. intros Hy Hy'. rewrite <- Hy' in Hy. by apply Hf.
   - intros x. exists (f x). apply tr. exists x. reflexivity.
-  - cbn. intros x. destruct iota as [x' H]. now apply Hf.
+  - cbn. intros x. destruct iota as [x' H]. by apply Hf.
   - cbn. intros [y x]. apply path_sigma_hprop. cbn.
     destruct iota as [x' Hx]. apply Hx.
 Qed.
@@ -128,7 +128,7 @@ Fact path_infinite_power (X : HSet) :
   infinite X -> (X -> HProp) + (X -> HProp) = (X -> HProp).
 Proof.
   intros H. rewrite path_sum_bool. rewrite <- path_bool_subsingleton.
-  rewrite path_sum_prod. now rewrite path_infinite_unit.
+  rewrite path_sum_prod. by rewrite path_infinite_unit.
 Qed.
 
 
@@ -143,7 +143,7 @@ Lemma Cantor X (f : X -> X -> Type) :
 Proof.
   exists (fun x => ~ f x x). intros x H.
   enough (Hx : f x x <-> ~ f x x).
-  - apply Hx; apply Hx; intros H'; now apply Hx.
+  - apply Hx; apply Hx; intros H'; by apply Hx.
   - pattern (f x) at 1. rewrite H. reflexivity.
 Qed.
 
@@ -152,7 +152,7 @@ Lemma hCantor {X} (f : X -> X -> HProp) :
 Proof.
   exists (fun x => Build_HProp (f x x -> Empty)). intros x H.
   enough (Hx : f x x <-> ~ f x x).
-  - apply Hx; apply Hx; intros H'; now apply Hx.
+  - apply Hx; apply Hx; intros H'; by apply Hx.
   - pattern (f x) at 1. rewrite H. reflexivity.
 Qed.
 
@@ -160,25 +160,25 @@ Definition clean_sum {X Y Z} (f : X -> Y + Z) :
   (forall x y, f x <> inl y) -> forall x, { z | inr z = f x }.
 Proof.
   intros Hf. enough (H : forall x a, a = f x -> {z : Z & inr z = f x}).
-  - intros x. now apply (H x (f x)).
+  - intros x. by apply (H x (f x)).
   - intros x a Hxa. specialize (Hf x). destruct (f x) as [y|z].
-    + apply Empty_rect. now apply (Hf y).
-    + now exists z.
+    + apply Empty_rect. by apply (Hf y).
+    + by exists z.
 Qed.
 
 Fact Cantor_path_injection {X Y} :
   (X -> HProp) = (X + Y) -> (X + X) = X -> Injection (X -> HProp) Y.
 Proof.
   intros H1 H2. assert (H : X + Y = (X -> HProp) * (X -> HProp)).
-  - now rewrite <- H1, path_sum_prod, H2. 
+  - by rewrite <- H1, path_sum_prod, H2. 
   - apply equiv_path in H as [f [g Hfg Hgf _]].
     pose (f' x := fst (f (inl x))). destruct (hCantor f') as [p Hp].
     pose (g' q := g (p, q)). assert (H' : forall q x, g' q <> inl x).
-    + intros q x H. apply (Hp x). unfold f'. rewrite <- H. unfold g'. now rewrite Hfg.
+    + intros q x H. apply (Hp x). unfold f'. rewrite <- H. unfold g'. by rewrite Hfg.
     + exists (fun x => proj1 (clean_sum _ H' x)). intros q q' H. assert (Hqq' : g' q = g' q').
-      * destruct clean_sum as [z <-]. destruct clean_sum as [z' <-]. cbn in H. now rewrite H.
+      * destruct clean_sum as [z <-]. destruct clean_sum as [z' <-]. cbn in H. by rewrite H.
       * unfold g' in Hqq'. change (snd (p, q) = snd (p, q')).
-        rewrite <- (Hfg (p, q)), <- (Hfg (p, q')). now rewrite Hqq'.
+        rewrite <- (Hfg (p, q)), <- (Hfg (p, q')). by rewrite Hqq'.
 Qed.
 
 (* Version just requiring propositional injections *)
@@ -188,10 +188,10 @@ Lemma Cantor_rel X (R : X -> (X -> HProp) -> HProp) :
 Proof.
   intros HR. pose (pc x := Build_HProp (smalltype (forall p : X -> HProp, R x p -> ~ p x))).
   exists pc. intros x H. enough (Hpc : pc x <-> ~ pc x). 2: split.
-  { apply Hpc; apply Hpc; intros H'; now apply Hpc. }
-  - intros Hx. apply equiv_smalltype in Hx. now apply Hx.
+  { apply Hpc; apply Hpc; intros H'; by apply Hpc. }
+  - intros Hx. apply equiv_smalltype in Hx. by apply Hx.
   - intros Hx. apply equiv_smalltype. intros p Hp.
-    eapply merely_destruct; try apply (HR _ _ _ Hp H). now intros ->.
+    eapply merely_destruct; try apply (HR _ _ _ Hp H). by intros ->.
 Qed.
 
 Lemma InjectsInto_power_morph X Y :
@@ -201,9 +201,9 @@ Proof.
   apply tr. exists (fun p => fun y => hexists (fun x => p x /\ y = f x)).
   intros p q H. apply path_forall. intros x. apply equiv_path_iff_hprop. split; intros Hx.
   - assert (Hp : (fun y : Y => hexists (fun x : X => p x * (y = f x))) (f x)). { apply tr. exists x. split; trivial. }
-    pattern (f x) in Hp. rewrite H in Hp. eapply merely_destruct; try apply Hp. now intros [x'[Hq <- % Hf]].
+    pattern (f x) in Hp. rewrite H in Hp. eapply merely_destruct; try apply Hp. by intros [x'[Hq <- % Hf]].
   - assert (Hq : (fun y : Y => hexists (fun x : X => q x * (y = f x))) (f x)). { apply tr. exists x. split; trivial. }
-    pattern (f x) in Hq. rewrite <- H in Hq. eapply merely_destruct; try apply Hq. now intros [x'[Hp <- % Hf]].
+    pattern (f x) in Hq. rewrite <- H in Hq. eapply merely_destruct; try apply Hq. by intros [x'[Hp <- % Hf]].
 Qed.
 
 Fact Cantor_injects_injects {X Y : HSet} :
@@ -217,12 +217,12 @@ Proof.
     pose (R x p := hexists (fun q => f (p, q) = inl x)). destruct (@Cantor_rel _ R) as [p Hp].
     { intros x p p' H3 H4. eapply merely_destruct; try apply H3. intros [q Hq].
       eapply merely_destruct; try apply H4. intros [q' Hq']. apply tr.
-      change p with (fst (p, q)). rewrite (Hf (p, q) (p', q')); trivial. now rewrite Hq, Hq'. }
+      change p with (fst (p, q)). rewrite (Hf (p, q) (p', q')); trivial. by rewrite Hq, Hq'. }
     pose (f' q := f (p, q)). assert (H' : forall q x, f' q <> inl x).
     + intros q x H. apply (Hp x). apply tr. exists q. apply H.
     + apply tr. exists (fun x => proj1 (clean_sum _ H' x)). intros q q' H. assert (Hqq' : f' q = f' q').
-      * destruct clean_sum as [z <-]. destruct clean_sum as [z' <-]. cbn in H. now rewrite H.
-      * apply Hf in Hqq'. change q with (snd (p, q)). now rewrite Hqq'.
+      * destruct clean_sum as [z <-]. destruct clean_sum as [z' <-]. cbn in H. by rewrite H.
+      * apply Hf in Hqq'. change q with (snd (p, q)). by rewrite Hqq'.
 Qed.
 
 End Preparation.
@@ -257,8 +257,8 @@ Proof.
   apply tr. exists (fun z => match z with inl x => inl (f x) | inr y => inr (g y) end).
   intros [x|y] [x'|y'] H.
   - apply ap. apply Hf. apply path_sum_inl with Y'. apply H.
-  - now apply inl_ne_inr in H.
-  - now apply inr_ne_inl in H.
+  - by apply inl_ne_inr in H.
+  - by apply inr_ne_inl in H.
   - apply ap. apply Hg. apply path_sum_inr with X'. apply H.
 Qed.
 
@@ -268,9 +268,9 @@ Lemma Sierpinski_step (X : HSet) n :
   GCH -> infinite X -> powfix X -> InjectsInto (HN X) (power_iterated X n) -> InjectsInto X (HN X).
 Proof.
   intros gch H1 H2 Hi. induction n.
-  - now apply HN_ninject in Hi.
+  - by apply HN_ninject in Hi.
   - destruct (gch (Build_HSet (power_iterated X n)) (Build_HSet (power_iterated X n + HN X))) as [H|H].
-    + now apply infinite_power_iterated.
+    + by apply infinite_power_iterated.
     + apply tr. exists inl. intros x x'. apply path_sum_inl.
     + eapply InjectsInto_trans.
       * apply InjectsInto_sum; try apply Hi. apply tr, Injection_power. exact _.
@@ -286,7 +286,7 @@ Proof.
   intros gch HX. eapply InjectsInto_trans; try apply tr, Injection_power; try apply X.
   apply (@Sierpinski_step (Build_HSet (X -> HProp)) HN_bound gch).
   - apply infinite_inject with X; trivial. apply Injection_power. apply X.
-  - intros n. cbn. rewrite !power_iterated_shift. eapply path_infinite_power. cbn. now apply infinite_power_iterated.
+  - intros n. cbn. rewrite !power_iterated_shift. eapply path_infinite_power. cbn. by apply infinite_power_iterated.
   - apply HN_inject.
 Qed.
 

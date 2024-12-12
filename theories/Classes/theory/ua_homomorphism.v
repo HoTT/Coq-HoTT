@@ -201,7 +201,7 @@ Section hom_id.
   Proof.
     intro u. generalize u.#A. intro w. induction (σ u).
     - reflexivity.
-    - now intro x.
+    - by intro x.
   Defined.
 
   Global Instance is_isomorphism_id
@@ -262,7 +262,7 @@ Section hom_compose.
   Proof.
     induction w; simpl in *.
     - by path_induction.
-    - intro x. now apply (IHw _ (β (f _ x))).
+    - intro x. by apply (IHw _ (β (f _ x))).
   Defined.
 
   Global Instance is_homomorphism_compose
