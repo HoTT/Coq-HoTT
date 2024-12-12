@@ -410,6 +410,16 @@ Notation Build_HSet := (Build_TruncType 0).
 (** This is (as of October 2014) the only [Canonical Structure] in the library.  It would be nice to do without it, in the interests of minimizing the number of fancy Coq features that the reader needs to know about. *)
 Canonical Structure default_TruncType := fun n T P => (@Build_TruncType n T P).
 
+(** Version of [smalltype] for n-Types. *)
+Definition smallntype@{i j} (n : trunc_index) (P : TruncType@{j} n) {smallP : IsSmall@{i j} P}
+  : TruncType@{i} n.
+Proof.
+  nrapply (Build_TruncType n (smalltype P)).
+  apply (@istrunc_equiv_istrunc _ _ (equiv_smalltype P)^-1 n _).
+Defined.
+
+Notation smallhprop := (smallntype (-1)).
+
 (** ** Facts about hprops *)
 
 (** An inhabited proposition is contractible.  This is not an [Instance] because it causes infinite loops. *)
