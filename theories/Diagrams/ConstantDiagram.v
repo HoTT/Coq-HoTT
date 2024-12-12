@@ -50,7 +50,14 @@ Section ConstantDiagram.
     1,2: intros[].
     1: srapply path_cocone.
     3: srapply path_DiagramMap.
-    1,3: reflexivity.
+    1: reflexivity.
+    2: {
+      snrapply exist.
+      - intro i; reflexivity.
+      - intros i j g x; cbn.
+        lhs refine (inv_V (DiagramMap_comm i j g x) @@ 1).
+        apply concat_p1_1p.
+    }
     all: cbn; intros; hott_simpl.
   Defined.
 
