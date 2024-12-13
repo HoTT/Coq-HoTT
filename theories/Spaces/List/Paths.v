@@ -10,7 +10,7 @@ Require Import Spaces.List.Core.
 Section PathList.
   Context {A : Type}.
   
-  (** This type is equivalent to the path space of lists. We don't actually show that it is equivalent to the type of paths but rather that the path type is a retract of this type. This is sufficient to determine the h-level of the type of lists. *)
+  (** We'll show that this type is equivalent to the path space [l = l'] in [list A]. *)
   Fixpoint ListEq (l l' : list A) : Type :=
     match l, l' with
       | nil, nil => Unit
