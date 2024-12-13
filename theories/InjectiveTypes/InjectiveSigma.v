@@ -6,8 +6,7 @@ Require Import Basics.
 Require Import Types.Forall Types.Sigma Types.Universe.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import Truncations.Core.
-Require Import InjectiveTypes.
-Require Import TypeFamKanExt.
+Require Import InjectiveTypes.InjectiveTypes InjectiveTypes.TypeFamKanExt.
 
 Section AlgFlabSigma.
   Context {X : Type} (A : X -> Type) (Xaf : IsAlgebraicFlabbyType X).

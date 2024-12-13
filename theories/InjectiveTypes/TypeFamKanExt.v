@@ -6,7 +6,7 @@ Require Import Basics.
 Require Import Types.Sigma Types.Unit Types.Forall Types.Empty Types.Universe Types.Equiv Types.Paths.
 Require Import HFiber.
 Require Import Truncations.Core.
-Require Import ReflectiveSubuniverse Modality.
+Require Import Modalities.ReflectiveSubuniverse Modalities.Modality.
 
 (** We are careful about universe variables for these first few definitions because they are used in the rest of the paper.  We use [u], [v], [w], etc. as our typical universe variables. Our convention for the max of two universes [u] and [v] is [uv]. *)
 
@@ -25,7 +25,7 @@ Section UniverseStructure.
 
   (** Below we will introduce notations [P <| j] and [P |> j] for these Kan extensions. *)
 
-  (* If [j] is an embedding, then [P <| j] and [P |> j] are extensions in the following sense: [(P <| j o j) x <~> P x <~> (P |> j o j) x].  So, with univalence, we get that they are extensions. *)
+  (** If [j] is an embedding, then [P <| j] and [P |> j] are extensions in the following sense: [(P <| j o j) x <~> P x <~> (P |> j o j) x].  So, with univalence, we get that they are extensions. *)
 
   Definition isext_equiv_leftkanfam@{} {X : Type@{u}} {Y : Type@{v}}
     (P : X -> Type@{w}) (j : X -> Y) (isem : IsEmbedding@{u v uv} j) (x : X)
@@ -94,15 +94,13 @@ Proof.
   - intros g. by apply path_forall.
 Defined.
 
-(** Here we are taking the perspective that a type family [P : X -> Type] is a sort of oo-presheaf, considering the interpretation of [X] as an oo-groupoid and [Type] as a universe of spaces i.e. an appropriate generalization of the category of sets. It is easy to see that a type family [P] is functorial if we define its action on paths with [transport]. Functoriality then reduces to known lemmas about the [transport] function. *)
+(** Here we are taking the perspective that a type family [P : X -> Type] as an oo-presheaf, considering the interpretation of [X] as an oo-groupoid and [Type] as a universe of spaces i.e. an appropriate generalization of the category of sets. It is easy to see that a type family [P] is functorial if we define its action on paths with [transport]. Functoriality then reduces to known lemmas about the [transport] function. *)
 
-(** With this in mind, we define the type of transformations between two type families. *)
+(** With this in mind, we define the type of transformations between two type families. [concat_Ap] says that these transformations are automatically natural. *)
 Definition MapFam {X : Type} (P : X -> Type) (R : X -> Type)
   := forall x, P x -> R x.
 
 Notation "P >=> R" := (MapFam P R) : function_scope.
-
-(** [concat_Ap] says that these transformations are automatically natural. *)
 
 (** Composition of transformations. *)
 Definition compose_mapfam {X} {P R Q : X -> Type} (b : R >=> Q) (a : P >=> R)
@@ -264,7 +262,8 @@ Section EmbedProofLeft.
     rapply isequiv_counit_leftkanfam_leftkanfam.
   Defined.
 
-  Global Instance isequiv_leftkanfam_counit_equiv : IsEquiv leftkanfam_counit_equiv.
+  Global Instance isequiv_leftkanfam_counit_equiv
+    : IsEquiv leftkanfam_counit_equiv.
   Proof.
     snrapply isequiv_adjointify.
     - intros [R e]. exact (R o j).
@@ -306,7 +305,8 @@ Section EmbedProofRight.
     rapply isequiv_unit_rightkanfam_rightkanfam.
   Defined.
       
-  Global Instance isequiv_rightkanfam_unit_equiv : IsEquiv rightkanfam_unit_equiv.
+  Global Instance isequiv_rightkanfam_unit_equiv
+    : IsEquiv rightkanfam_unit_equiv.
   Proof.
     snrapply isequiv_adjointify.
     - intros [R e]. exact (R o j).

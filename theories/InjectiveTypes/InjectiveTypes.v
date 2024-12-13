@@ -2,16 +2,14 @@
 
 (** Formalization of the paper: Injective Types in Univalent Mathematics by Martin Escardo (with some extra results). *)
 
-Require Import Basics.
-Require Import Types.
+Require Import Basics Types.
 Require Import Truncations.Core.
-Require Import Modality.
+Require Import Modalities.Modality.
 Require Import HFiber.
-Require Import HProp.
+Require Import Universes.HProp.
 Require Import Constant.
-Require Import PropResizing.
 Require Import ExcludedMiddle.
-Require Import TypeFamKanExt.
+Require Import InjectiveTypes.TypeFamKanExt.
 
 (** ** Definitions of injectivity and first examples *)
 
@@ -415,8 +413,7 @@ Definition lem_pointed_types_alg_flab@{w} `{Funext}
   : ExcludedMiddle_type@{w}.
 Proof.
   intros P PropP.
-  snrapply decidable_alg_flab_hprop.
-  - apply ptaf.
-    exact (inr tt).
-  - exact PropP. (* Don't know why type class search doesn't find this. *)
+  apply (decidable_alg_flab_hprop (@Build_HProp P PropP)).
+  apply ptaf.
+  exact (inr tt).
 Defined.
