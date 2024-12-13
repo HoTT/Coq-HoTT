@@ -132,19 +132,19 @@ Section Flattening.
     + cbn; reflexivity.
     + intros i j g x; cbn.
       funext y.
+      set (L := cocone_extends Z (cocone_postcompose cocone_E' f)).
       refine (transport_forall _ _ _ @ _).
-      rewrite transport_paths_FlFr.
-      refine ((1 @@ _ @@ 1) @ (concat_p1 _ @@ 1) @ concat_Vp _).
-      match goal with |- transportD E' ?C _ _ _ = _ =>
-                        rewrite (transportD_is_transport _ (fun w => C w.1 w.2)) end.
-      rewrite transport_paths_FlFr.
-      lhs rapply concat_pp_p.
-      apply moveR_Vp.
-      apply equiv_1p_q1.
+      nrapply (transport_paths_FlFr' (f:=fun y0 => L (_; y0))).
+      lhs nrapply concat_p1.
+      lhs_V nrapply concat_1p.
+      refine (_^ @@ 1).
+      lhs rapply (transportD_is_transport E' (fun w => L w = f w)).
+      nrapply transport_paths_FlFr'; apply equiv_p1_1q.
       rewrite ap_path_sigma.
       rewrite Colimit_ind_beta_colimp.
       rewrite ap10_path_forall.
       simpl.
+      clear L.
       rewrite concat_pp_p, concat_V_pp.
       rewrite ap11_is_ap10_ap01.
       cbn.
@@ -154,6 +154,7 @@ Section Flattening.
         => (colim j (pr1 x0); pr2 x0)) f).
       rewrite <- ! (ap_pp f).
       apply (ap (ap f)).
+      symmetry.
       refine (_ @ concat_pp_p _ _ _).
       match goal with |- _ = (ap ?ff ?pp1 @ ?pp2) @ ?pp3
         => set (p1 := pp1) end.
