@@ -794,12 +794,8 @@ Defined.
 
 (** The reversed sequence of [n.+1] numbers is the [n] followed by the rest of the reversed sequence. *)
 Definition seq_rev_cons@{} (n : nat)
-  : seq_rev n.+1 = n :: seq_rev n.
-Proof.
-  induction n as [|n IHn].
-  1: reflexivity.
-  cbn; f_ap.
-Defined.
+  : seq_rev n.+1 = n :: seq_rev n
+  := idpath.
 
 (** The sequence of [n.+1] numbers is the sequence of [n] numbers concatenated with [[n]]. *)
 Definition seq_succ@{} (n : nat)
