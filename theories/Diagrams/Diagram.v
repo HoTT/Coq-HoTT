@@ -169,10 +169,11 @@ Section Diagram.
   Proof.
     destruct w as [[w_obj w_comm] is_eq_w]. simpl in *.
     set (we i := Build_Equiv _ _ _ (is_eq_w i)).
-    simple refine (path_DiagramMap _).
+    apply path_DiagramMap.
     exists (fun i => eisretr (we i)).
     simpl.
-    intros i j f x. apply (concatR (concat_p1 _)^).
+    intros i j f x.
+    rhs nrapply concat_p1.
     apply (comm_square_inverse_is_retr (we i) (we j) _ x).
   Defined.
 
@@ -182,10 +183,11 @@ Section Diagram.
   Proof.
     destruct w as [[w_obj w_comm] is_eq_w]. simpl in *.
     set (we i := Build_Equiv _ _ _ (is_eq_w i)).
-    simple refine (path_DiagramMap _).
+    apply path_DiagramMap.
     exists (fun i => eissect (we i)).
     simpl.
-    intros i j f x. apply (concatR (concat_p1 _)^).
+    intros i j f x.
+    rhs nrapply concat_p1.
     apply (comm_square_inverse_is_sect (we i) (we j) _ x).
   Defined.
 
@@ -199,9 +201,11 @@ Section Diagram.
 
   Global Instance transitive_diagram_equiv : Transitive diagram_equiv | 1.
   Proof.
-  simple refine (fun D1 D2 D3 m1 m2 =>
-                   Build_diagram_equiv (diagram_comp m2 m1) _).
-  simpl. intros i; apply isequiv_compose';[apply m1 | apply m2].
+    intros D1 D2 D3 m1 m2.
+    nrapply (Build_diagram_equiv (diagram_comp m2 m1)).
+    intros i.
+    simpl.
+    apply isequiv_compose'; [apply m1 | apply m2].
   Defined.
 End Diagram.
 

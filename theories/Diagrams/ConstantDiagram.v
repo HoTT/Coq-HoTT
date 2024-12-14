@@ -1,4 +1,4 @@
-Require Import Basics.
+Require Import Basics Types.Paths.
 Require Import Cone.
 Require Import Cocone.
 Require Import Diagram.
@@ -29,36 +29,30 @@ Section ConstantDiagram.
   Definition diagram_const_functor_comp {A B C : Type}
     (f : A -> B) (g : B -> C)
     : diagram_const_functor (g o f)
-    = diagram_comp (diagram_const_functor g) (diagram_const_functor f).
-  Proof.
-    reflexivity.
-  Defined.
+      = diagram_comp (diagram_const_functor g) (diagram_const_functor f)
+    := idpath.
 
   Definition diagram_const_functor_idmap {A : Type}
-    : diagram_const_functor (idmap : A -> A) = diagram_idmap (diagram_const A).
-  Proof.
-    reflexivity.
-  Defined.
+    : diagram_const_functor (idmap : A -> A) = diagram_idmap (diagram_const A)
+    := idpath.
 
   Definition equiv_diagram_const_cocone `{Funext} (D : Diagram G) (X : Type)
     : DiagramMap D (diagram_const X) <~> Cocone D X.
   Proof.
     srapply equiv_adjointify.
+    (* The two functions are defined in parallel: *)
     1,2: intros [? w]; econstructor.
+    (* This reversal is a defect in the definition of [Cocone]. *)
     1,2: intros x y z z'; symmetry; revert x y z z'.
     1,2: exact w.
-    1,2: intros[].
-    1: srapply path_cocone.
-    3: srapply path_DiagramMap.
-    1: reflexivity.
-    2: {
-      snrapply exist.
-      - intro i; reflexivity.
-      - intros i j g x; cbn.
-        lhs refine (inv_V (DiagramMap_comm i j g x) @@ 1).
-        apply concat_p1_1p.
-    }
-    all: cbn; intros; hott_simpl.
+    (* The two homotopies are proved in parallel: *)
+    1,2: intros [].
+    1: srapply path_cocone; cbn.
+    3: srapply path_DiagramMap; snrefine (_; _); cbn.
+    1,3: reflexivity.
+    1,2: intros; cbn.
+    1,2: apply equiv_p1_1q.
+    1,2: apply inv_V.
   Defined.
 
   Definition equiv_diagram_const_cone `{Funext} (X : Type) (D : Diagram G)
@@ -75,6 +69,3 @@ Section ConstantDiagram.
   Defined.
 
 End ConstantDiagram.
-
-
-
