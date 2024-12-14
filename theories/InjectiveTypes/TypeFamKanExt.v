@@ -94,7 +94,7 @@ Proof.
   - intros g. by apply path_forall.
 Defined.
 
-(** Here we are taking the perspective that a type family [P : X -> Type] as an oo-presheaf, considering the interpretation of [X] as an oo-groupoid and [Type] as a universe of spaces i.e. an appropriate generalization of the category of sets. It is easy to see that a type family [P] is functorial if we define its action on paths with [transport]. Functoriality then reduces to known lemmas about the [transport] function. *)
+(** Here we are taking the perspective of a type family [P : X -> Type] as an oo-presheaf, considering the interpretation of [X] as an oo-groupoid and [Type] as a universe of spaces i.e. an appropriate generalization of the category of sets. It is easy to see that a type family [P] is functorial if we define its action on paths with [transport]. Functoriality then reduces to known lemmas about the [transport] function. *)
 
 (** With this in mind, we define the type of transformations between two type families. [concat_Ap] says that these transformations are automatically natural. *)
 Definition MapFam {X : Type} (P : X -> Type) (R : X -> Type)

@@ -413,7 +413,7 @@ Definition lem_pointed_types_alg_flab@{w} `{Funext}
   : ExcludedMiddle_type@{w}.
 Proof.
   intros P PropP.
-  apply (decidable_alg_flab_hprop (@Build_HProp P PropP)).
+  apply (decidable_alg_flab_hprop (Build_HProp P)).
   apply ptaf.
   exact (inr tt).
 Defined.
