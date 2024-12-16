@@ -25,7 +25,6 @@ Require Export HoTT.Equiv.PathSplit.
 Require Export HoTT.Equiv.Relational.
 
 Require Export HoTT.Extensions.
-Require Export HoTT.Misc.
 
 Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
