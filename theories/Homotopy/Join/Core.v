@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Cubical.DPath Cubical.PathSquare.
-Require Import NullHomotopy.
+Require Import Homotopy.NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.Connectedness.

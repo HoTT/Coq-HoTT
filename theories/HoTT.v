@@ -41,7 +41,6 @@ Require Export HoTT.Universes.Automorphisms.
 Require Export HoTT.Universes.BAut.
 Require Export HoTT.Universes.Rigid.
 
-Require Export HoTT.NullHomotopy.
 Require Export HoTT.Idempotents.
 Require Export HoTT.ExcludedMiddle.
 Require Export HoTT.BoundedSearch.
@@ -168,6 +167,7 @@ Require Export HoTT.Homotopy.EncodeDecode.
 Require Export HoTT.Homotopy.Syllepsis.
 Require Export HoTT.Homotopy.Hopf.
 Require Export HoTT.Homotopy.IdentitySystems.
+Require Export HoTT.Homotopy.NullHomotopy.
 
 Require Export HoTT.Spectra.Spectrum.
 
