@@ -173,7 +173,7 @@ Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 (** ** A few special things about the (-2)-truncation *)
 
 (** The type of contractible types is contractible. *)
-Definition contr_tr_minus_2@{u su | u < su} `{Univalence}
+Definition contr_tr_minus_two@{u su | u < su} `{Univalence}
   : Contr (Type_@{u su} (Tr (-2))).
 Proof.
   apply (Build_Contr _ (exist@{su su} _ (Unit : Type@{u}) (inO_tr_istrunc _))).

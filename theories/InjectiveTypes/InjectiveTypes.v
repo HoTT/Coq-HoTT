@@ -13,16 +13,22 @@ Require Import InjectiveTypes.TypeFamKanExt.
 
 (** ** Definitions of injectivity and first examples *)
 
-(** Since the universe levels are important to many of the results here, we keep track of them explicitly as much as possible. Due to our inability to use the max and successor operations within proofs, we instead construct these universes and their associated posetal relations in the arguments of the functions. In universe declarations, we use [u], [v], [w], etc. as our typical universe variables. Our convention for the max of two universes [u] and [v] is [uv], and the successor of a universe [u] is [su]. Occasionally we write [T] for a top universe which is strictly larger than all other provided universes. We hope that later versions of Coq will allow us access to the max and successor operations and much of the cumbersome universe handing here can be greatly reduced. *)
+(** Since the universe levels are important to many of the results here, we keep track of them explicitly as much as possible. Due to our inability to use the max and successor operations within proofs, we instead construct these universes and their associated posetal relations in the arguments of the functions.
+
+In universe declarations, we use [u], [v], [w], etc. as our typical universe variables. Our convention for the max of two universes [u] and [v] is [uv], and the successor of a universe [u] is [su]. Occasionally we write [T] for a top universe which is strictly larger than all other provided universes.
+
+We hope that later versions of Coq will allow us access to the max and successor operations and much of the cumbersome universe handing here can be greatly reduced. *)
 
 Section UniverseStructure.
   Universes u v w uv uw vw.
   Constraint u <= uv, v <= uv, u <= uw, w <= uw, v <= vw, w <= vw.
 
+  (** A type [D] is said to be injective if for every embedding [j : X -> Y] and every function [f : X -> D], there merely exists a [f' : Y -> D] such that [f' o j == f]. *)
   Definition IsInjectiveType@{uvw | uv <= uvw, uw <= uvw, vw <= uvw} (D : Type@{w})
     := forall (X : Type@{u}) (Y : Type@{v}) (j : X -> Y) (isem : IsEmbedding@{u v uv} j)
       (f : X -> D), merely@{uvw} (sig@{vw uw} (fun f' => f' o j == f)).
 
+  (** A type is then algebraically injective if the same is true, but without the propositional truncation. We use a class here instead of just a sigma type to make proofs more readable. *)
   Class IsAlgebraicInjectiveType@{} (D : Type@{w}) := {
     lift_ai {X : Type@{u}} {Y : Type@{v}} (j : X -> Y) {isem : IsEmbedding@{u v uv} j} (f : X -> D)
       : Y -> D;
@@ -74,7 +80,9 @@ Defined.
 (** ** Constructions with algebraically injective types *)
 
 (** Retracts of algebraically injective types are algebraically injective. *)
-Definition alg_inj_retract@{u v w w' uv uw vw uw' vw' | u <= uv, v <= uv, u <= uw, w <= uw, v <= vw, w <= vw, u <= uw', v <= vw', w' <= uw', w' <= vw'}
+Definition alg_inj_retract
+  @{u v w w' uv uw vw uw' vw'
+  | u <= uv, v <= uv, u <= uw, w <= uw, v <= vw, w <= vw, u <= uw', v <= vw', w' <= uw', w' <= vw'}
   {D' : Type@{w'}} {D : Type@{w}} (r : D -> D') {s : D' -> D}
   (retr : r o s == idmap) (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
   : IsAlgebraicInjectiveType@{u v w' uv uw' vw'} D'.
@@ -126,7 +134,9 @@ Definition retract_power_universe_alg_usuinj@{u su | u < su} `{Univalence}
 
 (** ** Algebraic flabbiness and resizing constructions *)
 (** If [D : Type@{u}] is algebraically [u],[su]-injective, then it is algebraically [u],[u]-injective. *)
-Definition alg_uuinj_alg_usu_inj@{u w su uw suw | u < su, u <= uw, w <= uw, su <= suw, w <= suw}
+Definition alg_uuinj_alg_usu_inj
+  @{u w su uw suw
+  | u < su, u <= uw, w <= uw, su <= suw, w <= suw}
   (D : Type@{w}) (Dai : IsAlgebraicInjectiveType@{u su w su uw suw} D)
   : IsAlgebraicInjectiveType@{u u w u uw uw} D.
 Proof.
@@ -197,8 +207,10 @@ Section UniverseStructure.
 End UniverseStructure.
 
 (** By combining the above, we see that if [D] is algebraically [ut],[v]-injective, then it is algebraically [u],[t]-injective. *)
-Definition resize_alg_inj@{u v w t ut uw vw tw uvt utw | u <= ut, u <= uw, v <= vw, v <= uvt, w <= uw, w <= vw, w <= tw, t <= ut, t <= tw,
-                            ut <= uvt, ut <= utw, uw <= utw, tw <= utw}
+Definition resize_alg_inj
+  @{u v w t ut uw vw tw uvt utw
+  | u <= ut, u <= uw, v <= vw, v <= uvt, w <= uw, w <= vw, w <= tw,
+    t <= ut, t <= tw, ut <= uvt, ut <= utw, uw <= utw, tw <= utw}
   {D : Type@{w}} (Dai : IsAlgebraicInjectiveType@{ut v w uvt utw vw} D)
   : IsAlgebraicInjectiveType@{u t w ut uw tw} D.
 Proof.
@@ -248,8 +260,10 @@ Section AssumePropResizing.
   Defined.
 
   (** Algebraic injectivity is independent of universes under propositional resizing. *)
-  Definition universe_independent_alg_inj@{u v w u' v' uv uw vw u'v' u'w v'w | u <= uv, v <= uv, u <= uw, w <= uw, v <= vw, w <= vw,
-                                            u' <= u'v', v' <= u'v', u' <= u'w, w <= u'w, v' <= v'w, w <= v'w}
+  Definition universe_independent_alg_inj
+    @{u v w u' v' uv uw vw u'v' u'w v'w
+    | u <= uv, v <= uv, u <= uw, w <= uw, v <= vw, w <= vw,
+      u' <= u'v', v' <= u'v', u' <= u'w, w <= u'w, v' <= v'w, w <= v'w}
     {D : Type@{w}} (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
     : IsAlgebraicInjectiveType@{u' v' w u'v' u'w v'w} D.
   Proof.
@@ -313,7 +327,10 @@ Section UniverseStructure.
   Defined.
 
   (** A retract of an injective type is injective. *)
-  Definition inj_retract@{w' uw' vw' uvw' T | u <= uw', v <= vw', w' <= uw', w' <= vw', uv <= uvw', uw' <= uvw', vw' <= uvw', uvw < T, uvw' < T}
+  Definition inj_retract
+    @{w' uw' vw' uvw' T
+    | u <= uw', v <= vw', w' <= uw', w' <= vw', 
+    uv <= uvw', uw' <= uvw', vw' <= uvw', uvw < T, uvw' < T}
     `{Funext} {D' : Type@{w'}} {D : Type@{w}} (r : D -> D') {s : D' -> D}
     (retr : r o s == idmap) (Di : IsInjectiveType@{u v w uv uw vw uvw} D)
     : IsInjectiveType@{u v w' uv uw' vw' uvw'} D'.
@@ -340,8 +357,10 @@ Definition merely_retract_inj_embedding@{v w vw svw | v <= vw, w <= vw, vw < svw
   := Di _ _ _ _ idmap.
 
 (** The power of an injective type is injective. *)
-Definition inj_arrow@{u v w t uv ut vt tw uvt utw vtw utvw | u <= uv, v <= uv, u <= ut, t <= ut, v <= vt, t <= vt, t <= tw, w <= tw,
-                        uv <= uvt, ut <= uvt, vt <= uvt, ut <= utw, tw <= utw, vt <= vtw, tw <= vtw, uvt <= utvw, utw <= utvw, vtw <= utvw}
+Definition inj_arrow
+  @{u v w t uv ut vt tw uvt utw vtw utvw
+  | u <= uv, v <= uv, u <= ut, t <= ut, v <= vt, t <= vt, t <= tw, w <= tw, uv <= uvt, ut <= uvt,
+    vt <= uvt, ut <= utw, tw <= utw, vt <= vtw, tw <= vtw, uvt <= utvw, utw <= utvw, vtw <= utvw}
   `{Funext} {A : Type@{t}} (D : Type@{w})
   (Di : IsInjectiveType@{ut vt w uvt utw vtw utvw} D)
   : IsInjectiveType@{u v tw uv utw vtw utvw} (A -> D).
