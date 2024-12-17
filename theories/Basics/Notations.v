@@ -201,6 +201,11 @@ Reserved Notation " [ u , v ] " (at level 0).
 Reserved Infix "*L" (at level 40).
 Reserved Infix "*R" (at level 40).
 
+(** Type Family Extensions *)
+Reserved Notation "P <| j" (at level 40).
+Reserved Notation "P |> j" (at level 40).
+Reserved Notation "P >=> R" (at level 55).
+
 (** Other / Not sorted yet *)
 
 Reserved Infix "<=>" (at level 70).
