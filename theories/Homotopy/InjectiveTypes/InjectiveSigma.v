@@ -1,6 +1,8 @@
-(** * Injectivity for Sigma types and examples of Injective Types which use this setup *)
+(** * Injectivity of Sigma types *)
 
-(** Many proofs guided by original Agda formalization in the Type Topology Library which can be found at: https://martinescardo.github.io/TypeTopology/InjectiveTypes.Sigma and InjectiveTypes.MathematicalStructuresMoreGeneral. *)
+(** Here we characterize the condition for which a sigma type over an injective type is itself injective, and we also provide some examples.
+
+Many proofs guided by original Agda formalization in the Type Topology Library which can be found at: https://martinescardo.github.io/TypeTopology/InjectiveTypes.Sigma and InjectiveTypes.MathematicalStructuresMoreGeneral. *)
 
 Require Import Basics.
 Require Import Types.Forall Types.Sigma Types.Universe.
