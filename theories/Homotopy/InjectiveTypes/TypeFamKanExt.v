@@ -3,7 +3,7 @@
 (** This is part of the formalization of section 4 of the paper: Injective Types in Univalent Mathematics by Martin Escardo.  Many proofs are guided by Martin Escardo's original Agda formalization of this paper which can be found at: https://www.cs.bham.ac.uk/~mhe/TypeTopology/InjectiveTypes.Article.html. *)
 
 Require Import Basics.
-Require Import Types.Sigma Types.Unit Types.Forall Types.Empty Types.Universe Types.Equiv Types.Paths.
+Require Import Types.Sigma Types.Unit Types.Arrow Types.Forall Types.Empty Types.Universe Types.Equiv Types.Paths.
 Require Import HFiber.
 Require Import Truncations.Core.
 Require Import Modalities.ReflectiveSubuniverse Modalities.Modality.
@@ -171,7 +171,7 @@ Proof.
     lhs nrapply (ap_compose (fun k : (P <| j) >=> R => k (j x)) (fun ka => ka o i)).
     (* [ap (fun k => k (j x))] is exactly [apD10], so it cancels the first [path_forall]. *)
     lhs nrefine (ap _ (apD10_path_forall _ _ _ _)).
-    lhs rapply (ap_precompose _ i).
+    lhs rapply (ap_precomposeD _ i).
     unfold path_forall, ap10.
     rewrite (eisretr apD10); cbn.
     apply eissect.

@@ -166,9 +166,6 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 - `Spectra/*`: Files related to spectra in the sense of stable
   homotopy theory.
 
-- `InjectiveTypes/*`: Files related to the notion of injective types,
-  i.e. the correct notion of an injective object in a universe of types.
-
 - `Tactics, Tactics/*`: some more advanced tactics.
 
 - `HoTT`: This file imports and exports everything in the core (that

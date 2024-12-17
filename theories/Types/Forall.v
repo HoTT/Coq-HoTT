@@ -139,21 +139,12 @@ Proof.
   simpl; apply path_forall_1.
 Defined.
 
-(** The action of pre/post-composition on a path between functions.  See also [ap10_ap_precompose] and [ap10_ap_postcompose] in PathGroupoids.v. *)
-Definition ap_precompose {B P Q : Type}
+(** The action of pre-composition on a path between dependent functions.  See also [ap10_ap_precompose] in PathGroupoids.v and [ap_precompose] in Arrow.v. *)
+Definition ap_precomposeD {B P Q : Type}
   {f g : Q -> P} (h : f = g) (i : B -> Q)
   : ap (fun (k : Q -> P) => k o i) h
     = path_forall (f o i) (g o i) (ap10 h o i)
   := ap_lambdaD _ _.
-
-Definition ap_postcompose {B P Q : Type}
-  {f g : Q -> P} (h : f = g) (j : P -> B)
-  : ap (fun (k : Q -> P) => j o k) h
-    = path_forall (j o f) (j o g ) (fun q => ap j (ap10 h q)).
-Proof.
-  destruct h; cbn.
-  symmetry; apply path_forall_1.
-Defined.
 
 (** ** Dependent paths *)
 
