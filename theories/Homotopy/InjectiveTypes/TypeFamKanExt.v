@@ -171,7 +171,7 @@ Proof.
     lhs nrapply (ap_compose (fun k : (P <| j) >=> R => k (j x)) (fun ka => ka o i)).
     (* [ap (fun k => k (j x))] is exactly [apD10], so it cancels the first [path_forall]. *)
     lhs nrefine (ap _ (apD10_path_forall _ _ _ _)).
-    lhs rapply (ap_precomposeD _ i).
+    lhs rapply (ap_precompose _ i).
     unfold path_forall, ap10.
     rewrite (eisretr apD10); cbn.
     apply eissect.

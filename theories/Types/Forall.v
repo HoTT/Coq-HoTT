@@ -140,10 +140,10 @@ Proof.
 Defined.
 
 (** The action of pre-composition on a path between dependent functions.  See also [ap10_ap_precompose] in PathGroupoids.v and [ap_precompose] in Arrow.v. *)
-Definition ap_precomposeD {B P Q : Type}
-  {f g : Q -> P} (h : f = g) (i : B -> Q)
-  : ap (fun (k : Q -> P) => k o i) h
-    = path_forall (f o i) (g o i) (ap10 h o i)
+Definition ap_precomposeD {B Q : Type} {P : Q -> Type}
+  {f g : forall q, P q} (h : f = g) (i : B -> Q)
+  : ap (fun (k : forall q, P q) => k oD i) h
+    = path_forall (f oD i) (g oD i) (apD10 h oD i)
   := ap_lambdaD _ _.
 
 (** ** Dependent paths *)
