@@ -1,0 +1,12 @@
+digraph HoTT_Algebra_Groups_Image {
+  graph [ratio=0.5]
+  node [style=filled]
+Image_grp_image_in_embedding [label="grp_image_in_embedding", URL=<Image.html#grp_image_in_embedding>, peripheries=3, fillcolor="#F070D1"] ;
+Image_grp_image_embedding [label="grp_image_embedding", URL=<Image.html#grp_image_embedding>, fillcolor="#F070D1"] ;
+Image_grp_image_in [label="grp_image_in", URL=<Image.html#grp_image_in>, peripheries=3, fillcolor="#F070D1"] ;
+Image_grp_image [label="grp_image", URL=<Image.html#grp_image>, fillcolor="#F070D1"] ;
+  Image_grp_image_in_embedding -> Image_grp_image_embedding [] ;
+  Image_grp_image_in -> Image_grp_image [] ;
+subgraph cluster_Image { label="Image"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Image_grp_image; Image_grp_image_in; Image_grp_image_embedding; Image_grp_image_in_embedding; };
+} /* END */

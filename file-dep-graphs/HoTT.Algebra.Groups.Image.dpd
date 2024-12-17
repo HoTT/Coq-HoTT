@@ -1,0 +1,6 @@
+N: 4 "grp_image" [body=yes, kind=cnst, prop=no, path="Image", ];
+N: 2 "grp_image_embedding" [body=yes, kind=cnst, prop=no, path="Image", ];
+N: 3 "grp_image_in" [body=yes, kind=cnst, prop=no, path="Image", ];
+N: 1 "grp_image_in_embedding" [body=yes, kind=cnst, prop=no, path="Image", ];
+E: 1 2 [weight=24, ];
+E: 3 4 [weight=6, ];
