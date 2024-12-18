@@ -91,8 +91,8 @@ Section RingLaws.
   Definition rng_plus_assoc : x + (y + z) = (x + y) + z := simple_associativity x y z.
   Definition rng_mult_assoc : x * (y * z) = (x * y) * z := simple_associativity x y z.
 
-  Definition rng_negate_negate : - (- x) = x := groups.negate_involutive _.
-  Definition rng_negate_zero : - (0 : A) = 0 := groups.negate_mon_unit.
+  Definition rng_negate_negate : - (- x) = x := groups.inverse_involutive _.
+  Definition rng_negate_zero : - (0 : A) = 0 := groups.inverse_mon_unit.
   Definition rng_negate_plus : - (x + y) = - x - y := negate_plus_distr _ _.
 
   Definition rng_mult_one_l : 1 * x = x := left_identity _.
@@ -209,7 +209,7 @@ Definition Build_Ring (R : AbGroup)
   : Ring.
 Proof.
   rapply (Build_Ring' R).
-  2: exact (fun z y x => (associativity x y z)^).
+  2: exact (fun z y x => (associativity x y z)^%path).
   split; only 1,3,4: exact _.
   repeat split; exact _.
 Defined.

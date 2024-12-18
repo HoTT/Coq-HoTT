@@ -176,9 +176,8 @@ Proof.
 Defined.
 
 (** [bloop] "preserves inverses" by taking inverses in [G] to inverses of paths in [BG]. *)
-Definition bloop_inv {G : Group} : forall x : G, bloop (-x) = (bloop x)^.
+Definition bloop_inv {G : Group} (x : G) : bloop x^ = (bloop x)^%path.
 Proof.
-  intro x.
   refine (_ @ concat_p1 _).
   apply moveL_Vp.
   refine (_ @ bloop_id).

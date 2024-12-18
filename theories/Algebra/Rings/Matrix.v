@@ -591,7 +591,7 @@ Proof.
   unfold skip in p.
   destruct (dec (x < n)%nat) as [H|H], (dec (y < n)%nat) as [H'|H'].
   - exact p.
-  - destruct p^.
+  - destruct p^%path.
     contradiction (H' (leq_trans _ H)).
   - destruct p.
     contradiction (H (leq_trans _ H')).

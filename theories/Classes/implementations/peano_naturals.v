@@ -8,6 +8,7 @@ Require Import
 
 Local Open Scope nat_scope.
 Local Open Scope mc_scope.
+Local Open Scope path_scope.
 
 Local Set Universe Minimization ToSet.
 
@@ -18,6 +19,7 @@ Universe N.
 (* It's important that the universe [N] be free.  Occasionally, Coq will choose universe variables in proofs that force [N] to be [Set].  To pinpoint where this happens, you can add the line [Constraint Set < N.] here, and see what fails below. *)
 
 Let natpaths := @paths@{N} nat.
+Arguments natpaths (_ _)%_nat_scope.
 Infix "=N=" := natpaths.
 
 Definition natpaths_symm : Symmetric@{N N} natpaths.
@@ -203,7 +205,7 @@ Qed.
 
 (* Add Ring nat: (rings.stdlib_semiring_theory nat). *)
 
-(* Close Scope nat_scope. *)
+Local Open Scope nat_scope.
 
 Lemma O_nat_0 : O =N= 0.
 Proof. reflexivity. Qed.
@@ -410,7 +412,7 @@ repeat split.
   destruct E1 as [k1 E1], E2 as [k2 E2].
   assert (k1 + k2 = 0) as E.
   + apply (left_cancellation (+) a).
-    rewrite plus_0_r.
+    rhs rapply plus_0_r.
     path_via (k2 + b).
     rewrite E1.
     rewrite (plus_comm a), (plus_assoc k2), (plus_comm k2).
@@ -601,6 +603,8 @@ Global Instance S_strict_embedding : StrictOrderEmbedding S.
 Proof.
 split;apply _.
 Qed.
+
+Local Open Scope mc_scope.
 
 Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
   fun _ _ _ _ _ _ => fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |

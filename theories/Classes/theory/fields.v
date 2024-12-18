@@ -240,7 +240,7 @@ Proof.
   rewrite reciperse_alt.
   apply flip_negate.
   rewrite negate_mult_distr_l.
-  refine (_^).
+  refine _^%path.
   apply reciperse_alt.
 Qed.
 Lemma recip_apart (x : F) (Px : x ≶ 0) : // (x;Px) ≶ 0.

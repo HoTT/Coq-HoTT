@@ -69,12 +69,12 @@ Section QuotientRing.
     { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group,
         plus, mult, plus_quotient_group; simpl.
-      apply ap.
+      apply (ap (class_of _)).
       apply simple_distribute_l. }
     { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group,
         plus, mult, plus_quotient_group; simpl.
-      apply ap.
+      apply (ap (class_of _)).
       apply simple_distribute_r. }
   Defined.
 

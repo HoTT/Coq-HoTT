@@ -503,7 +503,7 @@ Proof.
   enough (H1 : forall a1 a2 : A, ↓a1 = ↓a2 -> forall b : ↓a1, out b < a2). {
     intros a1 a2 p. apply extensionality; intros b. split.
     - intros b_a1. exact (H1 a1 a2 p (in_ b b_a1)).
-    - intros b_a2. exact (H1 a2 a1 p^ (in_ b b_a2)).
+    - intros b_a2. exact (H1 a2 a1 p^ (in_ b b_a2))%path.
   }
 
   intros a1 a2 p b.

@@ -58,6 +58,6 @@ Proof.
     pose (q1 := p (freeproduct_inl y)).
     simpl in q1.
     rewrite 2 right_identity in q1.
-    exact q1^. }
+    exact q1^%path. }
   hnf; intros; apply path_ishprop.
 Defined.

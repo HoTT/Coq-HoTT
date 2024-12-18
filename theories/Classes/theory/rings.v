@@ -213,7 +213,7 @@ End cring_props.
 
 Section ring_props.
   Context `{IsRing R}.
-
+  
   Global Instance mult_left_absorb : LeftAbsorb (.*.) 0.
   Proof.
     intro y.
@@ -234,27 +234,37 @@ Section ring_props.
     apply left_identity.
   Defined.
 
-  Definition negate_involutive x : - - x = x := groups.negate_involutive x.
+  Global Instance negate_involutive : Involutive (-) := groups.inverse_involutive.
   (* alias for convenience *)
 
-  Lemma plus_negate_r : forall x, x + -x = 0.
-  Proof. exact right_inverse. Qed.
-  Lemma plus_negate_l : forall x, -x + x = 0.
-  Proof. exact left_inverse. Qed.
+  Global Instance plus_negate_r : RightInverse (+) (-) 0.
+  Proof. 
+    rapply right_inverse.
+    rapply inverse_r.
+  Defined.
+
+  Global Instance plus_negate_l : LeftInverse (+) (-) 0.
+  Proof.
+    rapply left_inverse.
+    rapply inverse_l.
+  Qed.
 
   Lemma negate_swap_r : forall x y, x - y = -(y - x).
   Proof.
-  intros.
-  rewrite groups.negate_sg_op.
-  rewrite involutive.
-  reflexivity.
+    intros; symmetry.
+    lhs rapply groups.inverse_sg_op.
+    f_ap.
+    apply involutive.
   Qed.
 
   Lemma negate_swap_l x y : -x + y = -(x - y).
   Proof.
-  rewrite groups.negate_sg_op_distr,involutive.
-  reflexivity.
+    rhs_V rapply negate_swap_r.
+    apply commutativity.
   Qed.
+  
+  Global Instance isinj_ring_neg : IsInjective (-)
+    := groups.isinj_group_inverse.
 
   Lemma negate_plus_distr : forall x y, -(x + y) = -x + -y.
   Proof. exact groups.negate_sg_op_distr. Qed.
@@ -263,11 +273,13 @@ Section ring_props.
   Proof.
   apply (left_cancellation (+) x).
   path_via 0.
-  - apply right_inverse.
+  - rapply inverse_r.
   - path_via (1 * x + (- 1) * x).
-    + apply symmetry.
-      rewrite <-distribute_r. rewrite right_inverse.
-      apply left_absorb.
+    + rhs_V rapply distribute_r.
+      symmetry.
+      rhs_V rapply (left_absorb x).
+      f_ap.
+      rapply inverse_r.
     + apply ap011;try reflexivity.
       apply left_identity.
   Qed.
@@ -281,7 +293,7 @@ Section ring_props.
       lhs_V rapply (right_absorb x).
       apply (ap (x *.)).
       symmetry.
-      apply left_inverse.
+      rapply inverse_l.
     - f_ap.
       apply right_identity.
   Defined.
@@ -307,11 +319,11 @@ Section ring_props.
   Lemma negate_mult_negate x y : -x * -y = x * y.
   Proof.
   rewrite <-negate_mult_distr_l, <-negate_mult_distr_r.
-  apply involutive.
+  rapply involutive.
   Qed.
 
   Lemma negate_0: -0 = 0.
-  Proof. exact groups.negate_mon_unit. Qed.
+  Proof. exact groups.inverse_mon_unit. Qed.
 
   Global Instance minus_0_r: RightIdentity (fun x y => x - y) 0.
   Proof.
@@ -409,7 +421,7 @@ Section ring_props.
     - intros r.
       apply U, equal_by_zero_sum, r.
     - exact _.
-    - lhs rapply ring_dist_right.
+    - lhs rapply (@distribute_r _ _ _ (.*.) (+)).
       rewrite <- negate_mult_distr_l.
       apply equal_by_zero_sum in p.
       exact p.
@@ -448,7 +460,7 @@ Hint Extern 6 (PropHolds (1 ≶ 0)) =>
 Section ringmor_props.
   Context `{IsRing A} `{IsRing B} `{!IsSemiRingPreserving (f : A -> B)}.
 
-  Definition preserves_negate x : f (-x) = -f x := groups.preserves_negate x.
+  Definition preserves_negate x : f (-x) = -f x := groups.preserves_inverse x.
   (* alias for convenience *)
 
   Lemma preserves_minus x y : f (x - y) = f x - f y.

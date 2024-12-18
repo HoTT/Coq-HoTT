@@ -12,6 +12,7 @@ Require Import AbGroups.Z.
 Require Import Truncations.
 
 Local Open Scope mc_scope.
+Local Open Scope path_scope.
 Local Open Scope mc_add_scope.
 
 (** * The Tensor Product of Abelian Groups *)

@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Spaces.Nat.Core Spaces.Int.
-Require Export Classes.interfaces.canonical_names (Zero, zero, Plus).
+Require Export Classes.interfaces.canonical_names (Zero, zero, Plus, plus, Negate, negate).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
 Require Export Algebra.Groups.Subgroup.
@@ -24,6 +24,11 @@ Record AbGroup := {
 Coercion abgroup_group : AbGroup >-> Group.
 Global Existing Instance abgroup_commutative.
 
+Global Instance zero_abgroup (A : AbGroup) : Zero A := mon_unit.
+Global Instance negate_abgroup (A : AbGroup) : Negate A := (^).
+Global Instance plus_abgroup (A : AbGroup) : Plus A := (.*.).
+
+(** Abelian groups form a category *)
 Global Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
 Proof.
   split; exact _.
@@ -31,7 +36,7 @@ Defined.
 
 (** Easier way to build abelian groups without redundant information. *)
 Definition Build_AbGroup' (G : Type)
-  `{Zero G, Negate G, Plus G, IsHSet G}
+  `{Zero G, Inverse G, Plus G, IsHSet G}
   (comm : Commutative (A:=G) (+))
   (assoc : Associative (A:=G) (+))
   (unit_l : LeftIdentity (A:=G) (+) 0)
@@ -52,10 +57,6 @@ Proof.
 Defined.
 
 Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
-
-Global Instance zero_abgroup (A : AbGroup) : Zero A := group_unit.
-Global Instance plus_abgroup (A : AbGroup) : Plus A := group_sgop.
-Global Instance negate_abgroup (A : AbGroup) : Negate A := group_inverse.
 
 Definition ab_comm {A : AbGroup} (x y : A) : x + y = y + x
   := commutativity x y.
@@ -248,7 +249,7 @@ Proof.
       apply commutativity.
   - srapply isequiv_adjointify.
     1: exact (fun a => -a).
-    1-2: exact negate_involutive.
+    1-2: exact inverse_involutive.
 Defined.
 
 (** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)

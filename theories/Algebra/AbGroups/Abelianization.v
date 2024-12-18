@@ -171,7 +171,7 @@ Section AbelGroup.
         abel_in x + abel_in y := abel_in (x * y)
 >>
       But we need to also check that it preserves ab_comm in the appropriate way. *)
-  Global Instance abel_sgop : SgOp (Abel G).
+  Global Instance abel_plus : Plus (Abel G).
   Proof.
     intro a.
     srapply Abel_rec.
@@ -197,40 +197,40 @@ Section AbelGroup.
     refine (ap _ (associativity _ _ _)^).
   Defined.
 
-  (** We can now easily show that this operation is associative by associativity in G and the fact that being associative is a proposition. *)
-  Global Instance abel_sgop_associative : Associative abel_sgop.
+  (** We can now easily show that this operation is associative by associativity in [G] and the fact that being associative is a proposition. *)
+  Global Instance abel_plus_associative : Associative (+).
   Proof.
     intros x y.
     Abel_ind_hprop z; revert y.
     Abel_ind_hprop y; revert x.
     Abel_ind_hprop x; simpl.
-    apply ap, associativity.
+    apply (ap abel_in), associativity.
   Defined.
 
-  (** From this we know that Abel G is a semigroup. *)
+  (** From this we know that Abel [G] is a semigroup. *)
   Global Instance abel_issemigroup : IsSemiGroup (Abel G) := {}.
 
-  (** We define the unit as ab of the unit of G *)
-  Global Instance abel_mon_unit : MonUnit (Abel G) := abel_in mon_unit.
+  (** We define [zero] as [abel_in] of the unit of [G] *)
+  Global Instance abel_zero : Zero (Abel G) := abel_in mon_unit.
 
   (** By using Abel_ind_hprop we can prove the left and right identity laws. *)
-  Global Instance abel_leftidentity : LeftIdentity abel_sgop abel_mon_unit.
+  Global Instance abel_leftidentity : LeftIdentity (+) 0.
   Proof.
     Abel_ind_hprop x.
-    simpl; apply ap, left_identity.
+    simpl; apply (ap abel_in), left_identity.
   Defined.
 
-  Global Instance abel_rightidentity : RightIdentity abel_sgop abel_mon_unit.
+  Global Instance abel_rightidentity : RightIdentity (+) 0.
   Proof.
     Abel_ind_hprop x.
-    simpl; apply ap, right_identity.
+    simpl; apply (ap abel_in), right_identity.
   Defined.
 
   (** Hence Abel G is a monoid *)
   Global Instance ismonoid_abel : IsMonoid (Abel G) := {}.
 
   (** We can also prove that the operation is commutative! This will come in handy later. *)
-  Global Instance abel_commutative : Commutative abel_sgop.
+  Global Instance abel_commutative : Commutative (+).
   Proof.
     intro x.
     Abel_ind_hprop y.
@@ -243,36 +243,37 @@ Section AbelGroup.
 
   (** Now we can define the negation. This is just
 <<
-        - (abel_in g) := abel_in (- g)
+        -(abel_in g) := abel_in g^
 >>
       However when checking that it respects ab_comm we have to show the following:
 <<
-        abel_in (- z * - y * - x) = abel_in (- y * - z * - x)
+        abel_in (z^ * y^ * x^) = abel_in (y^ * z^ * x^)
 >>
       there is no obvious way to do this, but we note that [abel_in (x * y)] is exactly the definition of [abel_in x + abel_in y]! Hence by commutativity we can show this. *)
   Global Instance abel_negate : Negate (Abel G).
   Proof.
     srapply Abel_rec.
     { intro g.
-      exact (abel_in (-g)). }
+      exact (abel_in g^). }
     intros x y z; cbn.
-    rewrite ?negate_sg_op.
-    change (abel_in (- z) * abel_in (- y) * abel_in (- x)
-      = abel_in (- y) * abel_in (- z) * abel_in (- x)).
-    by rewrite (commutativity (abel_in (-z)) (abel_in (-y))).
+    rewrite ?inverse_sg_op.
+    change (abel_in z^ + abel_in y^ + abel_in x^
+      = abel_in y^ + abel_in z^ + abel_in x^).
+    nrapply (ap (+ _)).
+    rapply (commutativity (abel_in z^) (abel_in z^)).
   Defined.
 
   (** Again by Abel_ind_hprop and the corresponding laws for G we can prove the left and right inverse laws. *)
-  Global Instance abel_leftinverse : LeftInverse abel_sgop abel_negate abel_mon_unit.
+  Global Instance abel_leftinverse : LeftInverse (+) (-) 0.
   Proof.
     Abel_ind_hprop x; simpl.
-    apply ap; apply left_inverse.
+    apply (ap abel_in); apply left_inverse.
   Defined.
 
-  Instance abel_rightinverse : RightInverse abel_sgop abel_negate abel_mon_unit.
+  Instance abel_rightinverse : RightInverse (+) (-) 0.
   Proof.
     Abel_ind_hprop x; simpl.
-    apply ap; apply right_inverse.
+    apply (ap abel_in); apply right_inverse.
   Defined.
 
   (** Thus Abel G is a group *)
@@ -384,7 +385,7 @@ Theorem homotopic_isabelianization {G : Group} (A B : AbGroup)
   : eta2 == grp_homo_compose (groupiso_isabelianization A B eta1 eta2) eta1.
 Proof.
   intros x.
-  exact (((esssurj (group_precomp B eta1) eta2).2 x)^).
+  exact ((esssurj (group_precomp B eta1) eta2).2 x)^%path.
 Defined.
 
 (** Hence any abelianization is surjective. *)

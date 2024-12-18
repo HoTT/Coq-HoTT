@@ -29,7 +29,7 @@ Proof.
     destruct q as [a q]. cbn in q.
     refine (ap (uncurry (fun x y => b x + c y)) q^ @ _).
     cbn.
-    refine (ap011 sg_op (preserves_negate _) (p a)^ @ _).
+    refine (ap011 sg_op (preserves_inverse _) (p a)^ @ _).
     exact (left_inverse _).
 Defined.
 
@@ -55,9 +55,9 @@ Proof.
   apply tr.
   exists a.
   apply path_prod; simpl.
-  - exact (right_identity _)^.
-  - rewrite negate_mon_unit.
-    exact (left_identity _)^.
+  - exact (right_identity _)^%path.
+  - rewrite inverse_mon_unit.
+    exact (left_identity _)^%path.
 Defined.
 
 (** A map out of the pushout induces itself after restricting along the inclusions. *)
@@ -145,7 +145,7 @@ Proof.
     exact (left_inverse mon_unit @ (grp_homo_unit g)^).
   - apply (grp_moveR_M1).
     refine (_ @ ap fst p); cbn; symmetry.
-    refine (_ @ negate_mon_unit).
+    refine (_ @ inverse_mon_unit).
     refine (ap _ _).
     exact (ap f z @ grp_homo_unit f).
 Defined.

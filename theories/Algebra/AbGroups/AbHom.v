@@ -77,7 +77,7 @@ Proof.
   lhs nrapply (ap (.* _)).
   1: apply grp_homo_inv.
   apply grp_moveL_M1^-1.
-  exact (p a)^.
+  exact (p a)^%path.
 Defined.
 
 Definition ab_coeq_rec_beta_in {A B : AbGroup} {f g : A $-> B}
