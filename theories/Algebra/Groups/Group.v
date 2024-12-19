@@ -118,42 +118,58 @@ Proof.
   apply left_identity.
 Defined.
 
+(** With other assumptions, the right inverse law follows from the left inverse law. *)
 Definition right_inverse_left_inverse (G : Type) `{IsHSet G}
   `(SgOp G, MonUnit G, Inverse G, !Associative (.*.),
-    !LeftIdentity (.*.) mon_unit, !RightIdentity (.*.) mon_unit,
+    !LeftIdentity (.*.) mon_unit,
     !LeftInverse (.*.) (^) mon_unit)
   : RightInverse (.*.) (^) mon_unit.
 Proof.
   intros x. 
   lhs_V rapply left_identity.
-  rhs_V rapply left_identity.
-  nrapply (transport (fun x => x * _ = x * _)).
-  1: apply (left_inverse (x * x^)).
-  lhs_V rapply simple_associativity.
-  rhs_V rapply simple_associativity.
-  nrapply ap.
-  rhs rapply right_identity.
+  apply (transport (fun x => x * _ = x) (left_inverse x^)).
   lhs_V rapply simple_associativity.
   nrapply ap.
   lhs rapply simple_associativity.
-  rhs_V rapply left_identity.
-  nrapply (ap (.* x^)).
-  apply left_inverse.
+  lhs nrapply (ap (.* x^)).
+  1: apply left_inverse.
+  apply left_identity.
 Defined.
 Global Opaque right_inverse_left_inverse.
   
-(** When building a group we can choose to omit the right inverse law since it follows from the left. *)
+(** With other assumptions, the right identity law follows from the left identity law. *)
+Definition right_identity_left_identity (G : Type) `{IsHSet G}
+  `(SgOp G, MonUnit G, Inverse G, !Associative (.*.),
+    !LeftIdentity (.*.) mon_unit,
+    !LeftInverse (.*.) (^) mon_unit)
+  : RightIdentity (.*.) mon_unit.
+Proof.
+  intros x.
+  lhs_V rapply left_identity.
+  rhs_V rapply left_identity.
+  apply (transport (fun x => x * _ = x * _) (left_inverse x^)).
+  lhs_V rapply simple_associativity.
+  rhs_V rapply simple_associativity.
+  nrapply ap.
+  lhs rapply simple_associativity.
+  lhs apply (ap (.* mon_unit) (left_inverse x)).
+  lhs apply left_identity.
+  symmetry; apply left_inverse.
+Defined.
+Global Opaque right_identity_left_identity.
+
+(** When building a group we can choose to omit the right inverse law and right identity law, since they follow from the left ones. *)
 Definition Build_Group' (G : Type) `{IsHSet G}
   `(SgOp G, MonUnit G, Inverse G, !Associative (.*.),
-    !LeftIdentity (.*.) mon_unit, !RightIdentity (.*.) mon_unit,
+    !LeftIdentity (.*.) mon_unit,
     !LeftInverse (.*.) (^) mon_unit)
   : Group.
 Proof.
-  snrapply Build_Group.
-  5: repeat split.
-  1: exact G.
-  1-8: exact _.
-  rapply right_inverse_left_inverse.
+  rapply (Build_Group G).
+  repeat split.
+  4: rapply right_identity_left_identity.
+  5: rapply right_inverse_left_inverse.
+  all: exact _.
 Defined.
 
 (** ** Group homomorphisms *)
