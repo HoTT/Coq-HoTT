@@ -3,12 +3,14 @@ Require Import Cubical.DPath WildCat.
 Require Import Colimits.Coeq.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Modalities.ReflectiveSubuniverse.
+Require Import canonical_names.
 
 (** In this file we define what it means for a group homomorphism G -> H into an abelian group H to be an abelianization. We then construct an example of an abelianization. *)
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope wc_iso_scope.
+Local Open Scope path_scope.
 
 (** Definition of Abelianization.
 
@@ -157,8 +159,8 @@ Local Ltac Abel_ind_hprop x := snrapply Abel_ind_hprop; [exact _ | intro x].
 
 (** We make sure that [G] is implicit in the arguments of [abel_in]
  and [abel_in_comm]. *)
-Arguments abel_in {_}.
-Arguments abel_in_comm {_}.
+Arguments abel_in {_} g%_mc.
+Arguments abel_in_comm {_} (a b c)%_mc.
 
 (** Now we can show that Abel G is in fact an abelian group. *)
 
