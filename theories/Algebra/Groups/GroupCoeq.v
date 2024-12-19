@@ -7,6 +7,7 @@ Require Import Algebra.Groups.FreeProduct.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** Coequalizers of group homomorphisms *)
 
@@ -58,6 +59,6 @@ Proof.
     pose (q1 := p (freeproduct_inl y)).
     simpl in q1.
     rewrite 2 right_identity in q1.
-    exact q1^%path. }
+    exact q1^. }
   hnf; intros; apply path_ishprop.
 Defined.

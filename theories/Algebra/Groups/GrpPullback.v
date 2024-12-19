@@ -174,6 +174,8 @@ Proof.
   1-2: apply eisretr.
   1-2: apply eissect.
 Defined.
+  
+Local Open Scope path_scope.
 
 (** Pulling back along some [g : Y $-> Z] and then [g' : Y' $-> Y] is the same as pulling back along [g $o g']. *)
 Definition equiv_grp_pullback_compose_r {X Z Y Y' : Group} (f : X $-> Z) (g' : Y' $-> Y) (g : Y $-> Z)
@@ -199,7 +201,7 @@ Proof.
       2: reflexivity.
       srapply equiv_path_pullback_hset; split; cbn.
       1: reflexivity.
-      exact z1^%path.
+      exact z1^.
 Defined.
 
 Section IsEquivGrpPullbackCorec.
