@@ -5,6 +5,7 @@ Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
+Local Open Scope path_scope.
 
 (** * Pushouts of abelian groups. *)
 
@@ -55,9 +56,9 @@ Proof.
   apply tr.
   exists a.
   apply path_prod; simpl.
-  - exact (right_identity _)^%path.
+  - exact (right_identity _)^.
   - rewrite inverse_mon_unit.
-    exact (left_identity _)^%path.
+    exact (left_identity _)^.
 Defined.
 
 (** A map out of the pushout induces itself after restricting along the inclusions. *)

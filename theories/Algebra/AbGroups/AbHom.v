@@ -4,6 +4,7 @@ Require Import Groups.QuotientGroup AbelianGroup Biproduct.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
+Local Open Scope path_scope.
 
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
@@ -77,7 +78,7 @@ Proof.
   lhs nrapply (ap (.* _)).
   1: apply grp_homo_inv.
   apply grp_moveL_M1^-1.
-  exact (p a)^%path.
+  exact (p a)^.
 Defined.
 
 Definition ab_coeq_rec_beta_in {A B : AbGroup} {f g : A $-> B}
