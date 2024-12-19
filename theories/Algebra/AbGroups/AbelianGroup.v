@@ -36,7 +36,7 @@ Defined.
 
 (** Easier way to build abelian groups without redundant information. *)
 Definition Build_AbGroup' (G : Type)
-  `{Zero G, Inverse G, Plus G, IsHSet G}
+  `{Zero G, Negate G, Plus G, IsHSet G}
   (comm : Commutative (A:=G) (+))
   (assoc : Associative (A:=G) (+))
   (unit_l : LeftIdentity (A:=G) (+) 0)
@@ -44,15 +44,7 @@ Definition Build_AbGroup' (G : Type)
   : AbGroup.
 Proof.
   snrapply Build_AbGroup.
-  - (* TODO: introduce smart constructor for [Build_Group] *)
-    rapply (Build_Group G).
-    repeat split; only 1-3, 5: exact _.
-    + intros x.
-      lhs nrapply comm.
-      exact (unit_l x).
-    + intros x.
-      lhs nrapply comm.
-      exact (inv_l x).
+  - rapply (Build_Group' G).
   - exact comm.
 Defined.
 
