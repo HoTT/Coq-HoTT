@@ -239,15 +239,13 @@ Section ring_props.
 
   Global Instance plus_negate_r : RightInverse (+) (-) 0.
   Proof. 
-    rapply right_inverse.
     rapply inverse_r.
   Defined.
 
   Global Instance plus_negate_l : LeftInverse (+) (-) 0.
   Proof.
-    rapply left_inverse.
     rapply inverse_l.
-  Qed.
+  Defined.
 
   Lemma negate_swap_r : forall x y, x - y = -(y - x).
   Proof.

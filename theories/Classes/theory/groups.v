@@ -81,7 +81,7 @@ Section abgroup_props.
   Lemma negate_sg_op_distr `{IsAbGroup G} x y : -(x * y) = -x * -y.
   Proof.
     path_via (-y * -x).
-    - nrapply inverse_sg_op; exact _.
+    - rapply inverse_sg_op.
     - apply commutativity.
   Qed.
 

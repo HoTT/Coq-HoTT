@@ -207,7 +207,7 @@ Section AbelGroup.
     apply (ap abel_in), associativity.
   Defined.
 
-  (** From this we know that Abel [G] is a semigroup. *)
+  (** From this we know that [Abel G] is a semigroup. *)
   Global Instance abel_issemigroup : IsSemiGroup (Abel G) := {}.
 
   (** We define [zero] as [abel_in] of the unit of [G] *)
