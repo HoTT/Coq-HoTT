@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Spaces.Nat.Core Spaces.Int.
-Require Export Classes.interfaces.canonical_names (Zero, zero, Plus, plus, Negate, negate).
+Require Export Classes.interfaces.canonical_names (Zero, zero, Plus, plus, Negate, negate, Involutive).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
 Require Export Algebra.Groups.Subgroup.
@@ -60,6 +60,7 @@ Proof.
 Defined.
 
 Definition ab_neg_zero {A : AbGroup} : -0 = 0 :> A := grp_inv_unit.
+Definition ab_neg_neg {A : AbGroup} : Involutive (-) := @grp_inv_inv A.
 
 (** ** Paths between abelian groups *)
 
