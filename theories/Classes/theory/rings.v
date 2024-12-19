@@ -3,6 +3,7 @@ Require Import
   HoTT.Classes.theory.apartness.
 Require Import
   HoTT.Classes.interfaces.abstract_algebra.
+Export Classes.theory.groups ( preserves_negate ). 
 
 Generalizable Variables R A B C f z.
 
@@ -457,9 +458,6 @@ Hint Extern 6 (PropHolds (1 ≶ 0)) =>
 
 Section ringmor_props.
   Context `{IsRing A} `{IsRing B} `{!IsSemiRingPreserving (f : A -> B)}.
-
-  Definition preserves_negate x : f (-x) = -f x := groups.preserves_negate x.
-  (* alias for convenience *)
 
   Lemma preserves_minus x y : f (x - y) = f x - f y.
   Proof.

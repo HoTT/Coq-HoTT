@@ -153,7 +153,7 @@ as [[n E]|[n E]];[left|right];exists n.
 - apply (injective (integers_to_ring Z (NatPair.Z N))).
   rewrite <-E. apply (naturals.to_semiring_twice _ _ _).
 - apply (injective (integers_to_ring Z (NatPair.Z N))).
-  rewrite rings.preserves_negate, <-E.
+  rewrite preserves_negate, <-E.
   apply (naturals.to_semiring_twice _ _ _).
 Qed.
 
