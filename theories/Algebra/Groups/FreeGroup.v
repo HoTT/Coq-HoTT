@@ -24,7 +24,7 @@ Section Reduction.
   Local Definition change_sign : A + A -> A + A := equiv_sum_symm A A.
 
   (** We introduce a local notation for [change_sign]. It is only defined in this section however. *)
-  Local Notation "a ^'" := (change_sign a).
+  Local Notation "a ^'" := (change_sign a) (at level 1).
 
   (** Changing sign is an involution *)
   Local Definition change_sign_inv a : a^'^' = a.
