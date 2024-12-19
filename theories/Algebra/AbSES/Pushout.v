@@ -56,7 +56,7 @@ Proof.
       * apply grp_moveL_Mg.
         change (negate (-b)) with (--b).
         by rewrite (ab_neg_neg b).
-      * exact ((preserves_inverse a) @ ap _ s @ (right_identity _)^).
+      * exact ((preserves_negate a) @ ap _ s @ (right_identity _)^).
 Defined.
 
 (** ** The universal property of [abses_pushout_morphism] *)
