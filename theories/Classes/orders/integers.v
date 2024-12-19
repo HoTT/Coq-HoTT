@@ -36,7 +36,7 @@ destruct (int_abs_sig Z nat n) as [[a A]|[a A]].
     apply Psuc1.
     * apply to_semiring_nonneg.
     * trivial.
-- rewrite <-(groups.negate_involutive n), <-A.
+- rewrite <-(negate_involutive n), <-A.
   clear A. revert a. apply naturals.induction.
   + rewrite rings.preserves_0, rings.negate_0. trivial.
   + intros m E.

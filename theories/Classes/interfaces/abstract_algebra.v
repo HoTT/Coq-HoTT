@@ -3,12 +3,13 @@ Require Import Spaces.Nat.Core.
 Require Export HoTT.Classes.interfaces.canonical_names.
 Require Import Modalities.ReflectiveSubuniverse.
 
+Local Open Scope mc_mult_scope.
 Local Set Polymorphic Inductive Cumulativity.
 
 Generalizable Variables A B C f g x y.
 
-(* 
-For various structures we omit declaration of substructures. For example, if we 
+(*
+For various structures we omit declaration of substructures. For example, if we
 say:
 
 Class Setoid_Morphism :=
@@ -21,12 +22,12 @@ then each time a Setoid instance is required, Coq will try to prove that a
 Setoid_Morphism exists. This obviously results in an enormous blow-up of the
 search space. Moreover, one should be careful to declare a Setoid_Morphisms
 as a substructure. Consider [f t1 t2], now if we want to perform setoid rewriting
-in [t2] Coq will first attempt to prove that [f t1] is Proper, for which it will 
+in [t2] Coq will first attempt to prove that [f t1] is Proper, for which it will
 attempt to prove [Setoid_Morphism (f t1)]. If many structures declare
 Setoid_Morphism as a substructure, setoid rewriting will become horribly slow.
 *)
 
-(* An unbundled variant of the former CoRN CSetoid. We do not 
+(* An unbundled variant of the former CoRN CSetoid. We do not
   include a proof that A is a Setoid because it can be derived. *)
 Class IsApart A {Aap : Apart A} : Type :=
   { apart_set : IsHSet A
@@ -61,7 +62,7 @@ End setoid_morphisms.
 Hint Extern 4 (?f _ = ?f _) => eapply (ap f) : core.
 
 Section setoid_binary_morphisms.
-  Context {A B C} {Aap: Apart A} 
+  Context {A B C} {Aap: Apart A}
     {Bap : Apart B} {Cap : Apart C} (f : A -> B -> C).
 
   Class StrongBinaryExtensionality := strong_binary_extensionality
@@ -69,15 +70,13 @@ Section setoid_binary_morphisms.
 End setoid_binary_morphisms.
 
 (*
-Since apartness usually only becomes relevant when considering fields (e.g. the 
+Since apartness usually only becomes relevant when considering fields (e.g. the
 real numbers), we do not include it in the lower part of the algebraic hierarchy
 (as opposed to CoRN).
 *)
 Section upper_classes.
   Universe i.
   Context (A : Type@{i}).
-
-  Local Open Scope mc_mult_scope.
 
   Class IsSemiGroup {Aop: SgOp A} :=
     { sg_set : IsHSet A
@@ -110,14 +109,15 @@ Section upper_classes.
     commonoid_mon
     commonoid_commutative.
 
-  Class IsGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
-    { group_monoid : @IsMonoid (.*.) Aunit
-    ; negate_l : LeftInverse (.*.) (-) mon_unit
-    ; negate_r : RightInverse (.*.) (-) mon_unit }.
-  #[export] Existing Instances 
+  Class IsGroup {Aop : SgOp A} {Aunit : MonUnit A} {Ainv : Inverse A} :=
+    { group_monoid : @IsMonoid (.*.) mon_unit
+    ; inverse_l : LeftInverse (.*.) (^) mon_unit
+    ; inverse_r: RightInverse (.*.) (^) mon_unit
+    }.
+  #[export] Existing Instances
     group_monoid
-    negate_l
-    negate_r.
+    inverse_l
+    inverse_r.
 
   Class IsBoundedSemiLattice {Aop : SgOp A} {Aunit : MonUnit A} :=
     { bounded_semilattice_mon : @IsCommutativeMonoid (.*.) Aunit
@@ -126,38 +126,36 @@ Section upper_classes.
     bounded_semilattice_mon
     bounded_semilattice_idempotent.
 
-  Class IsAbGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
-    { abgroup_group : @IsGroup (.*.) Aunit Anegate
-    ; abgroup_commutative : Commutative (.*.) }.
+  Class IsAbGroup {Aop : Plus A} {Azero : Zero A} {Anegate : Negate A} :=
+    { abgroup_group : @IsGroup plus_is_sg_op zero_is_mon_unit negate_is_inverse
+    ; abgroup_commutative : Commutative (+) }.
   #[export] Existing Instances abgroup_group abgroup_commutative.
-
-  Close Scope mc_mult_scope.
 
   Context {Aplus : Plus A} {Amult : Mult A} {Azero : Zero A} {Aone : One A}.
 
   Class IsSemiCRing :=
     { semiplus_monoid : @IsCommutativeMonoid plus_is_sg_op zero_is_mon_unit
     ; semimult_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
-    ; semiring_distr : LeftDistribute (.*.) (+)
-    ; semiring_left_absorb : LeftAbsorb (.*.) 0 }.
+    ; semiring_distr : LeftDistribute mult_is_sg_op plus_is_sg_op
+    ; semiring_left_absorb : LeftAbsorb mult_is_sg_op zero_is_mon_unit }.
   #[export] Existing Instances semiplus_monoid semimult_monoid semiring_distr semiring_left_absorb.
 
   Context {Anegate : Negate A}.
 
-  Class IsRing := {
-    ring_abgroup :: @IsAbGroup plus_is_sg_op zero_is_mon_unit _;
-    ring_monoid :: @IsMonoid mult_is_sg_op one_is_mon_unit;
-    ring_dist_left :: LeftDistribute (.*.) (+);
-    ring_dist_right :: RightDistribute (.*.) (+);
+  Class IsRing :=
+    { ring_abgroup :: @IsAbGroup plus_is_sg_op zero_is_mon_unit negate_is_inverse
+    ; ring_monoid :: @IsMonoid mult_is_sg_op one_is_mon_unit
+    ; ring_dist_left :: LeftDistribute mult_is_sg_op plus_is_sg_op
+    ; ring_dist_right :: RightDistribute mult_is_sg_op plus_is_sg_op
   }.
 
   Class IsCRing :=
-    { cring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit _
+    { cring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit negate_is_inverse
     ; cring_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
-    ; cring_dist : LeftDistribute (.*.) (+) }.
+    ; cring_dist : LeftDistribute mult_is_sg_op plus_is_sg_op }.
 
   #[export] Existing Instances cring_group cring_monoid cring_dist.
-  
+
   Global Instance isring_iscring : IsCRing -> IsRing.
   Proof.
     intros H.
@@ -167,7 +165,7 @@ Section upper_classes.
     lhs rapply distribute_l.
     f_ap; apply commutativity.
   Defined.
-  
+
   Class IsIntegralDomain :=
     { intdom_ring : IsCRing
     ; intdom_nontrivial : PropHolds (not (1 = 0))
@@ -190,7 +188,7 @@ Section upper_classes.
     field_mult_ext.
 
   (* We let /0 = 0 so properties as Injective (/),
-    f (/x) = / (f x), / /x = x, /x * /y = /(x * y) 
+    f (/x) = / (f x), / /x = x, /x * /y = /(x * y)
     hold without any additional assumptions *)
   Class IsDecField {Adec_recip : DecRecip A} :=
     { decfield_ring : IsCRing
@@ -219,11 +217,11 @@ Hint Extern 5 (PropHolds (1 ≶ 0)) =>
 Hint Extern 5 (PropHolds (1 <> 0)) =>
   eapply @decfield_nontrivial : typeclass_instances.
 
-(* 
+(*
 For a strange reason IsCRing instances of Integers are sometimes obtained by
 Integers -> IntegralDomain -> Ring and sometimes directly. Making this an
 instance with a low priority instead of using intdom_ring:> IsCRing forces Coq to
-take the right way 
+take the right way
 *)
 #[export]
 Hint Extern 10 (IsCRing _) => apply @intdom_ring : typeclass_instances.
@@ -236,10 +234,10 @@ Arguments dec_recip_0 {A Aplus Amult Azero Aone Anegate Adec_recip IsDecField}.
 Section lattice.
   Context A {Ajoin: Join A} {Ameet: Meet A} {Abottom : Bottom A} {Atop : Top A}.
 
-  Class IsJoinSemiLattice := 
+  Class IsJoinSemiLattice :=
     join_semilattice : @IsSemiLattice A join_is_sg_op.
   #[export] Existing Instance join_semilattice.
-  Class IsBoundedJoinSemiLattice := 
+  Class IsBoundedJoinSemiLattice :=
     bounded_join_semilattice : @IsBoundedSemiLattice A
       join_is_sg_op bottom_is_mon_unit.
   #[export] Existing Instance bounded_join_semilattice.
@@ -252,15 +250,15 @@ Section lattice.
   #[export] Existing Instance bounded_meet_semilattice.
 
 
-  Class IsLattice := 
+  Class IsLattice :=
     { lattice_join : IsJoinSemiLattice
     ; lattice_meet : IsMeetSemiLattice
-    ; join_meet_absorption : Absorption (⊔) (⊓) 
+    ; join_meet_absorption : Absorption (⊔) (⊓)
     ; meet_join_absorption : Absorption (⊓) (⊔) }.
   #[export] Existing Instances
     lattice_join
     lattice_meet
-    join_meet_absorption 
+    join_meet_absorption
     meet_join_absorption.
 
   Class IsBoundedLattice :=
@@ -273,9 +271,9 @@ Section lattice.
     boundedlattice_meet
     boundedjoin_meet_absorption
     boundedmeet_join_absorption.
-  
 
-  Class IsDistributiveLattice := 
+
+  Class IsDistributiveLattice :=
     { distr_lattice_lattice : IsLattice
     ; join_meet_distr_l : LeftDistribute (⊔) (⊓) }.
   #[export] Existing Instances distr_lattice_lattice join_meet_distr_l.
@@ -286,8 +284,6 @@ Section morphism_classes.
   Section sgmorphism_classes.
   Context {A B : Type} {Aop : SgOp A} {Bop : SgOp B}
     {Aunit : MonUnit A} {Bunit : MonUnit B}.
-
-  Local Open Scope mc_mult_scope.
 
   Class IsSemiGroupPreserving (f : A -> B) :=
     preserves_sg_op : forall x y, f (x * y) = f x * f y.
@@ -405,13 +401,10 @@ Section invert_mor.
   Proof.
     red; intros E fp x y.
     apply (equiv_inj f).
-    refine (_ @ _ @ _ @ _)^.
-    - apply fp.
-    (* We could use [apply ap2; apply eisretr] here, but it is convenient
-       to have things in terms of ap. *)
-    - refine (ap (fun z => sg_op z _) _); apply eisretr.
-    - refine (ap (fun z => sg_op _ z) _); apply eisretr.
-    - symmetry; apply eisretr.
+    lhs nrapply eisretr.
+    symmetry.
+    lhs nrapply fp.
+    f_ap; apply eisretr.
   Defined.
 
   Local Instance invert_monoid_morphism :
@@ -452,7 +445,7 @@ Hint Extern 4 (IsMonoidPreserving (_^-1)) =>
 Instance isinjective_mapinO_tr {A B : Type} (f : A -> B)
   {p : MapIn (Tr (-1)) f} : IsInjective f
   := fun x y pfeq => ap pr1 (@center _ (p (f y) (x; pfeq) (y; idpath))).
-  
+
 Section strong_injective.
   Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B) .
   Class IsStrongInjective :=

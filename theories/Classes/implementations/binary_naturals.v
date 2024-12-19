@@ -11,6 +11,8 @@ Require Import
         HoTT.Classes.orders.semirings
         HoTT.Classes.theory.apartness.
 
+Local Open Scope path_scope.
+
 Section basics.
 
   (* This definition of binary naturals is due to Martín Escardó and
@@ -346,6 +348,8 @@ Section naturals.
         apply nat_full; assumption.
     - intros m n. apply nat_full.
   Qed.
+  
+  Local Open Scope mc_scope.
 
   Global Instance binnat_naturals_to_semiring : NaturalsToSemiRing binnat:=
     fun _ _ _ _ _ _ => fix f (n: binnat) :=

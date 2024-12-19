@@ -40,7 +40,7 @@ Section AssumeDecidable.
   Proof.
     unfold kronecker_delta.
     destruct (dec (i = j)) as [p|q].
-    - by decidable_true (dec (j = i)) p^.
+    - by decidable_true (dec (j = i)) p^%path.
     - by decidable_false (dec (j = i)) (symmetric_neq q).
   Defined.
 

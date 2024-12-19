@@ -5,6 +5,7 @@ Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
+Local Open Scope path_scope.
 
 (** * Pushouts of abelian groups. *)
 
@@ -27,10 +28,10 @@ Proof.
   - exact (ab_biprod_rec b c).
   - intros [x y] q; strip_truncations; simpl.
     destruct q as [a q]. cbn in q.
-    refine (ap (uncurry (fun x y => b x + c y)) q^ @ _).
+    lhs_V nrapply (ap (uncurry (fun x y => b x + c y)) q).
     cbn.
-    refine (ap011 sg_op (preserves_negate _) (p a)^ @ _).
-    exact (left_inverse _).
+    lhs rapply (ap011 (+) (preserves_inverse _) (p a)^).
+    apply left_inverse.
 Defined.
 
 Corollary ab_pushout_rec_uncurried {A B C : AbGroup}
@@ -56,7 +57,7 @@ Proof.
   exists a.
   apply path_prod; simpl.
   - exact (right_identity _)^.
-  - rewrite negate_mon_unit.
+  - rewrite inverse_mon_unit.
     exact (left_identity _)^.
 Defined.
 
@@ -145,7 +146,7 @@ Proof.
     exact (left_inverse mon_unit @ (grp_homo_unit g)^).
   - apply (grp_moveR_M1).
     refine (_ @ ap fst p); cbn; symmetry.
-    refine (_ @ negate_mon_unit).
+    refine (_ @ inverse_mon_unit).
     refine (ap _ _).
     exact (ap f z @ grp_homo_unit f).
 Defined.

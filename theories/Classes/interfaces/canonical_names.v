@@ -5,7 +5,7 @@ Require Export
 
 Declare Scope mc_scope.
 Delimit Scope mc_scope with mc.
-Global Open Scope mc_scope.
+Open Scope mc_scope.
 
 Generalizable Variables A B f g x y.
 
@@ -64,6 +64,7 @@ Class Mult A := mult: A -> A -> A.
 Class One A := one: A.
 Class Zero A := zero: A.
 Class Negate A := negate: A -> A.
+Class Inverse A := inv: A -> A.
 Class DecRecip A := dec_recip: A -> A.
 Definition ApartZero R `{Zero R} `{Apart R} := sig (≶ zero).
 Class Recip A `{Apart A} `{Zero A} := recip: ApartZero A -> A.
@@ -83,14 +84,34 @@ Definition NonNeg R `{Zero R} `{Le R} := sig (le zero).
 Definition Pos R `{Zero R} `{Lt R} := sig (lt zero).
 Definition NonPos R `{Zero R} `{Le R} := sig (fun y => le y zero).
 
+(** *** Hints for converting between types of operations *)
+
 Global Instance plus_is_sg_op `{f : Plus A} : SgOp A := f.
+Definition sg_op_is_plus `{f : SgOp A} : Plus A := f.
+#[global] Hint Immediate sg_op_is_plus : typeclass_instances.
+
 Global Instance mult_is_sg_op `{f : Mult A} : SgOp A := f.
-Global Instance one_is_mon_unit `{c : One A} : MonUnit A := c.
+Definition sg_op_is_mult `{f : SgOp A} : Mult A := f.
+#[global] Hint Immediate sg_op_is_mult : typeclass_instances.
+
 Global Instance zero_is_mon_unit `{c : Zero A} : MonUnit A := c.
-Global Instance meet_is_sg_op `{f : Meet A} : SgOp A := f.
-Global Instance join_is_sg_op `{f : Join A} : SgOp A := f.
-Global Instance top_is_mon_unit `{s : Top A} : MonUnit A := s.
-Global Instance bottom_is_mon_unit `{s : Bottom A} : MonUnit A := s.
+Definition mon_unit_is_zero `{c : MonUnit A} : Zero A := c.
+#[global] Hint Immediate mon_unit_is_zero : typeclass_instances.
+
+Global Instance one_is_mon_unit `{c : One A} : MonUnit A := c.
+Definition mon_unit_is_one `{c : MonUnit A} : One A := c.
+
+Definition meet_is_sg_op `{f : Meet A} : SgOp A := f.
+
+Definition join_is_sg_op `{f : Join A} : SgOp A := f.
+
+Definition top_is_mon_unit `{s : Top A} : MonUnit A := s.
+
+Definition bottom_is_mon_unit `{s : Bottom A} : MonUnit A := s.
+
+Global Instance negate_is_inverse `{i : Negate A} : Inverse A := i.
+Definition inverse_is_negate `{i : Inverse A} : Negate A := i.
+#[global] Hint Immediate inverse_is_negate : typeclass_instances.
 
 #[export]
 Hint Extern 4 (Apart (ApartZero _)) => apply @sig_apart : typeclass_instances.
@@ -126,9 +147,16 @@ Notation "( x *.)" := (mult x) (only parsing) : mc_scope.
 Notation "(.*.)" := mult (only parsing) : mc_scope.
 Notation "(.* x )" := (fun y => y * x) (only parsing) : mc_scope.
 
+Notation "x ^" := (inv x) : mc_scope.
+Notation "(^)" := inv (only parsing) : mc_scope.
+
+Notation "- x" := (inv x) : mc_add_scope.
+Notation "(-)" := inv (only parsing) : mc_add_scope.
+Notation "x - y" := (sg_op x (inv y)) : mc_add_scope.
+
 Notation "- x" := (negate x) : mc_scope.
 Notation "(-)" := negate (only parsing) : mc_scope.
-Notation "x - y" := (x + -y) : mc_scope.
+Notation "x - y" := (x + negate y) : mc_scope.
 
 Notation "0" := zero : mc_scope.
 Notation "1" := one : mc_scope.

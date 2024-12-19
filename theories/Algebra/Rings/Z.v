@@ -4,6 +4,9 @@ Require Import Algebra.Rings.CRing.
 Require Import Spaces.Int Spaces.Pos.
 Require Import WildCat.Core.
 
+Local Open Scope mc_scope.
+Local Open Scope mc_add_scope.
+
 (** * In this file we define the ring [cring_Z] of integers with underlying abelian group [abgroup_Z] defined in Algebra.AbGroups.Z. We also define multiplication by an integer in a general ring, and show that [cring_Z] is initial. *)
 
 (** The ring of integers *)
@@ -80,8 +83,8 @@ Proof.
   - rewrite grp_pow_pred.
     rewrite IHx.
     clear IHx.
-    rewrite <- (rng_homo_one g).
-    rewrite <- (rng_homo_negate g).
+    change (-1 + g (-x)%int = g (-x).-1%int).
+    rewrite <- (rng_homo_minus_one g).
     lhs_V nrapply (rng_homo_plus g).
     f_ap.
 Defined.

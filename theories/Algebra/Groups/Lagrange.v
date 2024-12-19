@@ -39,7 +39,7 @@ Proof.
   (** Now we must show that cosets are all equivalent as types. *)
   simpl.
   snrapply equiv_functor_sigma.
-  2: apply (isequiv_group_left_op (-x)).
+  2: apply (isequiv_group_left_op x^).
   1: hnf; trivial.
   exact _.
 Defined.

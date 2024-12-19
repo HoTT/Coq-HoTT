@@ -4,6 +4,7 @@ Require Import Groups.QuotientGroup AbelianGroup Biproduct.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
+Local Open Scope path_scope.
 
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
