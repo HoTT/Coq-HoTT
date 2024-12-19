@@ -146,7 +146,7 @@ Proof.
     exact (left_inverse mon_unit @ (grp_homo_unit g)^).
   - apply (grp_moveR_M1).
     refine (_ @ ap fst p); cbn; symmetry.
-    refine (_ @ inverse_mon_unit).
+    refine (_ @ ab_neg_zero).
     refine (ap _ _).
     exact (ap f z @ grp_homo_unit f).
 Defined.

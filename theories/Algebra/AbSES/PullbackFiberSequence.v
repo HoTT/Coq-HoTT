@@ -88,7 +88,7 @@ Proof.
            exact (grp_homo_inv _ _). }
     (* Using [q2], we conclude. *)
     pose proof (q3 := ap negate (fst ((equiv_path_prod _ _)^-1 q2))); cbn in q3.
-    exact ((inverse_involutive _)^ @ q3^ @ inverse_mon_unit).
+    exact ((inverse_involutive _)^ @ q3^ @ ab_neg_zero).
   - apply (cancelR_conn_map (Tr (-1)) grp_quotient_map).
     1: exact _.
     simpl.

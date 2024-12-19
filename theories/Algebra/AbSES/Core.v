@@ -578,7 +578,7 @@ Proof.
   apply grp_cancelL1.
   refine (ap (fun x => - s x) _ @ _).
   1: rapply cx_isexact.
-  exact (ap _ (grp_homo_unit _) @ inverse_mon_unit).
+  exact (ap _ (grp_homo_unit _) @ ab_neg_zero).
 Defined.
 
 (** The induced map [E -> ab_kernel (projection E) + B] is an isomorphism. We suffix it with 1 since it is the first composite in the desired isomorphism [E -> A + B]. *)

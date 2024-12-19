@@ -208,7 +208,7 @@ Proof.
   refine (tr (0; _)).
   apply path_prod'; cbn.
   - refine (ap _ (grp_homo_unit _) @ _).
-    refine (inverse_mon_unit @ _).
+    refine (ab_neg_zero @ _).
     apply grp_moveL_Vg.
     exact (right_identity _ @ right_identity _).
   - refine (grp_homo_unit _ @ _).
