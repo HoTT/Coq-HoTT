@@ -30,7 +30,7 @@ Proof.
     destruct q as [a q]. cbn in q.
     lhs_V nrapply (ap (uncurry (fun x y => b x + c y)) q).
     cbn.
-    lhs rapply (ap011 (+) (preserves_inverse _) (p a)^).
+    lhs rapply (ap011 (+) (preserves_negate _) (p a)^).
     apply left_inverse.
 Defined.
 

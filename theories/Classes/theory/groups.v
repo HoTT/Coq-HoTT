@@ -101,6 +101,14 @@ Section groupmor_props.
 
 End groupmor_props.
 
+Section abgroupmor_props.
+
+    Context `{IsAbGroup A} `{IsAbGroup B} {f : A -> B} `{!IsMonoidPreserving f}.
+
+    Definition preserves_negate x : f (-x) = -f x := preserves_inverse x.
+
+End abgroupmor_props.
+
 Section from_another_sg.
 
   Context
