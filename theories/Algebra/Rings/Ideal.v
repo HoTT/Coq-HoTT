@@ -2,8 +2,8 @@ Require Import Basics Types.
 Require Import Spaces.Finite.Fin.
 Require Import Classes.interfaces.canonical_names.
 Require Import Algebra.Rings.Ring.
-Require Import Algebra.Groups.Subgroup.
-Require Import Algebra.AbGroups.
+Require Import Algebra.Groups.Subgroup Algebra.Groups.Kernel.
+Require Import Algebra.AbGroups.AbelianGroup.
 Require Import WildCat.Core.
 
 Local Open Scope mc_scope.
