@@ -1,0 +1,9 @@
+digraph HoTT_Algebra_Groups_GroupCoeq {
+  graph [ratio=0.5]
+  node [style=filled]
+GroupCoeq_equiv_groupcoeq_rec [label="equiv_groupcoeq_rec", URL=<GroupCoeq.html#equiv_groupcoeq_rec>, peripheries=3, fillcolor="#F070D1"] ;
+GroupCoeq_GroupCoeq [label="GroupCoeq", URL=<GroupCoeq.html#GroupCoeq>, fillcolor="#F070D1"] ;
+  GroupCoeq_equiv_groupcoeq_rec -> GroupCoeq_GroupCoeq [] ;
+subgraph cluster_GroupCoeq { label="GroupCoeq"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+GroupCoeq_GroupCoeq; GroupCoeq_equiv_groupcoeq_rec; };
+} /* END */

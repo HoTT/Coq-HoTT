@@ -1,0 +1,5 @@
+N: 2 "lagrange" [body=yes, kind=cnst, prop=no, path="Lagrange", ];
+N: 1 "lagrange_normal" [body=yes, kind=cnst, prop=no, path="Lagrange", ];
+N: 3 "subgroup_index" [body=yes, kind=cnst, prop=no, path="Lagrange", ];
+E: 1 2 [weight=2, ];
+E: 2 3 [weight=3, ];
