@@ -7,6 +7,7 @@ Require Import Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_scope.
+Local Open Scope path_scope.
 Local Open Scope type_scope.
 Local Open Scope mc_add_scope.
 
@@ -563,7 +564,7 @@ Proof.
   - intro x; simpl.
     refine (grp_homo_op (projection _) x _ @ _).
     refine (ap (fun y => (projection _) x + y) _ @ right_inverse ((projection _) x)).
-    refine (grp_homo_inv _ _ @ ap negate _ ).
+    refine (grp_homo_inv _ _ @ ap (-) _).
     apply h.
 Defined.
 
@@ -577,7 +578,7 @@ Proof.
   apply grp_cancelL1.
   refine (ap (fun x => - s x) _ @ _).
   1: rapply cx_isexact.
-  exact (ap _ (grp_homo_unit _) @ negate_mon_unit).
+  exact (ap _ (grp_homo_unit _) @ ab_neg_zero).
 Defined.
 
 (** The induced map [E -> ab_kernel (projection E) + B] is an isomorphism. We suffix it with 1 since it is the first composite in the desired isomorphism [E -> A + B]. *)

@@ -56,15 +56,14 @@ Section GrpPullback.
 
   Local Instance ismonoid_grp_pullback : IsMonoid (Pullback f g) := {}.
 
-  Local Instance grp_pullback_negate : Negate (Pullback f g).
+  Local Instance grp_pullback_inverse : Inverse (Pullback f g).
   Proof.
     intros [b [c p]].
-    refine (-b; -c; grp_homo_inv f b @ _ @ (grp_homo_inv g c)^).
-    exact (ap (fun a => -a) p).
+    refine (b^; c^; grp_homo_inv f b @ _ @ (grp_homo_inv g c)^).
+    exact (ap (^) p).
   Defined.
 
-  Local Instance grp_pullback_leftinverse
-    : LeftInverse grp_pullback_sgop grp_pullback_negate grp_pullback_mon_unit.
+  Local Instance grp_pullback_leftinverse : LeftInverse (.*.) (^) mon_unit.
   Proof.
     unfold LeftInverse.
     intros [b [c p]].
@@ -75,8 +74,7 @@ Section GrpPullback.
     apply path_ishprop.
   Defined.
 
-  Local Instance grp_pullback_rightinverse
-    : RightInverse grp_pullback_sgop grp_pullback_negate grp_pullback_mon_unit.
+  Local Instance grp_pullback_rightinverse : RightInverse (.*.) (^) mon_unit.
   Proof.
     intros [b [c p]].
     unfold grp_pullback_sgop; simpl.
@@ -176,6 +174,8 @@ Proof.
   1-2: apply eisretr.
   1-2: apply eissect.
 Defined.
+  
+Local Open Scope path_scope.
 
 (** Pulling back along some [g : Y $-> Z] and then [g' : Y' $-> Y] is the same as pulling back along [g $o g']. *)
 Definition equiv_grp_pullback_compose_r {X Z Y Y' : Group} (f : X $-> Z) (g' : Y' $-> Y) (g : Y $-> Z)

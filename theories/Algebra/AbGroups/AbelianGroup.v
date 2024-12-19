@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Spaces.Nat.Core Spaces.Int.
-Require Export Classes.interfaces.canonical_names (Zero, zero, Plus).
+Require Export Classes.interfaces.canonical_names (Zero, zero, Plus, plus, Negate, negate, Involutive).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
 Require Export Algebra.Groups.Subgroup.
@@ -24,6 +24,11 @@ Record AbGroup := {
 Coercion abgroup_group : AbGroup >-> Group.
 Global Existing Instance abgroup_commutative.
 
+Global Instance zero_abgroup (A : AbGroup) : Zero A := mon_unit.
+Global Instance negate_abgroup (A : AbGroup) : Negate A := (^).
+Global Instance plus_abgroup (A : AbGroup) : Plus A := (.*.).
+
+(** Abelian groups form a category *)
 Global Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
 Proof.
   split; exact _.
@@ -39,23 +44,11 @@ Definition Build_AbGroup' (G : Type)
   : AbGroup.
 Proof.
   snrapply Build_AbGroup.
-  - (* TODO: introduce smart constructor for [Build_Group] *)
-    rapply (Build_Group G).
-    repeat split; only 1-3, 5: exact _.
-    + intros x.
-      lhs nrapply comm.
-      exact (unit_l x).
-    + intros x.
-      lhs nrapply comm.
-      exact (inv_l x).
+  - rapply (Build_Group' G).
   - exact comm.
 Defined.
 
 Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
-
-Global Instance zero_abgroup (A : AbGroup) : Zero A := group_unit.
-Global Instance plus_abgroup (A : AbGroup) : Plus A := group_sgop.
-Global Instance negate_abgroup (A : AbGroup) : Negate A := group_inverse.
 
 Definition ab_comm {A : AbGroup} (x y : A) : x + y = y + x
   := commutativity x y.
@@ -65,6 +58,9 @@ Proof.
   lhs nrapply grp_inv_op.
   apply ab_comm.
 Defined.
+
+Definition ab_neg_zero {A : AbGroup} : -0 = 0 :> A := grp_inv_unit.
+Definition ab_neg_neg {A : AbGroup} : Involutive (-) := @grp_inv_inv A.
 
 (** ** Paths between abelian groups *)
 
@@ -248,7 +244,7 @@ Proof.
       apply commutativity.
   - srapply isequiv_adjointify.
     1: exact (fun a => -a).
-    1-2: exact negate_involutive.
+    1-2: exact inverse_involutive.
 Defined.
 
 (** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)

@@ -584,6 +584,8 @@ Defined.
 Definition skip (n : nat) : nat -> nat
   := fun i => if dec (i < n)%nat then i else i.+1%nat.
 
+Local Open Scope path_scope.
+
 Global Instance isinjective_skip n : IsInjective (skip n).
 Proof.
   hnf.

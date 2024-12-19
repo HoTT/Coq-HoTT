@@ -2,8 +2,8 @@ Require Import Basics Types.
 Require Import Spaces.Finite.Fin.
 Require Import Classes.interfaces.canonical_names.
 Require Import Algebra.Rings.Ring.
-Require Import Algebra.Groups.Subgroup.
-Require Import Algebra.AbGroups.
+Require Import Algebra.Groups.Subgroup Algebra.Groups.Kernel.
+Require Import Algebra.AbGroups.AbelianGroup.
 Require Import WildCat.Core.
 
 Local Open Scope mc_scope.
@@ -750,12 +750,16 @@ Proof.
       * by apply ideal_in_plus_negate.
       * cbn.
         refine (_ @ ap011 (fun x y => x - y) p q).
-        rewrite <- 2 rng_plus_assoc.
+        lhs_V nrapply rng_plus_assoc.
+        rhs_V nrapply rng_plus_assoc.
         f_ap.
-        rewrite negate_sg_op.
+        rewrite rng_negate_plus.
         rewrite rng_plus_comm.
         rewrite rng_plus_assoc.
-        reflexivity.
+        lhs_V nrapply rng_plus_assoc.
+        rhs_V nrapply rng_plus_assoc.
+        f_ap.
+        apply commutativity.
   - intro x.
     strip_truncations.
     intros r.

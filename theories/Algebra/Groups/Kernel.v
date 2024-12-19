@@ -19,8 +19,8 @@ Proof.
   - intros x y; cbn; intros p.
     apply (grp_homo_moveL_1V _ _ _)^-1.
     lhs_V nrapply grp_inv_inv.
-    apply (ap (-)).
-    exact ((grp_homo_moveL_1V f x y) p)^.
+    nrefine (ap (-) _^).
+    exact (grp_homo_moveL_1V f x y p).
 Defined.
 
 (** ** Corecursion principle for group kernels *)

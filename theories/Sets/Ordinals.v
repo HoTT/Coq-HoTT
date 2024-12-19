@@ -5,6 +5,7 @@ From HoTT Require Import HSet.
 
 Local Close Scope trunc_scope.
 Local Open Scope hprop_scope.
+Local Open Scope path_scope.
 
 (** This file contains a definition of ordinals and some fundamental results,
     roughly following the presentation in the HoTT book. *)
