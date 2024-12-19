@@ -59,6 +59,8 @@ Proof.
   apply ab_comm.
 Defined.
 
+Definition ab_neg_zero {A : AbGroup} : -0 = 0 :> A := grp_inv_unit.
+
 (** ** Paths between abelian groups *)
 
 Definition equiv_path_abgroup `{Univalence} {A B : AbGroup@{u}}

@@ -57,7 +57,7 @@ Proof.
   exists a.
   apply path_prod; simpl.
   - exact (right_identity _)^.
-  - rewrite inverse_mon_unit.
+  - rewrite ab_neg_zero.
     exact (left_identity _)^.
 Defined.
 
