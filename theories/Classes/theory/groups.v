@@ -194,17 +194,17 @@ Section from_another_group.
     (f : B -> A) `{!IsInjective f}
     (op_correct : forall x y, f (x * y) = f x * f y)
     (unit_correct : f mon_unit = mon_unit)
-    (negate_correct : forall x, f x^ = (f x)^).
+    (inverse_correct : forall x, f x^ = (f x)^).
 
   Lemma projected_group : IsGroup B.
   Proof.
     split.
     - apply (projected_monoid f);assumption.
     - repeat intro; apply (injective f).
-      rewrite op_correct, negate_correct, unit_correct, left_inverse.
+      rewrite op_correct, inverse_correct, unit_correct, left_inverse.
       apply reflexivity.
     - repeat intro; apply (injective f).
-      rewrite op_correct, negate_correct, unit_correct, right_inverse.
+      rewrite op_correct, inverse_correct, unit_correct, right_inverse.
       reflexivity.
   Qed.
 
