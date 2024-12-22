@@ -53,6 +53,13 @@ Proof.
   destruct p. symmetry; apply concat_p1.
 Defined.
 
+Definition transport_paths_FFr {A B C : Type} {f : A -> B} {g : B -> C}
+  {x1 x2 : A} {y : C} (p : x1 = x2) (q : g (f x1) = y)
+  : transport (fun x => g (f x) = y) p q = (ap g (ap f p))^ @ q.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
 Definition transport_paths_FlFr {A B : Type} {f g : A -> B} {x1 x2 : A}
   (p : x1 = x2) (q : f x1 = g x1)
   : transport (fun x => f x = g x) p q = (ap f p)^ @ q @ (ap g p).
@@ -114,7 +121,7 @@ Defined.
 
 Definition transport_paths_FFlFFr {A B B' C : Type}
   {f : A -> B} {f' : A -> B'} {g : B -> C} {g' : B' -> C} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = g' (f' x1)) (r : g (f x2) = g' (f' x2))
+  (p : x1 = x2) (q : g (f x1) = g' (f' x1))
   : transport (fun x => g (f x) = g' (f' x)) p q = (ap g (ap f p))^ @ q @ (ap g' (ap f' p)).
 Proof.
   destruct p; simpl.
@@ -185,7 +192,7 @@ Definition transport_paths_FFlFFr' {A B B' C : Type}
   (h : ap g (ap f p) @ r = q @ ap g' (ap f' p))
   : transport (fun x => g (f x) = g' (f' x)) p q = r.
 Proof.
-  lhs nrapply (transport_paths_FFlFFr p q r).
+  lhs nrapply (transport_paths_FFlFFr p q).
   lhs nrapply concat_pp_p.
   apply moveR_Vp.
   exact h^.
