@@ -1,7 +1,8 @@
 (** * Mapping Cylinders *)
 
-Require Import HoTT.Basics Cubical.DPath Cubical.PathSquare.
-Require Import Colimits.Pushout.
+Require Import Basics.Overture Basics.Tactics Basics.Equivalences
+  Basics.PathGroupoids Basics.Contractible Types.Paths
+  Cubical.DPath Cubical.PathSquare Colimits.Pushout.
 Local Open Scope path_scope.
 
 (** As in topology, the mapping cylinder of a function [f : A -> B] is a way to replace it with an equivalent cofibration (dually to how [hfiber] replaces it with an equivalent fibration).  We can't talk *internally* in type theory about cofibrations, but we can say metatheoretically what they are: functions with the isomorphism extension property.  So while we can't literally say "let [f] be a cofibration" we can do a mostly equivalent thing and say "let [f] be a map and consider its mapping cylinder".  Replacing a map by a cofibration can be useful because it allows us to make more equalities true definitionally. *)
@@ -185,3 +186,12 @@ Section CylCoeq.
   Defined.
 
 End CylCoeq.
+
+(** The mapping cylinder of a map into a contractible type is contractible. *)
+Global Instance contr_cyl_const {A B : Type} `{Contr B} (f : A -> B)
+  : Contr (Cyl f).
+Proof.
+  rapply (contr_equiv' B).
+  symmetry.
+  apply pr_cyl.
+Defined.
