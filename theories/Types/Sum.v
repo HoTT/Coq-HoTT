@@ -445,7 +445,7 @@ Defined.
 Definition functor_sum_idmap {A B : Type}
   : functor_sum (A:=A) (B:=B) idmap idmap == idmap.
 Proof.
-  intros [|]; reflexivity.
+  intros [a|b]; reflexivity.
 Defined.
 
 (** ** "Unfunctorial action" *)
