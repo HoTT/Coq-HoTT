@@ -170,7 +170,7 @@ Definition functor_coeq_beta_cglue {B A f g B' A' f' g'}
 := (Coeq_rec_beta_cglue _ _ _ b).
 
 Definition functor_coeq_idmap {B A f g}
-  : functor_coeq (B:=B) (A:=A) (f:=f) (g :=g) idmap idmap (fun _ => 1) (fun _  => 1)
+  : functor_coeq (B:=B) (A:=A) (f:=f) (g:=g) idmap idmap (fun _ => 1) (fun _  => 1)
     == idmap.
 Proof.
   snrapply Coeq_ind.
