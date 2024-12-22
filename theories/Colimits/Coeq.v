@@ -169,6 +169,18 @@ Definition functor_coeq_beta_cglue {B A f g B' A' f' g'}
   = ap coeq (p b) @ cglue (h b) @ ap coeq (q b)^
 := (Coeq_rec_beta_cglue _ _ _ b).
 
+Definition functor_coeq_idmap {B A f g}
+  : functor_coeq (B:=B) (A:=A) (f:=f) (g :=g) idmap idmap (fun _ => 1) (fun _  => 1)
+    == idmap.
+Proof.
+  snrapply Coeq_ind.
+  1: reflexivity.
+  intros b.
+  nrapply transport_paths_Flr'.
+  apply moveR_pM.
+  nrapply functor_coeq_beta_cglue.
+Defined.
+
 Definition functor_coeq_compose {B A f g B' A' f' g' B'' A'' f'' g''}
            (h : B -> B') (k : A -> A')
            (p : k o f == f' o h) (q : k o g == g' o h)
