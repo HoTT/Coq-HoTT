@@ -435,6 +435,19 @@ Proof.
   - exact (ap inr (q b)).
 Defined.
 
+Definition functor_sum_compose {A A' A'' B B' B'' : Type}
+  {f : A -> A'} {f' : A' -> A''} {g : B -> B'} {g' : B' -> B''}
+  : functor_sum (f' o f) (g' o g) == functor_sum f' g' o functor_sum f g.
+Proof.
+  intros [a|b]; reflexivity.
+Defined.
+
+Definition functor_sum_idmap {A B : Type}
+  : functor_sum (A:=A) (B:=B) idmap idmap == idmap.
+Proof.
+  intros [|]; reflexivity.
+Defined.
+
 (** ** "Unfunctorial action" *)
 
 (** Not every function [A + B -> A' + B'] is of the form [functor_sum f g].  However, this is the case if it preserves the summands, i.e. if it maps [A] into [A'] and [B] into [B'].  More generally, if a function [A + B -> A' + B'] maps [A] into [A'] only, then we can extract from it a function [A -> A'].  Since these operations are a sort of inverse to [functor_sum], we call them [unfunctor_sum_*]. *)
