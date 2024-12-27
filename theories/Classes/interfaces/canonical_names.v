@@ -116,6 +116,8 @@ Hint Extern 4 (Apart (NonNeg _)) => apply @sig_apart : typeclass_instances.
 #[export]
 Hint Extern 4 (Apart (Pos _)) => apply @sig_apart : typeclass_instances.
 
+(** For more information on using [mc_add_scope] and [mc_mult_scope], see the files test/Algebra/Groups/Expressions.v and test/Algebra/Rings/Expressions.v. *)
+
 Module AdditiveNotations.
 
   (** [mc_add_scope] is generally used when working with abelian groups. *)
