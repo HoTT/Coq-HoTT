@@ -203,8 +203,6 @@ Qed.
 
 (* Add Ring nat: (rings.stdlib_semiring_theory nat). *)
 
-(* Close Scope nat_scope. *)
-
 Lemma O_nat_0 : O =N= 0.
 Proof. reflexivity. Qed.
 

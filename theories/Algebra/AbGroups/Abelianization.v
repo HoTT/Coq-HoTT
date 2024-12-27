@@ -4,13 +4,15 @@ Require Import Colimits.Coeq.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Modalities.ReflectiveSubuniverse.
 
-(** In this file we define what it means for a group homomorphism G -> H into an abelian group H to be an abelianization. We then construct an example of an abelianization. *)
+(** * Abelianization *)
+
+(** In this file we define what it means for a group homomorphism [G -> H] into an abelian group [H] to be an abelianization. We then construct an example of an abelianization. *)
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope wc_iso_scope.
 
-(** Definition of Abelianization.
+(** ** Definition of abelianization.
 
   A "unit" homomorphism [eta : G -> G_ab], with [G_ab] abelian, is considered an abelianization if and only if for all homomorphisms [G -> A], where [A] is abelian, there exists a unique [g : G_ab -> A] such that [h == g o eta X].   We express this in funext-free form by saying that precomposition with [eta] in the wild 1-category [Group] induces an equivalence of hom 0-groupoids, in the sense of WildCat/EquivGpd.
 
@@ -45,27 +47,28 @@ Definition equiv_group_precomp_isabelianization `{Funext}
   : (G_ab $-> A) <~> (G $-> A)
   := Build_Equiv _ _ _ (isequiv_group_precomp_isabelianization eta A).
 
-(** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps: (a, b, c) |-> a (b c) and (a, b, c) |-> a (c b).
+(** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps [fun '(a, b, c) => a * (b * c)] and [fun '(a, b, c) => a * (c * b)].
 
 From this we can show that Abel G is an abelian group.
 
 In fact this models the following HIT:
 
+<<<
 HIT Abel (G : Group) := 
  | abel_in : G -> Abel G
  | abel_in_comm : forall x y z, abel_in (x * (y * z)) = abel_in (x * (z * y)).
+>>>
 
 We also derive [abel_in] and [abel_in_comm] from our coequalizer definition, and even prove the induction and computation rules for this HIT.
 
-This HIT was suggested by Dan Christensen.
-*)
+This HIT was suggested by Dan Christensen. *)
 
 Section Abel.
 
   (** Let G be a group. *)
   Context (G : Group).
 
-  (** We locally define a map uncurry2 that lets us uncurry A * B * C -> D twice. *)
+  (** We locally define a map uncurry2 that lets us uncurry [A * B * C -> D] twice. *)
   Local Definition uncurry2 {A B C D : Type}
     : (A -> B -> C -> D) -> A * B * C -> D.
   Proof.
@@ -73,7 +76,7 @@ Section Abel.
     by apply f.
   Defined.
 
-  (** The type Abel is defined to be the set coequalizer of the following maps G^3 -> G. *)
+  (** The type [Abel] is defined to be the set coequalizer of the following maps [G^3 -> G]. *)
   Definition Abel
     := Tr 0 (Coeq
       (uncurry2 (fun a b c : G => a * (b * c)))
@@ -86,7 +89,7 @@ Section Abel.
     apply tr, coeq, g.
   Defined.
 
-  (** This map satisfies the condition ab_comm. *)
+  (** This map satisfies the condition [ab_comm]. It's a form of commutativity in a right factor. *)
   Definition abel_in_comm a b c
     : abel_in (a * (b * c)) = abel_in (a * (c * b)).
   Proof.
@@ -180,7 +183,7 @@ Section AbelGroup.
       { intro a.
         exact (abel_in (a * b)). }
       intros a c d; hnf.
-      (* The pattern seems to be to alternate associativity and ab_comm. *)
+      (* The pattern seems to be to alternate [associativity] and [ab_comm]. *)
       refine (ap _ (associativity _ _ _)^ @ _).
       refine (abel_in_comm _ _ _ @ _).
       refine (ap _ (associativity _ _ _) @ _).
@@ -244,7 +247,7 @@ Section AbelGroup.
 <<
         - (abel_in g) := abel_in (- g)
 >>
-      However when checking that it respects ab_comm we have to show the following:
+      However when checking that it respects [ab_comm] we have to show the following:
 <<
         abel_in (- z * - y * - x) = abel_in (- y * - z * - x)
 >>
@@ -274,10 +277,10 @@ Section AbelGroup.
     apply ap; apply right_inverse.
   Defined.
 
-  (** Thus Abel G is a group *)
+  (** Thus [Abel G] is a group *)
   Global Instance isgroup_abel : IsGroup (Abel G) := {}.
 
-  (** And since the operation is commutative, an abelian group. *)
+  (** And furthermore, since the operation is commutative, it is an abelian group. *)
   Global Instance isabgroup_abel : IsAbGroup (Abel G) := {}.
 
   (** By definition, the map [abel_in] is also a group homomorphism. *)
@@ -301,7 +304,7 @@ Defined.
 
 (** Now we finally check that our definition of abelianization satisfies the universal property of being an abelianization. *)
 
-(** We define abel to be the abelianization of a group. This is a map from Group to AbGroup. *)
+(** We define [abel] to be the abelianization of a group. This is a map from [Group] to [AbGroup]. *)
 Definition abel : Group -> AbGroup.
 Proof.
   intro G.
@@ -310,6 +313,7 @@ Proof.
   - exact _.
 Defined.
 
+(** We don't wish for [abel G] to be unfolded when using [simpl] or [cbn]. *)
 Arguments abel G : simpl never.
 
 (** The unit of this map is the map [abel_in] which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
