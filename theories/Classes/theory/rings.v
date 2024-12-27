@@ -47,7 +47,7 @@ End cancellation.
 Section strong_cancellation.
   Context `{IsApart A} (op : A -> A -> A).
 
-  Lemma strong_right_cancel_from_left `{!Commutative op} 
+  Lemma strong_right_cancel_from_left `{!Commutative op}
     `{!StrongLeftCancellation op z}
     : StrongRightCancellation op z.
   Proof.
@@ -191,7 +191,7 @@ Qed.
 *)
 Section cring_props.
   Context `{IsCRing R}.
-  
+
   Instance: LeftAbsorb (.*.) 0.
   Proof.
   intro.

@@ -131,8 +131,7 @@ Section Abel.
   Defined.
 
   (** We also have a recursion princple. *)
-  Definition Abel_rec (P : Type) `{IsHSet P}
-    (a : G -> P)
+  Definition Abel_rec (P : Type) `{IsHSet P} (a : G -> P)
     (c : forall x y z, a (x * (y * z)) = a (x * (z * y)))
     : Abel -> P.
   Proof.
@@ -314,8 +313,7 @@ Defined.
 Arguments abel G : simpl never.
 
 (** The unit of this map is the map [abel_in] which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)
-Definition abel_unit {G : Group}
-  : G $-> (abel G)
+Definition abel_unit {G : Group} : G $-> abel G
   := @Build_GroupHomomorphism G (abel G) abel_in _.
 
 Definition grp_homo_abel_rec {G : Group} {A : AbGroup} (f : G $-> A)
