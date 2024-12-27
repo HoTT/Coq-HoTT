@@ -118,6 +118,60 @@ Proof.
   apply left_identity.
 Defined.
 
+(** With other assumptions, the right inverse law follows from the left inverse law. *)
+Definition right_inverse_left_inverse (G : Type) `{IsHSet G}
+  `(SgOp G, MonUnit G, Inverse G, !Associative (.*.),
+    !LeftIdentity (.*.) mon_unit,
+    !LeftInverse (.*.) (^) mon_unit)
+  : RightInverse (.*.) (^) mon_unit.
+Proof.
+  intros x.
+  lhs_V rapply left_identity.
+  apply (transport (fun x => x * _ = x) (left_inverse x^)).
+  lhs_V rapply simple_associativity.
+  nrapply ap.
+  lhs rapply simple_associativity.
+  lhs nrapply (ap (.* x^)).
+  1: apply left_inverse.
+  apply left_identity.
+Defined.
+Global Opaque right_inverse_left_inverse.
+  
+(** With other assumptions, the right identity law follows from the left identity law. *)
+Definition right_identity_left_identity (G : Type) `{IsHSet G}
+  `(SgOp G, MonUnit G, Inverse G, !Associative (.*.),
+    !LeftIdentity (.*.) mon_unit,
+    !LeftInverse (.*.) (^) mon_unit)
+  : RightIdentity (.*.) mon_unit.
+Proof.
+  intros x.
+  lhs_V rapply left_identity.
+  rhs_V rapply left_identity.
+  apply (transport (fun x => x * _ = x * _) (left_inverse x^)).
+  lhs_V rapply simple_associativity.
+  rhs_V rapply simple_associativity.
+  nrapply ap.
+  lhs rapply simple_associativity.
+  lhs apply (ap (.* mon_unit) (left_inverse x)).
+  lhs apply left_identity.
+  symmetry; apply left_inverse.
+Defined.
+Global Opaque right_identity_left_identity.
+
+(** When building a group we can choose to omit the right inverse law and right identity law, since they follow from the left ones. *)
+Definition Build_Group' (G : Type) `{IsHSet G}
+  `(SgOp G, MonUnit G, Inverse G, !Associative (.*.),
+    !LeftIdentity (.*.) mon_unit,
+    !LeftInverse (.*.) (^) mon_unit)
+  : Group.
+Proof.
+  rapply (Build_Group G).
+  repeat split.
+  4: rapply right_identity_left_identity.
+  5: rapply right_inverse_left_inverse.
+  all: exact _.
+Defined.
+
 (** ** Group homomorphisms *)
 
 (** Group homomorphisms are maps between groups that preserve the group operation. They allow us to compare groups and map their structure to one another. This is useful for determining if two groups are really the same, in which case we say they are "isomorphic". *)

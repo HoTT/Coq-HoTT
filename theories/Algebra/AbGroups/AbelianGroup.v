@@ -52,15 +52,7 @@ Definition Build_AbGroup' (G : Type)
   : AbGroup.
 Proof.
   snrapply Build_AbGroup.
-  - (* TODO: introduce smart constructor for [Build_Group] *)
-    rapply (Build_Group G).
-    repeat split; only 1-3, 5: exact _.
-    + intros x.
-      lhs nrapply comm.
-      exact (unit_l x).
-    + intros x.
-      lhs nrapply comm.
-      exact (inv_l x).
+  - rapply (Build_Group' G).
   - exact comm.
 Defined.
 

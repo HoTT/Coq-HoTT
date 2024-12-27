@@ -21,16 +21,12 @@ Global Instance inverse_hom {A : Group} {B : AbGroup}
 (** For [A] and [B] groups, with [B] abelian, homomorphisms [A $-> B] form an abelian group. *)
 Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.
 Proof.
-  nrefine (Build_Group (GroupHomomorphism A B)
-             sgop_hom grp_homo_const inverse_hom _).
-  repeat split.
+  snrapply (Build_Group' (GroupHomomorphism A B) sgop_hom grp_homo_const inverse_hom).
   1: exact _.
   all: hnf; intros; apply equiv_path_grouphomomorphism; intro; cbn.
-  + apply associativity.
-  + apply left_identity.
-  + apply right_identity.
-  + apply left_inverse.
-  + apply right_inverse.
+  - apply associativity.
+  - apply left_identity.
+  - apply left_inverse.
 Defined.
 
 Definition ab_hom `{Funext} (A : Group) (B : AbGroup) : AbGroup.
