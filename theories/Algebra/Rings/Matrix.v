@@ -9,8 +9,6 @@ Require Import Modalities.ReflectiveSubuniverse.
 
 Set Universe Minimization ToSet.
 
-Local Open Scope mc_scope.
-
 (** * Matrices *)
 
 (** ** Definition *)
@@ -591,7 +589,7 @@ Proof.
   unfold skip in p.
   destruct (dec (x < n)%nat) as [H|H], (dec (y < n)%nat) as [H'|H'].
   - exact p.
-  - destruct p^.
+  - symmetry in p; destruct p.
     contradiction (H' (leq_trans _ H)).
   - destruct p.
     contradiction (H (leq_trans _ H')).
@@ -1009,7 +1007,7 @@ Proof.
   unfold IsSkewSymmetric.
   rewrite matrix_transpose_plus.
   rhs nrapply (grp_inv_op (G:=abgroup_matrix R n n)).
-  rhs_V nrapply (AbelianGroup.ab_comm (A:=abgroup_matrix R n n)).
+  rhs_V rapply AbelianGroup.abgroup_commutative.
   f_ap.
 Defined.
 

@@ -43,8 +43,8 @@ Section FreeProduct.
     destruct x as [|x xs].
     1: exact nil.
     destruct x as [h|k].
-    + exact ((word_inverse xs) ++ [inl (- h)]).
-    + exact ((word_inverse xs) ++ [inr (- k)]).
+    + exact ((word_inverse xs) ++ [inl h^]).
+    + exact ((word_inverse xs) ++ [inr k^]).
   Defined.
 
   (** Inversion changes order of concatenation. *)
@@ -355,7 +355,7 @@ Section FreeProduct.
     exact (amal_eta nil).
   Defined.
 
-  Global Instance negate_amal_type : Negate amal_type.
+  Global Instance inverse_amal_type : Inverse amal_type.
   Proof.
     srapply amal_type_rec.
     { intros w.
@@ -368,7 +368,7 @@ Section FreeProduct.
         apply ap; simpl.
         rapply (ap (fun s => [s])).
         apply ap.
-        apply negate_sg_op. }
+        apply inverse_sg_op. }
       simpl.
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply app_assoc.
@@ -381,7 +381,7 @@ Section FreeProduct.
         apply ap; simpl.
         rapply (ap (fun s => [s])).
         apply ap.
-        apply negate_sg_op. }
+        apply inverse_sg_op. }
       simpl.
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply app_assoc.
@@ -405,7 +405,7 @@ Section FreeProduct.
       refine (ap amal_eta _^ @ _).
       1: apply app_assoc.
       simpl.
-      rewrite negate_mon_unit.
+      rewrite inverse_mon_unit.
       apply amal_omega_H. }
     { hnf; intros x z.
       refine (ap amal_eta _ @ _ @ ap amal_eta _^).
@@ -416,7 +416,7 @@ Section FreeProduct.
       refine (ap amal_eta _^ @ _).
       1: apply app_assoc.
       simpl.
-      rewrite negate_mon_unit.
+      rewrite inverse_mon_unit.
       apply amal_omega_K. }
   Defined.
 
@@ -471,13 +471,13 @@ Section FreeProduct.
     destruct x as [h|k].
     + cbn.
       rewrite app_assoc.
-      change (amal_eta ([inl h]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inl (- h)]) = mon_unit).
+      change (amal_eta ([inl h]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inl h^]) = mon_unit).
       rewrite IHxs.
       rewrite rightidentity_sgop_amal_type.
       rewrite <- (app_nil (cons _ _)).
-      change (amal_eta (([inl h] ++ [inl (- h)]) ++ nil) = mon_unit).
+      change (amal_eta (([inl h] ++ [inl h^]) ++ nil) = mon_unit).
       rewrite <- app_assoc.
-      change (amal_eta (nil ++ [inl h] ++ [inl (- h)] ++ nil) = mon_unit).
+      change (amal_eta (nil ++ [inl h] ++ [inl h^] ++ nil) = mon_unit).
       refine (amal_mu_H _ _ _ _ @ _).
       refine (_ @ _).
       { apply ap, ap.
@@ -488,13 +488,13 @@ Section FreeProduct.
       apply amal_omega_H.
     +  cbn.
       rewrite app_assoc.
-      change (amal_eta ([inr k]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inr (-k)]) = mon_unit).
+      change (amal_eta ([inr k]) * amal_eta ((xs ++ word_inverse xs)) * amal_eta ([inr k^]) = mon_unit).
       rewrite IHxs.
       rewrite rightidentity_sgop_amal_type.
       rewrite <- (app_nil (cons _ _)).
-      change (amal_eta (([inr k] ++ [inr (- k)]) ++ nil) = mon_unit).
+      change (amal_eta (([inr k] ++ [inr k^]) ++ nil) = mon_unit).
       rewrite <- app_assoc.
-      change (amal_eta (nil ++ [inr k] ++ [inr (- k)] ++ nil) = mon_unit).
+      change (amal_eta (nil ++ [inr k] ++ [inr k^] ++ nil) = mon_unit).
       refine (amal_mu_K _ _ _ _ @ _).
       refine (_ @ _).
       { apply ap, ap.
@@ -505,13 +505,13 @@ Section FreeProduct.
       apply amal_omega_K.
   Defined.
 
-  Global Instance leftinverse_sgop_amal_type : LeftInverse sg_op negate mon_unit.
+  Global Instance leftinverse_sgop_amal_type : LeftInverse (.*.) (^) mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     apply amal_eta_word_concat_Vw.
   Defined.
 
-  Global Instance rightinverse_sgop_amal_type : RightInverse sg_op negate mon_unit.
+  Global Instance rightinverse_sgop_amal_type : RightInverse (.*.) (^) mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     apply amal_eta_word_concat_wV.

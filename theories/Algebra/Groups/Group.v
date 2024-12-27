@@ -4,12 +4,12 @@ Require Import (notations) Classes.interfaces.canonical_names.
 Require Export (hints) Classes.interfaces.abstract_algebra.
 Require Export (hints) Classes.interfaces.canonical_names.
 (** We only export the parts of these that will be most useful to users of this file. *)
-Require Export Classes.interfaces.canonical_names (SgOp, sg_op, One, one,
-    MonUnit, mon_unit, LeftIdentity, left_identity, RightIdentity, right_identity,
-    Negate, negate, Associative, simple_associativity, associativity,
+Require Export Classes.interfaces.canonical_names (SgOp, sg_op, MonUnit, mon_unit,
+    LeftIdentity, left_identity, RightIdentity, right_identity,
+    Inverse, inv, Associative, simple_associativity, associativity,
     LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).
 Export canonical_names.BinOpNotations.
-Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, negate_l, negate_r,
+Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, inverse_l, inverse_r,
     IsSemiGroup(..), sg_set, sg_ass,
     IsMonoid(..), monoid_left_id, monoid_right_id, monoid_semigroup,
     IsMonoidPreserving(..), monmor_unitmor, monmor_sgmor,
@@ -41,7 +41,7 @@ Record Group := {
   group_type :> Type;
   group_sgop :: SgOp group_type;
   group_unit :: MonUnit group_type;
-  group_inverse :: Negate group_type;
+  group_inverse :: Inverse group_type;
   group_isgroup :: IsGroup group_type;
 }.
 
@@ -192,12 +192,12 @@ Defined.
 
 (** Group homomorphisms preserve inverses. *)
 Definition grp_homo_inv {G H} (f : GroupHomomorphism G H)
-  : forall x, f (- x) = -(f x).
+  : forall x, f x^ = (f x)^.
 Proof.
   intro x.
   apply (inverse_unique (f x)).
   + refine (_ @ grp_homo_unit f).
-    refine ((grp_homo_op f (-x) x)^ @ _).
+    refine ((grp_homo_op f _ x)^ @ _).
     apply ap.
     apply grp_inv_l.
   + apply grp_inv_r.
@@ -322,7 +322,7 @@ Proof.
     intros [[op' [unit' [neg' ax']]] eq].
     apply path_sigma_hprop; cbn.
     refine (@ap _ _ (fun x : { oun :
-      { oo : SgOp G & { u : MonUnit G & Negate G}}
+      { oo : SgOp G & { u : MonUnit G & Inverse G}}
       & @IsGroup G oun.1 oun.2.1 oun.2.2}
       => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
       ((op;unit;neg);ax) ((op';unit';neg');ax') _).
@@ -354,7 +354,7 @@ Global Instance isequiv_group_left_op {G : Group}
 Proof.
   intro x.
   srapply isequiv_adjointify.
-  1: exact (-x *.).
+  1: exact (x^ *.).
   all: intro y.
   all: refine (grp_assoc _ _ _ @ _ @ grp_unit_l y).
   all: refine (ap (fun x => x * y) _).
@@ -368,7 +368,7 @@ Global Instance isequiv_group_right_op (G : Group)
 Proof.
   intro x.
   srapply isequiv_adjointify.
-  1: exact (fun y => y * - x).
+  1: exact (fun y => y * x^).
   all: intro y.
   all: refine ((grp_assoc _ _ _)^ @ _ @ grp_unit_r y).
   all: refine (ap (y *.) _).
@@ -378,11 +378,10 @@ Defined.
 
 (** The operation inverting group elements is an equivalence. Note that, since the order of the operation will change after inversion, this isn't a group homomorphism. *)
 Global Instance isequiv_group_inverse {G : Group}
-  : IsEquiv ((-) : G -> G).
+  : IsEquiv ((^) : G -> G).
 Proof.
-  srapply isequiv_adjointify.
-  1: apply (-).
-  all: intro; apply negate_involutive.
+  srapply isequiv_involution.
+  rapply inverse_involutive.
 Defined.
 
 (** ** Reasoning with equations in groups. *)
@@ -392,13 +391,13 @@ Section GroupEquations.
   Context {G : Group} (x y z : G).
 
   (** Inverses are involutive. *)
-  Definition grp_inv_inv : --x = x := negate_involutive x.
+  Definition grp_inv_inv : x^^ = x := inverse_involutive x.
 
   (** Inverses distribute over the group operation. *)
-  Definition grp_inv_op : - (x * y) = -y * -x := negate_sg_op x y.
+  Definition grp_inv_op : (x * y)^ = y^ * x^ := inverse_sg_op x y.
   
   (** The inverse of the unit is the unit. *)
-  Definition grp_inv_unit : -mon_unit = mon_unit := negate_mon_unit (G :=G).
+  Definition grp_inv_unit : mon_unit^ = mon_unit := inverse_mon_unit (G :=G).
 
 End GroupEquations.
 
@@ -420,30 +419,30 @@ Section GroupMovement.
 
   (** *** Moving group elements *)
 
-  Definition grp_moveL_gM : x * -z = y <~> x = y * z
+  Definition grp_moveL_gM : x * z^ = y <~> x = y * z
     := equiv_moveL_equiv_M (f := fun t => t * z) _ _.
 
-  Definition grp_moveL_Mg : -y * x = z <~> x = y * z
+  Definition grp_moveL_Mg : y^ * x = z <~> x = y * z
     := equiv_moveL_equiv_M (f := fun t => y * t) _ _.
 
-  Definition grp_moveR_gM : x = z * -y <~> x * y = z
+  Definition grp_moveR_gM : x = z * y^ <~> x * y = z
     := equiv_moveR_equiv_M (f := fun t => t * y) _ _.
 
-  Definition grp_moveR_Mg : y = -x * z <~> x * y = z
+  Definition grp_moveR_Mg : y = x^ * z <~> x * y = z
     := equiv_moveR_equiv_M (f := fun t => x * t) _ _.
 
   (** *** Moving inverses.*)
   (** These are the inverses of the previous but are included here for completeness*)
-  Definition grp_moveR_gV : x = y * z <~> x * -z = y
+  Definition grp_moveR_gV : x = y * z <~> x * z^ = y
     := equiv_moveR_equiv_V (f := fun t => t * z) _ _.
 
-  Definition grp_moveR_Vg : x = y * z <~> -y * x = z 
+  Definition grp_moveR_Vg : x = y * z <~> y^ * x = z
     := equiv_moveR_equiv_V (f := fun t => y * t) _ _.
 
-  Definition grp_moveL_gV :  x * y = z <~> x = z * -y
+  Definition grp_moveL_gV :  x * y = z <~> x = z * y^
     := equiv_moveL_equiv_V (f := fun t => t * y) _ _.
 
-  Definition grp_moveL_Vg :  x * y = z <~> y = -x * z
+  Definition grp_moveL_Vg :  x * y = z <~> y = x^ * z
     := equiv_moveL_equiv_V (f := fun t => x * t) _ _.
 
 (** We close the section here so the previous lemmas generalise their assumptions. *)
@@ -455,19 +454,19 @@ Section GroupMovement.
 
   (** *** Moving elements equal to unit. *)
 
-  Definition grp_moveL_1M : x * -y = mon_unit <~> x = y
+  Definition grp_moveL_1M : x * y^ = mon_unit <~> x = y
     := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gM.
   
-  Definition grp_moveL_1V : x * y = mon_unit <~> x = -y
+  Definition grp_moveL_1V : x * y = mon_unit <~> x = y^
     := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gV.
 
-  Definition grp_moveL_M1 : -y * x = mon_unit <~> x = y
+  Definition grp_moveL_M1 : y^ * x = mon_unit <~> x = y
     := equiv_concat_r (grp_unit_r _) _ oE grp_moveL_Mg.
 
-  Definition grp_moveR_1M : mon_unit = y * (-x) <~> x = y
+  Definition grp_moveR_1M : mon_unit = y * x^ <~> x = y
     := (equiv_concat_l (grp_unit_l _) _)^-1%equiv oE grp_moveR_gM.
 
-  Definition grp_moveR_M1 : mon_unit = -x * y <~> x = y
+  Definition grp_moveR_M1 : mon_unit = x^ * y <~> x = y
     := (equiv_concat_l (grp_unit_r _) _)^-1%equiv oE grp_moveR_Mg.
 
   (** *** Cancelling elements equal to unit. *)
@@ -484,7 +483,7 @@ End GroupMovement.
 
 (** If [g] commutes with [h], then [g] commutes with the inverse [-h]. *)
 Definition grp_commutes_inv {G : Group} (g h : G) (p : g * h = h * g)
-  : g * (-h) = (-h) * g.
+  : g * h^ = h^ * g.
 Proof.
   apply grp_moveR_gV.
   rhs_V apply simple_associativity.
@@ -537,7 +536,7 @@ Definition grp_pow_succ {G : Group} (n : Int) (g : G)
   := int_iter_succ_l _ _ _.
 
 Definition grp_pow_pred {G : Group} (n : Int) (g : G)
-  : grp_pow g (n.-1)%int = (- g) * grp_pow g n
+  : grp_pow g (n.-1)%int = g^ * grp_pow g n
   := int_iter_pred_l _ _ _.
 
 (** [grp_pow] satisfies an additive law of exponents. *)
@@ -546,7 +545,7 @@ Definition grp_pow_add {G : Group} (m n : Int) (g : G)
 Proof.
   lhs nrapply int_iter_add.
   induction n; cbn.
-  1: exact (grp_unit_l _)^.
+  1: symmetry; exact (grp_unit_l _).
   1: rewrite int_iter_succ_l, grp_pow_succ.
   2: rewrite int_iter_pred_l, grp_pow_pred; cbn.
   1,2 : rhs_V srapply associativity;
@@ -555,16 +554,17 @@ Defined.
 
 (** [grp_pow] commutes negative exponents to powers of the inverse *)
 Definition grp_pow_neg {G : Group} (n : Int) (g : G)
-  : grp_pow g (int_neg n) = grp_pow (- g) n.
+  : grp_pow g (int_neg n) = grp_pow g^ n.
 Proof.
   lhs nrapply int_iter_neg.
   cbn; unfold grp_pow.
-  (* These agree, except for the proofs that [sg_op (-g)] is an equivalence. *)
+  (* These agree, except for the proofs that [sg_op g^] is an equivalence. *)
   apply int_iter_agree.
 Defined.
 
 (** Using a negative power in [grp_pow] is the same as first using a positive power and then inverting the result. *)
-Definition grp_pow_neg_inv {G: Group} (m : Int) (g : G) : grp_pow g (- m)%int = - grp_pow g m.
+Definition grp_pow_neg_inv {G: Group} (m : Int) (g : G)
+  : grp_pow g (- m)%int = (grp_pow g m)^.
 Proof.
   apply grp_moveL_1V.
   lhs_V nrapply grp_pow_add.
@@ -572,7 +572,8 @@ Proof.
 Defined.
 
 (** Combining the two previous results gives that a power of an inverse is the inverse of the power. *)
-Definition grp_pow_neg_inv' {G: Group} (n: Int) (g : G) : grp_pow (- g) n = - grp_pow g n.
+Definition grp_pow_neg_inv' {G: Group} (n: Int) (g : G)
+  : grp_pow g^ n = (grp_pow g n)^.
 Proof.
   lhs_V nrapply grp_pow_neg.
   apply grp_pow_neg_inv.
@@ -633,7 +634,7 @@ Proof.
     rewrite <- 2 grp_assoc.
     apply grp_cancelL.
     apply grp_pow_commutes.
-    exact c^.
+    exact c^%path.
   - simpl.
     rewrite 3 grp_pow_pred.
     rewrite IHn.
@@ -761,10 +762,10 @@ Proof.
   intros [a0 p].
   refine (equiv_transport (hfiber f) (right_inverse b) oE _).
   snrapply Build_Equiv.
-  { srapply (functor_hfiber (h := fun t => t * -a0) (k := fun t => t * -b)).
+  { srapply (functor_hfiber (h := (.* a0^)) (k := (.* b^))).
     intro a; cbn; symmetry.
-    refine (_ @ ap (fun x => f a * (- x)) p).
-    exact (grp_homo_op f _ _ @ ap (fun x => f a * x) (grp_homo_inv f a0)). }
+    rhs_V nrapply (ap (fun x => f a * x^) p).
+    exact (grp_homo_op f _ _ @ ap (f a *.) (grp_homo_inv f a0)). }
   srapply isequiv_functor_hfiber.
 Defined.
 
@@ -800,7 +801,7 @@ Proof.
   - intro G.
     exists (grp_trivial_rec G).
     intros g []; cbn.
-    exact (grp_homo_unit g)^.
+    exact (grp_homo_unit g)^%path.
   - intro G.
     exists (grp_trivial_corec G).
     intros g x; cbn.
@@ -824,7 +825,7 @@ Proof.
   1: exact (mon_unit, mon_unit).
   (** Inverse *)
   { intros [g h].
-    exact (-g, -h). }
+    exact (g^, h^). }
   repeat split.
   1: exact _.
   all: grp_auto.
@@ -950,7 +951,7 @@ Proof.
   intro G.
   exists (grp_trivial_rec _).
   intros g [].
-  apply (grp_homo_unit g)^.
+  apply (grp_homo_unit g)^%path.
 Defined.
 
 Global Instance contr_grp_homo_trivial_source `{Funext} G
@@ -1064,7 +1065,7 @@ Definition grp_homo_moveL_1V {A B : Group} (f : GroupHomomorphism A B) (x y : A)
   := grp_moveL_1V oE equiv_concat_l (grp_homo_op f x y)^ _.
 
 Definition grp_homo_moveL_1M  {A B : Group} (f : GroupHomomorphism A B) (x y : A)
-  : f (x * -y) = group_unit <~> (f x = f y).
+  : f (x * y^) = group_unit <~> (f x = f y).
 Proof.
   refine (grp_moveL_1M oE equiv_concat_l _^ _).
   lhs nrapply grp_homo_op.

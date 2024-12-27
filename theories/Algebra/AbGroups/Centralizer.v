@@ -29,16 +29,16 @@ Defined.
 
 Definition centralizer_inverse {G : Group} (g h : G)
            (p : centralizer g h)
-  : centralizer g (-h).
+  : centralizer g h^.
 Proof.
   unfold centralizer in *.
   symmetry.
   refine ((grp_unit_r _)^ @ _ @ grp_unit_l _).
-  refine (ap (fun x => (-h * g * x)) (grp_inv_r h)^ @ _ @ ap (fun x => x * (g * -h)) (grp_inv_l h)).
+  refine (ap ((_ * g) *.) (grp_inv_r h)^ @ _ @ ap (.* (g * _)) (grp_inv_l h)).
   refine (grp_assoc _ _ _ @ _ @ (grp_assoc _ _ _)^).
-  refine (ap (fun x => x * (-h)) _).
+  refine (ap (.* h^) _).
   refine ((grp_assoc _ _ _)^ @ _ @ grp_assoc _ _ _).
-  exact (ap (fun x => (-h) * x) p).
+  exact (ap (h^ *.) p).
 Defined.
 
 Global Instance issubgroup_centralizer {G : Group} (g : G)

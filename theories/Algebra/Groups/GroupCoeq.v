@@ -5,9 +5,6 @@ Require Import Algebra.Groups.Group.
 Require Import Colimits.Coeq.
 Require Import Algebra.Groups.FreeProduct.
 
-Local Open Scope mc_scope.
-Local Open Scope mc_mult_scope.
-
 (** Coequalizers of group homomorphisms *)
 
 Definition GroupCoeq {A B : Group} (f g : A $-> B) : Group.

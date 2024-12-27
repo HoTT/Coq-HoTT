@@ -80,8 +80,8 @@ Proof.
   - rewrite grp_pow_pred.
     rewrite IHx.
     clear IHx.
-    rewrite <- (rng_homo_one g).
-    rewrite <- (rng_homo_negate g).
+    change (-1 + g (-x)%int = g (-x).-1%int).
+    rewrite <- (rng_homo_minus_one g).
     lhs_V nrapply (rng_homo_plus g).
     f_ap.
 Defined.

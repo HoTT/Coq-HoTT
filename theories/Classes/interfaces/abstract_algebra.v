@@ -110,14 +110,15 @@ Section upper_classes.
     commonoid_mon
     commonoid_commutative.
 
-  Class IsGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
-    { group_monoid : @IsMonoid (.*.) Aunit
-    ; negate_l : LeftInverse (.*.) (-) mon_unit
-    ; negate_r : RightInverse (.*.) (-) mon_unit }.
-  #[export] Existing Instances 
+  Class IsGroup {Aop : SgOp A} {Aunit : MonUnit A} {Ainv : Inverse A} :=
+    { group_monoid : @IsMonoid (.*.) mon_unit
+    ; inverse_l : LeftInverse (.*.) (^) mon_unit
+    ; inverse_r: RightInverse (.*.) (^) mon_unit
+    }.
+  #[export] Existing Instances
     group_monoid
-    negate_l
-    negate_r.
+    inverse_l
+    inverse_r.
 
   Class IsBoundedSemiLattice {Aop : SgOp A} {Aunit : MonUnit A} :=
     { bounded_semilattice_mon : @IsCommutativeMonoid (.*.) Aunit
@@ -125,39 +126,39 @@ Section upper_classes.
   #[export] Existing Instances
     bounded_semilattice_mon
     bounded_semilattice_idempotent.
+  
+  Local Close Scope mc_mult_scope.
 
-  Class IsAbGroup {Aop : SgOp A} {Aunit : MonUnit A} {Anegate : Negate A} :=
-    { abgroup_group : @IsGroup (.*.) Aunit Anegate
-    ; abgroup_commutative : Commutative (.*.) }.
+  Class IsAbGroup {Aop : SgOp A} {Aunit : MonUnit A} {Ainv : Inverse A} :=
+    { abgroup_group : @IsGroup Aop Aunit Ainv
+    ; abgroup_commutative : Commutative Aop }.
   #[export] Existing Instances abgroup_group abgroup_commutative.
-
-  Close Scope mc_mult_scope.
 
   Context {Aplus : Plus A} {Amult : Mult A} {Azero : Zero A} {Aone : One A}.
 
   Class IsSemiCRing :=
-    { semiplus_monoid : @IsCommutativeMonoid plus_is_sg_op zero_is_mon_unit
-    ; semimult_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
+    { semiplus_monoid : @IsCommutativeMonoid (+) 0
+    ; semimult_monoid : @IsCommutativeMonoid (.*.) 1
     ; semiring_distr : LeftDistribute (.*.) (+)
     ; semiring_left_absorb : LeftAbsorb (.*.) 0 }.
   #[export] Existing Instances semiplus_monoid semimult_monoid semiring_distr semiring_left_absorb.
 
   Context {Anegate : Negate A}.
 
-  Class IsRing := {
-    ring_abgroup :: @IsAbGroup plus_is_sg_op zero_is_mon_unit _;
-    ring_monoid :: @IsMonoid mult_is_sg_op one_is_mon_unit;
-    ring_dist_left :: LeftDistribute (.*.) (+);
-    ring_dist_right :: RightDistribute (.*.) (+);
+  Class IsRing :=
+    { ring_abgroup :: @IsAbGroup (+) 0 (-)
+    ; ring_monoid :: @IsMonoid (.*.) 1
+    ; ring_dist_left :: LeftDistribute (.*.) (+)
+    ; ring_dist_right :: RightDistribute (.*.) (+)
   }.
 
   Class IsCRing :=
-    { cring_group : @IsAbGroup plus_is_sg_op zero_is_mon_unit _
-    ; cring_monoid : @IsCommutativeMonoid mult_is_sg_op one_is_mon_unit
+    { cring_group : @IsAbGroup (+) 0 (-)
+    ; cring_monoid : @IsCommutativeMonoid (.*.) 1
     ; cring_dist : LeftDistribute (.*.) (+) }.
 
   #[export] Existing Instances cring_group cring_monoid cring_dist.
-  
+
   Global Instance isring_iscring : IsCRing -> IsRing.
   Proof.
     intros H.
@@ -308,9 +309,9 @@ Section morphism_classes.
 
   Class IsSemiRingPreserving (f : A -> B) :=
     { semiringmor_plus_mor : @IsMonoidPreserving A B
-        plus_is_sg_op plus_is_sg_op zero_is_mon_unit zero_is_mon_unit f
+        (+) (+) 0 0 f
     ; semiringmor_mult_mor : @IsMonoidPreserving A B
-        mult_is_sg_op mult_is_sg_op one_is_mon_unit one_is_mon_unit f }.
+        (.*.) (.*.) 1 1 f }.
   #[export] Existing Instances semiringmor_plus_mor semiringmor_mult_mor.
 
   Context {Aap : Apart A} {Bap : Apart B}.
@@ -405,13 +406,10 @@ Section invert_mor.
   Proof.
     red; intros E fp x y.
     apply (equiv_inj f).
-    refine (_ @ _ @ _ @ _)^.
-    - apply fp.
-    (* We could use [apply ap2; apply eisretr] here, but it is convenient
-       to have things in terms of ap. *)
-    - refine (ap (fun z => sg_op z _) _); apply eisretr.
-    - refine (ap (fun z => sg_op _ z) _); apply eisretr.
-    - symmetry; apply eisretr.
+    lhs nrapply eisretr.
+    symmetry.
+    lhs nrapply fp.
+    f_ap; apply eisretr.
   Defined.
 
   Local Instance invert_monoid_morphism :

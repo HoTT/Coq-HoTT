@@ -48,7 +48,7 @@ Proof.
     strip_truncations.
     exact (tr (abses_baer_sum E F)).
   - exact (point (Ext B A)).
-  - unfold Negate.
+  - unfold Inverse.
     exact (Trunc_functor _ (abses_pullback (- grp_homo_id))).
   - repeat split.
     1: apply istrunc_truncation.

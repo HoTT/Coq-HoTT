@@ -11,7 +11,6 @@ Require Import Spaces.List.Core Spaces.Int.
 Require Import AbGroups.Z.
 Require Import Truncations.
 
-Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
 (** * The Tensor Product of Abelian Groups *)
@@ -215,9 +214,7 @@ Proof.
     + change (P (tensor_in (freegroup_in (a, b)) + tensor_in (freegroup_eta w))).
       apply Hop; trivial.
       apply Hin.
-    + change (P (tensor_in (- freegroup_in (a, b)) + tensor_in (freegroup_eta w))).
-      (* This [rewrite] is also reflexivity. *)
-      rewrite grp_homo_inv.
+    + change (P (-tensor_in (freegroup_in (a, b)) + tensor_in (freegroup_eta w))).
       apply Hop; trivial.
       rewrite <- tensor_neg_l.
       apply Hin.
@@ -240,7 +237,7 @@ Definition ab_tensor_prod_ind_homotopy_plus {A B G : AbGroup}
   {f f' f'' : ab_tensor_prod A B $-> G}
   (H : forall a b, f (tensor a b) = f' (tensor a b) + f'' (tensor a b))
   : forall x, f x = f' x + f'' x
-  := ab_tensor_prod_ind_homotopy (f':=ab_homo_add f' f'') H.
+  := ab_tensor_prod_ind_homotopy (f':=f' + f'') H.
 
 (** Here we give an induction principle for a triple tensor, a.k.a a dependent trilinear function. *)
 Definition ab_tensor_prod_ind_hprop_triple {A B C : AbGroup}
@@ -617,9 +614,8 @@ Proof.
   - snrapply Build_Is1Natural.
     intros A A' f.
     snrapply ab_tensor_prod_ind_homotopy.
-    intros a z.
-    change (grp_pow (f a) z = f (grp_pow a z)).
-    exact (grp_pow_natural _ _ _)^.
+    intros a z; symmetry.
+    exact (grp_pow_natural _ _ _).
 Defined.
 
 (** Since we have symmetry of the tensor product, we get left unitality for free. *)
@@ -647,8 +643,8 @@ Proof.
   snrapply triangle_twist.
   intros A B.
   snrapply ab_tensor_prod_ind_homotopy_triple.
-  intros a b z.
-  exact (tensor_ab_mul z a b)^.
+  intros a b z; symmetry.
+  exact (tensor_ab_mul z a b).
 Defined.
 
 (** The hexagon identity is also straighforward to prove. We simply have to reduce all the involved functions on the simple tensors using our custom triple tensor induction principle. *)
@@ -774,7 +770,7 @@ Proof.
       snrapply grp_homo_op.
     + intros x x'.
       rapply Abel_ind_hprop.
-      snrapply (FreeGroup_ind_homotopy _ (f' := ab_homo_add _ _)).
+      snrapply (FreeGroup_ind_homotopy _ (f' := sgop_hom _ _)).
       intros y.
       lhs nrapply FreeGroup_rec_beta.
       lhs nrapply grp_homo_op.

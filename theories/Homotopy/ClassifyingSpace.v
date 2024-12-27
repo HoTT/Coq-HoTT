@@ -9,9 +9,8 @@ Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.WhiteheadsPrinciple.
 
 Local Open Scope pointed_scope.
-Local Open Scope mc_scope.
-Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** * We define the Classifying space of a group to be the following HIT:
 
@@ -42,6 +41,8 @@ Module Export ClassifyingSpace.
     Proof. Admitted.
 
   End ClassifyingSpace.
+  
+  Arguments bloop {G} _%_mc_mult_scope.
 
   (** Now we can state the expected dependent elimination principle, and derive other versions of the elimination principle from it. *)
   Section ClassifyingSpace_ind.
@@ -121,7 +122,7 @@ Section Eliminators.
   Proof.
     refine (ClassifyingSpace_ind P bbase' bloop' _).
     intros.
-    apply ds_G1. 
+    apply ds_G1.
     apply path_ishprop.
   Defined.
 
@@ -176,9 +177,8 @@ Proof.
 Defined.
 
 (** [bloop] "preserves inverses" by taking inverses in [G] to inverses of paths in [BG]. *)
-Definition bloop_inv {G : Group} : forall x : G, bloop (-x) = (bloop x)^.
+Definition bloop_inv {G : Group} (x : G) : bloop x^ = (bloop x)^.
 Proof.
-  intro x.
   refine (_ @ concat_p1 _).
   apply moveL_Vp.
   refine (_ @ bloop_id).
@@ -421,7 +421,7 @@ Proof.
   nrapply pClassifyingSpace_rec_beta_bloop.
 Defined.
 
-Lemma pbloop_natural (G K : Group) (f : G $-> K) 
+Lemma pbloop_natural (G K : Group) (f : G $-> K)
   : fmap loops (fmap B f) o* pbloop ==* pbloop o* f.
 Proof.
   srapply phomotopy_homotopy_hset.

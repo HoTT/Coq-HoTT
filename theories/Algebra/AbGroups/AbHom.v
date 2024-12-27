@@ -2,29 +2,27 @@ Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Groups.QuotientGroup AbelianGroup Biproduct.
 
-Local Open Scope mc_scope.
-Local Open Scope mc_add_scope.
-
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
-(** We can add group homomorphisms. *)
-Definition ab_homo_add {A : Group} {B : AbGroup} (f g : A $-> B)
-  : A $-> B.
+(** In this file, we use additive notation for the group operation, even though some of the groups we deal with are not assumed to be abelian. *)
+Local Open Scope mc_add_scope.
+
+(** The sum of group homomorphisms [f] and [g] is [fun a => f(a) + g(a)].  While the group *laws* require [Funext], the operations do not, so we make them instances. *)
+Global Instance sgop_hom {A : Group} {B : AbGroup} : SgOp (A $-> B).
 Proof.
-  refine (grp_homo_compose ab_codiagonal _).
-  (** [fun a => f(a) + g(a)] **)
-  exact (grp_prod_corec f g).
+  intros f g.
+  exact (grp_homo_compose ab_codiagonal (grp_prod_corec f g)).
 Defined.
 
-(** We can negate a group homomorphism by composing with [ab_homo_negation]. *)
-Global Instance negate_hom {A : Group} {B : AbGroup}
-  : Negate (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.
+(** We can negate a group homomorphism [A -> B] by post-composing with [ab_homo_negation : B -> B]. *)
+Global Instance inverse_hom {A : Group} {B : AbGroup}
+  : Inverse (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.
 
 (** For [A] and [B] groups, with [B] abelian, homomorphisms [A $-> B] form an abelian group. *)
 Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.
 Proof.
   nrefine (Build_Group (GroupHomomorphism A B)
-             ab_homo_add grp_homo_const negate_hom _).
+             sgop_hom grp_homo_const inverse_hom _).
   repeat split.
   1: exact _.
   all: hnf; intros; apply equiv_path_grouphomomorphism; intro; cbn.
@@ -47,7 +45,7 @@ Defined.
 
 (** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)
 Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
-  := ab_cokernel (ab_homo_add (negate_hom f) g).
+  := ab_cokernel ((-f) + g).
 
 Definition ab_coeq_in {A B} {f g : A $-> B} : B $-> ab_coeq f g.
 Proof.
@@ -74,7 +72,7 @@ Proof.
   destruct H as [a q].
   destruct q; simpl.
   lhs nrapply grp_homo_op.
-  lhs nrapply (ap (.* _)).
+  lhs nrapply (ap (+ _)).
   1: apply grp_homo_inv.
   apply grp_moveL_M1^-1.
   exact (p a)^.

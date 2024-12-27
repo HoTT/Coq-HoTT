@@ -476,7 +476,7 @@ Section Localization.
     snrapply isinvertible_cring.
     - exact (class_of _ (Build_Fraction 1 x Sx)).
     - apply qglue, fraction_eq_simple.
-      exact (rng_mult_assoc _ _ _)^.
+      exact (ring_mult_assoc_opp _ _ _ _).
   Defined.
   
   (** As a special case, any denominator of a fraction must necessarily be invertible. *)

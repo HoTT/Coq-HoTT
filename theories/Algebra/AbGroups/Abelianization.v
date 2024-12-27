@@ -70,11 +70,8 @@ Section Abel.
 
   (** We locally define a map uncurry2 that lets us uncurry [A * B * C -> D] twice. *)
   Local Definition uncurry2 {A B C D : Type}
-    : (A -> B -> C -> D) -> A * B * C -> D.
-  Proof.
-    intros f [[a b] c].
-    by apply f.
-  Defined.
+    : (A -> B -> C -> D) -> A * B * C -> D
+    := fun f '(a, b, c) => f a b c.
 
   (** The type [Abel] is defined to be the set coequalizer of the following maps [G^3 -> G]. *)
   Definition Abel
@@ -82,35 +79,28 @@ Section Abel.
       (uncurry2 (fun a b c : G => a * (b * c)))
       (uncurry2 (fun a b c : G => a * (c * b)))).
 
-  (** We have a natural map from G to Abel G. *)
-  Definition abel_in : G -> Abel.
-  Proof.
-    intro g.
-    apply tr, coeq, g.
-  Defined.
+  (** We have a natural map from [G] to [Abel G]. *)
+  Definition abel_in : G -> Abel := tr o coeq.
 
   (** This map satisfies the condition [ab_comm]. It's a form of commutativity in a right factor. *)
   Definition abel_in_comm a b c
-    : abel_in (a * (b * c)) = abel_in (a * (c * b)).
-  Proof.
-    apply (ap tr).
-    exact (cglue (a, b, c)).
-  Defined.
+    : abel_in (a * (b * c)) = abel_in (a * (c * b))
+    := ap tr (cglue (a, b, c)).
 
   (** It is clear that Abel is a set. *)
-  Global Instance istrunc_abel : IsHSet Abel := _.
+  Definition istrunc_abel : IsHSet Abel := _.
 
   (** We can derive the induction principle from the ones for truncation and the coequalizer. *)
   Definition Abel_ind (P : Abel -> Type) `{forall x, IsHSet (P x)} 
     (a : forall x, P (abel_in x))
-    (c : forall x y z, DPath P (abel_in_comm x y z) (a (x * (y * z))) (a (x * (z * y))))
+    (c : forall x y z, abel_in_comm x y z # a (x * (y * z)) = a (x * (z * y)))
     : forall (x : Abel), P x.
   Proof.
     srapply Trunc_ind.
-    srapply Coeq_ind.
+    snrapply Coeq_ind.
     1: apply a.
     intros [[x y] z].
-    refine (transport_compose _ _ _ _ @ _).
+    nrefine (transport_compose _ _ _ _ @ _).
     apply c.
   Defined.
 
@@ -125,11 +115,11 @@ Section Abel.
   (** The computation rule on paths. *)
   Definition Abel_ind_beta_abel_in_comm (P : Abel -> Type) `{forall x, IsHSet (P x)}
     (a : forall x, P (abel_in x))
-    (c : forall x y z, DPath P (abel_in_comm x y z) (a (x * (y * z))) (a (x * (z * y))))
+    (c : forall x y z, abel_in_comm x y z # a (x * (y * z)) = a (x * (z * y)))
     (x y z : G)
     : apD (Abel_ind P a c) (abel_in_comm x y z) = c x y z.
   Proof.
-    refine (apD_compose' tr _ _ @ ap _ _ @ concat_V_pp _ _).
+    nrefine (apD_compose' tr _ _ @ ap _ _ @ concat_V_pp _ _).
     rapply Coeq_ind_beta_cglue.
   Defined.
 
@@ -159,21 +149,21 @@ Local Ltac Abel_ind_hprop x := snrapply Abel_ind_hprop; [exact _ | intro x].
 
 (** We make sure that [G] is implicit in the arguments of [abel_in]
  and [abel_in_comm]. *)
-Arguments abel_in {_}.
-Arguments abel_in_comm {_}.
+Arguments abel_in {_} g%_mc_mult_scope.
+Arguments abel_in_comm {_} (a b c)%_mc_mult_scope.
 
-(** Now we can show that Abel G is in fact an abelian group. *)
+(** Now we can show that [Abel G] is in fact an abelian group. We will denote the operation in [Abel G] by the multiplicative [*] notation even though it is later shown to be commutative. *)
 
 Section AbelGroup.
 
   Context (G : Group).
 
-  (** Firstly we derive the operation on Abel G. This is defined as follows:
+  (** Firstly we define the operation on [Abel G]. This is defined as follows:
 <<
-        abel_in x + abel_in y := abel_in (x * y)
+        abel_in x * abel_in y := abel_in (x * y)
 >>
-      But we need to also check that it preserves ab_comm in the appropriate way. *)
-  Global Instance abel_sgop : SgOp (Abel G).
+      But we need to also check that it preserves [ab_comm] in the appropriate way. *)
+  Global Instance sgop_abel : SgOp (Abel G).
   Proof.
     intro a.
     srapply Abel_rec.
@@ -199,82 +189,83 @@ Section AbelGroup.
     refine (ap _ (associativity _ _ _)^).
   Defined.
 
-  (** We can now easily show that this operation is associative by associativity in G and the fact that being associative is a proposition. *)
-  Global Instance abel_sgop_associative : Associative abel_sgop.
+  (** We can now easily show that this operation is associative by [associativity] in [G] and the fact that being associative is a proposition. *)
+  Global Instance associative_abel_sgop : Associative (.*.).
   Proof.
     intros x y.
     Abel_ind_hprop z; revert y.
     Abel_ind_hprop y; revert x.
     Abel_ind_hprop x; simpl.
-    apply ap, associativity.
+    apply (ap abel_in), associativity.
   Defined.
 
-  (** From this we know that Abel G is a semigroup. *)
-  Global Instance abel_issemigroup : IsSemiGroup (Abel G) := {}.
+  (** From this we know that [Abel G] is a semigroup. *)
+  Global Instance issemigroup_abel : IsSemiGroup (Abel G) := {}.
 
-  (** We define the unit as ab of the unit of G *)
-  Global Instance abel_mon_unit : MonUnit (Abel G) := abel_in mon_unit.
+  (** We define the group unit as [abel_in] of the unit of [G] *)
+  Global Instance monunit_abel_zero : MonUnit (Abel G) := abel_in mon_unit.
 
   (** By using Abel_ind_hprop we can prove the left and right identity laws. *)
-  Global Instance abel_leftidentity : LeftIdentity abel_sgop abel_mon_unit.
+  Global Instance leftidentity_abel : LeftIdentity (.*.) 1.
   Proof.
     Abel_ind_hprop x.
-    simpl; apply ap, left_identity.
+    simpl; apply (ap abel_in), left_identity.
   Defined.
 
-  Global Instance abel_rightidentity : RightIdentity abel_sgop abel_mon_unit.
+  Global Instance rightidentity_abel : RightIdentity (.*.) 1.
   Proof.
     Abel_ind_hprop x.
-    simpl; apply ap, right_identity.
+    simpl; apply (ap abel_in), right_identity.
   Defined.
 
-  (** Hence Abel G is a monoid *)
+  (** Hence [Abel G] is a monoid *)
   Global Instance ismonoid_abel : IsMonoid (Abel G) := {}.
 
   (** We can also prove that the operation is commutative! This will come in handy later. *)
-  Global Instance abel_commutative : Commutative abel_sgop.
+  Global Instance commutative_abel : Commutative (.*.).
   Proof.
     intro x.
     Abel_ind_hprop y.
     revert x.
-    Abel_ind_hprop x.
+    Abel_ind_hprop x; cbn beta.
     refine ((ap abel_in (left_identity _))^ @ _).
     refine (_ @ (ap abel_in (left_identity _))).
     apply abel_in_comm.
   Defined.
 
-  (** Now we can define the negation. This is just
+  (** Now we can define the inverse operation. This is just
 <<
-        - (abel_in g) := abel_in (- g)
+        (abel_in g)^ := abel_in g^
 >>
       However when checking that it respects [ab_comm] we have to show the following:
 <<
-        abel_in (- z * - y * - x) = abel_in (- y * - z * - x)
+        abel_in (z^ * y^ * x^) = abel_in (y^ * z^ * x^)
 >>
-      there is no obvious way to do this, but we note that [abel_in (x * y)] is exactly the definition of [abel_in x + abel_in y]! Hence by commutativity we can show this. *)
-  Global Instance abel_negate : Negate (Abel G).
+      there is no obvious way to do this, but we note that [abel_in (x * y)] is exactly the definition of [abel_in x * abel_in y]! Hence by [commutativity] we can show this. *)
+  Global Instance inverse_abel : Inverse (Abel G).
   Proof.
-    srapply Abel_rec.
-    { intro g.
-      exact (abel_in (-g)). }
-    intros x y z; cbn.
-    rewrite ?negate_sg_op.
-    change (abel_in (- z) * abel_in (- y) * abel_in (- x)
-      = abel_in (- y) * abel_in (- z) * abel_in (- x)).
-    by rewrite (commutativity (abel_in (-z)) (abel_in (-y))).
+    srapply (Abel_rec _ _ (abel_in o inv)).
+    intros x y z; cbn beta.
+    lhs nrapply ap.
+    2: rhs nrapply ap.
+    1,3: lhs rapply inverse_sg_op; nrapply (ap (.* _)); rapply inverse_sg_op.
+    change (abel_in z^ * abel_in y^ * abel_in x^
+      = abel_in y^ * abel_in z^ * abel_in x^).
+    apply (ap (.* _)).
+    exact (commutativity (abel_in z^) (abel_in y^)).
   Defined.
 
-  (** Again by Abel_ind_hprop and the corresponding laws for G we can prove the left and right inverse laws. *)
-  Global Instance abel_leftinverse : LeftInverse abel_sgop abel_negate abel_mon_unit.
+  (** Again by [Abel_ind_hprop] and the corresponding laws for [G] we can prove the left and right inverse laws. *)
+  Global Instance leftinverse_abel : LeftInverse (.*.) (^) 1.
   Proof.
     Abel_ind_hprop x; simpl.
-    apply ap; apply left_inverse.
+    apply (ap abel_in); apply left_inverse.
   Defined.
 
-  Instance abel_rightinverse : RightInverse abel_sgop abel_negate abel_mon_unit.
+  Instance rightinverse_abel : RightInverse (.*.) (^) 1.
   Proof.
     Abel_ind_hprop x; simpl.
-    apply ap; apply right_inverse.
+    apply (ap abel_in); apply right_inverse.
   Defined.
 
   (** Thus [Abel G] is a group *)
@@ -295,8 +286,7 @@ End AbelGroup.
 Global Instance issurj_abel_in {G : Group} : IsSurjection (@abel_in G).
 Proof.
   apply BuildIsSurjection.
-  Abel_ind_hprop x.
-  cbn.
+  Abel_ind_hprop x; cbn beta.
   apply tr.
   exists x.
   reflexivity.
@@ -386,7 +376,8 @@ Theorem homotopic_isabelianization {G : Group} (A B : AbGroup)
   : eta2 == grp_homo_compose (groupiso_isabelianization A B eta1 eta2) eta1.
 Proof.
   intros x.
-  exact (((esssurj (group_precomp B eta1) eta2).2 x)^).
+  symmetry.
+  exact ((esssurj (group_precomp B eta1) eta2).2 x).
 Defined.
 
 (** Hence any abelianization is surjective. *)

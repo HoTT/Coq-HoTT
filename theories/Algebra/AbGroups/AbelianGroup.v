@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import Spaces.Nat.Core Spaces.Int.
-Require Export Classes.interfaces.canonical_names (Zero, zero, Plus).
+Require Export Classes.interfaces.canonical_names (Zero, zero, Plus, plus, Negate, negate, Involutive, involutive).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
 Require Export Algebra.Groups.Subgroup.
@@ -18,11 +18,24 @@ Local Open Scope mc_add_scope.
 
 Record AbGroup := {
   abgroup_group : Group;
-  abgroup_commutative : Commutative (@group_sgop abgroup_group);
+  abgroup_commutative : @Commutative abgroup_group _ (+);
 }.
 
 Coercion abgroup_group : AbGroup >-> Group.
 Global Existing Instance abgroup_commutative.
+
+Definition zero_abgroup (A : AbGroup) : Zero A := mon_unit.
+Definition negate_abgroup (A : AbGroup) : Negate A := inv.
+Definition plus_abgroup (A : AbGroup) : Plus A := sg_op.
+
+(** Sometimes we want an abelian group to act as if it has a [Plus], [Zero] and [Negate] operation. For example, when working with rings. We therefore make this module of hints available for import so that consumers can control the way the abelian group operation is treated.
+
+Files about abelian groups (apart from this one) typically don't have these instances available, whereas files about rings do. *)
+Module Import AdditiveInstances.
+  #[export] Hint Immediate zero_abgroup : typeclass_instances.
+  #[export] Hint Immediate negate_abgroup : typeclass_instances.
+  #[export] Hint Immediate plus_abgroup : typeclass_instances.
+End AdditiveInstances.
 
 Global Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
 Proof.
@@ -31,7 +44,7 @@ Defined.
 
 (** Easier way to build abelian groups without redundant information. *)
 Definition Build_AbGroup' (G : Type)
-  `{Zero G, Negate G, Plus G, IsHSet G}
+  `{MonUnit G, Inverse G, SgOp G, IsHSet G}
   (comm : Commutative (A:=G) (+))
   (assoc : Associative (A:=G) (+))
   (unit_l : LeftIdentity (A:=G) (+) 0)
@@ -53,17 +66,10 @@ Defined.
 
 Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
 
-Global Instance zero_abgroup (A : AbGroup) : Zero A := group_unit.
-Global Instance plus_abgroup (A : AbGroup) : Plus A := group_sgop.
-Global Instance negate_abgroup (A : AbGroup) : Negate A := group_inverse.
-
-Definition ab_comm {A : AbGroup} (x y : A) : x + y = y + x
-  := commutativity x y.
-
 Definition ab_neg_op {A : AbGroup} (x y : A) : - (x + y) = -x - y.
 Proof.
   lhs nrapply grp_inv_op.
-  apply ab_comm.
+  apply commutativity.
 Defined.
 
 (** ** Paths between abelian groups *)
@@ -81,6 +87,8 @@ Definition equiv_path_abgroup_group `{Univalence} {A B : AbGroup}
   := equiv_path_group oE equiv_path_abgroup^-1.
 
 (** ** Subgroups of abelian groups *)
+
+Local Hint Immediate canonical_names.inverse_is_negate : typeclass_instances.
 
 (** Subgroups of abelian groups are abelian *)
 Global Instance isabgroup_subgroup (G : AbGroup) (H : Subgroup G)
@@ -103,7 +111,7 @@ Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
   intros x y h.
-  by rewrite ab_comm.
+  by rewrite commutativity.
 Defined.
 
 (** ** Quotients of abelian groups *)
@@ -248,7 +256,7 @@ Proof.
       apply commutativity.
   - srapply isequiv_adjointify.
     1: exact (fun a => -a).
-    1-2: exact negate_involutive.
+    1-2: exact inverse_involutive.
 Defined.
 
 (** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)
@@ -257,7 +265,7 @@ Proof.
   snrapply Build_GroupHomomorphism.
   1: exact (fun a => grp_pow a n).
   intros a b.
-  apply grp_pow_mul, ab_comm.
+  apply grp_pow_mul, commutativity.
 Defined.
 
 (** [ab_mul n] is natural. *)
