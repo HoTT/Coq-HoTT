@@ -737,7 +737,7 @@ Global Instance lower_triangular_negate {R : Ring@{i}} {n : nat}
 Proof.
   unfold IsLowerTriangular.
   rewrite matrix_transpose_negate.
-  exact _.
+  by apply upper_triangular_negate.
 Defined.
 
 (** The product of two upper triangular matrices is upper triangular. *)
