@@ -708,8 +708,8 @@ Proof.
     intros w.
     induction w as [|gh].
     1: exact (grp_homo_unit _ @ (grp_homo_unit _)^).
-    change (f (amal_eta [gh] * amal_eta w) = g (amal_eta [gh] * amal_eta w)).
-    nrapply grp_homo_op_agree.
+    (* The goal is definitionally the same as [f (amal_eta [gh] * amal_eta w) = g (amal_eta [gh] * amal_eta w)], but using [change] to put it in that form slows down the next line for some reason. *)
+    nrapply (@grp_homo_op_agree _ _ _ f g (amal_eta [gh]) (amal_eta w) (amal_eta [gh]) (amal_eta w)).
     2: apply IHw.
     destruct gh as [g' | h].
     + exact (p g').

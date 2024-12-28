@@ -196,7 +196,7 @@ Section AbelGroup.
     Abel_ind_hprop z; revert y.
     Abel_ind_hprop y; revert x.
     Abel_ind_hprop x; simpl.
-    apply (ap abel_in), associativity.
+    nrapply (ap abel_in); apply associativity.
   Defined.
 
   (** From this we know that [Abel G] is a semigroup. *)
@@ -208,14 +208,14 @@ Section AbelGroup.
   (** By using Abel_ind_hprop we can prove the left and right identity laws. *)
   Global Instance leftidentity_abel : LeftIdentity (.*.) 1.
   Proof.
-    Abel_ind_hprop x.
-    simpl; apply (ap abel_in), left_identity.
+    Abel_ind_hprop x; cbn beta.
+    nrapply (ap abel_in); apply left_identity.
   Defined.
 
   Global Instance rightidentity_abel : RightIdentity (.*.) 1.
   Proof.
-    Abel_ind_hprop x.
-    simpl; apply (ap abel_in), right_identity.
+    Abel_ind_hprop x; cbn beta.
+    nrapply (ap abel_in); apply right_identity.
   Defined.
 
   (** Hence [Abel G] is a monoid *)
@@ -259,13 +259,13 @@ Section AbelGroup.
   Global Instance leftinverse_abel : LeftInverse (.*.) (^) 1.
   Proof.
     Abel_ind_hprop x; simpl.
-    apply (ap abel_in); apply left_inverse.
+    nrapply (ap abel_in); apply left_inverse.
   Defined.
 
   Instance rightinverse_abel : RightInverse (.*.) (^) 1.
   Proof.
     Abel_ind_hprop x; simpl.
-    apply (ap abel_in); apply right_inverse.
+    nrapply (ap abel_in); apply right_inverse.
   Defined.
 
   (** Thus [Abel G] is a group *)

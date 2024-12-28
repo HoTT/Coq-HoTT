@@ -167,8 +167,8 @@ Definition Build_Group' (G : Type) `{IsHSet G}
 Proof.
   rapply (Build_Group G).
   repeat split.
-  4: rapply right_identity_left_identity.
-  5: rapply right_inverse_left_inverse.
+  4: nrapply right_identity_left_identity; exact _.
+  5: nrapply right_inverse_left_inverse; exact _.
   all: exact _.
 Defined.
 
