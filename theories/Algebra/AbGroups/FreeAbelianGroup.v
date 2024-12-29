@@ -37,7 +37,7 @@ Definition freeabgroup_in {S : Type} : S -> FreeAbGroup S
 
 Definition FreeAbGroup_rec {S : Type} {A : AbGroup} (f : S -> A)
   : FreeAbGroup S $-> A
-  := grp_homo_abel_rec (FreeGroup_rec _ _ f).
+  := grp_homo_abel_rec (FreeGroup_rec f).
 
 Definition FreeAbGroup_rec_beta_in {S : Type} {A : AbGroup} (f : S -> A)
   : FreeAbGroup_rec f o freeabgroup_in == f

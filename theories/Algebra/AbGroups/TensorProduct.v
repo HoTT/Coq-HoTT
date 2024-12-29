@@ -148,9 +148,9 @@ Definition ab_tensor_prod_rec_helper {A B C : AbGroup}
   (l : forall a b b', f a (b + b') = f a b + f a b')
   (r : forall a a' b, f (a + a') b = f a b + f a' b)
   (x : FreeAbGroup (A * B)) (insg : subgroup_biadditive_pairs x)
-  : grp_homo_abel_rec (FreeGroup_rec (A * B) C (uncurry f)) x = mon_unit.
+  : grp_homo_abel_rec (FreeGroup_rec (uncurry f)) x = mon_unit.
 Proof.
-  set (abel_rec := grp_homo_abel_rec (FreeGroup_rec (A * B) C (uncurry f))).
+  set (abel_rec := grp_homo_abel_rec (FreeGroup_rec (uncurry f))).
   strip_truncations.
   induction insg as [ x biad | | g h insg_g IHg insg_h IHh ].
   - destruct biad as [ [ a [ a' [ b p ] ] ] | [ a [ b [ b' p ] ] ] ].
