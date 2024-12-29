@@ -302,7 +302,7 @@ Section FreeProduct.
     { intros r y h1 h2; revert r.
       rapply amal_type_ind_hprop.
       intros z;
-      change (amal_eta ((x ++ [inl h1 ,inl h2] ++ y) ++ z)
+      change (amal_eta ((x ++ [inl h1, inl h2] ++ y) ++ z)
         = amal_eta ((x ++ [inl (h1 * h2)] ++ y) ++ z)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply app_assoc.
