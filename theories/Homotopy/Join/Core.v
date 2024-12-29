@@ -50,12 +50,10 @@ Section Join.
     (Hglue : forall a b, ap f (jglue a b) @ Hr b = Hl a @ ap g (jglue a b))
     : f == g.
   Proof.
-    snrapply Join_ind.
-    - exact Hl.
-    - exact Hr.
-    - intros a b.
-      nrapply transport_paths_FlFr'.
-      apply Hglue.
+    snrapply (Join_ind _ Hl Hr).
+    intros a b.
+    nrapply transport_paths_FlFr'.
+    apply Hglue.
   Defined.
 
   Definition Join_ind_Flr {A B : Type} (f : Join A B -> Join A B)
@@ -64,11 +62,10 @@ Section Join.
     (Hglue : forall a b, ap f (jglue a b) @ Hr b = Hl a @ jglue a b)
     : forall x, f x = x.
   Proof.
-    snrapply (Join_ind_FlFr _ _ Hl Hr).
+    snrapply (Join_ind _ Hl Hr).
     intros a b.
-    lhs nrapply Hglue.
-    apply ap; symmetry.
-    apply ap_idmap.
+    nrapply transport_paths_Flr'.
+    apply Hglue.
   Defined.
 
   (** And a version for showing that a composite is homotopic to the identity. *)
@@ -78,12 +75,49 @@ Section Join.
     (Hglue : forall a b, ap g (ap f (jglue a b)) @ Hr b = Hl a @ jglue a b)
     : forall x, g (f x) = x.
   Proof.
-    snrapply Join_ind.
-    - exact Hl.
-    - exact Hr.
-    - intros a b.
-      nrapply transport_paths_FFlr'.
-      apply Hglue.
+    snrapply (Join_ind _ Hl Hr).
+    intros a b.
+    nrapply transport_paths_FFlr'.
+    apply Hglue.
+  Defined.
+  
+  Definition Join_ind_FFlFr {A B C P : Type}
+    (f : Join A B -> C) (g : C -> P) (h : Join A B -> P)
+    (Hl : forall a, g (f (joinl a)) = h (joinl a))
+    (Hr : forall b, g (f (joinr b)) = h (joinr b))
+    (Hglue : forall a b, ap g (ap f (jglue a b)) @ Hr b = Hl a @ ap h (jglue a b))
+    : g o f == h.
+  Proof.
+    snrapply (Join_ind _ Hl Hr).
+    intros a b; cbn beta.
+    nrapply transport_paths_FFlFr'.
+    apply Hglue.
+  Defined.
+  
+  Definition Join_ind_FlFFr {A B C P : Type}
+    (f : Join A B -> C) (g : C -> P) (h : Join A B -> P)
+    (Hl : forall a, h (joinl a) = g (f (joinl a)))
+    (Hr : forall b, h (joinr b) = g (f (joinr b)))
+    (Hglue : forall a b, ap h (jglue a b) @ Hr b = Hl a @ ap g (ap f (jglue a b)))
+    : h == g o f.
+  Proof.
+    snrapply (Join_ind _ Hl Hr).
+    intros a b; cbn beta.
+    nrapply transport_paths_FlFFr'.
+    apply Hglue.
+  Defined.
+  
+  Definition Join_ind_FFlFFr {A B C D P : Type}
+    (f : Join A B -> C) (g : C -> P) (h : Join A B -> D) (i : D -> P)
+    (Hl : forall a, i (h (joinl a)) = g (f (joinl a)))
+    (Hr : forall b, i (h (joinr b)) = g (f (joinr b)))
+    (Hglue : forall a b, ap i (ap h (jglue a b)) @ Hr b = Hl a @ ap g (ap f (jglue a b)))
+    : i o h == g o f.
+  Proof.
+    snrapply (Join_ind _ Hl Hr).
+    intros a b; cbn beta.
+    nrapply transport_paths_FFlFFr'.
+    apply Hglue.
   Defined.
 
   Definition Join_rec {A B P : Type} (P_A : A -> P) (P_B : B -> P)
@@ -516,15 +550,14 @@ Section FunctorJoin.
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
     : functor_join (h o f) (i o g) == functor_join h i o functor_join f g.
   Proof.
-    snrapply Join_ind_FlFr.
+    snrapply Join_ind_FlFFr.
     1,2: reflexivity.
     intros a b.
     simpl.
     apply equiv_p1_1q.
     lhs nrapply functor_join_beta_jglue; symmetry.
-    lhs nrapply (ap_compose (functor_join f g) _ (jglue a b)).
     lhs nrefine (ap _ (functor_join_beta_jglue _ _ _ _)).
-    apply functor_join_beta_jglue.
+    nrapply (functor_join_beta_jglue _ _ (f a) (g b)).
   Defined.
 
   Definition functor_join_idmap {A B}
@@ -727,15 +760,13 @@ Section JoinSym.
   Definition join_sym_nat {A B A' B'} (f : A -> A') (g : B -> B')
     : join_sym A' B' o functor_join f g == functor_join g f o join_sym A B.
   Proof.
-    snrapply Join_ind_FlFr.
+    snrapply Join_ind_FFlFFr.
     1, 2: reflexivity.
     intros a b; cbn beta.
     apply equiv_p1_1q.
-    lhs nrefine (ap_compose' (functor_join f g) _ (jglue a b)).
     lhs nrefine (ap _ (functor_join_beta_jglue _ _ _ _)).
     lhs nrapply join_sym_beta_jglue.
     symmetry.
-    lhs nrefine (ap_compose' (join_sym A B) _ (jglue a b)).
     lhs nrefine (ap _ (join_sym_beta_jglue a b)).
     refine (ap_V _ (jglue b a) @ ap inverse _).
     apply functor_join_beta_jglue.
