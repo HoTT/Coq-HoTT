@@ -165,7 +165,7 @@ Defined.
 Definition Colimit_rec_homotopy' {G : Graph} {D : Diagram G} (P : Type) (C1 C2 : Cocone D P)
   (h_obj : forall i, legs C1 i == legs C2 i)
   (h_comm : forall i j (g : G i j) x,
-      legs_comm C1 i j g x @ h_obj i x = h_obj j ((D _f g) x) @ legs_comm C2 i j g x)
+      legs_comm C1 i j g x @ h_obj i x = h_obj j (D _f g x) @ legs_comm C2 i j g x)
   : Colimit_rec P C1 == Colimit_rec P C2.
 Proof.
   snrapply Colimit_rec_homotopy.
@@ -273,9 +273,9 @@ Proof.
     apply equiv_p1_1q.
     unfold comm_square_comp.
     Open Scope long_path_scope.
-    lhs nrapply ((ap_V _ _) @@ 1).
-    lhs nrapply ((inverse2 (ap_pp (HQ j) _ _)) @@ 1).
-    lhs nrapply ((inv_pp _ _) @@ 1).
+    lhs nrapply (ap_V _ _ @@ 1).
+    lhs nrapply (inverse2 (ap_pp (HQ j) _ _) @@ 1).
+    lhs nrapply (inv_pp _ _ @@ 1).
     symmetry.
     lhs nrapply (ap_compose (functor_Colimit f)).
     lhs nrapply (ap _ (Colimit_rec_beta_colimp _ _ _ _ _ _)).
