@@ -53,7 +53,7 @@ Proof.
   destruct p. symmetry; apply concat_p1.
 Defined.
 
-Definition transport_paths_FFr {A B C : Type} {f : A -> B} {g : B -> C}
+Definition transport_paths_FFl {A B C : Type} {f : A -> B} {g : B -> C}
   {x1 x2 : A} {y : C} (p : x1 = x2) (q : g (f x1) = y)
   : transport (fun x => g (f x) = y) p q = (ap g (ap f p))^ @ q.
 Proof.
