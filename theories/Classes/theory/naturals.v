@@ -137,10 +137,10 @@ Section borrowed_from_nat.
   exact nat_induction.
   Qed.
 
-  Lemma case : forall x : N, x = 0 |_| exists y : N, (x = 1 + y)%mc.
+  Lemma case : forall x : N, x = 0 |_| exists y : N, (x = 1 + y).
   Proof.
   refine (from_nat_stmt nat
-    (fun s => forall x : s, x = 0 |_| exists y : s, (x = 1 + y)%mc) _).
+    (fun s => forall x : s, x = 0 |_| exists y : s, x = 1 + y) _).
   simpl. intros [|x];eauto.
   Qed.
 

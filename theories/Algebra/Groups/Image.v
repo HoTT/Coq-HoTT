@@ -20,7 +20,7 @@ Proof.
     apply grp_homo_unit.
   - intros x y p q; strip_truncations; apply tr.
     destruct p as [a p], q as [b q].
-    exists (a * -b).
+    exists (a * b^).
     lhs nrapply grp_homo_op; f_ap.
     lhs nrapply grp_homo_inv; f_ap.
 Defined.
@@ -47,7 +47,7 @@ Proof.
     exists (a * b).
     apply grp_homo_op.
   - intros b [a []].
-    exists (-a).
+    exists a^.
     apply grp_homo_inv.
 Defined.
 

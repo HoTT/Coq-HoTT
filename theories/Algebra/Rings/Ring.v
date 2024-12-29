@@ -2,10 +2,14 @@ Require Import WildCat.
 Require Import Spaces.Nat.Core Spaces.Nat.Arithmetic.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.abstract_algebra.
-Require Import Algebra.Groups.Group Algebra.Groups.Subgroup.
-Require Export Algebra.AbGroups.
+Require Import Algebra.Groups.Group Algebra.Groups.Subgroup Algebra.Groups.Image.
+Require Export Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct Algebra.AbGroups.FiniteSum.
+
 Require Export Classes.theory.rings.
 Require Import Modalities.ReflectiveSubuniverse.
+
+(** We make sure to treat [AbGroup] as if it has a [Plus], [Zero], and [Negate] operation from now on. *)
+Export AbelianGroup.AdditiveInstances.
 
 (** * Rings *)
 
@@ -91,8 +95,8 @@ Section RingLaws.
   Definition rng_plus_assoc : x + (y + z) = (x + y) + z := simple_associativity x y z.
   Definition rng_mult_assoc : x * (y * z) = (x * y) * z := simple_associativity x y z.
 
-  Definition rng_negate_negate : - (- x) = x := groups.negate_involutive _.
-  Definition rng_negate_zero : - (0 : A) = 0 := groups.negate_mon_unit.
+  Definition rng_negate_negate : - (- x) = x := groups.inverse_involutive _.
+  Definition rng_negate_zero : - (0 : A) = 0 := groups.inverse_mon_unit.
   Definition rng_negate_plus : - (x + y) = - x - y := negate_plus_distr _ _.
 
   Definition rng_mult_one_l : 1 * x = x := left_identity _.
@@ -133,7 +137,7 @@ Section RingHomoLaws.
   Definition rng_homo_negate : f (-x) = -(f x) := preserves_negate x.
 
   Definition rng_homo_minus_one : f (-1) = -1
-    := preserves_negate 1%mc @ ap negate preserves_1.
+    := preserves_negate _ @ ap negate preserves_1.
 
 End RingHomoLaws.
 

@@ -9,6 +9,7 @@ Require Import Truncations.Core Truncations.Connectedness.
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** * H-spaces *)
 

@@ -4,10 +4,6 @@ Require Import WildCat.Core Pointed.
 Require Import Groups.Group Groups.Subgroup Groups.Kernel.
 Require Import Homotopy.ExactSequence Modalities.Identity.
 
-Local Open Scope mc_scope.
-Local Open Scope mc_add_scope.
-Local Open Scope path_scope.
-
 (** * Complexes of groups *)
 
 Definition grp_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C} (cx : IsComplex i f)

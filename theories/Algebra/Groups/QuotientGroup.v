@@ -39,62 +39,68 @@ Section GroupCongruenceQuotient.
     apply class_of, mon_unit.
   Defined.
 
-  Global Instance congquot_negate : Negate CongruenceQuotient.
+  Global Instance congquot_inverse : Inverse CongruenceQuotient.
   Proof.
     srapply Quotient_rec.
-    1: exact (class_of R o negate).
-    intros x y p; cbn.
-    symmetry.
-    rewrite <- (left_identity (-x)).
-    destruct (left_inverse y).
-    set (-y * y * -x).
-    rewrite <- (right_identity (-y)).
-    destruct (right_inverse x).
-    unfold g; clear g.
-    rewrite <- simple_associativity.
-    apply qglue.
-    apply iscong; try reflexivity.
-    apply iscong; try reflexivity.
-    exact p.
+    1: exact (class_of R o (^)).
+    intros x y p; cbn beta.
+    transitivity (class_of R (y^ * (y * x^))).
+    - rewrite grp_assoc.
+      rewrite grp_inv_l.
+      rewrite grp_unit_l.
+      reflexivity.
+    - transitivity (class_of R (y^ * (x * x^))).
+      + symmetry; apply qglue; repeat apply iscong.
+        1,3: reflexivity.
+        exact p.
+      + rewrite grp_inv_r.
+        rewrite grp_unit_r.
+        reflexivity.
   Defined.
 
   Global Instance congquot_sgop_associative : Associative congquot_sgop.
   Proof.
     srapply Quotient_ind3_hprop; intros x y z.
-    simpl; by rewrite associativity.
-  Qed.
+    snrapply (ap (class_of R)).
+    rapply associativity.
+  Defined.
+  Global Opaque congquot_sgop_associative.
 
   Global Instance issemigroup_congquot : IsSemiGroup CongruenceQuotient := {}.
 
-  Global Instance congquot_leftidentity
-    : LeftIdentity congquot_sgop congquot_mon_unit.
+  Global Instance congquot_leftidentity : LeftIdentity (.*.) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
-    by simpl; rewrite left_identity.
-  Qed.
+    snrapply (ap (class_of R)).
+    rapply left_identity.
+  Defined.
+  Global Opaque congquot_leftidentity.
 
-  Global Instance congquot_rightidentity
-    : RightIdentity congquot_sgop congquot_mon_unit.
+  Global Instance congquot_rightidentity : RightIdentity (.*.) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
-    by simpl; rewrite right_identity.
-  Qed.
+    snrapply (ap (class_of R)).
+    rapply right_identity.
+  Defined.
+  Global Opaque congquot_rightidentity.
 
   Global Instance ismonoid_quotientgroup : IsMonoid CongruenceQuotient := {}.
 
-  Global Instance quotientgroup_leftinverse
-    : LeftInverse congquot_sgop congquot_negate congquot_mon_unit.
+  Global Instance quotientgroup_leftinverse : LeftInverse (.*.) (^) mon_unit.
   Proof.
-    srapply Quotient_ind_hprop; intro x.
-    by simpl; rewrite left_inverse.
-  Qed.
+    srapply Quotient_ind_hprop; intro x; cbn beta.
+    snrapply (ap (class_of R)).
+    rapply left_inverse.
+  Defined.
+  Global Opaque quotientgroup_leftinverse.
 
-  Global Instance quotientgroup_rightinverse
-    : RightInverse congquot_sgop congquot_negate congquot_mon_unit.
+  Global Instance quotientgroup_rightinverse : RightInverse (.*.) (^) mon_unit.
   Proof.
-    srapply Quotient_ind_hprop; intro x.
-    by simpl; rewrite right_inverse.
-  Qed.
+    srapply Quotient_ind_hprop; intro x; cbn beta.
+    snrapply (ap (class_of R)).
+    rapply right_inverse.
+  Defined.
+  Global Opaque quotientgroup_rightinverse.
 
   Global Instance isgroup_quotientgroup : IsGroup CongruenceQuotient := {}.
 
@@ -253,7 +259,7 @@ Section FirstIso.
     apply qglue; cbn.
     apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
     cbn. rewrite grp_homo_op, grp_homo_inv, h.
-    srapply negate_l.
+    apply grp_inv_l.
   Defined.
 
   (** First isomorphism theorem for groups *)
@@ -292,9 +298,9 @@ Proof.
     intros [g p].
     rapply contr_inhabited_hprop.
     srefine (tr ((g; _); _)).
-    + rewrite <- grp_unit_l, <- negate_mon_unit.
-      apply (related_quotient_paths (fun x y => N (-x * y))).
-      exact p^.
+    + rewrite <- grp_unit_l, <- inverse_mon_unit.
+      apply (related_quotient_paths (fun x y => N (x^ * y))).
+      exact p^%path.
     + srapply path_sigma_hprop.
       reflexivity.
 Defined.

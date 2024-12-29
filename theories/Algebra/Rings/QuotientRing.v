@@ -56,12 +56,12 @@ Section QuotientRing.
     1: exact _.
     (** Associativity follows from the underlying operation *)
     { srapply Quotient_ind3_hprop; intros x y z.
-      unfold sg_op, mult_is_sg_op, mult_quotient_group; simpl.
+      unfold mult, sg_op; simpl.
       apply ap.
       apply associativity. }
     (* Left and right identity follow from the underlying structure *)
     1,2: snrapply Quotient_ind_hprop; [exact _ | intro x].
-    1-2: unfold sg_op, mult_is_sg_op, mult_quotient_group; simpl.
+    1,2: unfold mult, sg_op; simpl.
     1-2: apply ap.
     1: apply left_identity.
     1: apply right_identity.
@@ -69,12 +69,12 @@ Section QuotientRing.
     { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group,
         plus, mult, plus_quotient_group; simpl.
-      apply ap.
+      nrapply ap.
       apply simple_distribute_l. }
     { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group,
         plus, mult, plus_quotient_group; simpl.
-      apply ap.
+      nrapply ap.
       apply simple_distribute_r. }
   Defined.
 

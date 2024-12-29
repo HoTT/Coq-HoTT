@@ -24,10 +24,10 @@ Section Reduction.
   Local Definition change_sign : A + A -> A + A := equiv_sum_symm A A.
 
   (** We introduce a local notation for [change_sign]. It is only defined in this section however. *)
-  Local Notation "a ^" := (change_sign a).
+  Local Notation "a ^'" := (change_sign a) (at level 1).
 
   (** Changing sign is an involution *)
-  Local Definition change_sign_inv a : a^^ = a.
+  Local Definition change_sign_inv a : a^'^' = a.
   Proof.
     by destruct a.
   Defined.
@@ -44,7 +44,7 @@ Section Reduction.
   Local Definition map1 : Words * (A + A) * Words -> Words.
   Proof.
     intros [[x a] y].
-    exact (x ++ [a] ++ [a^] ++ y).
+    exact (x ++ [a] ++ [a^'] ++ y).
   Defined.
   
   Arguments map1 _ /.
@@ -65,7 +65,7 @@ Section Reduction.
 
   (** This is the path constructor *)
   Definition freegroup_tau (x : Words) (a : A + A) (y : Words)
-    : freegroup_eta (x ++ [a] ++ [a^] ++ y) = freegroup_eta (x ++ y).
+    : freegroup_eta (x ++ [a] ++ [a^'] ++ y) = freegroup_eta (x ++ y).
   Proof.
     apply path_Tr, tr.
     exact ((cglue (x, a, y))).
@@ -82,7 +82,7 @@ Section Reduction.
       { intros y.
         exact (freegroup_eta (x ++ y)). }
       intros [[y a] z]; simpl.
-      change (freegroup_eta (x ++ y ++ ([a] ++ [a^] ++ z))
+      change (freegroup_eta (x ++ y ++ ([a] ++ [a^'] ++ z))
         = freegroup_eta (x ++ y ++ z)).
       rhs nrapply ap.
       2: nrapply app_assoc.
@@ -93,7 +93,7 @@ Section Reduction.
     revert y.
     srapply Coeq_ind_hprop.
     intro a.
-    change (freegroup_eta ((c ++ [b] ++ [b^] ++ d) ++ a)
+    change (freegroup_eta ((c ++ [b] ++ [b^'] ++ d) ++ a)
       = freegroup_eta ((c ++ d) ++ a)).
     lhs_V nrapply ap.
     1: nrapply app_assoc.
@@ -144,11 +144,11 @@ Section Reduction.
     1: reflexivity.
     lhs nrapply (ap (fun x => freegroup_eta (x ++ _))).
     1: nrapply reverse_cons.
-    change (freegroup_eta ((word_change_sign x ++ [a^]) ++ [a] ++ x)
+    change (freegroup_eta ((word_change_sign x ++ [a^']) ++ [a] ++ x)
       = mon_unit). 
     lhs_V nrapply ap.
     1: nrapply app_assoc.
-    set (a' := a^).
+    set (a' := a^').
     rewrite <- (change_sign_inv a).
     lhs nrapply freegroup_tau.
     apply IHx.
@@ -163,8 +163,8 @@ Section Reduction.
     apply word_concat_Vw.
   Defined.
 
-  (** Negation is defined by changing the order of a word that appears in eta. Most of the work here is checking that it is agreeable with the path constructor. *)
-  Global Instance negate_freegroup_type : Negate freegroup_type.
+  (** Inverses are defined by changing the order of a word that appears in eta. Most of the work here is checking that it is agreeable with the path constructor. *)
+  Global Instance inverse_freegroup_type : Inverse freegroup_type.
   Proof.
     intro x.
     strip_truncations.
@@ -222,7 +222,7 @@ Section Reduction.
   Defined.
 
   (** Left inverse *)
-  Global Instance leftinverse_freegroup_type : LeftInverse sg_op negate mon_unit.
+  Global Instance leftinverse_freegroup_type : LeftInverse (.*.) (^) mon_unit.
   Proof.
     rapply Trunc_ind.
     srapply Coeq_ind_hprop; intro x.
@@ -230,7 +230,7 @@ Section Reduction.
   Defined.
 
   (** Right inverse *)
-  Global Instance rightinverse_freegroup_type : RightInverse sg_op negate mon_unit.
+  Global Instance rightinverse_freegroup_type : RightInverse (.*.) (^) mon_unit.
   Proof.
     rapply Trunc_ind.
     srapply Coeq_ind_hprop; intro x.
@@ -247,7 +247,7 @@ Section Reduction.
   Proof.
     intros [x|x].
     - exact (s x).
-    - exact (- s x).
+    - exact (s x)^.
   Defined.
 
   (** When we have a list of words we can recursively define a group element. The obvious choice would be to map [nil] to the identity and [x :: xs] to [x * words_rec xs]. This has the disadvantage that a single generating element gets mapped to [x * 1] instead of [x]. To fix this issue, we map [nil] to the identity, the singleton to the element we want, and do the rest recursively. *)
@@ -341,7 +341,7 @@ Section Reduction.
     `{forall x, IsHProp (P x)}
     (H1 : P mon_unit)
     (Hin : forall x, P (freegroup_in x))
-    (Hop : forall x y, P x -> P y -> P (- x * y))
+    (Hop : forall x y, P x -> P y -> P (x^ * y))
     : forall x, P x.
   Proof.
     rapply FreeGroup_ind_hprop'.
@@ -355,7 +355,7 @@ Section Reduction.
         * rewrite <- grp_unit_r.
           by apply Hop.
         * assumption.
-      + change (P (-(freegroup_in a) * freegroup_eta w)).
+      + change (P ((freegroup_in a)^ * freegroup_eta w)).
         by apply Hop.
   Defined.
   

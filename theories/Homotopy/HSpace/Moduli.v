@@ -3,6 +3,7 @@ Require Import Basics Types HSpace.Core HSpace.Coherent HSpace.Pointwise
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** * The moduli type of coherent H-space structures *)
 

@@ -8,31 +8,31 @@ Section group_props.
   Context `{IsGroup G}.
 
   (** Group inverses are involutive *)
-  Global Instance negate_involutive : Involutive (-).
+  Global Instance inverse_involutive : Involutive (^).
   Proof.
     intros x.
     transitivity (mon_unit * x).
     2: apply left_identity.
-    transitivity ((- - x * - x) * x).
+    transitivity ((x^^ *  x^) * x).
     2: apply (@ap _ _ (fun y => y * x)),
           left_inverse.
-    transitivity (- - x * (- x * x)).
+    transitivity (x^^ * (x^ * x)).
     2: apply associativity.
-    transitivity (- - x * mon_unit).
+    transitivity (x^^ * mon_unit).
     2: apply ap, symmetry, left_inverse.
     apply symmetry, right_identity.
   Qed.
 
-  Global Instance isinj_group_negate : IsInjective (-).
+  Global Instance isinj_group_inverse : IsInjective (^).
   Proof.
     intros x y E.
     refine ((involutive x)^ @ _ @ involutive y).
     apply ap, E.
   Qed.
 
-  Lemma negate_mon_unit : - mon_unit = mon_unit.
+  Lemma inverse_mon_unit : mon_unit^ = mon_unit.
   Proof.
-    change ((fun x => - mon_unit = x) mon_unit).
+    change ((fun x => mon_unit^ = x) mon_unit).
     apply (transport _ (left_inverse mon_unit)).
     apply symmetry, right_identity.
   Qed.
@@ -61,7 +61,7 @@ Section group_props.
     reflexivity.
   Qed.
 
-  Lemma negate_sg_op x y : - (x * y) = -y * -x.
+  Lemma inverse_sg_op x y : (x * y)^ = y^ * x^.
   Proof.
     rewrite <- (left_identity (-y * -x)).
     rewrite <- (left_inverse (unit:=mon_unit) (x * y)).
@@ -77,21 +77,23 @@ Section group_props.
 End group_props.
 
 Section abgroup_props.
+  Local Open Scope mc_add_scope.
 
-  Lemma negate_sg_op_distr `{IsAbGroup G} x y : -(x * y) = -x * -y.
+  Lemma negate_sg_op_distr `{IsAbGroup G} x y : -(x + y) = -x + -y.
   Proof.
-    path_via (-y * -x).
-    - apply negate_sg_op.
+    path_via (-y + -x).
+    - rapply inverse_sg_op.
     - apply commutativity.
   Qed.
 
+  Local Close Scope mc_add_scope.
 End abgroup_props.
 
 Section groupmor_props.
 
   Context `{IsGroup A} `{IsGroup B} {f : A -> B} `{!IsMonoidPreserving f}.
 
-  Lemma preserves_negate x : f (-x) = -f x.
+  Lemma preserves_inverse x : f x^ = (f x)^.
   Proof.
     apply (left_cancellation (.*.) (f x)).
     rewrite <-preserves_sg_op.
@@ -189,41 +191,43 @@ End from_another_com_monoid.
 Section from_another_group.
 
   Context
-    `{IsGroup A} `{IsHSet B}
-    `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
+    `{isg : IsGroup A} `{IsHSet B}
+    `{Bop : SgOp B} `{Bunit : MonUnit B} `{Binv : Inverse B}
     (f : B -> A) `{!IsInjective f}
     (op_correct : forall x y, f (x * y) = f x * f y)
     (unit_correct : f mon_unit = mon_unit)
-    (negate_correct : forall x, f (-x) = -f x).
+    (inverse_correct : forall x, f x^ = (f x)^).
 
   Lemma projected_group : IsGroup B.
   Proof.
     split.
     - apply (projected_monoid f);assumption.
     - repeat intro; apply (injective f).
-      rewrite op_correct, negate_correct, unit_correct, left_inverse.
+      rewrite op_correct, inverse_correct, unit_correct, left_inverse.
       apply reflexivity.
     - repeat intro; apply (injective f).
-      rewrite op_correct, negate_correct, unit_correct, right_inverse.
+      rewrite op_correct, inverse_correct, unit_correct, right_inverse.
       reflexivity.
   Qed.
 
 End from_another_group.
 
 Section from_another_ab_group.
+  Local Open Scope mc_add_scope.
 
   Context `{IsAbGroup A} `{IsHSet B}
    `{Bop : SgOp B} `{Bunit : MonUnit B} `{Bnegate : Negate B}
    (f : B -> A) `{!IsInjective f}
-   (op_correct : forall x y, f (x * y) = f x * f y)
-   (unit_correct : f mon_unit = mon_unit)
+   (op_correct : forall x y, f (x + y) = f x + f y)
+   (unit_correct : f 0 = 0)
    (negate_correct : forall x, f (-x) = -f x).
 
   Lemma projected_ab_group : IsAbGroup B.
   Proof.
     split.
-    - apply (projected_group f);assumption.
-    - apply (projected_comm f);assumption.
+    - apply (projected_group f (isg:=abgroup_group _)); assumption.
+    - apply (projected_comm f); assumption.
   Qed.
 
+  Local Close Scope mc_add_scope.
 End from_another_ab_group.

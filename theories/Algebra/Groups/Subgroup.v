@@ -14,7 +14,7 @@ Class IsSubgroup {G : Group} (H : G -> Type) := {
   issubgroup_predicate : forall x, IsHProp (H x) ;
   issubgroup_in_unit : H mon_unit ;
   issubgroup_in_op : forall x y, H x -> H y -> H (x * y) ;
-  issubgroup_in_inv : forall x, H x -> H (- x) ;
+  issubgroup_in_inv : forall x, H x -> H x^ ;
 }.
 
 Global Existing Instance issubgroup_predicate.
@@ -23,7 +23,7 @@ Global Existing Instance issubgroup_predicate.
 Definition Build_IsSubgroup' {G : Group}
   (H : G -> Type) `{forall x, IsHProp (H x)}
   (unit : H mon_unit)
-  (c : forall x y, H x -> H y -> H (x * -y))
+  (c : forall x y, H x -> H y -> H (x * y^))
   : IsSubgroup H.
 Proof.
   refine (Build_IsSubgroup G H _ unit _ _).
@@ -31,8 +31,8 @@ Proof.
     intros hx hy.
     pose (c' := c mon_unit y).
     specialize (c' unit).
-    specialize (c x (-y)).
-    rewrite (negate_involutive y) in c.
+    specialize (c x y^).
+    rewrite (grp_inv_inv y) in c.
     rewrite left_identity in c'.
     apply c.
     1: assumption.
@@ -47,7 +47,7 @@ Defined.
 Section IsSubgroupElements.
   Context  {G : Group} {H : G -> Type} `{IsSubgroup G H}.
 
-  Definition issubgroup_in_op_inv (x y : G) : H x -> H y -> H (x * -y).
+  Definition issubgroup_in_op_inv (x y : G) : H x -> H y -> H (x * y^).
   Proof.
     intros p q.
     apply issubgroup_in_op.
@@ -55,16 +55,16 @@ Section IsSubgroupElements.
     by apply issubgroup_in_inv.
   Defined.
 
-  Definition issubgroup_in_inv' (x : G) : H (- x) -> H x.
+  Definition issubgroup_in_inv' (x : G) : H x^ -> H x.
   Proof.
-    intros p; rewrite <- (negate_involutive x); revert p.
+    intros p; rewrite <- (inverse_involutive x); revert p.
     apply issubgroup_in_inv.
   Defined.
 
-  Definition issubgroup_in_inv_op (x y : G) : H x -> H y -> H (-x * y).
+  Definition issubgroup_in_inv_op (x y : G) : H x -> H y -> H (x^ * y).
   Proof.
     intros p q.
-    rewrite <- (negate_involutive y).
+    rewrite <- (inverse_involutive y).
     apply issubgroup_in_op_inv.
     1,2: by apply issubgroup_in_inv.
   Defined.
@@ -113,7 +113,7 @@ Global Existing Instance subgroup_issubgroup.
 Definition Build_Subgroup' {G : Group}
   (H : G -> Type) `{forall x, IsHProp (H x)}
   (unit : H mon_unit)
-  (c : forall x y, H x -> H y -> H (x * -y))
+  (c : forall x y, H x -> H y -> H (x * y^))
   : Subgroup G.
 Proof.
   refine (Build_Subgroup G H _).
@@ -126,8 +126,8 @@ Section SubgroupElements.
   Definition subgroup_in_inv : H x -> H (- x) := issubgroup_in_inv x.
   Definition subgroup_in_inv' : H (- x) -> H x := issubgroup_in_inv' x.
   Definition subgroup_in_op : H x -> H y -> H (x * y) := issubgroup_in_op x y.
-  Definition subgroup_in_op_inv : H x -> H y -> H (x * -y) := issubgroup_in_op_inv x y.
-  Definition subgroup_in_inv_op : H x -> H y -> H (-x * y) := issubgroup_in_inv_op x y.
+  Definition subgroup_in_op_inv : H x -> H y -> H (x * y^) := issubgroup_in_op_inv x y.
+  Definition subgroup_in_inv_op : H x -> H y -> H (x^ * y) := issubgroup_in_inv_op x y.
   Definition subgroup_in_op_l : H (x * y) -> H y -> H x := issubgroup_in_op_l x y.
   Definition subgroup_in_op_r : H (x * y) -> H x -> H y := issubgroup_in_op_r x y.
 End SubgroupElements.
@@ -140,7 +140,7 @@ Proof.
 Defined.
 
 Definition equiv_subgroup_inverse {G : Group} (H : Subgroup G) (x : G)
-  : H x <~> H (-x) := Build_Equiv _ _ (subgroup_in_inv H x) _.
+  : H x <~> H x^ := Build_Equiv _ _ (subgroup_in_inv H x) _.
 
 (** The group given by a subgroup *)
 Definition subgroup_group {G : Group} (H : Subgroup G) : Group.
@@ -185,7 +185,7 @@ Proof.
   intros x y p q.
   rewrite p, q.
   rewrite left_identity.
-  apply negate_mon_unit.
+  apply inverse_mon_unit.
 Defined.
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
@@ -248,9 +248,9 @@ Section Cosets.
   Context {G : Group} (H : Subgroup G).
 
   (** The relation of being in a left coset represented by an element. *)
-  Definition in_cosetL : Relation G := fun x y => H (-x * y).
+  Definition in_cosetL : Relation G := fun x y => H (x^ * y).
   (** The relation of being in a right coset represented by an element. *)
-  Definition in_cosetR : Relation G := fun x y => H (x * -y).
+  Definition in_cosetR : Relation G := fun x y => H (x * y^).
 
   Hint Extern 4 => progress unfold in_cosetL : typeclass_instances.
   Hint Extern 4 => progress unfold in_cosetR : typeclass_instances.
@@ -280,25 +280,25 @@ Section Cosets.
   Global Instance symmetric_in_cosetL : Symmetric in_cosetL.
   Proof.
     intros x y h; cbn; cbn in h.
-    rewrite <- (negate_involutive x).
-    rewrite <- negate_sg_op.
+    rewrite <- (grp_inv_inv x).
+    rewrite <- grp_inv_op.
     apply issubgroup_in_inv; assumption.
   Defined.
 
   Global Instance symmetric_in_cosetR : Symmetric in_cosetR.
   Proof.
     intros x y h; cbn; cbn in h.
-    rewrite <- (negate_involutive y).
-    rewrite <- negate_sg_op.
+    rewrite <- (grp_inv_inv y).
+    rewrite <- grp_inv_op.
     apply issubgroup_in_inv; assumption.
   Defined.
 
   Global Instance transitive_in_cosetL : Transitive in_cosetL.
   Proof.
     intros x y z h k; cbn; cbn in h; cbn in k.
-    rewrite <- (right_identity (-x)).
-    rewrite <- (right_inverse y : y * -y = mon_unit).
-    rewrite (associativity (-x) _ _).
+    rewrite <- (right_identity x^).
+    rewrite <- (right_inverse y : y * y^ = mon_unit).
+    rewrite (associativity x^ _ _).
     rewrite <- simple_associativity.
     apply issubgroup_in_op; assumption.
   Defined.
@@ -307,9 +307,9 @@ Section Cosets.
   Proof.
     intros x y z h k; cbn; cbn in h; cbn in k.
     rewrite <- (right_identity x).
-    rewrite <- (left_inverse y : -y * y = mon_unit).
+    rewrite <- (left_inverse y : y^ * y = mon_unit).
     rewrite (simple_associativity x).
-    rewrite <- (associativity _ _ (-z)).
+    rewrite <- (associativity _ _ z^).
     apply issubgroup_in_op; assumption.
   Defined.
 
@@ -318,21 +318,21 @@ End Cosets.
 (** Identities related to the left and right cosets. *)
 
 Definition in_cosetL_unit {G : Group} {N : Subgroup G}
-  : forall x y, in_cosetL N (-x * y) mon_unit <~> in_cosetL N x y.
+  : forall x y, in_cosetL N (x^ * y) mon_unit <~> in_cosetL N x y.
 Proof.
   intros x y; cbn.
-  rewrite (right_identity (- _)).
-  rewrite (negate_sg_op _).
-  rewrite (negate_involutive _).
+  rewrite (right_identity _^).
+  rewrite (inverse_sg_op _).
+  rewrite (inverse_involutive _).
   apply equiv_iff_hprop; apply symmetric_in_cosetL.
 Defined.
 
 Definition in_cosetR_unit {G : Group} {N : Subgroup G}
-  : forall x y, in_cosetR N (x * -y) mon_unit <~> in_cosetR N x y.
+  : forall x y, in_cosetR N (x * y^) mon_unit <~> in_cosetR N x y.
 Proof.
   intros x y; cbn.
-  rewrite negate_mon_unit.
-  rewrite (right_identity (x * -y)).
+  rewrite inverse_mon_unit.
+  rewrite (right_identity (x * y^)).
   reflexivity.
 Defined.
 
@@ -378,7 +378,7 @@ Defined.
 
 (** Our definiiton of normal subgroup implies the usual definition of invariance under conjugation. *)
 Definition isnormal_conjugate {G : Group} (N : NormalSubgroup G) {x y : G}
-  : N x -> N (y * x * -y).
+  : N x -> N (y * x * y^).
 Proof.
   intros n.
   apply isnormal.
@@ -390,7 +390,7 @@ Defined.
 
 (** We can show a subgroup is normal if it is invariant under conjugation. *)
 Definition Build_IsNormalSubgroup' (G : Group) (N : Subgroup G)
-  (isnormal : forall x y, N x -> N (y * x * -y))
+  (isnormal : forall x y, N x -> N (y * x * y^))
   : IsNormalSubgroup N.
 Proof.
   intros x y n.
@@ -410,7 +410,7 @@ Defined.
 
 (** Our definition of normal subgroup and the usual definition are therefore equivalent. *)
 Definition equiv_isnormal_conjugate `{Funext} {G : Group} (N : Subgroup G)
-  : IsNormalSubgroup N <~> (forall x y, N x -> N (y * x * -y)).
+  : IsNormalSubgroup N <~> (forall x y, N x -> N (y * x * y^)).
 Proof.
   rapply equiv_iff_hprop.
   - intros is_normal x y.
@@ -427,14 +427,14 @@ Definition equiv_in_cosetL_in_cosetR_normalsubgroup {G : Group}
 
 (** Inverses are then respected *)
 Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G} (x y : G)
-  : in_cosetL N (-x) (-y) <~> in_cosetL N x y.
+  : in_cosetL N x^ y^ <~> in_cosetL N x y.
 Proof.
   refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.
-  by rewrite negate_involutive.
+  by rewrite inverse_involutive.
 Defined.
 
 Definition in_cosetR_inverse {G : Group} {N : NormalSubgroup G} (x y : G)
-  : in_cosetR N (-x) (-y) <~> in_cosetR N x y.
+  : in_cosetR N x^ y^ <~> in_cosetR N x y.
 Proof.
   refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.
   by rewrite grp_inv_inv.
@@ -447,7 +447,7 @@ Definition in_cosetL_cong {G : Group} {N : NormalSubgroup G}
 Proof.
   cbn; intros p q.
   (** rewrite goal before applying subgroup_op *)
-  rewrite negate_sg_op, <- simple_associativity.
+  rewrite inverse_sg_op, <- simple_associativity.
   apply isnormal.
   rewrite simple_associativity, <- simple_associativity.
   apply subgroup_in_op.
@@ -462,7 +462,7 @@ Definition in_cosetR_cong  {G : Group} {N : NormalSubgroup G}
 Proof.
   cbn; intros p q.
   (** rewrite goal before applying subgroup_op *)
-  rewrite negate_sg_op, simple_associativity.
+  rewrite inverse_sg_op, simple_associativity.
   apply isnormal.
   rewrite <- simple_associativity, simple_associativity.
   apply subgroup_in_op.
@@ -503,7 +503,7 @@ Inductive subgroup_generated_type {G : Group} (X : G -> Type) : G -> Type :=
 | sgt_op (g h : G)
   : subgroup_generated_type X g
   -> subgroup_generated_type X h
-  -> subgroup_generated_type X (g * - h)
+  -> subgroup_generated_type X (g * h^)
 .
 
 Arguments sgt_in {G X g}.
@@ -514,7 +514,7 @@ Arguments sgt_op {G X g h}.
 
 (** Subgroups are closed under inverses. *)
 Definition sgt_inv {G : Group} {X} {g : G}
-  : subgroup_generated_type X g -> subgroup_generated_type X (- g).
+  : subgroup_generated_type X g -> subgroup_generated_type X g^.
 Proof.
   intros p.
   rewrite <- left_identity.
@@ -522,7 +522,7 @@ Proof.
 Defined.
 
 Definition sgt_inv' {G : Group} {X} {g : G}
-  : subgroup_generated_type X (- g) -> subgroup_generated_type X g.
+  : subgroup_generated_type X g^ -> subgroup_generated_type X g.
 Proof.
   intros p.
   rewrite <- grp_inv_inv.
@@ -535,7 +535,7 @@ Definition sgt_op' {G : Group} {X} {g h : G}
     -> subgroup_generated_type X (g * h).
 Proof.
   intros p q.
-  rewrite <- (negate_involutive h).
+  rewrite <- (inverse_involutive h).
   exact (sgt_op p (sgt_inv q)).
 Defined.
 

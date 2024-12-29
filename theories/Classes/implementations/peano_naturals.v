@@ -6,9 +6,6 @@ Require Import
   HoTT.Classes.orders.semirings
   HoTT.Classes.theory.apartness.
 
-Local Open Scope nat_scope.
-Local Open Scope mc_scope.
-
 Local Set Universe Minimization ToSet.
 
 (* This should go away one Coq has universe cumulativity through inductives. *)
@@ -18,6 +15,7 @@ Universe N.
 (* It's important that the universe [N] be free.  Occasionally, Coq will choose universe variables in proofs that force [N] to be [Set].  To pinpoint where this happens, you can add the line [Constraint Set < N.] here, and see what fails below. *)
 
 Let natpaths := @paths@{N} nat.
+Arguments natpaths (_ _)%_nat_scope.
 Infix "=N=" := natpaths.
 
 Definition natpaths_symm : Symmetric@{N N} natpaths.
@@ -202,8 +200,6 @@ Proof.
 Qed.
 
 (* Add Ring nat: (rings.stdlib_semiring_theory nat). *)
-
-(* Close Scope nat_scope. *)
 
 Lemma O_nat_0 : O =N= 0.
 Proof. reflexivity. Qed.
@@ -410,7 +406,7 @@ repeat split.
   destruct E1 as [k1 E1], E2 as [k2 E2].
   assert (k1 + k2 = 0) as E.
   + apply (left_cancellation (+) a).
-    rewrite plus_0_r.
+    rhs rapply plus_0_r.
     path_via (k2 + b).
     rewrite E1.
     rewrite (plus_comm a), (plus_assoc k2), (plus_comm k2).
