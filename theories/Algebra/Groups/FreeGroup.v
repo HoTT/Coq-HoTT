@@ -301,9 +301,8 @@ Section Reduction.
     - nrapply grp_inv_l.
   Defined.
 
-  (** Given a group [G] we can construct a group homomorphism [FreeGroup A -> G] if we have a map [A -> G]. *)
-  Definition FreeGroup_rec (G : Group) (s : A -> G)
-    : GroupHomomorphism FreeGroup G.
+  (** Given a group [G] we can construct a group homomorphism [FreeGroup A $-> G] if we have a map [A -> G]. *)
+  Definition FreeGroup_rec {G : Group} (s : A -> G) : FreeGroup $-> G.
   Proof.
     snrapply Build_GroupHomomorphism.
     { rapply Trunc_rec.
@@ -322,7 +321,7 @@ Section Reduction.
     := freegroup_eta o (fun x => [ x ]) o inl.
 
   Definition FreeGroup_rec_beta {G : Group} (f : A -> G)
-    : FreeGroup_rec _ f o freegroup_in == f
+    : FreeGroup_rec f o freegroup_in == f
     := fun _ => idpath.
 
   Coercion freegroup_in : A >-> group_type.
@@ -396,6 +395,7 @@ Section Reduction.
 
 End Reduction.
 
+Arguments FreeGroup_rec {A G}.
 Arguments freegroup_eta {A}.
 Arguments freegroup_in {A}.
 

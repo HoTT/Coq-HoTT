@@ -11,7 +11,7 @@ Definition Z1_gen : Z1 := freegroup_in tt. (* The generator *)
 
 (** The recursion principle of [Z1] and its computation rule. *)
 Definition Z1_rec {G : Group} (g : G) : Z1 $-> G
-  := FreeGroup_rec Unit G (unit_name g).
+  := FreeGroup_rec (unit_name g).
 
 Definition Z1_rec_beta {G : Group} (g : G) : Z1_rec g Z1_gen = g
   := FreeGroup_rec_beta _ _ _.
