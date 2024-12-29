@@ -161,7 +161,7 @@ Section FreeProduct.
   Definition amal_eta : Words -> amal_type := tr o coeq.
 
   Definition amal_mu_H (x y : Words) (h1 h2 : H)
-    : amal_eta (x ++ (cons (inl h1) [inl h2]) ++ y) = amal_eta (x ++ [inl (h1 * h2)] ++ y).
+    : amal_eta (x ++ [inl h1, inl h2] ++ y) = amal_eta (x ++ [inl (h1 * h2)] ++ y).
   Proof.
     unfold amal_eta.
     apply path_Tr, tr.
@@ -169,7 +169,7 @@ Section FreeProduct.
   Defined.
 
   Definition amal_mu_K (x y : Words) (k1 k2 : K)
-    : amal_eta (x ++ (cons (inr k1) [inr k2]) ++ y) = amal_eta (x ++ [inr (k1 * k2)] ++ y).
+    : amal_eta (x ++ [inr k1, inr k2] ++ y) = amal_eta (x ++ [inr (k1 * k2)] ++ y).
   Proof.
     unfold amal_eta.
     apply path_Tr, tr.
@@ -205,9 +205,9 @@ Section FreeProduct.
   Definition amal_type_ind (P : amal_type -> Type) `{forall x, IsHSet (P x)}
     (e : forall w, P (amal_eta w))
     (mh : forall (x y : Words) (h1 h2 : H),
-      DPath P (amal_mu_H x y h1 h2) (e (x ++ (inl h1 :: [inl h2]) ++ y)) (e (x ++ [inl (h1 * h2)] ++ y)))
+      DPath P (amal_mu_H x y h1 h2) (e (x ++ [inl h1, inl h2] ++ y)) (e (x ++ [inl (h1 * h2)] ++ y)))
     (mk : forall (x y : Words) (k1 k2 : K),
-      DPath P (amal_mu_K x y k1 k2) (e (x ++ (inr k1 :: [inr k2]) ++ y)) (e (x ++ [inr (k1 * k2)] ++ y)))
+      DPath P (amal_mu_K x y k1 k2) (e (x ++ [inr k1, inr k2] ++ y)) (e (x ++ [inr (k1 * k2)] ++ y)))
     (t : forall (x y : Words) (z : G),
       DPath P (amal_tau x y z) (e (x ++ [inl (f z)] ++ y)) (e (x ++ [inr (g z)] ++ y)))
     (oh : forall (x y : Words),
@@ -250,9 +250,9 @@ Section FreeProduct.
   (** From which we can derive the non-dependent eliminator / recursion principle *)
   Definition amal_type_rec (P : Type) `{IsHSet P} (e : Words -> P)
     (eh : forall (x y : Words) (h1 h2 : H),
-      e (x ++ (cons (inl h1) [inl h2]) ++ y) = e (x ++ [inl (h1 * h2)] ++ y))
+      e (x ++ [inl h1, inl h2] ++ y) = e (x ++ [inl (h1 * h2)] ++ y))
     (ek : forall (x y : Words) (k1 k2 : K),
-      e (x ++ (cons (inr k1) [inr k2]) ++ y) = e (x ++ [inr (k1 * k2)] ++ y))
+      e (x ++ [inr k1, inr k2] ++ y) = e (x ++ [inr (k1 * k2)] ++ y))
     (t : forall (x y : Words) (z : G),
       e (x ++ [inl (f z)] ++ y) = e (x ++ [inr (g z)] ++ y))
     (oh : forall (x y : Words), e (x ++ [inl mon_unit] ++ y) = e (x ++ y))
@@ -302,7 +302,7 @@ Section FreeProduct.
     { intros r y h1 h2; revert r.
       rapply amal_type_ind_hprop.
       intros z;
-      change (amal_eta ((x ++ ((inl h1 :: [inl h2]) ++ y)) ++ z)
+      change (amal_eta ((x ++ [inl h1 ,inl h2] ++ y) ++ z)
         = amal_eta ((x ++ [inl (h1 * h2)] ++ y) ++ z)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply app_assoc.
@@ -312,7 +312,7 @@ Section FreeProduct.
     { intros r y k1 k2; revert r.
       rapply amal_type_ind_hprop.
       intros z;
-      change (amal_eta ((x ++ ((inr k1 :: [inr k2]) ++ y)) ++ z)
+      change (amal_eta ((x ++ [inr k1, inr k2] ++ y) ++ z)
         = amal_eta ((x ++ [inr (k1 * k2)] ++ y) ++ z)).
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply app_assoc.
@@ -585,16 +585,16 @@ Section FreeProduct.
   Qed.
 
   Definition AmalgamatedFreeProduct_rec (X : Group)
-    (h : GroupHomomorphism H X) (k : GroupHomomorphism K X)
-    (p : h o f == k o g)
-    : GroupHomomorphism AmalgamatedFreeProduct X.
+    (h : H $-> X) (k : K $-> X)
+    (p : h $o f $== k $o g)
+    : AmalgamatedFreeProduct $-> X.
   Proof.
     snrapply Build_GroupHomomorphism.
     1: srapply (AmalgamatedFreeProduct_rec' X h k p).
     exact _.
   Defined.
 
-  Definition amal_inl : GroupHomomorphism H AmalgamatedFreeProduct.
+  Definition amal_inl : H $-> AmalgamatedFreeProduct.
   Proof.
     snrapply Build_GroupHomomorphism.
     { intro x.
@@ -606,7 +606,7 @@ Section FreeProduct.
     reflexivity.
   Defined.
 
-  Definition amal_inr : GroupHomomorphism K AmalgamatedFreeProduct.
+  Definition amal_inr : K $-> AmalgamatedFreeProduct.
   Proof.
     snrapply Build_GroupHomomorphism.
     { intro x.
@@ -616,6 +616,11 @@ Section FreeProduct.
     rewrite <- (amal_mu_K nil nil x y).
     rewrite app_nil.
     reflexivity.
+  Defined.
+  
+  Definition amal_glue : amal_inl $o f $== amal_inr $o g.
+  Proof.
+    hnf; apply (amal_tau nil nil).
   Defined.
 
   Theorem equiv_amalgamatedfreeproduct_rec `{Funext} (X : Group)
@@ -654,28 +659,89 @@ Section FreeProduct.
     apply equiv_path_grouphomomorphism;
     intro; simpl; rapply right_identity.
   Defined.
+  
+  Definition amalgamatedfreeproduct_ind_hprop (P : AmalgamatedFreeProduct -> Type)
+    `{forall x, IsHProp (P x)}
+    (l : forall a, P (amal_inl a)) (r : forall b, P (amal_inr b))
+    (Hop : forall x y, P x -> P y -> P (x * y))
+    : forall x, P x.
+  Proof.
+    rapply amal_type_ind_hprop.
+    intros w.
+    simple_list_induction w a w IH.
+    - rewrite <- (amal_omega_H nil nil).
+      apply l.
+    - destruct a as [a|b].
+      + change (P (amal_inl a * amal_eta w)).
+        by apply Hop.
+      + change (P (amal_inr b * amal_eta w)).
+        by apply Hop.
+  Defined.
+
+  Definition amalgamatedfreeproduct_ind_homotopy
+    {k k' : AmalgamatedFreeProduct $-> G}
+    (l : k $o amal_inl $== k' $o amal_inl)
+    (r : k $o amal_inr $== k' $o amal_inr)
+    : k $== k'.
+  Proof.
+    rapply (amalgamatedfreeproduct_ind_hprop _ l r).
+    intros x y p q; by nrapply grp_homo_op_agree.
+  Defined.
 
 End FreeProduct.
 
 Arguments amal_eta {G H K f g} x.
+Arguments amal_inl {G H K f g}.
+Arguments amal_inr {G H K f g}.
+Arguments AmalgamatedFreeProduct_rec {G H K f g}.
+Arguments amalgamatedfreeproduct_ind_hprop {G H K f g} _ {_}.
+Arguments amalgamatedfreeproduct_ind_homotopy {G H K f g _}.
+Arguments amal_glue {G H K f g}.
 
 Definition FreeProduct (G H : Group) : Group
   := AmalgamatedFreeProduct grp_trivial G H (grp_trivial_rec _) (grp_trivial_rec _).
 
 Definition freeproduct_inl {G H : Group} : GroupHomomorphism G (FreeProduct G H)
-  := amal_inl _ _ _ _ _.
+  := amal_inl.
 
 Definition freeproduct_inr {G H : Group} : GroupHomomorphism H (FreeProduct G H)
-  := amal_inr _ _ _ _ _.
+  := amal_inr.
 
-Definition FreeProduct_rec (G H K : Group)
-  (f : GroupHomomorphism G K) (g : GroupHomomorphism H K)
-  : GroupHomomorphism (FreeProduct G H) K.
+Definition FreeProduct_rec {G H K : Group} (f : G $-> K) (g : H $-> K)
+  : FreeProduct G H $-> K.
 Proof.
-  snrapply (AmalgamatedFreeProduct_rec _ _ _ _ _ _ f g).
+  snrapply (AmalgamatedFreeProduct_rec _ f g).
   intros [].
   refine (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
+
+Definition freeproduct_ind_hprop {G H} (P : FreeProduct G H -> Type)
+  `{forall x, IsHProp (P x)}
+  (l : forall g, P (freeproduct_inl g))
+  (r : forall h, P (freeproduct_inr h))
+  (Hop : forall x y, P x -> P y -> P (x * y))
+  : forall x, P x
+  := amalgamatedfreeproduct_ind_hprop P l r Hop.
+
+Definition freeproduct_ind_homotopy {G H K : Group}
+  {f f' : FreeProduct G H $-> K}
+  (l : f $o freeproduct_inl $== f' $o freeproduct_inl)
+  (r : f $o freeproduct_inr $== f' $o freeproduct_inr)
+  : f $== f'.
+Proof.
+  rapply (freeproduct_ind_hprop _ l r).
+  intros x y p q; by nrapply grp_homo_op_agree.
+Defined.
+
+Definition freeproduct_rec_beta_inl {G H K : Group}
+  (f : G $-> K) (g : H $-> K)
+  : FreeProduct_rec f g $o freeproduct_inl $== f
+  := fun x => right_identity (f x).
+
+Definition freeproduct_rec_beta_inr {G H K : Group}
+  (f : G $-> K) (g : H $-> K)
+  : FreeProduct_rec f g $o freeproduct_inr $== g
+  := fun x => right_identity (g x).
 
 Definition equiv_freeproduct_rec `{funext : Funext} (G H K : Group)
   : (GroupHomomorphism G K) * (GroupHomomorphism H K)
@@ -698,20 +764,9 @@ Proof.
   - exact (FreeProduct G H).
   - exact freeproduct_inl.
   - exact freeproduct_inr.
-  - exact (FreeProduct_rec G H).
-  - intros Z f g x; simpl.
-    rapply right_identity.
-  - intros Z f g x; simpl.
-    rapply right_identity.
+  - intros Z; exact FreeProduct_rec.
+  - intros; apply freeproduct_rec_beta_inl.
+  - intros; apply freeproduct_rec_beta_inr.
   - intros Z f g p q.
-    srapply amal_type_ind_hprop; simpl.
-    intros w.
-    induction w as [|gh].
-    1: exact (grp_homo_unit _ @ (grp_homo_unit _)^).
-    (* The goal is definitionally the same as [f (amal_eta [gh] * amal_eta w) = g (amal_eta [gh] * amal_eta w)], but using [change] to put it in that form slows down the next line for some reason. *)
-    nrapply (@grp_homo_op_agree _ _ _ f g (amal_eta [gh]) (amal_eta w) (amal_eta [gh]) (amal_eta w)).
-    2: apply IHw.
-    destruct gh as [g' | h].
-    + exact (p g').
-    + exact (q h).
+    by snrapply freeproduct_ind_homotopy.
 Defined.
