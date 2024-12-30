@@ -145,23 +145,21 @@ Proof.
   - exact (inr (if_not_hprop_then_equiv_Empty hprop nx)).
 Defined.
 
-(** Under function extensionality, if [A] is decidable, then [~~A] is the propositional truncation of [A]. Here, for dependency reasons, we don't give the equivalence to [Tr (-1) A], but just show that the recursion principle holds. See ../Metatheory/ImpredicativeTruncation.v for a generalization to all types. *)
+(** Recall that a type [A] is "stable" if [~~A -> A].  Under function extensionality, if [A] is stable, then [~~A] is the propositional truncation of [A]. Here, for dependency reasons, we don't give the equivalence to [Tr (-1) A], but just show that the recursion principle holds. See Metatheory/ImpredicativeTruncation.v for a generalization to all types, and Modalities/Notnot.v for a description of the universal property of [~~A] when [A] is not assumed to be stable. *)
 
 (** Any negation is an hprop, by [istrunc_Empty] and [istrunc_arrow]. In particular, double-negation is an hprop. *)
 Definition ishprop_not_not `{Funext} {A : Type} : IsHProp (~~A) := _.
 
-(** The recursion principle for [~~A]. *)
-Definition not_not_rec {A : Type} `{Decidable A} (P : HProp) (f : A -> P)
+(** The recursion principle for [~~A] when [A] is stable. *)
+Definition not_not_rec {A : Type} `{stable : Stable A} (P : HProp) (f : A -> P)
   : ~~A -> P.
 Proof.
   intro nna.
-  destruct (dec A) as [a | na].
-  - exact (f a).
-  - elim (nna na).
+  exact (f (stable nna)).
 Defined.
 
-(** The computation rule only holds propositionally. *)
-Definition not_not_rec_beta {A : Type} `{Decidable A} (P : HProp) (f : A -> P) (a : A)
+(** The unit is [not_not_unit : A -> ~~A], and the computation rule only holds propositionally. *)
+Definition not_not_rec_beta {A : Type} `{Stable A} (P : HProp) (f : A -> P) (a : A)
   : not_not_rec P f (not_not_unit a) = f a
   := path_ishprop _ _.
 
@@ -170,7 +168,7 @@ Global Instance ishprop_decpaths' `{Funext} {A : Type} (x : A)
   : IsHProp (forall (y : A), Decidable (x = y)).
 Proof.
   apply hprop_allpath; intros d d'.
-  (* Define [C] to be the component of [A] containing [x]. Since [x = y] is decidable, we can use [~~(x = y)] as an elementary form of propositional truncation. It also works to use [merely] here, but that brings in further dependencies and requires HITs. *)
+  (* Define [C] to be the component of [A] containing [x]. Since [x = y] is decidable, it is stable, so we can use [~~(x = y)] as an elementary form of propositional truncation. It also works to use [merely] here, but that brings in further dependencies and requires HITs. *)
   pose (C := {y : A & ~~(x = y)}).
   assert (cC : Contr C).
   { snrapply (Build_Contr C (x; not_not_unit idpath)).
