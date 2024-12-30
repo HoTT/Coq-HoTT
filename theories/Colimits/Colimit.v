@@ -69,24 +69,14 @@ Definition colimp {G : Graph} {D : Diagram G} (i j : G) (f : G i j) (x : D i)
   : colim j (D _f f x) = colim i x
   := (cglue ((i; x); j; f))^.
 
-(** Naturality of [ap] applied to [colim]. *)
-Definition concat_ap_colim {G : Graph} {D : Diagram G} {i j : G} (f : G i j) {x y : D i} (p : x = y)
-  : ap (colim j) (ap (D _f f) p) @ colimp i j f y
-    = colimp i j f x @ ap (colim i) p.
-Proof.
-  lhs_V nrapply (ap_compose _ _ _ @@ 1).
-  exact (concat_Ap (colimp i j f) p).
-Defined.
-
 (** To obtain a path [colim j (D _f f x) = colim j (D _f f y)] from a path [x = y], one can either use [ap (D _f f)] followed by [ap (colim j)], or conjugate [ap (colim i)] by [colimp i j f]. These paths are equivalent. *)
 Definition ap_colim_homotopic {G : Graph} {D : Diagram G} {i j : G} (f : G i j) {x y : D i} (p : x = y)
   : ap (colim j) (ap (D _f f) p)
     = colimp i j f x @ ap (colim i) p @ (colimp i j f y)^.
 Proof.
-  nrapply moveL_pV.
-  nrapply concat_ap_colim.
+  lhs_V nrapply ap_compose.
+  exact (ap_homotopic (colimp _ _ _) p).
 Defined.
-
 
 Definition Colimit_ind {G : Graph} {D : Diagram G} (P : Colimit D -> Type)
 (q : forall i x, P (colim i x))
@@ -299,6 +289,7 @@ Section FunctorialityColimit.
   Context `{Funext} {G : Graph}.
 
   (** Colimits are preserved by composition with a (diagram) equivalence. *)
+
   Definition iscolimit_precompose_equiv {D1 D2 : Diagram G}
     (m : D1 ~d~ D2) {Q : Type}
     : IsColimit D2 Q -> IsColimit D1 Q.
@@ -369,6 +360,7 @@ Section FunctorialityColimit.
   (** ** Colimits of equivalent diagrams *)
 
   (** Now we have that two equivalent diagrams have equivalent colimits. *)
+
   Context {D1 D2 : Diagram G} (m : D1 ~d~ D2) {Q1 Q2}
     (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2).
 
