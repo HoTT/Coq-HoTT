@@ -143,3 +143,26 @@ Proof.
   - exact (inl (if_hprop_then_equiv_Unit hprop x)).
   - exact (inr (if_not_hprop_then_equiv_Empty hprop nx)).
 Defined.
+
+(** Under function extensionality, if [A] is decidable, then [~~A] is the propositional truncation of [A]. Here, for dependency reasons, we don't give the equivalence to [Tr (-1) A], but just show that the recursion principle holds. See ../Metatheory/ImpredicativeTruncation.v for a generalization to all types. *)
+
+(** Any negation is an hprop, by [istrunc_Empty] and [istrunc_arrow]. In particular, double-negation is an hprop. *)
+Definition ishprop_not_not `{Funext} {A : Type} : IsHProp (~~A) := _.
+
+Definition not_not_unit {A : Type} : A -> ~~A
+  := fun a na => na a.
+
+(** The recursion principle for [~~A]. *)
+Definition not_not_rec {A : Type} `{Decidable A} (P : HProp) (f : A -> P)
+  : ~~A -> P.
+Proof.
+  intro nna.
+  destruct (dec A) as [a | na].
+  - exact (f a).
+  - elim (nna na).
+Defined.
+
+(** The computation rule only holds propositionally. *)
+Definition not_not_rec_beta {A : Type} `{Decidable A} (P : HProp) (f : A -> P) (a : A)
+  : not_not_rec P f (not_not_unit a) = f a
+  := path_ishprop _ _.
