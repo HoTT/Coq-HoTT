@@ -1,6 +1,7 @@
 (** * HPropositions *)
 
-Require Import HoTT.Basics HoTT.Types.
+Require Import Basics.
+Require Import Types.Empty Types.Unit Types.Prod Types.Paths Types.Sigma Types.Equiv.
 
 Local Open Scope path_scope.
 
