@@ -150,9 +150,6 @@ Defined.
 (** Any negation is an hprop, by [istrunc_Empty] and [istrunc_arrow]. In particular, double-negation is an hprop. *)
 Definition ishprop_not_not `{Funext} {A : Type} : IsHProp (~~A) := _.
 
-Definition not_not_unit {A : Type} : A -> ~~A
-  := fun a na => na a.
-
 (** The recursion principle for [~~A]. *)
 Definition not_not_rec {A : Type} `{Decidable A} (P : HProp) (f : A -> P)
   : ~~A -> P.

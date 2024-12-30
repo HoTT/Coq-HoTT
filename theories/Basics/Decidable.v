@@ -72,6 +72,10 @@ Global Existing Instance dec_paths.
 
 Class Stable P := stable : ~~P -> P.
 
+(** We always have a map in the other direction. *)
+Definition not_not_unit {P : Type} : P -> ~~P
+  := fun x np => np x.
+
 Global Instance stable_decidable P `{!Decidable P} : Stable P.
 Proof.
   intros dn;destruct (dec P) as [p|n].
@@ -82,14 +86,14 @@ Qed.
 Global Instance stable_negation P : Stable (~ P).
 Proof.
   intros nnnp p.
-  exact (nnnp (fun np => np p)).
+  exact (nnnp (not_not_unit p)).
 Defined.
 
 Definition iff_stable P `(Stable P) : ~~P <-> P.
 Proof.
   split.
   - apply stable.
-  - exact (fun x f => f x).
+  - exact not_not_unit.
 Defined.
 
 (**
