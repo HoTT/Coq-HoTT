@@ -16,11 +16,11 @@ Generalizable All Variables.
 (** ** Abstract definition *)
 
 (** A colimit is the extremity of a cocone. *)
-
 Class IsColimit `(D: Diagram G) (Q: Type) := {
   iscolimit_cocone : Cocone D Q;
   iscolimit_unicocone : UniversalCocone iscolimit_cocone;
 }.
+
 (* Use :> and remove the two following lines,
    once Coq 8.16 is the minimum required version. *)
 #[export] Existing Instance iscolimit_cocone.
@@ -69,25 +69,24 @@ Definition colimp {G : Graph} {D : Diagram G} (i j : G) (f : G i j) (x : D i)
   : colim j (D _f f x) = colim i x
   := (cglue ((i; x); j; f))^.
 
-(** The two ways of getting a path [colim j (D _f f x) = colim j (D _f f y)] from an path [x = y] are equivalent. *)
-Definition ap_colim {G : Graph} {D : Diagram G} {i j : G} (f : G i j) {x y : D i} (p : x = y) 
-  : colimp i j f x @ ap (colim i) p @ (colimp i j f y)^
-    = ap (colim j) (ap (D _f f) p).
+(** Naturality of [ap] applied to [colim]. *)
+Definition concat_ap_colim {G : Graph} {D : Diagram G} {i j : G} (f : G i j) {x y : D i} (p : x = y)
+  : ap (colim j) (ap (D _f f) p) @ colimp i j f y
+    = colimp i j f x @ ap (colim i) p.
 Proof.
-  rhs_V nrapply ap_compose.
-  exact (ap_homotopic (colimp i j f) p)^.
+  lhs_V nrapply (ap_compose _ _ _ @@ 1).
+  exact (concat_Ap (colimp i j f) p).
 Defined.
 
-(** The two ways of getting a path [colim i x = colim i y] from a path [x = y] are equivalent. *)
-Definition ap_colim' {G : Graph} {D : Diagram G} {i j : G} (f : G i j) {x y : D i} (p : x = y)
-  : (colimp i j f x)^ @ ap (colim j) (ap (D _f f) p) @ colimp i j f y = ap (colim i) p.
+(** To obtain a path [colim j (D _f f x) = colim j (D _f f y)] from a path [x = y], one can either use [ap (D _f f)] followed by [ap (colim j)], or conjugate [ap (colim i)] by [colimp i j f]. These paths are equivalent. *)
+Definition ap_colim_homotopic {G : Graph} {D : Diagram G} {i j : G} (f : G i j) {x y : D i} (p : x = y)
+  : ap (colim j) (ap (D _f f) p)
+    = colimp i j f x @ ap (colim i) p @ (colimp i j f y)^.
 Proof.
-  apply moveR_pM.
-  apply moveR_Vp.
-  symmetry.
-  lhs nrapply concat_p_pp.
-  apply ap_colim.
+  nrapply moveL_pV.
+  nrapply concat_ap_colim.
 Defined.
+
 
 Definition Colimit_ind {G : Graph} {D : Diagram G} (P : Colimit D -> Type)
 (q : forall i x, P (colim i x))
@@ -230,7 +229,7 @@ Definition functor_Colimit_half_beta_colimp {G : Graph} {D1 D2 : Diagram G} (m :
 
 (** Homotopic diagram maps induce homotopic maps. *)
 Definition functor_Colimit_half_homotopy {G : Graph} {D1 D2 : Diagram G}
-  {m1 m2 : DiagramMap D1 D2} (h : DiagramMap_homotopy m1 m2) 
+  {m1 m2 : DiagramMap D1 D2} (h : DiagramMap_homotopy m1 m2)
   {Q} (HQ : Cocone D2 Q)
   : functor_Colimit_half m1 HQ == functor_Colimit_half m2 HQ.
 Proof.
@@ -300,7 +299,6 @@ Section FunctorialityColimit.
   Context `{Funext} {G : Graph}.
 
   (** Colimits are preserved by composition with a (diagram) equivalence. *)
-
   Definition iscolimit_precompose_equiv {D1 D2 : Diagram G}
     (m : D1 ~d~ D2) {Q : Type}
     : IsColimit D2 Q -> IsColimit D1 Q.
@@ -339,14 +337,14 @@ Section FunctorialityColimit.
       = cocone_precompose m (cocone_postcompose HQ2 t).
     Proof.
       lhs nrapply cocone_postcompose_comp.
-      lhs_V exact (ap (fun x => cocone_postcompose x t) 
+      lhs_V exact (ap (fun x => cocone_postcompose x t)
         (functor_colimit_commute m HQ1 HQ2)).
       nrapply cocone_precompose_postcompose.
     Defined.
 
   (** In order to show that colimits are functorial, we show that this is true after precomposing with the cocone. *)
-  Definition postcompose_functor_colimit_compose {D1 D2 D3 : Diagram G} 
-    (m : DiagramMap D1 D2) (n : DiagramMap D2 D3) 
+  Definition postcompose_functor_colimit_compose {D1 D2 D3 : Diagram G}
+    (m : DiagramMap D1 D2) (n : DiagramMap D2 D3)
     {Q1 Q2 Q3} (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2)
     (HQ3 : IsColimit D3 Q3)
     : cocone_postcompose HQ1 (functor_colimit n HQ2 HQ3 o functor_colimit m HQ1 HQ2)
@@ -358,20 +356,19 @@ Section FunctorialityColimit.
     nrapply functor_colimit_commute.
   Defined.
 
-  Definition functor_colimit_compose {D1 D2 D3 : Diagram G} 
-    (m : DiagramMap D1 D2) (n : DiagramMap D2 D3) 
+  Definition functor_colimit_compose {D1 D2 D3 : Diagram G}
+    (m : DiagramMap D1 D2) (n : DiagramMap D2 D3)
     {Q1 Q2 Q3} (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2)
     (HQ3 : IsColimit D3 Q3)
     : functor_colimit n HQ2 HQ3 o functor_colimit m HQ1 HQ2
       = functor_colimit (diagram_comp n m) HQ1 HQ3
-    := @equiv_inj _ _ 
-      (cocone_postcompose HQ1) (iscolimit_unicocone HQ1 Q3) _ _ 
+    := @equiv_inj _ _
+      (cocone_postcompose HQ1) (iscolimit_unicocone HQ1 Q3) _ _
       (postcompose_functor_colimit_compose m n HQ1 HQ2 HQ3).
 
   (** ** Colimits of equivalent diagrams *)
 
   (** Now we have that two equivalent diagrams have equivalent colimits. *)
-
   Context {D1 D2 : Diagram G} (m : D1 ~d~ D2) {Q1 Q2}
     (HQ1 : IsColimit D1 Q1) (HQ2 : IsColimit D2 Q2).
 
@@ -419,8 +416,7 @@ End FunctorialityColimit.
 
 (** ** Unicity of colimits *)
 
-(** A particuliar case of the functoriality result is that all colimits of a diagram are equivalent (and hence equal in presence of univalence). *)
-
+(** A particular case of the functoriality result is that all colimits of a diagram are equivalent (and hence equal in presence of univalence). *)
 Theorem colimit_unicity `{Funext} {G : Graph} {D : Diagram G} {Q1 Q2 : Type}
   (HQ1 : IsColimit D Q1) (HQ2 : IsColimit D Q2)
   : Q1 <~> Q2.
