@@ -166,3 +166,34 @@ Defined.
 Definition not_not_rec_beta {A : Type} `{Decidable A} (P : HProp) (f : A -> P) (a : A)
   : not_not_rec P f (not_not_unit a) = f a
   := path_ishprop _ _.
+
+(** Under [Funext], [ishprop_decpaths] shows that [DecidablePaths A] is an hprop.  More generally, it's also an hprop with the first argument fixed. *)
+Global Instance ishprop_decpaths' `{Funext} {A : Type} (x : A)
+  : IsHProp (forall (y : A), Decidable (x = y)).
+Proof.
+  apply hprop_allpath; intros d d'.
+  (* Define [C] to be the component of [A] containing [x]. Since [x = y] is decidable, we can use [~~(x = y)] as an elementary form of propositional truncation. It also works to use [merely] here, but that brings in further dependencies and requires HITs. *)
+  pose (C := {y : A & ~~(x = y)}).
+  assert (cC : Contr C).
+  { snrapply (Build_Contr C (x; not_not_unit idpath)).
+    intros [y p].
+    srapply path_sigma_hprop; cbn.
+    (* [d y] either solves the goal or contradicts [p]. *)
+    by destruct (d y). }
+  funext y.
+  generalize (d y); clear d; intros d.
+  generalize (d' y); clear d'; intros d'.
+  destruct d as [d | nd]; destruct d' as [d' | nd'].
+  - apply ap.
+    (* [x] and [y] are "in" the component [C]: *)
+    pose (xC := (x; not_not_unit idpath) : C).
+    pose (yC := (y; not_not_unit d) : C).
+    (* [d] and [d'] can be lifted to equalities of type [xC = yC] using [path_sigma_hprop], and so up to the computation rule for [pr1_path] (denoted "..1"), our goal is in the image of "..1". *)
+    refine ((pr1_path_path_sigma_hprop xC yC d)^ @ _ @ pr1_path_path_sigma_hprop xC yC d').
+    (* But since [C] is an hset, the paths in [C] are equal. *)
+    apply ap, path_ishprop.
+  (* The remaining cases are the same as in [ishprop_decpaths], but the last bullet is shorter since typeclass search tells us that [x <> y] is an hprop. *)
+  - elim (nd' d).
+  - elim (nd d').
+  - apply ap, path_ishprop.
+Defined.
