@@ -163,6 +163,19 @@ Definition not_not_rec_beta {A : Type} `{Stable A} (P : HProp) (f : A -> P) (a :
   : not_not_rec P f (not_not_unit a) = f a
   := path_ishprop _ _.
 
+(** The map [A -> ~~A] is an equivalence if and only if [A] is a stable hprop.  This characterizes the local types for the double-negation modality.  See Modality/Notnot.v. *)
+Definition stable_hprop_iff_isequiv_not_not_unit `{Funext} A
+  : IsEquiv (@not_not_unit A) <-> (Stable A * IsHProp A).
+Proof.
+  split.
+  - intros iseq.
+    pose proof (eq := (Build_Equiv _ _ _ iseq)^-1%equiv); clear iseq.
+    exact (stable_equiv eq _, istrunc_equiv_istrunc _ eq).
+  - intros [stable ishprop].
+    rapply isequiv_iff_hprop.
+    apply stable.
+Defined.
+
 (** Under [Funext], [ishprop_decpaths] shows that [DecidablePaths A] is an hprop.  More generally, it's also an hprop with the first argument fixed. *)
 Global Instance ishprop_decpaths' `{Funext} {A : Type} (x : A)
   : IsHProp (forall (y : A), Decidable (x = y)).

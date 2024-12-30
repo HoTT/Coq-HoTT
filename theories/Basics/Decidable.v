@@ -96,6 +96,22 @@ Proof.
   - exact not_not_unit.
 Defined.
 
+Definition stable_iff {A B} (f : A <-> B)
+  : Stable A -> Stable B.
+Proof.
+  intros stableA nnb.
+  destruct f as [f finv].
+  exact (f (stableA (fun na => nnb (fun b => na (finv b))))).
+Defined.
+
+Definition stable_equiv' {A B} (f : A <~> B)
+  : Stable A -> Stable B
+  := stable_iff f.
+
+Definition stable_equiv {A B} (f : A -> B) `{!IsEquiv f}
+  : Stable A -> Stable B
+  := stable_equiv' (Build_Equiv _ _ f _).
+
 (**
   Because [vm_compute] evaluates terms in [PROP] eagerly
   and does not remove dead code we
