@@ -76,12 +76,15 @@ Class Stable P := stable : ~~P -> P.
 Definition not_not_unit {P : Type} : P -> ~~P
   := fun x np => np x.
 
-Global Instance stable_decidable P `{!Decidable P} : Stable P.
+Global Instance ishprop_stable_hprop `{Funext} P `{IsHProp P} : IsHProp (Stable P)
+  := istrunc_forall.
+
+Global Instance stable_decidable P `{Decidable P} : Stable P.
 Proof.
-  intros dn;destruct (dec P) as [p|n].
-  - assumption.
-  - apply Empty_rect,dn,n.
-Qed.
+  intros dn.
+  (* [dec P] either solves the goal or contradicts [dn]. *)
+  by destruct (dec P).
+Defined.
 
 Global Instance stable_negation P : Stable (~ P).
 Proof.

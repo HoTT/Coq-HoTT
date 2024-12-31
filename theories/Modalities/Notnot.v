@@ -25,5 +25,5 @@ Defined.
 
 (** By definition, the local types for this modality are the types such that [not_not_unit : P -> ~~P] is an equivalence.  These are exactly the stable propositions, i.e. those propositions [P] such that [~~P -> P]. *)
 Definition inO_notnot `{Funext} (P : Type)
-  : In NotNot P <-> (Stable P * IsHProp P)
-  := stable_hprop_iff_isequiv_not_not_unit P.
+  : In NotNot P <~> (Stable P * IsHProp P)
+  := equiv_isequiv_not_not_unit_stable_hprop P.

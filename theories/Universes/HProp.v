@@ -145,7 +145,18 @@ Proof.
   - exact (inr (if_not_hprop_then_equiv_Empty hprop nx)).
 Defined.
 
-(** Recall that a type [A] is "stable" if [~~A -> A].  Under function extensionality, if [A] is stable, then [~~A] is the propositional truncation of [A]. Here, for dependency reasons, we don't give the equivalence to [Tr (-1) A], but just show that the recursion principle holds. See Metatheory/ImpredicativeTruncation.v for a generalization to all types, and Modalities/Notnot.v for a description of the universal property of [~~A] when [A] is not assumed to be stable. *)
+(** ** Stable types and stable hprops *)
+
+(** Recall that a type [A] is "stable" if [~~A -> A]. *)
+
+(** When [A] is an hprop, so is [Stable A] (by [ishprop_stable_hprop]), so [Stable A * IsHProp A] is an hprop for any [A]. *)
+Global Instance ishprop_stable_ishprop `{Funext} (A : Type) : IsHProp (Stable A * IsHProp A).
+Proof.
+  apply hprop_allpath; intros [st1 hp1] [st2 hp2].
+  apply path_ishprop.
+Defined.
+
+(** Under function extensionality, if [A] is a stable type, then [~~A] is the propositional truncation of [A]. Here, for dependency reasons, we don't give the equivalence to [Tr (-1) A], but just show that the recursion principle holds. See Metatheory/ImpredicativeTruncation.v for a generalization to all types, and Modalities/Notnot.v for a description of the universal property of [~~A] when [A] is not assumed to be stable. *)
 
 (** Any negation is an hprop, by [istrunc_Empty] and [istrunc_arrow]. In particular, double-negation is an hprop. *)
 Definition ishprop_not_not `{Funext} {A : Type} : IsHProp (~~A) := _.
@@ -164,7 +175,7 @@ Definition not_not_rec_beta {A : Type} `{Stable A} (P : HProp) (f : A -> P) (a :
   := path_ishprop _ _.
 
 (** The map [A -> ~~A] is an equivalence if and only if [A] is a stable hprop.  This characterizes the local types for the double-negation modality.  See Modality/Notnot.v. *)
-Definition stable_hprop_iff_isequiv_not_not_unit `{Funext} A
+Definition isequiv_not_not_unit_iff_stable_hprop `{Funext} A
   : IsEquiv (@not_not_unit A) <-> (Stable A * IsHProp A).
 Proof.
   split.
@@ -175,6 +186,13 @@ Proof.
     rapply isequiv_iff_hprop.
     apply stable.
 Defined.
+
+(** We can upgrade the previous "iff" result to an equivalence. *)
+Definition equiv_isequiv_not_not_unit_stable_hprop `{Funext} (P : Type)
+  : IsEquiv (@not_not_unit P) <~> (Stable P * IsHProp P)
+  := equiv_iff_hprop_uncurried (isequiv_not_not_unit_iff_stable_hprop P).
+
+(** ** A generalization of [ishprop_decpaths] *)
 
 (** Under [Funext], [ishprop_decpaths] shows that [DecidablePaths A] is an hprop.  More generally, it's also an hprop with the first argument fixed. *)
 Global Instance ishprop_decpaths' `{Funext} {A : Type} (x : A)
