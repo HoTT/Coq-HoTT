@@ -8,6 +8,7 @@ Require Import Spaces.Nat.Core.
 (** ** Lagrange's theorem *)
 
 Local Open Scope mc_scope.
+Local Open Scope mc_mult_scope.
 Local Open Scope nat_scope.
 
 Definition subgroup_index {U : Univalence} (G : Group) (H : Subgroup G)
@@ -39,7 +40,7 @@ Proof.
   (** Now we must show that cosets are all equivalent as types. *)
   simpl.
   snrapply equiv_functor_sigma.
-  2: apply (isequiv_group_left_op (-x)).
+  2: apply (isequiv_group_left_op x^).
   1: hnf; trivial.
   exact _.
 Defined.

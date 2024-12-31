@@ -3,7 +3,7 @@ Require Import Types.
 Require Import Cubical.DPath Cubical.DPathSquare.
 Require Import WildCat.
 Require Import Colimits.Pushout.
-Require Import NullHomotopy.
+Require Import Homotopy.NullHomotopy.
 Require Import Truncations.Core.
 Require Import Modalities.Modality.
 Require Import Extensions.

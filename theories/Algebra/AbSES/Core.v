@@ -6,7 +6,7 @@ Require Import Homotopy.ExactSequence Pointed.
 Require Import Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
-Local Open Scope mc_scope.
+Local Open Scope path_scope.
 Local Open Scope type_scope.
 Local Open Scope mc_add_scope.
 
@@ -159,7 +159,7 @@ Proof.
     1: apply center, issurjection_projection.
     strip_truncations.
     (** The difference [f - (phi e0.1)] is sent to [0] by [projection F], hence lies in [A]. *)
-    assert (a : Tr (-1) (hfiber (inclusion F) (f + (- phi e0.1)))).
+    assert (a : Tr (-1) (hfiber (inclusion F) (f - phi e0.1))).
     1: { refine (isexact_preimage (Tr (-1)) (inclusion F) (projection F) _ _).
          refine (grp_homo_op _ _ _ @ _).
          refine (ap _ (grp_homo_inv _ _) @ _).
@@ -491,7 +491,7 @@ Definition hom_loops_data_abses {A B : AbGroup} (E : AbSES B A)
 Proof.
   intro phi.
   srefine (_; (_, _)).
-  - exact (ab_homo_add grp_homo_id (inclusion E $o phi $o projection E)).
+  - exact (grp_homo_id + (inclusion E $o phi $o projection E)).
   - intro a; cbn.
     refine (ap (fun x => _ + inclusion E (phi x)) _ @ _).
     1: apply iscomplex_abses.
@@ -558,12 +558,11 @@ Definition projection_split_to_kernel {B A : AbGroup} (E : AbSES B A)
   : (middle E) $-> (@ab_kernel E B (projection _)).
 Proof.
   snrapply (grp_kernel_corec (G:=E) (A:=E)).
-  - refine (ab_homo_add grp_homo_id
-              (grp_homo_compose ab_homo_negation (s $o (projection _)))).
+  - refine (grp_homo_id - (s $o projection _)).
   - intro x; simpl.
     refine (grp_homo_op (projection _) x _ @ _).
     refine (ap (fun y => (projection _) x + y) _ @ right_inverse ((projection _) x)).
-    refine (grp_homo_inv _ _ @ ap negate _ ).
+    refine (grp_homo_inv _ _ @ ap (-) _).
     apply h.
 Defined.
 
@@ -577,7 +576,7 @@ Proof.
   apply grp_cancelL1.
   refine (ap (fun x => - s x) _ @ _).
   1: rapply cx_isexact.
-  exact (ap _ (grp_homo_unit _) @ negate_mon_unit).
+  exact (ap _ (grp_homo_unit _) @ grp_inv_unit).
 Defined.
 
 (** The induced map [E -> ab_kernel (projection E) + B] is an isomorphism. We suffix it with 1 since it is the first composite in the desired isomorphism [E -> A + B]. *)

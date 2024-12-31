@@ -111,11 +111,10 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 
 - There are files in the root `theories/` directory, including
   `EquivGroupoids`, `ExcludedMiddle`, `Factorization`, `HFiber`,
-  `Extensions`, `NullHomotopy`, `Projective`,
-  `Idempotents`, `Constant`, `BoundedSearch`, etc.  These contain more
-  advanced results which may depend on files in the whole library.  We
-  try to limit the number of files in the top-level folder, and would
-  like to reduce the number.
+  `Extensions`, `Projective`, `Idempotents`, `Constant`,
+  `BoundedSearch`, etc.  These contain more advanced results which may
+  depend on files in the whole library.  We try to limit the number of
+  files in the top-level folder, and would like to reduce the number.
 
 - `WildCat/*`: Files related to wild categories.  They are used
   extensively in the library, so we try to minimize the files they

@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import WildCat.Equiv.
-Require Import NullHomotopy.
+Require Import Homotopy.NullHomotopy.
 Require Import Homotopy.Suspension.
 Require Import Pointed.
 Require Import Truncations.

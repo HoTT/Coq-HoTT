@@ -5,9 +5,9 @@ Require Import WildCat.Core WildCat.Induced WildCat.Equiv WildCat.Universe
 Require Import (notations) Classes.interfaces.canonical_names.
 Require Export (hints) Classes.interfaces.abstract_algebra.
 Require Export (hints) Classes.interfaces.canonical_names.
-Require Export Classes.interfaces.canonical_names (SgOp, sg_op, One, one,
+Require Export Classes.interfaces.canonical_names (SgOp, sg_op,
     MonUnit, mon_unit, LeftIdentity, left_identity, RightIdentity, right_identity,
-    Negate, negate, Associative, simple_associativity, associativity,
+    Associative, simple_associativity, associativity,
     LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).
 Export canonical_names.BinOpNotations.
 Require Export Classes.interfaces.abstract_algebra (IsSemiGroup(..), sg_set, sg_ass,

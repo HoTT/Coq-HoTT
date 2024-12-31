@@ -264,6 +264,19 @@ Proof.
   apply transport_path_universe_V.
 Defined.
 
+(** Transporting along an equivalence with univalence. *)
+Definition univalent_transport (S : Type -> Type) {X Y} (e : X <~> Y) (s : S X)
+  : S Y
+  := (path_universe e) # s.
+
+(** Transporting along the identity equivalence is the identity. *)
+Definition univalent_transport_idequiv (S : Type -> Type) {X}
+  : @univalent_transport S X X equiv_idmap == idmap.
+Proof.
+  intros s.
+  apply (transport2 S path_universe_1).
+Defined.
+
 (** ** 2-paths *)
 
 Definition equiv_path2_universe
@@ -509,6 +522,20 @@ Proof.
   - exact (X; equiv_idmap).
   - intros [Y f]; revert Y f.
     refine (equiv_induction_inv _ idpath).
+Defined.
+
+(** Any two functions that act like transport along an equivalence, i.e. maps of the type [T : forall X Y, X <~> Y -> S X -> S Y] with a computation rule of type [Trefl : forall X, (T (equiv_idmap X) == idmap)], are homotopic. This can be useful when we want to transport along an equivalence, but [univalent_transport] does not have the computational properties that we want. *)
+Definition homotopic_trequiv (S : Type -> Type) {X Y}
+  (T T' : forall {X Y}, X <~> Y -> S X -> S Y)
+  (Trefl : forall {X}, (T (equiv_idmap X) == idmap))
+  (T'refl : forall {X}, (T' (equiv_idmap X) == idmap))
+  (e : X <~> Y)
+  : T e == T' e.
+Proof.
+  revert Y e.
+  apply equiv_induction.
+  apply (pointwise_paths_concat (Trefl _)).
+  symmetry; apply T'refl.
 Defined.
 
 (** ** Truncations *)

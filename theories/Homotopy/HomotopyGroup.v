@@ -107,11 +107,9 @@ Global Instance ishset_pi {n : nat} {X : pType}
   := ltac:(destruct n; exact _).
 
 (** When n >= 2 we have that the nth homotopy group is an abelian group. Note that we don't actually define it as an abelian group but merely show that it is one. This would cause lots of complications with the typechecker. *)
-Global Instance isabgroup_pi (n : nat) (X : pType)
-  : IsAbGroup (Pi n.+2 X).
+Global Instance commutative_pi (n : nat) (X : pType)
+  : Commutative (A:=Pi n.+2 X) sg_op.
 Proof.
-  nrapply Build_IsAbGroup.
-  1: exact _.
   intros x y.
   strip_truncations.
   cbn; apply (ap tr).

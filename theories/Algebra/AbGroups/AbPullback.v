@@ -4,6 +4,8 @@ Require Export Algebra.Groups.GrpPullback.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import WildCat.Core.
 
+Local Open Scope mc_add_scope.
+
 (** * Pullbacks of abelian groups *)
 
 Section AbPullback.
@@ -21,11 +23,7 @@ Section AbPullback.
     apply path_ishprop.
   Defined.
 
-  Global Instance isabgroup_ab_pullback
-    : IsAbGroup (grp_pullback f g) := {}.
-
-  Definition ab_pullback
-    : AbGroup := Build_AbGroup (grp_pullback f g) _.
+  Definition ab_pullback : AbGroup := Build_AbGroup (grp_pullback f g) _.
 
   (** The corecursion principle is inherited from Groups; use grp_pullback_corec and friends from Groups/GrpPullback.v. *)
 

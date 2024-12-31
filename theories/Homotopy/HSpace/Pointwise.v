@@ -2,6 +2,7 @@ Require Import Basics Types Pointed HSpace.Core HSpace.Coherent.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** * Pointwise H-space structures *)
 

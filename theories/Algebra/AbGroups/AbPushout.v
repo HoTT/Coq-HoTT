@@ -27,10 +27,9 @@ Proof.
   - exact (ab_biprod_rec b c).
   - intros [x y] q; strip_truncations; simpl.
     destruct q as [a q]. cbn in q.
-    refine (ap (uncurry (fun x y => b x + c y)) q^ @ _).
-    cbn.
-    refine (ap011 sg_op (preserves_negate _) (p a)^ @ _).
-    exact (left_inverse _).
+    lhs_V nrapply (ap (fun '(x, y) => b x + c y) q); cbn.
+    lhs rapply (ap011 (+) (preserves_inverse _) (p a)^).
+    apply left_inverse.
 Defined.
 
 Corollary ab_pushout_rec_uncurried {A B C : AbGroup}
@@ -50,13 +49,11 @@ Definition ab_pushout_inr {A B C : AbGroup} {f : A $-> B} {g : A $-> C}
 Proposition ab_pushout_commsq {A B C : AbGroup} {f : A $-> B} {g : A $-> C}
   : (@ab_pushout_inl A B C f g) $o f == ab_pushout_inr $o g.
 Proof.
-  intro a.
-  apply qglue; cbn.
-  apply tr.
-  exists a.
+  intro a; simpl.
+  apply qglue, tr; exists a.
   apply path_prod; simpl.
   - exact (right_identity _)^.
-  - rewrite negate_mon_unit.
+  - rewrite grp_inv_unit.
     exact (left_identity _)^.
 Defined.
 
@@ -145,7 +142,7 @@ Proof.
     exact (left_inverse mon_unit @ (grp_homo_unit g)^).
   - apply (grp_moveR_M1).
     refine (_ @ ap fst p); cbn; symmetry.
-    refine (_ @ negate_mon_unit).
+    refine (_ @ grp_inv_unit).
     refine (ap _ _).
     exact (ap f z @ grp_homo_unit f).
 Defined.

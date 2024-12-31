@@ -279,7 +279,7 @@ Defined.
 (** Applying a two variable function to a [path_sigma]. *)
 Definition ap_path_sigma {A B} (P : A -> Type) (F : forall a : A, P a -> B)
   {x x' : A} {y : P x} {y' : P x'} (p : x = x') (q : p # y = y')
-  : ap (fun w => F w.1 w.2) (path_sigma' P p q)
+  : ap (sig_rec F) (path_sigma' P p q)
     = ap _ (moveL_transport_V _ p _ _ q)
         @ (transport_arrow_toconst _ _ _)^ @ ap10 (apD F p) y'.
 Proof.

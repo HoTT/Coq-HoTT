@@ -225,7 +225,7 @@ Proof.
 split.
 - apply _.
 - intros e f;apply tr; exists (e/2), (e/2);split.
-  + apply pos_split2.
+  + apply (pos_split2 e).
   + intros x;reflexivity.
 - intros e f g;apply (Trunc_ind _);intros [d [d' [E1 E2]]].
   apply tr;exists d, d';split;trivial.

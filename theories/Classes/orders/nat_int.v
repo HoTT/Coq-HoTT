@@ -41,8 +41,8 @@ Context `{Naturals N} `{Apart N} `{Le N} `{Lt N} `{!FullPseudoSemiRingOrder le l
 
 (* Add Ring R : (stdlib_semiring_theory R). *)
 
-Lemma nat_int_to_semiring : forall x : R, exists z, x = naturals_to_semiring N R z |_|
-  (x + naturals_to_semiring N R z)%mc = 0.
+Lemma nat_int_to_semiring : forall x : R, exists z,
+  x = naturals_to_semiring N R z |_| x + naturals_to_semiring N R z = 0.
 Proof.
 apply biinduction.
 - exists 0.

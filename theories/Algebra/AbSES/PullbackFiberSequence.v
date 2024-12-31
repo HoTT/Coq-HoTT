@@ -6,7 +6,6 @@ Require Import AbSES.Core AbSES.Pullback.
 Require Import Modalities.Identity Modalities.Modality Truncations.Core.
 
 Local Open Scope pointed_scope.
-Local Open Scope mc_scope.
 Local Open Scope mc_add_scope.
 
 (** * The fiber sequence induced by pulling back along a short exact sequence *)
@@ -86,8 +85,8 @@ Proof.
            refine (ap (grp_pullback_pr1 _ _) (fst p^$.2 (-a)) @ _).
            exact (grp_homo_inv _ _). }
     (* Using [q2], we conclude. *)
-    pose proof (q3 := ap negate (fst ((equiv_path_prod _ _)^-1 q2))); cbn in q3.
-    exact ((negate_involutive _)^ @ q3^ @ negate_mon_unit).
+    pose proof (q3 := ap (-) (fst ((equiv_path_prod _ _)^-1 q2))); cbn in q3.
+    exact ((inverse_involutive _)^ @ q3^ @ grp_inv_unit).
   - apply (cancelR_conn_map (Tr (-1)) grp_quotient_map).
     1: exact _.
     simpl.
@@ -129,7 +128,7 @@ Proof.
       apply qglue.
       exists b.
       refine (_ @ (grp_unit_r _)^).
-      exact (negate_involutive _)^.
+      exact (inverse_involutive _)^.
 Defined.
 
 (** That [abses_pullback_trivial_preimage E F p] pulls back to [F] is immediate from [abses_pullback_component1_id] and the following map. As such, we've shown that sequences which become trivial after pulling back along [inclusion E] are in the image of pullback along [projection E]. *)

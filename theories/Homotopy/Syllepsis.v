@@ -162,7 +162,7 @@ Proof.
   by destruct p, q.
 Defined.
 
-(* Eckmann-Hilton *)
+(* Eckmann-Hilton.  This is also proved as [eckmann_hilton] in PathGroupoids.v, but we need this particular proof in order to prove the syllepsis. *)
 Theorem eh {X} {a : X} (p q : idpath a = idpath a) :
   p @ q = q @ p.
 Proof.

@@ -130,14 +130,21 @@ Defined.
 
 
 (** The action of maps given by lambda. *)
-Definition ap_lambdaD {A B : Type} {C : B -> Type} {x y : A} (p : x = y) (M : forall a b, C b) :
-  ap (fun a b => M a b) p =
-  path_forall _ _ (fun b => ap (fun a => M a b) p).
+Definition ap_lambdaD {A B : Type} {C : B -> Type} {x y : A} (p : x = y) (M : forall a b, C b)
+  : ap (fun a b => M a b) p =
+      path_forall _ _ (fun b => ap (fun a => M a b) p).
 Proof.
   destruct p;
   symmetry;
   simpl; apply path_forall_1.
 Defined.
+
+(** The action of pre-composition on a path between dependent functions.  See also [ap10_ap_precompose] in PathGroupoids.v and [ap_precompose] in Arrow.v. *)
+Definition ap_precomposeD {B Q : Type} {P : Q -> Type}
+  {f g : forall q, P q} (h : f = g) (i : B -> Q)
+  : ap (fun (k : forall q, P q) => k oD i) h
+    = path_forall (f oD i) (g oD i) (apD10 h oD i)
+  := ap_lambdaD _ _.
 
 (** ** Dependent paths *)
 

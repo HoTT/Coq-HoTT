@@ -355,7 +355,12 @@ Section Localization.
   Definition rng_localization : CRing.
   Proof.
     snrapply Build_CRing'.
-    1: rapply (Build_AbGroup' (Quotient fraction_eq)).
+    (* All of the laws can be found by typeclass search, but it's slightly faster if we fill them in: *)
+    1: exact (Build_AbGroup' (Quotient fraction_eq)
+                commutative_plus_rng_localization
+                associative_plus_rng_localization
+                leftidentity_plus_rng_localization
+                leftinverse_plus_rng_localization).
     all: exact _.
   Defined.
 
@@ -476,7 +481,7 @@ Section Localization.
     snrapply isinvertible_cring.
     - exact (class_of _ (Build_Fraction 1 x Sx)).
     - apply qglue, fraction_eq_simple.
-      exact (rng_mult_assoc _ _ _)^.
+      exact (ring_mult_assoc_opp _ _ _ _).
   Defined.
   
   (** As a special case, any denominator of a fraction must necessarily be invertible. *)
@@ -510,7 +515,8 @@ Section Localization.
     (Hmul : forall x y, P x -> P y -> P (x * y))
     : forall x, P x.
   Proof.
-    srapply Quotient_ind.
+    snrapply Quotient_ind.
+    - exact _.
     - intros f.
       refine (transport P (fraction_decompose f)^ _).
       apply Hmul.
