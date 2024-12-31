@@ -3,7 +3,7 @@
 Require Import HoTT.Basics HoTT.Truncations HoTT.Types.Bool.
 Require Import Metatheory.Core Metatheory.FunextVarieties Metatheory.ImpredicativeTruncation.
 
-(** ** An approach using the truncations defined as HITs *)
+(** Assuming that we have a propositional truncation operation with a definitional computation rule, we can prove function extensionality.  Since we can't assume we have a definitional computation rule, we work with the propositional truncation defined as a HIT, which does have a definitional computation rule. *)
 
 (** We can construct an interval type as [Trunc -1 Bool]. *)
 Local Definition interval := Trunc (-1) Bool.
@@ -11,7 +11,7 @@ Local Definition interval := Trunc (-1) Bool.
 Local Definition interval_rec (P : Type) (a b : P) (p : a = b)
   : interval -> P.
 Proof.
-  (** We define this map by factoring it through the type [{ x : P & x = b}], which is a proposition since it is contractible. *)
+  (* We define this map by factoring it through the type [{ x : P & x = b}], which is a proposition since it is contractible. *)
   refine ((pr1 : { x : P & x = b } -> P) o _).
   apply Trunc_rec.
   intros [].
@@ -22,7 +22,7 @@ Defined.
 Local Definition seg : tr true = tr false :> interval
   := path_ishprop _ _.
 
-(** From an interval type, and thus from truncations, we can prove function extensionality. *)
+(** From an interval type, and thus from truncations, we can prove function extensionality. See IntervalImpliesFunext.v for an approach that works with an interval defined as a HIT. *)
 Definition funext_type_from_trunc : Funext_type
   := WeakFunext_implies_Funext (NaiveFunext_implies_WeakFunext
     (fun A P f g p =>
@@ -30,7 +30,7 @@ Definition funext_type_from_trunc : Funext_type
         interval_rec _ (f a) (g a) (p a) x
         in ap h seg)).
 
-(** ** An approach without using HITs *)
+(** ** Function extensionality implies an interval type *)
 
 (** Assuming [Funext] (and not propositional resizing), the construction [Trm] in ImpredicativeTruncation.v applied to [Bool] gives an interval type with definitional computation on the end points.  So we see that function extensionality is equivalent to the existence of an interval type. *)
 

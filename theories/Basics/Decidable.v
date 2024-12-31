@@ -72,25 +72,48 @@ Global Existing Instance dec_paths.
 
 Class Stable P := stable : ~~P -> P.
 
-Global Instance stable_decidable P `{!Decidable P} : Stable P.
+(** We always have a map in the other direction. *)
+Definition not_not_unit {P : Type} : P -> ~~P
+  := fun x np => np x.
+
+Global Instance ishprop_stable_hprop `{Funext} P `{IsHProp P} : IsHProp (Stable P)
+  := istrunc_forall.
+
+Global Instance stable_decidable P `{Decidable P} : Stable P.
 Proof.
-  intros dn;destruct (dec P) as [p|n].
-  - assumption.
-  - apply Empty_rect,dn,n.
-Qed.
+  intros dn.
+  (* [dec P] either solves the goal or contradicts [dn]. *)
+  by destruct (dec P).
+Defined.
 
 Global Instance stable_negation P : Stable (~ P).
 Proof.
   intros nnnp p.
-  exact (nnnp (fun np => np p)).
+  exact (nnnp (not_not_unit p)).
 Defined.
 
 Definition iff_stable P `(Stable P) : ~~P <-> P.
 Proof.
   split.
   - apply stable.
-  - exact (fun x f => f x).
+  - exact not_not_unit.
 Defined.
+
+Definition stable_iff {A B} (f : A <-> B)
+  : Stable A -> Stable B.
+Proof.
+  intros stableA nnb.
+  destruct f as [f finv].
+  exact (f (stableA (fun na => nnb (fun b => na (finv b))))).
+Defined.
+
+Definition stable_equiv' {A B} (f : A <~> B)
+  : Stable A -> Stable B
+  := stable_iff f.
+
+Definition stable_equiv {A B} (f : A -> B) `{!IsEquiv f}
+  : Stable A -> Stable B
+  := stable_equiv' (Build_Equiv _ _ f _).
 
 (**
   Because [vm_compute] evaluates terms in [PROP] eagerly
