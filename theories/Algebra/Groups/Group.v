@@ -453,6 +453,18 @@ Section GroupEquations.
   (** The inverse of the unit is the unit. *)
   Definition grp_inv_unit : mon_unit^ = mon_unit := inverse_mon_unit (G :=G).
 
+  Definition grp_inv_V_gg : x^ * (x * y) = y
+    := grp_assoc _ _ _ @ ap (.* y) (grp_inv_l x) @ grp_unit_l y.
+
+  Definition grp_inv_g_Vg : x * (x^ * y) = y
+    := grp_assoc _ _ _ @ ap (.* y) (grp_inv_r x) @ grp_unit_l y.
+
+  Definition grp_inv_gg_V : (x * y) * y^ = x
+    := (grp_assoc _ _ _)^ @ ap (x *.) (grp_inv_r y) @ grp_unit_r x.
+
+  Definition grp_inv_gV_g : (x * y^) * y = x
+    := (grp_assoc _ _ _)^ @ ap (x *.) (grp_inv_l y) @ grp_unit_r x.
+
 End GroupEquations.
 
 (** ** Cancelation lemmas *)
