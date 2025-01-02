@@ -178,7 +178,7 @@ Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
 
 (** Trivial subgroup *)
-Definition trivial_subgroup {G} : Subgroup G.
+Definition trivial_subgroup G : Subgroup G.
 Proof.
   rapply (Build_Subgroup' (fun x => x = mon_unit)).
   1: reflexivity.
@@ -205,7 +205,7 @@ Proof.
 Defined.
 
 (** Every group is a (maximal) subgroup of itself *)
-Definition maximal_subgroup {G} : Subgroup G.
+Definition maximal_subgroup G : Subgroup G.
 Proof.
   rapply (Build_Subgroup G (fun x => Unit)).
   split; auto; exact _.
@@ -473,7 +473,7 @@ Defined.
 
 (** The property of being the trivial subgroup is useful. *)
 Definition IsTrivialSubgroup {G : Group} (H : Subgroup G) : Type :=
-  forall x, H x <-> trivial_subgroup x.
+  forall x, H x <-> trivial_subgroup G x.
 Existing Class IsTrivialSubgroup.
 
 Global Instance istrivialsubgroup_trivial_subgroup {G : Group}
