@@ -304,3 +304,16 @@ Proof.
     + srapply path_sigma_hprop.
       reflexivity.
 Defined.
+
+(** The group quotient by a trivial group is isomorphic to the original group. *)
+Definition grp_quotient_trivial (G : Group) (N : NormalSubgroup G)
+  : IsTrivialGroup N -> G / N ≅ G.
+Proof.
+  intros T.
+  snrapply cate_adjointify.
+  - srapply (grp_quotient_rec _ _ (Id _)).
+    apply T.
+  - srapply grp_quotient_map.
+  - reflexivity.
+  - by srapply grp_quotient_ind_hprop.
+Defined.
