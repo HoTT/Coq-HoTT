@@ -179,6 +179,13 @@ Proof.
   all: intro A; apply ispointedcat_group.
 Defined.
 
+(** [abgroup_group] is a functor *)
+Global Instance is0functor_abgroup_group : Is0Functor abgroup_group
+  := is0functor_induced _.
+
+Global Instance is1functor_abgroup_group : Is1Functor abgroup_group
+  := is1functor_induced _.
+
 (** Image of group homomorphisms between abelian groups *)
 Definition abgroup_image {A B : AbGroup} (f : A $-> B) : AbGroup
   := Build_AbGroup (grp_image f) _.
