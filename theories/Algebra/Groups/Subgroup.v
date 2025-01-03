@@ -368,7 +368,7 @@ Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
 Global Existing Instance normalsubgroup_isnormal.
 
 Definition equiv_symmetric_in_normalsubgroup {G : Group}
-  (N : NormalSubgroup G)
+  (N : Subgroup G) `{!IsNormalSubgroup N}
   : forall x y, N (x * y) <~> N (y * x).
 Proof.
   intros x y.
@@ -377,15 +377,12 @@ Proof.
 Defined.
 
 (** Our definiiton of normal subgroup implies the usual definition of invariance under conjugation. *)
-Definition isnormal_conjugate {G : Group} (N : NormalSubgroup G) {x y : G}
-  : N x -> N (y * x * y^).
+Definition isnormal_conj {G : Group} (N : Subgroup G)
+  `{!IsNormalSubgroup N} {x y : G}
+  : N x <~> N (y * x * y^).
 Proof.
-  intros n.
-  apply isnormal.
-  nrefine (transport N (grp_assoc _ _ _)^ _).
-  nrefine (transport (fun y => N (y * x)) (grp_inv_l _)^ _).
-  nrefine (transport N (grp_unit_l _)^ _).
-  exact n.
+  srefine (equiv_symmetric_in_normalsubgroup N _ _ oE _).
+  by rewrite grp_inv_V_gg.
 Defined.
 
 (** We can show a subgroup is normal if it is invariant under conjugation. *)
@@ -414,7 +411,7 @@ Definition equiv_isnormal_conjugate `{Funext} {G : Group} (N : Subgroup G)
 Proof.
   rapply equiv_iff_hprop.
   - intros is_normal x y.
-    exact (isnormal_conjugate (Build_NormalSubgroup G N is_normal)).
+    rapply isnormal_conj.
   - intros is_normal'.
     by snrapply Build_IsNormalSubgroup'.
 Defined.
