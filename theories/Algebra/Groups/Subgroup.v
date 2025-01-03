@@ -122,9 +122,9 @@ Defined.
 
 Section SubgroupElements.
   Context {G : Group} (H : Subgroup G) (x y : G).
-  Definition subgroup_in_unit : H mon_unit := issubgroup_in_unit.
-  Definition subgroup_in_inv : H x -> H (- x) := issubgroup_in_inv x.
-  Definition subgroup_in_inv' : H (- x) -> H x := issubgroup_in_inv' x.
+  Definition subgroup_in_unit : H 1 := issubgroup_in_unit.
+  Definition subgroup_in_inv : H x -> H x^ := issubgroup_in_inv x.
+  Definition subgroup_in_inv' : H x^ -> H x := issubgroup_in_inv' x.
   Definition subgroup_in_op : H x -> H y -> H (x * y) := issubgroup_in_op x y.
   Definition subgroup_in_op_inv : H x -> H y -> H (x * y^) := issubgroup_in_op_inv x y.
   Definition subgroup_in_inv_op : H x -> H y -> H (x^ * y) := issubgroup_in_inv_op x y.
