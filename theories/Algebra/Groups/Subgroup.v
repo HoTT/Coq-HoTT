@@ -420,6 +420,22 @@ Proof.
     by snrapply Build_IsNormalSubgroup'.
 Defined.
 
+(** The trivial subgroup is a normal subgroup. *)
+Global Instance isnormal_trivial_subgroup {G : Group}
+  : IsNormalSubgroup (trivial_subgroup G).
+Proof.
+  intros x y p; cbn in p |- *.
+  apply grp_moveL_1V in p.
+  by apply grp_moveL_V1.
+Defined.
+
+(** The maximal subgroup (the group itself) is a normal subgroup. *)
+Global Instance isnormal_maximal_subgroup {G : Group}
+  : IsNormalSubgroup (maximal_subgroup G).
+Proof.
+  intros x y p; exact tt.
+Defined.
+
 (** Left and right cosets are equivalent in normal subgroups. *)
 Definition equiv_in_cosetL_in_cosetR_normalsubgroup {G : Group}
   (N : NormalSubgroup G) (x y : G)
