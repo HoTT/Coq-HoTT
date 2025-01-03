@@ -222,6 +222,15 @@ Defined.
 Coercion maximal_subgroup : Group >-> Subgroup.
 Add Printing Coercion maximal_subgroup.
 
+(** The group inferred from the maximal subgroup is the original group. *)
+Definition grp_iso_subgroup_group_maximal (G : Group)
+  : subgroup_group (maximal_subgroup G) $<~> G.
+Proof.
+  snrapply Build_GroupIsomorphism'.
+  - rapply equiv_sigma_contr.
+  - hnf; reflexivity.
+Defined.
+
 (** Paths between subgroups correspond to homotopies between the underlying predicates. *) 
 Proposition equiv_path_subgroup `{F : Funext} {G : Group} (H K : Subgroup G)
   : (H == K) <~> (H = K).
