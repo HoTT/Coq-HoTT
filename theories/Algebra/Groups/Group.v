@@ -465,6 +465,12 @@ Section GroupEquations.
   Definition grp_inv_gV_g : (x * y^) * y = x
     := (grp_assoc _ _ _)^ @ ap (x *.) (grp_inv_l y) @ grp_unit_r x.
 
+  Definition grp_1g_g1 : x = y <~> 1 * x = y * 1
+    := equiv_concat_r (grp_unit_r _)^ _ oE equiv_concat_l (grp_unit_l _) _.
+
+  Definition grp_g1_1g : x = y <~> x * 1 = 1 * y
+    := equiv_concat_r (grp_unit_l _)^ _ oE equiv_concat_l (grp_unit_r _) _.
+
 End GroupEquations.
 
 (** ** Cancelation lemmas *)
@@ -678,7 +684,7 @@ Definition grp_pow_commutes {G : Group} (n : Int) (g h : G)
   : h * (grp_pow g n) = (grp_pow g n) * h.
 Proof.
   induction n.
-  - exact (grp_unit_r _ @ (grp_unit_l _)^).
+  - by apply grp_g1_1g.
   - rewrite grp_pow_succ.
     nrapply grp_commutes_op; assumption.
   - rewrite grp_pow_pred.
@@ -1168,8 +1174,7 @@ Definition grp_conj_unit {G : Group} : grp_conj (G:=G) 1 $== Id _.
 Proof.
   intros x.
   apply grp_moveR_gV.
-  rhs nrapply grp_unit_r.
-  nrapply grp_unit_l.
+  by nrapply grp_1g_g1.
 Defined.
 
 (** Conjugation commutes with group homomorphisms. *)
