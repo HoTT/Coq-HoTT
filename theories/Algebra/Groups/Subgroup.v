@@ -211,6 +211,10 @@ Proof.
   split; auto; exact _.
 Defined.
 
+(** We wish to coerce a group to its maximal subgroup. However, if we don't explicitly print [maximal_subgroup] things can get confusing, so we mark it as a coercion to be printed. *)
+Coercion maximal_subgroup : Group >-> Subgroup.
+Add Printing Coercion maximal_subgroup.
+
 (** Paths between subgroups correspond to homotopies between the underlying predicates. *) 
 Proposition equiv_path_subgroup `{F : Funext} {G : Group} (H K : Subgroup G)
   : (H == K) <~> (H = K).
