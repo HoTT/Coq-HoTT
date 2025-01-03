@@ -558,10 +558,10 @@ Definition subgroup_generated_gen_incl {G : Group} {X : G -> Type} (g : G) (H : 
   := (g; tr (sgt_in H)).
 
 Definition subgroup_generated_rec {G H : Group} (X : G -> Type) (S : Subgroup H)
-  (f : G $-> H) (i : forall x, X x -> S (f x))
-  : forall x, subgroup_generated X x -> S (f x).
+  (f : G $-> H) (i : forall g, X g -> S (f g))
+  : forall g, subgroup_generated X g -> S (f g).
 Proof.
-  intros x; rapply Trunc_rec; intros p.
+  intros g; rapply Trunc_rec; intros p.
   induction p as [g Xg | | g h p1 IHp1 p2 IHp2].
   - by apply i.
   - rewrite grp_homo_unit.
