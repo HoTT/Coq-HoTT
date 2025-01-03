@@ -520,20 +520,29 @@ Section GroupMovement.
 
   (** *** Moving elements equal to unit. *)
 
-  Definition grp_moveL_1M : x * y^ = mon_unit <~> x = y
+  Definition grp_moveL_1M : x * y^ = 1 <~> x = y
     := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gM.
   
-  Definition grp_moveL_1V : x * y = mon_unit <~> x = y^
-    := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gV.
-
-  Definition grp_moveL_M1 : y^ * x = mon_unit <~> x = y
+  Definition grp_moveL_M1 : y^ * x = 1 <~> x = y
     := equiv_concat_r (grp_unit_r _) _ oE grp_moveL_Mg.
+  
+  Definition grp_moveL_1V : x * y = 1 <~> x = y^
+    := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gV.
+  
+  Definition grp_moveL_V1 : y * x = 1 <~> x = y^
+    := equiv_concat_r (grp_unit_r _) _ oE grp_moveL_Vg.
 
-  Definition grp_moveR_1M : mon_unit = y * x^ <~> x = y
-    := (equiv_concat_l (grp_unit_l _) _)^-1%equiv oE grp_moveR_gM.
+  Definition grp_moveR_1M : 1 = y * x^ <~> x = y
+    := (equiv_concat_l (grp_unit_l _) _)^-1 oE grp_moveR_gM.
+  
+  Definition grp_moveR_M1 : 1 = x^ * y <~> x = y
+    := (equiv_concat_l (grp_unit_r _) _)^-1 oE grp_moveR_Mg.
+  
+  Definition grp_moveR_1V : 1 = y * x <~> x^ = y
+    := (equiv_concat_l (grp_unit_l _) _)^-1 oE grp_moveR_gV.
 
-  Definition grp_moveR_M1 : mon_unit = x^ * y <~> x = y
-    := (equiv_concat_l (grp_unit_r _) _)^-1%equiv oE grp_moveR_Mg.
+  Definition grp_moveR_V1 : mon_unit = x * y <~> x^ = y
+    := (equiv_concat_l (grp_unit_r _) _)^-1 oE grp_moveR_Vg.
 
   (** *** Cancelling elements equal to unit. *)
 
