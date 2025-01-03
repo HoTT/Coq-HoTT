@@ -1146,3 +1146,69 @@ Proof.
   lhs nrapply grp_homo_op.
   apply ap, grp_homo_inv.
 Defined.
+
+(** ** Conjugation *)
+
+(** Conjugation by a group element is a homomorphism. Often we need to use properties about group homomorphisms in order to prove things about conjugation, so it is helpful to define it directly as a group homomorphism. *)
+Definition grp_conj {G : Group} (x : G) : G $-> G.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun y => x * y * x^).
+  - intros y z.
+    rhs nrapply grp_assoc.
+    apply (ap (.* x^)).
+    rhs nrapply grp_assoc.
+    lhs nrapply grp_assoc.
+    apply (ap (.* z)).
+    symmetry; apply grp_inv_gV_g.
+Defined.
+
+(** Conjugation by the unit element is the identity. *)
+Definition grp_conj_unit {G : Group} : grp_conj (G:=G) 1 $== Id _.
+Proof.
+  intros x.
+  apply grp_moveR_gV.
+  rhs nrapply grp_unit_r.
+  nrapply grp_unit_l.
+Defined.
+
+(** Conjugation commutes with group homomorphisms. *)
+Definition grp_homo_conj {G H : Group} (f : G $-> H) (x : G)
+  : f $o grp_conj x $== grp_conj (f x) $o f.
+Proof.
+  intros z; simpl.
+  by rewrite !grp_homo_op, grp_homo_inv.
+Defined.
+
+(** Conjugation respects composition. *)
+Definition grp_conj_op {G : Group} (x y : G)
+  : grp_conj (x * y) $== grp_conj x $o grp_conj y.
+Proof.
+  intros z; simpl.
+  by rewrite grp_inv_op, !grp_assoc.
+Defined.
+
+(** Conjugating by an element then its inverse is the identity. *)
+Definition grp_conj_inv_r {G : Group} (x : G)
+  : grp_conj x $o grp_conj x^ $== Id _.
+Proof.
+  refine ((grp_conj_op _ _)^$ $@ _ $@ grp_conj_unit).
+  intros y.
+  nrapply (ap (fun x => grp_conj x y)).
+  apply grp_inv_r.
+Defined.
+
+(** Conjugating by an inverse then the element is the identity. *)
+Definition grp_conj_inv_l {G : Group} (x : G)
+  : grp_conj x^ $o grp_conj x $== Id _.
+Proof.
+  refine ((grp_conj_op _ _)^$ $@ _ $@ grp_conj_unit).
+  intros y.
+  nrapply (ap (fun x => grp_conj x y)).
+  apply grp_inv_l.
+Defined.
+
+(** Conjugation is a group automorphism. *)
+Definition grp_iso_conj {G : Group} (x : G) : G $<~> G
+  := cate_adjointify (grp_conj x) (grp_conj x^)
+      (grp_conj_inv_r _) (grp_conj_inv_l _).
