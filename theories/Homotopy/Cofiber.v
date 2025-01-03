@@ -90,3 +90,13 @@ Definition functor_cofiber_compose {X Y X' Y' X'' Y'' : Type}
   : functor_cofiber (g' o g) (h' o h) (fun x => ap h' (p x) @ p' (g x))
     == functor_cofiber g' h' p' o functor_cofiber g h p
   := functor_pushout_compose g idmap h g' idmap h' (fun _ => 1) p (fun _ => 1) p'.
+
+(** ** Comparison of fibers and cofibers *)
+
+Definition fiber_to_path_cofiber {X Y : Type} (f : X -> Y) (y : Y)
+  : hfiber f y -> cofib f y = apex f.
+Proof.
+  intros [x p].
+  lhs nrapply (ap (cofib f) p^).
+  apply leg.
+Defined.
