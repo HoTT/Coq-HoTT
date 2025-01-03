@@ -57,7 +57,7 @@ Defined.
 
 (** ** Characterisation of group embeddings *)
 Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
-  : (grp_kernel f = trivial_subgroup :> Subgroup A) <~> IsEmbedding f.
+  : (grp_kernel f = trivial_subgroup A :> Subgroup A) <~> IsEmbedding f.
 Proof.
   refine (_ oE (equiv_path_subgroup' _ _)^-1%equiv).
   apply equiv_iff_hprop_uncurried.
