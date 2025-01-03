@@ -576,7 +576,7 @@ Definition functor_subgroup_generated {G H : Group} (X : G -> Type) (Y : H -> Ty
   : forall g, subgroup_generated X g -> subgroup_generated Y (f g).
 Proof.
   apply subgroup_generated_rec.
-  intros g x.
+  intros g p.
   apply tr, sgt_in.
   by apply preserves.
 Defined.
