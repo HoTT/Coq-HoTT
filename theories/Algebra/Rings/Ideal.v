@@ -143,7 +143,7 @@ End IdealElements.
 
 (** The trivial subgroup is a left ideal. *)
 Global Instance isleftideal_trivial_subgroup (R : Ring)
-  : IsLeftIdeal (R := R) trivial_subgroup.
+  : IsLeftIdeal (trivial_subgroup R).
 Proof.
   intros r x p.
   rhs_V nrapply (rng_mult_zero_r).
@@ -152,12 +152,12 @@ Defined.
 
 (** The trivial subgroup is a right ideal. *)
 Global Instance isrightideal_trivial_subgroup (R : Ring)
-  : IsRightIdeal (R := R) trivial_subgroup
+  : IsRightIdeal (trivial_subgroup R)
   := isleftideal_trivial_subgroup _.
 
 (** The trivial subgroup is an ideal. *)
 Global Instance isideal_trivial_subgroup (R : Ring)
-  : IsIdeal (R := R) trivial_subgroup
+  : IsIdeal (trivial_subgroup R)
   := {}.
 
 (** We call the trivial subgroup the "zero ideal". *)
@@ -167,17 +167,17 @@ Definition ideal_zero (R : Ring) : Ideal R := Build_Ideal R _ _.
 
 (** The maximal subgroup is a left ideal. *)
 Global Instance isleftideal_maximal_subgroup (R : Ring)
-  : IsLeftIdeal (R := R) maximal_subgroup
+  : IsLeftIdeal (maximal_subgroup R)
   := ltac:(done).
 
 (** The maximal subgroup is a right ideal. *)
 Global Instance isrightideal_maximal_subgroup (R : Ring)
-  : IsRightIdeal (R := R) maximal_subgroup
+  : IsRightIdeal (maximal_subgroup R)
   := isleftideal_maximal_subgroup _.
 
 (** The maximal subgroup is an ideal.  *)
 Global Instance isideal_maximal_subgroup (R : Ring)
-  : IsIdeal (R:=R) maximal_subgroup
+  : IsIdeal (maximal_subgroup R)
   := {}.
 
 (** We call the maximal subgroup the "unit ideal". *)

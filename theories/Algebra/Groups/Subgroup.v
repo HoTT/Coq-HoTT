@@ -178,7 +178,7 @@ Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
 
 (** Trivial subgroup *)
-Definition trivial_subgroup {G} : Subgroup G.
+Definition trivial_subgroup G : Subgroup G.
 Proof.
   rapply (Build_Subgroup' (fun x => x = mon_unit)).
   1: reflexivity.
@@ -205,11 +205,15 @@ Proof.
 Defined.
 
 (** Every group is a (maximal) subgroup of itself *)
-Definition maximal_subgroup {G} : Subgroup G.
+Definition maximal_subgroup G : Subgroup G.
 Proof.
   rapply (Build_Subgroup G (fun x => Unit)).
   split; auto; exact _.
 Defined.
+
+(** We wish to coerce a group to its maximal subgroup. However, if we don't explicitly print [maximal_subgroup] things can get confusing, so we mark it as a coercion to be printed. *)
+Coercion maximal_subgroup : Group >-> Subgroup.
+Add Printing Coercion maximal_subgroup.
 
 (** Paths between subgroups correspond to homotopies between the underlying predicates. *) 
 Proposition equiv_path_subgroup `{F : Funext} {G : Group} (H K : Subgroup G)
@@ -470,7 +474,7 @@ Defined.
 
 (** The property of being the trivial subgroup is useful. *)
 Definition IsTrivialSubgroup {G : Group} (H : Subgroup G) : Type :=
-  forall x, H x <-> trivial_subgroup x.
+  forall x, H x <-> trivial_subgroup G x.
 Existing Class IsTrivialSubgroup.
 
 Global Instance istrivialsubgroup_trivial_subgroup {G : Group}
