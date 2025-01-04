@@ -1,0 +1,204 @@
+<html>
+<head>
+<title>Freudenthal.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Freudenthal.v</h1>
+
+<div class="code" title="File: Freudenthal.v
+Line: 1
+Time: 0.031s">
+<div class="time" style="width: 50.819672131148%"></div>
+<pre>Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 1
+Time: 0.01s">
+<div class="time" style="width: 16.393442622951%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 2
+Time: 0.016s">
+<div class="time" style="width: 26.229508196721%"></div>
+<pre>
+Require Import Colimits.Pushout.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Colimits.SpanPushout.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 4
+Time: 0.017s">
+<div class="time" style="width: 27.868852459016%"></div>
+<pre>
+Require Import HoTT.Truncations.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 5
+Time: 0.028s">
+<div class="time" style="width: 45.901639344262%"></div>
+<pre>
+Require Import Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 6
+Time: 0.008s">
+<div class="time" style="width: 13.114754098361%"></div>
+<pre>
+Require Import Homotopy.BlakersMassey.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The Freudenthal Suspension Theorem *)
+
+(** The Freudenthal suspension theorem is a fairly trivial corollary of the Blakers-Massey theorem.  The only real work is to relate the span-pushout that we used for Blakers-Massey to the naive pushout that we used to define suspension. *)</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition freudenthal' `{Univalence} (n : trunc_index)
+           (X : Type) `{IsConnected n.+1 X}
+  : IsConnMap (n +2+ n) (@merid X).</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 1.6393442622951%"></div>
+<pre>
+  snrapply cancelL_equiv_conn_map.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: {</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (equiv_ap' (B:=SPushout (fun (u v : Unit) =&gt; X)) _ North South).</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 16
+Time: 0.003s">
+<div class="time" style="width: 4.9180327868852%"></div>
+<pre>
+       exact (equiv_pushout (equiv_contr_sigma (fun _ : Unit * Unit =&gt; X))^-1
+                            (equiv_idmap Unit) (equiv_idmap Unit)
+                            (fun x : X =&gt; idpath) (fun x : X =&gt; idpath)).</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 19
+Time: 0.007s">
+<div class="time" style="width: 11.475409836066%"></div>
+<pre>
+  refine (conn_map_homotopic _ _ _ _
+                             (blakers_massey n n (fun (u v:Unit) =&gt; X) tt tt)).</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 22
+Time: 0.008s">
+<div class="time" style="width: 13.114754098361%"></div>
+<pre>
+  refine (_ @ (equiv_pushout_pglue
+                 (equiv_contr_sigma (fun _ : Unit * Unit =&gt; X))^-1
+                 (equiv_idmap Unit) (equiv_idmap Unit)
+                 (fun x : X =&gt; idpath) (fun x : X =&gt; idpath) x)^).</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 26
+Time: 0.002s">
+<div class="time" style="width: 3.2786885245902%"></div>
+<pre>
+  exact ((concat_p1 _ @ concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 27
+Time: 0.057s">
+<div class="time" style="width: 93.44262295082%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 28
+Time: 0.061s">
+<div class="time" style="width: 100%"></div>
+<pre>
+
+Definition freudenthal@{u v | u &lt; v} := Eval unfold freudenthal' in @freudenthal'@{u u u u u v u u u u u}.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Existing Instance freudenthal.</pre>
+</div>
+<div class="code" title="File: Freudenthal.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

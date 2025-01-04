@@ -1,0 +1,2954 @@
+<html>
+<head>
+<title>PathSquare.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for PathSquare.v</h1>
+
+<div class="code" title="File: PathSquare.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 96.666666666667%"></div>
+<pre>Require Import Basics.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+Require Import Types.Paths Types.Prod.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 2
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+Require Import DPath.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope square_scope.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope square_scope with square.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Homogeneous squares *)
+
+(* 
+        x00 ----pi0---- x01
+         |               |
+         |               |
+        p0i     ==&gt;     p1i
+         |               |
+         |               |
+        x01-----pi1-----x11
+ *)
+
+(* Contents:
+
+  * Definition of PathSquare 
+  * Degenerate PathSquares as paths between paths
+  * Flipping squares horizontally and vertically
+  * PathSquare transpose
+  * PathSquare inverse
+  * PathSquare rotations
+  * Edge rewriting
+  * Concatenation
+  * Kan fillers
+  * natural squares from ap
+
+*)
+
+(* Definition of PathSquare *)
+(* PathSquare left right up down *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Cumulative Inductive PathSquare {A} : forall a00 {a10 a01 a11 : A},
+  a00 = a10 -&gt; a01 = a11 -&gt; a00 = a01 -&gt; a10 = a11 -&gt; Type
+  := sq_id : forall {x : A},
+    PathSquare x 1 1 1 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments sq_id {A x}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments PathSquare {A _ _ _ _}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "1" := sq_id : square_scope.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme PathSquare_ind := Induction for PathSquare Sort Type.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments PathSquare_ind {A} P f {_ _ _ _ _ _ _ _} _.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme PathSquare_rec := Minimality for PathSquare Sort Type.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments PathSquare_rec {A} P f {_ _ _ _ _ _ _ _} _.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* PathSquare_ind is an equivalence, similar to how paths_ind is *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance isequiv_PathSquare_ind `{Funext} {A}
+  (P : forall (a00 a10 a01 a11 : A) (p : a00 = a10) (p0 : a01 = a11)
+    (p1 : a00 = a01) (p2 : a10 = a11),
+    PathSquare p p0 p1 p2 -&gt; Type) : IsEquiv (PathSquare_ind P).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros X ?; apply X.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: intro; reflexivity.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 60
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  do 8 (apply path_forall; intro).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by intros [].</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 63
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* PathSquares can be given by 2-dimensional paths *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_path {A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  : px0 @ p1x = p0x @ px1 &lt;~&gt; PathSquare px0 px1 p0x p1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrapply Build_Equiv.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p0x, p1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro e.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize (e @ concat_1p _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro e'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct e', px0.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact sq_id.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 77
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+  srapply isequiv_adjointify; try by intros [].</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 78
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  destruct p0x, p1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros e.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pattern e.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (e' := e @ concat_1p _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (e'' := e' @ (concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (@transport _ _ e'' e _ _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 85
+Time: 0.03s">
+<div class="time" style="width: 100%"></div>
+<pre> subst e' e''; hott_simpl.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> clearbody e'; clear e.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 86
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+    destruct e', px0.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 88
+Time: 0.007s">
+<div class="time" style="width: 23.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_path := equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Squares in (n+2)-truncated types are n-truncated *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Instance istrunc_sq n
+  {A} `{!IsTrunc n.+2 A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  : IsTrunc n (PathSquare px0 px1 p0x p1x).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  exact (istrunc_equiv_istrunc _ sq_path).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* We can give degenerate squares *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PathSquaresFromPaths.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context
+    {A : Type} {a00 a10 a01 : A}
+    {p p' : a00 = a10} {q q' : a00 = a01}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_sq_G1  : p = p' &lt;~&gt; PathSquare p p' 1 1
+    := sq_path oE equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+  Definition equiv_sq_1G : q = q' &lt;~&gt; PathSquare 1 1 q q'
+    := sq_path oE equiv_1p_q1 oE equiv_path_inverse _ _.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End PathSquaresFromPaths.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_G1 := equiv_sq_G1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_1G := equiv_sq_1G.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope equiv_scope.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* PathSquare horizontal reflexivity *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sq_refl_h {A} {a0 a1 : A} (p : a0 = a1)
+  : PathSquare p p 1 1 := sq_G1 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* PathSquare vertical reflexivity *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sq_refl_v {A} {a0 a1 : A} (p : a0 = a1)
+  : PathSquare 1 1 p p := sq_1G 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Horizontal flip *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_flip_h {A : Type} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  : PathSquare px0 px1 p0x p1x &lt;~&gt; PathSquare px1 px0 p0x^ p1x^.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p0x, p1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (sq_G1 oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_path_inverse _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sq_G1^-1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_flip_h := equiv_sq_flip_h.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Vertical flip *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_flip_v {A : Type} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  : PathSquare px0 px1 p0x p1x &lt;~&gt; PathSquare px0^ px1^ p1x p0x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct px0, px1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (sq_1G oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_path_inverse _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sq_1G^-1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_flip_v := equiv_sq_flip_v.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Transpose of a square *)
+
+(** We make a local definition that will never get unfolded *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition tr {A : Type} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  : PathSquare px0 px1 p0x p1x -&gt; PathSquare p0x p1x px0 px1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by intros [].</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments tr : simpl never.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_sq_tr {A : Type} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  : PathSquare px0 px1 p0x p1x &lt;~&gt; PathSquare p0x p1x px0 px1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  srapply (equiv_adjointify tr tr).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: by intros [].</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_tr := equiv_sq_tr.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* NOTE: sq_tr ought to be some sort of involution but it obviously isn't
+   since it is not of the form A -&gt; A. Perhaps there is a more general
+   "involution" but between equivalent types? But then that very equivalence
+   is given by sq_tr so it seems a bit circular... *)
+
+</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sq_tr_refl_h {A} {a b : A} {p : a = b}
+  : sq_tr (sq_refl_h p) = sq_refl_v p.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sq_tr_refl_v {A} {a b : A} {p : a = b}
+  : sq_tr (sq_refl_v p) = sq_refl_h p.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Operations on squares *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PathSquareOps.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context
+    {A : Type}
+    {a00 a10 a01 a11 : A}
+    {px0 : a00 = a10} {px1 : a01 = a11}
+    {p0x : a00 = a01} {p1x : a10 = a11}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Inverse square *)
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_V : PathSquare px0 px1 p0x p1x &lt;~&gt; PathSquare px1^ px0^ p1x^ p0x^.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_path oE _ ).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_concat_lr (inv_pp _ _)^ (inv_pp _ _) oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 201
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    refine (equiv_ap _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_path^-1 oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact sq_tr.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Left rotation : left right top bottom  -&gt;  top bottom right left *)
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_rot_l : PathSquare px0 px1 p0x p1x &lt;~&gt; PathSquare p0x^ p1x^ px1 px0.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_path oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_moveR_Vp _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_concat_r (concat_pp_p _ _ _) _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_moveL_pV _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact sq_path^-1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Right rotation : left right top bottom -&gt; bottom top left right *)
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_rot_r : PathSquare px0 px1 p0x p1x -&gt; PathSquare p1x p0x px0^ px1^.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_path oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_moveL_Vp _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_concat_l (concat_p_pp _ _ _) _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_moveR_pV _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact sq_path^-1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End PathSquareOps.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_V := equiv_sq_V.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_rot_l:= equiv_sq_rot_l.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_rot_r := equiv_sq_rot_r.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Lemmas for rewriting sides of squares *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PathSquareRewriting.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type}
+    {a00 a10 a01 a11 : A}
+    {px0 : a00 = a10} {px1 : a01 = a11}
+    {p0x : a00 = a01} {p1x : a10 = a11}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* These are all special cases of the following "rewrite all sides"
+     lemma which we prove is an equivalence giving us all special cases
+     as equivalences too *)
+
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_GGGG {px0' px1' p0x' p1x'} (qx0 : px0 = px0')
+    (qx1 : px1 = px1') (q0x : p0x = p0x') (q1x : p1x = p1x')
+    : PathSquare px0 px1 p0x p1x &lt;~&gt; PathSquare px0' px1' p0x' p1x'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 247
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    by destruct qx0, qx1, q0x, q1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {px0' px1' p0x' p1x'}
+    (qx0 : px0 = px0') (qx1 : px1 = px1')
+    (q0x : p0x = p0x') (q1x : p1x = p1x').</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_sq_Gccc := equiv_sq_GGGG qx0 1 1 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_cGcc := equiv_sq_GGGG 1 qx1 1 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_ccGc := equiv_sq_GGGG 1 1 q0x 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_cccG := equiv_sq_GGGG 1 1 1 q1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_GGcc := equiv_sq_GGGG qx0 qx1 1 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_GcGc := equiv_sq_GGGG qx0 1 q0x 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_GccG := equiv_sq_GGGG qx0 1 1 q1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_cGGc := equiv_sq_GGGG 1 qx1 q0x 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_cGcG := equiv_sq_GGGG 1 qx1 1 q1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_ccGG := equiv_sq_GGGG 1 1 q0x q1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_GGGc := equiv_sq_GGGG qx0 qx1 q0x 1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_sq_cGGG := equiv_sq_GGGG 1 qx1 q0x q1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 266
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+End PathSquareRewriting.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_GGGG := equiv_sq_GGGG.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_Gccc := equiv_sq_Gccc.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_cGcc := equiv_sq_cGcc.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_ccGc := equiv_sq_ccGc.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_cccG := equiv_sq_cccG.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_GGcc := equiv_sq_GGcc.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_GcGc := equiv_sq_GcGc.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_GccG := equiv_sq_GccG.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_cGGc := equiv_sq_cGGc.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_cGcG := equiv_sq_cGcG.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_ccGG := equiv_sq_ccGG.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_GGGc := equiv_sq_GGGc.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_cGGG := equiv_sq_cGGG.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section MovePaths.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A : Type} {x x00 x20 x02 x22 : A}
+  {f10 : x00 = x20} {f12 : x02 = x22} {f01 : x00 = x02} {f21 : x20 = x22}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Operations to move paths around a square. We define all these operations immediately as equvialences. The naming first number indicates in which argument the path that moves is on the left of the equivalence, and the second number where it is on the right. The equivalences are all set up so that on the right, there is no path inversion. For the [24] and [13] equivalences there is a path inverse on the left. The corresponding equivalences [42] and [31] are the symmetric versions of these, but the path inverse is in another place. *)
+
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_move_23 {f12'' : x02 = x} {f12' : x = x22} 
+    : PathSquare f10 (f12'' @ f12') f01 f21 &lt;~&gt; PathSquare f10 f12' (f01 @ f12'') f21.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear f12.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct f12''.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_cGcc (concat_1p _) oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_ccGc (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_sq_move_14 {f10'' : x00 = x} {f10' : x = x20} 
+    : PathSquare (f10'' @ f10') f12 f01 f21 &lt;~&gt; PathSquare f10'' f12 f01 (f10' @ f21).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear f10.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct f10'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_cccG (concat_1p _)^ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_Gccc (concat_p1 _)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_sq_move_24 {f12'' : x02 = x} {f12' : x22 = x} 
+    : PathSquare f10 (f12'' @ f12'^) f01 f21 &lt;~&gt; PathSquare f10 f12'' f01 (f21 @ f12').</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear f12.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct f12'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_cccG (concat_p1 _)^ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_cGcc (concat_p1 _)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_sq_move_42 {f12'' : x02 = x} {f12' : x = x22} 
+    : PathSquare f10 f12'' f01 (f21 @ f12'^) &lt;~&gt; PathSquare f10 (f12'' @ f12') f01 f21.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear f12.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct f12'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_cGcc (concat_p1 _)^ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_cccG (concat_p1 _)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_sq_move_13 {f10'' : x = x00} {f10' : x = x20} 
+    : PathSquare (f10''^ @ f10') f12 f01 f21 &lt;~&gt; PathSquare f10' f12 (f10'' @ f01) f21.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear f10.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct f10''.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_ccGc (concat_1p _)^ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_Gccc (concat_1p _)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 327
+Time: 0.014s">
+<div class="time" style="width: 46.666666666667%"></div>
+<pre>
+
+  Definition equiv_sq_move_31 {f10'' : x00 = x} {f10' : x = x20} 
+    : PathSquare f10' f12 (f10''^ @ f01) f21 &lt;~&gt; PathSquare (f10'' @ f10') f12 f01 f21.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear f10.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct f10''.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_Gccc (concat_1p _)^ oE _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_ccGc (concat_1p _)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End MovePaths.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_move_23 := equiv_sq_move_23.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_move_14 := equiv_sq_move_14.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_move_24 := equiv_sq_move_24.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_move_42 := equiv_sq_move_42.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_move_13 := equiv_sq_move_13.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation sq_move_31 := equiv_sq_move_31.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Depdent path product definition of PathSquare *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 346
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition equiv_sq_dp_prod {A : Type} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  : DPath (fun xy =&gt; fst xy = snd xy) (path_prod' p0x p1x) px0 px1
+    &lt;~&gt; PathSquare px0 px1 p0x p1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (dp_paths_FlFr _ _ _)^-1).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (equiv_concat_l (concat_pp_p _ _ _) _)^-1).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_moveL_Mp _ _ _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE sq_path).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (sq_ccGG (ap_fst_path_prod _ _) (ap_snd_path_prod _ _)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 355
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_dp_prod := equiv_sq_dp_prod.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Concatenation of squares *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PathSquareConcat.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} {a00 a10 a01 a11 : A}
+    {px0 : a00 = a10} {px1 : a01 = a11}
+    {p0x : a00 = a01} {p1x : a10 = a11}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Horizontal concatenation of squares *)
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sq_concat_h  {a02 a12 : A}
+    {p0y : a01 = a02} {p1y : a11 = a12} {px2 : a02 = a12}
+    : PathSquare px0 px1 p0x p1x -&gt; PathSquare px1 px2 p0y p1y
+      -&gt; PathSquare px0 px2 (p0x @ p0y) (p1x @ p1y).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct b.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_ccGG _ _ a).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply inverse, concat_p1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Infix "@@h" := sq_concat_h : square_scope.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Vertical concatenation of squares *)
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sq_concat_v {a20 a21 : A}
+    {py0 : a10 = a20} {py1 : a11 = a21} {p2x : a20 = a21}
+    : PathSquare px0 px1 p0x p1x -&gt; PathSquare py0 py1 p1x p2x
+      -&gt; PathSquare (px0 @ py0) (px1 @ py1) p0x p2x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct b.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (sq_GGcc _ _ a).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply inverse, concat_p1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Infix "@@v" := sq_concat_v : square_scope.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End PathSquareConcat.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Horizontal groupoid laws for concatenation *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section GroupoidLawsH.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* There are many more laws to write, but it seems we don't really need them *)
+
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context
+    {A : Type}
+    {a00 a10 a01 a11 a02 a12 a20 a21 a03 a13 : A} {px0 : a00 = a10}
+    {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+    {px2 : a02 = a12} {p0y : a01 = a02} {p1y : a11 = a12}
+    {px3 : a03 = a13} {p0z : a02 = a03} {p1z : a12 = a13}
+    (s : PathSquare px0 px1 p0x p1x).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Open Scope square_scope.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Notation hr := (sq_refl_h _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 412
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    by destruct s.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sq_concat_h_1s : sq_concat_h hr s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 417
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    by destruct s.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (t : PathSquare px1 px2 p0y p1y) (u : PathSquare px2 px3 p0z p1z).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 421
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+  Definition sq_concat_h_ss_s : sq_concat_h (sq_concat_h s t) u
+    = sq_ccGG (concat_p_pp _ _ _) (concat_p_pp _ _ _) (sq_concat_h s (sq_concat_h t u)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 425
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>
+    by destruct s, u, (sq_1G^-1 t), p0y.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 426
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 427
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+End GroupoidLawsH.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* PathSquare Kan fillers ~ Every open box has a lid *)
+
+</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Kan.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* These can be used to prove groupoid laws about paths *)
+ </pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A : Type} {a00 a10 a01 a11 : A}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sq_fill_l (px1 : a01 = a11) (p0x : a00 = a01) (p1x : a10 = a11)
+    : {px0 : a00 = a10 &amp; PathSquare px0 px1 p0x p1x}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (p0x @ px1 @ p1x^).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct px1, p0x, p1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sq_fill_l_uniq
+             {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+             {px0 : a00 = a10} (s : PathSquare px0 px1 p0x p1x)
+             {px0' : a00 = a10} (s' : PathSquare px0' px1 p0x p1x)
+    : px0 = px0'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct s.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply sq_path^-1 in s'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (s'^ @ concat_p1 _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sq_fill_r (px0 : a00 = a10) (p0x : a00 = a01) (p1x : a10 = a11)
+    : {px1 : a01 = a11 &amp; PathSquare px0 px1 p0x p1x}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (p0x^ @ px0 @ p1x).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct px0, p0x, p1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sq_fill_r_uniq
+             {px0 : a00 = a10} {p0x : a00 = a01} {p1x : a10 = a11}
+             {px1 : a01 = a11} (s : PathSquare px0 px1 p0x p1x)
+             {px1' : a01 = a11} (s' : PathSquare px0 px1' p0x p1x)
+    : px1 = px1'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct s.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply sq_path^-1 in s'.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (s' @ concat_1p _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_sq_fill_lr (p0x : a00 = a01) (p1x : a10 = a11)
+    : (a00 = a10) &lt;~&gt; (a01 = a11).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros px0; exact (sq_fill_r px0 p0x p1x).1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros px1; exact (sq_fill_l px1 p0x p1x).1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros px1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (sq_fill_r_uniq (sq_fill_r _ p0x p1x).2
+                            (sq_fill_l px1 p0x p1x).2).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros px0.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (sq_fill_l_uniq (sq_fill_l _ p0x p1x).2
+                            (sq_fill_r px0 p0x p1x).2).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sq_fill_t (px0 : a00 = a10) (px1 : a01 = a11) (p1x : a10 = a11)
+    : {p0x : a00 = a01 &amp; PathSquare px0 px1 p0x p1x}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (px0 @ p1x @ px1^).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct px0, px1, p1x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sq_fill_b (px0 : a00 = a10) (px1 : a01 = a11) (p0x : a00 = a01)
+    : {p1x : a10 = a11 &amp; PathSquare px0 px1 p0x p1x}.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (px0^ @ p0x @ px1).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct px0, px1, p0x.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 499
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+End Kan.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Apply a function to the sides of square *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sq_ap {A B : Type} {a00 a10 a01 a11 : A} (f : A -&gt; B)
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  : PathSquare px0 px1 p0x p1x -&gt; PathSquare (ap f px0) (ap f px1) (ap f p0x) (ap f p1x).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by intros [].</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This preserves reflexivity *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sq_ap_refl_h {A B} (f : A -&gt; B) {a0 a1 : A} (p : a0 = a1)
+  : sq_ap f (sq_refl_h p) = sq_refl_h (ap f p).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sq_ap_refl_v {A B} (f : A -&gt; B) {a0 a1 : A} (p : a0 = a1)
+  : sq_ap f (sq_refl_v p) = sq_refl_v (ap f p).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* PathSquares respect products *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 522
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>Definition equiv_sq_prod {A B : Type} {a00 a10 a01 a11 : A} {px0 : a00 = a10}
+  {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11} {b00 b10 b01 b11 : B}
+  {qx0 : b00 = b10} {qx1 : b01 = b11} {q0x : b00 = b01} {q1x : b10 = b11}
+  : (PathSquare px0 px1 p0x p1x) * (PathSquare qx0 qx1 q0x q1x)
+    &lt;~&gt; PathSquare (path_prod' px0 qx0) (path_prod' px1 qx1)
+        (path_prod' p0x q0x) (path_prod' p1x q1x).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (equiv_functor_prod' sq_path sq_path)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_path_prod (_,_) (_,_)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (_ oE equiv_ap' _ _ _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  3: apply (equiv_path_prod (_,_) (_,_)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_concat_l _^ _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 533
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  2: apply (path_prod_pp (_,_) (_,_) (_,_)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_concat_r _ _).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 535
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  2: apply (path_prod_pp (_,_) (_,_) (_,_)).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sq_path.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 537
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_prod := equiv_sq_prod.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The natural square from an ap *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ap_nat {A B} {f f' : A -&gt; B} (h : f == f') {x y : A} (p : x = y)
+  : PathSquare (ap f p) (ap f' p) (h x) (h y).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p; apply sq_1G.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The transpose of the natural square *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ap_nat' {A B} {f f' : A -&gt; B} (h : f == f') {x y : A} (p : x = y)
+  : PathSquare (h x) (h y) (ap f p) (ap f' p).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p; apply sq_G1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ap_compose fits naturally into a square *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 554
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition ap_compose_sq {A B C} (f : A -&gt; B) (g : B -&gt; C) {x y : A} (p : x = y)
+  : PathSquare (ap (g o f) p) (ap g (ap f p)) 1 1 := sq_G1 (ap_compose f g p).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ap_idmap_sq {A} {x y : A} (p : x = y) : PathSquare (ap idmap p) p 1 1
+  := sq_G1 (ap_idmap p).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* A DPath of a certain form can be turned into a square *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sq_dp {A B : Type} {f g : A -&gt; B} {a1 a2 : A} {p : a1 = a2}
+  {q1 : f a1 = g a1} {q2 : f a2 = g a2}
+  : DPath (fun x =&gt; f x = g x) p q1 q2 &lt;~&gt; PathSquare q1 q2 (ap f p) (ap g p).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact sq_G1.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation sq_dp := equiv_sq_dp.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ap011 fits into a square *)</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 570
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition sq_ap011 {A B C} (f : A -&gt; B -&gt; C)
+  {a a' : A} (p : a = a') {b b' : B} (q : b = b')
+  : PathSquare (ap (fun x =&gt; f x b) p) (ap (fun x =&gt; f x b') p)
+    (ap (f a) q) (ap (f a') q).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sq_dp.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (apD (fun y =&gt; ap (fun x =&gt; f x y) p) q).</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathSquare.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

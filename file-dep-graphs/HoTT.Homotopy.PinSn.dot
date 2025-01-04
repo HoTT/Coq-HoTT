@@ -1,0 +1,15 @@
+digraph HoTT_Homotopy_PinSn {
+  graph [ratio=0.5]
+  node [style=filled]
+PinSn_pin_sn [label="pin_sn", URL=<PinSn.html#pin_sn>, peripheries=3, fillcolor="#F070D1"] ;
+PinSn_pi2_s2 [label="pi2_s2", URL=<PinSn.html#pi2_s2>, fillcolor="#F070D1"] ;
+PinSn_ptr_loops_s2_s1 [label="ptr_loops_s2_s1", URL=<PinSn.html#ptr_loops_s2_s1>, fillcolor="#F070D1"] ;
+PinSn_pi1_s1 [label="pi1_s1", URL=<PinSn.html#pi1_s1>, fillcolor="#F070D1"] ;
+PinSn_pi1_circle [label="pi1_circle", URL=<PinSn.html#pi1_circle>, fillcolor="#F070D1"] ;
+  PinSn_pin_sn -> PinSn_pi2_s2 [] ;
+  PinSn_pi2_s2 -> PinSn_ptr_loops_s2_s1 [] ;
+  PinSn_pi2_s2 -> PinSn_pi1_s1 [] ;
+  PinSn_pi1_s1 -> PinSn_pi1_circle [] ;
+subgraph cluster_PinSn { label="PinSn"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+PinSn_pi1_circle; PinSn_pi1_s1; PinSn_ptr_loops_s2_s1; PinSn_pi2_s2; PinSn_pin_sn; };
+} /* END */

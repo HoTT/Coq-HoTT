@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Nat.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="nat-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="nat-v-chk0"><span class="kn">Require Import</span> Basics.Overture Basics.Numeral.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+1&quot;</span> := (S n) : nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+2&quot;</span> := (n.+<span class="mi">1</span>.+<span class="mi">1</span>)%nat   : nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+3&quot;</span> := (n.+<span class="mi">1</span>.+<span class="mi">2</span>)%nat   : nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+4&quot;</span> := (n.+<span class="mi">1</span>.+<span class="mi">3</span>)%nat   : nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+5&quot;</span> := (n.+<span class="mi">1</span>.+<span class="mi">4</span>)%nat   : nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+<span class="sd">(** ** Tail-recursive versions of [add] and [mul] *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">tail_add</span> <span class="nv">n</span> <span class="nv">m</span> :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+    | O =&gt; m
+    | S n =&gt; tail_add n (S m)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [tail_addmul r n m] is [r + n * m]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">tail_addmul</span> <span class="nv">r</span> <span class="nv">n</span> <span class="nv">m</span> :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+    | O =&gt; r
+    | S n =&gt; tail_addmul (tail_add m r) n m
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">tail_mul</span> <span class="nv">n</span> <span class="nv">m</span> := tail_addmul O n m.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Conversion with a decimal representation for printing/parsing *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">ten</span> := (S (S (S (S (S (S (S (S (S (S O)))))))))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">of_uint_acc</span> (<span class="nv">d</span>:Decimal.uint)(<span class="nv">acc</span>:nat) :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Decimal.Nil =&gt; acc
+  | Decimal.D0 d =&gt; of_uint_acc d (tail_mul ten acc)
+  | Decimal.D1 d =&gt; of_uint_acc d (S (tail_mul ten acc))
+  | Decimal.D2 d =&gt; of_uint_acc d (S (S (tail_mul ten acc)))
+  | Decimal.D3 d =&gt; of_uint_acc d (S (S (S (tail_mul ten acc))))
+  | Decimal.D4 d =&gt; of_uint_acc d (S (S (S (S (tail_mul ten acc)))))
+  | Decimal.D5 d =&gt; of_uint_acc d (S (S (S (S (S (tail_mul ten acc))))))
+  | Decimal.D6 d =&gt; of_uint_acc d (S (S (S (S (S (S (tail_mul ten acc)))))))
+  | Decimal.D7 d =&gt; of_uint_acc d (S (S (S (S (S (S (S (tail_mul ten acc))))))))
+  | Decimal.D8 d =&gt; of_uint_acc d (S (S (S (S (S (S (S (S (tail_mul ten acc)))))))))
+  | Decimal.D9 d =&gt; of_uint_acc d (S (S (S (S (S (S (S (S (S (tail_mul ten acc))))))))))
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">of_uint</span> (<span class="nv">d</span>:Decimal.uint) := of_uint_acc d O.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">sixteen</span> := (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S O)))))))))))))))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">of_hex_uint_acc</span> (<span class="nv">d</span>:Hexadecimal.uint)(<span class="nv">acc</span>:nat) :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Hexadecimal.Nil =&gt; acc
+  | Hexadecimal.D0 d =&gt; of_hex_uint_acc d (tail_mul sixteen acc)
+  | Hexadecimal.D1 d =&gt; of_hex_uint_acc d (S (tail_mul sixteen acc))
+  | Hexadecimal.D2 d =&gt; of_hex_uint_acc d (S (S (tail_mul sixteen acc)))
+  | Hexadecimal.D3 d =&gt; of_hex_uint_acc d (S (S (S (tail_mul sixteen acc))))
+  | Hexadecimal.D4 d =&gt; of_hex_uint_acc d (S (S (S (S (tail_mul sixteen acc)))))
+  | Hexadecimal.D5 d =&gt; of_hex_uint_acc d (S (S (S (S (S (tail_mul sixteen acc))))))
+  | Hexadecimal.D6 d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (tail_mul sixteen acc)))))))
+  | Hexadecimal.D7 d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))
+  | Hexadecimal.D8 d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))
+  | Hexadecimal.D9 d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))
+  | Hexadecimal.Da d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))
+  | Hexadecimal.Db d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))
+  | Hexadecimal.Dc d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))))
+  | Hexadecimal.Dd d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))))
+  | Hexadecimal.De d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))))))
+  | Hexadecimal.Df d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))))))
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">of_hex_uint</span> (<span class="nv">d</span>:Hexadecimal.uint) := of_hex_uint_acc d O.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">of_num_uint</span> (<span class="nv">d</span>:Numeral.uint) :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Numeral.UIntDec d =&gt; of_uint d
+  | Numeral.UIntHex d =&gt; of_hex_uint d
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">to_little_uint</span> <span class="nv">n</span> <span class="nv">acc</span> :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+  | O =&gt; acc
+  | S n =&gt; to_little_uint n (Decimal.Little.succ acc)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">to_uint</span> <span class="nv">n</span> :=
+  Decimal.rev (to_little_uint n Decimal.zero).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">to_num_uint</span> <span class="nv">n</span> := Numeral.UIntDec (to_uint n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">of_int</span> (<span class="nv">d</span>:Decimal.int) : option nat :=
+  <span class="kr">match</span> Decimal.norm d <span class="kr">with</span>
+    | Decimal.Pos u =&gt; Some (of_uint u)
+    | _ =&gt; None
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">of_hex_int</span> (<span class="nv">d</span>:Hexadecimal.int) : option nat :=
+  <span class="kr">match</span> Hexadecimal.norm d <span class="kr">with</span>
+    | Hexadecimal.Pos u =&gt; Some (of_hex_uint u)
+    | _ =&gt; None
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">of_num_int</span> (<span class="nv">d</span>:Numeral.int) : option nat :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Numeral.IntDec d =&gt; of_int d
+  | Numeral.IntHex d =&gt; of_hex_int d
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">to_int</span> <span class="nv">n</span> := Decimal.Pos (to_uint n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">to_num_int</span> <span class="nv">n</span> := Numeral.IntDec (to_int n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> of_uint d%_dec_uint_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> of_int d%_dec_int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Parsing / printing of [nat] numbers *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">Number <span class="kn">Notation</span> <span class="nf">nat</span> of_num_uint to_num_uint (<span class="kn">abstract after</span> <span class="mi">5001</span>) : nat_scope.</span></span></pre>
+</div>
+</div></body>
+</html>

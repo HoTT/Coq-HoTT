@@ -1,0 +1,344 @@
+<html>
+<head>
+<title>Nat.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Nat.v</h1>
+
+<div class="code" title="File: Nat.v
+Line: 1
+Time: 0.02s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Numeral.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "n .+1" := (S n) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "n .+2" := (n.+1.+1)%nat   : nat_scope.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "n .+3" := (n.+1.+2)%nat   : nat_scope.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "n .+4" := (n.+1.+3)%nat   : nat_scope.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "n .+5" := (n.+1.+4)%nat   : nat_scope.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Tail-recursive versions of [add] and [mul] *)
+
+</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint tail_add n m :=
+  match n with
+    | O =&gt; m
+    | S n =&gt; tail_add n (S m)
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [tail_addmul r n m] is [r + n * m]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint tail_addmul r n m :=
+  match n with
+    | O =&gt; r
+    | S n =&gt; tail_addmul (tail_add m r) n m
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition tail_mul n m := tail_addmul O n m.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Conversion with a decimal representation for printing/parsing *)
+
+</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Notation ten := (S (S (S (S (S (S (S (S (S (S O)))))))))).</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 27
+Time: 0.002s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+Fixpoint of_uint_acc (d:Decimal.uint)(acc:nat) :=
+  match d with
+  | Decimal.Nil =&gt; acc
+  | Decimal.D0 d =&gt; of_uint_acc d (tail_mul ten acc)
+  | Decimal.D1 d =&gt; of_uint_acc d (S (tail_mul ten acc))
+  | Decimal.D2 d =&gt; of_uint_acc d (S (S (tail_mul ten acc)))
+  | Decimal.D3 d =&gt; of_uint_acc d (S (S (S (tail_mul ten acc))))
+  | Decimal.D4 d =&gt; of_uint_acc d (S (S (S (S (tail_mul ten acc)))))
+  | Decimal.D5 d =&gt; of_uint_acc d (S (S (S (S (S (tail_mul ten acc))))))
+  | Decimal.D6 d =&gt; of_uint_acc d (S (S (S (S (S (S (tail_mul ten acc)))))))
+  | Decimal.D7 d =&gt; of_uint_acc d (S (S (S (S (S (S (S (tail_mul ten acc))))))))
+  | Decimal.D8 d =&gt; of_uint_acc d (S (S (S (S (S (S (S (S (tail_mul ten acc)))))))))
+  | Decimal.D9 d =&gt; of_uint_acc d (S (S (S (S (S (S (S (S (S (tail_mul ten acc))))))))))
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition of_uint (d:Decimal.uint) := of_uint_acc d O.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Notation sixteen := (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S O)))))))))))))))).</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 46
+Time: 0.005s">
+<div class="time" style="width: 25%"></div>
+<pre>
+
+Fixpoint of_hex_uint_acc (d:Hexadecimal.uint)(acc:nat) :=
+  match d with
+  | Hexadecimal.Nil =&gt; acc
+  | Hexadecimal.D0 d =&gt; of_hex_uint_acc d (tail_mul sixteen acc)
+  | Hexadecimal.D1 d =&gt; of_hex_uint_acc d (S (tail_mul sixteen acc))
+  | Hexadecimal.D2 d =&gt; of_hex_uint_acc d (S (S (tail_mul sixteen acc)))
+  | Hexadecimal.D3 d =&gt; of_hex_uint_acc d (S (S (S (tail_mul sixteen acc))))
+  | Hexadecimal.D4 d =&gt; of_hex_uint_acc d (S (S (S (S (tail_mul sixteen acc)))))
+  | Hexadecimal.D5 d =&gt; of_hex_uint_acc d (S (S (S (S (S (tail_mul sixteen acc))))))
+  | Hexadecimal.D6 d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (tail_mul sixteen acc)))))))
+  | Hexadecimal.D7 d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))
+  | Hexadecimal.D8 d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))
+  | Hexadecimal.D9 d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))
+  | Hexadecimal.Da d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))
+  | Hexadecimal.Db d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))
+  | Hexadecimal.Dc d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))))
+  | Hexadecimal.Dd d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))))
+  | Hexadecimal.De d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc)))))))))))))))
+  | Hexadecimal.Df d =&gt; of_hex_uint_acc d (S (S (S (S (S (S (S (S (S (S (S (S (S (S (S (tail_mul sixteen acc))))))))))))))))
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition of_hex_uint (d:Hexadecimal.uint) := of_hex_uint_acc d O.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition of_num_uint (d:Numeral.uint) :=
+  match d with
+  | Numeral.UIntDec d =&gt; of_uint d
+  | Numeral.UIntHex d =&gt; of_hex_uint d
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint to_little_uint n acc :=
+  match n with
+  | O =&gt; acc
+  | S n =&gt; to_little_uint n (Decimal.Little.succ acc)
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition to_uint n :=
+  Decimal.rev (to_little_uint n Decimal.zero).</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition to_num_uint n := Numeral.UIntDec (to_uint n).</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition of_int (d:Decimal.int) : option nat :=
+  match Decimal.norm d with
+    | Decimal.Pos u =&gt; Some (of_uint u)
+    | _ =&gt; None
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition of_hex_int (d:Hexadecimal.int) : option nat :=
+  match Hexadecimal.norm d with
+    | Hexadecimal.Pos u =&gt; Some (of_hex_uint u)
+    | _ =&gt; None
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition of_num_int (d:Numeral.int) : option nat :=
+  match d with
+  | Numeral.IntDec d =&gt; of_int d
+  | Numeral.IntHex d =&gt; of_hex_int d
+  end.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition to_int n := Decimal.Pos (to_uint n).</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition to_num_int n := Numeral.IntDec (to_int n).</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments of_uint d%_dec_uint_scope.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments of_int d%_dec_int_scope.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Parsing / printing of [nat] numbers *)</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Number Notation nat of_num_uint to_num_uint (abstract after 5001) : nat_scope.</pre>
+</div>
+<div class="code" title="File: Nat.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+
+</pre>
+</div>
+</body>
+</html>
+

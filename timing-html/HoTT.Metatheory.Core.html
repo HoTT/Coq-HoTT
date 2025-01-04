@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.035s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Metatheory *)
+
+(** This directory contains files that prove important metatheoretic results about HoTT, but that are not important for internal development of mathematics in HoTT.  Thus, no files in this directory should ever need to be imported by files outside of this directory. *)
+
+(** Many of these results are about ways to prove univalence and function extensionality (which in the main library we simply assert as axioms, though we track their usage with dummy typeclasses).  For convenience, here we define the types of these two statements. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Funext_type@{i j max} :=
+  forall (A : Type@{i}) (P : A -&gt; Type@{j}) f g,
+    IsEquiv (@apD10@{i j max} A P f g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Univalence is a property of a single universe; its statement lives in a higher universe *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Univalence_type@{i iplusone} : Type@{iplusone} :=
+  forall (A B : Type@{i}), IsEquiv (equiv_path@{i iplusone} A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+
