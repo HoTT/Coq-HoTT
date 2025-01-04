@@ -496,9 +496,8 @@ Proof.
 Defined.
 
 (** The property of being the trivial group is useful. Note that any group can be automatically coerced to its maximal subgroup, so it makes sense for this predicate to be applied to groups in general. *)
-Definition IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
-  forall x, H x -> trivial_subgroup G x.
-Existing Class IsTrivialGroup.
+Class IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
+  istrivialgroup : forall x, H x -> trivial_subgroup G x.
 
 Global Instance istrivial_trivial_subgroup {G : Group}
   : IsTrivialGroup (trivial_subgroup G)
@@ -506,7 +505,8 @@ Global Instance istrivial_trivial_subgroup {G : Group}
 
 (** Trivial groups are isomorphic to the trivial group. *)
 Definition istrivial_iff_grp_iso_trivial_subgroup {G : Group} (H : Subgroup G)
-  : IsTrivialGroup H <-> (H : Group) $<~> trivial_subgroup G.
+  : IsTrivialGroup H
+    <-> (subgroup_group H $<~> subgroup_group (trivial_subgroup G)).
 Proof.
   split.
   - intros T.
