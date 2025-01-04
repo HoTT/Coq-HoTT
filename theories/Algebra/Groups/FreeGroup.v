@@ -396,6 +396,7 @@ Section Reduction.
 End Reduction.
 
 Arguments FreeGroup_rec {A G}.
+Arguments FreeGroup_ind_homotopy {A G f f'}.
 Arguments freegroup_eta {A}.
 Arguments freegroup_in {A}.
 
@@ -536,6 +537,27 @@ Section FreeGroupGenerated.
 
 End FreeGroupGenerated.
 
+(** ** Properties of recursor *)
+
+Definition freegroup_rec_in {A : Type}
+  : FreeGroup_rec freegroup_in $== Id (FreeGroup A).
+Proof.
+  by snrapply FreeGroup_ind_homotopy.
+Defined.
+
+Definition freegroup_rec_compose {A B : Type}
+  (f : A -> FreeGroup B) {G : Group} (i : FreeGroup B $-> G)
+  : FreeGroup_rec (i o f) $== i $o FreeGroup_rec f.
+Proof.
+  by snrapply FreeGroup_ind_homotopy; intros x.
+Defined.
+
+Definition freegroup_const {A : Type} {G : Group}
+  : FreeGroup_rec (fun _ : A => 1) $== @grp_homo_const _ G.
+Proof.
+  by snrapply FreeGroup_ind_homotopy.
+Defined.
+  
 (** ** Functoriality *)
 
 Global Instance is0functor_freegroup : Is0Functor FreeGroup.
@@ -553,8 +575,7 @@ Proof.
     snrapply FreeGroup_ind_homotopy.
     intros x.
     exact (ap freegroup_in (p x)).
-  - intros X.
-    by snrapply FreeGroup_ind_homotopy.
+  - intro; nrapply freegroup_rec_in.
   - intros X Y Z f g.
     by snrapply FreeGroup_ind_homotopy.
 Defined.
