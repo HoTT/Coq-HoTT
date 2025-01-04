@@ -168,6 +168,27 @@ Proof.
     apply ap, q.
 Defined.
 
+Definition functor_pushout_beta_pglue
+  {A B C} {f : A -> B} {g : A -> C}
+  {A' B' C'} {f' : A' -> B'} {g' : A' -> C'}
+  {h : A -> A'} {k : B -> B'} {l : C -> C'}
+  {p : k o f == f' o h} {q : l o g == g' o h}
+  (a : A)
+  : ap (functor_pushout h k l p q) (pglue a)
+    = ap pushl (p a) @ pglue (h a) @ ap pushr (q a)^.
+Proof.
+  lhs nrapply functor_coeq_beta_cglue.
+  symmetry.
+  snrapply ap011.
+  - apply whiskerR.
+    unfold pushl.
+    nrapply ap_compose.
+  - unfold pushr.
+    lhs nrapply ap_compose.
+    apply ap.
+    nrapply ap_V.
+Defined.
+
 Lemma functor_pushout_homotopic
   {A B C : Type} {f : A -> B} {g : A -> C}
   {A' B' C' : Type} {f' : A' -> B'} {g' : A' -> C'}
@@ -189,6 +210,44 @@ Proof.
   exact (j b).
 Defined.
 
+Definition functor_pushout_idmap {A B C : Type} {f : A -> B} {g : A -> C}
+  : functor_pushout (f:=f) (g:=g) idmap idmap idmap (fun _ => 1) (fun _ => 1) == idmap.
+Proof.
+  snrapply Pushout_ind.
+  1,2: reflexivity.
+  simpl.
+  intros a.
+  nrapply transport_paths_Flr'.
+  nrapply moveR_pM.
+  nrapply functor_pushout_beta_pglue.
+Defined.
+
+Definition functor_pushout_compose
+  {A B C f g A' B' C' f' g' A'' B'' C'' f'' g''}
+  (u : A -> A') (v : B -> B') (w : C -> C')
+  (u' : A' -> A'') (v' : B' -> B'') (w' : C' -> C'')
+  (p : v o f == f' o u) (q : w o g == g' o u)
+  (p' : v' o f' == f'' o u') (q' : w' o g' == g'' o u')
+  : functor_pushout (u' o u) (v' o v) (w' o w)
+      (fun x => ap v' (p x) @ p' (u x)) (fun x => ap w' (q x) @ q' (u x))
+    == functor_pushout u' v' w' p' q'
+      o functor_pushout u v w p q.
+Proof.
+  intros a.
+  rhs_V nrapply functor_coeq_compose.
+  snrapply functor_coeq_homotopy.
+  1: reflexivity.
+  1: apply functor_sum_compose.
+  1,2: intros x; simpl.
+  1,2: apply equiv_1p_q1.
+  1,2: lhs_V nrapply whiskerR.
+  1,3: nrapply ap_compose.
+  1,2: simpl.
+  1,2: lhs nrapply whiskerR.
+  1,3: nrapply ap_compose.
+  1,2: symmetry.
+  1,2: apply ap_pp.
+Defined.
 
 (** ** Equivalences *)
 

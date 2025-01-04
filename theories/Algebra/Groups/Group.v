@@ -453,6 +453,24 @@ Section GroupEquations.
   (** The inverse of the unit is the unit. *)
   Definition grp_inv_unit : mon_unit^ = mon_unit := inverse_mon_unit (G :=G).
 
+  Definition grp_inv_V_gg : x^ * (x * y) = y
+    := grp_assoc _ _ _ @ ap (.* y) (grp_inv_l x) @ grp_unit_l y.
+
+  Definition grp_inv_g_Vg : x * (x^ * y) = y
+    := grp_assoc _ _ _ @ ap (.* y) (grp_inv_r x) @ grp_unit_l y.
+
+  Definition grp_inv_gg_V : (x * y) * y^ = x
+    := (grp_assoc _ _ _)^ @ ap (x *.) (grp_inv_r y) @ grp_unit_r x.
+
+  Definition grp_inv_gV_g : (x * y^) * y = x
+    := (grp_assoc _ _ _)^ @ ap (x *.) (grp_inv_l y) @ grp_unit_r x.
+
+  Definition grp_1g_g1 : x = y <~> 1 * x = y * 1
+    := equiv_concat_r (grp_unit_r _)^ _ oE equiv_concat_l (grp_unit_l _) _.
+
+  Definition grp_g1_1g : x = y <~> x * 1 = 1 * y
+    := equiv_concat_r (grp_unit_l _)^ _ oE equiv_concat_l (grp_unit_r _) _.
+
 End GroupEquations.
 
 (** ** Cancelation lemmas *)
@@ -508,20 +526,29 @@ Section GroupMovement.
 
   (** *** Moving elements equal to unit. *)
 
-  Definition grp_moveL_1M : x * y^ = mon_unit <~> x = y
+  Definition grp_moveL_1M : x * y^ = 1 <~> x = y
     := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gM.
   
-  Definition grp_moveL_1V : x * y = mon_unit <~> x = y^
-    := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gV.
-
-  Definition grp_moveL_M1 : y^ * x = mon_unit <~> x = y
+  Definition grp_moveL_M1 : y^ * x = 1 <~> x = y
     := equiv_concat_r (grp_unit_r _) _ oE grp_moveL_Mg.
+  
+  Definition grp_moveL_1V : x * y = 1 <~> x = y^
+    := equiv_concat_r (grp_unit_l _) _ oE grp_moveL_gV.
+  
+  Definition grp_moveL_V1 : y * x = 1 <~> x = y^
+    := equiv_concat_r (grp_unit_r _) _ oE grp_moveL_Vg.
 
-  Definition grp_moveR_1M : mon_unit = y * x^ <~> x = y
-    := (equiv_concat_l (grp_unit_l _) _)^-1%equiv oE grp_moveR_gM.
+  Definition grp_moveR_1M : 1 = y * x^ <~> x = y
+    := (equiv_concat_l (grp_unit_l _) _)^-1 oE grp_moveR_gM.
+  
+  Definition grp_moveR_M1 : 1 = x^ * y <~> x = y
+    := (equiv_concat_l (grp_unit_r _) _)^-1 oE grp_moveR_Mg.
+  
+  Definition grp_moveR_1V : 1 = y * x <~> x^ = y
+    := (equiv_concat_l (grp_unit_l _) _)^-1 oE grp_moveR_gV.
 
-  Definition grp_moveR_M1 : mon_unit = x^ * y <~> x = y
-    := (equiv_concat_l (grp_unit_r _) _)^-1%equiv oE grp_moveR_Mg.
+  Definition grp_moveR_V1 : mon_unit = x * y <~> x^ = y
+    := (equiv_concat_l (grp_unit_r _) _)^-1 oE grp_moveR_Vg.
 
   (** *** Cancelling elements equal to unit. *)
 
@@ -657,7 +684,7 @@ Definition grp_pow_commutes {G : Group} (n : Int) (g h : G)
   : h * (grp_pow g n) = (grp_pow g n) * h.
 Proof.
   induction n.
-  - exact (grp_unit_r _ @ (grp_unit_l _)^).
+  - by apply grp_g1_1g.
   - rewrite grp_pow_succ.
     nrapply grp_commutes_op; assumption.
   - rewrite grp_pow_pred.
@@ -1125,3 +1152,68 @@ Proof.
   lhs nrapply grp_homo_op.
   apply ap, grp_homo_inv.
 Defined.
+
+(** ** Conjugation *)
+
+(** Conjugation by a group element is a homomorphism. Often we need to use properties about group homomorphisms in order to prove things about conjugation, so it is helpful to define it directly as a group homomorphism. *)
+Definition grp_conj {G : Group} (x : G) : G $-> G.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun y => x * y * x^).
+  - intros y z.
+    rhs nrapply grp_assoc.
+    apply (ap (.* x^)).
+    rhs nrapply grp_assoc.
+    lhs nrapply grp_assoc.
+    apply (ap (.* z)).
+    symmetry; apply grp_inv_gV_g.
+Defined.
+
+(** Conjugation by the unit element is the identity. *)
+Definition grp_conj_unit {G : Group} : grp_conj (G:=G) 1 $== Id _.
+Proof.
+  intros x.
+  apply grp_moveR_gV.
+  by nrapply grp_1g_g1.
+Defined.
+
+(** Conjugation commutes with group homomorphisms. *)
+Definition grp_homo_conj {G H : Group} (f : G $-> H) (x : G)
+  : f $o grp_conj x $== grp_conj (f x) $o f.
+Proof.
+  intros z; simpl.
+  by rewrite !grp_homo_op, grp_homo_inv.
+Defined.
+
+(** Conjugation respects composition. *)
+Definition grp_conj_op {G : Group} (x y : G)
+  : grp_conj (x * y) $== grp_conj x $o grp_conj y.
+Proof.
+  intros z; simpl.
+  by rewrite grp_inv_op, !grp_assoc.
+Defined.
+
+(** Conjugating by an element then its inverse is the identity. *)
+Definition grp_conj_inv_r {G : Group} (x : G)
+  : grp_conj x $o grp_conj x^ $== Id _.
+Proof.
+  refine ((grp_conj_op _ _)^$ $@ _ $@ grp_conj_unit).
+  intros y.
+  nrapply (ap (fun x => grp_conj x y)).
+  apply grp_inv_r.
+Defined.
+
+(** Conjugating by an inverse then the element is the identity. *)
+Definition grp_conj_inv_l {G : Group} (x : G)
+  : grp_conj x^ $o grp_conj x $== Id _.
+Proof.
+  refine ((grp_conj_op _ _)^$ $@ _ $@ grp_conj_unit).
+  intros y.
+  nrapply (ap (fun x => grp_conj x y)).
+  apply grp_inv_l.
+Defined.
+
+(** Conjugation is a group automorphism. *)
+Definition grp_iso_conj {G : Group} (x : G) : G $<~> G
+  := cate_adjointify (grp_conj x) (grp_conj x^)
+      (grp_conj_inv_r _) (grp_conj_inv_l _).

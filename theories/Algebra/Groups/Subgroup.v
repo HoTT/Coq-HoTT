@@ -1,4 +1,4 @@
-Require Import Basics Types HFiber WildCat.Core.
+Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.
 Require Import Truncations.Core.
 Require Import Algebra.Groups.Group TruncType.
 
@@ -122,9 +122,9 @@ Defined.
 
 Section SubgroupElements.
   Context {G : Group} (H : Subgroup G) (x y : G).
-  Definition subgroup_in_unit : H mon_unit := issubgroup_in_unit.
-  Definition subgroup_in_inv : H x -> H (- x) := issubgroup_in_inv x.
-  Definition subgroup_in_inv' : H (- x) -> H x := issubgroup_in_inv' x.
+  Definition subgroup_in_unit : H 1 := issubgroup_in_unit.
+  Definition subgroup_in_inv : H x -> H x^ := issubgroup_in_inv x.
+  Definition subgroup_in_inv' : H x^ -> H x := issubgroup_in_inv' x.
   Definition subgroup_in_op : H x -> H y -> H (x * y) := issubgroup_in_op x y.
   Definition subgroup_in_op_inv : H x -> H y -> H (x * y^) := issubgroup_in_op_inv x y.
   Definition subgroup_in_inv_op : H x -> H y -> H (x^ * y) := issubgroup_in_inv_op x y.
@@ -178,7 +178,7 @@ Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
 
 (** Trivial subgroup *)
-Definition trivial_subgroup {G} : Subgroup G.
+Definition trivial_subgroup G : Subgroup G.
 Proof.
   rapply (Build_Subgroup' (fun x => x = mon_unit)).
   1: reflexivity.
@@ -186,6 +186,13 @@ Proof.
   rewrite p, q.
   rewrite left_identity.
   apply inverse_mon_unit.
+Defined.
+
+Definition trivial_subgroup_rec {G : Group} (H : Subgroup G)
+  : forall x, trivial_subgroup G x -> H x.
+Proof.
+  snrapply paths_ind_r; cbn beta.
+  apply issubgroup_in_unit.
 Defined.
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
@@ -205,11 +212,15 @@ Proof.
 Defined.
 
 (** Every group is a (maximal) subgroup of itself *)
-Definition maximal_subgroup {G} : Subgroup G.
+Definition maximal_subgroup G : Subgroup G.
 Proof.
   rapply (Build_Subgroup G (fun x => Unit)).
   split; auto; exact _.
 Defined.
+
+(** We wish to coerce a group to its maximal subgroup. However, if we don't explicitly print [maximal_subgroup] things can get confusing, so we mark it as a coercion to be printed. *)
+Coercion maximal_subgroup : Group >-> Subgroup.
+Add Printing Coercion maximal_subgroup.
 
 (** Paths between subgroups correspond to homotopies between the underlying predicates. *) 
 Proposition equiv_path_subgroup `{F : Funext} {G : Group} (H K : Subgroup G)
@@ -368,7 +379,7 @@ Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
 Global Existing Instance normalsubgroup_isnormal.
 
 Definition equiv_symmetric_in_normalsubgroup {G : Group}
-  (N : NormalSubgroup G)
+  (N : Subgroup G) `{!IsNormalSubgroup N}
   : forall x y, N (x * y) <~> N (y * x).
 Proof.
   intros x y.
@@ -377,15 +388,12 @@ Proof.
 Defined.
 
 (** Our definiiton of normal subgroup implies the usual definition of invariance under conjugation. *)
-Definition isnormal_conjugate {G : Group} (N : NormalSubgroup G) {x y : G}
-  : N x -> N (y * x * y^).
+Definition isnormal_conj {G : Group} (N : Subgroup G)
+  `{!IsNormalSubgroup N} {x y : G}
+  : N x <~> N (y * x * y^).
 Proof.
-  intros n.
-  apply isnormal.
-  nrefine (transport N (grp_assoc _ _ _)^ _).
-  nrefine (transport (fun y => N (y * x)) (grp_inv_l _)^ _).
-  nrefine (transport N (grp_unit_l _)^ _).
-  exact n.
+  srefine (equiv_symmetric_in_normalsubgroup N _ _ oE _).
+  by rewrite grp_inv_V_gg.
 Defined.
 
 (** We can show a subgroup is normal if it is invariant under conjugation. *)
@@ -414,9 +422,25 @@ Definition equiv_isnormal_conjugate `{Funext} {G : Group} (N : Subgroup G)
 Proof.
   rapply equiv_iff_hprop.
   - intros is_normal x y.
-    exact (isnormal_conjugate (Build_NormalSubgroup G N is_normal)).
+    rapply isnormal_conj.
   - intros is_normal'.
     by snrapply Build_IsNormalSubgroup'.
+Defined.
+
+(** The trivial subgroup is a normal subgroup. *)
+Global Instance isnormal_trivial_subgroup {G : Group}
+  : IsNormalSubgroup (trivial_subgroup G).
+Proof.
+  intros x y p; cbn in p |- *.
+  apply grp_moveL_1V in p.
+  by apply grp_moveL_V1.
+Defined.
+
+(** The maximal subgroup (the group itself) is a normal subgroup. *)
+Global Instance isnormal_maximal_subgroup {G : Group}
+  : IsNormalSubgroup (maximal_subgroup G).
+Proof.
+  intros x y p; exact tt.
 Defined.
 
 (** Left and right cosets are equivalent in normal subgroups. *)
@@ -471,14 +495,38 @@ Proof.
   exact p.
 Defined.
 
-(** The property of being the trivial subgroup is useful. *)
-Definition IsTrivialSubgroup {G : Group} (H : Subgroup G) : Type :=
-  forall x, H x <-> trivial_subgroup x.
-Existing Class IsTrivialSubgroup.
+(** The property of being the trivial group is useful. Note that any group can be automatically coerced to its maximal subgroup, so it makes sense for this predicate to be applied to groups in general. *)
+Class IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
+  istrivialgroup : forall x, H x -> trivial_subgroup G x.
 
-Global Instance istrivialsubgroup_trivial_subgroup {G : Group}
-  : IsTrivialSubgroup (@trivial_subgroup G)
-  := ltac:(hnf; reflexivity).
+Global Instance istrivial_trivial_subgroup {G : Group}
+  : IsTrivialGroup (trivial_subgroup G)
+  := fun x => idmap.
+
+(** Trivial groups are isomorphic to the trivial group. *)
+Definition istrivial_iff_grp_iso_trivial_subgroup {G : Group} (H : Subgroup G)
+  : IsTrivialGroup H
+    <-> (subgroup_group H $<~> subgroup_group (trivial_subgroup G)).
+Proof.
+  split.
+  - intros T.
+    snrapply Build_GroupIsomorphism'.
+    + snrapply equiv_functor_sigma_id.
+      intros x.
+      rapply equiv_iff_hprop_uncurried.
+      split; only 1: apply T.
+      apply trivial_subgroup_rec.
+    + intros [x Hx] [y Hy].
+      by rapply path_sigma_hprop.
+  - unfold IsTrivialGroup.
+    intros e x h.
+    change ((x; h).1 = (1; idpath).1).
+    snrapply (pr1_path (u:=(_;_)) (v:=(_;_))).
+    1: apply subgroup_in_unit.
+    rhs_V nrapply (grp_homo_unit e^-1$).
+    apply moveL_equiv_V.
+    apply path_contr.
+Defined.
 
 (** Intersection of two subgroups *)
 Definition subgroup_intersection {G : Group} (H K : Subgroup G) : Subgroup G.
@@ -553,20 +601,29 @@ Definition subgroup_generated_gen_incl {G : Group} {X : G -> Type} (g : G) (H : 
   : subgroup_generated X
   := (g; tr (sgt_in H)).
 
+(** The generated subgroup is the smallest subgroup containing the generating set. *)
+Definition subgroup_generated_rec {G : Group} (X : G -> Type) (S : Subgroup G)
+  (i : forall g, X g -> S g)
+  : forall g, subgroup_generated X g -> S g.
+Proof.
+  intros g; rapply Trunc_rec; intros p.
+  induction p as [g Xg | | g h p1 IHp1 p2 IHp2].
+  - by apply i.
+  - apply subgroup_in_unit.
+  - by apply subgroup_in_op_inv.
+Defined.
+
 (** If [f : G $-> H] is a group homomorphism and [X] and [Y] are subsets of [G] and [H] such that [f] maps [X] into [Y], then [f] sends the subgroup generated by [X] into the subgroup generated by [Y]. *)
 Definition functor_subgroup_generated {G H : Group} (X : G -> Type) (Y : H -> Type)
   (f : G $-> H) (preserves : forall g, X g -> Y (f g))
   : forall g, subgroup_generated X g -> subgroup_generated Y (f g).
 Proof.
-  intro g.
-  apply Trunc_functor.
-  intro p.
-  induction p as [g i | | g h p1 IHp1 p2 IHp2].
-  - apply sgt_in, preserves, i.
-  - rewrite grp_homo_unit.
-    apply sgt_unit.
-  - rewrite grp_homo_op, grp_homo_inv.
-    by apply sgt_op.
+  change (subgroup_generated Y (f ?g))
+    with (subgroup_preimage f (subgroup_generated Y) g).
+  apply subgroup_generated_rec.
+  intros g p.
+  apply tr, sgt_in.
+  by apply preserves.
 Defined.
 
 (** The product of two subgroups. *)
