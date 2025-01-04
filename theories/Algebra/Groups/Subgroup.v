@@ -1,4 +1,4 @@
-Require Import Basics Types HFiber WildCat.Core.
+Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.
 Require Import Truncations.Core.
 Require Import Algebra.Groups.Group TruncType.
 
@@ -186,6 +186,13 @@ Proof.
   rewrite p, q.
   rewrite left_identity.
   apply inverse_mon_unit.
+Defined.
+
+Definition trivial_subgroup_rec {G : Group} (H : Subgroup G)
+  : forall x, trivial_subgroup G x -> H x.
+Proof.
+  snrapply paths_ind_r; cbn beta.
+  apply issubgroup_in_unit.
 Defined.
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
@@ -488,14 +495,38 @@ Proof.
   exact p.
 Defined.
 
-(** The property of being the trivial subgroup is useful. *)
-Definition IsTrivialSubgroup {G : Group} (H : Subgroup G) : Type :=
-  forall x, H x <-> trivial_subgroup G x.
-Existing Class IsTrivialSubgroup.
+(** The property of being the trivial group is useful. Note that any group can be automatically coerced to its maximal subgroup, so it makes sense for this predicate to be applied to groups in general. *)
+Definition IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
+  forall x, H x -> trivial_subgroup G x.
+Existing Class IsTrivialGroup.
 
-Global Instance istrivialsubgroup_trivial_subgroup {G : Group}
-  : IsTrivialSubgroup (@trivial_subgroup G)
-  := ltac:(hnf; reflexivity).
+Global Instance istrivial_trivial_subgroup {G : Group}
+  : IsTrivialGroup (trivial_subgroup G)
+  := fun x => idmap.
+
+(** Trivial groups are isomorphic to the trivial group. *)
+Definition istrivial_iff_grp_iso_trivial_subgroup {G : Group} (H : Subgroup G)
+  : IsTrivialGroup H <-> (H : Group) $<~> trivial_subgroup G.
+Proof.
+  split.
+  - intros T.
+    snrapply Build_GroupIsomorphism'.
+    + snrapply equiv_functor_sigma_id.
+      intros x.
+      rapply equiv_iff_hprop_uncurried.
+      split; only 1: apply T.
+      apply trivial_subgroup_rec.
+    + intros [x Hx] [y Hy].
+      by rapply path_sigma_hprop.
+  - unfold IsTrivialGroup.
+    intros e x h.
+    change ((x; h).1 = (1; idpath).1).
+    snrapply (pr1_path (u:=(_;_)) (v:=(_;_))).
+    1: apply subgroup_in_unit.
+    rhs_V nrapply (grp_homo_unit e^-1$).
+    apply moveL_equiv_V.
+    apply path_contr.
+Defined.
 
 (** Intersection of two subgroups *)
 Definition subgroup_intersection {G : Group} (H K : Subgroup G) : Subgroup G.
