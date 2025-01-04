@@ -11,10 +11,8 @@ Local Open Scope mc_mult_scope.
 Definition centralizer {G : Group} (g : G)
   := fun h => g * h = h * g.
 
-Definition centralizer_unit {G : Group} (g : G) : centralizer g mon_unit.
-Proof.
-  exact (grp_unit_r _ @ (grp_unit_l _)^).
-Defined.
+Definition centralizer_unit {G : Group} (g : G) : centralizer g mon_unit
+  := grp_g1_1g _ _ idpath.
 
 Definition centralizer_sgop {G : Group} (g h k : G)
            (p : centralizer g h) (q : centralizer g k)
@@ -33,7 +31,7 @@ Definition centralizer_inverse {G : Group} (g h : G)
 Proof.
   unfold centralizer in *.
   symmetry.
-  refine ((grp_unit_r _)^ @ _ @ grp_unit_l _).
+  apply grp_g1_1g.
   refine (ap ((_ * g) *.) (grp_inv_r h)^ @ _ @ ap (.* (g * _)) (grp_inv_l h)).
   refine (grp_assoc _ _ _ @ _ @ (grp_assoc _ _ _)^).
   refine (ap (.* h^) _).
