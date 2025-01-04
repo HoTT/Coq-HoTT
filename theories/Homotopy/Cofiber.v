@@ -1,5 +1,6 @@
-Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.
-Require Import Types.Unit Types.Paths.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc.
+Require Import Types.Unit Types.Paths Types.Universe.
+Require Import Truncations.Core Truncations.Connectedness.
 Require Import Colimits.Pushout.
 Require Import Homotopy.NullHomotopy.
 
@@ -59,6 +60,8 @@ Defined.
 
 (** ** Functoriality *)
 
+Local Close Scope trunc_scope.
+
 (** The homotopy cofiber can be thought of as a functor from the category of arrows in [Type] to [Type]. *)
 
 (** 1-functorial action. *)
@@ -91,6 +94,8 @@ Definition functor_cofiber_compose {X Y X' Y' X'' Y'' : Type}
     == functor_cofiber g' h' p' o functor_cofiber g h p
   := functor_pushout_compose g idmap h g' idmap h' (fun _ => 1) p (fun _ => 1) p'.
 
+Local Open Scope trunc_scope.
+
 (** ** Comparison of fibers and cofibers *)
 
 Definition fiber_to_path_cofiber {X Y : Type} (f : X -> Y) (y : Y)
@@ -99,4 +104,20 @@ Proof.
   intros [x p].
   lhs nrapply (ap (cofib f) p^).
   apply leg.
+Defined.
+
+(** The cofiber of a surjective map is [0]-connected. This will be generalized this later. *)
+Definition is0connected_cofiber {X Y : Type} (f : X -> Y)
+  {fc : IsConnMap (-1) f} : IsConnected 0 (Cofiber f).
+Proof.
+  snrapply (Build_Contr _ (tr (apex f))).
+  rapply Trunc_ind.
+  snrapply cofiber_ind; cbn beta.
+  - intro y; symmetry.
+    pose proof (x := @center _ (fc y)).
+    strip_truncations.
+    apply ap.
+    exact (fiber_to_path_cofiber f y x).
+  - exists idpath.
+    intro a; rapply path_ishprop.
 Defined.
