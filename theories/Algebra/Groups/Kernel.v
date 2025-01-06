@@ -2,6 +2,7 @@ Require Import Basics Types.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import WildCat.Core.
+Require Import Universes.HSet.
 
 (** * Kernels of group homomorphisms *)
 
@@ -55,17 +56,34 @@ Proof.
     apply path_sigma_hprop; reflexivity.
 Defined.
 
-(** ** Characterisation of group embeddings *)
-Proposition equiv_kernel_isembedding `{Univalence} {A B : Group} (f : A $-> B)
-  : (grp_kernel f = trivial_subgroup A :> Subgroup A) <~> IsEmbedding f.
+(** The underlying map of a group homomorphism with a trivial kernel is an embedding. *)
+Global Instance isembedding_istrivial_kernel {G H : Group} (f : G $-> H)
+  (triv : IsTrivialGroup (grp_kernel f))
+  : IsEmbedding f.
 Proof.
-  refine (_ oE (equiv_path_subgroup' _ _)^-1%equiv).
+  apply isembedding_grouphomomorphism.
+  intros g p.
+  apply triv.
+  exact p.
+Defined.
+
+(** If the underlying map of a group homomorphism is an embedding then the kernel is trivial. *)
+Definition istrivial_kernel_isembedding {G H : Group} (f : G $-> H)
+  (emb : IsEmbedding f)
+  : IsTrivialGroup (grp_kernel f).
+Proof.
+  intros g p.
+  rapply (isinj_embedding f).
+  rhs nrapply grp_homo_unit.
+  exact p.
+Defined.
+Global Hint Immediate istrivial_kernel_isembedding : typeclass_instances.
+
+(** Characterisation of group embeddings *)
+Proposition equiv_istrivial_kernel_isembedding `{F : Funext}
+  {G H : Group} (f : G $-> H)
+  : IsTrivialGroup (grp_kernel f) <~> IsEmbedding f.
+Proof.
   apply equiv_iff_hprop_uncurried.
-  refine (iff_compose _ (isembedding_grouphomomorphism f)); split.
-  - intros E ? ?.
-    by apply E.
-  - intros e a; split.
-    + apply e.
-    + intro p.
-      exact (ap _ p @ grp_homo_unit f).
+  split; exact _.
 Defined.
