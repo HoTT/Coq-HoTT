@@ -545,9 +545,9 @@ Proof.
   by snrapply FreeGroup_ind_homotopy.
 Defined.
 
-Definition freegroup_rec_compose {A B : Type}
-  (f : A -> FreeGroup B) {G : Group} (i : FreeGroup B $-> G)
-  : FreeGroup_rec (i o f) $== i $o FreeGroup_rec f.
+Definition freegroup_rec_compose {A : Type} {G H : Group}
+  (f : A -> G) (k : G $-> H)
+  : FreeGroup_rec (k o f) $== k $o FreeGroup_rec f.
 Proof.
   by snrapply FreeGroup_ind_homotopy; intros x.
 Defined.
