@@ -222,7 +222,7 @@ Defined.
 Coercion maximal_subgroup : Group >-> Subgroup.
 Add Printing Coercion maximal_subgroup.
 
-(** The group inferred from the maximal subgroup is the original group. *)
+(** The group associated to the maximal subgroup is the original group. *)
 Definition grp_iso_subgroup_group_maximal (G : Group)
   : subgroup_group (maximal_subgroup G) $<~> G.
 Proof.
