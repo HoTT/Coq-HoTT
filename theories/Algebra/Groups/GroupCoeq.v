@@ -41,12 +41,10 @@ Proof.
   - exact (h $o f).
   - exact h.
   - snrapply freeproduct_ind_homotopy.
-    + change (?f1 $o ?f2 $o ?f3 $o ?f4 $== ?f5 $o ?f6 $o ?f7)
-        with (f1 $o f2 $o (f3 $o f4) $== f5 $o (f6 $o f7)).
+    + refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
       exact ((_ $@L freeproduct_rec_beta_inl _ _) $@ cat_idr _
         $@ (_ $@L freeproduct_rec_beta_inl _ _)^$).
-    + change (?f1 $o ?f2 $o ?f3 $o ?f4 $== ?f5 $o ?f6 $o ?f7)
-        with (f1 $o f2 $o (f3 $o f4) $== f5 $o (f6 $o f7)).
+    + refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
       exact ((_ $@L freeproduct_rec_beta_inr _ _) $@ (cat_idr _ $@ p)
         $@ (_ $@L freeproduct_rec_beta_inr _ _)^$).
 Defined.
