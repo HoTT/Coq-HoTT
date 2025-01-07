@@ -71,7 +71,7 @@ Proof.
     intro b.
     refine (ap (projection E) (abses_pullback_inclusion_transpose_beta (inclusion E) F p b) @ _).
     apply iscomplex_abses.
-  - apply isembedding_grouphomomorphism.
+  - apply isembedding_istrivial_kernel.
     intros a q0.
     (* Since [inclusion F a] is killed by [grp_quotient_map], its in the image of [B]. *)
     pose proof (in_coset := related_quotient_paths _ _ _ q0).

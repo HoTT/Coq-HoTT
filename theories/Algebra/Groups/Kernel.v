@@ -8,12 +8,11 @@ Require Import Universes.HSet.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
-Local Open Scope path_scope.
 
 Definition grp_kernel {A B : Group} (f : GroupHomomorphism A B) : NormalSubgroup A.
 Proof.
   snrapply Build_NormalSubgroup.
-  - srapply (Build_Subgroup' (fun x => f x = group_unit)); cbn beta.
+  - srapply (Build_Subgroup' (fun x => f x = 1)); cbn beta.
     1: apply grp_homo_unit.
     intros x y p q.
     apply (grp_homo_moveL_1M _ _ _)^-1.
@@ -21,8 +20,8 @@ Proof.
   - intros x y; cbn; intros p.
     apply (grp_homo_moveL_1V _ _ _)^-1.
     lhs_V nrapply grp_inv_inv.
-    apply (ap (-)).
-    exact (grp_homo_moveL_1V f x y p)^.
+    nrapply (ap (-) _^).
+    by apply grp_homo_moveL_1V.
 Defined.
 
 (** ** Corecursion principle for group kernels *)
@@ -61,10 +60,17 @@ Global Instance isembedding_istrivial_kernel {G H : Group} (f : G $-> H)
   (triv : IsTrivialGroup (grp_kernel f))
   : IsEmbedding f.
 Proof.
-  apply isembedding_grouphomomorphism.
-  intros g p.
-  apply triv.
-  exact p.
+  intros h.
+  apply hprop_allpath.
+  intros [x p] [y q].
+  srapply path_sigma_hprop; unfold pr1.
+  apply grp_moveL_1M.
+  apply triv; simpl.
+  rhs_V nrapply (grp_inv_r h).
+  lhs nrapply grp_homo_op.
+  nrapply (ap011 (.*.) p).
+  lhs nrapply grp_homo_inv.
+  exact (ap (^) q).
 Defined.
 
 (** If the underlying map of a group homomorphism is an embedding then the kernel is trivial. *)
@@ -74,8 +80,7 @@ Definition istrivial_kernel_isembedding {G H : Group} (f : G $-> H)
 Proof.
   intros g p.
   rapply (isinj_embedding f).
-  rhs nrapply grp_homo_unit.
-  exact p.
+  exact (p @ (grp_homo_unit f)^).
 Defined.
 Global Hint Immediate istrivial_kernel_isembedding : typeclass_instances.
 

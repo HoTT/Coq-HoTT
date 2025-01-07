@@ -1098,25 +1098,6 @@ Global Instance isfreegroup_isfreegroupon (S : Type) (F_S : Group) (i : S -> F_S
 
 (** ** Further properties of group homomorphisms. *)
 
-(** Characterisation of injective group homomorphisms. *)
-Lemma isembedding_grouphomomorphism {A B : Group} (f : A $-> B)
-  : (forall a, f a = group_unit -> a = group_unit) <-> IsEmbedding f.
-Proof.
-  split.
-  - intros h b.
-    apply hprop_allpath.
-    intros [a0 p0] [a1 p1].
-    srapply path_sigma_hprop; simpl.
-    apply grp_moveL_1M.
-    apply h.
-    rewrite grp_homo_op, grp_homo_inv.
-    rewrite p0, p1.
-    apply right_inverse.
-  - intros E a p.
-    rapply (isinj_embedding f).
-    exact (p @ (grp_homo_unit f)^).
-Defined.
-
 (** Commutativity can be transferred across isomorphisms. *)
 Definition commutative_iso_commutative {G H : Group}
   {C : Commutative (@group_sgop G)} (f : GroupIsomorphism G H)
