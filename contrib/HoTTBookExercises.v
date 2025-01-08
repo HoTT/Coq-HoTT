@@ -686,7 +686,9 @@ Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_aut_bool.
 (* ================================================== ex:strengthen-transport-is-ap *)
 (** Exercise 2.15 *)
 
-
+Definition Book_2_15 {A} (B : A -> Type) {x y : A} (p : x = y)
+  : transport B p = HoTT.Types.Universe.equiv_path _ _ (ap B p)
+  := match p with 1 => 1 end.
 
 (* ================================================== ex:strong-from-weak-funext *)
 (** Exercise 2.16 *)
