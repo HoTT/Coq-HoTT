@@ -680,7 +680,8 @@ Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_aut_bool.
 (* ================================================== ex:equality-reflection *)
 (** Exercise 2.14 *)
 
-
+(** For any q : x = y, q and refl_x has the same type x = x, so we can form the type Pi_{x,y} Pi_q (q = refl_x). *)
+(** A path induction produces an element r, with (r x x p) : p = refl_x, which is also definitional by assumption *)
 
 (* ================================================== ex:strengthen-transport-is-ap *)
 (** Exercise 2.15 *)
