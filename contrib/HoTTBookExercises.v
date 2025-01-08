@@ -693,7 +693,7 @@ Definition Book_2_15 {A} (B : A -> Type) {x y : A} (p : x = y)
 (* ================================================== ex:strong-from-weak-funext *)
 (** Exercise 2.16 *)
 
-
+Definition Book_2_16 := @HoTT.Metatheory.FunextVarieties.NaiveFunext_implies_Funext.
 
 (* ================================================== ex:equiv-functor-types *)
 (** Exercise 2.17 *)
