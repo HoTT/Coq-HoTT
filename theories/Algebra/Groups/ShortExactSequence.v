@@ -51,7 +51,6 @@ Defined.
 
 (** A complex 0 -> A -> B is purely exact if and only if the kernel of the map A -> B is trivial. *)
 Definition equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)
-  : IsExact purely (grp_trivial_rec A) f
-      <~> (grp_kernel f = trivial_subgroup A :> Subgroup _)
-  := (equiv_kernel_isembedding f)^-1%equiv
+  : IsExact purely (grp_trivial_rec A) f <~> IsTrivialGroup (grp_kernel f)
+  := (equiv_istrivial_kernel_isembedding f)^-1%equiv
        oE equiv_iff_hprop_uncurried (iff_grp_isexact_isembedding f).

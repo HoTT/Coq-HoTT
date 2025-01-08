@@ -172,7 +172,7 @@ Proof.
     refine ((grp_assoc _ _ _)^ @ _).
     refine (ap _ (left_inverse (phi e0.1)) @ _).
     apply grp_unit_r.
-  - apply isembedding_grouphomomorphism.
+  - apply isembedding_istrivial_kernel.
     intros e p.
     assert (a : Tr (-1) (hfiber (inclusion E) e)).
     1: { refine (isexact_preimage _ (inclusion E) (projection E) _ _).

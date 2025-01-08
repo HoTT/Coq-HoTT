@@ -508,6 +508,10 @@ Defined.
 Class IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
   istrivialgroup : forall x, H x -> trivial_subgroup G x.
 
+Global Instance ishprop_istrivialgroup `{F : Funext} {G : Group} (H : Subgroup G)
+  : IsHProp (IsTrivialGroup H)
+  := istrunc_forall.
+
 Global Instance istrivial_trivial_subgroup {G : Group}
   : IsTrivialGroup (trivial_subgroup G)
   := fun x => idmap.
