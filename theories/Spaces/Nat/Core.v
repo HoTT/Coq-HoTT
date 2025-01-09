@@ -740,6 +740,34 @@ Proof.
   exact (ap S IH).
 Defined.
 
+(** The defining properties of [nat_max]: [m] and [n] are less than or equal to [nat_max n m] and [nat_max n m] is less than or equal to any number greater than or equal to [m] and [n]. *)
+Definition leq_nat_max_l@{} n m : n <= nat_max n m.
+Proof.
+  induction n as [|n IHn] in m |- *.
+  1: exact (leq_zero_l _).
+  destruct m; cbn.
+  1: cbn; reflexivity.
+  exact (leq_succ (IHn m)).
+Defined.
+
+Definition leq_nat_max_r@{} n m : m <= nat_max n m.
+Proof.
+  induction n as [|n IHn] in m |- *.
+  1: cbn; reflexivity.
+  destruct m; cbn.
+  1: exact (leq_zero_l _).
+  exact (leq_succ (IHn m)).
+Defined.
+
+Definition nat_max_leq@{} {n m k : nat} (Hn : n <= k) (Hm : m <= k)
+  : nat_max n m <= k.
+Proof.
+  induction k in m, n, Hn, Hm |- *; destruct m, n; cbn.
+  1-3, 5-7: exact _.
+  - contradiction (not_lt_zero_r _ _).
+  - exact (leq_succ (IHk n m _ _)).
+Defined.
+
 (** [nat_max] is commutative. *)
 Definition nat_max_comm@{} n m : nat_max n m = nat_max m n.
 Proof.
@@ -801,6 +829,33 @@ Proof.
   simple_induction' n; cbn.
   1: reflexivity.
   exact (ap S IH).
+Defined.
+
+(** The defining properties of [nat_min]: [nat_min n m] is less than or equal to [m] and [n] and any number less than or equal to [m] and [n] is less than or equal to [nat_min n m]. *)
+Definition nat_min_leq_l@{} n m : nat_min n m <= n.
+Proof.
+  induction n as [|n IHn] in m |- *.
+  1: cbn; reflexivity.
+  destruct m; cbn.
+  1: exact (leq_zero_l _).
+  exact (leq_succ (IHn m)).
+Defined.
+
+Definition nat_min_leq_r@{} n m : nat_min n m <= m.
+Proof.
+  induction n as [|n IHn] in m |- *.
+  1: exact (leq_zero_l _).
+  destruct m; cbn.
+  1: cbn; reflexivity.
+  exact (leq_succ (IHn m)).
+Defined.
+
+Definition leq_nat_min@{} {n m k : nat} (Hn : k <= n) (Hm : k <= m)
+  : k <= nat_min n m.
+Proof.
+  induction k in m, n, Hn, Hm |- *; destruct m, n; cbn.
+  1-7: exact _.
+  exact (leq_succ (IHk n m _ _)).
 Defined.
 
 (** [nat_min] is commutative. *)
