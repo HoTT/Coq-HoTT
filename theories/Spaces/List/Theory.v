@@ -14,6 +14,8 @@ Local Set Polymorphic Inductive Cumulativity.
 (** We generally try to keep the order the same as the concepts appeared in [List.Core]. *)
 
 Local Open Scope list_scope.
+Local Open Scope nat_scope.
+Local Open Scope type_scope.
 
 (** ** Length *)
 
@@ -352,6 +354,15 @@ Proof.
   apply ap, path_ishprop.
 Defined.
 
+(** Two equal lists have the same elements in the same positions. *)
+Definition nth'_path_list {A : Type} {l1 l2 : list A}
+  (p : l1 = l2) {n : nat} (Hn1 : n < length l1) (Hn2 : n < length l2)
+  : nth' l1 n Hn1 = nth' l2 n Hn2.
+Proof.
+  destruct p.
+  by apply nth'_nth'.
+Defined.
+
 (** The [nth'] element of a list is in the list. *)
 Definition inlist_nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
   (H : (n < length l)%nat)
@@ -645,6 +656,11 @@ Proof.
   cbn; f_ap.
 Defined.
 
+(** The length of a [take] is less than or equal to the length of the list. *)
+Definition length_take_leq {A : Type} {n : nat} (l : list A)
+  : length (take n l) <= length l
+  := transport (fun x => x <= length l) (length_take n l)^ (nat_min_leq_r _ _).
+
 (** An element of a [take] is an element of the original list. *)
 Definition take_inlist@{i|} {A : Type@{i}} (n : nat) (l : list A) (x : A)
   : InList x (take n l) -> InList x l.
@@ -657,6 +673,36 @@ Proof.
   destruct H as [-> | H].
   - left; reflexivity.
   - right; exact (IHl _ _ H).
+Defined.
+
+(** Applying a [take] twice with [m] and [n] is the same as applying it once with [nat_min m n]. *)
+Definition take_take_min {A : Type} {m n : nat} (l : list A)
+  : take n (take m l) = take (nat_min n m) l.
+Proof.
+  revert n m l; induction n, m.
+  1-3: intro l; by rewrite !take_0.
+  destruct l as [|a l'].
+  1: by rewrite !take_nil.
+  cbn. apply ap, IHn.
+Defined.
+
+(** [take] is commutative in [n]. *)
+Definition take_comm {A : Type} {m n : nat} (l : list A)
+  : take n (take m l) = take m (take n l).
+Proof.
+  by rewrite !take_take_min, nat_min_comm.
+Defined.
+
+(** A [take n] does not change under concatenation if [n] is less than or equal to the length of the first list. *)
+Definition take_app {A : Type} {n : nat} (l1 l2 : list A) (hn : n <= length l1)
+  : take n l1 = take n (l1++l2).
+Proof.
+  induction n in l1, l2, hn |- *.
+  - by rewrite !take_0.
+  - induction l1 as [|a l1 IHl1].
+    + contradiction (not_lt_zero_r _ hn).
+    + cbn.
+      apply ap, IHn, (_ hn).
 Defined.
 
 (** *** Remove *)
