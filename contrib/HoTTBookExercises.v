@@ -680,7 +680,7 @@ Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_aut_bool.
 (* ================================================== ex:equality-reflection *)
 (** Exercise 2.14 *)
 
-(** Assuming the equality reflection rule, given any [q : x = y], [x] and [y] are definitionally equal, so [q] and [refl_x] have the same type [x = x]. We can form the type [forall x y, forall q, q = refl_x]. A path induction produces an element r, with [(r x x p) : p = refl_x], which is also definitional by the equality reflection rule. *)
+(** Assuming the equality reflection rule, given any [q : x = y], [x] and [y] are definitionally equal, so [q] and [refl_x] have the same type [x = x]. We can form the type [forall x y, forall q, q = refl_x]. A path induction produces an element [r], with [r x x p : p = refl_x], which is also definitional by the equality reflection rule. *)
 
 (* ================================================== ex:strengthen-transport-is-ap *)
 (** Exercise 2.15 *)
