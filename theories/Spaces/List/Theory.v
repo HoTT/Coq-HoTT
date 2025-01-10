@@ -542,32 +542,22 @@ Defined.
 
 (** [drop n l] removes the first [n] elements of [l]. *)
 Fixpoint drop {A : Type} (n : nat) (l : list A) : list A :=
-  match l, n with
-  | _ :: l, n.+1 => drop n l
-  | _, _ => l
+  match n with
+  | 0 => l
+  | n.+1 => drop n (tail l)
   end.
 
-(** A [drop] of zero elements is the identity. *)
-Definition drop_0 {A : Type} (l : list A)
-  : drop 0 l = l.
-Proof.
-  by destruct l.
-Defined.
+(** A [drop] of zero elements is the identity, by definition. *)
+Definition drop_0 {A : Type} (l : list A) : drop 0 l = l := idpath.
 
-(** A [drop] of one element is the tail of the list. *)
-Definition drop_1 {A : Type} (l : list A)
-  : drop 1 l = tail l.
-Proof.
-  induction l.
-  1: reflexivity.
-  by destruct l.
-Defined.
+(** A [drop] of one element is the tail of the list, by definition. *)
+Definition drop_1 {A : Type} (l : list A) : drop 1 l = tail l := idpath.
 
 (** A [drop] of the empty list is the empty list. *)
 Definition drop_nil {A : Type} (n : nat)
   : drop n (@nil A) = nil.
 Proof.
-  by destruct n.
+  by induction n.
 Defined.
 
 (** A [drop] of [n] elements with [length l <= n] is the empty list. *)
@@ -603,7 +593,7 @@ Proof.
   induction l as [|a l IHl] in n, H, x |- * using list_ind@{i i}.
   1: rewrite drop_nil in H; contradiction.
   destruct n.
-  1: rewrite drop_0 in H; assumption.
+  1: exact H.
   right; nrapply (IHl _ _ H).
 Defined.
 
@@ -708,11 +698,7 @@ Definition remove {A : Type} (n : nat) (l : list A) : list A
   := take n l ++ drop n.+1 l.
 
 (** Removing the first element of a list is the tail of the list. *)
-Definition remove_0 {A : Type} (l : list A) : remove 0 l = tail l.
-Proof.
-  unfold remove.
-  by rewrite drop_1.
-Defined.
+Definition remove_0 {A : Type} (l : list A) : remove 0 l = tail l := idpath.
 
 (** Removing the [n]-th element of a list with [length l <= n] is the original list. *)
 Definition remove_length_leq {A : Type} (n : nat) (l : list A)
