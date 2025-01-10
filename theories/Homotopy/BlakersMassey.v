@@ -1,6 +1,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
+Require Import Limits.Pullback.
 Require Import Homotopy.Join.Core.
 Require Import Truncations.
 
@@ -527,10 +528,10 @@ End GBM.
 (** ** The classical Blakers-Massey Theorem *)
 
 Global Instance blakers_massey `{Univalence} (m n : trunc_index)
-           {X Y : Type} (Q : X -> Y -> Type)
-           `{forall y, IsConnected m.+1 { x : X & Q x y } }
-           `{forall x, IsConnected n.+1 { y : Y & Q x y } }
-           (x : X) (y : Y)
+  {X Y : Type} (Q : X -> Y -> Type)
+  `{forall y, IsConnected m.+1 { x : X & Q x y } }
+  `{forall x, IsConnected n.+1 { y : Y & Q x y } }
+  (x : X) (y : Y)
   : IsConnMap (m +2+ n) (@spglue X Y Q x y).
 Proof.
   intros r.
@@ -538,4 +539,77 @@ Proof.
                             (merely_isconnected n _) (spushr Q y) r).
   1: intros; apply isconnected_join.
   all: exact _.
+Defined.
+
+Definition blakers_massey_po `{Univalence} (m n : trunc_index)
+  {X Y Z : Type} (f : X -> Y) (g : X -> Z)
+  `{H1 : !IsConnMap m.+1 f} `{H2 : !IsConnMap n.+1 g}
+  : IsConnMap (m +2+ n) (pullback_corec (pglue (f:=f) (g:=g))).
+Proof.
+  pose (Q := fun (y : Y) (z : Z) => {x : X & f x = y /\ g x = z}).
+  snrapply cancelL_equiv_conn_map.
+  1: exact (Pullback (spushl Q) (spushr Q)).
+  { snrapply equiv_pullback.
+    { snrapply equiv_pushout.
+      { unfold Q.
+        nrefine (equiv_sigma_symm _ oE _).
+        nrefine (equiv_functor_sigma_id (fun _ => (equiv_sigma_prod_prod _ _)^-1) oE _).
+        symmetry.
+        rapply equiv_sigma_contr. }
+      1-4: reflexivity. }
+    1-4: reflexivity. }
+  snrapply cancelR_conn_map.
+  1: exact {y : Y & {z : Z & Q y z}}.
+  { apply equiv_fun.
+    unfold Q.
+    symmetry.
+    nrefine ((equiv_sigma_prod' _)^-1 oE _).
+    nrefine (equiv_sigma_symm _ oE _).
+    nrefine (equiv_functor_sigma_id (fun _ => (equiv_sigma_prod_prod _ _)^-1) oE _).
+    symmetry.
+    rapply equiv_sigma_contr. }
+  1: exact _. 
+  snrapply conn_map_homotopic.
+  { snrapply (functor_sigma idmap); intros y.
+    snrapply (functor_sigma idmap); intros z.
+    apply spglue. }
+  { intros [y [z [x [p q]]]].
+    symmetry.
+    snrapply path_sigma.
+    1: exact p.
+    destruct p.
+    snrapply path_sigma.
+    1: exact q.
+    destruct q.
+    cbn -[functor_spushout].
+    lhs nrapply concat_1p.
+    lhs nrapply concat_p1.
+    lhs nrapply functor_coeq_beta_cglue.
+    apply moveR_pM.
+    apply concat_1p_p1. }
+  rapply conn_map_functor_sigma.
+  intros y.
+  rapply conn_map_functor_sigma.
+  revert y.
+  rewrite trunc_index_add_comm.
+  nrapply blakers_massey.
+  - intros z.
+    snrapply isconnected_equiv'.
+    3: by snrapply H2. 
+    nrefine (equiv_sigma_symm _ oE _).
+    snrapply equiv_functor_sigma_id; intros x; cbn beta.
+    nrefine (equiv_functor_sigma_id (fun _ => equiv_sigma_prod0 _ _) oE _).
+    nrefine ((equiv_sigma_assoc' _ _)^-1 oE _).
+    symmetry.
+    rapply equiv_contr_sigma.
+  - intros y'.
+    snrapply isconnected_equiv'.
+    3: by snrapply H1. 
+    nrefine (equiv_sigma_symm _ oE _).
+    snrapply equiv_functor_sigma_id; intros x; cbn beta.
+    nrefine (equiv_functor_sigma_id (fun _ => equiv_prod_symm _ _) oE _).
+    nrefine (equiv_functor_sigma_id (fun _ => equiv_sigma_prod0 _ _) oE _).
+    nrefine ((equiv_sigma_assoc' _ _)^-1 oE _).
+    symmetry.
+    rapply equiv_contr_sigma.
 Defined.
