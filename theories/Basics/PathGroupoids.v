@@ -492,8 +492,7 @@ Definition apD_homotopic {A : Type} {B : A -> Type} {f g : forall x, B x}
   (p : forall x, f x = g x) {x y : A} (q : x = y)
   : apD f q = ap (transport B q) (p x) @ apD g q @ (p y)^.
 Proof.
-  apply moveL_pV.
-  exact (apD_natural _ _).
+  apply moveL_pV, apD_natural.
 Defined.
 
 (** Naturality with other paths hanging around. *)
