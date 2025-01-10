@@ -612,16 +612,13 @@ Defined.
 
 (** [take n l] keeps the first [n] elements of [l] and returns [l] if [n >= length l]. *)
 Fixpoint take {A : Type} (n : nat) (l : list A) : list A :=
-  match l, n with
-  | x :: l, n.+1%nat => x :: take n l
+  match n, l with
+  | n.+1, x :: l => x :: take n l
   | _, _ => nil
   end.
 
-(** A [take] of zero elements is the empty list. *)
-Definition take_0 {A : Type} (l : list A) : take 0 l = nil.
-Proof.
-  by destruct l.
-Defined.
+(** A [take] of zero elements is the empty list, by definition. *)
+Definition take_0 {A : Type} (l : list A) : take 0 l = nil := idpath.
 
 (** A [take] of the empty list is the empty list. *)
 Definition take_nil {A : Type} (n : nat) : take n (@nil A) = nil.
@@ -669,7 +666,7 @@ Proof.
   induction l as [|a l IHl] in n, H, x |- * using list_ind@{i i}.
   1: rewrite take_nil in H; contradiction.
   destruct n.
-  1: rewrite take_0 in H; contradiction.
+  { cbn in H. contradiction. }
   destruct H as [-> | H].
   - left; reflexivity.
   - right; exact (IHl _ _ H).
@@ -679,8 +676,8 @@ Defined.
 Definition take_take_min {A : Type} {m n : nat} (l : list A)
   : take n (take m l) = take (nat_min n m) l.
 Proof.
-  revert n m l; induction n, m.
-  1-3: intro l; by rewrite !take_0.
+  revert n m l; induction n, m; intro l.
+  1-3: reflexivity.
   destruct l as [|a l'].
   1: by rewrite !take_nil.
   cbn. apply ap, IHn.
@@ -698,7 +695,7 @@ Definition take_app {A : Type} {n : nat} (l1 l2 : list A) (hn : n <= length l1)
   : take n l1 = take n (l1++l2).
 Proof.
   induction n in l1, l2, hn |- *.
-  - by rewrite !take_0.
+  - reflexivity.
   - induction l1 as [|a l1 IHl1].
     + contradiction (not_lt_zero_r _ hn).
     + cbn.
@@ -715,7 +712,7 @@ Definition remove {A : Type} (n : nat) (l : list A) : list A
 Definition remove_0 {A : Type} (l : list A) : remove 0 l = tail l.
 Proof.
   unfold remove.
-  by rewrite take_0, drop_1.
+  by rewrite drop_1.
 Defined.
 
 (** Removing the [n]-th element of a list with [length l <= n] is the original list. *)
