@@ -479,14 +479,21 @@ Definition concat_pA1 {A : Type} {f : A -> A} (p : forall x, x = f x) {x y : A} 
     | idpath => concat_p1_1p _
   end.
 
+Definition apD_natural {A : Type} {B : A -> Type} {f g : forall x, B x}
+  (p : forall x, f x = g x) {x y : A} (q : x = y)
+  : apD f q @ p y = ap (transport B q) (p x) @ apD g q.
+Proof.
+  destruct q.
+  unfold transport.
+  exact (concat_1p _ @ (ap_idmap _)^ @ (concat_p1 _)^).
+Defined.
+
 Definition apD_homotopic {A : Type} {B : A -> Type} {f g : forall x, B x}
   (p : forall x, f x = g x) {x y : A} (q : x = y)
   : apD f q = ap (transport B q) (p x) @ apD g q @ (p y)^.
 Proof.
   apply moveL_pV.
-  destruct q; unfold apD, transport.
-  symmetry.
-  exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
+  exact (apD_natural _ _).
 Defined.
 
 (** Naturality with other paths hanging around. *)

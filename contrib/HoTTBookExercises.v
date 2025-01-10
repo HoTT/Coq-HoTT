@@ -702,16 +702,7 @@ Definition Book_2_16 := @HoTT.Metatheory.FunextVarieties.NaiveFunext_implies_Fun
 (* ================================================== ex:dep-htpy-natural *)
 (** Exercise 2.18 *)
 
-(** This exercise is solved in the library as HoTT.Basics.PathGroupoids.apD_homotopic *)
-
-Definition Book_2_18 {A : Type} {B : A -> Type} {f g : forall x, B x}
-  (H : forall x, f x = g x) {x y : A} (p : x = y)
-  : apD f p @ H y = ap (transport B p) (H x) @ apD g p.
-Proof.
-  destruct p.
-  unfold transport.
-  exact (concat_1p _ @ (ap_idmap _)^ @ (concat_p1 _)^).
-Defined.
+Definition Book_2_18 := @HoTT.Basics.PathGroupoids.apD_natural.
 
 (* ================================================== ex:equiv-functor-set *)
 (** Exercise 3.1 *)
