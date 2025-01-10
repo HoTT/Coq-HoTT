@@ -15,12 +15,11 @@ Local Set Polymorphic Inductive Cumulativity.
 
 Local Open Scope list_scope.
 Local Open Scope nat_scope.
-Local Open Scope type_scope.
 
 (** ** Length *)
 
 (** A list of length zero must be the empty list. *)
-Definition length_0 {A : Type} (l : list A) (H : length l = 0%nat)
+Definition length_0 {A : Type} (l : list A) (H : length l = 0)
   : l = nil.
 Proof.
   destruct l.
@@ -75,7 +74,7 @@ Defined.
 
 (** The length of a concatenated list is the sum of the lengths of the two lists. *)
 Definition length_app {A : Type} (l l' : list A)
-  : length (l ++ l') = (length l + length l')%nat.
+  : length (l ++ l') = length l + length l'.
 Proof.
   induction l as [|a l IHl] using list_ind.
   1: reflexivity.
@@ -138,7 +137,7 @@ Defined.
 
 (** An element of a mapped list is equal to the function applied to some element of the original list. *)
 Definition inlist_map' {A B : Type} (f : A -> B) (l : list A) (x : B)
-  : InList x (list_map f l) -> { y : A & (f y = x) * InList y l }.
+  : InList x (list_map f l) -> { y : A & prod (f y = x) (InList y l) }.
 Proof.
   induction l as [|y l IHl].
   1: contradiction.
@@ -244,7 +243,7 @@ Defined.
 
 (** The length of [reverse_acc] is the sum of the lengths of the two lists. *)
 Definition length_reverse_acc@{i|} {A : Type@{i}} (acc l : list A)
-  : length (reverse_acc acc l) = (length acc + length l)%nat.
+  : length (reverse_acc acc l) = length acc + length l.
 Proof.
   symmetry.
   induction l as [|x l IHl] in acc |- * using list_ind@{i i}.
@@ -331,7 +330,7 @@ Defined.
 
 (** A variant of [nth] that returns an element of the list and a proof that it is the [n]-th element. *)
 Definition nth_lt@{i|} {A : Type@{i}} (l : list A) (n : nat)
-  (H : (n < length l)%nat)
+  (H : n < length l)
   : { x : A & nth l n = Some x }.
 Proof.
   induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.
@@ -344,11 +343,11 @@ Proof.
 Defined.
 
 (** A variant of [nth] that always returns an element when we know that the index is in the list. *)
-Definition nth' {A : Type} (l : list A) (n : nat) (H : (n < length l)%nat) : A
+Definition nth' {A : Type} (l : list A) (n : nat) (H : n < length l) : A
   := pr1 (nth_lt l n H).
 
 (** The [nth'] element doesn't depend on the proof that [n < length l]. *)
-Definition nth'_nth' {A} (l : list A) (n : nat) (H H' : (n < length l)%nat)
+Definition nth'_nth' {A} (l : list A) (n : nat) (H H' : n < length l)
   : nth' l n H = nth' l n H'.
 Proof.
   apply ap, path_ishprop.
@@ -365,7 +364,7 @@ Defined.
 
 (** The [nth'] element of a list is in the list. *)
 Definition inlist_nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
-  (H : (n < length l)%nat)
+  (H : n < length l)
   : InList (nth' l n H) l.
 Proof.
   induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.
@@ -377,7 +376,7 @@ Proof.
 Defined.
 
 (** The [nth'] element of a list is the same as the one given by [nth]. *)
-Definition nth_nth' {A} (l : list A) (n : nat) (H : (n < length l)%nat)
+Definition nth_nth' {A} (l : list A) (n : nat) (H : n < length l)
   : nth l n = Some (nth' l n H).
 Proof.
   exact (nth_lt l n H).2.
@@ -385,7 +384,7 @@ Defined.
 
 (** The [nth'] element of a [cons] indexed at [n.+1] is the same as the [nth'] element of the tail indexed at [n]. *)
 Definition nth'_cons {A : Type} (l : list A) (n : nat) (x : A)
-  (H : (n < length l)%nat) (H' : (n.+1 < length (x :: l))%nat)
+  (H : n < length l) (H' : n.+1 < length (x :: l))
   : nth' (x :: l) n.+1 H' = nth' l n H.
 Proof.
   apply isinj_some.
@@ -397,19 +396,19 @@ Defined.
 (** The index of an element in a list is the [n] such that the [nth'] element is the element. *)
 Definition index_of@{i|} {A : Type@{i}} (l : list A) (x : A)
   : InList x l
-    -> sig@{Set i} (fun n : nat => { H : (n < length l)%nat & nth' l n H = x }).
+    -> sig@{Set i} (fun n : nat => { H : n < length l & nth' l n H = x }).
 Proof.
   induction l as [|a l IHl] using list_ind@{i i}.
   1: intros x'; destruct x'.
   intros [| i].
   - revert a p.
     snrapply paths_ind_r@{i i}.
-    snrefine (exist@{i i} _ 0%nat _).
+    snrefine (exist@{i i} _ 0 _).
     snrefine (exist _ _ idpath).
     apply leq_succ.
     exact _.
   - destruct (IHl i) as [n [H H']].
-    snrefine (exist@{i i} _ n.+1%nat _).
+    snrefine (exist@{i i} _ n.+1 _).
     snrefine (_; _); cbn.
     1: apply leq_succ, H.
     refine (_ @ H').
@@ -430,8 +429,8 @@ Defined.
 
 (** The [nth'] element of a [list_map] is the function applied to the [nth'] element of the original list. *)
 Definition nth'_list_map@{i j|} {A : Type@{i}} {B : Type@{j}}
-  (f : A -> B) (l : list A) (n : nat) (H : (n < length l)%nat)
-  (H' : (n < length (list_map f l))%nat)
+  (f : A -> B) (l : list A) (n : nat) (H : n < length l)
+  (H' : n < length (list_map f l))
   : nth' (list_map f l) n H' = f (nth' l n H).
 Proof.
   induction l as [|a l IHl] in n, H, H' |- * using list_ind@{i j}.
@@ -444,8 +443,8 @@ Defined.
 (** The [nth'] element of a [list_map2] is the function applied to the [nth'] elements of the original lists. The length of the two lists is required to be the same. *)
 Definition nth'_list_map2 {A B C : Type}
   (f : A -> B -> C) (l1 : list A) (l2 : list B)
-  (n : nat) defl defr (H : (n < length l1)%nat) (H' : (n < length l2)%nat)
-  (H'' : (n < length (list_map2 f defl defr l1 l2))%nat)
+  (n : nat) defl defr (H : n < length l1) (H' : n < length l2)
+  (H'' : n < length (list_map2 f defl defr l1 l2))
   (p : length l1 = length l2)
   : f (nth' l1 n H) (nth' l2 n H') = nth' (list_map2 f defl defr l1 l2) n H''.
 Proof.
@@ -466,7 +465,7 @@ Defined.
 
 (** The [nth'] element of a [repeat] is the repeated value. *)
 Definition nth'_repeat@{i|} {A : Type@{i}} (x : A) (i n : nat)
-  (H : (i < length (repeat x n))%nat)
+  (H : i < length (repeat x n))
   : nth' (repeat x n) i H = x.
 Proof.
   induction n as [|n IHn] in i, H |- * using nat_ind@{i}.
@@ -479,7 +478,7 @@ Defined.
 (** Two lists are equal if their [nth'] elements are equal. *)
 Definition path_list_nth'@{i|} {A : Type@{i}} (l l' : list A)
   (p : length l = length l')
-  : (forall n (H : (n < length l)%nat), nth' l n H = nth' l' n (p # H))
+  : (forall n (H : n < length l), nth' l n H = nth' l' n (p # H))
     -> l = l'.
 Proof.
   intros H.
@@ -490,7 +489,7 @@ Proof.
   destruct l' as [|a' l'].
   1: discriminate.
   f_ap.
-  - exact (H 0%nat _).
+  - exact (H 0 _).
   - snrapply IHl.
     1: by apply path_nat_succ.
     intros n Hn.
@@ -502,7 +501,7 @@ Defined.
 
 (** The [nth n] element of a concatenated list [l ++ l'] where [n < length l] is the [nth] element of [l]. *)
 Definition nth_app@{i|} {A : Type@{i}} (l l' : list A) (n : nat)
-  (H : (n < length l)%nat)
+  (H : n < length l)
   : nth (l ++ l') n = nth l n.
 Proof.
   induction l as [|a l IHl] in l', n, H |- * using list_ind@{i i}.
@@ -544,7 +543,7 @@ Defined.
 (** [drop n l] removes the first [n] elements of [l]. *)
 Fixpoint drop {A : Type} (n : nat) (l : list A) : list A :=
   match l, n with
-  | _ :: l, n.+1%nat => drop n l
+  | _ :: l, n.+1 => drop n l
   | _, _ => l
   end.
 
@@ -573,7 +572,7 @@ Defined.
 
 (** A [drop] of [n] elements with [length l <= n] is the empty list. *)
 Definition drop_length_leq@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  (H : (length l <= n)%nat)
+  (H : length l <= n)
   : drop n l = nil.
 Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
@@ -587,7 +586,7 @@ Defined.
 
 (** The length of a [drop n] is the length of the original list minus [n]. *)
 Definition length_drop@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  : length (drop n l) = (length l - n)%nat.
+  : length (drop n l) = length l - n.
 Proof.
   induction l as [|a l IHl] in n |- * using list_ind@{i i}.
   1: by rewrite drop_nil.
@@ -628,7 +627,7 @@ Defined.
 
 (** A [take] of [n] elements with [length l <= n] is the original list. *)
 Definition take_length_leq@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  (H : (length l <= n)%nat)
+  (H : (length l <= n))
   : take n l = l.
 Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
@@ -717,7 +716,7 @@ Defined.
 
 (** Removing the [n]-th element of a list with [length l <= n] is the original list. *)
 Definition remove_length_leq {A : Type} (n : nat) (l : list A)
-  (H : (length l <= n)%nat)
+  (H : length l <= n)
   : remove n l = l.
 Proof.
   unfold remove.
@@ -730,8 +729,8 @@ Defined.
 
 (** The length of a [remove n] is the length of the original list minus one. *)
 Definition length_remove@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  (H : (n < length l)%nat)
-  : length (remove n l) = nat_pred (length l)%nat.
+  (H : n < length l)
+  : length (remove n l) = nat_pred (length l).
 Proof.
   unfold remove.
   rewrite length_app@{i}.
@@ -848,10 +847,10 @@ Proof.
 Defined.
 
 (** Alternate definition of [seq_rev] that keeps the proofs of the entries being [< n]. *)
-Definition seq_rev'@{} (n : nat) : list {k : nat & (k < n)%nat}.
+Definition seq_rev'@{} (n : nat) : list {k : nat & k < n}.
 Proof.
-  transparent assert (f : (forall n, {k : nat & (k < n)%nat}
-    -> {k : nat & (k < n.+1)%nat})).
+  transparent assert (f : (forall n, {k : nat & k < n}
+    -> {k : nat & k < n.+1})).
   { intros m.
     snrapply (functor_sigma idmap).
     intros k H.
@@ -863,7 +862,7 @@ Proof.
 Defined.
 
 (** Alternate definition of [seq] that keeps the proofs of the entries being [< n]. *)
-Definition seq'@{} (n : nat) : list {k : nat & (k < n)%nat}
+Definition seq'@{} (n : nat) : list {k : nat & k < n}
   := reverse (seq_rev' n).
 
 (** The length of [seq_rev' n] is [n]. *) 
@@ -906,8 +905,8 @@ Proof.
 Defined.
 
 (** The [nth] element of a [seq_rev] is [n - i.+1]. *)
-Definition nth_seq_rev@{} {n i} (H : (i < n)%nat)
-  : nth (seq_rev n) i = Some (n - i.+1)%nat.
+Definition nth_seq_rev@{} {n i} (H : i < n)
+  : nth (seq_rev n) i = Some (n - i.+1).
 Proof.
   induction i as [|i IHi] in n, H |- *.
   - induction n.
@@ -919,13 +918,13 @@ Proof.
 Defined.
 
 (** The [nth] element of a [seq] is [i]. *)
-Definition nth_seq@{} {n i} (H : (i < n)%nat)
+Definition nth_seq@{} {n i} (H : i < n)
   : nth (seq n) i = Some i.
 Proof.
   induction n.
   1: destruct (not_lt_zero_r _ H).
   rewrite seq_succ.
-  destruct (dec (i < n)%nat) as [H'|H'].
+  destruct (dec (i < n)) as [H'|H'].
   - lhs nrapply nth_app.
     1: by rewrite length_seq.
     by apply IHn.
@@ -940,7 +939,7 @@ Proof.
 Defined.
 
 (** The [nth'] element of a [seq'] is [i]. *)
-Definition nth'_seq'@{} (n i : nat) (H : (i < length (seq' n))%nat)
+Definition nth'_seq'@{} (n i : nat) (H : i < length (seq' n))
   : (nth' (seq' n) i H).1 = i.
 Proof.
   unshelve lhs_V nrapply nth'_list_map.
@@ -954,7 +953,7 @@ Proof.
 Defined.
 
 Definition inlist_seq@{} (n : nat) x
-  : InList x (seq n) <~> (x < n)%nat.
+  : InList x (seq n) <~> (x < n).
 Proof.
   simple_induction n n IHn.
   { symmetry; apply equiv_to_empty.
@@ -1224,7 +1223,7 @@ Proof.
 Defined.
 
 Definition list_exists_seq {n : nat} (P : nat -> Type)
-  (H : forall k, P k -> (k < n)%nat)
+  (H : forall k, P k -> (k < n))
   : (exists k, P k) <-> list_exists P (seq n).
 Proof.
   split.
@@ -1241,7 +1240,7 @@ Defined.
 
 (** An upper bound on witnesses of a decidable predicate makes the sigma type decidable. *)
 Definition decidable_exists_nat (n : nat) (P : nat -> Type)
-  (H1 : forall k, P k -> (k < n)%nat)
+  (H1 : forall k, P k -> (k < n))
   (H2 : forall k, Decidable (P k))
   : Decidable (exists k, P k).
 Proof.
