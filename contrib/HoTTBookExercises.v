@@ -680,17 +680,19 @@ Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_aut_bool.
 (* ================================================== ex:equality-reflection *)
 (** Exercise 2.14 *)
 
-
+(** Assuming the equality reflection rule, given any [q : x = y], [x] and [y] are definitionally equal, so [q] and [refl_x] have the same type [x = x]. We can form the type [forall x y, forall q, q = refl_x]. A path induction produces an element [r], with [r x x p : p = refl_x], which is also definitional by the equality reflection rule. *)
 
 (* ================================================== ex:strengthen-transport-is-ap *)
 (** Exercise 2.15 *)
 
-
+Definition Book_2_15 {A} (B : A -> Type) {x y : A} (p : x = y)
+  : transport B p = HoTT.Types.Universe.equiv_path _ _ (ap B p)
+  := match p with 1 => 1 end.
 
 (* ================================================== ex:strong-from-weak-funext *)
 (** Exercise 2.16 *)
 
-
+Definition Book_2_16 := @HoTT.Metatheory.FunextVarieties.NaiveFunext_implies_Funext.
 
 (* ================================================== ex:equiv-functor-types *)
 (** Exercise 2.17 *)
@@ -700,7 +702,7 @@ Definition Book_2_13 := @HoTT.Types.Bool.equiv_bool_aut_bool.
 (* ================================================== ex:dep-htpy-natural *)
 (** Exercise 2.18 *)
 
-
+Definition Book_2_18 := @HoTT.Basics.PathGroupoids.apD_natural.
 
 (* ================================================== ex:equiv-functor-set *)
 (** Exercise 3.1 *)
