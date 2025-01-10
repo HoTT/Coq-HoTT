@@ -665,8 +665,10 @@ Defined.
 Definition take_take_min {A : Type} {m n : nat} (l : list A)
   : take n (take m l) = take (nat_min n m) l.
 Proof.
-  revert n m l; induction n, m; intro l.
-  1-3: reflexivity.
+  induction n in m, l |- *.
+  1: reflexivity.
+  destruct m.
+  1: reflexivity.
   destruct l as [|a l'].
   1: by rewrite !take_nil.
   cbn. apply ap, IHn.
@@ -685,10 +687,10 @@ Definition take_app {A : Type} {n : nat} (l1 l2 : list A) (hn : n <= length l1)
 Proof.
   induction n in l1, l2, hn |- *.
   - reflexivity.
-  - induction l1 as [|a l1 IHl1].
+  - destruct l1 as [|a l1].
     + contradiction (not_lt_zero_r _ hn).
     + cbn.
-      apply ap, IHn, (_ hn).
+      apply ap, IHn, leq_pred', hn.
 Defined.
 
 (** *** Remove *)
@@ -980,9 +982,9 @@ Definition entry_list_restrict {A : Type} (s : nat -> A) (n : nat)
   {i : nat} (Hi : i < n)
   : nth' (list_restrict s n) i ((list_restrict_length s n)^ # Hi) = s i.
 Proof.
-  lhs snrefine (nth'_list_map _ _ _ (_^ # Hi) _).
+  unshelve lhs snrefine (nth'_list_map _ _ _ (_^ # Hi) _).
+  - nrapply length_seq'.
   - exact (ap s (nth'_seq' _ _ _)).
-  Unshelve. nrapply length_seq'.
 Defined.
 
 (** ** Repeat *)
