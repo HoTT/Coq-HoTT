@@ -288,7 +288,7 @@ Proof.
   apply IHl.
 Defined.
 
-(** The [reverse] of a [cons] is the concatenation of the [reverse] with the head. *) 
+(** The [reverse] of a [cons] is the concatenation of the [reverse] with the head. *)
 Definition reverse_cons {A : Type} (a : A) (l : list A)
   : reverse (a :: l) = reverse l ++ [a].
 Proof.
@@ -388,7 +388,7 @@ Definition nth'_cons {A : Type} (l : list A) (n : nat) (x : A)
   : nth' (x :: l) n.+1 H' = nth' l n H.
 Proof.
   apply isinj_some.
-  nrefine (_^ @ _ @ _).  
+  nrefine (_^ @ _ @ _).
   1,3: rapply nth_nth'.
   reflexivity.
 Defined.
@@ -513,7 +513,7 @@ Defined.
 
 (** The [nth i] element where [pred (length l) = i] is the last element of the list. *)
 Definition nth_last {A : Type} (l : list A) (i : nat) (p : nat_pred (length l) = i)
-  : nth l i = last l. 
+  : nth l i = last l.
 Proof.
   destruct p.
   induction l as [|a l IHl].
@@ -731,7 +731,7 @@ Proof.
   lhs nrapply nat_sub_succ_r.
   apply ap.
   apply nat_add_sub_cancel_l.
-Defined. 
+Defined.
 
 (** An element of a [remove] is an element of the original list. *)
 Definition remove_inlist {A : Type} (n : nat) (l : list A) (x : A)
@@ -853,7 +853,7 @@ Defined.
 Definition seq'@{} (n : nat) : list {k : nat & k < n}
   := reverse (seq_rev' n).
 
-(** The length of [seq_rev' n] is [n]. *) 
+(** The length of [seq_rev' n] is [n]. *)
 Definition length_seq_rev'@{} (n : nat)
   : length (seq_rev' n) = n.
 Proof.
@@ -955,7 +955,7 @@ Proof.
   rapply equiv_iff_hprop.
 Defined.
 
-(** Turning a finite sequence into a list. This is taken from [Build_Vector]. *)
+(** Turning a finite sequence into a list. *)
 Definition Build_list {A : Type} (n : nat)
   (f : forall (i : nat), (i < n) -> A)
   : list A
@@ -969,18 +969,30 @@ Proof.
   apply length_seq'.
 Defined.
 
+Definition nth'_Build_list {A : Type} {n : nat}
+  (f : forall (i : nat), (i < n) -> A) {i : nat} (Hi : i < n)
+  (Hi' : i < length (Build_list n f))
+  : nth' (Build_list n f) i Hi' = f i Hi.
+Proof.
+  unshelve lhs snrefine (nth'_list_map _ _ _ (_^ # Hi) _).
+  1: nrapply length_seq'.
+  snrapply ap011D.
+  1: nrapply nth'_seq'.
+  rapply path_ishprop.
+Defined.
+
 (** Restriction of an infinite sequence to a list of specified length. *)
 Definition list_restrict {A : Type} (s : nat -> A) (n : nat) : list A
   := Build_list n (fun m _ => s m).
 
-Definition list_restrict_length {A : Type} (s : nat -> A) (n : nat)
+Definition length_list_restrict {A : Type} (s : nat -> A) (n : nat)
   : length (list_restrict s n) = n
   := length_Build_list _ _.
 
 (** [nth'] of the restriction of a sequence is the corresponding term of the sequence.  *)
-Definition entry_list_restrict {A : Type} (s : nat -> A) (n : nat)
+Definition nth'_list_restrict {A : Type} (s : nat -> A) (n : nat)
   {i : nat} (Hi : i < n)
-  : nth' (list_restrict s n) i ((list_restrict_length s n)^ # Hi) = s i.
+  : nth' (list_restrict s n) i ((length_list_restrict s n)^ # Hi) = s i.
 Proof.
   unshelve lhs snrefine (nth'_list_map _ _ _ (_^ # Hi) _).
   - nrapply length_seq'.
