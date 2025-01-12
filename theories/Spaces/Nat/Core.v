@@ -832,7 +832,7 @@ Proof.
 Defined.
 
 (** The defining properties of [nat_min]: [nat_min n m] is less than or equal to [m] and [n] and any number less than or equal to [m] and [n] is less than or equal to [nat_min n m]. *)
-Definition nat_min_leq_l@{} n m : nat_min n m <= n.
+Definition leq_nat_min_l@{} n m : nat_min n m <= n.
 Proof.
   induction n as [|n IHn] in m |- *.
   1: cbn; reflexivity.
@@ -841,7 +841,7 @@ Proof.
   exact (leq_succ (IHn m)).
 Defined.
 
-Definition nat_min_leq_r@{} n m : nat_min n m <= m.
+Definition leq_nat_min_r@{} n m : nat_min n m <= m.
 Proof.
   induction n as [|n IHn] in m |- *.
   1: exact (leq_zero_l _).
@@ -850,7 +850,7 @@ Proof.
   exact (leq_succ (IHn m)).
 Defined.
 
-Definition leq_nat_min@{} {n m k : nat} (Hn : k <= n) (Hm : k <= m)
+Definition nat_min_leq@{} {n m k : nat} (Hn : k <= n) (Hm : k <= m)
   : k <= nat_min n m.
 Proof.
   induction k in m, n, Hn, Hm |- *; destruct m, n; cbn.
