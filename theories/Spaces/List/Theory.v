@@ -617,7 +617,7 @@ Defined.
 
 (** A [take] of [n] elements with [length l <= n] is the original list. *)
 Definition take_length_leq@{i|} {A : Type@{i}} (n : nat) (l : list A)
-  (H : (length l <= n))
+  (H : length l <= n)
   : take n l = l.
 Proof.
   induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.
@@ -1223,7 +1223,7 @@ Proof.
 Defined.
 
 Definition list_exists_seq {n : nat} (P : nat -> Type)
-  (H : forall k, P k -> (k < n))
+  (H : forall k, P k -> k < n)
   : (exists k, P k) <-> list_exists P (seq n).
 Proof.
   split.
@@ -1240,7 +1240,7 @@ Defined.
 
 (** An upper bound on witnesses of a decidable predicate makes the sigma type decidable. *)
 Definition decidable_exists_nat (n : nat) (P : nat -> Type)
-  (H1 : forall k, P k -> (k < n))
+  (H1 : forall k, P k -> k < n)
   (H2 : forall k, Decidable (P k))
   : Decidable (exists k, P k).
 Proof.
