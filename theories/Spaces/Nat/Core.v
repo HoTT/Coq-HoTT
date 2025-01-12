@@ -759,7 +759,7 @@ Proof.
   exact (leq_succ (IHn m)).
 Defined.
 
-Definition nat_max_leq@{} {n m k : nat} (Hn : n <= k) (Hm : m <= k)
+Definition leq_nat_max@{} {n m k : nat} (Hn : n <= k) (Hm : m <= k)
   : nat_max n m <= k.
 Proof.
   induction k in m, n, Hn, Hm |- *; destruct m, n; cbn.
@@ -850,7 +850,7 @@ Proof.
   exact (leq_succ (IHn m)).
 Defined.
 
-Definition nat_min_leq@{} {n m k : nat} (Hn : k <= n) (Hm : k <= m)
+Definition leq_nat_min@{} {n m k : nat} (Hn : k <= n) (Hm : k <= m)
   : k <= nat_min n m.
 Proof.
   induction k in m, n, Hn, Hm |- *; destruct m, n; cbn.
