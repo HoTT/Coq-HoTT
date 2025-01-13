@@ -23,29 +23,21 @@ Definition Vector@{i|} (A : Type@{i}) (n : nat) : Type@{i}
 
 Definition Build_Vector (A : Type) (n : nat)
   (f : forall (i : nat), (i < n)%nat -> A)
-  : Vector A n. 
-Proof.
-  exists (list_map (fun '(i; Hi) => f i Hi) (seq' n)).
-  lhs nrapply length_list_map.
-  apply length_seq'.
-Defined.
+  : Vector A n
+  := (Build_list n f; length_Build_list n f).
 
 (** *** Projections *)
 
 Definition entry {A : Type} {n : nat} (v : Vector A n) i {Hi : (i < n)%nat} : A
   := nth' (pr1 v) i ((pr2 v)^ # Hi).
 
-(** *** Basic properties *) 
+(** *** Basic properties *)
 
 Definition entry_Build_Vector {A : Type} {n}
   (f : forall (i : nat), (i < n)%nat -> A) i {Hi : (i < n)%nat}
   : entry (Build_Vector A n f) i = f i Hi.
 Proof.
-  snrefine (nth'_list_map _ _ _ (_^ # Hi) _ @ _).
-  1: nrapply length_seq'.
-  snrapply ap011D.
-  1: nrapply nth'_seq'.
-  rapply path_ishprop. 
+  snrapply nth'_Build_list.
 Defined.
 
 Global Instance istrunc_vector@{i} (A : Type@{i}) (n : nat) k `{IsTrunc k.+2 A}
