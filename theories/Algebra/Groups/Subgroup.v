@@ -557,7 +557,7 @@ Defined.
 
 (** *** Maximal Subgroups *)
 
-(** Every group is a (maximal) subgroup of itself *)
+(** Every group is a (maximal) subgroup of itself. *)
 Definition maximal_subgroup G : Subgroup G.
 Proof.
   rapply (Build_Subgroup G (fun x => Unit)).
