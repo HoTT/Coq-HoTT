@@ -1249,3 +1249,8 @@ Proof.
   1: exact H1.
   exact _.
 Defined.
+
+Definition decidable_exists_bounded_nat (n : nat) (P : nat -> Type)
+  (H2 : forall k, Decidable (P k))
+  : Decidable { k : nat & prod (k < n) (P k) }
+  := decidable_exists_nat n _ (fun k => fst) _.
