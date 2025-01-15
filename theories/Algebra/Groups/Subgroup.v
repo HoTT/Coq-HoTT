@@ -568,7 +568,7 @@ Defined.
 Coercion maximal_subgroup : Group >-> Subgroup.
 Add Printing Coercion maximal_subgroup.
 
-(** The group associated to the maximal subgroup is the original group. *)
+(** The group associated to the maximal subgroup is the original group. Note that this equivalence does not characterize the maximal subgroup, as a proper subgroup can be isomorphic to the whole group. For example, the even integers are isomorphic to the integers. *)
 Definition grp_iso_subgroup_group_maximal (G : Group)
   : subgroup_group (maximal_subgroup G) $<~> G.
 Proof.
@@ -596,8 +596,6 @@ Global Instance ishprop_ismaximalsubgroup `{Funext}
 Global Instance ismaximalsubgroup_maximalsubgroup {G : Group}
   : IsMaximalSubgroup (maximal_subgroup G)
   := fun g => tt.
-
-(** Note that we don't have an analogue for [istrivial_iff_grp_iso_trivial] since a proper subgroup of a group may be isomorphic to the entire group, whilst still being different from the maximal subgroup. The example to keep in mind is the group of integers [Z] and the subgroup of even integers [2Z]. Clearly, the integers are isomorphic to the even integers as groups, however the even integers are not equal to the maximal subgroup. *) 
 
 (** *** Subgroup intersection *)
 
