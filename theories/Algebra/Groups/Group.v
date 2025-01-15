@@ -930,7 +930,7 @@ Definition grp_prod_corec_natural {X Y A B : Group}
 
 (** The left factor injects into the direct product. *)
 Definition grp_prod_inl {H K : Group}
-  : H $-> (grp_prod H K)
+  : H $-> grp_prod H K
   := grp_prod_corec grp_homo_id grp_homo_const.
 
 (** The left injection is an embedding. *)
@@ -944,7 +944,7 @@ Defined.
 
 (** The right factor injects into the direct product. *)
 Definition grp_prod_inr {H K : Group}
-  : K $-> (grp_prod H K)
+  : K $-> grp_prod H K
   := grp_prod_corec grp_homo_const grp_homo_id.
 
 (** The right injection is an embedding. *)
