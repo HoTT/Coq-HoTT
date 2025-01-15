@@ -208,37 +208,6 @@ Proof.
     nrapply eissect.
 Defined.
 
-(** Trivial subgroup *)
-Definition trivial_subgroup G : Subgroup G.
-Proof.
-  rapply (Build_Subgroup' (fun x => x = mon_unit)).
-  1: reflexivity.
-  intros x y p q.
-  rewrite p, q.
-  rewrite left_identity.
-  apply inverse_mon_unit.
-Defined.
-
-Definition trivial_subgroup_rec {G : Group} (H : Subgroup G)
-  : forall x, trivial_subgroup G x -> H x.
-Proof.
-  snrapply paths_ind_r; cbn beta.
-  apply issubgroup_in_unit.
-Defined.
-
-(** All trivial subgroups are isomorphic as groups. *)
-Definition grp_iso_trivial_subgroup (G H : Group)
-  : subgroup_group (trivial_subgroup G)
-    $<~> subgroup_group (trivial_subgroup H).
-Proof.
-  snrapply cate_adjointify.
-  1,2: exact grp_homo_const.
-  - intros [x p]; rapply path_sigma_hprop.
-    symmetry; exact p.
-  - intros [x p]; rapply path_sigma_hprop.
-    symmetry; exact p.
-Defined.
-
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
 Definition subgroup_preimage {G H : Group} (f : G $-> H) (S : Subgroup H)
   : Subgroup G.
@@ -253,26 +222,6 @@ Proof.
     nrapply subgroup_in_op; only 1: assumption.
     nrefine (transport S (grp_homo_inv f _)^ _).
     by apply subgroup_in_inv.
-Defined.
-
-(** Every group is a (maximal) subgroup of itself *)
-Definition maximal_subgroup G : Subgroup G.
-Proof.
-  rapply (Build_Subgroup G (fun x => Unit)).
-  split; auto; exact _.
-Defined.
-
-(** We wish to coerce a group to its maximal subgroup. However, if we don't explicitly print [maximal_subgroup] things can get confusing, so we mark it as a coercion to be printed. *)
-Coercion maximal_subgroup : Group >-> Subgroup.
-Add Printing Coercion maximal_subgroup.
-
-(** The group associated to the maximal subgroup is the original group. *)
-Definition grp_iso_subgroup_group_maximal (G : Group)
-  : subgroup_group (maximal_subgroup G) $<~> G.
-Proof.
-  snrapply Build_GroupIsomorphism'.
-  - rapply equiv_sigma_contr.
-  - hnf; reflexivity.
 Defined.
 
 (** Paths between subgroups correspond to homotopies between the underlying predicates. *) 
@@ -480,22 +429,6 @@ Proof.
     by snrapply Build_IsNormalSubgroup'.
 Defined.
 
-(** The trivial subgroup is a normal subgroup. *)
-Global Instance isnormal_trivial_subgroup {G : Group}
-  : IsNormalSubgroup (trivial_subgroup G).
-Proof.
-  intros x y p; cbn in p |- *.
-  apply grp_moveL_1V in p.
-  by apply grp_moveL_V1.
-Defined.
-
-(** The maximal subgroup (the group itself) is a normal subgroup. *)
-Global Instance isnormal_maximal_subgroup {G : Group}
-  : IsNormalSubgroup (maximal_subgroup G).
-Proof.
-  intros x y p; exact tt.
-Defined.
-
 (** Left and right cosets are equivalent in normal subgroups. *)
 Definition equiv_in_cosetL_in_cosetR_normalsubgroup {G : Group}
   (N : NormalSubgroup G) (x y : G)
@@ -548,6 +481,36 @@ Proof.
   exact p.
 Defined.
 
+(** *** Trivial subgroup *)
+
+(** The trivial subgroup of a group [G]. *)
+Definition trivial_subgroup G : Subgroup G.
+Proof.
+  rapply (Build_Subgroup' (fun x => x = 1)).
+  1: reflexivity.
+  intros x y p q.
+  rewrite p, q.
+  rewrite left_identity.
+  apply grp_inv_unit.
+Defined.
+
+(** The trivial subgroup is always included in any subgroup. *)
+Definition trivial_subgroup_rec {G : Group} (H : Subgroup G)
+  : forall x, trivial_subgroup G x -> H x.
+Proof.
+  snrapply paths_ind_r; cbn beta.
+  apply issubgroup_in_unit.
+Defined.
+
+(** The trivial subgroup is a normal subgroup. *)
+Global Instance isnormal_trivial_subgroup {G : Group}
+  : IsNormalSubgroup (trivial_subgroup G).
+Proof.
+  intros x y p; cbn in p |- *.
+  apply grp_moveL_1V in p.
+  by apply grp_moveL_V1.
+Defined.
+
 (** The property of being the trivial subgroup. Note that any group can be automatically coerced to its maximal subgroup, so it makes sense for this predicate to be applied to groups in general. *)
 Class IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
   istrivialgroup : forall x, H x -> trivial_subgroup G x.
@@ -582,7 +545,46 @@ Proof.
     apply path_contr.
 Defined.
 
-(** A maximal subgroup of a group [G] is a subgroup where every element of [G] is included. *)
+(** All trivial subgroups are isomorphic as groups. *)
+Definition grp_iso_trivial_subgroup (G H : Group)
+  : subgroup_group (trivial_subgroup G)
+    $<~> subgroup_group (trivial_subgroup H).
+Proof.
+  snrefine (_^-1$ $oE _).
+  1: exact grp_trivial.
+  1,2: apply istrivial_iff_grp_iso_trivial; exact _.
+Defined.
+
+(** *** Maximal Subgroups *)
+
+(** Every group is a (maximal) subgroup of itself *)
+Definition maximal_subgroup G : Subgroup G.
+Proof.
+  rapply (Build_Subgroup G (fun x => Unit)).
+  split; auto; exact _.
+Defined.
+
+(** We wish to coerce a group to its maximal subgroup. However, if we don't explicitly print [maximal_subgroup] things can get confusing, so we mark it as a coercion to be printed. *)
+Coercion maximal_subgroup : Group >-> Subgroup.
+Add Printing Coercion maximal_subgroup.
+
+(** The group associated to the maximal subgroup is the original group. *)
+Definition grp_iso_subgroup_group_maximal (G : Group)
+  : subgroup_group (maximal_subgroup G) $<~> G.
+Proof.
+  snrapply Build_GroupIsomorphism'.
+  - rapply equiv_sigma_contr.
+  - hnf; reflexivity.
+Defined.
+
+(** The maximal subgroup (the group itself) is a normal subgroup. *)
+Global Instance isnormal_maximal_subgroup {G : Group}
+  : IsNormalSubgroup (maximal_subgroup G).
+Proof.
+  intros x y p; exact tt.
+Defined.
+
+(** The property of being a maximal subgroup of a group [G]. *)
 Class IsMaximalSubgroup {G : Group} (H : Subgroup G) :=
   ismaximalsubgroup : forall (x : G), H x.
 
@@ -595,7 +597,9 @@ Global Instance ismaximalsubgroup_maximalsubgroup {G : Group}
   : IsMaximalSubgroup (maximal_subgroup G)
   := fun g => tt.
 
-(** Note that we don't have an analogue for [istrivial_iff_grp_iso_trivial_group] since a proper subgroup of a group may be isomorphic to the entire group, whilst still being different from the maximal subgroup. The example to keep in mind is the group of integers [Z] and the subgroup of even integers [2Z]. Clearly, the integers are isomorphic to the even integers as groups, however the even integers are not equal to the maximal subgroup. *) 
+(** Note that we don't have an analogue for [istrivial_iff_grp_iso_trivial] since a proper subgroup of a group may be isomorphic to the entire group, whilst still being different from the maximal subgroup. The example to keep in mind is the group of integers [Z] and the subgroup of even integers [2Z]. Clearly, the integers are isomorphic to the even integers as groups, however the even integers are not equal to the maximal subgroup. *) 
+
+(** *** Subgroup intersection *)
 
 (** Intersection of two subgroups *)
 Definition subgroup_intersection {G : Group} (H K : Subgroup G) : Subgroup G.
