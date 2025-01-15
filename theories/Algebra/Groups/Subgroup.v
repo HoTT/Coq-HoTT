@@ -232,12 +232,7 @@ Definition grp_iso_trivial_subgroup (G H : Group)
     $<~> subgroup_group (trivial_subgroup H).
 Proof.
   snrapply cate_adjointify.
-  - snrapply functor_subgroup_group.
-    + exact grp_homo_const.
-    + reflexivity.
-  - snrapply functor_subgroup_group.
-    + exact grp_homo_const.
-    + reflexivity.
+  1,2: exact grp_homo_const.
   - intros [x p]; rapply path_sigma_hprop.
     symmetry; exact p.
   - intros [x p]; rapply path_sigma_hprop.
@@ -553,7 +548,7 @@ Proof.
   exact p.
 Defined.
 
-(** The property of being the trivial group is useful. Note that any group can be automatically coerced to its maximal subgroup, so it makes sense for this predicate to be applied to groups in general. *)
+(** The property of being the trivial subgroup. Note that any group can be automatically coerced to its maximal subgroup, so it makes sense for this predicate to be applied to groups in general. *)
 Class IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
   istrivialgroup : forall x, H x -> trivial_subgroup G x.
 
