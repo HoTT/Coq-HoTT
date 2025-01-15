@@ -177,6 +177,37 @@ Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
 Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
 
+Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H}
+  (f : G $-> H) (g : forall x, J x -> K (f x))
+  : subgroup_group J $-> subgroup_group K.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (functor_sigma f g).
+  - intros x y.
+    rapply path_sigma_hprop.
+    snrapply grp_homo_op.
+Defined.
+
+Definition grp_iso_subgroup_group {G H : Group@{i}}
+  {J : Subgroup@{i i} G} (K : Subgroup@{i i} H)
+  (e : G $<~> H) (f : forall x, J x <-> K (e x))
+  : subgroup_group J $<~> subgroup_group K.
+Proof.
+  snrapply cate_adjointify.
+  - exact (functor_subgroup_group e (fun x => fst (f x))).
+  - nrefine (functor_subgroup_group e^-1$ _).
+    equiv_intro e x. 
+    intros k.
+    nrefine ((eissect e _)^ # _).
+    exact (snd (f x) k).
+  - intros x.
+    rapply path_sigma_hprop.
+    nrapply eisretr.
+  - intros x.
+    rapply path_sigma_hprop.
+    nrapply eissect.
+Defined.
+
 (** Trivial subgroup *)
 Definition trivial_subgroup G : Subgroup G.
 Proof.
@@ -193,6 +224,24 @@ Definition trivial_subgroup_rec {G : Group} (H : Subgroup G)
 Proof.
   snrapply paths_ind_r; cbn beta.
   apply issubgroup_in_unit.
+Defined.
+
+(** All trivial subgroups are isomorphic as groups. *)
+Definition grp_iso_trivial_subgroup (G H : Group)
+  : subgroup_group (trivial_subgroup G)
+    $<~> subgroup_group (trivial_subgroup H).
+Proof.
+  snrapply cate_adjointify.
+  - snrapply functor_subgroup_group.
+    + exact grp_homo_const.
+    + reflexivity.
+  - snrapply functor_subgroup_group.
+    + exact grp_homo_const.
+    + reflexivity.
+  - intros [x p]; rapply path_sigma_hprop.
+    symmetry; exact p.
+  - intros [x p]; rapply path_sigma_hprop.
+    symmetry; exact p.
 Defined.
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
