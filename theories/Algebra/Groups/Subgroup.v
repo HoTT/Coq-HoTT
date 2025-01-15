@@ -547,7 +547,7 @@ Class IsMaximalSubgroup {G : Group} (H : Subgroup G) :=
 
 Global Instance ishprop_ismaximalsubgroup `{Funext}
   {G : Group} (H : Subgroup G)
-  : IsHProp (IsMaximalSubgroup G)
+  : IsHProp (IsMaximalSubgroup H)
   := istrunc_forall.
 
 Global Instance ismaximalsubgroup_maximalsubgroup {G : Group}
