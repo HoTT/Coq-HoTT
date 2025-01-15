@@ -1,5 +1,5 @@
 Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.
-Require Import Truncations.Core.
+Require Import Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Algebra.Groups.Group TruncType.
 
 Local Open Scope mc_scope.
@@ -808,3 +808,87 @@ Defined.
 Definition equiv_subgroup_group {G : Group} (H1 H2 : Subgroup G)
   : H1 = H2 -> GroupIsomorphism H1 H2
   := ltac:(intros []; exact grp_iso_id).
+
+(** ** Image of a subgroup under a group homomoprhism *)
+
+(** The image of a subgroup under group homomorphism. *) 
+Definition subgroup_image {G H : Group} (f : G $-> H) : Subgroup G -> Subgroup H.
+Proof.
+  intros J.
+  snrapply Build_Subgroup'.
+  - exact (fun b => hexists (fun (j : J) => f j.1 = b)).
+  - exact _.
+  - apply tr.
+    exists 1.
+    apply grp_homo_unit.
+  - intros x y p q; strip_truncations; apply tr.
+    destruct p as [a p], q as [b q].
+    exists (a * b^).
+    lhs nrapply grp_homo_op; f_ap.
+    lhs nrapply grp_homo_inv; f_ap.
+Defined.
+
+(** By definition, values of [f x] where [x] is in a subgroup [J] are in the image of [J] under [f]. *)
+Definition subgroup_image_in {G H : Group} (f : G $-> H) (J : Subgroup G)
+  : forall x, J x -> subgroup_image f J (f x)
+  := fun x Jx => tr ((x; Jx); idpath).
+
+(** Converting the subgroups to groups, we get the expected surjective (epi) restriction homomorphism. *)
+Definition grp_homo_subgroup_image {G H : Group} (f : G $-> H) (J : Subgroup G)
+  : subgroup_group J $-> subgroup_image f J
+  := functor_subgroup_group f (subgroup_image_in _ _).
+
+(** The restriction map from the subgroup to the image is surjective as expected. *)
+Global Instance issurj_grp_homo_subgroup_image {G H : Group}
+  (f : G $-> H) (J : Subgroup G)
+  : IsSurjection (grp_homo_subgroup_image f J).
+Proof.
+  snrapply BuildIsSurjection.
+  intros [x p].
+  strip_truncations; apply tr.
+  exists p.1.
+  rapply path_sigma_hprop.
+  exact p.2.
+Defined.
+
+(** An image of a subgroup [J] is included in a subgroup [J] if (and only if) the [J] is included in the preimage of the subgroup [K]. *) 
+Definition subgroup_image_rec {G H : Group}
+  (f : G $-> H) {J : Subgroup G} {K : Subgroup H}
+  (g : forall x, J x -> K (f x))
+  : forall x, subgroup_image f J x -> K x.
+Proof.
+  intros x; apply Trunc_rec; intros [[j Jj] p].
+  destruct p.
+  exact (g j Jj).
+Defined.
+
+(** The image functor is adjoint to the preimage functor. *) 
+Definition iff_subgroup_image_rec {G H : Group}
+  (f : G $-> H) {J : Subgroup G} {K : Subgroup H}
+  : (forall x, subgroup_image f J x -> K x)
+    <-> (forall x, J x -> subgroup_preimage f K x).
+Proof.
+  split.
+  - intros rec x Jx.
+    apply rec, tr.
+    by exists (x; Jx).
+  - snrapply subgroup_image_rec.
+Defined.
+
+(** [subgorup_image] preserves normal subgroups when the group homomorphism is surjective. *)
+Global Instance isnormal_subgroup_image {G H : Group} (f : G $-> H)
+  (J : Subgroup G) `{!IsNormalSubgroup J} `{!IsSurjection f}
+  : IsNormalSubgroup (subgroup_image f J).
+Proof.
+  snrapply Build_IsNormalSubgroup'.
+  intros x y; revert x.
+  change (subgroup_image f J (y * ?x * y^))
+    with (subgroup_preimage (grp_conj y) (subgroup_image f J) x).
+  snrapply subgroup_image_rec.
+  intros x Jx.
+  change (subgroup_image f J ((grp_conj y $o f) x)).
+  revert y; rapply (conn_map_elim (Tr (-1)) f); intros y.
+  rewrite <- grp_homo_conj.
+  nrapply subgroup_image_in.
+  by rapply isnormal_conj.
+Defined.
