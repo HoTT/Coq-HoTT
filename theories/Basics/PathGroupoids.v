@@ -16,7 +16,7 @@ Local Open Scope path_scope.
 
    Theorems about concatenation of paths are called [concat_XXX] where [XXX] tells us what is on the left-hand side of the equation. You have to guess the right-hand side. We use the following symbols in [XXX]:
 
-   - [1] means the identity path
+   - [1] means the identity path, or sometimes the identity function
    - [p] means 'the path'
    - [V] means 'the inverse path'
    - [A] means '[ap]'
@@ -27,12 +27,12 @@ Local Open Scope path_scope.
 
    Associativity is indicated with an underscore. Here are some examples of how the name gives hints about the left-hand side of the equation.
 
-   - [concat_1p] means [1 * p]
-   - [concat_Vp] means [p^ * p]
-   - [concat_p_pp] means [p * (q * r)]
-   - [concat_pp_p] means [(p * q) * r]
-   - [concat_V_pp] means [p^ * (p * q)]
-   - [concat_pV_p] means [(q * p^) * p] or [(p * p^) * q], but probably the former because for the latter you could just use [concat_pV].
+   - [concat_1p] means [1 @ p]
+   - [concat_Vp] means [p^ @ p]
+   - [concat_p_pp] means [p @ (q @ r)]
+   - [concat_pp_p] means [(p @ q) @ r]
+   - [concat_V_pp] means [p^ @ (p @ q)]
+   - [concat_pV_p] means [(q @ p^) @ p] or [(p @ p^) @ q], but probably the former because for the latter you could just use [concat_pV].
 
    Laws about inverse of something are of the form [inv_XXX], and those about [ap] are of the form [ap_XXX], and so on. For example:
 
@@ -55,11 +55,9 @@ Local Open Scope path_scope.
      because we move to the right-hand side, and we are moving the left
      argument of concat.
 
-   - [moveR_1M] means that we transform [p = q] (rather than [p = 1 @ q]) to [p * q^ = 1].
+   - [moveR_1M] means that we transform [p = q] (rather than [p = 1 @ q]) to [p @ q^ = 1].
 
    There are also cancellation laws called [cancelR] and [cancelL], which are inverse to the 2-dimensional 'whiskering' operations [whiskerR] and [whiskerL].
-
-   We may now proceed with the groupoid structure proper.
 *)
 
 (** ** The 1-dimensional groupoid structure. *)
