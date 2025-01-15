@@ -561,23 +561,20 @@ Global Instance istrivial_trivial_subgroup {G : Group}
   := fun x => idmap.
 
 (** Trivial groups are isomorphic to the trivial group. *)
-Definition istrivial_iff_grp_iso_trivial_subgroup {G : Group} (H : Subgroup G)
-  : IsTrivialGroup H
-    <-> (subgroup_group H $<~> subgroup_group (trivial_subgroup G)).
+Definition istrivial_iff_grp_iso_trivial {G : Group} (H : Subgroup G)
+  : IsTrivialGroup H <-> (subgroup_group H $<~> grp_trivial).
 Proof.
   split.
-  - intros T.
-    snrapply Build_GroupIsomorphism'.
-    + snrapply equiv_functor_sigma_id.
-      intros x.
-      rapply equiv_iff_hprop_uncurried.
-      split; only 1: apply T.
-      apply trivial_subgroup_rec.
-    + intros [x Hx] [y Hy].
-      by rapply path_sigma_hprop.
-  - unfold IsTrivialGroup.
-    intros e x h.
-    change ((x; h).1 = (1; idpath).1).
+  - intros triv.
+    snrapply cate_adjointify.
+    1,2: exact grp_homo_const.
+    + by intros [].
+    + intros [x Hx]; simpl.
+      apply path_sigma_hprop.
+      symmetry.
+      by apply triv.
+  - intros e x Hx.
+    change ((x; Hx).1 = (1; idpath).1).
     snrapply (pr1_path (u:=(_;_)) (v:=(_;_))).
     1: apply subgroup_in_unit.
     rhs_V nrapply (grp_homo_unit e^-1$).
