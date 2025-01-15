@@ -641,7 +641,7 @@ Defined.
 
 (** The product of two subgroups. *)
 Definition subgroup_product {G : Group} (H K : Subgroup G) : Subgroup G
-  := subgroup_generated (fun x => ((H x) + (K x))%type).
+  := subgroup_generated (fun x => (H x + K x)%type).
 
 (** The induction principle for the product. *)
 Definition subgroup_product_ind {G : Group} (H K : Subgroup G)
@@ -662,6 +662,30 @@ Proof.
   + exact P_unit.
   + by apply P_op.
 Defined.
+
+Definition subgroup_product_incl_l {G : Group} (H K : Subgroup G)
+  : forall x, H x -> subgroup_product H K x
+  := fun x => tr o sgt_in o inl.
+
+Definition subgroup_product_incl_r {G : Group} (H K : Subgroup G)
+  : forall x, K x -> subgroup_product H K x
+  := fun x => tr o sgt_in o inr.
+
+(** A product of normal subgroups is normal. *)
+Global Instance isnormal_subgroup_product {G : Group} (H K : Subgroup G)
+  `{!IsNormalSubgroup H, !IsNormalSubgroup K}
+  : IsNormalSubgroup (subgroup_product H K).
+Proof.
+  snrapply Build_IsNormalSubgroup'.
+  intros x y; revert x.
+  nrapply (functor_subgroup_generated _ _ (grp_conj y)).
+  intros x.
+  apply functor_sum; rapply isnormal_conj.
+Defined.
+
+Definition normalsubgroup_product {G : Group} (H K : NormalSubgroup G)
+  : NormalSubgroup G
+  := Build_NormalSubgroup G (subgroup_product H K) _.
 
 (* **** Paths between generated subgroups *)
 
