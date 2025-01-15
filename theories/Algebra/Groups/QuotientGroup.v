@@ -322,3 +322,29 @@ Definition grp_quotient_trivial (G : Group) (N : NormalSubgroup G)
   (triv : IsTrivialGroup N)
   : G $<~> G / N
   := Build_CatEquiv grp_quotient_map.
+
+(** A quotient by a maximal subgroup is trivial. *)
+Global Instance istrivial_grp_quotient_maximal
+  (G : Group) (N : NormalSubgroup G)
+  : IsMaximalSubgroup N -> IsTrivialGroup (G / N).
+Proof.
+  intros max x _; revert x.
+  rapply grp_quotient_ind_hprop.
+  intros x.
+  apply qglue, max.
+Defined.
+
+(** Conversely, a trivial quotient means the subgroup is maximal. *)
+Definition ismaximalsubgroup_istrivial_grp_quotient `{Univalence}
+  (G : Group) (N : NormalSubgroup G)
+  : IsTrivialGroup (G / N) -> IsMaximalSubgroup N.
+Proof.
+  intros triv x.
+  specialize (triv (grp_quotient_map x) tt).
+  simpl in triv.
+  apply related_quotient_paths in triv.
+  2-5: exact _.
+  apply equiv_subgroup_inverse.
+  nrapply (subgroup_in_op_l _ _ 1 triv) .
+  apply subgroup_in_unit.
+Defined.
