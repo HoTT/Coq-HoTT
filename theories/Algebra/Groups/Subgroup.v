@@ -612,6 +612,16 @@ Proof.
   1,2: apply istrivial_iff_grp_iso_trivial; exact _.
 Defined.
 
+Definition istrivial_grp_iso {G H : Group} (J : Subgroup G) (K : Subgroup H)
+  (e : subgroup_group J $<~> subgroup_group K)
+  : IsTrivialGroup J -> IsTrivialGroup K.
+Proof.
+  intros triv.
+  apply istrivial_iff_grp_iso_trivial in triv.
+  apply istrivial_iff_grp_iso_trivial.
+  exact (triv $oE e^-1$).
+Defined.
+
 (** ** Maximal Subgroups *)
 
 (** Every group is a (maximal) subgroup of itself. *)
