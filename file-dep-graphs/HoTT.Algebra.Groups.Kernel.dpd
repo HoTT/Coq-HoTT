@@ -1,0 +1,14 @@
+N: 4 "equiv_grp_kernel_corec" [body=yes, kind=cnst, prop=no, path="Kernel", ];
+N: 1 "equiv_istrivial_kernel_isembedding" [body=yes, kind=cnst, prop=no, path="Kernel", ];
+N: 6 "grp_kernel" [body=yes, kind=cnst, prop=no, path="Kernel", ];
+N: 5 "grp_kernel_corec" [body=yes, kind=cnst, prop=no, path="Kernel", ];
+N: 3 "isembedding_istrivial_kernel" [body=yes, kind=cnst, prop=no, path="Kernel", ];
+N: 2 "istrivial_kernel_isembedding" [body=yes, kind=cnst, prop=no, path="Kernel", ];
+E: 1 2 [weight=1, ];
+E: 1 3 [weight=1, ];
+E: 1 6 [weight=6, ];
+E: 2 6 [weight=3, ];
+E: 3 6 [weight=3, ];
+E: 4 5 [weight=16, ];
+E: 4 6 [weight=61, ];
+E: 5 6 [weight=18, ];

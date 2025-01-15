@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>family_prod.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="family-prod-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="family-prod-v-chk0"><span class="kn">Require Import</span>
+  HoTT.Utf8Minimal
+  HoTT.Basics.Overture Types.Unit
+  HoTT.Spaces.List.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> list_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The following section implements a datatype [FamilyProd] which</span>
+<span class="sd">    is a kind of product/tuple. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">family_prod</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">I</span> : <span class="kt">Type</span>}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** [FamilyProd F ℓ] is a product type defined by</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">        FamilyProd F [i1;i2;...;in] = F i1 * F i2 * ... * F in * Unit</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">      It is convenient to have the [Unit] in the end.</span>
+<span class="sd">  *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">FamilyProd</span> (<span class="nv">F</span> : I → <span class="kt">Type</span>) : list I → <span class="kt">Type</span>
+    := fold_right (<span class="kr">λ</span> (<span class="nv">i</span>:I) (<span class="nv">A</span>:<span class="kt">Type</span>), F i * A) Unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Map function for [FamilyProd F ℓ],</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">        map_family_prod f (x1, x2, ..., xn, tt)</span>
+<span class="sd">        = (f x1, f x2, ..., f xn, tt)</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">map_family_prod</span> {<span class="nv">F</span> <span class="nv">G</span> : I → <span class="kt">Type</span>} {<span class="nv">ℓ</span> : list I}
+      (<span class="nv">f</span> : <span class="kr">∀</span> <span class="nv">i</span>, F i → G i)
+      : FamilyProd F ℓ → FamilyProd G ℓ :=
+    <span class="kr">match</span> ℓ <span class="kr">with</span>
+    | nil =&gt; const_tt _
+    | i :: ℓ&#39; =&gt; <span class="kr">λ</span> &#39;(x,s), (f i x, map_family_prod f s)
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** [for_all_family_prod F P (x1, ..., xn, tt) = True] if</span>
+<span class="sd">      [P i1 x1 ∧ P i2 x2 ∧ ... ∧ P in xn] holds. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">for_all_family_prod</span> (<span class="nv">F</span> : I → <span class="kt">Type</span>) {<span class="nv">ℓ</span> : list I}
+      (<span class="nv">P</span> : <span class="kr">∀</span> <span class="nv">i</span>, F i -&gt; <span class="kt">Type</span>) : FamilyProd F ℓ → <span class="kt">Type</span> :=
+    <span class="kr">match</span> ℓ <span class="kr">with</span>
+    | nil =&gt; <span class="kr">λ</span> <span class="nv">_</span>, Unit
+    | i :: _ =&gt; <span class="kr">λ</span> &#39;(x,s), P i x ∧ for_all_family_prod F P s
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** [for_all_2_family_prod F G R (x1,...,xn,tt) (y1,...,yn,tt) = True]</span>
+<span class="sd">      if [R i1 x1 y1 ∧ R i2 x2 y2 ∧ ... ∧ P in xn yn] holds. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">for_all_2_family_prod</span> (<span class="nv">F</span> <span class="nv">G</span> : I → <span class="kt">Type</span>) {<span class="nv">ℓ</span> : list I}
+      (<span class="nv">R</span> : <span class="kr">∀</span> <span class="nv">i</span>, F i -&gt; G i -&gt; <span class="kt">Type</span>)
+      : FamilyProd F ℓ → FamilyProd G ℓ → <span class="kt">Type</span> :=
+    <span class="kr">match</span> ℓ <span class="kr">with</span>
+    | nil =&gt; <span class="kr">λ</span> <span class="nv">_</span> <span class="nv">_</span>, Unit 
+    | i :: _ =&gt; <span class="kr">λ</span> &#39;(x,s) &#39;(y,t), R i x y ∧ for_all_2_family_prod F G R s t
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** If [R : ∀ i, relation (F i)] is a family of relations indexed by</span>
+<span class="sd">      [i:I] and [R i] is reflexive for all [i], then</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">        for_all_2_family_prod F F R s s</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">      holds. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="family-prod-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="family-prod-v-chk1"><span class="kn">Lemma</span> <span class="nf">reflexive_for_all_2_family_prod</span> (<span class="nv">F</span> : I → <span class="kt">Type</span>)
+    (<span class="nv">R</span> : <span class="kr">∀</span> <span class="nv">i</span>, Relation (F i)) `{!<span class="kr">∀</span> <span class="nv">i</span>, Reflexive (R i)}
+    {ℓ : list I} (s : FamilyProd F ℓ)
+    : for_all_2_family_prod F F R s s.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>I -&gt; <span class="kt">Type</span></span></span></span><br><span><var>R</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, Relation (F i)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, Reflexive (R i)</span></span></span><br><span><var>ℓ</var><span class="hyp-type"><b>: </b><span>list I</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>FamilyProd F ℓ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">for_all_2_family_prod F F R s s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="family-prod-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="family-prod-v-chk2"><span class="kn">Proof with</span> <span class="kp">try</span> <span class="bp">reflexivity</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>I -&gt; <span class="kt">Type</span></span></span></span><br><span><var>R</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, Relation (F i)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, Reflexive (R i)</span></span></span><br><span><var>ℓ</var><span class="hyp-type"><b>: </b><span>list I</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>FamilyProd F ℓ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">for_all_2_family_prod F F R s s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="family-prod-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="family-prod-v-chk3"><span class="nb">induction</span> ℓ...</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>I -&gt; <span class="kt">Type</span></span></span></span><br><span><var>R</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, Relation (F i)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, Reflexive (R i)</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br><span><var>ℓ</var><span class="hyp-type"><b>: </b><span>list I</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>FamilyProd F (a :: ℓ)</span></span></span><br><span><var>IHℓ</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : FamilyProd F ℓ, for_all_2_family_prod F F R s s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">for_all_2_family_prod F F R s s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="family-prod-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="family-prod-v-chk4"><span class="nb">split</span>...</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>I -&gt; <span class="kt">Type</span></span></span></span><br><span><var>R</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, Relation (F i)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, Reflexive (R i)</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br><span><var>ℓ</var><span class="hyp-type"><b>: </b><span>list I</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>FamilyProd F (a :: ℓ)</span></span></span><br><span><var>IHℓ</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : FamilyProd F ℓ, for_all_2_family_prod F F R s s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">for_all_2_family_prod F F R (snd s) (snd s)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> IHℓ.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">family_prod</span>.</span></span></pre>
+</div>
+</div></body>
+</html>
