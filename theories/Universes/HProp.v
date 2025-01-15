@@ -152,8 +152,8 @@ Defined.
 (** When [A] is an hprop, so is [Stable A] (by [ishprop_stable_hprop]), so [Stable A * IsHProp A] is an hprop for any [A]. *)
 Global Instance ishprop_stable_ishprop `{Funext} (A : Type) : IsHProp (Stable A * IsHProp A).
 Proof.
-  apply hprop_allpath; intros [st1 hp1] [st2 hp2].
-  apply path_ishprop.
+  apply istrunc_inhabited_istrunc; intros [stable ishprop].
+  exact _.
 Defined.
 
 (** Under function extensionality, if [A] is a stable type, then [~~A] is the propositional truncation of [A]. Here, for dependency reasons, we don't give the equivalence to [Tr (-1) A], but just show that the recursion principle holds. See Metatheory/ImpredicativeTruncation.v for a generalization to all types, and Modalities/Notnot.v for a description of the universal property of [~~A] when [A] is not assumed to be stable. *)

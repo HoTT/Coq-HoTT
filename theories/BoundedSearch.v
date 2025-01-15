@@ -5,8 +5,7 @@ Require Import HoTT.Spaces.Nat.Core.
 Section bounded_search.
 
   Context (P : nat -> Type)
-          (P_dec : forall n, Decidable (P n))
-          (P_inhab : hexists (fun n => P n)).
+          (P_dec : forall n, Decidable (P n)).
   
   (** We open type_scope again after nat_scope in order to use the product type notation. *)
   Local Open Scope nat_scope.
@@ -80,15 +79,17 @@ Section bounded_search.
     - destruct (none n (leq_refl n) Pn).
   Defined.
 
-  Local Definition prop_n_to_min_n : min_n_Type.
+  Local Definition prop_n_to_min_n (P_inhab : hexists (fun n => P n))
+    : min_n_Type.
   Proof.
     refine (Trunc_rec _ P_inhab).
     intros [n Pn]. exact (n_to_min_n n Pn).
   Defined.
 
-  Definition minimal_n : { n : nat & P n }.
+  Definition minimal_n (P_inhab : hexists (fun n => P n))
+    : { n : nat & P n }.
   Proof.
-    destruct prop_n_to_min_n as [n pl]. destruct pl as [p _].
+    destruct (prop_n_to_min_n P_inhab) as [n pl]. destruct pl as [p _].
     exact (n; fst merely_inhabited_iff_inhabited_stable p).
   Defined.
 

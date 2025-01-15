@@ -144,7 +144,6 @@ Section AssumeFunext.
   Global Instance istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
     : IsTrunc n.+1 (A <~> B).
   Proof.
-    simpl.
     apply istrunc_S.
     intros e1 e2.
     apply (istrunc_equiv_istrunc _ (equiv_path_equiv e1 e2)).
