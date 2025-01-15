@@ -545,7 +545,7 @@ Defined.
 Class IsMaximalSubgroup {G : Group} (H : Subgroup G) :=
   ismaximalsubgroup : forall (x : G), H x.
 
-Global Instance ishprop_ismaximalsubgroup {F : Funext}
+Global Instance ishprop_ismaximalsubgroup `{Funext}
   {G : Group} (H : Subgroup G)
   : IsHProp (IsMaximalSubgroup G)
   := istrunc_forall.
