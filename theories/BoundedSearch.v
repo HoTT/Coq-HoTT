@@ -1,3 +1,7 @@
+(** * Bounded Search *)
+
+(** The main result of this file is [minimal_n], which say that if [P : nat -> Type] is a family such that each [P n] is decidable and [{n & P n}] is merely inhabited, then [{n & P n}] is inhabited.  Since [P n] is decidable, it is sufficient to prove [{n & merely (P n)}], and to do this, we prove the stronger claim that there is a *minimal* [n] satisfying [merely (P n)].  This stronger claim is a proposition, which is what makes the argument work.  Along the way, we also prove that [{ l : nat & (l <= n) * P l }] is decidable for each [n]. *)
+
 Require Import Basics.Overture Basics.Decidable Basics.Trunc Basics.Tactics.
 Require Import Types.Sigma Types.Prod.
 Require Import Truncations.Core.
