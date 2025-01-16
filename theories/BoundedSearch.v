@@ -76,17 +76,6 @@ Section bounded_search.
              rewrite eqlSn; assumption.
   Defined.
 
-  (** Should we include [minimal l] in the condition as well? *)
-  Definition decidable_search (n : nat) : Decidable { l : nat & (l <= n) * P l }.
-  Proof.
-    destruct (bounded_search n) as [s | no_l].
-    - destruct s as [l [[Pl min] l_leq_n]].
-      exact (inl (l; (l_leq_n, Pl))).
-    - right.
-      intros [l [l_leq_n Pl]].
-      exact (no_l l l_leq_n Pl).
-  Defined.
-
   Local Definition n_to_min_n (n : nat) (Pn : P n) : min_n_Type.
   Proof.
     assert (smaller n + forall l, (l <= n) -> not (P l)) as X by apply bounded_search.
@@ -107,6 +96,17 @@ Section bounded_search.
   Proof.
     destruct (prop_n_to_min_n P_inhab) as [n pl]. destruct pl as [p _].
     exact (n; fst merely_inhabited_iff_inhabited_stable p).
+  Defined.
+
+  (** As a consequence of [bounded_search] we deduce that bounded existence is decidable.  See also [decidable_exists_bounded_nat] in Spaces/Lists/Theory.v for a similar result with different dependencies. *)
+  Definition decidable_search (n : nat) : Decidable { l : nat & (l <= n) * P l }.
+  Proof.
+    destruct (bounded_search n) as [s | no_l].
+    - destruct s as [l [[Pl min] l_leq_n]].
+      exact (inl (l; (l_leq_n, Pl))).
+    - right.
+      intros [l [l_leq_n Pl]].
+      exact (no_l l l_leq_n Pl).
   Defined.
 
 End bounded_search.
