@@ -9,8 +9,7 @@ Require Import Spaces.Nat.Core.
 
 Section bounded_search.
 
-  Context (P : nat -> Type)
-          (P_dec : forall n, Decidable (P n)).
+  Context (P : nat -> Type) (P_dec : forall n, Decidable (P n)).
   
   (** We open type_scope again after nat_scope in order to use the product type notation. *)
   Local Open Scope nat_scope.
@@ -45,56 +44,42 @@ Section bounded_search.
   Local Definition bounded_search (n : nat) : smaller n + forall l : nat, (l <= n) -> not (P l).
   Proof.
     induction n as [|n IHn].
-    - assert (P 0 + not (P 0)) as X; [apply P_dec |].
-      destruct X as [h|].
+    - destruct (dec (P 0)) as [h|n].
       + left.
-        refine (0;(h,_,_)).
-        * intros ? ?. exact _.
+        exact (0; (h, fun _ _ => _, _)).
       + right.
         intros l lleq0.
-        assert (l0 : l = 0) by rapply leq_antisym.
-        rewrite l0; assumption.
-    - destruct IHn as [|n0].
-      + left. apply smaller_S. assumption.
-      + assert (P (n.+1) + not (P (n.+1))) as X by apply P_dec.
-        destruct X as [h|].
+        by rewrite (leq_antisym lleq0 _ : l = 0).
+    - destruct IHn as [s|n0].
+      + left; by apply smaller_S.
+      + destruct (dec (P n.+1)) as [h|nP].
         * left.
-          refine (n.+1;(h,_,_)).
-          -- intros m pm.
-             assert ((n.+1 <= m)+(n.+1>m)) as X by apply leq_dichotomy.
-             destruct X as [leqSnm|ltmSn].
-             ++ assumption.
-             ++ unfold gt, lt in ltmSn.
-                assert (m <= n) as X by rapply leq_pred'.
-                destruct (n0 m X pm).
-        * right. intros l q.
-          assert ((l <= n) + (l > n)) as X by apply leq_dichotomy.
-          destruct X as [h|h].
-          -- exact (n0 l h).
-          -- unfold lt in h.
-             assert (eqlSn : l = n.+1) by (apply leq_antisym; assumption).
-             rewrite eqlSn; assumption.
+          refine (n.+1; (h, _, _)).
+          intros m pm.
+          apply leq_iff_not_gt.
+          unfold gt, lt; intro leq_Sm_Sn.
+          apply leq_pred' in leq_Sm_Sn.
+          destruct (n0 m leq_Sm_Sn pm).
+        * right.
+          by apply leq_ind_l.
   Defined.
 
   Local Definition n_to_min_n (n : nat) (Pn : P n) : min_n_Type.
   Proof.
-    assert (smaller n + forall l, (l <= n) -> not (P l)) as X by apply bounded_search.
-    destruct X as [[l [[Pl ml] leqln]]|none].
-    - exact (l;(tr Pl,tr ml)).
+    destruct (bounded_search n) as [[l [[Pl ml] _]] | none].
+    - exact (l; (tr Pl, tr ml)).
     - destruct (none n (leq_refl n) Pn).
   Defined.
 
-  Local Definition prop_n_to_min_n (P_inhab : hexists (fun n => P n))
-    : min_n_Type.
+  Local Definition prop_n_to_min_n (P_inhab : hexists P) : min_n_Type.
   Proof.
-    refine (Trunc_rec _ P_inhab).
-    intros [n Pn]. exact (n_to_min_n n Pn).
+    strip_truncations.
+    exact (n_to_min_n (P_inhab.1) (P_inhab.2)).
   Defined.
 
-  Definition minimal_n (P_inhab : hexists (fun n => P n))
-    : { n : nat & P n }.
+  Definition minimal_n (P_inhab : hexists P) : { n : nat & P n }.
   Proof.
-    destruct (prop_n_to_min_n P_inhab) as [n pl]. destruct pl as [p _].
+    destruct (prop_n_to_min_n P_inhab) as [n [p _]].
     exact (n; fst merely_inhabited_iff_inhabited_stable p).
   Defined.
 
@@ -117,14 +102,14 @@ Section bounded_search_alt_type.
           (e : nat <~> X)
           (P : X -> Type)
           (P_dec : forall x, Decidable (P x))
-          (P_inhab : hexists (fun x => P x)).
+          (P_inhab : hexists P).
 
   (** Bounded search works for types equivalent to the naturals even without full univalence. *)
   Definition minimal_n_alt_type : {x : X & P x}.
   Proof.
-    set (P' n := P (e n)).
-    assert (P'_dec : forall n, Decidable (P' n)) by apply _.
-    assert (P'_inhab : hexists (fun n => P' n)).
+    pose (P' n := P (e n)).
+    pose (P'_dec n := P_dec (e n) : Decidable (P' n)).
+    assert (P'_inhab : hexists P').
     {
       strip_truncations. apply tr.
       destruct P_inhab as [x p].
@@ -133,7 +118,7 @@ Section bounded_search_alt_type.
       rewrite (eisretr e). exact p.
     }
     destruct (minimal_n P' P'_dec P'_inhab) as [n p'].
-    exists (e n). exact p'.
+    exact ((e n); p').
   Defined.
 
 End bounded_search_alt_type.
