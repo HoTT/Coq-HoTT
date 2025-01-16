@@ -1,6 +1,7 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import HoTT.Truncations.Core.
-Require Import HoTT.Spaces.Nat.Core.
+Require Import Basics.Overture Basics.Decidable Basics.Trunc Basics.Tactics.
+Require Import Types.Sigma Types.Prod.
+Require Import Truncations.Core.
+Require Import Spaces.Nat.Core.
 
 Section bounded_search.
 
