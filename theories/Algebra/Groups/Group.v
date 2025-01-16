@@ -995,7 +995,7 @@ Defined.
 
 (** Pairs in direct products can be decomposed *)
 Definition grp_prod_decompose {G H : Group} (g : G) (h : H)
-  : (g, h) = ((g, group_unit) : grp_prod G H) * (group_unit, h).
+  : (g, h) = ((g, 1) : grp_prod G H) * (1, h).
 Proof.
   snrapply path_prod; symmetry.
   - snrapply grp_unit_r.
