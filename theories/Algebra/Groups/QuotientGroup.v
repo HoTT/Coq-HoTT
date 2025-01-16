@@ -253,9 +253,8 @@ Section FirstIso.
     snrapply isequiv_surj_emb.
     1: srapply cancelR_conn_map.
     srapply isembedding_isinj_hset.
-    refine (Quotient_ind_hprop _ _ _); intro x.
-    refine (Quotient_ind_hprop _ _ _); intro y.
-    intros h; simpl in h.
+    srapply Quotient_ind2_hprop.
+    intros x y h; simpl in h.
     apply qglue; cbn.
     apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.
     cbn. rewrite grp_homo_op, grp_homo_inv, h.
