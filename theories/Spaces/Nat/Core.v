@@ -434,12 +434,15 @@ Proof.
 Defined.
 Global Existing Instance leq_zero_l | 10.
 
+Global Instance pred_leq {m} : nat_pred m <= m.
+Proof.
+  destruct m; exact _.
+Defined.
+
 (** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
 Global Instance leq_pred {n m} : n <= m -> nat_pred n <= nat_pred m.
 Proof.
-  intros H; induction H.
-  1: exact _.
-  destruct m; exact _.
+  intros H; induction H; exact _.
 Defined.
 
 (** A successor is less than or equal to a successor if the original numbers are less than or equal. *)
@@ -499,6 +502,12 @@ Proof.
   intros p.
   apply (lt_irrefl n), (leq_trans p).
   exact _.
+Defined.
+
+(** [n.+1 <= m] implies [n <= m]. *)
+Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
+Proof.
+  intro l; apply leq_pred'; exact _.
 Defined.
 
 (** A general form for injectivity of this constructor *)
@@ -568,10 +577,16 @@ Proof.
       apply equiv_leq_succ.
 Defined.
 
-(** [n.+1 <= m] implies [n <= m]. *)
-Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
+(** The default induction principle for [leq] applies to a type family depending on the second variable.  Here is a version involving a type family depending on the first variable. *)
+Definition leq_ind_l {n : nat} (Q : forall (m : nat) (l : m <= n.+1), Type)
+  (H_Sn : Q n.+1 (leq_refl n.+1))
+  (H_m : forall (m : nat) (l : m <= n), Q m (leq_succ_r l))
+  : forall (m : nat) (l : m <= n.+1), Q m l.
 Proof.
-  intro l; apply leq_pred'; exact _.
+  intros m leq_m_Sn.
+  inversion leq_m_Sn as [p | k H p]; destruct p^; clear p.
+  - exact (path_ishprop _ _ # H_Sn).
+  - exact (path_ishprop _ _ # H_m _ _).
 Defined.
 
 (** *** Basic properties of [<] *)
@@ -993,6 +1008,14 @@ Proof.
   destruct (IHm n).
   1: left; exact _.
   1: right; exact _.
+Defined.
+
+(** A variant. *)
+Definition leq_succ_dichotomy {n m : nat} (l : m <= n.+1) : (m = n.+1) + (m <= n).
+Proof.
+  inversion l.
+  - left; reflexivity.
+  - right; assumption.
 Defined.
 
 (** *** Trichotomy *)
