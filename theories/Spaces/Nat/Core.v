@@ -417,18 +417,6 @@ Definition nat_mul_one_r@{} n : n * 1 = n
 (** [<=] is reflexive by definition. *)
 Global Instance reflexive_leq : Reflexive leq := leq_refl.
 
-(** The default induction principle for [leq] applies to a type family depending on the second variable.  Here is a version involving a type family depending on the first variable.  A more general form would involve [Q : forall (m : nat) (l : m <= n.+1), Type], but that seems trickier to prove. *)
-Definition leq_ind_l {n : nat} (Q : forall (m : nat), Type)
-  (H_Sn : Q n.+1)
-  (H_m : forall (m : nat) (l : m <= n), Q m)
-  : forall (m : nat) (l : m <= n.+1), Q m.
-Proof.
-  intros m leq_m_Sn.
-  inversion leq_m_Sn.
-  1: assumption.
-  apply H_m, H.
-Defined.
-
 (** Being less than or equal to is a transitive relation. *)
 Definition leq_trans {x y z} : x <= y -> y <= z -> x <= z.
 Proof.
@@ -581,6 +569,18 @@ Proof.
     + rapply decidable_equiv'.
       symmetry.
       apply equiv_leq_succ.
+Defined.
+
+(** The default induction principle for [leq] applies to a type family depending on the second variable.  Here is a version involving a type family depending on the first variable. *)
+Definition leq_ind_l {n : nat} (Q : forall (m : nat) (l : m <= n.+1), Type)
+  (H_Sn : Q n.+1 (leq_refl n.+1))
+  (H_m : forall (m : nat) (l : m <= n), Q m (leq_succ_r l))
+  : forall (m : nat) (l : m <= n.+1), Q m l.
+Proof.
+  intros m leq_m_Sn.
+  inversion leq_m_Sn as [p | k H p]; destruct p^; clear p.
+  - exact (path_ishprop _ _ # H_Sn).
+  - exact (path_ishprop _ _ # H_m _ _).
 Defined.
 
 (** [n.+1 <= m] implies [n <= m]. *)
