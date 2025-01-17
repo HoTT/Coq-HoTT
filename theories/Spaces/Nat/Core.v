@@ -504,6 +504,12 @@ Proof.
   exact _.
 Defined.
 
+(** [n.+1 <= m] implies [n <= m]. *)
+Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
+Proof.
+  intro l; apply leq_pred'; exact _.
+Defined.
+
 (** A general form for injectivity of this constructor *)
 Definition leq_refl_inj_gen n k (p : n <= k) (r : n = k) : p = r # leq_refl n.
 Proof.
@@ -581,12 +587,6 @@ Proof.
   inversion leq_m_Sn as [p | k H p]; destruct p^; clear p.
   - exact (path_ishprop _ _ # H_Sn).
   - exact (path_ishprop _ _ # H_m _ _).
-Defined.
-
-(** [n.+1 <= m] implies [n <= m]. *)
-Definition leq_succ_l {n m} : n.+1 <= m -> n <= m.
-Proof.
-  intro l; apply leq_pred'; exact _.
 Defined.
 
 (** *** Basic properties of [<] *)
