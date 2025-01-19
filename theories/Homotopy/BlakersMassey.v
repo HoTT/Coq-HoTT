@@ -546,22 +546,15 @@ Definition blakers_massey_po `{Univalence} (m n : trunc_index)
   `{H1 : !IsConnMap m.+1 f} `{H2 : !IsConnMap n.+1 g}
   : IsConnMap (m +2+ n) (pullback_corec (pglue (f:=f) (g:=g))).
 Proof.
+  (** First we convert our [Pushout] to an equivalent [SPushout] over a family [Q]. We can do this since we are canceling by an equivalence on the left. *)
   pose (Q := fun (y : Y) (z : Z) => {x : X & f x = y /\ g x = z}).
   snrapply cancelL_equiv_conn_map.
   1: exact (Pullback (spushl Q) (spushr Q)).
-  { snrapply equiv_pullback.
-    { snrapply equiv_pushout.
-      { unfold Q.
-        nrefine (equiv_sigma_symm _ oE _).
-        nrefine (equiv_functor_sigma_id (fun _ => (equiv_sigma_prod_prod _ _)^-1) oE _).
-        symmetry.
-        rapply equiv_sigma_contr. }
-      1-4: reflexivity. }
-    1-4: reflexivity. }
-  snrapply cancelR_conn_map.
+  1: by snrapply (equiv_pullback (equiv_pushout_spushout _ _)).
+  (** Next, we convert our [X] to the equivalent total space of [Q]. We can do this because an equivalence is connected, and we are canceling on the rigght. *)
+  snrapply (cancelR_conn_map _ (equiv_fun _)).
   1: exact {y : Y & {z : Z & Q y z}}.
-  { apply equiv_fun.
-    unfold Q.
+  { unfold Q.
     symmetry.
     nrefine ((equiv_sigma_prod' _)^-1 oE _).
     nrefine (equiv_sigma_symm _ oE _).
@@ -569,6 +562,7 @@ Proof.
     symmetry.
     rapply equiv_sigma_contr. }
   1: exact _. 
+  (** Next we prove that this composition is homotopic to [spglue Q] in an iterated sigma functor. *) 
   snrapply conn_map_homotopic.
   { snrapply (functor_sigma idmap); intros y.
     snrapply (functor_sigma idmap); intros z.
@@ -587,12 +581,16 @@ Proof.
     lhs nrapply functor_coeq_beta_cglue.
     apply moveR_pM.
     apply concat_1p_p1. }
+  (** A sigma functor is connected if its fibers are. *)
   rapply conn_map_functor_sigma.
   intros y.
   rapply conn_map_functor_sigma.
   revert y.
+  (** We need to swap the order of the truncation index addition. *)
   rewrite trunc_index_add_comm.
+  (** Now we can apply [blakers_massey] for [SPushout]. *)
   nrapply blakers_massey.
+  (** Whats left is to check that the partial total spaces of [Q] are connected, which we get by definition since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
   - intros z.
     snrapply isconnected_equiv'.
     3: by snrapply H2. 
