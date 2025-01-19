@@ -106,18 +106,22 @@ Proof.
   apply cfglue.
 Defined.
 
-(** The cofiber of a surjective map is [0]-connected. *)
-Definition is0connected_cofiber {X Y : Type} (f : X -> Y)
-  {fc : IsConnMap (-1) f} : IsConnected 0 (Cofiber f).
+(** The cofiber of an [n]-conencted map is [n]-connected. *)
+Definition isconnnected_cofiber (n : trunc_index) {X Y : Type} (f : X -> Y)
+  {fc : IsConnMap n f}
+  : IsConnected n (Cofiber f).
 Proof.
-  snrapply (Build_Contr _ (tr (cf_apex f))).
-  rapply Trunc_ind.
-  snrapply cofiber_ind; cbn beta.
-  - intro y; symmetry.
-    pose proof (x := @center _ (fc y)).
-    strip_truncations.
-    apply ap.
-    exact (fiber_to_path_cofiber f y x).
+  apply isconnected_from_elim.
+  intros C H' g.
+  exists (g (cf_apex _)).
+  snrapply cofiber_ind.
+  - rapply (conn_map_elim n f).
+    intros x.
+    exact (ap g (cfglue f x)).
   - exists idpath.
-    intro a; rapply path_ishprop.
+    intros x.
+    lhs snrapply transport_paths_Fl.
+    apply moveR_Vp.
+    rhs nrapply concat_p1.
+    nrapply conn_map_comp.
 Defined.
