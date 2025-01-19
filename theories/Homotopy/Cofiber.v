@@ -22,11 +22,11 @@ Definition cofib {X Y : Type} (f : X -> Y) : Y -> Cofiber f
   := pushr.
 
 (** We have a distinguised point in the cofiber, where the image of [f] is contracted to. *)
-Definition apex {X Y : Type} (f : X -> Y) : Cofiber f
+Definition cf_apex {X Y : Type} (f : X -> Y) : Cofiber f
   := pushl tt.
 
-(** Given an element [x : X], we have the path [leg] from the [f x] to the [apex]. *)
-Definition leg {X Y : Type} (f : X -> Y) (x : X) : cofib f (f x) = apex f
+(** Given an element [x : X], we have the path [cfglue f x] from the [f x] to the [cf_apex]. *)
+Definition cfglue {X Y : Type} (f : X -> Y) (x : X) : cofib f (f x) = cf_apex f
   := (pglue _)^.
 
 (** *** Induction and recursion principles *)
@@ -46,7 +46,7 @@ Defined.
 (** The induction principle is similar, although requries a dependent form of null homotopy. *)
 Definition cofiber_ind {X Y : Type} (f : X -> Y) (P : Cofiber f -> Type)
   (g : forall y, P (cofib f y))
-  (null : exists b, forall x, transport P (leg f x) (g (f x)) = b)
+  (null : exists b, forall x, transport P (cfglue f x) (g (f x)) = b)
   : forall x, P x.
 Proof.
   snrapply Pushout_ind.
@@ -99,18 +99,18 @@ Local Open Scope trunc_scope.
 (** ** Comparison of fibers and cofibers *)
 
 Definition fiber_to_path_cofiber {X Y : Type} (f : X -> Y) (y : Y)
-  : hfiber f y -> cofib f y = apex f.
+  : hfiber f y -> cofib f y = cf_apex f.
 Proof.
   intros [x p].
   lhs nrapply (ap (cofib f) p^).
-  apply leg.
+  apply cfglue.
 Defined.
 
-(** The cofiber of a surjective map is [0]-connected. This will be generalized this later. *)
+(** The cofiber of a surjective map is [0]-connected. *)
 Definition is0connected_cofiber {X Y : Type} (f : X -> Y)
   {fc : IsConnMap (-1) f} : IsConnected 0 (Cofiber f).
 Proof.
-  snrapply (Build_Contr _ (tr (apex f))).
+  snrapply (Build_Contr _ (tr (cf_apex f))).
   rapply Trunc_ind.
   snrapply cofiber_ind; cbn beta.
   - intro y; symmetry.
