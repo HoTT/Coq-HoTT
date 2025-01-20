@@ -1,5 +1,5 @@
 Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.
-Require Import Truncations.Core Modalities.ReflectiveSubuniverse.
+Require Import Truncations.Core Modalities.ReflectiveSubuniverse Modalities.Modality.
 Require Import Algebra.Groups.Group TruncType.
 
 Local Open Scope mc_scope.
@@ -838,20 +838,13 @@ Definition grp_homo_subgroup_image {G H : Group} (f : G $-> H) (J : Subgroup G)
   : subgroup_group J $-> subgroup_image f J
   := functor_subgroup_group f (subgroup_image_in _ _).
 
-(** The restriction map from the subgroup to the image is surjective as expected. *)
+(** The restriction map from the subgroup to the image is surjective as expected, by [conn_map_factor1_image]. *)
 Global Instance issurj_grp_homo_subgroup_image {G H : Group}
   (f : G $-> H) (J : Subgroup G)
-  : IsSurjection (grp_homo_subgroup_image f J).
-Proof.
-  snrapply BuildIsSurjection.
-  intros [x p].
-  strip_truncations; apply tr.
-  exists p.1.
-  rapply path_sigma_hprop.
-  exact p.2.
-Defined.
+  : IsSurjection (grp_homo_subgroup_image f J)
+  := _.
 
-(** An image of a subgroup [J] is included in a subgroup [J] if (and only if) the [J] is included in the preimage of the subgroup [K]. *) 
+(** An image of a subgroup [J] is included in a subgroup [K] if (and only if) [J] is included in the preimage of the subgroup [K]. *)
 Definition subgroup_image_rec {G H : Group}
   (f : G $-> H) {J : Subgroup G} {K : Subgroup H}
   (g : forall x, J x -> K (f x))
