@@ -27,28 +27,18 @@ Defined.
 
 (** ** Index of a subgroup *)
 
-Definition subgroup_index@{i j | i < j} {U : Univalence}
-  (G : Group@{i}) (H : Subgroup@{i i} G)
-  {fin_G : Finite@{i i i} G} {fin_H : Finite@{i i i} H}
+(** TODO: fix the number of universes appearing here. *)
+(** The index of a subgroup is the number of possible cosets of the subgroup. *) 
+Definition subgroup_index {U : Univalence}
+  (G : Group) (H : Subgroup G)
+  {fin_G : Finite G} {fin_H : Finite H}
   : nat.
 Proof.
-  refine (fcard@{i i i} (Quotient@{i i i} (in_cosetL@{i i} H))).
-  (* 54 universes! :'( *) 
-  nrapply finite_quotient
-    @{i i i i i i i i i j
-      i i i i i i i i i i
-      i i i i i i i i i i
-      j i i i i i i i i i
-      i i i i i i j i i i
-      i i i i}.
+  refine (fcard (Quotient (in_cosetL H))).
+  nrapply finite_quotient.
   1-5: exact _.
   intros x y.
-  (* 33 universes! :'( *) 
-  pose (dec_H := detachable_finite_subset
-    @{i i i i i i i i j i
-      i i i i i i i i i i
-      i i i i i i i i i i
-      i i i} H).
+  pose (dec_H := detachable_finite_subset H).
   apply dec_H.
 Defined.
 
