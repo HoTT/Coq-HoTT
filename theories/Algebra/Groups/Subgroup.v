@@ -836,7 +836,7 @@ Definition subgroup_image_in {G H : Group} (f : G $-> H) (J : Subgroup G)
 
 (** Converting the subgroups to groups, we get the expected surjective (epi) restriction homomorphism. *)
 Definition grp_homo_subgroup_image {G H : Group} (f : G $-> H) (J : Subgroup G)
-  : subgroup_group J $-> subgroup_image f J
+  : subgroup_group J $-> subgroup_group (subgroup_image f J)
   := functor_subgroup_group f (subgroup_image_in _ _).
 
 (** The restriction map from the subgroup to the image is surjective as expected, by [conn_map_factor1_image]. *)
