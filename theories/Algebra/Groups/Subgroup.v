@@ -1,5 +1,6 @@
 Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.
-Require Import Truncations.Core Modalities.ReflectiveSubuniverse Modalities.Modality.
+Require Import Truncations.Core Modalities.Modality.
+Require Export Modalities.Modality (conn_map_factor1_image).
 Require Import Algebra.Groups.Group TruncType.
 
 Local Open Scope mc_scope.
@@ -839,7 +840,7 @@ Definition grp_homo_subgroup_image {G H : Group} (f : G $-> H) (J : Subgroup G)
   := functor_subgroup_group f (subgroup_image_in _ _).
 
 (** The restriction map from the subgroup to the image is surjective as expected, by [conn_map_factor1_image]. *)
-Global Instance issurj_grp_homo_subgroup_image {G H : Group}
+Definition issurj_grp_homo_subgroup_image {G H : Group}
   (f : G $-> H) (J : Subgroup G)
   : IsSurjection (grp_homo_subgroup_image f J)
   := _.
