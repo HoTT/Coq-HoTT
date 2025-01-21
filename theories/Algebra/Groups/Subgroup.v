@@ -227,6 +227,12 @@ Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
   : IsEmbedding (subgroup_incl H)
   := fun _ => istrunc_equiv_istrunc _ (hfiber_fibration _ _).
 
+(** Restriction of a group homomorphism to a subgroup. *)
+Definition grp_homo_restr {G H : Group} (f : G $-> H) (K : Subgroup G)
+  : subgroup_group K $-> H
+  := f $o subgroup_incl _.
+
+(** Corestriction of a group homomorphism to a subgroup. *)
 Definition subgroup_corec {G H : Group} {K : Subgroup H}
   (f : G $-> H) (g : forall x, K (f x))
   : G $-> subgroup_group K.
@@ -238,10 +244,11 @@ Proof.
     snrapply grp_homo_op.
 Defined.
 
+(** Functoriality on subgroups. *)
 Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H}
   (f : G $-> H) (g : forall x, J x -> K (f x))
   : subgroup_group J $-> subgroup_group K
-  := subgroup_corec (f $o subgroup_incl _) (sig_ind _ g).
+  := subgroup_corec (grp_homo_restr f J) (sig_ind _ g).
 
 Definition grp_iso_subgroup_group {G H : Group@{i}}
   {J : Subgroup@{i i} G} (K : Subgroup@{i i} H)
@@ -262,11 +269,6 @@ Proof.
     rapply path_sigma_hprop.
     nrapply eissect.
 Defined.
-
-(** Restriction of a group homomorphism to a subgroup. *)
-Definition grp_homo_restr {G H : Group} (f : G $-> H) (K : Subgroup G)
-  : subgroup_group K $-> H
-  := f $o subgroup_incl _.
 
 (** ** Cosets of subgroups *)
 
