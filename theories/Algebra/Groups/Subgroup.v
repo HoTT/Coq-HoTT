@@ -392,8 +392,6 @@ Proof.
     apply equiv_subgroup_op_inv.
 Defined.
 
-(** The sigma type of any two right cosets are equivalent. *)
-
 (** A normal subgroup is a subgroup closed under conjugation. *)
 Class IsNormalSubgroup {G : Group} (N : Subgroup G)
   := isnormal : forall {x y}, N (x * y) -> N (y * x).

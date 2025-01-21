@@ -124,11 +124,10 @@ Section Cosets.
     nrapply finite_quotient.
     1-5: exact _.
     intros x y.
-    pose (dec_H := detachable_finite_subset H).
-    apply dec_H.
+    apply (detachable_finite_subset H).
   Defined.
 
-  (** The index of a subgroup is the number of possible cosets of the subgroup. *) 
+  (** The index of a subgroup is the number of cosets of the subgroup. *)
   Definition subgroup_index `{Univalence, Finite G, Finite H} : nat
     := fcard LeftCoset.
 
