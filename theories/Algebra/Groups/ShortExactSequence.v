@@ -1,7 +1,7 @@
 Require Import Basics Types.
 Require Import Truncations.Core.
 Require Import WildCat.Core Pointed.
-Require Import Groups.Group Groups.Subgroup Groups.Kernel.
+Require Import Groups.Group Groups.Subgroup.
 Require Import Homotopy.ExactSequence Modalities.Identity.
 
 (** * Complexes of groups *)

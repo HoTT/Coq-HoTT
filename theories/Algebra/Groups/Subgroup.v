@@ -629,6 +629,19 @@ Global Instance ismaximalsubgroup_maximalsubgroup {G : Group}
   : IsMaximalSubgroup (maximal_subgroup G)
   := fun g => tt.
 
+(** *** Preimage subgroup *)
+
+(** The preimage of a normal subgroup is again normal. *)
+Global Instance isnormal_subgroup_preimage {G H : Group} (f : G $-> H)
+  (N : Subgroup H) `{!IsNormalSubgroup N}
+  : IsNormalSubgroup (subgroup_preimage f N).
+Proof.
+  intros x y Nfxy; simpl.
+  nrefine (transport N (grp_homo_op _ _ _)^ _).
+  apply isnormal.
+  exact (transport N (grp_homo_op _ _ _) Nfxy).
+Defined.
+
 (** *** Subgroup intersection *)
 
 (** Intersection of two subgroups *)
@@ -960,4 +973,79 @@ Proof.
   rewrite <- grp_homo_conj.
   nrapply subgroup_image_in.
   by rapply isnormal_conj.
+Defined.
+
+(** ** Kernels of group homomorphisms *)
+
+Definition grp_kernel {G H : Group} (f : G $-> H)
+  : NormalSubgroup G
+  := Build_NormalSubgroup G (subgroup_preimage f (trivial_subgroup _)) _.
+
+(** Corecursion principle for group kernels *)
+Definition grp_kernel_corec {A B G : Group} {f : A $-> B}
+  (g : G $-> A) (h : f $o g == grp_homo_const)
+  : G $-> grp_kernel f.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact (fun x:G => (g x; h x)).
+  - intros x x'.
+    apply path_sigma_hprop; cbn.
+    apply grp_homo_op.
+Defined.
+
+Definition equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
+  : (G $-> grp_kernel f) <~> (exists g : G $-> A, f $o g == grp_homo_const).
+Proof.
+  srapply equiv_adjointify.
+  - intro k.
+    srefine (_ $o k; _).
+    1: apply subgroup_incl.
+    intro x; cbn.
+    exact (k x).2.
+  - intros [g p].
+    exact (grp_kernel_corec _ p).
+  - intros [g p].
+    apply path_sigma_hprop; unfold pr1.
+    apply equiv_path_grouphomomorphism; intro; reflexivity.
+  - intro k.
+    apply equiv_path_grouphomomorphism; intro x.
+    apply path_sigma_hprop; reflexivity.
+Defined.
+
+(** The underlying map of a group homomorphism with a trivial kernel is an embedding. *)
+Global Instance isembedding_istrivial_kernel {G H : Group} (f : G $-> H)
+  (triv : IsTrivialGroup (grp_kernel f))
+  : IsEmbedding f.
+Proof.
+  intros h.
+  apply hprop_allpath.
+  intros [x p] [y q].
+  srapply path_sigma_hprop; unfold pr1.
+  apply grp_moveL_1M.
+  apply triv; simpl.
+  rhs_V nrapply (grp_inv_r h).
+  lhs nrapply grp_homo_op.
+  nrapply (ap011 (.*.) p).
+  lhs nrapply grp_homo_inv.
+  exact (ap (^) q).
+Defined.
+
+(** If the underlying map of a group homomorphism is an embedding then the kernel is trivial. *)
+Definition istrivial_kernel_isembedding {G H : Group} (f : G $-> H)
+  (emb : IsEmbedding f)
+  : IsTrivialGroup (grp_kernel f).
+Proof.
+  intros g p.
+  rapply (isinj_embedding f).
+  exact (p @ (grp_homo_unit f)^).
+Defined.
+Global Hint Immediate istrivial_kernel_isembedding : typeclass_instances.
+
+(** Characterisation of group embeddings *)
+Proposition equiv_istrivial_kernel_isembedding `{F : Funext}
+  {G H : Group} (f : G $-> H)
+  : IsTrivialGroup (grp_kernel f) <~> IsEmbedding f.
+Proof.
+  apply equiv_iff_hprop_uncurried.
+  split; exact _.
 Defined.

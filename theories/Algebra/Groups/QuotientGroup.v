@@ -3,7 +3,6 @@ Require Import Truncations.Core.
 Require Import Algebra.Congruence.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
-Require Export Algebra.Groups.Kernel.
 Require Export Colimits.Quotient.
 Require Import HSet.
 Require Import Spaces.Finite.Finite.
