@@ -25,23 +25,6 @@ Proof.
   - exact _.
 Defined.
 
-(** ** Index of a subgroup *)
-
-(** TODO: fix the number of universes appearing here. *)
-(** The index of a subgroup is the number of possible cosets of the subgroup. *) 
-Definition subgroup_index {U : Univalence}
-  (G : Group) (H : Subgroup G)
-  {fin_G : Finite G} {fin_H : Finite H}
-  : nat.
-Proof.
-  refine (fcard (Quotient (in_cosetL H))).
-  nrapply finite_quotient.
-  1-5: exact _.
-  intros x y.
-  pose (dec_H := detachable_finite_subset H).
-  apply dec_H.
-Defined.
-
 (** ** Lagrange's theorem *)
 
 (** Lagrange's Theorem - Given a finite group [G] and a finite subgroup [H] of [G], the order of [H] divides the order of [G].
@@ -59,10 +42,7 @@ Proof.
   srapply Quotient_ind_hprop; simpl.
   intros x.
   apply fcard_equiv'.
-  snrapply equiv_functor_sigma.
-  2: apply (isequiv_group_left_op x^).
-  1: exact (fun _ => idmap).
-  exact _.
+  apply equiv_sigma_in_cosetL_subgroup.
 Defined.
 
 (** As a corollary, the index of a subgroup is the order of the group divided by the order of the subgroup. *)
@@ -80,5 +60,5 @@ Definition fcard_grp_quotient {U : Univalence}
   (fin_G : Finite G) (fin_H : Finite H)
   : fcard (QuotientGroup G H) = fcard G / fcard H.
 Proof.
-  apply subgroup_index_fcard_div.
+  rapply subgroup_index_fcard_div.
 Defined.

@@ -139,8 +139,15 @@ Proof.
   apply subgroup_in_inv'.
 Defined.
 
-Definition equiv_subgroup_inverse {G : Group} (H : Subgroup G) (x : G)
+Definition equiv_subgroup_inv {G : Group} (H : Subgroup G) (x : G)
   : H x <~> H x^ := Build_Equiv _ _ (subgroup_in_inv H x) _.
+
+Definition equiv_subgroup_op_inv {G : Group} (H : Subgroup G) (x y : G)
+  : H (x * y^) <~> H (y * x^).
+Proof.
+  nrefine (_ oE equiv_subgroup_inv _ _).
+  by rewrite grp_inv_op, grp_inv_inv.
+Defined.
 
 (** The group given by a subgroup *)
 Definition subgroup_group {G : Group} (H : Subgroup G) : Group.
@@ -365,6 +372,27 @@ Proof.
   srapply equiv_iff_hprop.
   all: by intro.
 Defined.
+
+(** The sigma type of a left coset is equivalent to the sigma type of the subgroup. *)
+Definition equiv_sigma_in_cosetL_subgroup (G : Group) (H : Subgroup G) (x : G)
+  : sig (in_cosetL H x) <~> sig H.
+Proof.
+  snrapply equiv_functor_sigma'.
+  - rapply (Build_Equiv _ _ (x^ *.)).
+  - reflexivity.
+Defined.
+
+(** The sigma type of a right coset is equivalent to the sigma type of the subgroup. *)
+Definition equiv_sigma_in_cosetR_subgroup (G : Group) (H : Subgroup G) (x : G)
+  : sig (in_cosetR H x) <~> sig H.
+Proof.
+  snrapply equiv_functor_sigma'.
+  - rapply (Build_Equiv _ _ (.* x ^)).
+  - simpl; intros y.
+    apply equiv_subgroup_op_inv.
+Defined.
+
+(** The sigma type of any two right cosets are equivalent. *)
 
 (** A normal subgroup is a subgroup closed under conjugation. *)
 Class IsNormalSubgroup {G : Group} (N : Subgroup G)
