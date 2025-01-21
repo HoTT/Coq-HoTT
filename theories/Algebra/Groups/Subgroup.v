@@ -227,16 +227,21 @@ Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
   : IsEmbedding (subgroup_incl H)
   := fun _ => istrunc_equiv_istrunc _ (hfiber_fibration _ _).
 
-Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H}
-  (f : G $-> H) (g : forall x, J x -> K (f x))
-  : subgroup_group J $-> subgroup_group K.
+Definition subgroup_corec {G H : Group} {K : Subgroup H}
+  (f : G $-> H) (g : forall x, K (f x))
+  : G $-> subgroup_group K.
 Proof.
   snrapply Build_GroupHomomorphism.
-  - exact (functor_sigma f g).
+  - exact (fun x => (f x; g x)).
   - intros x y.
     rapply path_sigma_hprop.
     snrapply grp_homo_op.
 Defined.
+
+Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H}
+  (f : G $-> H) (g : forall x, J x -> K (f x))
+  : subgroup_group J $-> subgroup_group K
+  := subgroup_corec (f $o subgroup_incl _) (sig_ind _ g).
 
 Definition grp_iso_subgroup_group {G H : Group@{i}}
   {J : Subgroup@{i i} G} (K : Subgroup@{i i} H)
@@ -861,23 +866,12 @@ Proof.
 Defined.
 
 Definition grp_image_in {G H : Group} (f : G $-> H)
-  : forall x, grp_image f (f x).
-Proof.
-  intros x.
-  apply tr.
-  by exists x.
-Defined.
+  : forall x, grp_image f (f x)
+  := fun x => tr (x; idpath).
 
-Definition grp_homo_image_in {G H : Group} (f : G $-> H) : G $-> grp_image f.
-Proof.
-  snrapply Build_GroupHomomorphism.
-  - intros x.
-    exists (f x).
-    apply grp_image_in.
-  - intros x y.
-    rapply path_sigma_hprop; simpl.
-    apply grp_homo_op.
-Defined.
+Definition grp_homo_image_in {G H : Group} (f : G $-> H)
+  : G $-> grp_image f
+  := subgroup_corec f (grp_image_in f).
 
 (** ** Image of a group embedding *)
 
@@ -901,10 +895,8 @@ Definition grp_image_in_embedding {G H : Group} (f : G $-> H) `{IsEmbedding f}
   : GroupIsomorphism G (grp_image_embedding f).
 Proof.
   snrapply Build_GroupIsomorphism.
-  - snrapply Build_GroupHomomorphism.
-    + intro x.
-      by exists (f x), x.
-    + cbn; grp_auto.
+  - snrapply (subgroup_corec f).
+    exact (fun x => (x; idpath)).
   - apply isequiv_surj_emb.
     2: apply (cancelL_isembedding (g:=pr1)).
     intros [b [a p]]; cbn.
@@ -1002,11 +994,7 @@ Definition grp_kernel_corec {A B G : Group} {f : A $-> B}
   (g : G $-> A) (h : f $o g == grp_homo_const)
   : G $-> grp_kernel f.
 Proof.
-  snrapply Build_GroupHomomorphism.
-  - exact (fun x:G => (g x; h x)).
-  - intros x x'.
-    apply path_sigma_hprop; cbn.
-    apply grp_homo_op.
+  snrapply (subgroup_corec g); exact h.
 Defined.
 
 Definition equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
