@@ -1,6 +1,6 @@
 Require Import Basics Types Truncations.Core.
 Require Import WildCat.Core HSet.
-Require Export Algebra.Groups.Image Algebra.Groups.QuotientGroup.
+Require Export Algebra.Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
 
 Local Open Scope mc_scope.

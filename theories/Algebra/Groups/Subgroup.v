@@ -1,7 +1,7 @@
 Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.
 Require Import Truncations.Core Modalities.Modality.
 Require Export Modalities.Modality (conn_map_factor1_image).
-Require Import Algebra.Groups.Group TruncType.
+Require Import Algebra.Groups.Group Universes.TruncType Universes.HSet.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
@@ -215,6 +215,11 @@ Proof.
     rapply path_sigma_hprop.
     nrapply eissect.
 Defined.
+
+(** Restriction of a group homomorphism to a subgroup. *)
+Definition grp_homo_restr {G H : Group} (f : G $-> H) (K : Subgroup G)
+  : subgroup_group K $-> H
+  := f $o subgroup_incl _.
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
 Definition subgroup_preimage {G H : Group} (f : G $-> H) (S : Subgroup H)
@@ -810,15 +815,12 @@ Definition equiv_subgroup_group {G : Group} (H1 H2 : Subgroup G)
   : H1 = H2 -> GroupIsomorphism H1 H2
   := ltac:(intros []; exact grp_iso_id).
 
-(** ** Image of a subgroup under a group homomoprhism *)
+(** ** Image of a group homomorphism *)
 
-(** The image of a subgroup under group homomorphism. *) 
-Definition subgroup_image {G H : Group} (f : G $-> H) : Subgroup G -> Subgroup H.
+(** The image of a group homomorphism between groups is a subgroup. *)
+Definition grp_image {G H : Group} (f : G $-> H) : Subgroup H.
 Proof.
-  intros J.
-  snrapply Build_Subgroup'.
-  - exact (fun b => hexists (fun (j : J) => f j.1 = b)).
-  - exact _.
+  srapply (Build_Subgroup' (fun y => hexists (fun x => f x = y))); cbn beta.
   - apply tr.
     exists 1.
     apply grp_homo_unit.
@@ -828,6 +830,78 @@ Proof.
     lhs nrapply grp_homo_op; f_ap.
     lhs nrapply grp_homo_inv; f_ap.
 Defined.
+
+Definition grp_image_in {G H : Group} (f : G $-> H)
+  : forall x, grp_image f (f x).
+Proof.
+  intros x.
+  apply tr.
+  by exists x.
+Defined.
+
+Definition grp_homo_image_in {G H : Group} (f : G $-> H) : G $-> grp_image f.
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - intros x.
+    exists (f x).
+    apply grp_image_in.
+  - intros x y.
+    rapply path_sigma_hprop; simpl.
+    apply grp_homo_op.
+Defined.
+
+(** ** Image of a group embedding *)
+
+(** When the homomorphism is an embedding, we don't need to truncate. *)
+Definition grp_image_embedding {G H : Group} (f : G $-> H) `{IsEmbedding f}
+  : Subgroup H.
+Proof.
+  snrapply (Build_Subgroup _ (hfiber f)).
+  repeat split.
+  - exact _.
+  - exact (mon_unit; grp_homo_unit f).
+  - intros x y [a []] [b []].
+    exists (a * b).
+    apply grp_homo_op.
+  - intros b [a []].
+    exists a^.
+    apply grp_homo_inv.
+Defined.
+
+Definition grp_image_in_embedding {G H : Group} (f : G $-> H) `{IsEmbedding f}
+  : GroupIsomorphism G (grp_image_embedding f).
+Proof.
+  snrapply Build_GroupIsomorphism.
+  - snrapply Build_GroupHomomorphism.
+    + intro x.
+      by exists (f x), x.
+    + cbn; grp_auto.
+  - apply isequiv_surj_emb.
+    2: apply (cancelL_isembedding (g:=pr1)).
+    intros [b [a p]]; cbn.
+    rapply contr_inhabited_hprop.
+    refine (tr (a; _)).
+    srapply path_sigma'.
+    1: exact p.
+    refine (transport_sigma' _ _ @ _).
+    by apply path_sigma_hprop.
+Defined.
+
+(** The image of a surjective group homomorphism is the maximal subgroup. *)
+Global Instance ismaximal_image_issurj {G H : Group}
+  (f : G $-> H) `{IsSurjection f}
+  : IsMaximalSubgroup (grp_image f).
+Proof.
+  rapply conn_map_elim.
+  apply grp_image_in.
+Defined.
+
+(** ** Image of a subgroup under a group homomoprhism *)
+
+(** The image of a subgroup under group homomorphism. *) 
+Definition subgroup_image {G H : Group} (f : G $-> H)
+  : Subgroup G -> Subgroup H
+  := fun K => grp_image (grp_homo_restr f K).
 
 (** By definition, values of [f x] where [x] is in a subgroup [J] are in the image of [J] under [f]. *)
 Definition subgroup_image_in {G H : Group} (f : G $-> H) (J : Subgroup G)
