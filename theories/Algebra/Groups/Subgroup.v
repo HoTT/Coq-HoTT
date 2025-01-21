@@ -10,6 +10,8 @@ Generalizable Variables G H A B C N f g.
 
 (** * Subgroups *)
 
+(** ** Definition of being a subgroup *)
+
 (** A subgroup H of a group G is a predicate (i.e. an hProp-valued type family) on G which is closed under the group operations. The group underlying H is given by the total space { g : G & H g }, defined in [subgroup_group] below. *)
 Class IsSubgroup {G : Group} (H : G -> Type) := {
   issubgroup_predicate : forall x, IsHProp (H x) ;
@@ -19,6 +21,8 @@ Class IsSubgroup {G : Group} (H : G -> Type) := {
 }.
 
 Global Existing Instance issubgroup_predicate.
+
+(** Basic properties of subgroups *)
 
 (** Smart constructor for subgroups.  *)
 Definition Build_IsSubgroup' {G : Group}
@@ -102,6 +106,8 @@ Proof.
   exact (istrunc_equiv_istrunc _ (issig_issubgroup H)).
 Defined.
 
+(** ** Definition of subgroup *) 
+
 (** The type (set) of subgroups of a group G. *)
 Record Subgroup (G : Group) := {
   subgroup_pred : G -> Type ;
@@ -110,6 +116,11 @@ Record Subgroup (G : Group) := {
 
 Coercion subgroup_pred : Subgroup >-> Funclass.
 Global Existing Instance subgroup_issubgroup.
+
+Definition issig_subgroup {G : Group} : _ <~> Subgroup G
+  := ltac:(issig).
+
+(** ** Basics properties of subgroups *)
 
 Definition Build_Subgroup' {G : Group}
   (H : G -> Type) `{forall x, IsHProp (H x)}
@@ -150,6 +161,38 @@ Proof.
   by rewrite grp_inv_op, grp_inv_inv.
 Defined.
 
+(** Paths between subgroups correspond to homotopies between the underlying predicates. *) 
+Proposition equiv_path_subgroup `{F : Funext} {G : Group} (H K : Subgroup G)
+  : (H == K) <~> (H = K).
+Proof.
+  refine ((equiv_ap' issig_subgroup^-1%equiv _ _)^-1%equiv oE _); cbn.
+  refine (equiv_path_sigma_hprop _ _ oE _); cbn.
+  apply equiv_path_arrow.
+Defined.
+
+Proposition equiv_path_subgroup' `{U : Univalence} {G : Group} (H K : Subgroup G)
+  : (forall g:G, H g <-> K g) <~> (H = K).
+Proof.
+  refine (equiv_path_subgroup _ _ oE _).
+  apply equiv_functor_forall_id; intro g.
+  exact equiv_path_iff_ishprop.
+Defined.
+
+Global Instance ishset_subgroup `{Univalence} {G : Group} : IsHSet (Subgroup G).
+Proof.
+  nrefine (istrunc_equiv_istrunc _ issig_subgroup).
+  nrefine (istrunc_equiv_istrunc _ (equiv_functor_sigma_id _)).
+  - intro P; apply issig_issubgroup.
+  - nrefine (istrunc_equiv_istrunc _ (equiv_sigma_assoc' _ _)^-1%equiv).
+    nrapply istrunc_sigma.
+    2: intros []; apply istrunc_hprop.
+    nrefine (istrunc_equiv_istrunc
+               _ (equiv_sig_coind (fun g:G => Type) (fun g x => IsHProp x))^-1%equiv).
+    apply istrunc_forall.
+Defined.
+
+(** ** Underlying group of a subgroup *)
+
 (** The group given by a subgroup *)
 Definition subgroup_group {G : Group} (H : Subgroup G) : Group.
 Proof.
@@ -170,6 +213,7 @@ Defined.
 
 Coercion subgroup_group : Subgroup >-> Group.
 
+(** The underlying group of a subgroup of [G] has an inclusion map into [G]. *) 
 Definition subgroup_incl {G : Group} (H : Subgroup G)
   : subgroup_group H $-> G.
 Proof.
@@ -178,12 +222,10 @@ Proof.
   hnf; reflexivity.
 Defined.
 
+(** The inclusion map is an embedding. *)
 Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
   : IsEmbedding (subgroup_incl H)
   := fun _ => istrunc_equiv_istrunc _ (hfiber_fibration _ _).
-
-Definition issig_subgroup {G : Group} : _ <~> Subgroup G
-  := ltac:(issig).
 
 Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H}
   (f : G $-> H) (g : forall x, J x -> K (f x))
@@ -221,35 +263,7 @@ Definition grp_homo_restr {G H : Group} (f : G $-> H) (K : Subgroup G)
   : subgroup_group K $-> H
   := f $o subgroup_incl _.
 
-(** Paths between subgroups correspond to homotopies between the underlying predicates. *) 
-Proposition equiv_path_subgroup `{F : Funext} {G : Group} (H K : Subgroup G)
-  : (H == K) <~> (H = K).
-Proof.
-  refine ((equiv_ap' issig_subgroup^-1%equiv _ _)^-1%equiv oE _); cbn.
-  refine (equiv_path_sigma_hprop _ _ oE _); cbn.
-  apply equiv_path_arrow.
-Defined.
-
-Proposition equiv_path_subgroup' `{U : Univalence} {G : Group} (H K : Subgroup G)
-  : (forall g:G, H g <-> K g) <~> (H = K).
-Proof.
-  refine (equiv_path_subgroup _ _ oE _).
-  apply equiv_functor_forall_id; intro g.
-  exact equiv_path_iff_ishprop.
-Defined.
-
-Global Instance ishset_subgroup `{Univalence} {G : Group} : IsHSet (Subgroup G).
-Proof.
-  nrefine (istrunc_equiv_istrunc _ issig_subgroup).
-  nrefine (istrunc_equiv_istrunc _ (equiv_functor_sigma_id _)).
-  - intro P; apply issig_issubgroup.
-  - nrefine (istrunc_equiv_istrunc _ (equiv_sigma_assoc' _ _)^-1%equiv).
-    nrapply istrunc_sigma.
-    2: intros []; apply istrunc_hprop.
-    nrefine (istrunc_equiv_istrunc
-               _ (equiv_sig_coind (fun g:G => Type) (fun g x => IsHProp x))^-1%equiv).
-    apply istrunc_forall.
-Defined.
+(** ** Cosets of subgroups *)
 
 Section Cosets.
 
@@ -325,7 +339,7 @@ Section Cosets.
 
 End Cosets.
 
-(** Identities related to the left and right cosets. *)
+(** ** Properties of left and right cosets *)
 
 Definition in_cosetL_unit {G : Group} {N : Subgroup G}
   : forall x y, in_cosetL N (x^ * y) mon_unit <~> in_cosetL N x y.
@@ -381,6 +395,8 @@ Proof.
   - simpl; intros y.
     apply equiv_subgroup_op_inv.
 Defined.
+
+(** ** Normal subgroups *)
 
 (** A normal subgroup is a subgroup closed under conjugation. *)
 Class IsNormalSubgroup {G : Group} (N : Subgroup G)
@@ -497,7 +513,7 @@ Proof.
   exact p.
 Defined.
 
-(** *** Trivial subgroup *)
+(** ** Trivial subgroup *)
 
 (** The trivial subgroup of a group [G]. *)
 Definition trivial_subgroup G : Subgroup G.
@@ -571,7 +587,7 @@ Proof.
   1,2: apply istrivial_iff_grp_iso_trivial; exact _.
 Defined.
 
-(** *** Maximal Subgroups *)
+(** ** Maximal Subgroups *)
 
 (** Every group is a (maximal) subgroup of itself. *)
 Definition maximal_subgroup G : Subgroup G.
@@ -642,7 +658,7 @@ Proof.
   exact (transport N (grp_homo_op _ _ _) Nfxy).
 Defined.
 
-(** *** Subgroup intersection *)
+(** ** Subgroup intersection *)
 
 (** Intersection of two subgroups *)
 Definition subgroup_intersection {G : Group} (H K : Subgroup G) : Subgroup G.
@@ -796,7 +812,7 @@ Definition normalsubgroup_product {G : Group} (H K : NormalSubgroup G)
   : NormalSubgroup G
   := Build_NormalSubgroup G (subgroup_product H K) _.
 
-(* **** Paths between generated subgroups *)
+(* *** Paths between generated subgroups *)
 
 (* This gets used twice in [path_subgroup_generated], so we factor it out here. *)
 Local Lemma path_subgroup_generated_helper {G : Group}
