@@ -244,6 +244,24 @@ Proof.
     snrapply grp_homo_op.
 Defined.
 
+(** Corestriction is an equivalence on group homomorphisms. *)
+Definition equiv_subgroup_corec {F : Funext}
+  (G : Group) {H : Group} (K : Subgroup H)
+  : (exists (f : G $-> H), forall x, K (f x)) <~> (G $-> subgroup_group K).
+Proof.
+  snrapply equiv_adjointify.
+  - exact (sig_rec subgroup_corec).
+  - intros g.
+    exists (subgroup_incl _ $o g).
+    intros x.
+    exact (g x).2.
+  - intros g.
+    by snrapply equiv_path_grouphomomorphism.
+  - intros [f p].
+    rapply path_sigma_hprop.
+    by snrapply equiv_path_grouphomomorphism.
+Defined.
+
 (** Functoriality on subgroups. *)
 Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H}
   (f : G $-> H) (g : forall x, J x -> K (f x))
@@ -1000,23 +1018,8 @@ Proof.
 Defined.
 
 Definition equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
-  : (G $-> grp_kernel f) <~> (exists g : G $-> A, f $o g == grp_homo_const).
-Proof.
-  srapply equiv_adjointify.
-  - intro k.
-    srefine (_ $o k; _).
-    1: apply subgroup_incl.
-    intro x; cbn.
-    exact (k x).2.
-  - intros [g p].
-    exact (grp_kernel_corec _ p).
-  - intros [g p].
-    apply path_sigma_hprop; unfold pr1.
-    apply equiv_path_grouphomomorphism; intro; reflexivity.
-  - intro k.
-    apply equiv_path_grouphomomorphism; intro x.
-    apply path_sigma_hprop; reflexivity.
-Defined.
+  : (G $-> grp_kernel f) <~> (exists g : G $-> A, f $o g == grp_homo_const)
+  := (equiv_subgroup_corec G (grp_kernel f))^-1.
 
 (** The underlying map of a group homomorphism with a trivial kernel is an embedding. *)
 Global Instance isembedding_istrivial_kernel {G H : Group} (f : G $-> H)
