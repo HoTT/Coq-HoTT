@@ -116,6 +116,7 @@ Section Cosets.
   
   Definition LeftCoset := G / in_cosetL H.
 
+  (** TODO: Way too many universes, needs fixing *)
   (** The set of left cosets of a finite subgroup of a finite group is finite. *)
   Global Instance finite_leftcoset `{Univalence, Finite G, Finite H}
     : Finite LeftCoset.
@@ -128,7 +129,7 @@ Section Cosets.
   Defined.
 
   (** The index of a subgroup is the number of possible cosets of the subgroup. *) 
-  Definition subgroup_index `{Univalence, Finite G,  Finite H} : nat
+  Definition subgroup_index `{Univalence, Finite G, Finite H} : nat
     := fcard LeftCoset.
 
   Definition RightCoset := G / in_cosetR H.
