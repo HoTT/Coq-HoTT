@@ -64,6 +64,6 @@ Definition fcard_grp_quotient {U : Univalence} (G : Group) (H : NormalSubgroup G
   (fin_G : Finite G) (fin_H : Finite H)
   : fcard (QuotientGroup G H) = fcard G / fcard H.
 Proof.
-  rapply nat_div_moveR_nV.
+  rapply nat_div_moveL_nV.
   apply divides_fcard_subgroup.
 Defined.

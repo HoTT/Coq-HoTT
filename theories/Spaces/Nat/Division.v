@@ -632,7 +632,7 @@ Proof.
 Defined.
 
 (** We can move a divisor from the right to become a factor on the left of an equation. *)
-Definition nat_div_moveR_nV n m k : 0 < k -> n * k = m -> n = m / k.
+Definition nat_div_moveL_nV n m k : 0 < k -> n * k = m -> n = m / k.
 Proof.
   intros H p.
   rewrite <- p.
