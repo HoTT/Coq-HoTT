@@ -3,14 +3,26 @@ Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
 Require Import Spaces.Finite.Finite.
-Require Import Spaces.Nat.Core.
+Require Import Spaces.Nat.Core Spaces.Nat.Division.
+Require Import Truncations.Core.
 
 (** ** Lagrange's theorem *)
 
-Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope nat_scope.
 
+(** TODO: move to file about finite groups *)
+(** The order of a group is strictly positive. *)
+Global Instance lt_zero_fcard_grp (G : Group) (fin_G : Finite G) : 0 < fcard G.
+Proof.
+  pose proof (merely_equiv_fin G) as f.
+  strip_truncations.
+  destruct (fcard G).
+  - contradiction (f mon_unit).
+  - exact _.
+Defined.
+
+(** TODO: move to file about finite groups *)
 Definition subgroup_index {U : Univalence} (G : Group) (H : Subgroup G)
   (fin_G : Finite G) (fin_H : Finite H)
   : nat.
@@ -23,10 +35,12 @@ Proof.
   apply dec_H.
 Defined.
 
-(** Given a finite group G and a finite subgroup H of G, the order of H divides the order of G. Note that constructively, a subgroup of a finite group cannot be shown to be finite without exlcluded middle. We therefore have to assume it is. This in turn implies that the subgroup is decidable. *)
-Theorem lagrange {U : Univalence} (G : Group) (H : Subgroup G)
+(** Lagrange's Theorem - Given a finite group [G] and a finite subgroup [H] of [G], the order of [H] divides the order of [G].
+
+Note that constructively, a subgroup of a finite group cannot be shown to be finite without excluded middle. We therefore have to assume it is. This in turn implies that the subgroup is decidable. *)
+Definition divides_fcard_subgroup {U : Univalence} (G : Group) (H : Subgroup G)
   (fin_G : Finite G) (fin_H : Finite H)
-  : exists d, d * (fcard H) = fcard G.
+  : (fcard H | fcard G).
 Proof.
   exists (subgroup_index G H _ _).
   symmetry.
@@ -45,9 +59,11 @@ Proof.
   exact _.
 Defined.
 
-Corollary lagrange_normal {U : Univalence} (G : Group) (H : NormalSubgroup G)
+(** As a corollary, we can show that the order of the quotient group [G/H] is the order of [G] divided by the order of [H]. *)
+Definition fcard_grp_quotient {U : Univalence} (G : Group) (H : NormalSubgroup G)
   (fin_G : Finite G) (fin_H : Finite H)
-  : fcard (QuotientGroup G H) * fcard H = fcard G.
+  : fcard (QuotientGroup G H) = fcard G / fcard H.
 Proof.
-  apply lagrange.
+  rapply nat_div_moveR_nV.
+  apply divides_fcard_subgroup.
 Defined.
