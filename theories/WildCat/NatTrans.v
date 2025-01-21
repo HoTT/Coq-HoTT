@@ -176,7 +176,7 @@ Arguments Build_NatTrans {A B isgraph_A isgraph_B is2graph_B is01cat_B is1cat_B
 
 Global Existing Instance is1natural_nattrans.
 
-Hint Mode is1natural_nattrans + + + + + + + + + + + + : typeclass_instances.
+Hint Mode is1natural_nattrans - - - - - - - - - - + + : typeclass_instances.
 
 Definition issig_NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
   {ff : Is0Functor F} {fg : Is0Functor G}
