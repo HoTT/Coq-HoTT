@@ -6,8 +6,8 @@ Require Import Spaces.Finite.Finite.
 Require Import Spaces.Nat.Core Spaces.Nat.Division.
 Require Import Truncations.Core.
 
-Local Open Scope mc_mult_scope.
 Local Open Scope nat_scope.
+Local Open Scope mc_mult_scope.
 
 Set Universe Minimization ToSet.
 
@@ -66,15 +66,12 @@ Proof.
   refine (fcard_quotient (in_cosetL H) @ _).
   refine (_ @ finadd_const _ _).
   apply ap, path_forall.
-  srapply Quotient_ind_hprop.
-  simpl. (** simpl is better than cbn here *)
+  srapply Quotient_ind_hprop; simpl.
   intros x.
   apply fcard_equiv'.
-  (** Now we must show that cosets are all equivalent as types. *)
-  simpl.
   snrapply equiv_functor_sigma.
   2: apply (isequiv_group_left_op x^).
-  1: hnf; trivial.
+  1: exact (fun _ => idmap).
   exact _.
 Defined.
 
