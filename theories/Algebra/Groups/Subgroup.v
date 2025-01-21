@@ -819,9 +819,9 @@ Definition normalsubgroup_product {G : Group} (H K : NormalSubgroup G)
   : NormalSubgroup G
   := Build_NormalSubgroup G (subgroup_product H K) _.
 
-(* *** Paths between generated subgroups *)
+(** *** Paths between generated subgroups *)
 
-(* This gets used twice in [path_subgroup_generated], so we factor it out here. *)
+(** This gets used twice in [path_subgroup_generated], so we factor it out here. *)
 Local Lemma path_subgroup_generated_helper {G : Group}
   (X Y : G -> Type) (K : forall g, merely (X g) -> merely (Y g))
   : forall g, Trunc (-1) (subgroup_generated_type X g)
@@ -835,7 +835,7 @@ Proof.
     by apply tr, sgt_op.
 Defined.
 
-(* If the predicates selecting the generators are merely equivalent, then the generated subgroups are equal. (One could probably prove that the generated subgroup are isomorphic without using univalence.) *)
+(** If the predicates selecting the generators are merely equivalent, then the generated subgroups are equal. (One could probably prove that the generated subgroup are isomorphic without using univalence.) *)
 Definition path_subgroup_generated `{Univalence} {G : Group}
   (X Y : G -> Type) (K : forall g, Trunc (-1) (X g) <-> Trunc (-1) (Y g))
   : subgroup_generated X = subgroup_generated Y.
@@ -846,7 +846,7 @@ Proof.
   - apply path_subgroup_generated_helper, (fun x => snd (K x)).
 Defined.
 
-(* Equal subgroups have isomorphic underlying groups. *)
+(** Equal subgroups have isomorphic underlying groups. *)
 Definition equiv_subgroup_group {G : Group} (H1 H2 : Subgroup G)
   : H1 = H2 -> GroupIsomorphism H1 H2
   := ltac:(intros []; exact grp_iso_id).
@@ -967,7 +967,7 @@ Proof.
   - snrapply subgroup_image_rec.
 Defined.
 
-(** [subgorup_image] preserves normal subgroups when the group homomorphism is surjective. *)
+(** [subgroup_image] preserves normal subgroups when the group homomorphism is surjective. *)
 Global Instance isnormal_subgroup_image {G H : Group} (f : G $-> H)
   (J : Subgroup G) `{!IsNormalSubgroup J} `{!IsSurjection f}
   : IsNormalSubgroup (subgroup_image f J).
