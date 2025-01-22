@@ -640,6 +640,44 @@ Proof.
   rapply nat_div_mul_cancel_r.
 Defined.
 
+Definition nat_div_moveR_nV n m k : 0 < k -> n = m * k -> n / k = m.
+Proof.
+  intros H p.
+  symmetry.
+  rapply nat_div_moveL_nV.
+  by symmetry.
+Defined.
+
+Definition nat_divides_div_l n m l
+  : 0 < m -> (m | n) -> (n | l * m) -> (n / m | l).
+Proof.
+  intros H1 H2 [y q].
+  exists y.
+  rewrite nat_div_mul_l; only 2: exact _.
+  by rapply nat_div_moveR_nV.
+Defined.
+
+Definition nat_divides_div_r n m l
+  : (n * l | m) -> (n | m / l).
+Proof.
+  destruct l; only 1: exact _.
+  intros [k p].
+  exists k.
+  napply nat_div_moveL_nV.
+  1: exact _.
+  by lhs_V napply nat_mul_assoc.
+Defined.
+
+Definition nat_divides_div_r_inv n m l
+  : (l | m) -> (n | m / l) -> (n * l | m).
+Proof.
+  intros H [k p].
+  exists k.
+  rewrite nat_mul_assoc.
+  rewrite p.
+  rapply nat_mul_div_cancel_r.  
+Defined.
+
 (** ** Greatest Common Divisor *)
 
 (** The greatest common divisor of [0] and a number is the number itself. *)
@@ -731,9 +769,7 @@ Defined.
 (** [nat_gcd] is associative. *)
 Definition nat_gcd_assoc n m k : nat_gcd n (nat_gcd m k) = nat_gcd (nat_gcd n m) k.
 Proof.
-  napply nat_gcd_unique.
-  - intros q H1 H2.
-    rapply nat_divides_r_gcd.
+  rapply nat_gcd_unique.
   - rapply (nat_divides_trans (nat_divides_l_gcd_l _ _)).
   - apply nat_divides_r_gcd; rapply nat_divides_trans.
 Defined.
@@ -919,6 +955,110 @@ Definition nat_bezout n m
   : NatBezout n m (nat_gcd n m) + NatBezout m n (nat_gcd n m).
 Proof.
   destruct n; [ right | left ]; exact _.
+Defined.
+
+(** ** Least common multiple *)
+
+(** The least common multiple [nat_lcm n m] is the smallest natural number divisibile by both [n] and [m]. *)
+Definition nat_lcm (n m : nat) : nat := n * (m / nat_gcd n m).
+
+(** The least common multiple of [0] and [n] is [0]. *)
+Definition nat_lcm_zero_l n : nat_lcm 0 n = 0 := idpath.
+
+(** The least common multiple of [n] and [0] is [0]. *)
+Definition nat_lcm_zero_r n : nat_lcm n 0 = 0.
+Proof.
+  unfold nat_lcm.
+  by rewrite nat_div_zero_l, nat_mul_zero_r.
+Defined.
+
+(** The least common multiple of [1] and [n] is [n]. *)
+Definition nat_lcm_one_l n : nat_lcm 1 n = n.
+Proof.
+  unfold nat_lcm.
+  by rewrite nat_gcd_one_l, nat_div_one_r, nat_mul_one_l.
+Defined.
+
+(** The least common multiple of [n] and [1] is [n]. *)
+Definition nat_lcm_one_r n : nat_lcm n 1 = n.
+Proof.
+  unfold nat_lcm.
+  by rewrite nat_gcd_one_r, nat_div_one_r, nat_mul_one_r.
+Defined.
+
+(** Idempotency. *)
+Definition nat_lcm_idem n : nat_lcm n n = n.
+Proof.
+  unfold nat_lcm.
+  by rewrite nat_gcd_idem, nat_mul_div_cancel_l.
+Defined.
+
+(** [n] divides the least common multiple of [n] and [m]. *) 
+Global Instance nat_divides_r_lcm_l n m : (n | nat_lcm n m) := _.
+
+(** [m] divides the least common multiple of [n] and [m]. *)
+Global Instance nat_divides_r_lcm_r n m : (m | nat_lcm n m).
+Proof.
+  unfold nat_lcm.
+  rewrite nat_div_mul_l; only 2: exact _.
+  rewrite <- nat_div_mul_r; exact _.
+Defined.
+
+(** The least common multiple of [n] and [m] divides any multiple of [n] and [m]. *)
+Global Instance nat_divides_l_lcm n m k : (n | k) -> (m | k) -> (nat_lcm n m | k).
+Proof.
+  intros H1 H2.
+  destruct (equiv_leq_lt_or_eq (n:=0) (m:=n) _) as [lt_n | p];
+    only 2: by destruct p.
+  destruct (equiv_leq_lt_or_eq (n:=0) (m:=m) _) as [lt_m | q];
+    only 2: (destruct q; by rewrite nat_lcm_zero_r).
+  unfold nat_lcm.
+  destruct (nat_bezout_pos_l n m _) as [a [b p]].
+  apply nat_moveR_nV in p.
+  rewrite nat_div_mul_l.
+  2: exact _.
+  napply nat_divides_div_l.
+  1,2: exact _.
+  destruct p.
+  rewrite nat_dist_sub_l.
+  napply nat_divides_sub.
+  1,2: rewrite nat_mul_assoc.
+  1,2: only 1: rewrite nat_mul_comm; exact _.
+Defined.
+
+Definition nat_divides_l_iff_divides_l_lcm n m k
+  : (n | k) * (m | k) <-> (nat_lcm n m | k).
+Proof.
+  split.
+  - intros [H1 H2]; exact _.
+  - intros H; split.
+    + rapply (nat_divides_trans _ H).
+    + exact _.
+Defined.
+
+(** If [k] divides all common multiples of [n] and [m], and [k] is also a common multiple, then it must necesserily be equal to the least common multiple. *)
+Definition nat_lcm_unique n m k
+  (H : forall q, (n | q) -> (m | q) -> (k | q))
+  : (n | k) -> (m | k) -> nat_lcm n m = k.
+Proof.
+  intros H1 H2.
+  rapply nat_divides_antisym.
+Defined.
+
+(** As a corollary of uniquness, we get that the least common multiple operation is commutative. *)
+Definition nat_lcm_comm n m : nat_lcm n m = nat_lcm m n.
+Proof.
+  rapply nat_lcm_unique.
+Defined.
+
+(** [nat_lcm] is associative. *)
+Definition nat_lcm_assoc n m k : nat_lcm n (nat_lcm m k) = nat_lcm (nat_lcm n m) k.
+Proof.
+  rapply nat_lcm_unique.
+  intros q H1 H2.
+  rapply nat_divides_l_lcm.
+  rapply nat_divides_l_lcm.
+  rapply (nat_divides_trans _ H2).
 Defined.
 
 (** ** Prime Numbers *)
