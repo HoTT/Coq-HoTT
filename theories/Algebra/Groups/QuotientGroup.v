@@ -17,6 +17,8 @@ Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope wc_iso_scope.
 
+(** ** Congruence quotients *)
+
 Section GroupCongruenceQuotient.
 
   (** A congruence on a group is a relation satisfying [R x x' -> R y y' -> R (x * y) (x' * y')].  Because we also require that [R] is reflexive, we also know that [R y y' -> R (x * y) (x * y')] for any [x], and similarly for multiplication on the right by [x].  We don't need to assume that [R] is symmetric or transitive. *)
@@ -106,6 +108,55 @@ Section GroupCongruenceQuotient.
 
 End GroupCongruenceQuotient.
 
+(** ** Sets of cosets *)
+
+Section Cosets.
+
+  Context (G : Group) (H : Subgroup G).
+  
+  Definition LeftCoset := G / in_cosetL H.
+
+  (** TODO: Way too many universes, needs fixing *)
+  (** The set of left cosets of a finite subgroup of a finite group is finite. *)
+  Global Instance finite_leftcoset `{Univalence, Finite G, Finite H}
+    : Finite LeftCoset.
+  Proof.
+    nrapply finite_quotient.
+    1-5: exact _.
+    intros x y.
+    apply (detachable_finite_subset H).
+  Defined.
+
+  (** The index of a subgroup is the number of cosets of the subgroup. *)
+  Definition subgroup_index `{Univalence, Finite G, Finite H} : nat
+    := fcard LeftCoset.
+
+  Definition RightCoset := G / in_cosetR H.
+  
+  (** The set of left cosets is equivalent to the set of right coset. *)
+  Definition equiv_leftcoset_rightcoset
+    : LeftCoset <~> RightCoset.
+  Proof.
+    snrapply equiv_quotient_functor.
+    - exact inv.
+    - exact _.
+    - intros x y; simpl.
+      by rewrite grp_inv_inv.
+  Defined.
+
+  (** The set of right cosets of a finite subgroup of a finite group is finite since it is equivalent to the set of left cosets. *)
+  Global Instance finite_rightcoset `{Univalence, Finite G, Finite H}
+    : Finite RightCoset.
+  Proof.
+    nrapply finite_equiv'.
+    1: apply equiv_leftcoset_rightcoset.
+    exact _.
+  Defined.
+
+End Cosets.
+
+(** ** Quotient groups *)
+
 (** Now we can define the quotient group by a normal subgroup. *)
 
 Section QuotientGroup.
@@ -126,7 +177,7 @@ Section QuotientGroup.
 
   (** Now we have to make a choice whether to pick the left or right cosets. Due to existing convention we shall pick left cosets but we note that we could equally have picked right. *)
   Definition QuotientGroup : Group
-    := Build_Group (G / (in_cosetL N)) _ _ _ _.
+    := Build_Group (LeftCoset G N) _ _ _ _.
 
   Definition grp_quotient_map : G $-> QuotientGroup.
   Proof.
@@ -343,7 +394,7 @@ Proof.
   simpl in triv.
   apply related_quotient_paths in triv.
   2-5: exact _.
-  apply equiv_subgroup_inverse.
+  apply equiv_subgroup_inv.
   nrapply (subgroup_in_op_l _ _ 1 triv) .
   apply subgroup_in_unit.
 Defined.

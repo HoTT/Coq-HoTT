@@ -631,6 +631,15 @@ Proof.
   nrapply nat_mod_mul_l.
 Defined.
 
+(** We can move a divisor from the right to become a factor on the left of an equation. *)
+Definition nat_div_moveL_nV n m k : 0 < k -> n * k = m -> n = m / k.
+Proof.
+  intros H p.
+  rewrite <- p.
+  symmetry.
+  rapply nat_div_mul_cancel_r.
+Defined.
+
 (** ** Greatest Common Divisor *)
 
 (** The greatest common divisor of [0] and a number is the number itself. *)

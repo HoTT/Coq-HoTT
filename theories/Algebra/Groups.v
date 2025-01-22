@@ -13,7 +13,7 @@ Require Export HoTT.Algebra.Groups.FreeProduct.
 
 Require Export HoTT.Algebra.Groups.Presentation.
 Require Export HoTT.Algebra.Groups.ShortExactSequence.
-Require Export HoTT.Algebra.Groups.Lagrange.
+Require Export HoTT.Algebra.Groups.Finite.
 
 (** Examples *)
 
