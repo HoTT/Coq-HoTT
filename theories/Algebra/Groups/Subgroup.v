@@ -247,7 +247,7 @@ Defined.
 (** Corestriction is an equivalence on group homomorphisms. *)
 Definition equiv_subgroup_corec {F : Funext}
   (G : Group) {H : Group} (K : Subgroup H)
-  : (exists (f : G $-> H), forall x, K (f x)) <~> (G $-> subgroup_group K).
+  : {f : G $-> H & forall x, K (f x)} <~> (G $-> subgroup_group K).
 Proof.
   snrapply equiv_adjointify.
   - exact (sig_rec subgroup_corec).
@@ -1018,8 +1018,8 @@ Proof.
 Defined.
 
 Definition equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
-  : (G $-> grp_kernel f) <~> (exists g : G $-> A, f $o g == grp_homo_const)
-  := (equiv_subgroup_corec G (grp_kernel f))^-1.
+  : {g : G $-> A & f $o g == grp_homo_const} <~> (G $-> grp_kernel f)
+  := equiv_subgroup_corec G (grp_kernel f).
 
 (** The underlying map of a group homomorphism with a trivial kernel is an embedding. *)
 Global Instance isembedding_istrivial_kernel {G H : Group} (f : G $-> H)
