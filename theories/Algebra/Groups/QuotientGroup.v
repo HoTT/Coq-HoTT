@@ -3,8 +3,6 @@ Require Import Truncations.Core.
 Require Import Algebra.Congruence.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.Subgroup.
-Require Export Algebra.Groups.Image.
-Require Export Algebra.Groups.Kernel.
 Require Export Colimits.Quotient.
 Require Import HSet.
 Require Import Spaces.Finite.Finite.
@@ -292,7 +290,7 @@ Section FirstIso.
     : A / grp_kernel phi $-> grp_image phi.
   Proof.
     srapply grp_quotient_rec.
-    + srapply grp_image_in.
+    + srapply grp_homo_image_in.
     + intros n x.
       by apply path_sigma_hprop.
   Defined.

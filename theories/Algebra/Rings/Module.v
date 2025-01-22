@@ -2,7 +2,7 @@ Require Import WildCat.
 Require Import Spaces.Nat.Core.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.canonical_names.
-Require Import Algebra.Groups.Kernel Algebra.Groups.Image Algebra.Groups.QuotientGroup.
+Require Import Algebra.Groups.QuotientGroup.
 Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct.
 Require Import Rings.Ring.
 
