@@ -551,7 +551,7 @@ Proof.
   snrapply cancelL_equiv_conn_map.
   1: exact (Pullback (spushl Q) (spushr Q)).
   1: by snrapply (equiv_pullback (equiv_pushout_spushout _ _)).
-  (** Next, we convert our [X] to the equivalent total space of [Q]. We can do this because an equivalence is connected, and we are canceling on the rigght. *)
+  (** Next, we convert our [X] to the equivalent total space of [Q]. We can do this because an equivalence is connected, and we are canceling on the right. *)
   snrapply (cancelR_conn_map _ (equiv_fun _)).
   1: exact {y : Y & {z : Z & Q y z}}.
   { unfold Q.
@@ -590,7 +590,7 @@ Proof.
   rewrite trunc_index_add_comm.
   (** Now we can apply [blakers_massey] for [SPushout]. *)
   nrapply blakers_massey.
-  (** Whats left is to check that the partial total spaces of [Q] are connected, which we get by definition since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
+  (** What's left is to check that the partial total spaces of [Q] are connected, which we get by definition since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
   - intros z.
     snrapply isconnected_equiv'.
     3: by snrapply H2. 
