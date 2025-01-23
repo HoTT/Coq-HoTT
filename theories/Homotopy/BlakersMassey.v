@@ -561,20 +561,15 @@ Proof.
   { snrapply (functor_sigma idmap); intros y.
     snrapply (functor_sigma idmap); intros z.
     apply spglue. }
-  { intros [y [z [x [p q]]]].
-    symmetry.
-    snrapply path_sigma.
-    1: exact p.
-    destruct p.
-    snrapply path_sigma.
-    1: exact q.
-    destruct q.
-    cbn -[functor_spushout].
+  { hnf; equiv_intro (equiv_double_fibration_replacement f g) x.
+    rhs nrapply (ap _ (ap _ (eissect _ _))).
+    snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)).
+    symmetry; simpl.
     lhs nrapply concat_1p.
     lhs nrapply concat_p1.
     lhs nrapply functor_coeq_beta_cglue.
-    apply moveR_pM.
-    apply concat_1p_p1. }
+    lhs nrapply concat_p1.
+    nrapply concat_1p. }
   (** A sigma functor is connected if its fibers are. *)
   rapply conn_map_functor_sigma.
   intros y.
