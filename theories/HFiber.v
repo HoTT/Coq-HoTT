@@ -153,6 +153,18 @@ Proof.
   - reflexivity.
 Defined.
 
+(** This is a useful variant for taking a "double fiber" of two maps. *)
+Definition equiv_double_fibration_replacement
+  {X Y Z : Type} (f : X -> Y) (g : X -> Z)
+  : X <~> {y : Y & {z : Z & {x : X & f x = y /\ g x = z}}}.
+Proof.
+  nrefine ((equiv_sigma_prod' _)^-1 oE _).
+  nrefine (equiv_sigma_symm _ oE _).
+  nrefine (equiv_functor_sigma_id (fun _ => (equiv_sigma_prod_prod _ _)^-1) oE _).
+  symmetry.
+  rapply equiv_sigma_contr.
+Defined.
+
 Definition hfiber_fibration {X} (x : X) (P:X->Type)
   : P x <~> @hfiber (sig P) X pr1 x.
 Proof.

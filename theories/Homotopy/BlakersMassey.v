@@ -1,4 +1,4 @@
-Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Basics HoTT.Types HFiber.
 Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
 Require Import Limits.Pullback.
@@ -554,13 +554,7 @@ Proof.
   (** Next, we convert our [X] to the equivalent total space of [Q]. We can do this because an equivalence is connected, and we are canceling on the right. *)
   snrapply (cancelR_conn_map _ (equiv_fun _)).
   1: exact {y : Y & {z : Z & Q y z}}.
-  { unfold Q.
-    symmetry.
-    nrefine ((equiv_sigma_prod' _)^-1 oE _).
-    nrefine (equiv_sigma_symm _ oE _).
-    nrefine (equiv_functor_sigma_id (fun _ => (equiv_sigma_prod_prod _ _)^-1) oE _).
-    symmetry.
-    rapply equiv_sigma_contr. }
+  1: by symmetry; snrapply equiv_double_fibration_replacement.
   1: exact _. 
   (** Next we prove that this composition is homotopic to [spglue Q] in an iterated sigma functor. *) 
   snrapply conn_map_homotopic.

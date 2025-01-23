@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Colimits.Pushout.
-Require Import Types.Paths Types.Sigma Types.Prod.
+Require Import Types.Paths Types.Sigma Types.Prod HFiber.
 
 (** * Pushouts of "dependent spans". *)
 
@@ -128,9 +128,7 @@ Definition equiv_pushout_spushout {X Y Z : Type} (f : X -> Y) (g : X -> Z)
     <~> SPushout (fun (y : Y) (z : Z) => {x : X & f x = y /\ g x = z}).
 Proof.
   snrapply equiv_pushout.
-  { nrefine (equiv_sigma_symm _ oE _).
-    nrefine (equiv_functor_sigma_id (fun _ => (equiv_sigma_prod_prod _ _)^-1) oE _).
-    symmetry.
-    rapply equiv_sigma_contr. }
+  { nrefine (equiv_sigma_prod _ oE _).
+    apply equiv_double_fibration_replacement. }
   1-4: reflexivity.
 Defined.
