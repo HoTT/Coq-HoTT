@@ -106,10 +106,10 @@ Proof.
   apply cfglue.
 Defined.
 
-(** The cofiber of an [n]-conencted map is [n]-connected. *)
+(** The cofiber of an [n]-conencted map is [n.+1]-connected. *)
 Definition isconnnected_cofiber (n : trunc_index) {X Y : Type} (f : X -> Y)
   {fc : IsConnMap n f}
-  : IsConnected n (Cofiber f).
+  : IsConnected n.+1 (Cofiber f).
 Proof.
   apply isconnected_from_elim.
   intros C H' g.
