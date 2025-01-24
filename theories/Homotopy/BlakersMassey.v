@@ -551,7 +551,7 @@ Definition blakers_massey_total_map `{Univalence} (m n : trunc_index)
 
 Definition blakers_massey_po `{Univalence} (m n : trunc_index)
   {X Y Z : Type} (f : X -> Y) (g : X -> Z)
-  `{H1 : !IsConnMap m.+1 f} `{H2 : !IsConnMap n.+1 g}
+  `{H1 : !IsConnMap n.+1 f} `{H2 : !IsConnMap m.+1 g}
   : IsConnMap (m +2+ n) (pullback_corec (pglue (f:=f) (g:=g))).
 Proof.
   (** First we convert our [Pushout] to an equivalent [SPushout] over a family [Q]. We can do this since we are canceling by an equivalence on the left. *)
@@ -576,8 +576,6 @@ Proof.
     lhs nrapply functor_coeq_beta_cglue.
     lhs nrapply concat_p1.
     nrapply concat_1p. }
-  (** We need to swap the order of the truncation index addition. *)
-  rewrite trunc_index_add_comm.
   (** Now we can apply [blakers_massey] for [SPushout]. *)
   rapply blakers_massey_total_map.
   (** What's left is to check that the partial total spaces of [Q] are connected, which we get by definition since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
