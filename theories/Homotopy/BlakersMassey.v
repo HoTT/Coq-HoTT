@@ -558,24 +558,11 @@ Proof.
   nrapply blakers_massey.
   (** What's left is to check that the partial total spaces of [Q] are connected, which we get by definition since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
   - intros z.
-    snrapply isconnected_equiv'.
-    3: by snrapply H2. 
-    nrefine (equiv_sigma_symm _ oE _).
-    snrapply equiv_functor_sigma_id; intros x; cbn beta.
-    nrefine (equiv_functor_sigma_id (fun _ => equiv_sigma_prod0 _ _) oE _).
-    nrefine ((equiv_sigma_assoc' _ _)^-1 oE _).
-    symmetry.
-    rapply equiv_contr_sigma.
-  - intros y'.
-    snrapply isconnected_equiv'.
-    3: by snrapply H1. 
-    nrefine (equiv_sigma_symm _ oE _).
-    snrapply equiv_functor_sigma_id; intros x; cbn beta.
-    nrefine (equiv_functor_sigma_id (fun _ => equiv_prod_symm _ _) oE _).
-    nrefine (equiv_functor_sigma_id (fun _ => equiv_sigma_prod0 _ _) oE _).
-    nrefine ((equiv_sigma_assoc' _ _)^-1 oE _).
-    symmetry.
-    rapply equiv_contr_sigma.
+    nrefine (isconnected_equiv' _ _ _ (H2 z)).
+    make_equiv_contr_basedpaths.
+  - intros y.
+    nrefine (isconnected_equiv' _ _ _ (H1 y)).
+    make_equiv_contr_basedpaths.
 Defined.
 
 Definition blakers_massey_po `{Univalence} (m n : trunc_index)
