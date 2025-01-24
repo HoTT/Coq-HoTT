@@ -554,16 +554,13 @@ Definition blakers_massey_po `{Univalence} (m n : trunc_index)
   `{H1 : !IsConnMap n.+1 f} `{H2 : !IsConnMap m.+1 g}
   : IsConnMap (m +2+ n) (pullback_corec (pglue (f:=f) (g:=g))).
 Proof.
-  (** First we convert our [Pushout] to an equivalent [SPushout] over a family [Q]. We can do this since we are canceling by an equivalence on the left. *)
+  (** We postcompose our map with an equivalence from the the pullback of the pushout of [f] and [g] to the pullback of an equivalent [SPushout] over a family [Q]. *)
   pose (Q := fun y z => {x : X & f x = y /\ g x = z}).
   snrapply cancelL_equiv_conn_map.
   1: exact (Pullback (spushl Q) (spushr Q)).
   1: by snrapply (equiv_pullback (equiv_pushout_spushout _ _)).
-  (** Next, we convert our [X] to the equivalent total space of [Q]. We can do this because an equivalence is connected, and we are canceling on the right. *)
-  snrapply (cancelR_conn_map _ (equiv_fun _)).
-  1: exact {y : Y & {z : Z & Q y z}}.
-  1: by symmetry; snrapply equiv_double_fibration_replacement.
-  1: exact _. 
+  (** Next we precompose with the equivalence from the total space of [Q] to [X]. *)
+  rapply (cancelR_conn_map _ (equiv_double_fibration_replacement f g)^-1%equiv).
   (** Next we prove that this composition is homotopic to [spushout_sjoin_map Q]. *)
   snrapply (conn_map_homotopic _ (spushout_sjoin_map Q)).
   { intros [y [z [x [[] []]]]].
