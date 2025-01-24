@@ -66,7 +66,7 @@ Arguments Is1Natural {A B} {isgraph_A}
   F {is0functor_F} G {is0functor_G} alpha : rename.
 Arguments isnat {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
 Arguments isnat_tr {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.
-
+Hint Mode Is1Natural - - - - - - - - - - - ! : typeclass_instances.
 (** We coerce naturality proofs to their naturality square as the [isnat] projection can be unwieldy in certain situations where the transformation is difficult to write down. This allows for the naturality proof to be used directly. *)
 Coercion isnat : Is1Natural >-> Funclass.
 
