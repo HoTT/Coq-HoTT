@@ -564,11 +564,8 @@ Proof.
   1: exact {y : Y & {z : Z & Q y z}}.
   1: by symmetry; snrapply equiv_double_fibration_replacement.
   1: exact _. 
-  (** Next we prove that this composition is homotopic to [spglue Q] in an iterated sigma functor. *) 
-  snrapply conn_map_homotopic.
-  { snrapply (functor_sigma idmap); intros y.
-    snrapply (functor_sigma idmap); intros z.
-    apply spglue. }
+  (** Next we prove that this composition is homotopic to [spushout_sjoin_map Q]. *)
+  snrapply (conn_map_homotopic _ (spushout_sjoin_map Q)).
   { intros [y [z [x [[] []]]]].
     snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
     lhs nrapply concat_1p.
@@ -576,9 +573,8 @@ Proof.
     lhs nrapply functor_coeq_beta_cglue.
     lhs nrapply concat_p1.
     nrapply concat_1p. }
-  (** Now we can apply [blakers_massey] for [SPushout]. *)
   rapply blakers_massey_total_map.
-  (** What's left is to check that the partial total spaces of [Q] are connected, which we get by definition since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
+  (** What's left is to check that the partial total spaces of [Q] are connected, which we get since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
   - intros z.
     nrefine (isconnected_equiv' _ _ _ (H2 z)).
     make_equiv_contr_basedpaths.
