@@ -561,10 +561,8 @@ Proof.
   { snrapply (functor_sigma idmap); intros y.
     snrapply (functor_sigma idmap); intros z.
     apply spglue. }
-  { hnf; equiv_intro (equiv_double_fibration_replacement f g) x.
-    rhs nrapply (ap _ (ap _ (eissect _ _))).
-    snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)).
-    symmetry; simpl.
+  { intros [y [z [x [[] []]]]].
+    snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
     lhs nrapply concat_1p.
     lhs nrapply concat_p1.
     lhs nrapply functor_coeq_beta_cglue.
