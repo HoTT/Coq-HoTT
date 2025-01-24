@@ -541,29 +541,13 @@ Proof.
   all: exact _.
 Defined.
 
-Definition blakers_massey_po_helper `{Univalence} (m n : trunc_index)
-  {X Y Z : Type} (f : X -> Y) (g : X -> Z)
-  `{H1 : !IsConnMap m.+1 f} `{H2 : !IsConnMap n.+1 g}
-  : IsConnMap (Tr (m +2+ n))
-      (spushout_sjoin_map (fun y z => {x : X & f x = y /\ g x = z})).
-Proof.
-  (** A sigma functor is connected if its fibers are. *)
-  rapply conn_map_functor_sigma.
-  intros y.
-  rapply conn_map_functor_sigma.
-  revert y.
-  (** We need to swap the order of the truncation index addition. *)
-  rewrite trunc_index_add_comm.
-  (** Now we can apply [blakers_massey] for [SPushout]. *)
-  nrapply blakers_massey.
-  (** What's left is to check that the partial total spaces of [Q] are connected, which we get by definition since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
-  - intros z.
-    nrefine (isconnected_equiv' _ _ _ (H2 z)).
-    make_equiv_contr_basedpaths.
-  - intros y.
-    nrefine (isconnected_equiv' _ _ _ (H1 y)).
-    make_equiv_contr_basedpaths.
-Defined.
+(** A sigma functor is connected if its fibers are, so we have the following. *)
+Definition blakers_massey_total_map `{Univalence} (m n : trunc_index)
+  {X Y : Type} (Q : X -> Y -> Type)
+  `{forall y, IsConnected m.+1 { x : X & Q x y } }
+  `{forall x, IsConnected n.+1 { y : Y & Q x y } }
+  : IsConnMap (Tr (m +2+ n)) (spushout_sjoin_map Q)
+  := _.
 
 Definition blakers_massey_po `{Univalence} (m n : trunc_index)
   {X Y Z : Type} (f : X -> Y) (g : X -> Z)
@@ -592,5 +576,15 @@ Proof.
     lhs nrapply functor_coeq_beta_cglue.
     lhs nrapply concat_p1.
     nrapply concat_1p. }
-  rapply blakers_massey_po_helper.
+  (** We need to swap the order of the truncation index addition. *)
+  rewrite trunc_index_add_comm.
+  (** Now we can apply [blakers_massey] for [SPushout]. *)
+  rapply blakers_massey_total_map.
+  (** What's left is to check that the partial total spaces of [Q] are connected, which we get by definition since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
+  - intros z.
+    nrefine (isconnected_equiv' _ _ _ (H2 z)).
+    make_equiv_contr_basedpaths.
+  - intros y.
+    nrefine (isconnected_equiv' _ _ _ (H1 y)).
+    make_equiv_contr_basedpaths.
 Defined.
