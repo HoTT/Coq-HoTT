@@ -2,7 +2,7 @@ Require Import WildCat.
 Require Import Spaces.Nat.Core Spaces.Nat.Arithmetic.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.abstract_algebra.
-Require Import Algebra.Groups.Group Algebra.Groups.Subgroup Algebra.Groups.Image.
+Require Import Algebra.Groups.Group Algebra.Groups.Subgroup.
 Require Export Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct Algebra.AbGroups.FiniteSum.
 
 Require Export Classes.theory.rings.
