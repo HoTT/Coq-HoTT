@@ -541,33 +541,12 @@ Proof.
   all: exact _.
 Defined.
 
-Definition blakers_massey_po `{Univalence} (m n : trunc_index)
+Definition blakers_massey_po_helper `{Univalence} (m n : trunc_index)
   {X Y Z : Type} (f : X -> Y) (g : X -> Z)
   `{H1 : !IsConnMap m.+1 f} `{H2 : !IsConnMap n.+1 g}
-  : IsConnMap (m +2+ n) (pullback_corec (pglue (f:=f) (g:=g))).
+  : IsConnMap (Tr (m +2+ n))
+      (spushout_sjoin_map (fun y z => {x : X & f x = y /\ g x = z})).
 Proof.
-  (** First we convert our [Pushout] to an equivalent [SPushout] over a family [Q]. We can do this since we are canceling by an equivalence on the left. *)
-  pose (Q := fun (y : Y) (z : Z) => {x : X & f x = y /\ g x = z}).
-  snrapply cancelL_equiv_conn_map.
-  1: exact (Pullback (spushl Q) (spushr Q)).
-  1: by snrapply (equiv_pullback (equiv_pushout_spushout _ _)).
-  (** Next, we convert our [X] to the equivalent total space of [Q]. We can do this because an equivalence is connected, and we are canceling on the right. *)
-  snrapply (cancelR_conn_map _ (equiv_fun _)).
-  1: exact {y : Y & {z : Z & Q y z}}.
-  1: by symmetry; snrapply equiv_double_fibration_replacement.
-  1: exact _. 
-  (** Next we prove that this composition is homotopic to [spglue Q] in an iterated sigma functor. *) 
-  snrapply conn_map_homotopic.
-  { snrapply (functor_sigma idmap); intros y.
-    snrapply (functor_sigma idmap); intros z.
-    apply spglue. }
-  { intros [y [z [x [[] []]]]].
-    snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
-    lhs nrapply concat_1p.
-    lhs nrapply concat_p1.
-    lhs nrapply functor_coeq_beta_cglue.
-    lhs nrapply concat_p1.
-    nrapply concat_1p. }
   (** A sigma functor is connected if its fibers are. *)
   rapply conn_map_functor_sigma.
   intros y.
@@ -597,4 +576,34 @@ Proof.
     nrefine ((equiv_sigma_assoc' _ _)^-1 oE _).
     symmetry.
     rapply equiv_contr_sigma.
+Defined.
+
+Definition blakers_massey_po `{Univalence} (m n : trunc_index)
+  {X Y Z : Type} (f : X -> Y) (g : X -> Z)
+  `{H1 : !IsConnMap m.+1 f} `{H2 : !IsConnMap n.+1 g}
+  : IsConnMap (m +2+ n) (pullback_corec (pglue (f:=f) (g:=g))).
+Proof.
+  (** First we convert our [Pushout] to an equivalent [SPushout] over a family [Q]. We can do this since we are canceling by an equivalence on the left. *)
+  pose (Q := fun y z => {x : X & f x = y /\ g x = z}).
+  snrapply cancelL_equiv_conn_map.
+  1: exact (Pullback (spushl Q) (spushr Q)).
+  1: by snrapply (equiv_pullback (equiv_pushout_spushout _ _)).
+  (** Next, we convert our [X] to the equivalent total space of [Q]. We can do this because an equivalence is connected, and we are canceling on the right. *)
+  snrapply (cancelR_conn_map _ (equiv_fun _)).
+  1: exact {y : Y & {z : Z & Q y z}}.
+  1: by symmetry; snrapply equiv_double_fibration_replacement.
+  1: exact _. 
+  (** Next we prove that this composition is homotopic to [spglue Q] in an iterated sigma functor. *) 
+  snrapply conn_map_homotopic.
+  { snrapply (functor_sigma idmap); intros y.
+    snrapply (functor_sigma idmap); intros z.
+    apply spglue. }
+  { intros [y [z [x [[] []]]]].
+    snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
+    lhs nrapply concat_1p.
+    lhs nrapply concat_p1.
+    lhs nrapply functor_coeq_beta_cglue.
+    lhs nrapply concat_p1.
+    nrapply concat_1p. }
+  rapply blakers_massey_po_helper.
 Defined.
