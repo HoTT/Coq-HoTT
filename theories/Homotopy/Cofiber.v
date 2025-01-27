@@ -1,8 +1,9 @@
-Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc.
-Require Import Types.Unit Types.Paths Types.Universe.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc Basics.Equivalences.
+Require Import Types.Unit Types.Paths Types.Universe Types.Sigma.
 Require Import Truncations.Core Truncations.Connectedness.
-Require Import Colimits.Pushout.
+Require Import Colimits.Pushout Homotopy.Suspension.
 Require Import Homotopy.NullHomotopy.
+Require Import HFiber Limits.Pullback BlakersMassey.
 
 Set Universe Minimization ToSet.
 
@@ -124,4 +125,34 @@ Proof.
     apply moveR_Vp.
     rhs nrapply concat_p1.
     nrapply conn_map_comp.
+Defined.
+
+(** Blakers-Massey implies that the comparison map is highly connected. *)
+Definition isconnected_fiber_to_cofiber `{Univalence}
+  (n m : trunc_index) {X Y : Type} {ac : IsConnected n.+1 X}
+  (f : X -> Y) {fc : IsConnMap m.+1 f} (y : Y)
+  : IsConnMap (m +2+ n) (fiber_to_path_cofiber f y).
+Proof.
+  Arguments IsConnMap : clear implicits.
+  snrapply conn_map_fiber.
+  rapply (cancelR_conn_map _ (equiv_fibration_replacement _)).
+  
+  snrapply cancelL_equiv_conn_map.
+  - exact (Pullback (pushl (f:=const_tt X) (g:=f)) pushr).
+  - unfold Pullback.
+    refine ((equiv_contr_sigma _)^-1 oE _).
+    snrapply equiv_functor_sigma_id.
+    intros y'.
+    snrapply equiv_path_inverse.
+  - snrapply conn_map_homotopic.
+    3: rapply blakers_massey_po.
+    intros x.
+    snrapply path_sigma.
+    1: reflexivity.
+    snrapply path_sigma.
+    1: reflexivity.
+    simpl.
+    lhs_V nrapply inv_V.
+    change ((pglue ?x)^^ = ?y) with ((cfglue f x)^ = y).
+    by elim (cfglue f x).
 Defined.
