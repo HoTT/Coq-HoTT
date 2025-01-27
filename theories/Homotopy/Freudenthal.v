@@ -15,6 +15,6 @@ Proof.
   - rapply blakers_massey_po.
 Defined.
 
-Definition freudenthal@{u v | u < v} := Eval unfold freudenthal' in @freudenthal'@{u u u v u u u}.
+Definition freudenthal@{u v | u < v} := Eval unfold freudenthal' in @freudenthal'@{u u v u u u}.
 
 Global Existing Instance freudenthal.
