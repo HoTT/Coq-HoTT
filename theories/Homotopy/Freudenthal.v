@@ -11,12 +11,10 @@ Local Definition freudenthal' `{Univalence} (n : trunc_index)
 Proof.
   snrapply cancelL_equiv_conn_map.
   - exact (Pullback (pushl (f:=const_tt X) (g:=const_tt X)) pushr).
-  - symmetry.
-    do 2 refine (_ oE equiv_contr_sigma _).
-    reflexivity.
+  - make_equiv.
   - rapply blakers_massey_po.
 Defined.
 
-Definition freudenthal@{u v | u < v} := Eval unfold freudenthal' in @freudenthal'@{u u v u u u u u u}.
+Definition freudenthal@{u v | u < v} := Eval unfold freudenthal' in @freudenthal'@{u u u v u u u}.
 
 Global Existing Instance freudenthal.
