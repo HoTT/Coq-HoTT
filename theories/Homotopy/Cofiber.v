@@ -133,10 +133,8 @@ Definition isconnected_fiber_to_cofiber `{Univalence}
   (f : X -> Y) {fc : IsConnMap m.+1 f} (y : Y)
   : IsConnMap (m +2+ n) (fiber_to_path_cofiber f y).
 Proof.
-  Arguments IsConnMap : clear implicits.
   snrapply conn_map_fiber.
   rapply (cancelR_conn_map _ (equiv_fibration_replacement _)).
-  
   snrapply cancelL_equiv_conn_map.
   - exact (Pullback (pushl (f:=const_tt X) (g:=f)) pushr).
   - unfold Pullback.
