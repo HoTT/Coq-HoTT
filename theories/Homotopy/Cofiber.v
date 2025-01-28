@@ -97,15 +97,7 @@ Definition functor_cofiber_compose {X Y X' Y' X'' Y'' : Type}
 
 Local Open Scope trunc_scope.
 
-(** ** Comparison of fibers and cofibers *)
-
-Definition fiber_to_path_cofiber {X Y : Type} (f : X -> Y) (y : Y)
-  : hfiber f y -> cofib f y = cf_apex f.
-Proof.
-  intros [x p].
-  lhs nrapply (ap (cofib f) p^).
-  apply cfglue.
-Defined.
+(** ** Connectivity of cofibers *)
 
 (** The cofiber of an [n]-conencted map is [n.+1]-connected. *)
 Definition isconnnected_cofiber (n : trunc_index) {X Y : Type} (f : X -> Y)
@@ -125,6 +117,16 @@ Proof.
     apply moveR_Vp.
     rhs nrapply concat_p1.
     nrapply conn_map_comp.
+Defined.
+
+(** ** Comparison of fibers and cofibers *)
+
+Definition fiber_to_path_cofiber {X Y : Type} (f : X -> Y) (y : Y)
+  : hfiber f y -> cofib f y = cf_apex f.
+Proof.
+  intros [x p].
+  lhs nrapply (ap (cofib f) p^).
+  apply cfglue.
 Defined.
 
 (** Blakers-Massey implies that the comparison map is highly connected. *)
