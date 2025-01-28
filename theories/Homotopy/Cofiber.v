@@ -151,8 +151,8 @@ Proof.
     1: reflexivity.
     snrapply path_sigma.
     1: reflexivity.
-    simpl.
+    unfold fiber_to_path_cofiber; simpl.
     lhs_V nrapply inv_V.
-    change ((pglue ?x)^^ = ?y) with ((cfglue f x)^ = y).
-    by elim (cfglue f x).
+    nrapply ap; symmetry.
+    apply concat_1p.
 Defined.
