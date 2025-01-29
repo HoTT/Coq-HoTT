@@ -13,7 +13,6 @@ Proof.
   snrapply cancelL_equiv_conn_map.
   - exact (Pullback (pushl (f:=const_tt X) (g:=const_tt X)) pushr).
   - symmetry.
-    do 2 refine (_ oE equiv_contr_sigma _).
-    reflexivity.
+    exact (equiv_contr_sigma _ oE equiv_contr_sigma (fun b : Unit => {c : Unit & pushl b = pushr c})).
   - rapply blakers_massey_po@{u u u u v u u u u}.
 Defined.
