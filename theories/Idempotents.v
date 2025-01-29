@@ -757,8 +757,8 @@ For convenience, we instead split the idempotent on splittings of a fixed map [f
 Section CoherentIdempotents.
   Context {ua : Univalence}.
 
-  Class IsIdempotent {X : Type} (f : X -> X)
-    := is_coherent_idem : split_idem (retract_idem (splitting_retractof_isqidem f)).
+  Class IsIdempotent@{u u0 u1} {X : Type@{u}} (f : X -> X)
+    := is_coherent_idem : split_idem@{u u0} (retract_idem@{u u1} (splitting_retractof_isqidem f)).
 
   Definition Build_IsIdempotent {X : Type} (f : X -> X)
   : Splitting f -> IsIdempotent f
@@ -781,7 +781,7 @@ Section CoherentIdempotents.
     refine (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).2.
   Defined.
 
-  Definition Idempotent (X : Type) := { f : X -> X & IsIdempotent f }.
+  Definition Idempotent@{u u0 u1} (X : Type@{u}) := { f : X -> X & IsIdempotent@{u u0 u1} f }.
 
   Definition idempotent_pr1 {X : Type} : Idempotent X -> (X -> X) := pr1.
   Coercion idempotent_pr1 : Idempotent >-> Funclass.
@@ -790,9 +790,8 @@ Section CoherentIdempotents.
     := f.2.
 
   (** The above definitions depend on [Univalence].  Technically this is the case by their construction, since they are a splitting of a map that we only know to be idempotent in the presence of univalence.  This map could be defined, and hence "split", without univalence; but also only with univalence do we know that they have the right homotopy type.  Thus univalence is used in two places: concluding (meta-theoretically) from HTT 4.4.5.14 that [RetractOf X] has the right homotopy type, and showing (in the next lemma) that it is equivalent to [Idempotent X].  In the absence of univalence, we don't currently have *any* provably-correct definition of the type of coherent idempotents; it ought to involve an infinite tower of coherences as defined in HTT section 4.4.5.   However, there may be some Yoneda-like meta-theoretic argument which would imply that the above-defined types do have the correct homotopy type without univalence (though almost certainly not without funext). *)
-
-  Definition equiv_idempotent_retractof (X : Type)
-  : Idempotent X <~> RetractOf X.
+  Definition equiv_idempotent_retractof@{u u0 u1 +} (X : Type@{u})
+  : Idempotent@{u u0 u1} X <~> RetractOf X.
   Proof.
     transitivity ({ f : X -> X & Splitting f }).
     - unfold Idempotent.

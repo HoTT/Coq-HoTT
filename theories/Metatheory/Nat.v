@@ -820,7 +820,7 @@ Section AssumeStuff.
       - apply equiv_precompose'.
         apply equiv_N_segment_succ.
       - apply equiv_functor_prod_l.
-        apply equiv_unit_rec@{x nr}.
+        apply equiv_unit_rec@{x}.
     Defined.
 
     Local Definition equiv_seg_succ@{} (n m : N) (H : m < succ n)

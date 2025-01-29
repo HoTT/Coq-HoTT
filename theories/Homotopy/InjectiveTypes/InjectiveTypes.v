@@ -418,7 +418,7 @@ Definition decidable_alg_flab_hprop@{w} `{Funext} (P : HProp@{w})
 Proof.
   pose (inl' := inl : P + ~P -> (P + ~P) + (Unit : Type@{w})).
   assert (l : {d : (P + ~P) + (Unit : Type@{w}) & forall z, d = inl' z}).
-  { refine (center_af _; contr_af inl'). rapply ishprop_decidable_hprop@{w w}. }
+  { refine (center_af _; contr_af inl'). rapply ishprop_decidable_hprop. }
   destruct l as [[s | u] l2].
   - exact s.
   - assert (np := fun p => inl_ne_inr _ _ (l2 (inl p))^).
