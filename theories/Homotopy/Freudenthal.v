@@ -12,6 +12,8 @@ Proof.
   (* If we post-compose [merid : X -> North = South] with an equivalence [North = South <~> P], where [P] is the pullback of the inclusions [Unit -> Susp X] hitting [North] and [South], we get the canonical comparison map [X -> P] whose connectivity follows from the Blakers-Massey theorem. *)
   snrapply cancelL_equiv_conn_map.
   - exact (Pullback (pushl (f:=const_tt X) (g:=const_tt X)) pushr).
-  - make_equiv.
+  - symmetry.
+    do 2 refine (_ oE equiv_contr_sigma _).
+    reflexivity.
   - rapply blakers_massey_po@{u u u u v u u u u}.
 Defined.
