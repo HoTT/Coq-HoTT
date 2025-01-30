@@ -1,9 +1,9 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc
-  Basics.Iff.
-Require Import Types.Sigma.
+  Basics.Iff Basics.Equivalences.
+Require Import Types.Sigma Types.Paths.
 Require Import Groups.Group AbGroups.Abelianization AbGroups.AbelianGroup
   Groups.QuotientGroup.
-Require Import WildCat.Core WildCat.EquivGpd.
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.
 Require Import Truncations.Core.
 
 Local Open Scope mc_scope.
@@ -197,7 +197,7 @@ Proof.
   - intros y; cbn beta.
     by rewrite grp_commutator_inv.
   - exact (issubgroup_precomp_commutator_l
-      (subgroup_preimage (grp_op_homo_inv G) (subgroup_grp_op H)) x).
+      (subgroup_preimage (grp_op_iso_inv G) (subgroup_grp_op H)) x).
 Defined.
 
 Definition subgroup_precomp_commutator_l {G : Group} (H : Subgroup G) (y : G)
@@ -253,8 +253,7 @@ Proof.
 Defined.
 
 (** Commutator subgroups are functorial. *)
-Definition functor_subgroup_commutator {G : Group}
-  {H J K L : Subgroup G}
+Definition functor_subgroup_commutator {G : Group} {H J K L : Subgroup G}
   (f : forall x, H x -> K x) (g : forall x, J x -> L x)
   : forall x, [H, J] x -> [K, L] x.
 Proof.
@@ -263,6 +262,50 @@ Proof.
   apply subgroup_commutator_in.
   - by apply f.
   - by apply g.
+Defined.
+
+Definition subgroup_eq_commutator {G : Group} {H J K L : Subgroup G}
+  (f : forall x, H x <-> K x) (g : forall x, J x <-> L x)
+  : forall x, [H, J] x <-> [K, L] x.
+Proof.
+  intros x; split; revert x; apply functor_subgroup_commutator.
+  1,3: apply f.
+  1,2: apply g.
+Defined.
+
+(** Commutator subgroups are symmetric in their arguments. *)
+Definition subgroup_commutator_symm {G : Group} (H J : Subgroup G)
+  : forall x, [H, J] x <-> [J, H] x.
+Proof.
+  intros x; split; revert x; snrapply subgroup_commutator_rec.
+  - intros x y Hx Jy.
+    nrapply subgroup_in_inv'.
+    rewrite grp_commutator_inv.
+    by apply subgroup_commutator_in.
+  - intros x y Jy Hx.
+    nrapply subgroup_in_inv'.
+    rewrite grp_commutator_inv.
+    by apply subgroup_commutator_in.
+Defined.
+
+(** The opposite subgroup of a commutator subgroup is the commutator subgroup of the opposite subgroups. *)
+Definition subgroup_eq_commutator_grp_op {G : Group} (H J : Subgroup G)
+  : forall (x : grp_op G), subgroup_grp_op [H, J] x
+    <-> [subgroup_grp_op H, subgroup_grp_op J] x.
+Proof.
+  intros x.
+  nrapply (iff_compose
+    (subgroup_eq_functor_subgroup_generated _ _ (grp_op_iso_inv G) _ x)
+    (equiv_subgroup_inv _ _)^-1%equiv).
+  clear x; intros x.
+  do 2 (snrapply (equiv_functor_sigma'
+    (grp_iso_subgroup_group _ (grp_op_iso_inv G)
+      (equiv_subgroup_inv (G:=grp_op G) (subgroup_grp_op _)))); intro).
+  simpl.
+  refine (equiv_moveL_equiv_M _ _ oE _).
+  apply equiv_concat_l.
+  apply moveR_equiv_V; symmetry.
+  nrapply (grp_homo_commutator (grp_op_iso_inv _)).
 Defined.
 
 (** A commutator subgroup of an abelian group is always trivial. *)
@@ -328,25 +371,13 @@ Definition subgroup_commutator_normal_prod_r {G : Group}
   (H K L : NormalSubgroup G)
   : forall x, [H, subgroup_product K L] x <-> subgroup_product [H, K] [H, L] x.
 Proof.
-  intros x; split.
-  - revert x; snrapply subgroup_commutator_rec.
-    intros x y Hx; revert y.
-    change (subgroup_product ?H ?J (grp_commutator x ?y))
-      with (subgroup_precomp_commutator_r (subgroup_product H J) x y).
-    snrapply subgroup_generated_rec.
-    intros y [Ky | Ly].
-    + apply subgroup_product_incl_l.
-      by apply subgroup_commutator_in.
-    + apply subgroup_product_incl_r.
-      by apply subgroup_commutator_in.
-  - revert x; snrapply subgroup_generated_rec.
-    intros x [HKx | HLx].
-    + revert x HKx.
-      apply functor_subgroup_commutator; trivial.
-      apply subgroup_product_incl_l.
-    + revert x HLx.
-      apply functor_subgroup_commutator; trivial.
-      apply subgroup_product_incl_r.
+  intros x.
+  etransitivity.
+  1: symmetry; apply subgroup_commutator_symm.
+  etransitivity.
+  2: nrapply (subgroup_eq_functor_subgroup_product grp_iso_id
+    (subgroup_commutator_symm _ _) (subgroup_commutator_symm _ _)).
+  exact (subgroup_commutator_normal_prod_l K L H x).
 Defined.
 
 (** The subgroup image of a commutator is included in the commutator of the subgroup images. The converse only generally holds for a normal [J] and [K] and a surjective [f]. *)

@@ -709,6 +709,16 @@ Proof.
   apply isnormal.
 Defined.
 
+Definition normalsubgroup_grp_op {G : Group}
+  : NormalSubgroup G -> NormalSubgroup (grp_op G)
+  := fun N => Build_NormalSubgroup (grp_op G) (subgroup_grp_op N) _.
+
+Definition subgroup_eq_grp_op_op {G : Group} (H : Subgroup G)
+  : forall x, subgroup_grp_op (subgroup_grp_op H) x <-> H x.
+Proof.
+  reflexivity.
+Defined.
+
 (** ** Preimage subgroup *)
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
@@ -848,6 +858,23 @@ Proof.
   by apply preserves.
 Defined.
 
+Definition subgroup_eq_functor_subgroup_generated {G H : Group}
+  (X : G -> Type) (Y : H -> Type) (f : G $<~> H) (preserves : forall g, X g <-> Y (f g))
+  : forall g, subgroup_generated X g <-> subgroup_generated Y (f g).
+Proof.
+  intros x; split; revert x.
+  - apply functor_subgroup_generated.
+    apply preserves.
+  - equiv_intro f^-1$ x.
+    rewrite eisretr.
+    apply functor_subgroup_generated; clear x.
+    equiv_intro f x; intros y.
+    simpl; rewrite (eissect f).
+    by apply preserves.
+Defined.
+
+(** ** Product of subgroups *)
+
 (** The product of two subgroups. *)
 Definition subgroup_product {G : Group} (H K : Subgroup G) : Subgroup G
   := subgroup_generated (fun x => (H x + K x)%type).
@@ -895,6 +922,37 @@ Defined.
 Definition normalsubgroup_product {G : Group} (H K : NormalSubgroup G)
   : NormalSubgroup G
   := Build_NormalSubgroup G (subgroup_product H K) _.
+
+Definition functor_subgroup_product {G H : Group}
+  {J K : Subgroup G} {L M : Subgroup H}
+  (f : G $-> H) (l : forall x, J x -> L (f x)) (r : forall x, K x -> M (f x))
+  : forall x, subgroup_product J K x -> subgroup_product L M (f x).
+Proof.
+  snrapply functor_subgroup_generated.
+  exact (fun x => functor_sum (l x) (r x)).
+Defined.
+
+Definition subgroup_eq_functor_subgroup_product {G H : Group}
+  {J K : Subgroup G} {L M : Subgroup H}
+  (f : G $<~> H) (l : forall x, J x <-> L (f x)) (r : forall x, K x <-> M (f x))
+  : forall x, subgroup_product J K x <-> subgroup_product L M (f x).
+Proof.
+  snrapply subgroup_eq_functor_subgroup_generated.
+  exact (fun x => iff_functor_sum (l x) (r x)).
+Defined.
+
+Definition subgroup_eq_product_grp_op {G : Group} (H K : Subgroup G)
+  : forall x, subgroup_grp_op (subgroup_product H K) x
+    <-> subgroup_product (subgroup_grp_op H) (subgroup_grp_op K) x.
+Proof.
+  intros x.
+  nrapply (iff_compose
+    (subgroup_eq_functor_subgroup_generated _ _ (grp_op_iso_inv G) _ x)
+    (equiv_subgroup_inv _ _)^-1%equiv).
+  clear x; intros x.
+  snrapply equiv_functor_sum';
+    nrapply equiv_subgroup_inv.
+Defined.
 
 (** *** Paths between generated subgroups *)
 
