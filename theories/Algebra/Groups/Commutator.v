@@ -192,20 +192,12 @@ Global Instance issubgroup_precomp_commutator_r {G : Group} (H : Subgroup G)
   `{!IsNormalSubgroup H} (x : G)
   : IsSubgroup (fun y => H [x, y]).
 Proof.
-  snrapply Build_IsSubgroup; cbn beta.
-  - exact _.
-  - rewrite grp_commutator_unit_r.
-    apply subgroup_in_unit.
-  - intros y z Hxy Hxz.
-    rewrite grp_commutator_op_r.
-    apply subgroup_in_op.
-    + assumption.
-    + by rapply isnormal_conj.
-  - intros y Hxy.
-    rewrite grp_commutator_inv_r.
-    rapply isnormal_conj.
-    rewrite <- grp_commutator_inv.
-    by apply subgroup_in_inv.
+  snrapply issubgroup_equiv.
+  - exact (fun y => H [y, x]^).
+  - intros y; cbn beta.
+    by rewrite grp_commutator_inv.
+  - exact (issubgroup_precomp_commutator_l
+      (subgroup_preimage (grp_op_homo_inv G) (subgroup_grp_op H)) x).
 Defined.
 
 Definition subgroup_precomp_commutator_l {G : Group} (H : Subgroup G) (y : G)

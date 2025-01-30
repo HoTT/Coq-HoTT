@@ -560,6 +560,37 @@ Section GroupMovement.
 
 End GroupMovement.
 
+(** ** Opposite Group *)
+
+(** The opposite group of a group is the group with the same elements but with the group operation reversed. *)
+Definition grp_op : Group -> Group.
+Proof.
+  intros G.
+  snrapply Build_Group'.
+  - exact G.
+  - exact _.
+  - exact (flip (.*.)).
+  - exact 1.
+  - exact (^).
+  - intros x y z.
+    symmetry.
+    exact (grp_assoc z y x).
+  - intro x.
+    exact (grp_unit_r x).
+  - intro x.
+    exact (grp_inv_r x).
+Defined.
+
+(** Taking the inverse is a homomorphism from a group to the opposite group. *)
+Definition grp_op_homo_inv (G : Group)
+  : GroupHomomorphism G (grp_op G).
+Proof.
+  snrapply Build_GroupHomomorphism.
+  - exact inv.
+  - intros x y.
+    rapply grp_inv_op.
+Defined.
+
 (** ** Commutation *)
 
 (** If [g] commutes with [h], then [g] commutes with the inverse [-h]. *)

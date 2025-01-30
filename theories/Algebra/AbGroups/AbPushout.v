@@ -123,7 +123,7 @@ Definition path_ab_pushout `{Univalence} {A B C : AbGroup} (f : A $-> B) (g : A 
   : @in_cosetL (ab_biprod B C) (ab_pushout_subgroup f g) bc0 bc1
                <~> (grp_quotient_map bc0 = grp_quotient_map bc1 :> ab_pushout f g).
 Proof.
-  rapply path_quotient.
+  nrapply path_quotient; exact _.
 Defined.
 
 (** The pushout of an embedding is an embedding. *)

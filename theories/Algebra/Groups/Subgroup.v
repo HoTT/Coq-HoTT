@@ -22,6 +22,9 @@ Class IsSubgroup {G : Group} (H : G -> Type) := {
 
 Global Existing Instance issubgroup_predicate.
 
+Definition issig_issubgroup {G : Group} (H : G -> Type) : _ <~> IsSubgroup H
+  := ltac:(issig).
+
 (** Basic properties of subgroups *)
 
 (** Smart constructor for subgroups.  *)
@@ -96,14 +99,32 @@ Section IsSubgroupElements.
 
 End IsSubgroupElements.
 
-Definition issig_issubgroup {G : Group} (H : G -> Type) : _ <~> IsSubgroup H
-  := ltac:(issig).
-
 (** Given a predicate H on a group G, being a subgroup is a property. *)
 Global Instance ishprop_issubgroup `{F : Funext} {G : Group} {H : G -> Type}
   : IsHProp (IsSubgroup H).
 Proof.
   exact (istrunc_equiv_istrunc _ (issig_issubgroup H)).
+Defined.
+
+(** Transporting being a subgroup across a pointwise equivalence. *)
+Definition issubgroup_equiv {G : Group} {H K : G -> Type}
+  (p : forall g, H g <~> K g)
+  : IsSubgroup H -> IsSubgroup K.
+Proof.
+  intros H1.
+  snrapply Build_IsSubgroup.
+  - intros x.
+    snrapply (istrunc_equiv_istrunc (H x)).
+    1: apply p.
+    exact _.
+  - apply p, issubgroup_in_unit.
+  - intros x y.
+    equiv_intro (p x) Hx.
+    equiv_intro (p y) Hy.
+    exact (p _ (issubgroup_in_op x y Hx Hy)).
+  - intros x.
+    equiv_intro (p x) Hx.
+    exact (p _ (issubgroup_in_inv x Hx)).
 Defined.
 
 (** ** Definition of subgroup *) 
@@ -664,23 +685,51 @@ Global Instance ismaximalsubgroup_maximalsubgroup {G : Group}
   : IsMaximalSubgroup (maximal_subgroup G)
   := fun g => tt.
 
+(** ** Subgroups in opposite group *)
+
+Global Instance issubgroup_grp_op {G : Group} (H : G -> Type)
+  : IsSubgroup H -> IsSubgroup (G:=grp_op G) H.
+Proof.
+  intros H1.
+  snrapply Build_IsSubgroup'.
+  - exact _.
+  - cbn; rapply issubgroup_in_unit.
+  - intros x y Hx Hy; cbn.
+    by apply issubgroup_in_inv_op.
+Defined.
+
+Definition subgroup_grp_op {G : Group} (H : Subgroup G)
+  : Subgroup (grp_op G)
+  := Build_Subgroup (grp_op G) H _.
+
+Global Instance isnormal_subgroup_grp_op {G : Group} (H : Subgroup G)
+  : IsNormalSubgroup H -> IsNormalSubgroup (subgroup_grp_op H).
+Proof.
+  intros n x y; cbn.
+  apply isnormal.
+Defined.
+
 (** ** Preimage subgroup *)
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
-Definition subgroup_preimage {G H : Group} (f : G $-> H) (S : Subgroup H)
-  : Subgroup G.
+Global Instance issubgroup_preimage {G H : Group} (f : G $-> H) (S : H -> Type)
+  : IsSubgroup S -> IsSubgroup (S o f).
 Proof.
-  snrapply Build_Subgroup'.
-  - exact (S o f).
+  intros H1.
+  snrapply Build_IsSubgroup'.
   - hnf; exact _.
   - nrefine (transport S (grp_homo_unit f)^ _).
-    apply subgroup_in_unit.
+    apply issubgroup_in_unit.
   - hnf; intros x y Sfx Sfy.
     nrefine (transport S (grp_homo_op f _ _)^ _).
-    nrapply subgroup_in_op; only 1: assumption.
+    rapply issubgroup_in_op; only 1: assumption.
     nrefine (transport S (grp_homo_inv f _)^ _).
-    by apply subgroup_in_inv.
+    by apply issubgroup_in_inv.
 Defined.
+
+Definition subgroup_preimage {G H : Group} (f : G $-> H) (S : Subgroup H)
+  : Subgroup G
+  := Build_Subgroup G (S o f) _.
 
 (** The preimage of a normal subgroup is again normal. *)
 Global Instance isnormal_subgroup_preimage {G H : Group} (f : G $-> H)
