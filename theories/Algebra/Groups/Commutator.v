@@ -317,7 +317,7 @@ Proof.
 Defined.
 
 (** A commutator of normal subgroups is normal. *)
-Global Instance isnormal_subgorup_commutator {G : Group} (H J : Subgroup G)
+Global Instance isnormal_subgroup_commutator {G : Group} (H J : Subgroup G)
   `{!IsNormalSubgroup H, !IsNormalSubgroup J}
   : IsNormalSubgroup [H, J].
 Proof.
@@ -325,19 +325,11 @@ Proof.
   intros x y; revert x.
   apply (functor_subgroup_generated _ _ (grp_conj y)).
   intros x.
-  snrapply functor_sigma.
-  - snrapply functor_sigma.
-    + exact (grp_conj y).
-    + exact (fun _ => isnormal_conj _).
-  - intros h.
-    snrapply functor_sigma.
-    + snrapply functor_sigma.
-      * exact (grp_conj y).
-      * exact (fun _ => isnormal_conj _).
-    + intros j.
-      intros p; simpl.
-      lhs_V nrapply (grp_homo_commutator (grp_conj y)).
-      exact (ap (grp_conj y) p).
+  do 2 (rapply (functor_sigma
+    (functor_subgroup_group (grp_conj y) (fun _ => isnormal_conj _))); intro).
+  intros p; simpl.
+  lhs_V nrapply (grp_homo_commutator (grp_conj y)).
+  exact (ap (grp_conj y) p).
 Defined.
 
 (** Commutator subgroups distribute over products of normal subgroups on the left. *)
