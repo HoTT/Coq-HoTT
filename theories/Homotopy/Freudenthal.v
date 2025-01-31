@@ -10,9 +10,6 @@ Global Instance freudenthal@{u v | u < v} `{Univalence} (n : trunc_index)
   : IsConnMap (n +2+ n) (@merid X).
 Proof.
   (* If we post-compose [merid : X -> North = South] with an equivalence [North = South <~> P], where [P] is the pullback of the inclusions [Unit -> Susp X] hitting [North] and [South], we get the canonical comparison map [X -> P] whose connectivity follows from the Blakers-Massey theorem. *)
-  snrapply cancelL_equiv_conn_map.
-  - exact (Pullback (pushl (f:=const_tt X) (g:=const_tt X)) pushr).
-  - symmetry.
-    exact (equiv_contr_sigma _ oE equiv_contr_sigma (fun b : Unit => {c : Unit & pushl b = pushr c})).
-  - rapply blakers_massey_po@{u u u u v u u u u}.
+  rapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_unit_paths _ _)^-1%equiv).
+  rapply blakers_massey_po@{u u u u v u u u u}.
 Defined.

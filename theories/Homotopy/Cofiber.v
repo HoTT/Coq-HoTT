@@ -133,22 +133,18 @@ Definition isconnected_fiber_to_cofiber `{Univalence}
   (f : X -> Y) {fc : IsConnMap n.+1 f} (y : Y)
   : IsConnMap (m +2+ n) (fiber_to_path_cofiber f y).
 Proof.
-  snrapply conn_map_fiber.
+  (* It's enough to check the connectivity of [functor_sigma idmap (fiber_to_path_cofiber f)]. *)
+  revert y; snrapply conn_map_fiber.
+  (* We precompose with the equivalence [X <~> { y : Y & hfiber f y }]. *)
   rapply (cancelR_conn_map _ (equiv_fibration_replacement _)).
-  snrapply cancelL_equiv_conn_map.
-  - exact (Pullback (pushl (f:=f) (g:=const_tt X)) pushr).
-  - unfold Pullback.
-    snrapply equiv_functor_sigma_id.
-    intros y'.
-    refine ((equiv_contr_sigma _)^-1 oE _).
-    reflexivity.
-  - snrapply conn_map_homotopic.
-    3: rapply blakers_massey_po.
-    intros x.
-    snrapply path_sigma.
-    1: reflexivity.
-    snrapply path_sigma.
-    1: reflexivity.
-    unfold fiber_to_path_cofiber; symmetry.
-    apply concat_1p.
+  (* The Sigma-type [{ y : Y & cofib f y = cf_apex f}] in the codomain is the fiber of the map [cofib f], and so it is equivalent to the pullback of the cospan in the pushout square defining [Cofiber f].  We postcompose with this equivalence. *)
+  snrapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_hfiber _ _)^-1%equiv).
+  (* The composite is homotopic to the map from [blakers_massey_po], with the only difference being an extra [1 @ _]. *)
+  snrapply conn_map_homotopic.
+  3: rapply blakers_massey_po.
+  (* Use [compute.] to see the details of the goal. *)
+  intros x.
+  apply (ap (fun z => (f x; tt; z))).
+  unfold fiber_to_path_cofiber; simpl.
+  symmetry; apply concat_1p.
 Defined.
