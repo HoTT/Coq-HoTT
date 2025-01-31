@@ -14,21 +14,21 @@ Set Universe Minimization ToSet.
 (** Homotopy cofibers or mapping cones are spaces constructed from a map [f : X -> Y] by contracting the image of [f] inside [Y] to a point. They can be thought of as a kind of coimage or quotient. *)
 
 Definition Cofiber {X Y : Type} (f : X -> Y)
-  := Pushout (const_tt X) f.
+  := Pushout f (const_tt X) .
 
 (** *** Constructors *)
 
 (** Any element of [Y] can be included in the cofiber. *)
 Definition cofib {X Y : Type} (f : X -> Y) : Y -> Cofiber f
-  := pushr.
+  := pushl.
 
 (** We have a distinguised point in the cofiber, where the image of [f] is contracted to. *)
 Definition cf_apex {X Y : Type} (f : X -> Y) : Cofiber f
-  := pushl tt.
+  := pushr tt.
 
 (** Given an element [x : X], we have the path [cfglue f x] from the [f x] to the [cf_apex]. *)
 Definition cfglue {X Y : Type} (f : X -> Y) (x : X) : cofib f (f x) = cf_apex f
-  := (pglue _)^.
+  := pglue _.
 
 (** *** Induction and recursion principles *)
 
@@ -38,10 +38,10 @@ Definition cofiber_rec {X Y Z : Type} (f : X -> Y) (g : Y -> Z)
   : Cofiber f -> Z.
 Proof.
   snrapply Pushout_rec.
-  - intros; exact null.1.
   - exact g.
+  - intros; exact null.1.
   - intros a.
-    exact (null.2 a)^.
+    exact (null.2 a).
 Defined.
 
 (** The induction principle is similar, although requries a dependent form of null homotopy. *)
@@ -51,12 +51,10 @@ Definition cofiber_ind {X Y : Type} (f : X -> Y) (P : Cofiber f -> Type)
   : forall x, P x.
 Proof.
   snrapply Pushout_ind.
-  - intros []; exact null.1.
   - intros y; apply g.
+  - intros []; exact null.1.
   - intros x.
-    simpl.
-    apply moveR_transport_p.
-    exact (null.2 x)^.
+    exact (null.2 x).
 Defined.
 
 (** ** Functoriality *)
@@ -69,7 +67,7 @@ Local Close Scope trunc_scope.
 Definition functor_cofiber {X Y X' Y' : Type} {f : X -> Y} {f' : X' -> Y'}
   (g : X -> X') (h : Y -> Y') (p : h o f == f' o g)
   : Cofiber f -> Cofiber f'
-  := functor_pushout g idmap h (fun _ => idpath) p.
+  := functor_pushout g h idmap p (fun _ => idpath).
 
 (** 2-functorial action. *)
 Definition functor_cofiber_homotopy {X Y X' Y' : Type} {f : X -> Y} {f' : X' -> Y'}
@@ -77,9 +75,10 @@ Definition functor_cofiber_homotopy {X Y X' Y' : Type} {f : X -> Y} {f' : X' -> 
   (u : g == g') (v : h == h') 
   (r : forall x, p x @ ap f' (u x) = v (f x) @ p' x)
   : functor_cofiber g h p == functor_cofiber g' h' p'
-  := functor_pushout_homotopic
-      (f := fun _ => _) (f' := fun _ => _) (k := idmap) (k' := idmap) (p' := fun _ => 1)
-      u (fun _ => 1) v (fun x => concat_1p _ @ ap_const _ _) r.
+  := @functor_pushout_homotopic
+      X Y Unit f (const_tt X) X' Y' Unit f' (const_tt X')
+      g g' h h' idmap idmap p (fun _ => 1) p' (fun _ => 1)
+      u v (fun _ => 1) r (fun x => concat_1p _ @ ap_const _ _).
 
 (** The cofiber functor preserves the identity map. *) 
 Definition functor_cofiber_idmap {X Y : Type} (f : X -> Y)
@@ -93,7 +92,7 @@ Definition functor_cofiber_compose {X Y X' Y' X'' Y'' : Type}
   (p : h o f == f' o g) (p' : h' o f' == f'' o g')
   : functor_cofiber (g' o g) (h' o h) (fun x => ap h' (p x) @ p' (g x))
     == functor_cofiber g' h' p' o functor_cofiber g h p
-  := functor_pushout_compose g idmap h g' idmap h' (fun _ => 1) p (fun _ => 1) p'.
+  := functor_pushout_compose g h idmap g' h' idmap p (fun _ => 1) p' (fun _ => 1).
 
 Local Open Scope trunc_scope.
 
@@ -131,19 +130,19 @@ Defined.
 
 (** Blakers-Massey implies that the comparison map is highly connected. *)
 Definition isconnected_fiber_to_cofiber `{Univalence}
-  (n m : trunc_index) {X Y : Type} {ac : IsConnected n.+1 X}
-  (f : X -> Y) {fc : IsConnMap m.+1 f} (y : Y)
+  (n m : trunc_index) {X Y : Type} {ac : IsConnected m.+1 X}
+  (f : X -> Y) {fc : IsConnMap n.+1 f} (y : Y)
   : IsConnMap (m +2+ n) (fiber_to_path_cofiber f y).
 Proof.
   snrapply conn_map_fiber.
   rapply (cancelR_conn_map _ (equiv_fibration_replacement _)).
   snrapply cancelL_equiv_conn_map.
-  - exact (Pullback (pushl (f:=const_tt X) (g:=f)) pushr).
+  - exact (Pullback (pushl (f:=f) (g:=const_tt X)) pushr).
   - unfold Pullback.
-    refine ((equiv_contr_sigma _)^-1 oE _).
     snrapply equiv_functor_sigma_id.
     intros y'.
-    snrapply equiv_path_inverse.
+    refine ((equiv_contr_sigma _)^-1 oE _).
+    reflexivity.
   - snrapply conn_map_homotopic.
     3: rapply blakers_massey_po.
     intros x.
@@ -151,8 +150,6 @@ Proof.
     1: reflexivity.
     snrapply path_sigma.
     1: reflexivity.
-    unfold fiber_to_path_cofiber; simpl.
-    lhs_V nrapply inv_V.
-    nrapply ap; symmetry.
+    unfold fiber_to_path_cofiber; symmetry.
     apply concat_1p.
 Defined.
