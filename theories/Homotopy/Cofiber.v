@@ -14,7 +14,7 @@ Set Universe Minimization ToSet.
 (** Homotopy cofibers or mapping cones are spaces constructed from a map [f : X -> Y] by contracting the image of [f] inside [Y] to a point. They can be thought of as a kind of coimage or quotient. *)
 
 Definition Cofiber {X Y : Type} (f : X -> Y)
-  := Pushout f (const_tt X) .
+  := Pushout f (const_tt X).
 
 (** *** Constructors *)
 
@@ -53,8 +53,7 @@ Proof.
   snrapply Pushout_ind.
   - intros y; apply g.
   - intros []; exact null.1.
-  - intros x.
-    exact (null.2 x).
+  - exact null.2.
 Defined.
 
 (** ** Functoriality *)
@@ -74,11 +73,11 @@ Definition functor_cofiber_homotopy {X Y X' Y' : Type} {f : X -> Y} {f' : X' -> 
   {g g' : X -> X'} {h h' : Y -> Y'} {p : h o f == f' o g} {p' : h' o f == f' o g'}
   (u : g == g') (v : h == h') 
   (r : forall x, p x @ ap f' (u x) = v (f x) @ p' x)
-  : functor_cofiber g h p == functor_cofiber g' h' p'
-  := @functor_pushout_homotopic
-      X Y Unit f (const_tt X) X' Y' Unit f' (const_tt X')
-      g g' h h' idmap idmap p (fun _ => 1) p' (fun _ => 1)
-      u v (fun _ => 1) r (fun x => concat_1p _ @ ap_const _ _).
+  : functor_cofiber g h p == functor_cofiber g' h' p'.
+Proof.
+  snrapply (functor_pushout_homotopic u v (fun _ => 1) r).
+  intro x; exact (concat_1p _ @ ap_const _ _).
+Defined.
 
 (** The cofiber functor preserves the identity map. *) 
 Definition functor_cofiber_idmap {X Y : Type} (f : X -> Y)
@@ -124,7 +123,7 @@ Definition fiber_to_path_cofiber {X Y : Type} (f : X -> Y) (y : Y)
   : hfiber f y -> cofib f y = cf_apex f.
 Proof.
   intros [x p].
-  lhs nrapply (ap (cofib f) p^).
+  lhs_V nrapply (ap (cofib f) p).
   apply cfglue.
 Defined.
 
