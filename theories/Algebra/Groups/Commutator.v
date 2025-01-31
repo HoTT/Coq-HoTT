@@ -299,7 +299,7 @@ Proof.
     (equiv_subgroup_inv _ _)^-1%equiv).
   clear x; intros x.
   do 2 (snrapply (equiv_functor_sigma'
-    (grp_iso_subgroup_group _ (grp_op_iso_inv G)
+    (grp_iso_subgroup_group (grp_op_iso_inv G)
       (equiv_subgroup_inv (G:=grp_op G) (subgroup_grp_op _)))); intro).
   simpl.
   refine (equiv_moveL_equiv_M _ _ oE _).
@@ -325,9 +325,8 @@ Proof.
   intros x y; revert x.
   apply (functor_subgroup_generated _ _ (grp_conj y)).
   intros x.
-  do 2 (rapply (functor_sigma
-    (functor_subgroup_group (grp_conj y) (fun _ => isnormal_conj _))); intro).
-  intros p; simpl.
+  do 2 (rapply (functor_sigma (grp_iso_normal_conj _ y)); intro).
+  intros p.
   lhs_V nrapply (grp_homo_commutator (grp_conj y)).
   exact (ap (grp_conj y) p).
 Defined.

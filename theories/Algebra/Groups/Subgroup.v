@@ -290,7 +290,7 @@ Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H
   := subgroup_corec (grp_homo_restr f J) (sig_ind _ g).
 
 Definition grp_iso_subgroup_group {G H : Group@{i}}
-  {J : Subgroup@{i i} G} (K : Subgroup@{i i} H)
+  {J : Subgroup@{i i} G} {K : Subgroup@{i i} H}
   (e : G $<~> H) (f : forall x, J x <-> K (e x))
   : subgroup_group J $<~> subgroup_group K.
 Proof.
@@ -505,6 +505,17 @@ Proof.
     rapply isnormal_conj.
   - intros is_normal'.
     by snrapply Build_IsNormalSubgroup'.
+Defined.
+
+(** Inner automorphisms of a group [G] restrict to automorphisms of normal subgroups. *)
+Definition grp_iso_normal_conj {G : Group} (N : Subgroup G)
+  `{!IsNormalSubgroup N} (x : G)
+  : subgroup_group N $<~> subgroup_group N.
+Proof.
+  snrapply grp_iso_subgroup_group.
+  - exact (grp_iso_conj x).
+  - intros y.
+    rapply isnormal_conj.
 Defined.
 
 (** Left and right cosets are equivalent in normal subgroups. *)
