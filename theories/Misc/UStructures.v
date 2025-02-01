@@ -4,7 +4,7 @@ Require Import Basics Types.
 Require Import Truncations.Core.
 Require Import Spaces.Nat.Core.
 
-Open Scope nat_scope.
+Local Open Scope nat_scope.
 
 (** ** [nat]-graded uniform structures *)
 
@@ -19,7 +19,8 @@ Class UStructure (us_type : Type) := {
 
 Existing Instances us_reflexive us_symmetric us_transitive.
 
-Notation "u =[ n ] v" := (us_rel n u v) (at level 70).
+Notation "u =[ n ] v" := (us_rel n u v)
+  (at level 70, format "u  =[ n ]  v").
 
 Definition us_rel_leq {X : Type} {struct : UStructure X}
   {m n : nat} (hm : m <= n) {u v : X} (h : u =[n] v)

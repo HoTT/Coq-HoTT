@@ -6,8 +6,8 @@ Require Import Misc.UStructures.
 Require Import List.Core List.Theory.
 Require Import Spaces.NatSeq.Core.
 
-Open Scope nat_scope.
-Open Scope type_scope.
+Local Open Scope nat_scope.
+Local Open Scope type_scope.
 
 (** ** [UStructure] defined by [seq_agree_lt] *)
 

@@ -3,8 +3,8 @@
 Require Import Basics Types.
 Require Import Spaces.Nat.Core.
 
-Open Scope nat_scope.
-Open Scope type_scope.
+Local Open Scope nat_scope.
+Local Open Scope type_scope.
 
 (** ** Operations on sequences *)
 
