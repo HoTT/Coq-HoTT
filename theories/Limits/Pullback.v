@@ -91,14 +91,30 @@ Defined.
 Definition equiv_pullback_unit_prod (A B : Type)
 : Pullback (const_tt A) (const_tt B) <~> A * B.
 Proof.
-  simple refine (equiv_adjointify _ _ _ _).
-  - intros [a [b _]]; exact (a , b).
-  - intros [a b]; exact (a ; b ; 1).
-  - intros [a b]; exact 1.
-  - intros [a [b p]]; simpl.
-    apply (path_sigma' _ 1); simpl.
-    apply (path_sigma' _ 1); simpl.
-    apply path_contr.
+  refine (equiv_sigma_prod0 A B oE _).
+  snrapply equiv_functor_sigma_id; intro a; cbn.
+  rapply equiv_sigma_contr.
+Defined.
+
+(** Pullback of [Unit] is equivalent to [hfiber]. *)
+Definition equiv_pullback_unit_hfiber {A B : Type} (f : A -> B) (g : Unit -> B)
+  : Pullback f g <~> hfiber f (g tt).
+Proof.
+  snrapply equiv_functor_sigma_id; intro a; cbn.
+  exact (equiv_contr_sigma (fun c => _ = g c)).
+Defined.
+
+(** The same for the symmetrical pullback. *)
+Definition equiv_pullback_unit_hfiber' {A B : Type} (f : Unit -> B) (g : A -> B)
+  : Pullback f g <~> hfiber g (f tt)
+  := equiv_pullback_unit_hfiber _ _ oE equiv_pullback_symm _ _.
+
+(** When both corners are [Unit] you get the path type. *)
+Definition equiv_pullback_unit_unit_paths {B : Type} (f g : Unit -> B)
+  : Pullback f g <~> (f tt = g tt).
+Proof.
+  refine (_ oE equiv_contr_sigma _).
+  exact (equiv_contr_sigma (fun c => _ = g c)).
 Defined.
 
 (** The property of a given commutative square being a pullback *)

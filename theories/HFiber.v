@@ -142,29 +142,21 @@ Defined.
 Definition equiv_fibration_replacement  {B C} (f:C ->B)
   : C <~> {y:B & hfiber f y}.
 Proof.
-  snrefine (Build_Equiv _ _ _ (
-    Build_IsEquiv C {y:B & {x:C & f x = y}}
-      (fun c => (f c; (c; idpath)))
-      (fun c => c.2.1)
-      _
-      (fun c => idpath)
-       _)).
-  - intros [? [? []]]; reflexivity.
-  - reflexivity.
+  make_equiv_contr_basedpaths.
+Defined.
+
+(** This is a useful variant for taking a "double fiber" of two maps. *)
+Definition equiv_double_fibration_replacement
+  {X Y Z : Type} (f : X -> Y) (g : X -> Z)
+  : X <~> {y : Y & {z : Z & {x : X & f x = y /\ g x = z}}}.
+Proof.
+  make_equiv_contr_basedpaths.
 Defined.
 
 Definition hfiber_fibration {X} (x : X) (P:X->Type)
   : P x <~> @hfiber (sig P) X pr1 x.
 Proof.
-  snrefine (Build_Equiv _ _ _
-    (Build_IsEquiv (P x) { z : sig P & z.1 = x }
-      (fun Px => ((x; Px); idpath))
-      (fun Px => transport P Px.2 Px.1.2)
-      _
-      (fun Px => idpath)
-      _)).
-  - intros [[] []]; reflexivity.
-  - reflexivity.
+  make_equiv_contr_basedpaths.
 Defined.
 
 (** ** Exercise 4.4: The unstable octahedral axiom. *)

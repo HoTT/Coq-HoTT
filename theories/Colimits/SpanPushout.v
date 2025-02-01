@@ -1,5 +1,5 @@
 Require Import HoTT.Basics HoTT.Colimits.Pushout.
-Require Import Types.Paths.
+Require Import Types.Paths Types.Sigma Types.Prod HFiber Limits.Pullback.
 
 (** * Pushouts of "dependent spans". *)
 
@@ -121,3 +121,19 @@ Proof.
     2: apply spushout_rec_beta_spglue.
     apply H.
 Defined.
+
+(** Any pushout is equivalent to a span pushout. *)
+Definition equiv_pushout_spushout {X Y Z : Type} (f : X -> Y) (g : X -> Z)
+  : Pushout f g
+    <~> SPushout (fun (y : Y) (z : Z) => {x : X & f x = y /\ g x = z}).
+Proof.
+  snrapply equiv_pushout.
+  { nrefine (equiv_sigma_prod _ oE _).
+    apply equiv_double_fibration_replacement. }
+  1-4: reflexivity.
+Defined.
+
+(** There is a natural map from the total space of [Q] to the pushout product of [Q]. *)
+Definition spushout_sjoin_map {X Y : Type} (Q : X -> Y -> Type)
+  : {x : X & {y : Y & Q x y}} -> Pullback (spushl Q) (spushr Q)
+  := functor_sigma idmap (fun _ => functor_sigma idmap (fun _ => spglue Q)).

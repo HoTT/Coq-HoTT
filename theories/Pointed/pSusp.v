@@ -5,7 +5,7 @@ Require Import Pointed.Loops.
 Require Import Pointed.pTrunc.
 Require Import Pointed.pEquiv.
 Require Import Homotopy.Suspension.
-Require Import Homotopy.Freudenthal.
+Require Import Homotopy.BlakersMassey.
 Require Import Truncations.
 Require Import WildCat.
 

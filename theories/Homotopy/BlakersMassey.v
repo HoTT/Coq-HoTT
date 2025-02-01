@@ -1,6 +1,8 @@
-Require Import HoTT.Basics HoTT.Types.
+Require Import HoTT.Basics HoTT.Types HFiber.
 Require Import Colimits.Pushout.
 Require Import Colimits.SpanPushout.
+Require Import Homotopy.Suspension.
+Require Import Limits.Pullback.
 Require Import Homotopy.Join.Core.
 Require Import Truncations.
 
@@ -527,10 +529,10 @@ End GBM.
 (** ** The classical Blakers-Massey Theorem *)
 
 Global Instance blakers_massey `{Univalence} (m n : trunc_index)
-           {X Y : Type} (Q : X -> Y -> Type)
-           `{forall y, IsConnected m.+1 { x : X & Q x y } }
-           `{forall x, IsConnected n.+1 { y : Y & Q x y } }
-           (x : X) (y : Y)
+  {X Y : Type} (Q : X -> Y -> Type)
+  `{forall y, IsConnected m.+1 { x : X & Q x y } }
+  `{forall x, IsConnected n.+1 { y : Y & Q x y } }
+  (x : X) (y : Y)
   : IsConnMap (m +2+ n) (@spglue X Y Q x y).
 Proof.
   intros r.
@@ -538,4 +540,55 @@ Proof.
                             (merely_isconnected n _) (spushr Q y) r).
   1: intros; apply isconnected_join.
   all: exact _.
+Defined.
+
+(** A sigma functor is connected if its fibers are, so we have the following. *)
+Definition blakers_massey_total_map `{Univalence} (m n : trunc_index)
+  {X Y : Type} (Q : X -> Y -> Type)
+  `{forall y, IsConnected m.+1 { x : X & Q x y } }
+  `{forall x, IsConnected n.+1 { y : Y & Q x y } }
+  : IsConnMap (Tr (m +2+ n)) (spushout_sjoin_map Q)
+  := _.
+
+Definition blakers_massey_po `{Univalence} (m n : trunc_index)
+  {X Y Z : Type} (f : X -> Y) (g : X -> Z)
+  `{H1 : !IsConnMap n.+1 f} `{H2 : !IsConnMap m.+1 g}
+  : IsConnMap (m +2+ n) (pullback_corec (pglue (f:=f) (g:=g))).
+Proof.
+  (** We postcompose our map with an equivalence from the the pullback of the pushout of [f] and [g] to the pullback of an equivalent [SPushout] over a family [Q]. *)
+  pose (Q := fun y z => {x : X & f x = y /\ g x = z}).
+  snrapply cancelL_equiv_conn_map.
+  1: exact (Pullback (spushl Q) (spushr Q)).
+  1: by snrapply (equiv_pullback (equiv_pushout_spushout _ _)).
+  (** Next we precompose with the equivalence from the total space of [Q] to [X]. *)
+  rapply (cancelR_conn_map _ (equiv_double_fibration_replacement f g)^-1%equiv).
+  (** Next we prove that this composition is homotopic to [spushout_sjoin_map Q]. *)
+  snrapply (conn_map_homotopic _ (spushout_sjoin_map Q)).
+  { intros [y [z [x [[] []]]]].
+    snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
+    lhs nrapply concat_1p.
+    lhs nrapply concat_p1.
+    lhs nrapply functor_coeq_beta_cglue.
+    lhs nrapply concat_p1.
+    nrapply concat_1p. }
+  rapply blakers_massey_total_map.
+  (** What's left is to check that the partial total spaces of [Q] are connected, which we get since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
+  - intros z.
+    nrefine (isconnected_equiv' _ _ _ (H2 z)).
+    make_equiv_contr_basedpaths.
+  - intros y.
+    nrefine (isconnected_equiv' _ _ _ (H1 y)).
+    make_equiv_contr_basedpaths.
+Defined.
+
+(** ** The Freudenthal Suspension Theorem *)
+
+(** The Freudenthal suspension theorem is a fairly trivial corollary of the Blakers-Massey theorem.  It says that [merid : X -> North = South] is highly connected. *)
+Global Instance freudenthal `{Univalence} (n : trunc_index)
+           (X : Type@{u}) `{IsConnected n.+1 X}
+  : IsConnMap (n +2+ n) (@merid X).
+Proof.
+  (* If we post-compose [merid : X -> North = South] with an equivalence [North = South <~> P], where [P] is the pullback of the inclusions [Unit -> Susp X] hitting [North] and [South], we get the canonical comparison map [X -> P] whose connectivity follows from the Blakers-Massey theorem. *)
+  rapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_unit_paths _ _)^-1%equiv).
+  rapply blakers_massey_po.
 Defined.
