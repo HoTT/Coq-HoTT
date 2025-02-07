@@ -290,22 +290,19 @@ Defined.
 
 (** The opposite subgroup of a commutator subgroup is the commutator subgroup of the opposite subgroups. *)
 Definition subgroup_eq_commutator_grp_op {G : Group} (H J : Subgroup G)
-  : forall (x : grp_op G), subgroup_grp_op [H, J] x
-    <-> [subgroup_grp_op H, subgroup_grp_op J] x.
+  : forall (x : grp_op G), [H, J] x
+    <-> [subgroup_grp_op J, subgroup_grp_op H] x.
 Proof.
-  intros x.
-  nrapply (iff_compose
-    (subgroup_eq_functor_subgroup_generated _ _ (grp_op_iso_inv G) _ x)
-    (equiv_subgroup_inv _ _)^-1%equiv).
-  clear x; intros x.
+  nrapply (subgroup_eq_subgroup_generated_op (G:=G)).
+  intro x.
+  refine (iff_compose _ (equiv_sigma_symm _)).
   do 2 (snrapply (equiv_functor_sigma'
     (grp_iso_subgroup_group (grp_op_iso_inv G)
       (equiv_subgroup_inv (G:=grp_op G) (subgroup_grp_op _)))); intro).
-  simpl.
-  refine (equiv_moveL_equiv_M _ _ oE _).
-  apply equiv_concat_l.
-  apply moveR_equiv_V; symmetry.
-  nrapply (grp_homo_commutator (grp_op_iso_inv _)).
+  cbn -[grp_commutator].
+  apply equiv_concat_l; symmetry.
+  lhs_V nrapply grp_commutator_inv.
+  exact (grp_homo_commutator (grp_op_iso_inv _) a0.1 a.1).
 Defined.
 
 (** A commutator subgroup of an abelian group is always trivial. *)

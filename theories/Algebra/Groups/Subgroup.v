@@ -711,6 +711,22 @@ Definition subgroup_grp_op {G : Group} (H : Subgroup G)
   : Subgroup (grp_op G)
   := Build_Subgroup (grp_op G) H _.
 
+(** If [grp_op] was definitionally involutive, we wouldn't need the following. Note that making it an instance causes typeclass search to spin. *)
+Definition issubgroup_grp_op' {G : Group} (H : G -> Type)
+  : IsSubgroup (G:=grp_op G) H -> IsSubgroup H.
+Proof.
+  intros H1.
+  snrapply Build_IsSubgroup'.
+  - apply (issubgroup_predicate (G:=grp_op G)).
+  - apply (issubgroup_in_unit (G:=grp_op G)).
+  - intros x y Hx Hy.
+    by apply (issubgroup_in_inv_op (G:=grp_op G)).
+Defined.
+
+Definition subgroup_grp_op' {G : Group} (H : Subgroup (grp_op G))
+  : Subgroup G
+  := Build_Subgroup G H (issubgroup_grp_op' (G:=G) H _).
+
 Global Instance isnormal_subgroup_grp_op {G : Group} (H : Subgroup G)
   : IsNormalSubgroup H -> IsNormalSubgroup (subgroup_grp_op H).
 Proof.
@@ -882,6 +898,20 @@ Proof.
     by apply preserves.
 Defined.
 
+(** A similar result is true if we replace one group by its opposite, i.e. if [f] is an anti-homomorphism.  For simplicity, we state this only for the case in which [f] is the identity isomorphism.  It's also useful in the special case where [X] and [Y] are the same. *)
+Definition subgroup_eq_subgroup_generated_op {G : Group}
+  (X : G -> Type) (Y : G -> Type) (preserves : forall g, X g <-> Y g)
+  : forall g, subgroup_generated X g <-> subgroup_generated (G:=grp_op G) Y g.
+Proof.
+  intro g; split.
+  1: change (subgroup_generated X g -> subgroup_grp_op' (subgroup_generated (G:=grp_op G) Y) g).
+  2: change (subgroup_generated (G:=grp_op G) Y g -> subgroup_grp_op (subgroup_generated X) g).
+  all: apply subgroup_generated_rec.
+  all: intros x Xx.
+  all: apply (tr o sgt_in).
+  all: by apply (preserves x).
+Defined.
+
 (** ** Product of subgroups *)
 
 (** The product of two subgroups. *)
@@ -954,13 +984,9 @@ Definition subgroup_eq_product_grp_op {G : Group} (H K : Subgroup G)
   : forall x, subgroup_grp_op (subgroup_product H K) x
     <-> subgroup_product (subgroup_grp_op H) (subgroup_grp_op K) x.
 Proof.
-  intros x.
-  nrapply (iff_compose
-    (subgroup_eq_functor_subgroup_generated _ _ (grp_op_iso_inv G) _ x)
-    (equiv_subgroup_inv _ _)^-1%equiv).
-  clear x; intros x.
-  snrapply equiv_functor_sum';
-    nrapply equiv_subgroup_inv.
+  intro x.
+  apply subgroup_eq_subgroup_generated_op.
+  reflexivity.
 Defined.
 
 (** *** Paths between generated subgroups *)
