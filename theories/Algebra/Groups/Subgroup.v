@@ -114,17 +114,15 @@ Proof.
   intros H1.
   snrapply Build_IsSubgroup.
   - intros x.
-    snrapply (istrunc_equiv_istrunc (H x)).
-    1: apply p.
-    exact _.
+    rapply (istrunc_equiv_istrunc (H x)).
+    apply p.
   - apply p, issubgroup_in_unit.
-  - intros x y.
-    equiv_intro (p x) Hx.
-    equiv_intro (p y) Hy.
-    exact (p _ (issubgroup_in_op x y Hx Hy)).
-  - intros x.
-    equiv_intro (p x) Hx.
-    exact (p _ (issubgroup_in_inv x Hx)).
+  - intros x y inx iny.
+    apply (p _)^-1 in inx, iny.
+    exact (p _ (issubgroup_in_op x y inx iny)).
+  - intros x inx.
+    apply (p _)^-1 in inx.
+    exact (p _ (issubgroup_in_inv x inx)).
 Defined.
 
 (** ** Definition of subgroup *) 
@@ -704,7 +702,7 @@ Proof.
   intros H1.
   snrapply Build_IsSubgroup'.
   - exact _.
-  - cbn; rapply issubgroup_in_unit.
+  - cbn; apply issubgroup_in_unit.
   - intros x y Hx Hy; cbn.
     by apply issubgroup_in_inv_op.
 Defined.
