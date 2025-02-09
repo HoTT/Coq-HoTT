@@ -140,6 +140,25 @@ Proof.
   exact h^.
 Defined.
 
+Definition transport_paths_Fl' {A B : Type} {f : A -> B} {x1 x2 : A} {y : B}
+  (p : x1 = x2) (q : f x1 = y) (r : f x2 = y) (h : ap f p @ r = q)
+  : transport (fun x => f x = y) p q = r.
+Proof.
+  refine (transport_paths_Fl _ _ @ _).
+  apply moveR_Vp.
+  exact h^.
+Defined.
+
+Definition transport_paths_FFl' {A B C : Type} {f : A -> B} {g : B -> C}
+  {x1 x2 : A} {y : C} (p : x1 = x2) (q : g (f x1) = y) (r : g (f x2) = y)
+  (h : ap g (ap f p) @ r = q)
+  : transport (fun x => g (f x) = y) p q = r.
+Proof.
+  refine (transport_paths_FFl _ _ @ _).
+  apply moveR_Vp.
+  exact h^.
+Defined.
+
 Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
   (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
   (h : (ap f p) @ r = q @ (ap g p))
