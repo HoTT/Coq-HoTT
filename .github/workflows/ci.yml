@@ -89,7 +89,7 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-          sudo chown -R coq:coq .
+          sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make -j2
@@ -129,7 +129,7 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
+            sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           sudo apt-get -o Acquire::Retries=30 update -q
@@ -204,7 +204,7 @@ jobs:
           sudo apt-get -o Acquire::Retries=30 update -q
           sudo apt-get -o Acquire::Retries=30 install python3-pip python3-venv autoconf -y --allow-unauthenticated
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
+            sudo chown -R 1000:1000 .
           endGroup
           # Create and activate a virtual environment
           python3 -m venv myenv
@@ -263,7 +263,7 @@ jobs:
           sudo -E npm install -g doctoc
 
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
+            sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make dependency graph
@@ -337,7 +337,7 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
+            sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make HTML doc
@@ -382,7 +382,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y time python3 python-is-python3 lua5.1
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
+            sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Make timing doc
@@ -437,7 +437,7 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
+            sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           make validate
@@ -482,7 +482,7 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R coq:coq .
+            sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Test install target
