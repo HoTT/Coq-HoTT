@@ -3,6 +3,8 @@ Require Import Pointed.Core Pointed.pSusp.
 Require Import Colimits.Pushout.
 Require Import WildCat.
 Require Import Homotopy.Suspension.
+Require Import Truncations.Core Truncations.Connectedness.
+Require Import Modalities.ReflectiveSubuniverse.
 
 Local Set Universe Minimization ToSet.
 
@@ -79,6 +81,56 @@ Proof.
   - reflexivity.
 Defined.
 
+Definition wedge_ind {X Y : pType} (P : X \/ Y -> Type)
+  (f : forall x, P (wedge_inl x)) (g : forall y, P (wedge_inr y))
+  (w : wglue # f pt = g pt)
+  : forall xy, P xy.
+Proof.
+  napply (Pushout_ind P f g).
+  intros [].
+  exact w.
+Defined.
+
+Definition wedge_ind_beta_wglue {X Y : pType} (P : X \/ Y -> Type)
+  (f : forall x, P (wedge_inl x)) (g : forall y, P (wedge_inr y))
+  (w : wglue # f pt = g pt)
+  : apD (wedge_ind P f g w) wglue = w
+  := Pushout_ind_beta_pglue P _ _ _ _.
+
+Definition wedge_ind_FlFr {X Y Z : pType} {f g : X \/ Y -> Z}
+  (l : f o wedge_inl == g o wedge_inl)
+  (r : f o wedge_inr == g o wedge_inr)
+  (w : ap f wglue @ r pt = l pt @ ap g wglue)
+  : f == g.
+Proof.
+  napply (wedge_ind _ l r).
+  transport_paths FlFr.
+  exact w.
+Defined.
+
+Definition wedge_ind_FFl {X Y Z W : pType} (f : X \/ Y -> Z) (g : Z -> W)
+  {y : W}
+  (l : forall x, g (f (wedge_inl x)) = y)
+  (r : forall x, g (f (wedge_inr x)) = y)
+  (w : l pt = ap g (ap f wglue) @ r pt)
+  : forall x, g (f x) = y.
+Proof.
+  napply (wedge_ind _ l r); simpl.
+  transport_paths FFl.
+  exact w.
+Defined.
+
+Definition wedge_ind_FFlr {X Y Z : pType} (f : X \/ Y -> Z) (g : Z -> X \/ Y)
+  (l : g o f o wedge_inl == wedge_inl)
+  (r : g o f o wedge_inr == wedge_inr)
+  (w : ap g (ap f wglue) @ r pt = l pt @ wglue)
+  : g o f == idmap. 
+Proof.
+  napply (wedge_ind _ l r); simpl.
+  transport_paths FFlr.
+  exact w.
+Defined.
+
 (** 1-universal property of wedge. *)
 Lemma wedge_up X Y Z (f g : X \/ Y $-> Z)
   : f $o wedge_inl $== g $o wedge_inl
@@ -87,9 +139,7 @@ Lemma wedge_up X Y Z (f g : X \/ Y $-> Z)
 Proof.
   intros p q.
   snapply Build_pHomotopy.
-  - snapply (Pushout_ind _ p q).
-    intros [].
-    transport_paths FlFr.
+  - napply (wedge_ind_FlFr p q).
     lhs napply (whiskerL _ (dpoint_eq q)).
     rhs napply (whiskerR (dpoint_eq p)).
     clear p q.
@@ -131,7 +181,7 @@ Proof.
   - intros Z f g.
     snapply Build_pHomotopy.
     1: reflexivity.
-    by simpl; pelim f.
+    symmetry; apply concat_pp_V.
   - intros Z f g.
     snapply Build_pHomotopy.
     1: reflexivity.
@@ -142,9 +192,9 @@ Proof.
     apply moveR_Mp.
     apply moveL_pV.
     apply moveR_Vp.
-    refine (Pushout_rec_beta_pglue _ f g _ _  @ _).
-    simpl.
-    by pelim f g.
+    lhs napply wedge_rec_beta_wglue.
+    f_ap; f_ap; symmetry.
+    apply concat_1p.
   - intros Z f g p q.
     by apply wedge_up.
 Defined.
@@ -370,3 +420,63 @@ Proof.
   - reflexivity.
 Defined.
 
+(** ** Connectivity of wedge inclusion *)
+
+Definition conn_map_wedge_incl `{Univalence} {m n : trunc_index} (X Y : pType)
+  `{!IsConnected m.+1 X, !IsConnected n.+1 Y}
+  : IsConnMap (m +2+ n) (wedge_incl X Y).
+Proof.
+  rewrite trunc_index_add_comm.
+  apply conn_map_from_extension_elim.
+  intros P h d.
+  transparent assert (f : (forall x y, P (x, y))). 
+  { intros x y; revert y x.
+    rapply (wedge_incl_elim (n:=m) (m:=n)
+      (point Y) (point X) (fun y x => P (x, y))
+      (d o wedge_inl) (d o wedge_inr)).
+    rhs_V napply (apD d wglue).
+    rhs napply transport_compose.
+    napply (transport2 _ (p:=1) _^).
+    apply wedge_incl_beta_wglue. }
+  transparent assert (p : (forall x : X,
+    prod_ind P f (wedge_incl X Y (wedge_inl x)) = d (wedge_inl x))).
+  1: napply wedge_incl_comp1.
+  transparent assert (q : (forall y : Y,
+    prod_ind P f (wedge_incl X Y (wedge_inr y)) = d (wedge_inr y))).
+  1: napply wedge_incl_comp2.
+  transparent assert (pq
+    : (q pt = p pt @
+      ((transport2 P wedge_incl_beta_wglue^ (d (wedge_inl pt))
+        @ (transport_compose P (wedge_incl X Y) wglue (d (pushl pt)))^)
+      @ apD d wglue))).
+  1: napply wedge_incl_comp3.
+  clearbody f p q pq.
+  exists (prod_ind _ f).
+  napply (wedge_ind _ p q).
+  rhs napply pq.
+  lhs napply (transport_paths_FlFr_D wglue).
+  lhs napply concat_pp_p.
+  apply moveR_Vp.
+  rhs napply concat_p_pp.
+  rhs napply concat_p_pp.
+  apply whiskerR.
+  unshelve lhs napply ap_homotopic_id.
+  { intros x.
+    lhs napply transport_compose.
+    napply (transport2 _ (q:=1)).
+    apply wedge_incl_beta_wglue. }
+  cbn beta.
+  apply concat2.
+  - apply whiskerR.
+    symmetry.
+    lhs napply apD_compose.
+    apply whiskerL.
+    lhs_V napply (apD _ wedge_incl_beta_wglue^).
+    napply moveR_transport_V.
+    rhs napply (transport_paths_Fl wedge_incl_beta_wglue).
+    exact (concat_Vp _)^.
+  - symmetry.
+    rhs napply inv_pp.
+    apply whiskerR.
+    exact (transport2_V P wedge_incl_beta_wglue _).
+Defined.
