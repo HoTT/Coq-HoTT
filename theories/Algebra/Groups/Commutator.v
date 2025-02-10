@@ -275,19 +275,21 @@ Proof.
   1,2: apply g.
 Defined.
 
+Definition subgroup_incl_commutator_symm {G : Group} (H J : Subgroup G)
+  : forall x, [H, J] x -> [J, H] x.
+Proof.
+  snrapply subgroup_commutator_rec.
+  intros x y Hx Jy.
+  nrapply subgroup_in_inv'.
+  rewrite grp_commutator_inv.
+  by apply subgroup_commutator_in.
+Defined.
+
 (** Commutator subgroups are symmetric in their arguments. *)
 Definition subgroup_commutator_symm {G : Group} (H J : Subgroup G)
   : forall x, [H, J] x <-> [J, H] x.
 Proof.
-  intros x; split; revert x; snrapply subgroup_commutator_rec.
-  - intros x y Hx Jy.
-    nrapply subgroup_in_inv'.
-    rewrite grp_commutator_inv.
-    by apply subgroup_commutator_in.
-  - intros x y Jy Hx.
-    nrapply subgroup_in_inv'.
-    rewrite grp_commutator_inv.
-    by apply subgroup_commutator_in.
+  intros x; split; snrapply subgroup_incl_commutator_symm.
 Defined.
 
 (** The opposite subgroup of a commutator subgroup is the commutator subgroup of the opposite subgroups. *)
