@@ -701,25 +701,10 @@ Proof.
     by apply issubgroup_in_inv_op.
 Defined.
 
+(** Note that [grp_op] is definitionally involutive, so the next result also gives us a map [Subgroup (grp_op G) -> Subgroup G]. *)
 Definition subgroup_grp_op {G : Group} (H : Subgroup G)
   : Subgroup (grp_op G)
   := Build_Subgroup (grp_op G) H _.
-
-(** If [grp_op] was definitionally involutive, we wouldn't need the following. Note that making it an instance causes typeclass search to spin. *)
-Definition issubgroup_grp_op' {G : Group} (H : G -> Type)
-  : IsSubgroup (G:=grp_op G) H -> IsSubgroup H.
-Proof.
-  intros H1.
-  snrapply Build_IsSubgroup'.
-  - apply (issubgroup_predicate (G:=grp_op G)).
-  - apply (issubgroup_in_unit (G:=grp_op G)).
-  - intros x y Hx Hy.
-    by apply (issubgroup_in_inv_op (G:=grp_op G)).
-Defined.
-
-Definition subgroup_grp_op' {G : Group} (H : Subgroup (grp_op G))
-  : Subgroup G
-  := Build_Subgroup G H (issubgroup_grp_op' (G:=G) H _).
 
 Global Instance isnormal_subgroup_grp_op {G : Group} (H : Subgroup G)
   : IsNormalSubgroup H -> IsNormalSubgroup (subgroup_grp_op H).
@@ -898,7 +883,7 @@ Definition subgroup_eq_subgroup_generated_op {G : Group}
   : forall g, subgroup_generated X g <-> subgroup_generated (G:=grp_op G) Y g.
 Proof.
   intro g; split.
-  1: change (subgroup_generated X g -> subgroup_grp_op' (subgroup_generated (G:=grp_op G) Y) g).
+  1: change (subgroup_generated X g -> subgroup_grp_op (subgroup_generated (G:=grp_op G) Y) g).
   2: change (subgroup_generated (G:=grp_op G) Y g -> subgroup_grp_op (subgroup_generated X) g).
   all: apply subgroup_generated_rec.
   all: intros x Xx.
