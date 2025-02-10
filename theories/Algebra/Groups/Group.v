@@ -898,19 +898,23 @@ Definition grp_homo_const {G H : Group} : GroupHomomorphism G H
 Definition grp_op : Group -> Group.
 Proof.
   intros G.
-  snrapply Build_Group'.
+  snrapply Build_Group; repeat split.
   - exact G.
-  - exact _.
   - exact (flip (.*.)).
   - exact 1.
   - exact (^).
+  - exact _.
   - intros x y z.
     symmetry.
     exact (grp_assoc z y x).
   - intro x.
     exact (grp_unit_r x).
+  - intros x.
+    exact (grp_unit_l x).
   - intro x.
     exact (grp_inv_r x).
+  - intros x.
+    exact (grp_inv_l x).
 Defined.
 
 (** Taking the inverse is an isomorphism from the group to the opposite group. *)
