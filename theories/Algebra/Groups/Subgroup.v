@@ -215,19 +215,13 @@ Defined.
 (** The group given by a subgroup *)
 Definition subgroup_group {G : Group} (H : Subgroup G) : Group.
 Proof.
-  apply (Build_Group
-      (** The underlying type is the sigma type of the predicate. *)
-      (sig H)
-      (** The operation is the group operation on the first projection with the proof  of being in the subgroup given by the subgroup data. *)
-      (fun '(x ; p) '(y ; q) => (x * y ; issubgroup_in_op x y p q))
-      (** The unit *)
-      (mon_unit ; issubgroup_in_unit)
-      (** Inverse *)
-      (fun '(x ; p) => (- x ; issubgroup_in_inv _ p))).
-  (** Finally we need to prove our group laws. *)
-  repeat split.
+  apply (Build_Group (sig H)
+      (fun x y => (x.1 * y.1 ; issubgroup_in_op x.1 y.1 x.2 y.2))
+      (1; issubgroup_in_unit)
+      (fun x => (- x.1 ; issubgroup_in_inv _ x.2))).
+  1: repeat split.
   1: exact _.
-  all: grp_auto.
+  1-5: grp_auto.
 Defined.
 
 Coercion subgroup_group : Subgroup >-> Group.

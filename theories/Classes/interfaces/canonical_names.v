@@ -299,6 +299,20 @@ Class Associative {A} (f : A -> A -> A)
   := simple_associativity : HeteroAssociative f f f f.
 #[export] Existing Instances simple_associativity.
 
+Global Instance istrunc_associative `{Funext} A n f `{IsTrunc n.+1 A}
+  : IsTrunc n (@Associative A f).
+Proof.
+  unfold Associative, HeteroAssociative; exact _.
+Defined.
+
+Definition associative_flip A f
+  : @Associative A f -> Associative (flip f).
+Proof.
+  intros assoc z y x; unfold flip.
+  exact (assoc x y z)^.
+Defined.
+Hint Immediate associative_flip : typeclass_instances.
+
 Class Involutive {A} (f : A -> A) := involutive: forall x, f (f x) = x.
 
 Class TotalRelation `(R : Relation A) : Type := total : forall x y : A, R x y |_| R y x.

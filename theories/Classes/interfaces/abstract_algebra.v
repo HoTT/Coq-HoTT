@@ -512,18 +512,6 @@ Proof.
   set (b' := (issig_issemigroup x y)^-1 b).
   clearbody a' b'; clear a b.
   srapply (contr_equiv _ (ap (issig_issemigroup x y))).
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) a').
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) b').
-  set (a := equiv_sigma_prod0 _ _ a').
-  set (b := equiv_sigma_prod0 _ _ b').
-  clearbody a b; clear a' b'.
-  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  srapply (contr_equiv _ (equiv_path_prod _ _)).
-  srapply contr_prod.
-  destruct a as [a' a], b as [b' b].
-  do 3 (nrefine (contr_equiv' _ (@equiv_path_forall H _ _ _ _));
-  nrefine (@contr_forall H _ _ _); intro).
-  exact _.
 Defined.
 
 Definition issig_ismonoid x y z : _ <~> @IsMonoid x y z := ltac:(issig).
