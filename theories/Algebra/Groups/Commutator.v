@@ -20,6 +20,8 @@ Definition grp_commutator {G : Group} (x y : G) : G := x * y * x^ * y^.
 
 Notation "[ x , y ]" := (grp_commutator x y) : mc_mult_scope.
 
+Arguments grp_commutator {G} x y : simpl never.
+
 (** ** Easy properties of commutators *)
 
 (** Commuting elements of a group have trivial commutator. *)
@@ -299,7 +301,7 @@ Proof.
   do 2 (snrapply (equiv_functor_sigma'
     (grp_iso_subgroup_group (grp_op_iso_inv G)
       (equiv_subgroup_inv (G:=grp_op G) (subgroup_grp_op _)))); intro).
-  cbn -[grp_commutator].
+  simpl.
   apply equiv_concat_l; symmetry.
   lhs_V nrapply grp_commutator_inv.
   exact (grp_homo_commutator (grp_op_iso_inv _) a0.1 a.1).
