@@ -190,17 +190,20 @@ Proof.
     by apply subgroup_in_inv.
 Defined.
 
+(** The condition [H [x, y]] is equivalent to the condition [H [y, x]]. *)
+Definition issubgroup_precomp_commutator_agree {G : Group} (H : Subgroup G)
+  (x y : G)
+  : H [x, y] <~> H [y, x].
+Proof.
+  refine (_ oE equiv_subgroup_inv _ _).
+  by rewrite grp_commutator_inv.
+Defined.
+
+(** So we get this symmetrical version as well. *)
 Global Instance issubgroup_precomp_commutator_r {G : Group} (H : Subgroup G)
   `{!IsNormalSubgroup H} (x : G)
-  : IsSubgroup (fun y => H [x, y]).
-Proof.
-  snrapply issubgroup_equiv.
-  - exact (fun y => H [y, x]^).
-  - intros y; cbn beta.
-    by rewrite grp_commutator_inv.
-  - exact (issubgroup_precomp_commutator_l
-      (subgroup_preimage (grp_op_iso_inv G) (subgroup_grp_op H)) x).
-Defined.
+  : IsSubgroup (fun y => H [x, y])
+  := issubgroup_equiv (fun y => issubgroup_precomp_commutator_agree H y x) _.
 
 Definition subgroup_precomp_commutator_l {G : Group} (H : Subgroup G) (y : G)
   `{!IsNormalSubgroup H}
