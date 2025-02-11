@@ -926,7 +926,7 @@ Definition grp_homo_const {G H : Group} : GroupHomomorphism G H
 
 (** ** Opposite Group *)
 
-(** The opposite group of a group is the group with the same elements but with the group operation reversed. OUr technical choice for including a redundant associativity axiom in the definition of a group from before comes into play here. All we have to do to define the opposite group is to shuffle some data around. Since we are only shuffling, this operation becomes definitionally involutive. We make this choice because it is a great help in later proofs.  *)
+(** The opposite group of a group is the group with the same elements but with the group operation reversed. Our technical choice for including a redundant associativity axiom in the definition of a group from before comes into play here. All we have to do to define the opposite group is to shuffle some data around. Since we are only shuffling, this operation becomes definitionally involutive. We make this choice because it is a great help in later proofs.  *)
 Definition grp_op : Group -> Group.
 Proof.
   intros G.
