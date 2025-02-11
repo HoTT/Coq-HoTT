@@ -62,7 +62,7 @@ Definition issig_group : _ <~> Group
 
 It differs from [Build_Group_internal] by removing the redundant second proof of associativity. There is a technical reason for keeping the second axiom around, see the definition of [grp_op].
 
-Note that we could have given the fields of [IsGroup] in a compeletly unbundled manner, but this has a negative impact on performance since everytime a [Group] term is unfolded, the axioms appear in the arguments.
+Note that we could have given the fields of [IsGroup] in a completely unbundled manner, but this has a negative impact on performance since every time a [Group] term is unfolded, the axioms appear in the arguments.
 
 It is therefore advised to use this constructor in combination with a tactic like [repeat split] when building groups. *)
 Definition Build_Group (G : Type)
