@@ -717,12 +717,6 @@ Definition normalsubgroup_grp_op {G : Group}
   : NormalSubgroup G -> NormalSubgroup (grp_op G)
   := fun N => Build_NormalSubgroup (grp_op G) (subgroup_grp_op N) _.
 
-Definition subgroup_eq_grp_op_op {G : Group} (H : Subgroup G)
-  : forall x, subgroup_grp_op (subgroup_grp_op H) x <-> H x.
-Proof.
-  reflexivity.
-Defined.
-
 (** ** Preimage subgroup *)
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
