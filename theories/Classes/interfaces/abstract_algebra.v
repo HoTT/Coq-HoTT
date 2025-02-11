@@ -465,9 +465,14 @@ Class CutMinusSpec A (cm : CutMinus A) `{Zero A} `{Plus A} `{Le A} := {
   cut_minus_0 : forall x y, x ≤ y -> x ∸ y = 0
 }.
 
+Global Instance istrunc_isunitpreserving `{Funext} {n A B} unitA unitB f
+  : IsTrunc n.+1 B -> IsTrunc n (@IsUnitPreserving A B unitA unitB f).
+Proof.
+  unfold IsUnitPreserving; exact _.
+Defined.
 
-Global Instance ishprop_issemigrouppreserving `{Funext} {A B : Type} `{IsHSet B}
-  `{SgOp A} `{SgOp B} {f : A -> B} : IsHProp (IsSemiGroupPreserving f).
+Global Instance istrunc_issemigrouppreserving `{Funext} {n A B} opA opB f
+  : IsTrunc n.+1 B -> IsTrunc n (@IsSemiGroupPreserving A B opA opB f).
 Proof.
   unfold IsSemiGroupPreserving; exact _.
 Defined.
@@ -482,106 +487,29 @@ Definition issig_IsMonoidPreserving {A B : Type} `{SgOp A} `{SgOp B}
 
 Global Instance ishprop_ismonoidpreserving `{Funext} {A B : Type} `{SgOp A}
   `{SgOp B} `{IsHSet B} `{MonUnit A} `{MonUnit B} (f : A -> B)
-  : IsHProp (IsMonoidPreserving f).
-Proof.
-  srapply (istrunc_equiv_istrunc _ issig_IsMonoidPreserving).
-  srapply (istrunc_equiv_istrunc _ (equiv_sigma_prod0 _ _)^-1).
-  srapply istrunc_prod.
-  unfold IsUnitPreserving.
-  exact _.
-Defined.
+  : IsHProp (IsMonoidPreserving f)
+  := istrunc_equiv_istrunc _ issig_IsMonoidPreserving.
 
 Global Instance ishprop_issemiringpreserving `{Funext} {A B : Type} `{IsHSet B}
   `{Plus A, Plus B, Mult A, Mult B, Zero A, Zero B, One A, One B}
   (f : A -> B)
-  : IsHProp (IsSemiRingPreserving f).
-Proof.
-  snrapply (istrunc_equiv_istrunc _ issig_IsSemiRingPreserving).
-  exact _.
-Defined.
+  : IsHProp (IsSemiRingPreserving f)
+  := istrunc_equiv_istrunc _ issig_IsSemiRingPreserving.
 
 Definition issig_issemigroup x y : _ <~> @IsSemiGroup x y := ltac:(issig).
 
-Global Instance ishprop_issemigroup `{Funext}
-  : forall x y, IsHProp (@IsSemiGroup x y).
-Proof.
-  intros x y; apply istrunc_S; intros a b.
-  rewrite <- (eisretr (issig_issemigroup x y) a).
-  rewrite <- (eisretr (issig_issemigroup x y) b).
-  set (a' := (issig_issemigroup x y)^-1 a).
-  set (b' := (issig_issemigroup x y)^-1 b).
-  clearbody a' b'; clear a b.
-  srapply (contr_equiv _ (ap (issig_issemigroup x y))).
-Defined.
+Global Instance ishprop_issemigroup `{Funext} x y
+  : IsHProp (@IsSemiGroup x y)
+  := istrunc_equiv_istrunc _ (issig_issemigroup _ _).
 
 Definition issig_ismonoid x y z : _ <~> @IsMonoid x y z := ltac:(issig).
 
-Global Instance ishprop_ismonoid `{Funext} x y z : IsHProp (@IsMonoid x y z).
-Proof.
-  apply istrunc_S.
-  intros a b.
-  rewrite <- (eisretr (issig_ismonoid x y z) a).
-  rewrite <- (eisretr (issig_ismonoid x y z) b).
-  set (a' := (issig_ismonoid x y z)^-1 a).
-  set (b' := (issig_ismonoid x y z)^-1 b).
-  clearbody a' b'; clear a b.
-  srapply (contr_equiv _ (ap (issig_ismonoid x y z))).
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) a').
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) b').
-  set (a := equiv_sigma_prod0 _ _ a').
-  set (b := equiv_sigma_prod0 _ _ b').
-  clearbody a b; clear a' b'.
-  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  srapply (contr_equiv _ (equiv_path_prod _ _)).
-  srapply contr_prod.
-  destruct a as [a' a], b as [b' b]; cbn.
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) a).
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) b).
-  set (a'' := equiv_sigma_prod0 _ _ a).
-  set (b'' := equiv_sigma_prod0 _ _ b).
-  clearbody a'' b''; clear a b.
-  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  srapply (contr_equiv _ (equiv_path_prod _ _)).
-  destruct a'' as [a a''], b'' as [b b'']; cbn.
-  snrapply contr_prod.
-  all: srapply contr_paths_contr.
-  all: srapply contr_inhabited_hprop.
-  all: srapply istrunc_forall.
-Defined.
+Global Instance ishprop_ismonoid `{Funext} x y z : IsHProp (@IsMonoid x y z)
+  := istrunc_equiv_istrunc _ (issig_ismonoid _ _ _).
 
 Definition issig_isgroup w x y z : _ <~> @IsGroup w x y z := ltac:(issig).
 
-Global Instance ishprop_isgroup `{Funext} w x y z : IsHProp (@IsGroup w x y z).
-Proof.
-  apply istrunc_S.
-  intros a b.
-  rewrite <- (eisretr (issig_isgroup w x y z) a).
-  rewrite <- (eisretr (issig_isgroup w x y z) b).
-  set (a' := (issig_isgroup w x y z)^-1 a).
-  set (b' := (issig_isgroup w x y z)^-1 b).
-  clearbody a' b'; clear a b.
-  srapply (contr_equiv _ (ap (issig_isgroup w x y z))).
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) a').
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) b').
-  set (a := equiv_sigma_prod0 _ _ a').
-  set (b := equiv_sigma_prod0 _ _ b').
-  clearbody a b; clear a' b'.
-  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  srapply (contr_equiv _ (equiv_path_prod _ _)).
-  srapply contr_prod.
-  destruct a as [a' a], b as [b' b]; cbn.
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) a).
-  rewrite <- (eissect (equiv_sigma_prod0 _ _) b).
-  set (a'' := equiv_sigma_prod0 _ _ a).
-  set (b'' := equiv_sigma_prod0 _ _ b).
-  clearbody a'' b''; clear a b.
-  srapply (contr_equiv _ (ap (equiv_sigma_prod0 _ _)^-1)).
-  srapply (contr_equiv _ (equiv_path_prod _ _)).
-  destruct a'' as [a a''], b'' as [b b'']; cbn.
-  srapply contr_prod.
-  all: srapply contr_paths_contr.
-  all: srapply contr_inhabited_hprop.
-  all: srapply istrunc_forall.
-Defined.
+Global Instance ishprop_isgroup `{Funext} w x y z : IsHProp (@IsGroup w x y z)
+  := istrunc_equiv_istrunc _ (issig_isgroup _ _ _ _).
 
 End extras.

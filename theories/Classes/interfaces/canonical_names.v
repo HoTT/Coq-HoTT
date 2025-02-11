@@ -270,8 +270,21 @@ Class BinaryIdempotent `(op: A -> A -> A) : Type
 
 Class LeftIdentity {A B} (op : A -> B -> B) (x : A): Type
   := left_identity: forall y, op x y = y.
+
+Global Instance istrunc_leftidentity `{Funext} {n A B} op x
+   : IsTrunc n.+1 B -> IsTrunc n (@LeftIdentity A B op x).
+Proof.
+  unfold LeftIdentity; exact _.
+Defined.
+
 Class RightIdentity {A B} (op : A -> B -> A) (y : B): Type
   := right_identity: forall x, op x y = x.
+
+Global Instance istrunc_rightidentity `{Funext} {n A B} op y
+  : IsTrunc n.+1 A -> IsTrunc n (@RightIdentity A B op y).
+Proof.
+  unfold RightIdentity; exact _.
+Defined.
 
 Class Absorption {A B C} (op1: A -> C -> A) (op2: A -> B -> C) : Type
   := absorption: forall x y, op1 x (op2 x y) = x.
@@ -283,8 +296,21 @@ Class RightAbsorb {A B} (op : A -> B -> B) (y : B): Type
 
 Class LeftInverse {A} {B} {C} (op : A -> B -> C) (inv : B -> A) (unit : C)
   := left_inverse: forall x, op (inv x) x = unit.
+
+Global Instance istrunc_leftinverse `{Funext} {n A B C} op inv unit
+  : IsTrunc n.+1 C -> IsTrunc n (@LeftInverse A B C op inv unit).
+Proof.
+  unfold LeftInverse; exact _.
+Defined.
+
 Class RightInverse {A} {B} {C} (op : A -> B -> C) (inv : A -> B) (unit : C)
   := right_inverse: forall x, op x (inv x) = unit.
+
+Global Instance istrunc_rightinverse `{Funext} {n A B C} op inv unit
+  : IsTrunc n.+1 C -> IsTrunc n (@RightInverse A B C op inv unit).
+Proof.
+  unfold RightInverse; exact _.
+Defined.
 
 Class Commutative {B A} (f : A -> A -> B) : Type
   := commutativity: forall x y, f x y = f y x.
