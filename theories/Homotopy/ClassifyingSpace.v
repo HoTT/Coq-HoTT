@@ -12,15 +12,18 @@ Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope path_scope.
 
-(** * We define the Classifying space of a group to be the following HIT:
+(** * Classifying spaces of groups *)
 
+(* We define the Classifying space of a group to be the following HIT:
+
+<<
   HIT ClassifyingSpace (G : Group) : 1-Type
    | bbase : ClassifyingSpace
    | bloop : X -> bbase = bbase
    | bloop_pp : forall x y, bloop (x * y) = bloop x @ bloop y.
+>>
 
-  We implement this is a private inductive type.
-*)
+  We implement this is a private inductive type. *)
 Module Export ClassifyingSpace.
 
   Section ClassifyingSpace.
@@ -107,11 +110,10 @@ Section Eliminators.
     (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y) (x : G)
     : ap (ClassifyingSpace_rec P bbase' bloop' bloop_pp') (bloop x) = bloop' x.
   Proof.
-    rewrite <- dp_apD_const'.
-    unfold ClassifyingSpace_rec.
-    rewrite ClassifyingSpace_ind_beta_bloop.
-    apply eissect.
-  Qed.
+    lhs_V napply dp_apD_const'.
+    apply moveR_equiv_V.
+    napply ClassifyingSpace_ind_beta_bloop.
+  Defined.
 
   (** Sometimes we want to induct into a set which means we can ignore the bloop_pp arguments. Since this is a routine argument, we turn it into a special case of our induction principle. *)
   Definition ClassifyingSpace_ind_hset
@@ -121,7 +123,7 @@ Section Eliminators.
     : forall b, P b.
   Proof.
     refine (ClassifyingSpace_ind P bbase' bloop' _).
-    intros.
+    intros x y.
     apply ds_G1.
     apply path_ishprop.
   Defined.
@@ -194,17 +196,17 @@ Proof.
   exact bloop_id.
 Defined.
 
-(* This says that [B] is left adjoint to the loop space functor from pointed 1-types to groups. *)
+(** This says that [B] is left adjoint to the loop space functor from pointed 1-types to groups. *)
 Definition pClassifyingSpace_rec {G : Group} (P : pType) `{IsTrunc 1 P}
            (bloop' : G -> loops P)
            (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
   : B G ->* P
   := Build_pMap (B G) P (ClassifyingSpace_rec P (point P) bloop' bloop_pp') idpath.
 
-(* And this is one of the standard facts about adjoint functors: (R h') o eta = h, where h : G -> R P, h' : L G -> P is the adjunct, and eta (bloop) is the unit. *)
-Definition pClassifyingSpace_rec_beta_bloop {G : Group} (P : pType) `{IsTrunc 1 P}
-           (bloop' : G -> loops P)
-           (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
+(** And this is one of the standard facts about adjoint functors: [(R h') o eta = h], where [h : G -> R P], [h' : L G -> P] is the adjunct, and eta ([bloop]) is the unit. *)
+Definition pClassifyingSpace_rec_beta_bloop {G : Group} (P : pType)
+  `{IsTrunc 1 P} (bloop' : G -> loops P)
+  (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
   : fmap loops (pClassifyingSpace_rec P bloop' bloop_pp') o bloop == bloop'.
 Proof.
   intro x; simpl.
@@ -241,12 +243,13 @@ Section EncodeDecode.
     : forall x y : G, transport codes (bloop x) y = y * x.
   Proof.
     intros x y.
-    rewrite transport_idmap_ap.
-    rewrite ap_compose.
-    rewrite ClassifyingSpace_rec_beta_bloop.
-    rewrite ap_trunctype.
-    by rewrite transport_path_universe_uncurried.
-  Qed.
+    lhs napply (transport_idmap_ap _ (bloop x)).
+    rhs_V rapply (transport_path_universe (.* x)).
+    napply (transport2 idmap).
+    lhs napply (ap_compose _ trunctype_type (bloop x)).
+    rhs_V napply ap_trunctype; apply ap.
+    napply ClassifyingSpace_rec_beta_bloop.
+  Defined.
 
   Local Definition decode : forall (b : B G), codes b -> bbase = b.
   Proof.
