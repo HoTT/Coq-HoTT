@@ -1,0 +1,20 @@
+digraph HoTT_Basics_Classes {
+  graph [ratio=0.5]
+  node [style=filled]
+Classes_antisymmetry [label="antisymmetry", URL=<Classes.html#antisymmetry>, peripheries=3, fillcolor="#F070D1"] ;
+Classes_AntiSymmetric [label="AntiSymmetric", URL=<Classes.html#AntiSymmetric>, fillcolor="#F070D1"] ;
+Classes_isinj_cancelL [label="isinj_cancelL", URL=<Classes.html#isinj_cancelL>, peripheries=3, fillcolor="#F070D1"] ;
+Classes_isinj_compose [label="isinj_compose", URL=<Classes.html#isinj_compose>, peripheries=3, fillcolor="#F070D1"] ;
+Classes_isinj_idmap [label="isinj_idmap", URL=<Classes.html#isinj_idmap>, peripheries=3, fillcolor="#F070D1"] ;
+Classes_neq_isinj [label="neq_isinj", URL=<Classes.html#neq_isinj>, peripheries=3, fillcolor="#F070D1"] ;
+Classes_injective [label="injective", URL=<Classes.html#injective>, fillcolor="#F070D1"] ;
+Classes_IsInjective [label="IsInjective", URL=<Classes.html#IsInjective>, fillcolor="#F070D1"] ;
+  Classes_antisymmetry -> Classes_AntiSymmetric [] ;
+  Classes_isinj_cancelL -> Classes_injective [] ;
+  Classes_isinj_compose -> Classes_injective [] ;
+  Classes_isinj_idmap -> Classes_IsInjective [] ;
+  Classes_neq_isinj -> Classes_injective [] ;
+  Classes_injective -> Classes_IsInjective [] ;
+subgraph cluster_Classes { label="Classes"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Classes_IsInjective; Classes_injective; Classes_neq_isinj; Classes_isinj_idmap; Classes_isinj_compose; Classes_isinj_cancelL; Classes_AntiSymmetric; Classes_antisymmetry; };
+} /* END */
