@@ -22,6 +22,9 @@ Class IsSubgroup {G : Group} (H : G -> Type) := {
 
 Global Existing Instance issubgroup_predicate.
 
+Definition issig_issubgroup {G : Group} (H : G -> Type) : _ <~> IsSubgroup H
+  := ltac:(issig).
+
 (** Basic properties of subgroups *)
 
 (** Smart constructor for subgroups.  *)
@@ -96,14 +99,30 @@ Section IsSubgroupElements.
 
 End IsSubgroupElements.
 
-Definition issig_issubgroup {G : Group} (H : G -> Type) : _ <~> IsSubgroup H
-  := ltac:(issig).
-
 (** Given a predicate H on a group G, being a subgroup is a property. *)
 Global Instance ishprop_issubgroup `{F : Funext} {G : Group} {H : G -> Type}
   : IsHProp (IsSubgroup H).
 Proof.
   exact (istrunc_equiv_istrunc _ (issig_issubgroup H)).
+Defined.
+
+(** Transporting being a subgroup across a pointwise equivalence. *)
+Definition issubgroup_equiv {G : Group} {H K : G -> Type}
+  (p : forall g, H g <~> K g)
+  : IsSubgroup H -> IsSubgroup K.
+Proof.
+  intros H1.
+  snrapply Build_IsSubgroup.
+  - intros x.
+    rapply (istrunc_equiv_istrunc (H x)).
+    apply p.
+  - apply p, issubgroup_in_unit.
+  - intros x y inx iny.
+    apply (p _)^-1 in inx, iny.
+    exact (p _ (issubgroup_in_op x y inx iny)).
+  - intros x inx.
+    apply (p _)^-1 in inx.
+    exact (p _ (issubgroup_in_inv x inx)).
 Defined.
 
 (** ** Definition of subgroup *) 
@@ -196,19 +215,13 @@ Defined.
 (** The group given by a subgroup *)
 Definition subgroup_group {G : Group} (H : Subgroup G) : Group.
 Proof.
-  apply (Build_Group
-      (** The underlying type is the sigma type of the predicate. *)
-      (sig H)
-      (** The operation is the group operation on the first projection with the proof  of being in the subgroup given by the subgroup data. *)
-      (fun '(x ; p) '(y ; q) => (x * y ; issubgroup_in_op x y p q))
-      (** The unit *)
-      (mon_unit ; issubgroup_in_unit)
-      (** Inverse *)
-      (fun '(x ; p) => (- x ; issubgroup_in_inv _ p))).
-  (** Finally we need to prove our group laws. *)
-  repeat split.
+  apply (Build_Group (sig H)
+      (fun x y => (x.1 * y.1 ; issubgroup_in_op x.1 y.1 x.2 y.2))
+      (1; issubgroup_in_unit)
+      (fun x => (- x.1 ; issubgroup_in_inv _ x.2))).
+  1: repeat split.
   1: exact _.
-  all: grp_auto.
+  1-5: grp_auto.
 Defined.
 
 Coercion subgroup_group : Subgroup >-> Group.
@@ -269,7 +282,7 @@ Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H
   := subgroup_corec (grp_homo_restr f J) (sig_ind _ g).
 
 Definition grp_iso_subgroup_group {G H : Group@{i}}
-  {J : Subgroup@{i i} G} (K : Subgroup@{i i} H)
+  {J : Subgroup@{i i} G} {K : Subgroup@{i i} H}
   (e : G $<~> H) (f : forall x, J x <-> K (e x))
   : subgroup_group J $<~> subgroup_group K.
 Proof.
@@ -486,6 +499,17 @@ Proof.
     by snrapply Build_IsNormalSubgroup'.
 Defined.
 
+(** Inner automorphisms of a group [G] restrict to automorphisms of normal subgroups. *)
+Definition grp_iso_normal_conj {G : Group} (N : Subgroup G)
+  `{!IsNormalSubgroup N} (x : G)
+  : subgroup_group N $<~> subgroup_group N.
+Proof.
+  snrapply grp_iso_subgroup_group.
+  - exact (grp_iso_conj x).
+  - intros y.
+    rapply isnormal_conj.
+Defined.
+
 (** Left and right cosets are equivalent in normal subgroups. *)
 Definition equiv_in_cosetL_in_cosetR_normalsubgroup {G : Group}
   (N : NormalSubgroup G) (x y : G)
@@ -664,23 +688,56 @@ Global Instance ismaximalsubgroup_maximalsubgroup {G : Group}
   : IsMaximalSubgroup (maximal_subgroup G)
   := fun g => tt.
 
+(** ** Subgroups in opposite group *)
+
+Global Instance issubgroup_grp_op {G : Group} (H : G -> Type)
+  : IsSubgroup H -> IsSubgroup (G:=grp_op G) H.
+Proof.
+  intros H1.
+  snrapply Build_IsSubgroup'.
+  - exact _.
+  - cbn; apply issubgroup_in_unit.
+  - intros x y Hx Hy; cbn.
+    by apply issubgroup_in_inv_op.
+Defined.
+
+(** Note that [grp_op] is definitionally involutive, so the next result also gives us a map [Subgroup (grp_op G) -> Subgroup G]. *)
+Definition subgroup_grp_op {G : Group} (H : Subgroup G)
+  : Subgroup (grp_op G)
+  := Build_Subgroup (grp_op G) H _.
+
+Global Instance isnormal_subgroup_grp_op {G : Group} (H : Subgroup G)
+  : IsNormalSubgroup H -> IsNormalSubgroup (subgroup_grp_op H).
+Proof.
+  intros n x y; cbn.
+  apply isnormal.
+Defined.
+
+Definition normalsubgroup_grp_op {G : Group}
+  : NormalSubgroup G -> NormalSubgroup (grp_op G)
+  := fun N => Build_NormalSubgroup (grp_op G) (subgroup_grp_op N) _.
+
 (** ** Preimage subgroup *)
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
-Definition subgroup_preimage {G H : Group} (f : G $-> H) (S : Subgroup H)
-  : Subgroup G.
+Global Instance issubgroup_preimage {G H : Group} (f : G $-> H) (S : H -> Type)
+  : IsSubgroup S -> IsSubgroup (S o f).
 Proof.
-  snrapply Build_Subgroup'.
-  - exact (S o f).
+  intros H1.
+  snrapply Build_IsSubgroup'.
   - hnf; exact _.
   - nrefine (transport S (grp_homo_unit f)^ _).
-    apply subgroup_in_unit.
+    apply issubgroup_in_unit.
   - hnf; intros x y Sfx Sfy.
     nrefine (transport S (grp_homo_op f _ _)^ _).
-    nrapply subgroup_in_op; only 1: assumption.
+    rapply issubgroup_in_op; only 1: assumption.
     nrefine (transport S (grp_homo_inv f _)^ _).
-    by apply subgroup_in_inv.
+    by apply issubgroup_in_inv.
 Defined.
+
+Definition subgroup_preimage {G H : Group} (f : G $-> H) (S : Subgroup H)
+  : Subgroup G
+  := Build_Subgroup G (S o f) _.
 
 (** The preimage of a normal subgroup is again normal. *)
 Global Instance isnormal_subgroup_preimage {G H : Group} (f : G $-> H)
@@ -799,6 +856,37 @@ Proof.
   by apply preserves.
 Defined.
 
+Definition subgroup_eq_functor_subgroup_generated {G H : Group}
+  (X : G -> Type) (Y : H -> Type) (f : G $<~> H) (preserves : forall g, X g <-> Y (f g))
+  : forall g, subgroup_generated X g <-> subgroup_generated Y (f g).
+Proof.
+  intros x; split; revert x.
+  - apply functor_subgroup_generated.
+    apply preserves.
+  - equiv_intro f^-1$ x.
+    rewrite eisretr.
+    apply functor_subgroup_generated; clear x.
+    equiv_intro f x; intros y.
+    simpl; rewrite (eissect f).
+    by apply preserves.
+Defined.
+
+(** A similar result is true if we replace one group by its opposite, i.e. if [f] is an anti-homomorphism.  For simplicity, we state this only for the case in which [f] is the identity isomorphism.  It's also useful in the special case where [X] and [Y] are the same. *)
+Definition subgroup_eq_subgroup_generated_op {G : Group}
+  (X : G -> Type) (Y : G -> Type) (preserves : forall g, X g <-> Y g)
+  : forall g, subgroup_generated X g <-> subgroup_generated (G:=grp_op G) Y g.
+Proof.
+  intro g; split.
+  1: change (subgroup_generated X g -> subgroup_grp_op (subgroup_generated (G:=grp_op G) Y) g).
+  2: change (subgroup_generated (G:=grp_op G) Y g -> subgroup_grp_op (subgroup_generated X) g).
+  all: apply subgroup_generated_rec.
+  all: intros x Xx.
+  all: apply (tr o sgt_in).
+  all: by apply (preserves x).
+Defined.
+
+(** ** Product of subgroups *)
+
 (** The product of two subgroups. *)
 Definition subgroup_product {G : Group} (H K : Subgroup G) : Subgroup G
   := subgroup_generated (fun x => (H x + K x)%type).
@@ -846,6 +934,33 @@ Defined.
 Definition normalsubgroup_product {G : Group} (H K : NormalSubgroup G)
   : NormalSubgroup G
   := Build_NormalSubgroup G (subgroup_product H K) _.
+
+Definition functor_subgroup_product {G H : Group}
+  {J K : Subgroup G} {L M : Subgroup H}
+  (f : G $-> H) (l : forall x, J x -> L (f x)) (r : forall x, K x -> M (f x))
+  : forall x, subgroup_product J K x -> subgroup_product L M (f x).
+Proof.
+  snrapply functor_subgroup_generated.
+  exact (fun x => functor_sum (l x) (r x)).
+Defined.
+
+Definition subgroup_eq_functor_subgroup_product {G H : Group}
+  {J K : Subgroup G} {L M : Subgroup H}
+  (f : G $<~> H) (l : forall x, J x <-> L (f x)) (r : forall x, K x <-> M (f x))
+  : forall x, subgroup_product J K x <-> subgroup_product L M (f x).
+Proof.
+  snrapply subgroup_eq_functor_subgroup_generated.
+  exact (fun x => iff_functor_sum (l x) (r x)).
+Defined.
+
+Definition subgroup_eq_product_grp_op {G : Group} (H K : Subgroup G)
+  : forall x, subgroup_grp_op (subgroup_product H K) x
+    <-> subgroup_product (subgroup_grp_op H) (subgroup_grp_op K) x.
+Proof.
+  intro x.
+  apply subgroup_eq_subgroup_generated_op.
+  reflexivity.
+Defined.
 
 (** *** Paths between generated subgroups *)
 

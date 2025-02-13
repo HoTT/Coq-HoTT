@@ -108,13 +108,13 @@ Proof.
     srapply path_sigma.
     + apply equiv_path_grouphomomorphism.
       intro x; simpl.
-      refine (ap (fun k => b x + k) (grp_homo_unit c) @ _).
+      lhs exact (ap (fun k => b x + k) (grp_homo_unit c)).
       apply right_identity.
-    + refine (transport_sigma' _ _ @ _).
-      apply path_sigma_hprop; simpl.
+    + lhs nrapply transport_sigma'.
+      apply path_sigma_hprop.
       apply equiv_path_grouphomomorphism.
       intro y; simpl.
-      refine (ap (fun k => k + c y) (grp_homo_unit b) @ _).
+      lhs exact (ap (fun k => k + c y) (grp_homo_unit b)).
       apply left_identity.
 Defined.
 
@@ -123,7 +123,7 @@ Definition path_ab_pushout `{Univalence} {A B C : AbGroup} (f : A $-> B) (g : A 
   : @in_cosetL (ab_biprod B C) (ab_pushout_subgroup f g) bc0 bc1
                <~> (grp_quotient_map bc0 = grp_quotient_map bc1 :> ab_pushout f g).
 Proof.
-  rapply path_quotient.
+  nrapply path_quotient; exact _.
 Defined.
 
 (** The pushout of an embedding is an embedding. *)
@@ -133,17 +133,17 @@ Definition ab_pushout_embedding_inl `{Univalence} {A B C : AbGroup}
 Proof.
   apply isembedding_isinj_hset.
   intros c0 c1.
-  refine (_ o (path_ab_pushout f g (grp_prod_inl c0) (grp_prod_inl c1))^-1).
+  nrefine (_ o (path_ab_pushout f g (grp_prod_inl c0) (grp_prod_inl c1))^-1%equiv).
   rapply Trunc_ind.
   cbn; intros [a p].
-  assert (z : a = mon_unit).
+  assert (z : a = 0).
   - rapply (isinj_embedding g).
-    refine (ap snd p @ _); cbn.
-    exact (left_inverse mon_unit @ (grp_homo_unit g)^).
-  - apply (grp_moveR_M1).
-    refine (_ @ ap fst p); cbn; symmetry.
-    refine (_ @ grp_inv_unit).
-    refine (ap _ _).
+    lhs exact (ap snd p); unfold snd.
+    exact (left_inverse 0 @ (grp_homo_unit g)^).
+  - apply grp_moveR_M1.
+    rhs_V exact (ap fst p); unfold fst; symmetry.
+    rhs_V nrapply grp_inv_unit.
+    apply ap.
     exact (ap f z @ grp_homo_unit f).
 Defined.
 

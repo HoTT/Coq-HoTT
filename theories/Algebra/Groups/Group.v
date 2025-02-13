@@ -6,7 +6,7 @@ Require Export (hints) Classes.interfaces.canonical_names.
 (** We only export the parts of these that will be most useful to users of this file. *)
 Require Export Classes.interfaces.canonical_names (SgOp, sg_op, MonUnit, mon_unit,
     LeftIdentity, left_identity, RightIdentity, right_identity,
-    Inverse, inv, Associative, simple_associativity, associativity,
+    Inverse, inv, Associative, simple_associativity, associativity, associative_flip,
     LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).
 Export canonical_names.BinOpNotations.
 Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, inverse_l, inverse_r,
@@ -37,23 +37,41 @@ Local Open Scope wc_iso_scope.
 (** ** Definition of a Group *)
 
 (** A group consists of a type, an operation on that type, a unit and an inverse that satisfy the group axioms in [IsGroup]. *)
-Record Group := {
+Record Group := Build_Group_internal {
   group_type :> Type;
   group_sgop :: SgOp group_type;
   group_unit :: MonUnit group_type;
   group_inverse :: Inverse group_type;
   group_isgroup :: IsGroup group_type;
+  (** This axiom is redundant, but will allow the "opposite" group to be definitionally involutive. *)
+  group_assoc_opp : Associative (flip group_sgop);
 }.
 
 Arguments group_sgop {_}.
 Arguments group_unit {_}.
 Arguments group_inverse {_}.
 Arguments group_isgroup {_}.
+Arguments group_assoc_opp {_}.
 (** We should never need to unfold the proof that something is a group. *)
 Global Opaque group_isgroup.
 
 Definition issig_group : _ <~> Group
   := ltac:(issig).
+
+(** This is the main constructor that is used to build groups.
+
+It differs from [Build_Group_internal] by removing the redundant second proof of associativity. There is a technical reason for keeping the second axiom around, see the definition of [grp_op].
+
+Note that we could have given the fields of [IsGroup] in a completely unbundled manner, but this has a negative impact on performance since every time a [Group] term is unfolded, the axioms appear in the arguments.
+
+It is therefore advised to use this constructor in combination with a tactic like [repeat split] when building groups. *)
+Definition Build_Group (G : Type)
+  `(op : SgOp G, unit : MonUnit G, inv : Inverse G, grp : !IsGroup G)
+  : Group.
+Proof.
+  nrapply (Build_Group_internal G op unit inv grp).
+  rapply associative_flip.
+Defined.
 
 (** ** Proof automation *)
 (** Many times in group theoretic proofs we want some form of automation for obvious identities. Here we implement such a behavior. *)
@@ -158,18 +176,31 @@ Proof.
 Defined.
 Global Opaque right_identity_left_identity.
 
-(** When building a group we can choose to omit the right inverse law and right identity law, since they follow from the left ones. *)
+(** When building a group we can choose to omit the right inverse law and right identity law, since they follow from the left ones. Note that as before with [Build_Group], the extra associativity axiom is omitted. *)
 Definition Build_Group' (G : Type) `{IsHSet G}
-  `(SgOp G, MonUnit G, Inverse G, !Associative (.*.),
-    !LeftIdentity (.*.) mon_unit,
-    !LeftInverse (.*.) (^) mon_unit)
+  `(op : SgOp G, unit : MonUnit G, inv : Inverse G, !Associative (.*.),
+    !LeftIdentity (.*.) mon_unit, !LeftInverse (.*.) (^) mon_unit)
   : Group.
 Proof.
-  rapply (Build_Group G).
-  repeat split.
-  4: nrapply right_identity_left_identity; exact _.
-  5: nrapply right_inverse_left_inverse; exact _.
-  all: exact _.
+  snrapply (Build_Group G op unit inv); repeat split.
+  1-3, 5: exact _.
+  - nrapply right_identity_left_identity; exact _.
+  - nrapply right_inverse_left_inverse; exact _.
+Defined.
+
+(** This is a variant of [issig_group] that drops the opposite axiom. *)
+Definition issig_group' `{Funext}
+  : {G : Type & {op : SgOp G & {unit : MonUnit G & {inv : Inverse G
+    & @IsGroup G op unit inv}}}}
+   <~> Group.
+Proof.
+  nrefine (issig_group oE _^-1).
+  nrapply equiv_functor_sigma_id; intros G.
+  nrapply equiv_functor_sigma_id; intros op.
+  nrapply equiv_functor_sigma_id; intros unit.
+  nrapply equiv_functor_sigma_id; intros inv; simpl.
+  rapply (equiv_iff_hprop pr1 (fun g => (g; _))).
+  intros z y x; symmetry; rapply simple_associativity.
 Defined.
 
 (** ** Group homomorphisms *)
@@ -368,25 +399,26 @@ Proof.
   - intros [G [? [? [? ?]]]].
     exists 1%equiv.
     exact _.
-  - intros [G [op [unit [neg ax]]]]; cbn.
+  - intros [G [op [unit [neg [ax assoc_op]]]]]; cbn.
     contr_sigsig G (equiv_idmap G).
-    srefine (Build_Contr _ ((_;(_;(_;_)));_) _); cbn.
+    srefine (Build_Contr _ ((_;(_;(_;(_; _))));_) _); cbn.
     1: assumption.
     1: exact _.
-    intros [[op' [unit' [neg' ax']]] eq].
+    intros [[op' [unit' [neg' [ax' assoc_op']]]] eq].
     apply path_sigma_hprop; cbn.
     refine (@ap _ _ (fun x : { oun :
       { oo : SgOp G & { u : MonUnit G & Inverse G}}
-      & @IsGroup G oun.1 oun.2.1 oun.2.2}
-      => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; x.2))
-      ((op;unit;neg);ax) ((op';unit';neg');ax') _).
+      & { _ : @IsGroup G oun.1 oun.2.1 oun.2.2
+        & forall z y x, oun.1 (oun.1 x y) z = oun.1 x (oun.1 y z)}}
+      => (x.1.1 ; x.1.2.1 ; x.1.2.2 ; (x.2.1; x.2.2)))
+      ((op;unit;neg);(ax; assoc_op)) ((op';unit';neg');(ax'; assoc_op')) _).
     apply path_sigma_hprop; cbn.
     srefine (path_sigma' _ _ _).
     1: funext x y; apply eq.
     rewrite transport_const.
     pose (f := Build_GroupHomomorphism
-        (G:=Build_Group G op unit neg ax)
-        (H:=Build_Group G op' unit' neg' ax')
+        (G:=Build_Group_internal G op unit neg ax assoc_op)
+        (H:=Build_Group_internal G op' unit' neg' ax' assoc_op')
         idmap eq).
     srefine (path_sigma' _ _ _).
     1: exact (grp_homo_unit f).
@@ -854,8 +886,8 @@ Defined.
 
 Definition grp_trivial : Group.
 Proof.
-  refine (Build_Group Unit (fun _ _ => tt) tt (fun _ => tt) _).
-  repeat split; try exact _; by intros [].
+  snrapply (Build_Group' Unit (fun _ _ => tt) tt (fun _ => tt));
+    only 1: exact _; by intros [].
 Defined.
 
 (** Map out of trivial group. *)
@@ -892,24 +924,56 @@ Defined.
 Definition grp_homo_const {G H : Group} : GroupHomomorphism G H
   := zero_morphism.
 
+(** ** Opposite Group *)
+
+(** The opposite group of a group is the group with the same elements but with the group operation reversed. Our technical choice for including a redundant associativity axiom in the definition of a group from before comes into play here. All we have to do to define the opposite group is to shuffle some data around. Since we are only shuffling, this operation becomes definitionally involutive. We make this choice because it is a great help in later proofs.  *)
+Definition grp_op : Group -> Group.
+Proof.
+  intros G.
+  snrapply Build_Group_internal; repeat split.
+  - exact G.
+  - exact (flip (.*.)).
+  - exact 1.
+  - exact (^).
+  - exact _.
+  - exact group_assoc_opp.
+  - exact grp_unit_r.
+  - exact grp_unit_l.
+  - exact grp_inv_r.
+  - exact grp_inv_l.
+  - exact grp_assoc.
+Defined.
+
+(** Taking the inverse is an isomorphism from the group to the opposite group. *)
+Definition grp_op_iso_inv (G : Group)
+  : G $<~> (grp_op G).
+Proof.
+  snrapply Build_GroupIsomorphism.
+  - snrapply Build_GroupHomomorphism.
+    + exact inv.
+    + intros x y.
+      rapply grp_inv_op.
+  - simpl; exact _.
+Defined.
+
 (** ** The direct product of groups *)
 
 (** The cartesian product of the underlying sets of two groups has a natural group structure. We call this the direct product of groups. *)
 Definition grp_prod : Group -> Group -> Group.
 Proof.
   intros G H.
-  srapply (Build_Group (G * H)).
-  (** Operation *)
-  { intros [g1 h1] [g2 h2].
-    exact (g1 * g2, h1 * h2). }
-  (** Unit *)
-  1: exact (mon_unit, mon_unit).
-  (** Inverse *)
-  { intros [g h].
-    exact (g^, h^). }
-  repeat split.
-  1: exact _.
-  all: grp_auto.
+  snrapply (Build_Group (G * H)).
+  4: repeat split.
+  - intros [g1 h1] [g2 h2].
+    exact (g1 * g2, h1 * h2).
+  - exact (1, 1).
+  - exact (functor_prod inv inv).
+  - exact _.
+  - intros x y z; apply path_prod'; apply simple_associativity.
+  - intros x; apply path_prod'; apply left_identity.
+  - intros x; apply path_prod'; apply right_identity.
+  - intros x; apply path_prod'; apply left_inverse.
+  - intros x; apply path_prod'; apply right_inverse.
 Defined.
 
 (** Maps into the direct product can be built by mapping separately into each factor. *)

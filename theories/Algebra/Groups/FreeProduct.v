@@ -685,8 +685,8 @@ Section FreeProduct.
     : k $== k'.
   Proof.
     rapply (amalgamatedfreeproduct_ind_hprop _ l r).
-    intros x y p q; by nrapply grp_homo_op_agree.
-  Defined.
+    intros x y; nrapply grp_homo_op_agree. (* A bit slow, ~0.05s *)
+  Defined. (* A bit slow, ~0.05s *)
 
 End FreeProduct.
 
@@ -730,8 +730,8 @@ Definition freeproduct_ind_homotopy {G H K : Group}
   : f $== f'.
 Proof.
   rapply (freeproduct_ind_hprop _ l r).
-  intros x y p q; by nrapply grp_homo_op_agree.
-Defined.
+  intros x y; nrapply grp_homo_op_agree. (* Slow, ~0.2s. *)
+Time Defined. (* Slow, ~0.15s. *)
 
 Definition freeproduct_rec_beta_inl {G H K : Group}
   (f : G $-> K) (g : H $-> K)
