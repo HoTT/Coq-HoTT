@@ -376,7 +376,7 @@ Proof.
     exact (natequiv_prewhisker (A:=A^op) (B:=B^op)
       (natequiv_adjunction_l adj2 y) F). }
   intros x.
-  rapply is1natural_comp.
+  nrapply is1natural_comp.
   + rapply (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).
   + rapply is1natural_equiv_adjunction_r.
 Defined.
@@ -393,7 +393,7 @@ Proof.
     refine (natequiv_compose (natequiv_adjunction_l adj _) _).
     rapply (natequiv_postwhisker _ (natequiv_op e)). }
   intros x.
-  rapply is1natural_comp.
+  nrapply is1natural_comp; typeclasses eauto.
 Defined.
 
 (** Replace the right functor in an adjunction by a naturally equivalent one. *)
@@ -408,8 +408,7 @@ Proof.
     refine (natequiv_compose _ (natequiv_adjunction_r adj _)).
     rapply (natequiv_postwhisker _ e). }
   intros y.
-  rapply is1natural_comp.
+  nrapply is1natural_comp.
   2: exact _.
   rapply is1natural_yoneda.
 Defined.
-
