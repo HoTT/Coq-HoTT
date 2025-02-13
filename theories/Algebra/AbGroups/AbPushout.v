@@ -108,13 +108,13 @@ Proof.
     srapply path_sigma.
     + apply equiv_path_grouphomomorphism.
       intro x; simpl.
-      refine (ap (fun k => b x + k) (grp_homo_unit c) @ _).
+      lhs exact (ap (fun k => b x + k) (grp_homo_unit c)).
       apply right_identity.
-    + refine (transport_sigma' _ _ @ _).
-      apply path_sigma_hprop; simpl.
+    + lhs nrapply transport_sigma'.
+      apply path_sigma_hprop.
       apply equiv_path_grouphomomorphism.
       intro y; simpl.
-      refine (ap (fun k => k + c y) (grp_homo_unit b) @ _).
+      lhs exact (ap (fun k => k + c y) (grp_homo_unit b)).
       apply left_identity.
 Defined.
 
