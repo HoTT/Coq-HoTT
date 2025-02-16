@@ -93,6 +93,24 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+Definition transport_paths_FFFlr {A B C : Type}
+  {f : A -> B} {g : B -> C} {h : C -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = x1)
+  : transport (fun x => h (g (f x)) = x) p q = (ap h (ap g (ap f p)))^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FFFlFr {A B C D : Type}
+  {f : A -> B} {g : B -> C} {h : C -> D} {k : A -> D} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = k x1)
+  : transport (fun x => h (g (f x)) = k x) p q = (ap h (ap g (ap f p)))^ @ q @ (ap k p).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
 Definition transport_paths_lFFr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : x1 = g (f x1))
   : transport (fun x => x = g (f x)) p q = p^ @ q @ (ap g (ap f p)).
@@ -160,6 +178,30 @@ Proof.
   refine (concat_pp_p _ _ _ @ _).
   apply moveR_Vp.
   exact h^.
+Defined.
+
+Definition transport_paths_FFFlr' {A B C : Type}
+  {f : A -> B} {g : B -> C} {h : C -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = x1) (r : h (g (f x2)) = x2)
+  (h' : ap h (ap g (ap f p)) @ r = q @ p)
+  : transport (fun x => h (g (f x)) = x) p q = r.
+Proof.
+  refine (transport_paths_FFFlr (h:=h) _ _ @ _).
+  refine (concat_pp_p _ _ _ @ _).
+  apply moveR_Vp.
+  exact h'^.
+Defined.
+
+Definition transport_paths_FFFlFr' {A B C D : Type}
+  {f : A -> B} {g : B -> C} {h : C -> D} {k : A -> D} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = k x1) (r : h (g (f x2)) = k x2)
+  (h' : ap h (ap g (ap f p)) @ r = q @ (ap k p))
+  : transport (fun x => h (g (f x)) = k x) p q = r.
+Proof.
+  refine (transport_paths_FFFlFr (h:=h) _ _ @ _).
+  refine (concat_pp_p _ _ _ @ _).
+  apply moveR_Vp.
+  exact h'^.
 Defined.
 
 Definition transport_paths_FFlFr' {A B C : Type}
