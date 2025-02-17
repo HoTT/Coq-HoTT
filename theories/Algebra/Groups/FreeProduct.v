@@ -731,7 +731,7 @@ Definition freeproduct_ind_homotopy {G H K : Group}
 Proof.
   rapply (freeproduct_ind_hprop _ l r).
   intros x y; nrapply grp_homo_op_agree. (* Slow, ~0.2s. *)
-Time Defined. (* Slow, ~0.15s. *)
+Defined. (* Slow, ~0.15s. *)
 
 Definition freeproduct_rec_beta_inl {G H K : Group}
   (f : G $-> K) (g : H $-> K)

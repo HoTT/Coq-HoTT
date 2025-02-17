@@ -278,6 +278,7 @@ Defined.
 (** Group homomorphisms preserve inverses. *)
 Definition grp_homo_inv {G H} (f : GroupHomomorphism G H)
   : forall x, f x^ = (f x)^.
+(* This can also be proved using [:= preserves_inverse.] from Classes/theory/groups.v.  That uses [rewrite] and is marked [Qed]. *)
 Proof.
   intro x.
   apply (inverse_unique (f x)).
