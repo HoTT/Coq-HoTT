@@ -635,17 +635,15 @@ Defined.
 Definition nat_div_moveL_nV n m k : 0 < k -> n * k = m -> n = m / k.
 Proof.
   intros H p.
-  rewrite <- p.
-  symmetry.
-  rapply nat_div_mul_cancel_r.
+  destruct p.
+  symmetry; rapply nat_div_mul_cancel_r.
 Defined.
 
 Definition nat_div_moveR_nV n m k : 0 < k -> n = m * k -> n / k = m.
 Proof.
   intros H p.
-  symmetry.
-  rapply nat_div_moveL_nV.
-  by symmetry.
+  destruct p^.
+  rapply nat_div_mul_cancel_r.
 Defined.
 
 Definition nat_divides_div_l n m l
@@ -1017,13 +1015,12 @@ Proof.
   apply nat_moveR_nV in p.
   rewrite nat_div_mul_l.
   2: exact _.
-  napply nat_divides_div_l.
-  1,2: exact _.
+  rapply nat_divides_div_l.
   destruct p.
   rewrite nat_dist_sub_l.
   napply nat_divides_sub.
-  1,2: rewrite nat_mul_assoc.
-  1,2: only 1: rewrite nat_mul_comm; exact _.
+  1: rewrite nat_mul_comm.
+  1,2: exact _.
 Defined.
 
 Definition nat_divides_l_iff_divides_l_lcm n m k
@@ -1036,7 +1033,7 @@ Proof.
     + exact _.
 Defined.
 
-(** If [k] divides all common multiples of [n] and [m], and [k] is also a common multiple, then it must necesserily be equal to the least common multiple. *)
+(** If [k] divides all common multiples of [n] and [m], and [k] is also a common multiple, then it must necessarily be equal to the least common multiple. *)
 Definition nat_lcm_unique n m k
   (H : forall q, (n | q) -> (m | q) -> (k | q))
   : (n | k) -> (m | k) -> nat_lcm n m = k.
@@ -1045,7 +1042,7 @@ Proof.
   rapply nat_divides_antisym.
 Defined.
 
-(** As a corollary of uniquness, we get that the least common multiple operation is commutative. *)
+(** As a corollary of uniqueness, we get that the least common multiple operation is commutative. *)
 Definition nat_lcm_comm n m : nat_lcm n m = nat_lcm m n.
 Proof.
   rapply nat_lcm_unique.
