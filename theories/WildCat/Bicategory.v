@@ -1,5 +1,3 @@
-(* Require Import WildCat.Core WildCat.Prod WildCat.Equiv WildCat.NatTrans *)
-(*   WildCat.Square WildCat.Opposite. *)
 Require Import Basics.Overture.
 Require Import WildCat.Core WildCat.Equiv WildCat.Prod
   WildCat.NatTrans WildCat.Bifunctor.
