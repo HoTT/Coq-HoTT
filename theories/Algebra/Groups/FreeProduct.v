@@ -624,8 +624,8 @@ Section FreeProduct.
   Defined.
 
   Theorem equiv_amalgamatedfreeproduct_rec `{Funext} (X : Group)
-    : {h : GroupHomomorphism H X & {k : GroupHomomorphism K X & h o f == k o g }}
-      <~> GroupHomomorphism AmalgamatedFreeProduct X.
+    : {h : H $-> X & {k : K $-> X & h o f == k o g }}
+      <~> (AmalgamatedFreeProduct $-> X).
   Proof.
     snrapply equiv_adjointify.
     1: intros [h [k p]]; exact (AmalgamatedFreeProduct_rec X h k p).
@@ -651,7 +651,7 @@ Section FreeProduct.
     intro hkp.
     simpl.
     rapply (equiv_ap' (equiv_sigma_prod
-      (fun hk : GroupHomomorphism H X * GroupHomomorphism K X
+      (fun hk : (H $-> X) * (K $-> X)
         => fst hk o f == snd hk o g)) _ _)^-1%equiv.
     rapply path_sigma_hprop.
     destruct hkp as [h [k p]].
