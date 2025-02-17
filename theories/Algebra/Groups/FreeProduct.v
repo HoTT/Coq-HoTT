@@ -1,10 +1,10 @@
 Require Import Basics Types.
+Require Import WildCat.Core WildCat.Coproducts.
 Require Import Cubical.DPath.
 Require Import Spaces.List.Core Spaces.List.Theory.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
 Require Import Algebra.Groups.Group.
-Require Import WildCat.
 
 Local Open Scope list_scope.
 Local Open Scope mc_scope.
@@ -624,8 +624,8 @@ Section FreeProduct.
   Defined.
 
   Theorem equiv_amalgamatedfreeproduct_rec `{Funext} (X : Group)
-    : {h : GroupHomomorphism H X & {k : GroupHomomorphism K X & h o f == k o g }}
-      <~> GroupHomomorphism AmalgamatedFreeProduct X.
+    : {h : H $-> X & {k : K $-> X & h o f == k o g }}
+      <~> (AmalgamatedFreeProduct $-> X).
   Proof.
     snapply equiv_adjointify.
     1: intros [h [k p]]; exact (AmalgamatedFreeProduct_rec X h k p).
@@ -650,8 +650,8 @@ Section FreeProduct.
       rapply (grp_homo_op r (amal_eta [_]) (amal_eta x)). }
     intro hkp.
     simpl.
-    rapply (equiv_ap' (equiv_sigma_prod
-      (fun hk : GroupHomomorphism H X * GroupHomomorphism K X
+    tapply (equiv_ap' (equiv_sigma_prod
+      (fun hk : (H $-> X) * (K $-> X)
         => fst hk o f == snd hk o g)) _ _)^-1%equiv.
     rapply path_sigma_hprop.
     destruct hkp as [h [k p]].
