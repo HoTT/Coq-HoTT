@@ -37,16 +37,14 @@ Definition groupcoeq_rec {A B C : Group} (f g : A $-> B)
   (h : B $-> C) (p : h $o f $== h $o g)
   : GroupCoeq f g $-> C.
 Proof.
-  snrapply AmalgamatedFreeProduct_rec.
-  - exact (h $o f).
-  - exact h.
-  - snrapply freeproduct_ind_homotopy.
-    + refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
-      exact ((_ $@L freeproduct_rec_beta_inl _ _) $@ cat_idr _
-        $@ (_ $@L freeproduct_rec_beta_inl _ _)^$).
-    + refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
-      exact ((_ $@L freeproduct_rec_beta_inr _ _) $@ (cat_idr _ $@ p)
-        $@ (_ $@L freeproduct_rec_beta_inr _ _)^$).
+  rapply (AmalgamatedFreeProduct_rec C (h $o f) h).
+  snrapply freeproduct_ind_homotopy.
+  - refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
+    exact ((_ $@L freeproduct_rec_beta_inl _ _) $@ cat_idr _
+      $@ (_ $@L freeproduct_rec_beta_inl _ _)^$).
+  - refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
+    exact ((_ $@L freeproduct_rec_beta_inr _ _) $@ (cat_idr _ $@ p)
+      $@ (_ $@L freeproduct_rec_beta_inr _ _)^$).
 Defined.
 
 Definition equiv_groupcoeq_rec `{Funext} {A B C : Group} (f g : GroupHomomorphism A B)
