@@ -1,0 +1,57 @@
+digraph HoTT_Types_Equiv {
+  graph [ratio=0.5]
+  node [style=filled]
+Equiv_transport_equiv__ [label="transport_equiv''", URL=<Equiv.html#transport_equiv''>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_transport_equiv_ [label="transport_equiv'", URL=<Equiv.html#transport_equiv'>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_transport_equiv [label="transport_equiv", URL=<Equiv.html#transport_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_equiv_equiv_inverse [label="equiv_equiv_inverse", URL=<Equiv.html#equiv_equiv_inverse>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_isequiv_equiv_inverse [label="isequiv_equiv_inverse", URL=<Equiv.html#isequiv_equiv_inverse>, fillcolor="#F070D1"] ;
+Equiv_equiv_functor_postcompose_equiv [label="equiv_functor_postcompose_equiv", URL=<Equiv.html#equiv_functor_postcompose_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_equiv_functor_precompose_equiv [label="equiv_functor_precompose_equiv", URL=<Equiv.html#equiv_functor_precompose_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_equiv_functor_equiv [label="equiv_functor_equiv", URL=<Equiv.html#equiv_functor_equiv>, fillcolor="#F070D1"] ;
+Equiv_isequiv_functor_equiv [label="isequiv_functor_equiv", URL=<Equiv.html#isequiv_functor_equiv>, fillcolor="#F070D1"] ;
+Equiv_functor_equiv [label="functor_equiv", URL=<Equiv.html#functor_equiv>, fillcolor="#F070D1"] ;
+Equiv_contr_aut_hprop [label="contr_aut_hprop", URL=<Equiv.html#contr_aut_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_contr_equiv_contr_contr [label="contr_equiv_contr_contr", URL=<Equiv.html#contr_equiv_contr_contr>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_istrunc_equiv [label="istrunc_equiv", URL=<Equiv.html#istrunc_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_isequiv_ap_equiv_fun [label="isequiv_ap_equiv_fun", URL=<Equiv.html#isequiv_ap_equiv_fun>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_isequiv_path_equiv [label="isequiv_path_equiv", URL=<Equiv.html#isequiv_path_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_path_equiv [label="path_equiv", URL=<Equiv.html#path_equiv>, fillcolor="#F070D1"] ;
+Equiv_equiv_path_equiv [label="equiv_path_equiv", URL=<Equiv.html#equiv_path_equiv>, fillcolor="#F070D1"] ;
+Equiv_equiv_contr_map_isequiv [label="equiv_contr_map_isequiv", URL=<Equiv.html#equiv_contr_map_isequiv>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_hprop_isequiv [label="hprop_isequiv", URL=<Equiv.html#hprop_isequiv>, fillcolor="#F070D1"] ;
+Equiv_contr_retr_equiv [label="contr_retr_equiv", URL=<Equiv.html#contr_retr_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_contr_sect_equiv [label="contr_sect_equiv", URL=<Equiv.html#contr_sect_equiv>, fillcolor="#F070D1"] ;
+Equiv_equiv_total_iff_equiv_fiberwise [label="equiv_total_iff_equiv_fiberwise", URL=<Equiv.html#equiv_total_iff_equiv_fiberwise>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_isequiv_from_functor_sigma [label="isequiv_from_functor_sigma", URL=<Equiv.html#isequiv_from_functor_sigma>, fillcolor="#F070D1"] ;
+Equiv_isequiv_inhab_codomain [label="isequiv_inhab_codomain", URL=<Equiv.html#isequiv_inhab_codomain>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_isequiv_contr_map [label="isequiv_contr_map", URL=<Equiv.html#isequiv_contr_map>, fillcolor="#F070D1"] ;
+Equiv_contr_map_isequiv [label="contr_map_isequiv", URL=<Equiv.html#contr_map_isequiv>, fillcolor="#F070D1"] ;
+  Equiv_transport_equiv__ -> Equiv_path_equiv [] ;
+  Equiv_equiv_equiv_inverse -> Equiv_isequiv_equiv_inverse [] ;
+  Equiv_isequiv_equiv_inverse -> Equiv_path_equiv [] ;
+  Equiv_equiv_functor_postcompose_equiv -> Equiv_equiv_functor_equiv [] ;
+  Equiv_equiv_functor_precompose_equiv -> Equiv_equiv_functor_equiv [] ;
+  Equiv_equiv_functor_equiv -> Equiv_isequiv_functor_equiv [] ;
+  Equiv_isequiv_functor_equiv -> Equiv_functor_equiv [] ;
+  Equiv_isequiv_functor_equiv -> Equiv_path_equiv [] ;
+  Equiv_contr_aut_hprop -> Equiv_path_equiv [] ;
+  Equiv_contr_equiv_contr_contr -> Equiv_path_equiv [] ;
+  Equiv_istrunc_equiv -> Equiv_equiv_path_equiv [] ;
+  Equiv_isequiv_ap_equiv_fun -> Equiv_equiv_path_equiv [] ;
+  Equiv_isequiv_path_equiv -> Equiv_path_equiv [] ;
+  Equiv_path_equiv -> Equiv_equiv_path_equiv [] ;
+  Equiv_equiv_path_equiv -> Equiv_hprop_isequiv [] ;
+  Equiv_equiv_contr_map_isequiv -> Equiv_hprop_isequiv [] ;
+  Equiv_equiv_contr_map_isequiv -> Equiv_isequiv_contr_map [] ;
+  Equiv_hprop_isequiv -> Equiv_contr_sect_equiv [] ;
+  Equiv_contr_retr_equiv -> Equiv_contr_map_isequiv [] ;
+  Equiv_contr_sect_equiv -> Equiv_contr_map_isequiv [] ;
+  Equiv_equiv_total_iff_equiv_fiberwise -> Equiv_isequiv_from_functor_sigma [] ;
+  Equiv_isequiv_from_functor_sigma -> Equiv_isequiv_contr_map [] ;
+  Equiv_isequiv_from_functor_sigma -> Equiv_contr_map_isequiv [] ;
+  Equiv_isequiv_inhab_codomain -> Equiv_isequiv_contr_map [] ;
+  Equiv_isequiv_inhab_codomain -> Equiv_contr_map_isequiv [] ;
+subgraph cluster_Equiv { label="Equiv"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Equiv_contr_map_isequiv; Equiv_isequiv_contr_map; Equiv_isequiv_inhab_codomain; Equiv_isequiv_from_functor_sigma; Equiv_equiv_total_iff_equiv_fiberwise; Equiv_contr_sect_equiv; Equiv_contr_retr_equiv; Equiv_hprop_isequiv; Equiv_equiv_contr_map_isequiv; Equiv_equiv_path_equiv; Equiv_path_equiv; Equiv_isequiv_path_equiv; Equiv_isequiv_ap_equiv_fun; Equiv_istrunc_equiv; Equiv_contr_equiv_contr_contr; Equiv_contr_aut_hprop; Equiv_functor_equiv; Equiv_isequiv_functor_equiv; Equiv_equiv_functor_equiv; Equiv_equiv_functor_precompose_equiv; Equiv_equiv_functor_postcompose_equiv; Equiv_isequiv_equiv_inverse; Equiv_equiv_equiv_inverse; Equiv_transport_equiv; Equiv_transport_equiv_; Equiv_transport_equiv__; };
+} /* END */

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Tactics.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Miscellaneous helper tactics for proving exponential laws *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk1a"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths NaturalTransformation.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Tactics Basics.PathGroupoids Types.Forall Types.Prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** These are probably more general than just exponential laws, but I haven&#39;t tried them more widely, yet. *)</span>
+
+<span class="sd">(** Miscellaneous tactics to try *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">exp_laws_misc_t&#39;</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | _ =&gt; <span class="bp">reflexivity</span>
+    | _ =&gt; <span class="kp">progress</span> <span class="nb">intros</span>
+    | _ =&gt; <span class="kp">progress</span> <span class="nb">simpl</span> <span class="kr">in</span> *
+    | _ =&gt; <span class="nb">apply</span> (@path_forall _); <span class="nb">intro</span>
+    | _ =&gt; <span class="nb">rewrite</span> !identity_of
+    | _ =&gt; <span class="kp">progress</span> <span class="nb">autorewrite with</span> morphism
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Safe transformations to simplify complex types in the hypotheses or goal *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">exp_laws_simplify_types&#39;</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | [ H : (_ + _) |- _ ] =&gt; <span class="nb">destruct</span> H
+    | [ H : Unit |- _ ] =&gt; <span class="nb">destruct</span> H
+    | [ H : Empty |- _ ] =&gt; <span class="nb">destruct</span> H
+    | [ H : (_ * _) |- _ ] =&gt; <span class="nb">destruct</span> H
+    | [ |- _ = _ :&gt; Functor _ _ ] =&gt; <span class="kp">progress</span> path_functor
+    | [ |- _ = _ :&gt; NaturalTransformation _ _ ] =&gt; <span class="kp">progress</span> path_natural_transformation
+    | [ |- _ = _ :&gt; prod _ _ ] =&gt; <span class="nb">apply</span> path_prod
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Do some simplifications of contractible types *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">exp_laws_handle_contr&#39;</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | [ H : Contr <span class="nl">?T</span>, x : <span class="nl">?T</span> |- _ ] =&gt; <span class="kp">progress</span> <span class="nb">destruct</span> (contr x)
+    | [ H : <span class="kr">forall</span> <span class="nv">a</span>, Contr (<span class="nl">?T</span> a), x : <span class="nl">?T</span> _ |- _ ] =&gt; <span class="kp">progress</span> <span class="nb">destruct</span> (contr x)
+    | [ H : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span>, Contr (<span class="nl">?T</span> a b), x : <span class="nl">?T</span> _ _ |- _ ] =&gt; <span class="kp">progress</span> <span class="nb">destruct</span> (contr x)
+    | [ |- <span class="kp">context</span>[contr (center <span class="nl">?x</span>)] ]
+      =&gt; <span class="kp">progress</span> <span class="kr">let</span> <span class="nv">H</span> := <span class="kp">fresh</span> <span class="kr">in</span>
+                  <span class="nb">assert</span> (H : idpath = contr (center x)) <span class="bp">by</span> <span class="bp">exact</span> (center _);
+                    <span class="nb">destruct</span> H
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Try to simplify [transport] with some heuristics *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">exp_laws_handle_transport&#39;</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | _ =&gt; <span class="kp">progress</span> <span class="nb">rewrite</span> <span class="nl">?transport_forall_constant</span>, <span class="nl">?path_forall_2_beta</span>, <span class="nl">?transport_const</span>, <span class="nl">?transport_path_prod</span>
+    | [ |- <span class="kp">context</span> [path_functor_uncurried <span class="nl">?F</span> <span class="nl">?G</span> (<span class="nl">?x</span>; <span class="nl">?y</span>)] ] <span class="c">(* https://coq.inria.fr/bugs/show_bug.cgi?id=3768 *)</span>
+      =&gt; <span class="nb">rewrite</span> (@path_functor_uncurried_fst _ _ _ F G x y)
+    | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (y _0 <span class="nl">?x</span>)%object)] ]
+      =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (y&#39; x)) (@object_of C D))
+    | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (y _0 <span class="nl">?x</span>)%object <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (y&#39; x) z) (@object_of C D))
+    | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (y _0 <span class="nl">?x</span>)%object <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (y&#39; x) z) (@object_of C D))
+    | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (<span class="nl">?g</span> (y _0 <span class="nl">?x</span>)%object))] ]
+      =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (g (y&#39; x))) (@object_of C D))
+    | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (<span class="nl">?g</span> (y _0 <span class="nl">?x</span>)%object) <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (g (y&#39; x)) z) (@object_of C D))
+    | _ =&gt; <span class="kp">progress</span> transport_path_forall_hammer
+    | [ |- <span class="kp">context</span>[components_of (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; components_of) z)
+    | [ |- <span class="kp">context</span>[object_of (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; object_of) z)
+    | [ |- <span class="kp">context</span>[morphism_of (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; morphism_of) z)
+    | [ |- <span class="kp">context</span>[fst (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; fst) z)
+    | [ |- <span class="kp">context</span>[snd (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; snd) z)
+    | [ |- <span class="kp">context</span>[pr1 (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+      =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; pr1) z)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">exp_laws_t&#39;</span> :=
+  <span class="kp">first</span> [ exp_laws_misc_t&#39;
+        | exp_laws_simplify_types&#39;
+        | exp_laws_handle_contr&#39;
+        | exp_laws_handle_transport&#39; ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">exp_laws_t</span> := <span class="kp">repeat</span> exp_laws_t&#39;.</span></span></pre>
+</div>
+</div></body>
+</html>

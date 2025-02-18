@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>PseudofunctorToCat.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Grothendieck Construction of a pseudofunctor to Cat *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk0"><span class="kn">Require Import</span> FunctorCategory.Morphisms.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Pseudofunctor.Core Pseudofunctor.RewriteLaws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms Cat.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics Types HoTT.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Grothendieck</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Pseudofunctor C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Pair</span> :=
+    {
+      c : C;
+      x : object (F c)
+    }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">morphism</span> s d :=
+    { f : morphism C s.(c) d.(c)
+    | morphism _ (p_morphism_of F f s.(x)) d.(x) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk1"><span class="kn">Definition</span> <span class="nf">compose</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span>
+             (<span class="nv">m1</span> : morphism d d&#39;)
+             (<span class="nv">m2</span> : morphism s d)
+  : morphism s d&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>Pair</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>{f : Core.morphism C (c d) (c d&#39;) &amp;
+Core.morphism (F (c d&#39;))
+  ((p_morphism_of F f) _0 (x d))%object (x d&#39;)}</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>{f : Core.morphism C (c s) (c d) &amp;
+Core.morphism (F (c d))
+  ((p_morphism_of F f) _0 (x s))%object (x d)}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : Core.morphism C (c s) (c d&#39;) &amp;
+Core.morphism (F (c d&#39;))
+  ((p_morphism_of F f) _0 (x s))%object (x d&#39;)}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>Pair</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>{f : Core.morphism C (c d) (c d&#39;) &amp;
+Core.morphism (F (c d&#39;))
+  ((p_morphism_of F f) _0 (x d))%object (x d&#39;)}</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>{f : Core.morphism C (c s) (c d) &amp;
+Core.morphism (F (c d))
+  ((p_morphism_of F f) _0 (x s))%object (x d)}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : Core.morphism C (c s) (c d&#39;) &amp;
+Core.morphism (F (c d&#39;))
+  ((p_morphism_of F f) _0 (x s))%object (x d&#39;)}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk3"><span class="kr">exists</span> (<span class="nv">m1</span>.<span class="mi">1</span> o m2.<span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>Pair</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>{f : Core.morphism C (c d) (c d&#39;) &amp;
+Core.morphism (F (c d&#39;))
+  ((p_morphism_of F f) _0 (x d))%object (x d&#39;)}</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>{f : Core.morphism C (c s) (c d) &amp;
+Core.morphism (F (c d))
+  ((p_morphism_of F f) _0 (x s))%object (x d)}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Core.morphism (F (c d&#39;))
+  ((p_morphism_of F (m1.<span class="mi">1</span> o m2.<span class="mi">1</span>)) _0 (x s))%object
+  (x d&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk4"><span class="nb">refine</span> (m1.<span class="mi">2</span> o ((p_morphism_of F m1.<span class="mi">1</span>) _1 m2.<span class="mi">2</span> o _)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>Pair</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>{f : Core.morphism C (c d) (c d&#39;) &amp;
+Core.morphism (F (c d&#39;))
+  ((p_morphism_of F f) _0 (x d))%object (x d&#39;)}</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>{f : Core.morphism C (c s) (c d) &amp;
+Core.morphism (F (c d))
+  ((p_morphism_of F f) _0 (x s))%object (x d)}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Core.morphism (F (c d&#39;))
+  ((p_morphism_of F (m1.<span class="mi">1</span> o m2.<span class="mi">1</span>)) _0 (x s))%object
+  ((p_morphism_of F m1.<span class="mi">1</span>)
+   _0 ((p_morphism_of F m2.<span class="mi">1</span>) _0 (x s)))%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> (p_composition_of F).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk5"><span class="kn">Definition</span> <span class="nf">identity</span> <span class="nv">s</span> : morphism s s.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>Pair</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : Core.morphism C (c s) (c s) &amp;
+Core.morphism (F (c s))
+  ((p_morphism_of F f) _0 (x s))%object (x s)}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>Pair</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : Core.morphism C (c s) (c s) &amp;
+Core.morphism (F (c s))
+  ((p_morphism_of F f) _0 (x s))%object (x s)}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk7"><span class="kr">exists</span> <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>Pair</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Core.morphism (F (c s))
+  ((p_morphism_of F <span class="mi">1</span>) _0 (x s))%object (x s)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> (p_identity_of F).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> identity _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> compose _ _ _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">try_associativity_f_ap</span> :=
+    <span class="kp">first</span> [ f_ap; []
+          | <span class="kp">repeat</span> (<span class="nb">etransitivity</span>; [ <span class="nb">apply</span> Category.Core.associativity | ]);
+            <span class="kp">repeat</span> (<span class="nb">etransitivity</span>; [ | <span class="nb">symmetry</span>; <span class="nb">apply</span> Category.Core.associativity ]);
+            f_ap; []
+          | <span class="kp">repeat</span> (<span class="nb">etransitivity</span>; [ <span class="nb">symmetry</span>; <span class="nb">apply</span> Category.Core.associativity | ]);
+            <span class="kp">repeat</span> (<span class="nb">etransitivity</span>; [ | <span class="nb">apply</span> Category.Core.associativity ]);
+            f_ap; [] ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">assoc_before_commutes_tac</span> :=
+    <span class="nb">rewrite</span> !composition_of;
+    <span class="nb">rewrite</span> &lt;- !Category.Core.associativity;
+    <span class="nb">etransitivity</span>; [ | <span class="nb">symmetry</span>; <span class="nb">apply</span> compose4associativity_helper ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">assoc_fin_tac</span> :=
+    <span class="kp">repeat</span> <span class="kr">match goal with</span>
+             | _ =&gt; <span class="bp">reflexivity</span>
+             | _ =&gt; <span class="kp">progress</span> <span class="nb">rewrite</span> <span class="nl">?Category</span>.Core.left_identity, <span class="nl">?Category</span>.Core.right_identity
+             | [ |- <span class="kp">context</span>[components_of <span class="nl">?T</span> <span class="nl">?x</span> o components_of <span class="nl">?T</span>^-<span class="mi">1</span> <span class="nl">?x</span>] ]
+               =&gt; <span class="kr">let</span> <span class="nv">k</span> := <span class="kp">constr</span>:(@iso_compose_pV _ _ _ (T x) _) <span class="kr">in</span>
+                  <span class="nb">simpl</span> <span class="nb">rewrite</span> k <span class="c">(* https://coq.inria.fr/bugs/show_bug.cgi?id=3773 and https://coq.inria.fr/bugs/show_bug.cgi?id=3772 (probably) *)</span>
+             | _ =&gt; try_associativity_quick
+                      <span class="kp">first</span> [ f_ap; []
+                            | <span class="nb">apply</span> concat_left_identity
+                            | <span class="nb">apply</span> concat_right_identity ]
+             | _ =&gt; <span class="nb">rewrite</span> &lt;- <span class="nl">?identity_of</span>, &lt;- <span class="nl">?composition_of</span>;
+                   <span class="kp">progress</span> <span class="kp">repeat</span> (f_ap; []);
+                   <span class="nb">rewrite</span> <span class="nl">?identity_of</span>, <span class="nl">?composition_of</span>
+             | _ =&gt; try_associativity_quick <span class="nb">rewrite</span> compose4associativity_helper
+           <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">helper_t</span> before_commutes_tac :=
+    <span class="kp">repeat</span> <span class="nb">intro</span>;
+    <span class="nb">symmetry</span>;
+    <span class="nb">apply</span> path_sigma_uncurried;
+    <span class="nb">simpl</span> <span class="kr">in</span> *;
+    <span class="kr">let</span> <span class="nv">ex_hyp</span> := <span class="kr">match goal with</span>
+                    | [ H : <span class="nl">?A</span> = <span class="nl">?B</span> |- @sig (<span class="nl">?B</span> = <span class="nl">?A</span>) _ ] =&gt; <span class="kp">constr</span>:(H)
+                  <span class="kr">end</span> <span class="kr">in</span>
+    (<span class="kr">exists</span> (<span class="nv">inverse</span> <span class="nv">ex_hyp</span>));
+      <span class="nb">simpl</span>;
+      <span class="nb">rewrite</span> <span class="nl">?transport_Fc_to_idtoiso</span>, <span class="nl">?transport_cF_to_idtoiso</span>;
+      <span class="nb">rewrite</span> <span class="nl">?idtoiso_inv</span>, <span class="nl">?ap_V</span>, <span class="nl">?inv_V</span>;
+      <span class="nb">simpl</span>;
+      <span class="kr">let</span> <span class="nv">rew_hyp</span> := <span class="kr">match goal with</span>
+                       | [ H&#39; : <span class="kp">context</span>[ex_hyp] |- _ ] =&gt; <span class="kp">constr</span>:(H&#39;)
+                     <span class="kr">end</span> <span class="kr">in</span>
+      <span class="nb">rewrite</span> rew_hyp;
+        <span class="nb">clear</span> rew_hyp ex_hyp;
+        before_commutes_tac;
+        <span class="kp">repeat</span> <span class="kp">first</span> [ <span class="bp">reflexivity</span>
+                     | <span class="kp">progress</span> <span class="nb">rewrite</span> <span class="nl">?Category</span>.Core.left_identity, <span class="nl">?Category</span>.Core.right_identity
+                     | try_associativity_quick (f_ap; []) ];
+        <span class="kr">match goal with</span>
+          | _ =&gt; <span class="bp">reflexivity</span>
+          | [ |- <span class="kp">context</span>[<span class="nl">?F</span> _1 <span class="nl">?m</span> o components_of <span class="nl">?T</span> <span class="nl">?x</span>] ]
+            =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> &lt;- (commutes T _ _ m);
+              <span class="kp">try</span> <span class="bp">reflexivity</span>
+          | [ |- <span class="kp">context</span>[components_of <span class="nl">?T</span> <span class="nl">?x</span> o <span class="nl">?F</span> _1 <span class="nl">?m</span>] ]
+            =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (commutes T _ _ m);
+              <span class="kp">try</span> <span class="bp">reflexivity</span>
+        <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="c">(* The goal for, e.g., the following associativity helper was made</span>
+<span class="c">  with the following code:</span>
+<span class="c">&lt;&lt;</span>
+<span class="c">intros a b c d [f f&#39;] [g g&#39;] [h h&#39;]; simpl.</span>
+<span class="c">    pose proof (apD10 (ap components_of (p_composition_ofCoherent_for_rewrite F _ _ _ _ f g h))) as rew_hyp.</span>
+<span class="c">    revert rew_hyp.</span>
+<span class="c">    generalize dependent (Category.Core.associativity C _ _ _ _ f g h). intros fst_hyp ?.</span>
+
+<span class="c">    simpl in *.</span>
+<span class="c">    hnf in rew_hyp.</span>
+<span class="c">    simpl in *.</span>
+
+<span class="c">    Local Ltac gen_x x :=</span>
+<span class="c">      generalize dependent (X x);</span>
+<span class="c">      generalize dependent (C x);</span>
+<span class="c">      repeat (let x1 := fresh &quot;x&quot; in intro x1).</span>
+<span class="c">    gen_x a.</span>
+<span class="c">    gen_x b.</span>
+<span class="c">    gen_x c.</span>
+<span class="c">    gen_x d.</span>
+<span class="c">    repeat match goal with</span>
+<span class="c">             | [ |- context[p_identity_of ?F ?x] ]</span>
+<span class="c">               =&gt; generalize dependent (p_identity_of F x)</span>
+<span class="c">             | [ |- context[p_composition_of ?F ?x ?y ?z ?f ?g] ]</span>
+<span class="c">               =&gt; generalize dependent (p_composition_of F x y z f g)</span>
+<span class="c">             | [ |- context[p_morphism_of ?F ?m] ]</span>
+<span class="c">               =&gt; generalize dependent (p_morphism_of F m)</span>
+<span class="c">             | [ |- context[p_object_of ?F ?x] ]</span>
+<span class="c">               =&gt; generalize dependent (p_object_of F x)</span>
+<span class="c">             | [ H : context[p_morphism_of ?F ?m] |- _ ]</span>
+<span class="c">               =&gt; generalize dependent (p_morphism_of F m)</span>
+<span class="c">             | [ |- context[@p_morphism_of _ _ ?F ?x ?y] ]</span>
+<span class="c">               =&gt; generalize dependent (@p_morphism_of _ _ F x y)</span>
+<span class="c">           end.</span>
+<span class="c">    simpl.</span>
+
+<span class="c">    intros.</span>
+
+<span class="c">    lazymatch goal with</span>
+<span class="c">      | [ H : context[ap ?f ?H&#39;] |- _ ]</span>
+<span class="c">        =&gt; rename H&#39; into fst_hyp;</span>
+<span class="c">          rename H into rew_hyp;</span>
+<span class="c">          move rew_hyp at top</span>
+<span class="c">    end.</span>
+
+<span class="c">    generalize dependent fst_hyp.</span>
+<span class="c">    clear.</span>
+<span class="c">    intros.</span>
+<span class="c">    move rew_hyp at top.</span>
+
+<span class="c">    move H at top.</span>
+
+<span class="c">    repeat match goal with</span>
+<span class="c">             | [ H : Isomorphic _ _ |- _ ]</span>
+<span class="c">               =&gt; let x := fresh &quot;x&quot; in</span>
+<span class="c">                  let H&#39; := fresh &quot;H&quot; in</span>
+<span class="c">                  destruct H as [x H&#39;];</span>
+<span class="c">                    simpl in *</span>
+<span class="c">           end.</span>
+<span class="c">    move rew_hyp at top.</span>
+<span class="c">    repeat match goal with</span>
+<span class="c">             | [ H : _ |- _ ] =&gt; revert H</span>
+<span class="c">           end.</span>
+
+<span class="c">    intro H.</span>
+<span class="c">    intro C.</span>
+<span class="c">&gt;&gt; *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk8"><span class="kn">Lemma</span> <span class="nf">pseudofunctor_to_cat_assoc_helper</span>
+  : <span class="kr">forall</span> {<span class="nv">x</span> <span class="nv">x0</span> : C} {<span class="nv">x2</span> : Category.Core.morphism C x x0} {<span class="nv">x1</span> : C}
+           {<span class="nv">x5</span> : Category.Core.morphism C x0 x1} {<span class="nv">x4</span> : C} {<span class="nv">x7</span> : Category.Core.morphism C x1 x4}
+           {<span class="nv">p</span> <span class="nv">p0</span> : PreCategory} {<span class="nv">f</span> : Category.Core.morphism C x x4 -&gt; Functor p0 p}
+           {<span class="nv">p1</span> <span class="nv">p2</span> : PreCategory} {<span class="nv">f0</span> : Functor p2 p} {<span class="nv">f1</span> : Functor p1 p2}
+           {<span class="nv">f2</span> : Functor p0 p2} {<span class="nv">f3</span> : Functor p0 p1} {<span class="nv">f4</span> : Functor p1 p}
+           {<span class="nv">x16</span> : Category.Core.morphism (_ -&gt; _) (f (x7 o x5 o x2)) (f4 o f3)%functor}
+           {<span class="nv">x15</span> : Category.Core.morphism (_ -&gt; _) f2 (f1 o f3)%functor} {<span class="nv">H2</span> : IsIsomorphism x15}
+           {<span class="nv">x11</span> : Category.Core.morphism (_ -&gt; _) (f (x7 o (x5 o x2))) (f0 o f2)%functor}
+           {<span class="nv">H1</span> : IsIsomorphism x11} {<span class="nv">x9</span> : Category.Core.morphism (_ -&gt; _) f4 (f0 o f1)%functor}
+           {<span class="nv">fst_hyp</span> : x7 o x5 o x2 = x7 o (x5 o x2)}
+           (<span class="nv">rew_hyp</span> : <span class="kr">forall</span> <span class="nv">x3</span> : p0,
+                        (idtoiso (p0 -&gt; p) (ap f fst_hyp) : Category.Core.morphism _ _ _) x3 =
+                        x11^-<span class="mi">1</span> x3 o (f0 _1 (x15^-<span class="mi">1</span> x3) o (<span class="mi">1</span> o (x9 (f3 x3) o x16 x3))))
+           {<span class="nv">H0&#39;</span> : IsIsomorphism x16}
+           {<span class="nv">H1&#39;</span> : IsIsomorphism x9}
+           {<span class="nv">x13</span> : p} {<span class="nv">x3</span> : p0} {<span class="nv">x6</span> : p1} {<span class="nv">x10</span> : p2}
+           {<span class="nv">x14</span> : Category.Core.morphism p (f0 x10) x13} {<span class="nv">x12</span> : Category.Core.morphism p2 (f1 x6) x10}
+           {<span class="nv">x8</span> : Category.Core.morphism p1 (f3 x3) x6},
+      exist (<span class="kr">fun</span> <span class="nv">f5</span> : Category.Core.morphism C x x4 =&gt; Category.Core.morphism p ((f f5) x3) x13)
+             (x7 o x5 o x2)
+             (x14 o (f0 _1 x12 o x9 x6) o (f4 _1 x8 o x16 x3)) =
+      (x7 o (x5 o x2); x14 o (f0 _1 (x12 o (f1 _1 x8 o x15 x3)) o x11 x3)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">x0</span> : C) (<span class="nv">x2</span> : Core.morphism C x x0) (<span class="nv">x1</span> : C)
+(<span class="nv">x5</span> : Core.morphism C x0 x1) (<span class="nv">x4</span> : C)
+(<span class="nv">x7</span> : Core.morphism C x1 x4) (<span class="nv">p</span> <span class="nv">p0</span> : PreCategory)
+(<span class="nv">f</span> : Core.morphism C x x4 -&gt; Functor p0 p)
+(<span class="nv">p1</span> <span class="nv">p2</span> : PreCategory) (<span class="nv">f0</span> : Functor p2 p)
+(<span class="nv">f1</span> : Functor p1 p2) (<span class="nv">f2</span> : Functor p0 p2)
+(<span class="nv">f3</span> : Functor p0 p1) (<span class="nv">f4</span> : Functor p1 p)
+(<span class="nv">x16</span> : Core.morphism (p0 -&gt; p) (f (x7 o x5 o x2))
+         (f4 o f3)%functor)
+(<span class="nv">x15</span> : Core.morphism (p0 -&gt; p2) f2 (f1 o f3)%functor)
+(<span class="nv">H2</span> : IsIsomorphism x15)
+(<span class="nv">x11</span> : Core.morphism (p0 -&gt; p) (f (x7 o (x5 o x2)))
+         (f0 o f2)%functor) (<span class="nv">H1</span> : IsIsomorphism x11)
+(<span class="nv">x9</span> : Core.morphism (p1 -&gt; p) f4 (f0 o f1)%functor)
+(<span class="nv">fst_hyp</span> : x7 o x5 o x2 = x7 o (x5 o x2)),
+(<span class="kr">forall</span> <span class="nv">x3</span> : p0,
+ (idtoiso (p0 -&gt; p) (ap f fst_hyp)
+  :
+  Core.morphism (p0 -&gt; p) (f (x7 o x5 o x2))
+    (f (x7 o (x5 o x2)))) x3 =
+ x11^-<span class="mi">1</span> x3
+ o (f0 _1 (x15^-<span class="mi">1</span> x3)
+    o (<span class="mi">1</span> o (x9 (f3 _0 x3)%object o x16 x3)))) -&gt;
+IsIsomorphism x16 -&gt;
+IsIsomorphism x9 -&gt;
+<span class="kr">forall</span> (<span class="nv">x13</span> : p) (<span class="nv">x3</span> : p0) (<span class="nv">x6</span> : p1) (<span class="nv">x10</span> : p2)
+(<span class="nv">x14</span> : Core.morphism p (f0 _0 x10)%object x13)
+(<span class="nv">x12</span> : Core.morphism p2 (f1 _0 x6)%object x10)
+(<span class="nv">x8</span> : Core.morphism p1 (f3 _0 x3)%object x6),
+(x7 o x5 o x2;
+x14 o (f0 _1 x12 o x9 x6) o (f4 _1 x8 o x16 x3)) =
+(x7 o (x5 o x2);
+x14 o (f0 _1 (x12 o (f1 _1 x8 o x15 x3)) o x11 x3))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk9"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">x0</span> : C) (<span class="nv">x2</span> : Core.morphism C x x0) (<span class="nv">x1</span> : C)
+(<span class="nv">x5</span> : Core.morphism C x0 x1) (<span class="nv">x4</span> : C)
+(<span class="nv">x7</span> : Core.morphism C x1 x4) (<span class="nv">p</span> <span class="nv">p0</span> : PreCategory)
+(<span class="nv">f</span> : Core.morphism C x x4 -&gt; Functor p0 p)
+(<span class="nv">p1</span> <span class="nv">p2</span> : PreCategory) (<span class="nv">f0</span> : Functor p2 p)
+(<span class="nv">f1</span> : Functor p1 p2) (<span class="nv">f2</span> : Functor p0 p2)
+(<span class="nv">f3</span> : Functor p0 p1) (<span class="nv">f4</span> : Functor p1 p)
+(<span class="nv">x16</span> : Core.morphism (p0 -&gt; p) (f (x7 o x5 o x2))
+         (f4 o f3)%functor)
+(<span class="nv">x15</span> : Core.morphism (p0 -&gt; p2) f2 (f1 o f3)%functor)
+(<span class="nv">H2</span> : IsIsomorphism x15)
+(<span class="nv">x11</span> : Core.morphism (p0 -&gt; p) (f (x7 o (x5 o x2)))
+         (f0 o f2)%functor) (<span class="nv">H1</span> : IsIsomorphism x11)
+(<span class="nv">x9</span> : Core.morphism (p1 -&gt; p) f4 (f0 o f1)%functor)
+(<span class="nv">fst_hyp</span> : x7 o x5 o x2 = x7 o (x5 o x2)),
+(<span class="kr">forall</span> <span class="nv">x3</span> : p0,
+ (idtoiso (p0 -&gt; p) (ap f fst_hyp)
+  :
+  Core.morphism (p0 -&gt; p) (f (x7 o x5 o x2))
+    (f (x7 o (x5 o x2)))) x3 =
+ x11^-<span class="mi">1</span> x3
+ o (f0 _1 (x15^-<span class="mi">1</span> x3)
+    o (<span class="mi">1</span> o (x9 (f3 _0 x3)%object o x16 x3)))) -&gt;
+IsIsomorphism x16 -&gt;
+IsIsomorphism x9 -&gt;
+<span class="kr">forall</span> (<span class="nv">x13</span> : p) (<span class="nv">x3</span> : p0) (<span class="nv">x6</span> : p1) (<span class="nv">x10</span> : p2)
+(<span class="nv">x14</span> : Core.morphism p (f0 _0 x10)%object x13)
+(<span class="nv">x12</span> : Core.morphism p2 (f1 _0 x6)%object x10)
+(<span class="nv">x8</span> : Core.morphism p1 (f3 _0 x3)%object x6),
+(x7 o x5 o x2;
+x14 o (f0 _1 x12 o x9 x6) o (f4 _1 x8 o x16 x3)) =
+(x7 o (x5 o x2);
+x14 o (f0 _1 (x12 o (f1 _1 x8 o x15 x3)) o x11 x3))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chka">helper_t assoc_before_commutes_tac.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>x2</var><span class="hyp-type"><b>: </b><span>Core.morphism C x0 x1</span></span></span><br><span><var>x3</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>x5</var><span class="hyp-type"><b>: </b><span>Core.morphism C x1 x3</span></span></span><br><span><var>x4</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>x7</var><span class="hyp-type"><b>: </b><span>Core.morphism C x3 x4</span></span></span><br><span><var>p, p0</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Core.morphism C x0 x4 -&gt; Functor p0 p</span></span></span><br><span><var>p1, p2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>f0</var><span class="hyp-type"><b>: </b><span>Functor p2 p</span></span></span><br><span><var>f1</var><span class="hyp-type"><b>: </b><span>Functor p1 p2</span></span></span><br><span><var>f2</var><span class="hyp-type"><b>: </b><span>Functor p0 p2</span></span></span><br><span><var>f3</var><span class="hyp-type"><b>: </b><span>Functor p0 p1</span></span></span><br><span><var>f4</var><span class="hyp-type"><b>: </b><span>Functor p1 p</span></span></span><br><span><var>x16</var><span class="hyp-type"><b>: </b><span>NaturalTransformation (f (x7 o x5 o x2)) (f4 o f3)</span></span></span><br><span><var>x15</var><span class="hyp-type"><b>: </b><span>NaturalTransformation f2 (f1 o f3)</span></span></span><br><span><var>H2</var><span class="hyp-type"><b>: </b><span>IsIsomorphism x15</span></span></span><br><span><var>x11</var><span class="hyp-type"><b>: </b><span>NaturalTransformation (f (x7 o (x5 o x2))) (f0 o f2)</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsIsomorphism x11</span></span></span><br><span><var>x9</var><span class="hyp-type"><b>: </b><span>NaturalTransformation f4 (f0 o f1)</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>IsIsomorphism x16</span></span></span><br><span><var>H1'</var><span class="hyp-type"><b>: </b><span>IsIsomorphism x9</span></span></span><br><span><var>x13</var><span class="hyp-type"><b>: </b><span>p</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>p0</span></span></span><br><span><var>x8</var><span class="hyp-type"><b>: </b><span>p1</span></span></span><br><span><var>x10</var><span class="hyp-type"><b>: </b><span>p2</span></span></span><br><span><var>x14</var><span class="hyp-type"><b>: </b><span>Core.morphism p (f0 _0 x10)%object x13</span></span></span><br><span><var>x12</var><span class="hyp-type"><b>: </b><span>Core.morphism p2 (f1 _0 x8)%object x10</span></span></span><br><span><var>x17</var><span class="hyp-type"><b>: </b><span>Core.morphism p1 (f3 _0 x6)%object x8</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f0 _1 (f1 _1 x17)
+o (f0 _1 (x15 x6)
+   o (x11 x6
+      o (x11^-<span class="mi">1</span> x6
+         o (f0 _1 (x15^-<span class="mi">1</span> x6) o x9 (f3 _0 x6)%object)))) =
+f0 _1 (f1 _1 x17) o x9 (f3 _0 x6)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">assoc_fin_tac.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chkb"><span class="kn">Lemma</span> <span class="nf">pseudofunctor_to_cat_left_identity_helper</span>
+  : <span class="kr">forall</span> {<span class="nv">x1</span> <span class="nv">x2</span> : C} {<span class="nv">f</span> : Category.Core.morphism C x2 x1} {<span class="nv">p</span> <span class="nv">p0</span> : PreCategory}
+           {<span class="nv">f0</span> : Category.Core.morphism C x2 x1 -&gt; Functor p0 p} {<span class="nv">f1</span> : Functor p p}
+           {<span class="nv">x0</span> : Category.Core.morphism (_ -&gt; _) (f0 (<span class="mi">1</span> o f)) (f1 o f0 f)%functor}
+           {<span class="nv">x</span> : Category.Core.morphism (_ -&gt; _) f1 <span class="mi">1</span>%functor}
+           {<span class="nv">fst_hyp</span> : <span class="mi">1</span> o f = f}
+           (<span class="nv">rewrite_hyp</span> : <span class="kr">forall</span> <span class="nv">x3</span> : p0,
+                            (idtoiso (p0 -&gt; p) (ap f0 fst_hyp) : Category.Core.morphism _ _ _) x3
+                            = <span class="mi">1</span> o (x ((f0 f) x3) o x0 x3))
+           {<span class="nv">H0&#39;</span> : IsIsomorphism x0}
+           {<span class="nv">H1&#39;</span> : IsIsomorphism x}
+           {<span class="nv">x3</span> : p} {<span class="nv">x4</span> : p0} {<span class="nv">f&#39;</span> : Category.Core.morphism p ((f0 f) x4) x3},
+      exist (<span class="kr">fun</span> <span class="nv">f2</span> : Category.Core.morphism C x2 x1 =&gt; Category.Core.morphism p ((f0 f2) x4) x3)
+             (<span class="mi">1</span> o f)
+             (x x3 o (f1 _1 f&#39; o x0 x4))
+      = (f; f&#39;).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> : C) (<span class="nv">f</span> : Core.morphism C x2 x1)
+(<span class="nv">p</span> <span class="nv">p0</span> : PreCategory)
+(<span class="nv">f0</span> : Core.morphism C x2 x1 -&gt; Functor p0 p)
+(<span class="nv">f1</span> : Functor p p)
+(<span class="nv">x0</span> : Core.morphism (p0 -&gt; p) (f0 (<span class="mi">1</span> o f))
+        (f1 o f0 f)%functor)
+(<span class="nv">x</span> : Core.morphism (p -&gt; p) f1 <span class="mi">1</span>%functor)
+(<span class="nv">fst_hyp</span> : <span class="mi">1</span> o f = f),
+(<span class="kr">forall</span> <span class="nv">x3</span> : p0,
+ (idtoiso (p0 -&gt; p) (ap f0 fst_hyp)
+  :
+  Core.morphism (p0 -&gt; p) (f0 (<span class="mi">1</span> o f)) (f0 f)) x3 =
+ <span class="mi">1</span> o (x ((f0 f) _0 x3)%object o x0 x3)) -&gt;
+IsIsomorphism x0 -&gt;
+IsIsomorphism x -&gt;
+<span class="kr">forall</span> (<span class="nv">x3</span> : p) (<span class="nv">x4</span> : p0)
+(<span class="nv">f&#39;</span> : Core.morphism p ((f0 f) _0 x4)%object x3),
+(<span class="mi">1</span> o f; x x3 o (f1 _1 f&#39; o x0 x4)) = (f; f&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chkc"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> : C) (<span class="nv">f</span> : Core.morphism C x2 x1)
+(<span class="nv">p</span> <span class="nv">p0</span> : PreCategory)
+(<span class="nv">f0</span> : Core.morphism C x2 x1 -&gt; Functor p0 p)
+(<span class="nv">f1</span> : Functor p p)
+(<span class="nv">x0</span> : Core.morphism (p0 -&gt; p) (f0 (<span class="mi">1</span> o f))
+        (f1 o f0 f)%functor)
+(<span class="nv">x</span> : Core.morphism (p -&gt; p) f1 <span class="mi">1</span>%functor)
+(<span class="nv">fst_hyp</span> : <span class="mi">1</span> o f = f),
+(<span class="kr">forall</span> <span class="nv">x3</span> : p0,
+ (idtoiso (p0 -&gt; p) (ap f0 fst_hyp)
+  :
+  Core.morphism (p0 -&gt; p) (f0 (<span class="mi">1</span> o f)) (f0 f)) x3 =
+ <span class="mi">1</span> o (x ((f0 f) _0 x3)%object o x0 x3)) -&gt;
+IsIsomorphism x0 -&gt;
+IsIsomorphism x -&gt;
+<span class="kr">forall</span> (<span class="nv">x3</span> : p) (<span class="nv">x4</span> : p0)
+(<span class="nv">f&#39;</span> : Core.morphism p ((f0 f) _0 x4)%object x3),
+(<span class="mi">1</span> o f; x x3 o (f1 _1 f&#39; o x0 x4)) = (f; f&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">helper_t <span class="kp">idtac</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chkd"><span class="kn">Lemma</span> <span class="nf">pseudofunctor_to_cat_right_identity_helper</span>
+  : <span class="kr">forall</span> {<span class="nv">x1</span> <span class="nv">x2</span> : C} {<span class="nv">f</span> : Category.Core.morphism C x2 x1} {<span class="nv">p</span> <span class="nv">p0</span> : PreCategory}
+           {<span class="nv">f0</span> : Category.Core.morphism C x2 x1 -&gt; Functor p0 p} {<span class="nv">f1</span> : Functor p0 p0}
+           {<span class="nv">x0</span> : Category.Core.morphism (_ -&gt; _) (f0 (f o <span class="mi">1</span>)) (f0 f o f1)%functor}
+           {<span class="nv">H0&#39;</span> : IsIsomorphism x0}
+           {<span class="nv">x</span> : Category.Core.morphism (_ -&gt; _) f1 <span class="mi">1</span>%functor}
+           {<span class="nv">H1&#39;</span> : IsIsomorphism x}
+           {<span class="nv">fst_hyp</span> : f o <span class="mi">1</span> = f}
+           (<span class="nv">rew_hyp</span> : <span class="kr">forall</span> <span class="nv">x3</span> : p0,
+                        (idtoiso (p0 -&gt; p) (ap f0 fst_hyp) : Category.Core.morphism _ _ _) x3
+                        = <span class="mi">1</span> o ((f0 f) _1 (x x3) o x0 x3))
+           {<span class="nv">x3</span> : p} {<span class="nv">x4</span> : p0} {<span class="nv">f&#39;</span> : Category.Core.morphism p ((f0 f) x4) x3},
+        exist (<span class="kr">fun</span> <span class="nv">f2</span> : Category.Core.morphism C x2 x1 =&gt; Category.Core.morphism p ((f0 f2) x4) x3)
+               (f o <span class="mi">1</span>)
+               (f&#39; o ((f0 f) _1 (x x4) o x0 x4))
+        = (f; f&#39;).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> : C) (<span class="nv">f</span> : Core.morphism C x2 x1)
+(<span class="nv">p</span> <span class="nv">p0</span> : PreCategory)
+(<span class="nv">f0</span> : Core.morphism C x2 x1 -&gt; Functor p0 p)
+(<span class="nv">f1</span> : Functor p0 p0)
+(<span class="nv">x0</span> : Core.morphism (p0 -&gt; p) (f0 (f o <span class="mi">1</span>))
+        (f0 f o f1)%functor),
+IsIsomorphism x0 -&gt;
+<span class="kr">forall</span> <span class="nv">x</span> : Core.morphism (p0 -&gt; p0) f1 <span class="mi">1</span>%functor,
+IsIsomorphism x -&gt;
+<span class="kr">forall</span> <span class="nv">fst_hyp</span> : f o <span class="mi">1</span> = f,
+(<span class="kr">forall</span> <span class="nv">x3</span> : p0,
+ (idtoiso (p0 -&gt; p) (ap f0 fst_hyp)
+  :
+  Core.morphism (p0 -&gt; p) (f0 (f o <span class="mi">1</span>)) (f0 f)) x3 =
+ <span class="mi">1</span> o ((f0 f) _1 (x x3) o x0 x3)) -&gt;
+<span class="kr">forall</span> (<span class="nv">x3</span> : p) (<span class="nv">x4</span> : p0)
+(<span class="nv">f&#39;</span> : Core.morphism p ((f0 f) _0 x4)%object x3),
+(f o <span class="mi">1</span>; f&#39; o ((f0 f) _1 (x x4) o x0 x4)) = (f; f&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chke"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> : C) (<span class="nv">f</span> : Core.morphism C x2 x1)
+(<span class="nv">p</span> <span class="nv">p0</span> : PreCategory)
+(<span class="nv">f0</span> : Core.morphism C x2 x1 -&gt; Functor p0 p)
+(<span class="nv">f1</span> : Functor p0 p0)
+(<span class="nv">x0</span> : Core.morphism (p0 -&gt; p) (f0 (f o <span class="mi">1</span>))
+        (f0 f o f1)%functor),
+IsIsomorphism x0 -&gt;
+<span class="kr">forall</span> <span class="nv">x</span> : Core.morphism (p0 -&gt; p0) f1 <span class="mi">1</span>%functor,
+IsIsomorphism x -&gt;
+<span class="kr">forall</span> <span class="nv">fst_hyp</span> : f o <span class="mi">1</span> = f,
+(<span class="kr">forall</span> <span class="nv">x3</span> : p0,
+ (idtoiso (p0 -&gt; p) (ap f0 fst_hyp)
+  :
+  Core.morphism (p0 -&gt; p) (f0 (f o <span class="mi">1</span>)) (f0 f)) x3 =
+ <span class="mi">1</span> o ((f0 f) _1 (x x3) o x0 x3)) -&gt;
+<span class="kr">forall</span> (<span class="nv">x3</span> : p) (<span class="nv">x4</span> : p0)
+(<span class="nv">f&#39;</span> : Core.morphism p ((f0 f) _0 x4)%object x3),
+(f o <span class="mi">1</span>; f&#39; o ((f0 f) _1 (x x4) o x0 x4)) = (f; f&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">helper_t <span class="kp">idtac</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Category of elements *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chkf"><span class="kn">Definition</span> <span class="nf">category</span> : PreCategory.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctortocat-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctortocat-v-chk10"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Pseudofunctor C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (@Build_PreCategory
+              Pair
+              (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> =&gt; morphism s d)
+              identity
+              compose
+              _
+              _
+              _
+              _);
+    [ <span class="kp">abstract</span> (
+          <span class="nb">intros</span> ? ? ? ? [f ?] [g ?] [h ?];
+          <span class="bp">exact</span> (pseudofunctor_to_cat_assoc_helper
+                   (apD10
+                      (ap components_of
+                          (p_composition_of_coherent_for_rewrite F _ _ _ _ f g h))))
+        )
+    | <span class="kp">abstract</span> (
+          <span class="nb">intros</span> ? ? [f ?];
+          <span class="bp">exact</span> (pseudofunctor_to_cat_left_identity_helper
+                   (apD10
+                      (ap components_of
+                          (p_left_identity_of_coherent_for_rewrite F _ _ f))))
+        )
+    | <span class="kp">abstract</span> (
+          <span class="nb">intros</span> ? ? [f ?];
+          <span class="bp">exact</span> (pseudofunctor_to_cat_right_identity_helper
+                   (apD10
+                      (ap components_of
+                          (p_right_identity_of_coherent_for_rewrite F _ _ f))))
+    ) ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** First projection functor *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pr1</span> : Functor category C
+    := Build_Functor category C
+                     c
+                     (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> =&gt; @pr1 _ _)
+                     (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                     (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Grothendieck</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

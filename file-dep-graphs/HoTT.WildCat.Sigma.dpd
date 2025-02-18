@@ -1,0 +1,8 @@
+N: 3 "is01cat_sigma" [body=yes, kind=cnst, prop=no, path="Sigma", ];
+N: 1 "is0functor_sigma" [body=yes, kind=cnst, prop=no, path="Sigma", ];
+N: 2 "is0gpd_sigma" [body=yes, kind=cnst, prop=no, path="Sigma", ];
+N: 4 "isgraph_sigma" [body=yes, kind=cnst, prop=no, path="Sigma", ];
+E: 1 4 [weight=6, ];
+E: 2 3 [weight=2, ];
+E: 2 4 [weight=3, ];
+E: 3 4 [weight=4, ];
