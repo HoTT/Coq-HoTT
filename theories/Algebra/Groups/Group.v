@@ -237,6 +237,8 @@ Proof.
   symmetry.
   nrapply issemigrouppreserving_grp_homo.
 Defined.
+(** We usually don't need access to the proof, so we mark this as opaque for a very slight speedup. *)
+Opaque isunitpreserving_grp_homo.
 
 (** Group homomorphisms preserve identities. This is an alias for the previous statement. *)
 Definition grp_homo_unit
