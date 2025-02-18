@@ -183,9 +183,9 @@ Defined.
 
 (** We can use the above to give a funext-free approach to defining a map by factoring through a surjection. *)
 
-Section surjective_factor.
-  Context {A B C} `{IsHSet C} `(f : A -> C) `(g : A -> B).
-  Context (resp : forall x y, g x = g y -> f x = f y).
+Section SurjectiveFactor.
+  Context {A B C : Type} `{IsHSet C} (f : A -> C) (g : A -> B)
+    (resp : forall x y, g x = g y -> f x = f y).
 
   (** The assumption [resp] tells us that [f o pr1] is weakly constant on each fiber of [g], so it factors through the propositional truncation. *)
   Definition surjective_factor_aux (b : B) : merely (hfiber g b) -> C.
@@ -203,7 +203,8 @@ Section surjective_factor.
     rapply center.
   Defined.
 
-  Definition surjective_factor_pr {Esurj : IsSurjection g} : surjective_factor o g == f.
+  Definition surjective_factor_pr {Esurj : IsSurjection g}
+    : surjective_factor o g == f.
   Proof.
     intros a.
     unfold surjective_factor.
@@ -211,4 +212,4 @@ Section surjective_factor.
     1: apply path_ishprop.
   Defined.
 
-End surjective_factor.
+End SurjectiveFactor.
