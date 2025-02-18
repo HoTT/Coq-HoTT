@@ -52,7 +52,6 @@ Require Export HoTT.HIT.epi.
 Require Export HoTT.HIT.unique_choice.
 Require Export HoTT.HIT.iso.
 Require Export HoTT.HIT.quotient.
-Require Export HoTT.HIT.surjective_factor.
 Require Export HoTT.HIT.V.
 
 Require Export HoTT.Diagrams.Graph.

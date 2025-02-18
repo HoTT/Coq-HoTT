@@ -180,3 +180,33 @@ Proof.
     + cbn. funext x y.
       pose (Ys x); apply path_ishprop.
 Defined.
+
+(** We can use the above to give a funext-free approach to defining a map by factoring through a surjection. *)
+
+Section SurjectiveFactor.
+  Context {A B C : Type} `{IsHSet C} (f : A -> C) (g : A -> B)
+    (resp : forall x y, g x = g y -> f x = f y).
+
+  (** The assumption [resp] tells us that [f o pr1] is weakly constant on each fiber of [g], so it factors through the propositional truncation. *)
+  Definition surjective_factor_aux (b : B) : merely (hfiber g b) -> C.
+  Proof.
+    rapply (merely_rec_hset (f o pr1)).
+    intros [x p] [y q]; cbn.
+    exact (resp x y (p @ q^)).
+  Defined.
+
+  (** When [g] is surjective, those propositional truncations are contractible, giving us a way to get an element of [C]. *)
+  Definition surjective_factor `{IsSurjection g} : B -> C.
+  Proof.
+    intro b.
+    exact (surjective_factor_aux b (center _)).
+  Defined.
+
+  Definition surjective_factor_factors `{IsSurjection g}
+    : surjective_factor o g == f.
+  Proof.
+    intros a; unfold surjective_factor.
+    exact (ap (surjective_factor_aux (g a)) (contr (tr (a; idpath)))).
+  Defined.
+
+End SurjectiveFactor.
