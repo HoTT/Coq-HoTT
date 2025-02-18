@@ -273,7 +273,7 @@ Section FreeProduct.
   (** Now for the group structure *)
 
   (** The group operation is concatenation of the underlying list. Most of the work is spent showing that it respects the path constructors. *)
-  #[export] Instance sgop_amal_type : SgOp amal_type.
+  Local Instance sgop_amal_type : SgOp amal_type.
   Proof.
     intros x y; revert x.
     srapply amal_type_rec; intros x; revert y.
@@ -350,12 +350,12 @@ Section FreeProduct.
   Defined.
 
   (** The identity element is the empty list *)
-  #[export] Instance monunit_amal_type : MonUnit amal_type.
+  Local Instance monunit_amal_type : MonUnit amal_type.
   Proof.
     exact (amal_eta nil).
   Defined.
 
-  #[export] Instance inverse_amal_type : Inverse amal_type.
+  Local Instance inverse_amal_type : Inverse amal_type.
   Proof.
     srapply amal_type_rec.
     { intros w.
@@ -420,7 +420,7 @@ Section FreeProduct.
       apply amal_omega_K. }
   Defined.
 
-  #[export] Instance associative_sgop_m : Associative sg_op.
+  Local Instance associative_sgop_m : Associative sg_op.
   Proof.
     intros x y.
     rapply amal_type_ind_hprop; intro z; revert y.
@@ -430,13 +430,13 @@ Section FreeProduct.
     rapply app_assoc.
   Defined.
 
-  #[export] Instance leftidentity_sgop_amal_type : LeftIdentity sg_op mon_unit.
+  Local Instance leftidentity_sgop_amal_type : LeftIdentity sg_op mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     reflexivity.
   Defined.
 
-  #[export] Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
+  Local Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     napply (ap amal_eta).
@@ -505,13 +505,13 @@ Section FreeProduct.
       apply amal_omega_K.
   Defined.
 
-  #[export] Instance leftinverse_sgop_amal_type : LeftInverse (.*.) (^) mon_unit.
+  Local Instance leftinverse_sgop_amal_type : LeftInverse (.*.) (^) mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     apply amal_eta_word_concat_Vw.
   Defined.
 
-  #[export] Instance rightinverse_sgop_amal_type : RightInverse (.*.) (^) mon_unit.
+  Local Instance rightinverse_sgop_amal_type : RightInverse (.*.) (^) mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     apply amal_eta_word_concat_wV.
@@ -564,7 +564,7 @@ Section FreeProduct.
       rapply left_identity. }
   Defined.
 
-  #[export] Instance issemigrouppreserving_AmalgamatedFreeProduct_rec'
+  Local Instance issemigrouppreserving_AmalgamatedFreeProduct_rec'
     (X : Group) (h : GroupHomomorphism H X) (k : GroupHomomorphism K X)
     (p : h o f == k o g)
     : IsSemiGroupPreserving (AmalgamatedFreeProduct_rec' X h k p).
