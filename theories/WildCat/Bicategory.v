@@ -50,7 +50,7 @@ Class LeftUnitor (A : Type) (Hom : A -> A -> Type)
 
 Definition left_unitor {A : Type} {Hom: A ->  A -> Type} {F I}
   `{LeftUnitor A Hom F I} : forall {a b : A} (f : Hom a b),
-    F a b b f (I b) $<~> f := 
+    F a b b f (I b) $<~> f :=
   fun a b f => bicat_left_unitor_uncurried a b f.
 
 Class RightUnitor (A : Type) (Hom : A -> A -> Type)
@@ -71,11 +71,8 @@ Class RightUnitor (A : Type) (Hom : A -> A -> Type)
 
 Definition right_unitor {A : Type} {Hom: A ->  A -> Type} {F I}
   `{RightUnitor A Hom F I} : forall {a b : A} (f : Hom a b),
-    F a a b (I a) f $<~> f := 
+    F a a b (I a) f $<~> f :=
   fun a b f => bicat_right_unitor_uncurried a b f.
-
-Print Implicit fmap01.
-Print Implicit right_unitor.
 
 Check (fun (A : Type) (Hom : A -> A -> Type)
   (F : forall {a b c}, Hom a b -> Hom b c -> Hom a c)
