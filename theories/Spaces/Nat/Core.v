@@ -1139,7 +1139,7 @@ Hint Immediate nat_add_monotone : typeclass_instances.
 (** [nat_succ] is strictly monotone. *)
 Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
 
-Instance lt_succ_r {n m} : n < m -> n < m.+1 := _.
+Instance lt_succ_r {n m} : n < m -> n < m.+1 | 100 := _.
 
 (** Addition on the left is strictly monotone. *)
 Definition nat_add_l_strictly_monotone {n m} k
