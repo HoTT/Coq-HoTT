@@ -139,7 +139,7 @@ Definition phomotopy_from_homotopy `{Funext} {A B : pType}
   (m : forall (a : A), (point A) = (point A) -> a = a)
   (q :  m pt == idmap) {f g : B ->* A} (K : f == g)
   : f ==* g
-  := (phomotopy_from_path_arrow m q (path_forall _ _ K)).
+  := phomotopy_from_path_arrow m q (path_forall _ _ K).
 
 (** We specialize to H-spaces. *)
 Definition hspace_phomotopy_from_homotopy `{Funext} {A B : pType}

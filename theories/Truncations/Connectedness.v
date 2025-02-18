@@ -48,7 +48,7 @@ Proof.
     (* m = S m' *)
   - apply istrunc_S.
     intros e e'. refine (istrunc_isequiv_istrunc _ (path_extension e e')).
-  (* magically infers: paths in extensions = extensions into paths, which by induction is m'-truncated. *)
+    (* Magically infers: paths in extensions = extensions into paths, which by induction is [m']-truncated. *)
 Defined.
 
 (** ** Connectedness of path spaces *)
@@ -91,9 +91,9 @@ Definition conn_point_elim `{Univalence} (n : trunc_index) {A : pType@{u}} `{IsC
            (P : A -> Type@{u}) `{forall a, IsTrunc n (P a)} (p0 : P (point A))
   : forall a, P a.
 Proof.
-  (** This follows from [conn_point_incl] and [conn_map_elim], but we give a direct proof. *)
+  (* This follows from [conn_point_incl] and [conn_map_elim], but we give a direct proof. *)
   intro a.
-  (** Since [A] is [n+1]-connected, [a0 = a] is [n]-connected, which means that [Tr n (a0 = a)] has an element. *)
+  (* Since [A] is [n+1]-connected, [a0 = a] is [n]-connected, which means that [Tr n (a0 = a)] has an element. *)
   pose proof (p := center (Tr n ((point A) = a))).
   strip_truncations.
   exact (p # p0).

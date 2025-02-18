@@ -513,7 +513,7 @@ Section ModalFact.
   : IsConnMap O (factor1 (image f))
     := inclass1 (image f).
 
-  Global Instance inO_map_factor1_image {A B : Type} (f : A -> B)
+  Global Instance inO_map_factor2_image {A B : Type} (f : A -> B)
   : MapIn O (factor2 (image f))
     := inclass2 (image f).
 
