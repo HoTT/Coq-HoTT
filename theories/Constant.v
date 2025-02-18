@@ -192,24 +192,21 @@ Section SurjectiveFactor.
   Proof.
     rapply (merely_rec_hset (f o pr1)).
     intros [x p] [y q]; cbn.
-    exact (resp _ _ (p @ q^)).
+    exact (resp x y (p @ q^)).
   Defined.
 
   (** When [g] is surjective, those propositional truncations are contractible, giving us a way to get an element of [C]. *)
-  Definition surjective_factor {Esurj : IsSurjection g} : B -> C.
+  Definition surjective_factor `{IsSurjection g} : B -> C.
   Proof.
     intro b.
-    apply (surjective_factor_aux b).
-    rapply center.
+    exact (surjective_factor_aux b (center _)).
   Defined.
 
-  Definition surjective_factor_pr {Esurj : IsSurjection g}
+  Definition surjective_factor_factors `{IsSurjection g}
     : surjective_factor o g == f.
   Proof.
-    intros a.
-    unfold surjective_factor.
-    nrapply (ap (y:=tr (a; idpath)) (surjective_factor_aux (g a))).
-    1: apply path_ishprop.
+    intros a; unfold surjective_factor.
+    exact (ap (surjective_factor_aux (g a)) (contr (tr (a; idpath)))).
   Defined.
 
 End SurjectiveFactor.
