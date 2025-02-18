@@ -661,8 +661,7 @@ Proof.
   destruct l; only 1: exact _.
   intros [k p].
   exists k.
-  nrapply nat_div_moveL_nV.
-  1: exact _.
+  rapply nat_div_moveL_nV.
   by lhs_V nrapply nat_mul_assoc.
 Defined.
 
