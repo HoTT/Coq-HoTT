@@ -697,7 +697,37 @@ Definition Book_2_16 := @HoTT.Metatheory.FunextVarieties.NaiveFunext_implies_Fun
 (* ================================================== ex:equiv-functor-types *)
 (** Exercise 2.17 *)
 
+Section Book_2_17_prod.
+  Context {A A' B B' : Type} (f : A <~> A') (g : B <~> B').
 
+  Definition Book_2_17_i_prod : A * B <~> A' * B'
+    := HoTT.Types.Prod.equiv_functor_prod' f g.
+
+  Definition Book_2_17_ii_prod `{Univalence} : A * B <~> A' * B'.
+  Proof.
+    apply equiv_path.
+    exact (ap011 prod (path_universe_uncurried f) (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_prod' (p : A = A') (q : B = B')
+    : transport idmap (ap011 prod p q)
+      = functor_prod (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_prod `{Univalence}
+    : Book_2_17_ii_prod = Book_2_17_i_prod.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply (Book_2_17_eq_prod' _ _).
+    snrapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - apply transport_idmap_path_universe_uncurried.
+  Qed.
+End Book_2_17_prod.
 
 (* ================================================== ex:dep-htpy-natural *)
 (** Exercise 2.18 *)
