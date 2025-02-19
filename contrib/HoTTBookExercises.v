@@ -729,6 +729,62 @@ Section Book_2_17_prod.
   Qed.
 End Book_2_17_prod.
 
+Definition how_to_name_this_1 {A A' : Type} {B : A -> Type} {B' : A' -> Type}
+  (p : A = A')
+  : (transport (fun A0 => A0 -> Type) p B = B') <~> B = B' o (transport idmap p).
+Proof.
+  destruct p.
+  reflexivity.
+Defined.
+
+Section Book_2_17_sigma.
+  Context {A A' : Type} {B : A -> Type} {B' : A' -> Type}
+    (f : A <~> A') (g : forall a, B a <~> B' (f a)).
+
+  Definition Book_2_17_i_sigma : (exists a, B a) <~> (exists a', B' a')
+    := HoTT.Types.Sigma.equiv_functor_sigma' f g.
+
+  Definition Book_2_17_ii_sigma `{Univalence}
+    : (exists a, B a) <~> (exists a', B' a').
+  Proof.
+    apply equiv_path.
+    snrapply ap011D.
+    - exact (path_universe_uncurried f).
+    - apply (how_to_name_this_1 _)^-1, path_arrow; intro a.
+      apply path_universe_uncurried.
+      apply (transport (fun f0 => _ <~> B' (f0 _))
+        (transport_idmap_path_universe_uncurried f)^).
+      apply g.
+  Defined.
+
+  Definition Book_2_17_eq_sigma' (p : A = A')
+    (q : transport (fun A0 => A0 -> Type) p B = B')
+    : transport idmap (ap011D (@sig) p q)
+      = functor_sigma (transport idmap p)
+        (fun a => transport idmap (ap10 (how_to_name_this_1 p q) a)).
+  Proof.
+    clear f g.
+    destruct p; simpl in q; destruct q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_sigma `{Univalence}
+    : Book_2_17_ii_sigma = Book_2_17_i_sigma.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply (Book_2_17_eq_sigma' _ _).
+    snrapply ap011D.
+    - apply transport_idmap_path_universe_uncurried.
+    - lhs nrapply (ap (fun p => transport _ _ (fun a => transport idmap (ap10 p _)))
+        (eisretr _ _)).
+      lhs nrapply (ap (fun h => transport _ _ (fun a => transport idmap (h _)))
+        (eisretr _ _)).
+      destruct (transport_idmap_path_universe_uncurried f); simpl.
+      apply path_forall; intro a.
+      apply transport_idmap_path_universe_uncurried.
+  Defined.
+End Book_2_17_sigma.
+
 (* ================================================== ex:dep-htpy-natural *)
 (** Exercise 2.18 *)
 
