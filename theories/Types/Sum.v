@@ -604,9 +604,9 @@ Proof.
   - exact (functor_sum f^-1 g^-1).
   - intros [?|?]; simpl; apply ap; apply eisretr.
   - intros [?|?]; simpl; apply ap; apply eissect.
-  - intros [?|?]; simpl; lhs nrapply (ap _ (eisadj _ _)).
-    + exact (ap_functor_sum_inl _ _ _)^.
-    + exact (ap_functor_sum_inr _ _ _)^.
+  - intros [?|?]; simpl; lhs nrapply (ap _ (eisadj _ _)); symmetry.
+    + apply ap_functor_sum_inl.
+    + apply ap_functor_sum_inr.
 Defined.
 
 Definition equiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}

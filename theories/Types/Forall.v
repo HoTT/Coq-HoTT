@@ -250,19 +250,17 @@ Proof.
   snrapply isequiv_adjointify.
   - exact (functor_forall (f^-1)
       (fun (x : A) (y : Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y)).
-  - intro h; abstract (
-        apply path_forall; intros b; unfold functor_forall;
-        lhs nrapply (ap (fun p => g b (transport P p _)) (eisadj f b));
-        lhs_V nrapply (ap _ (transport_compose _ _ _ _));
-        lhs nrapply ap_transport;
-        lhs nrapply (ap _ (eisretr (g _) _));
-        apply apD
-      ).
-  - intro h; abstract (
-        apply path_forall; intros a; unfold functor_forall;
-        lhs nrapply (ap _ (eissect (g _) _));
-        apply apD
-      ).
+  - intro h.
+    apply path_forall; intros b; unfold functor_forall.
+    lhs nrapply (ap (fun p => g b (transport P p _)) (eisadj f b)).
+    lhs_V nrapply (ap _ (transport_compose _ _ _ _)).
+    lhs nrapply ap_transport.
+    lhs nrapply (ap _ (eisretr (g _) _)).
+    apply apD.
+  - intro h.
+    apply path_forall; intros a; unfold functor_forall.
+    lhs nrapply (ap _ (eissect (g _) _)).
+    apply apD.
 Defined.
 
 Definition equiv_functor_forall `{P : A -> Type} `{Q : B -> Type}

@@ -398,23 +398,19 @@ Global Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
   : IsEquiv (functor_sigma f g) | 1000.
 Proof.
   snrapply isequiv_adjointify.
-  - nrapply (functor_sigma f^-1 _).
+  - nrapply (functor_sigma f^-1).
     exact (fun b q => (g (f^-1 b))^-1 ((transport Q (eisretr f b)^) q)).
   - intros [b q].
     apply (path_sigma' _ (eisretr f _)); simpl.
-    abstract (
-        lhs nrapply (ap _ (eisretr (g (f^-1 _)) _));
-        apply transport_pV
-      ).
+    lhs nrapply (ap _ (eisretr (g (f^-1 _)) _)).
+    apply transport_pV.
   - intros [a p].
     apply (path_sigma' _ (eissect f _)); simpl.
     lhs_V rapply (ap_transport _ (fun a' => (g a') ^-1) _).
-    abstract (
-        lhs nrapply (ap _ (transport_compose _ _ _ _));
-        lhs_V nrapply (ap (fun x => (g _)^-1 (transport Q x _)) (eisadj f _));
-        lhs nrapply (ap _ (transport_pV _ _ _));
-        apply eissect
-      ).
+    lhs nrapply (ap _ (transport_compose _ _ _ _)).
+    lhs_V nrapply (ap (fun x => (g _)^-1 (transport Q x _)) (eisadj f _)).
+    lhs nrapply (ap _ (transport_pV _ _ _)).
+    apply eissect.
 Defined.
 
 Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
