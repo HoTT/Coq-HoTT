@@ -729,22 +729,6 @@ Section Book_2_17_prod.
   Qed.
 End Book_2_17_prod.
 
-Definition how_to_name_this_1 {A A' : Type} {B : A -> Type} {B' : A' -> Type}
-  (p : A = A')
-  : (transport (fun A0 => A0 -> Type) p B = B') <~> B = B' o (transport idmap p).
-Proof.
-  destruct p.
-  reflexivity.
-Defined.
-
-Definition how_to_name_this_2 {A A' : Type} {B : A -> Type} {B' : A' -> Type}
-  (p : A' = A)
-  : (transport (fun A0 => A0 -> Type) p^ B = B') <~> B o (transport idmap p) = B'.
-Proof.
-  destruct p.
-  reflexivity.
-Defined.
-
 Section Book_2_17_sigma.
   Context {A A' : Type} {B : A -> Type} {B' : A' -> Type}
     (f : A <~> A') (g : forall a, B a <~> B' (f a)).
@@ -758,21 +742,27 @@ Section Book_2_17_sigma.
     apply equiv_path.
     snrapply ap011D.
     - exact (path_universe_uncurried f).
-    - apply (how_to_name_this_1 _)^-1, path_arrow; intro a.
+    - apply moveR_transport_p.
+      rhs nrapply transport_arrow_toconst'.
+      apply (transport (fun p0 => _ = _ o (_ p0)) (inv_V _)^).
+      apply path_arrow; intro a.
       apply path_universe_uncurried.
-      apply (transport (fun f0 => _ <~> B' (f0 _))
-        (transport_idmap_path_universe_uncurried f)^).
+      apply (transport (fun f0 => _ <~> _ (f0 _))
+        (transport_idmap_path_universe_uncurried _)^).
       apply g.
   Defined.
 
   Definition Book_2_17_eq_sigma' (p : A = A')
-    (q : transport (fun A0 => A0 -> Type) p B = B')
-    : transport idmap (ap011D (@sig) p q)
+    (q : B = B' o (transport idmap p))
+    : transport idmap (ap011D (@sig) p (moveR_transport_p _ _ _ _
+        ((transport (fun p0 => B = B' o (_ p0)) (inv_V p)^ q)
+        @ (transport_arrow_toconst' p^ B')^)))
       = functor_sigma (transport idmap p)
-        (fun a => transport idmap (ap10 (how_to_name_this_1 p q) a)).
+        (fun a => transport idmap (ap10 q a)).
   Proof.
     clear f g.
-    destruct p; simpl in q; destruct q.
+    destruct p; simpl in q.
+    change (fun a' => B' a') with B' in q. destruct q.
     reflexivity.
   Defined.
 
@@ -783,12 +773,9 @@ Section Book_2_17_sigma.
     lhs nrapply Book_2_17_eq_sigma'.
     snrapply ap011D.
     - apply transport_idmap_path_universe_uncurried.
-    - lhs nrapply (ap (fun p => transport _ _ (fun a => transport idmap (ap10 p _)))
-        (eisretr _ _)).
-      lhs nrapply (ap (fun h => transport _ _ (fun a => transport idmap (h _)))
-        (eisretr _ _)).
-      destruct (transport_idmap_path_universe_uncurried f); simpl.
+    - destruct (transport_idmap_path_universe_uncurried f); simpl.
       apply path_forall; intro a.
+      lhs nrapply (ap (fun h => _ (h _)) (eisretr _ _)).
       apply transport_idmap_path_universe_uncurried.
   Defined.
 End Book_2_17_sigma.
@@ -839,7 +826,9 @@ Section Book_2_17_forall.
     apply equiv_path.
     snrapply (ap011D (fun A0 B0 => forall a0, B0 a0)).
     - exact (path_universe_uncurried f)^.
-    - apply (how_to_name_this_2 _)^-1, path_arrow; intro a.
+    - lhs nrapply transport_arrow_toconst'.
+      apply (transport (fun p0 => _ o (_ p0) = _) (inv_V _)^).
+      apply path_arrow; intro a.
       apply path_universe_uncurried.
       nrapply (transport (fun f0 => B (f0 _) <~> _)
         (transport_idmap_path_universe_uncurried f)^).
@@ -847,10 +836,12 @@ Section Book_2_17_forall.
   Defined.
 
   Definition Book_2_17_eq_forall' (p : A' = A)
-    (q : transport (fun A0 => A0 -> Type) p^ B = B')
-    : transport idmap (ap011D (fun A0 B0 => forall a0, B0 a0) p^ q)
+    (q : B o (transport idmap p) = B')
+    : transport idmap (ap011D (fun A0 B0 => forall a0, B0 a0) p^ 
+        ((transport_arrow_toconst' p^ B)
+        @ (transport (fun p0 => B o (_ p0) = B') (inv_V p)^ q)))
       = functor_forall (transport idmap p)
-        (fun a => transport idmap (ap10 (how_to_name_this_2 p q) a)).
+        (fun a => transport idmap (ap10 q a)).
   Proof.
     clear f g.
     destruct p; simpl in q; destruct q.
@@ -864,12 +855,9 @@ Section Book_2_17_forall.
     lhs nrapply Book_2_17_eq_forall'.
     snrapply ap011D.
     - apply transport_idmap_path_universe_uncurried.
-    - lhs nrapply (ap (fun p => transport _ _ (fun a => transport idmap (ap10 p _)))
-        (eisretr _ _)).
-      lhs nrapply (ap (fun h => transport _ _ (fun a => transport idmap (h _)))
-        (eisretr _ _)).
-      destruct (transport_idmap_path_universe_uncurried f); simpl.
+    - destruct (transport_idmap_path_universe_uncurried f); simpl.
       apply path_forall; intro a.
+      lhs nrapply (ap (fun h => _ (h _)) (eisretr _ _)).
       apply transport_idmap_path_universe_uncurried.
   Defined.
 End Book_2_17_forall.
