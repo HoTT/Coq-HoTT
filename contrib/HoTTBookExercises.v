@@ -874,6 +874,38 @@ Section Book_2_17_forall.
   Defined.
 End Book_2_17_forall.
 
+Section Book_2_17_sum.
+  Context {A A' B B' : Type} (f : A <~> A') (g : B <~> B').
+
+  Definition Book_2_17_i_sum : A + B <~> A' + B'
+    := HoTT.Types.Sum.equiv_functor_sum' f g.
+
+  Definition Book_2_17_ii_sum `{Univalence} : A + B <~> A' + B'.
+  Proof.
+    apply equiv_path.
+    exact (ap011 sum (path_universe_uncurried f) (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_sum' `{Funext} (p : A = A') (q : B = B')
+    : transport idmap (ap011 sum p q)
+      = functor_sum (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    apply path_arrow; intros [?|?]; reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_sum `{Univalence}
+    : Book_2_17_ii_sum = Book_2_17_i_sum.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply (Book_2_17_eq_sum' _ _).
+    snrapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - apply transport_idmap_path_universe_uncurried.
+  Qed.
+End Book_2_17_sum.
+
 (* ================================================== ex:dep-htpy-natural *)
 (** Exercise 2.18 *)
 
