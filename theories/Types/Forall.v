@@ -247,22 +247,20 @@ Global Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : IsEquiv (functor_forall f g) | 1000.
 Proof.
-  simple refine (isequiv_adjointify (functor_forall f g)
-    (functor_forall (f^-1)
-      (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
-      )) _ _);
-  intros h.
-  - abstract (
+  snrapply isequiv_adjointify.
+  - exact (functor_forall (f^-1)
+      (fun (x : A) (y : Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y)).
+  - intro h; abstract (
         apply path_forall; intros b; unfold functor_forall;
-        rewrite eisadj;
-        rewrite <- transport_compose;
-        rewrite ap_transport;
-        rewrite eisretr;
+        lhs nrapply (ap (fun p => g b (transport P p _)) (eisadj f b));
+        lhs_V nrapply (ap _ (transport_compose _ _ _ _));
+        lhs nrapply ap_transport;
+        lhs nrapply (ap _ (eisretr (g _) _));
         apply apD
       ).
-  - abstract (
+  - intro h; abstract (
         apply path_forall; intros a; unfold functor_forall;
-        rewrite eissect;
+        lhs nrapply (ap _ (eissect (g _) _));
         apply apD
       ).
 Defined.
