@@ -754,11 +754,13 @@ Section Book_2_17_sigma.
 
   Definition Book_2_17_eq_sigma' (p : A = A')
     (q : B = B' o (transport idmap p))
-    : transport idmap (ap011D (@sig) p (moveR_transport_p _ _ _ _
-        ((transport (fun p0 => B = B' o (_ p0)) (inv_V p)^ q)
-        @ (transport_arrow_toconst' p^ B')^)))
+    : transport idmap
+        (ap011D (@sig) p
+           (moveR_transport_p _ _ _ _
+              (transport (fun p0 => B = B' o (_ p0)) (inv_V p)^ q
+                 @ (transport_arrow_toconst' p^ B')^)))
       = functor_sigma (transport idmap p)
-        (fun a => transport idmap (ap10 q a)).
+          (fun a => transport idmap (ap10 q a)).
   Proof.
     destruct p.
     change (B = B') in q; destruct q.
