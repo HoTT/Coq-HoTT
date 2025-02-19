@@ -495,8 +495,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       Transparent frobnicate.
       cbn.
       Opaque frobnicate.
-      rewrite (transport_compose (fun q => glue q @ (glue q01)^ = 1%path) pr1).
-      unfold path_sigma'; rewrite ap_V, ap_pr1_path_sigma, transport_1.
+      simpl.
       destruct (glue q01); reflexivity.
     Qed.
 
