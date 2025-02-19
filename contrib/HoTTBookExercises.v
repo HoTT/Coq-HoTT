@@ -722,7 +722,7 @@ Section Book_2_17_prod.
     : Book_2_17_ii_prod = Book_2_17_i_prod.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply (Book_2_17_eq_prod' _ _).
+    lhs nrapply Book_2_17_eq_prod'.
     snrapply ap011.
     - apply transport_idmap_path_universe_uncurried.
     - apply transport_idmap_path_universe_uncurried.
@@ -780,7 +780,7 @@ Section Book_2_17_sigma.
     : Book_2_17_ii_sigma = Book_2_17_i_sigma.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply (Book_2_17_eq_sigma' _ _).
+    lhs nrapply Book_2_17_eq_sigma'.
     snrapply ap011D.
     - apply transport_idmap_path_universe_uncurried.
     - lhs nrapply (ap (fun p => transport _ _ (fun a => transport idmap (ap10 p _)))
@@ -818,7 +818,7 @@ Section Book_2_17_arrow.
     : Book_2_17_ii_arrow = Book_2_17_i_arrow.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply (Book_2_17_eq_arrow' _ _).
+    lhs nrapply Book_2_17_eq_arrow'.
     snrapply ap011.
     - apply transport_idmap_path_universe_uncurried.
     - exact (ap (fun g0 _ => g0)
@@ -861,7 +861,7 @@ Section Book_2_17_forall.
     : Book_2_17_ii_forall = Book_2_17_i_forall.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply (Book_2_17_eq_forall' _ _).
+    lhs nrapply Book_2_17_eq_forall'.
     snrapply ap011D.
     - apply transport_idmap_path_universe_uncurried.
     - lhs nrapply (ap (fun p => transport _ _ (fun a => transport idmap (ap10 p _)))
@@ -899,7 +899,7 @@ Section Book_2_17_sum.
     : Book_2_17_ii_sum = Book_2_17_i_sum.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply (Book_2_17_eq_sum' _ _).
+    lhs nrapply Book_2_17_eq_sum'.
     snrapply ap011.
     - apply transport_idmap_path_universe_uncurried.
     - apply transport_idmap_path_universe_uncurried.
