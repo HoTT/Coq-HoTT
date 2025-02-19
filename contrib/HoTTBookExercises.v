@@ -737,6 +737,14 @@ Proof.
   reflexivity.
 Defined.
 
+Definition how_to_name_this_2 {A A' : Type} {B : A -> Type} {B' : A' -> Type}
+  (p : A' = A)
+  : (transport (fun A0 => A0 -> Type) p^ B = B') <~> B o (transport idmap p) = B'.
+Proof.
+  destruct p.
+  reflexivity.
+Defined.
+
 Section Book_2_17_sigma.
   Context {A A' : Type} {B : A -> Type} {B' : A' -> Type}
     (f : A <~> A') (g : forall a, B a <~> B' (f a)).
@@ -784,6 +792,87 @@ Section Book_2_17_sigma.
       apply transport_idmap_path_universe_uncurried.
   Defined.
 End Book_2_17_sigma.
+
+Section Book_2_17_arrow.
+  Context `{Funext} {A A' B B' : Type} (f : A' <~> A) (g : B <~> B').
+
+  Definition Book_2_17_i_arrow : (A -> B) <~> (A' -> B')
+    := HoTT.Types.Arrow.equiv_functor_arrow' f g.
+
+  Definition Book_2_17_ii_arrow `{Univalence} : (A -> B) <~> (A' -> B').
+  Proof.
+    apply equiv_path.
+    exact (ap011 arrow (path_universe_uncurried f)^ (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_arrow' (p : A' = A) (q : B = B')
+    : transport idmap (ap011 arrow p^ q)
+      = functor_arrow (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_arrow `{Univalence}
+    : Book_2_17_ii_arrow = Book_2_17_i_arrow.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply (Book_2_17_eq_arrow' _ _).
+    snrapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - exact (ap (fun g0 _ => g0)
+        (transport_idmap_path_universe_uncurried g)).
+  Qed.
+End Book_2_17_arrow.
+
+Section Book_2_17_forall.
+  Context `{Funext} {A A' : Type} {B : A -> Type} {B' : A' -> Type}
+    (f : A' <~> A) (g : forall a', B (f a') <~> B' a').
+
+  Definition Book_2_17_i_forall : (forall a, B a) <~> (forall a', B' a')
+    := HoTT.Types.Forall.equiv_functor_forall' f g.
+
+  Definition Book_2_17_ii_forall `{Univalence}
+    : (forall a, B a) <~> (forall a', B' a').
+  Proof.
+    apply equiv_path.
+    snrapply (ap011D (fun A0 B0 => forall a0, B0 a0)).
+    - exact (path_universe_uncurried f)^.
+    - apply (how_to_name_this_2 _)^-1, path_arrow; intro a.
+      apply path_universe_uncurried.
+      nrapply (transport (fun f0 => B (f0 _) <~> _)
+        (transport_idmap_path_universe_uncurried f)^).
+      apply g.
+  Defined.
+
+  Definition Book_2_17_eq_forall' (p : A' = A)
+    (q : transport (fun A0 => A0 -> Type) p^ B = B')
+    : transport idmap (ap011D (fun A0 B0 => forall a0, B0 a0) p^ q)
+      = functor_forall (transport idmap p)
+        (fun a => transport idmap (ap10 (how_to_name_this_2 p q) a)).
+  Proof.
+    clear f g.
+    destruct p; simpl in q; destruct q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_forall `{Univalence}
+    : Book_2_17_ii_forall = Book_2_17_i_forall.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply (Book_2_17_eq_forall' _ _).
+    snrapply ap011D.
+    - apply transport_idmap_path_universe_uncurried.
+    - lhs nrapply (ap (fun p => transport _ _ (fun a => transport idmap (ap10 p _)))
+        (eisretr _ _)).
+      lhs nrapply (ap (fun h => transport _ _ (fun a => transport idmap (h _)))
+        (eisretr _ _)).
+      destruct (transport_idmap_path_universe_uncurried f); simpl.
+      apply path_forall; intro a.
+      apply transport_idmap_path_universe_uncurried.
+  Defined.
+End Book_2_17_forall.
 
 (* ================================================== ex:dep-htpy-natural *)
 (** Exercise 2.18 *)
