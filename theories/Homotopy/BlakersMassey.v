@@ -491,11 +491,10 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
                                (fun r => to O (hfiber glue r)) _).
       apply ap; unfold hfiber; rewrite transport_sigma'.
       apply ap; rewrite transport_paths_r.
-      (** Finally, we have another terrible-looking thing involving [frobnicate].  However, there are enough identity paths that [frobnicate] evaluates to... something that's almost fully path-general!  So with just a little bit of further work, we can reduce it also to something we can prove with path-induction. *)
+      (** Finally, we have another terrible-looking thing involving [frobnicate].  However, there are enough identity paths that [frobnicate] evaluates to something we can prove with path-induction. *)
       Transparent frobnicate.
-      cbn.
-      Opaque frobnicate.
       simpl.
+      Opaque frobnicate.
       destruct (glue q01); reflexivity.
     Qed.
 

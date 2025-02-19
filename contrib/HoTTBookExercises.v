@@ -760,9 +760,8 @@ Section Book_2_17_sigma.
       = functor_sigma (transport idmap p)
         (fun a => transport idmap (ap10 q a)).
   Proof.
-    clear f g.
-    destruct p; simpl in q.
-    change (fun a' => B' a') with B' in q. destruct q.
+    destruct p.
+    change (B = B') in q; destruct q.
     reflexivity.
   Defined.
 
@@ -837,7 +836,7 @@ Section Book_2_17_forall.
 
   Definition Book_2_17_eq_forall' (p : A' = A)
     (q : B o (transport idmap p) = B')
-    : transport idmap (ap011D (fun A0 B0 => forall a0, B0 a0) p^ 
+    : transport idmap (ap011D (fun A0 B0 => forall a0, B0 a0) p^
         ((transport_arrow_toconst' p^ B)
         @ (transport (fun p0 => B o (_ p0) = B') (inv_V p)^ q)))
       = functor_forall (transport idmap p)
