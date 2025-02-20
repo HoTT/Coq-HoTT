@@ -736,15 +736,20 @@ Section Book_2_17_sigma.
   Definition Book_2_17_i_sigma : {a : A & B a} <~> {a' : A' & B' a'}
     := HoTT.Types.Sigma.equiv_functor_sigma' f g.
 
+  Definition Book_2_17_path_fibr_1 (p : A = A')
+    (q : B = B' o (transport idmap p))
+    : (transport (fun A0 => A0 -> Type) p B) = B'
+    := moveR_transport_p _ _ _ _
+        (transport (fun p0 => B = B' o (_ p0)) (inv_V p)^ q
+           @ (transport_arrow_toconst' p^ B')^). 
+
   Definition Book_2_17_ii_sigma `{Univalence}
     : {a : A & B a} <~> {a' : A' & B' a'}.
   Proof.
     apply equiv_path.
     snrapply ap011D.
     - exact (path_universe_uncurried f).
-    - apply moveR_transport_p.
-      rhs nrapply transport_arrow_toconst'.
-      apply (transport (fun p0 => _ = _ o (_ p0)) (inv_V _)^).
+    - apply Book_2_17_path_fibr_1.
       apply path_arrow; intro a.
       apply path_universe_uncurried.
       apply (transport (fun f0 => _ <~> _ (f0 _))
@@ -754,15 +759,11 @@ Section Book_2_17_sigma.
 
   Definition Book_2_17_eq_sigma' (p : A = A')
     (q : B = B' o (transport idmap p))
-    : transport idmap
-        (ap011D (@sig) p
-           (moveR_transport_p _ _ _ _
-              (transport (fun p0 => B = B' o (_ p0)) (inv_V p)^ q
-                 @ (transport_arrow_toconst' p^ B')^)))
+    : transport idmap (ap011D (@sig) p (Book_2_17_path_fibr_1 p q))
       = functor_sigma (transport idmap p)
           (fun a => transport idmap (ap10 q a)).
   Proof.
-    destruct p.
+    unfold Book_2_17_path_fibr_1; destruct p.
     change (B = B') in q; destruct q.
     reflexivity.
   Defined.
@@ -821,14 +822,19 @@ Section Book_2_17_forall.
   Definition Book_2_17_i_forall : (forall a, B a) <~> (forall a', B' a')
     := HoTT.Types.Forall.equiv_functor_forall' f g.
 
+  Definition Book_2_17_path_fibr_2 (p : A' = A)
+    (q : B o (transport idmap p) = B')
+    : (transport (fun A0 => A0 -> Type) p^ B) = B'
+    := (transport_arrow_toconst' p^ B)
+       @ (transport (fun p0 => B o (_ p0) = B') (inv_V p)^ q).
+
   Definition Book_2_17_ii_forall `{Univalence}
     : (forall a, B a) <~> (forall a', B' a').
   Proof.
     apply equiv_path.
     snrapply (ap011D (fun A0 B0 => forall a0, B0 a0)).
     - exact (path_universe_uncurried f)^.
-    - lhs nrapply transport_arrow_toconst'.
-      apply (transport (fun p0 => _ o (_ p0) = _) (inv_V _)^).
+    - apply Book_2_17_path_fibr_2.
       apply path_arrow; intro a.
       apply path_universe_uncurried.
       nrapply (transport (fun f0 => B (f0 _) <~> _)
@@ -839,13 +845,12 @@ Section Book_2_17_forall.
   Definition Book_2_17_eq_forall' (p : A' = A)
     (q : B o (transport idmap p) = B')
     : transport idmap
-        (ap011D (fun A0 B0 => forall a0, B0 a0) p^
-          ((transport_arrow_toconst' p^ B)
-             @ (transport (fun p0 => B o (_ p0) = B') (inv_V p)^ q)))
+      (ap011D (fun A0 B0 => forall a0, B0 a0) p^ (Book_2_17_path_fibr_2 p q))
       = functor_forall (transport idmap p)
           (fun a => transport idmap (ap10 q a)).
   Proof.
-    destruct p; simpl in q; destruct q.
+    unfold Book_2_17_path_fibr_2; destruct p.
+    simpl in q; destruct q.
     reflexivity.
   Defined.
 
