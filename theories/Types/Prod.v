@@ -245,9 +245,8 @@ Proof.
     exact (path_prod' (eissect f _) (eissect g _)).
   - intros [a b]; simpl.
     lhs nrapply (ap (fun p => path_prod' p _) (eisadj f _)).
-    lhs nrapply (ap _ (eisadj g _)).
-    symmetry.
-    nrapply ap_functor_prod.
+    rhs nrapply ap_functor_prod.
+    nrapply (ap _ (eisadj g _)).
 Defined.
 
 Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}

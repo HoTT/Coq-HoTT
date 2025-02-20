@@ -588,15 +588,6 @@ Proof.
 Defined.
 
 (** ** Functoriality on equivalences *)
-
-Definition ap_functor_sum_inl {A A' B B' : Type} (f : A -> A') (g : B -> B') {a a' : A} (p : a = a')
-  : ap (functor_sum f g) (ap inl p) = ap inl (ap f p)
-  := match p with 1 => 1 end.
-
-Definition ap_functor_sum_inr {A A' B B' : Type} (f : A -> A') (g : B -> B') {b b' : B} (p : b = b')
-  : ap (functor_sum f g) (ap inr p) = ap inr (ap g p)
-  := match p with 1 => 1 end.
-
 Global Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_sum f g) | 1000.
 Proof.
@@ -605,8 +596,8 @@ Proof.
   - intros [?|?]; simpl; apply ap; apply eisretr.
   - intros [?|?]; simpl; apply ap; apply eissect.
   - intros [?|?]; simpl; lhs nrapply (ap _ (eisadj _ _)); symmetry.
-    + apply ap_functor_sum_inl.
-    + apply ap_functor_sum_inr.
+    + exact ((ap_compose inl _ _)^ @ ap_compose f inl _).
+    + exact ((ap_compose inr _ _)^ @ ap_compose g inr _).
 Defined.
 
 Definition equiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
