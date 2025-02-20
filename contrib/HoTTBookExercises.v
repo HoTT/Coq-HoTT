@@ -25,7 +25,7 @@
 
 From HoTT Require Import Basics Types HProp HSet Projective
      TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
-     BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
+     Misc.BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
      Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties.
 
 Local Open Scope nat_scope.
@@ -1269,7 +1269,7 @@ End Book_3_14.
 (* ================================================== ex:decidable-choice *)
 (** Exercise 3.19 *)
 
-Definition Book_3_19 := @HoTT.BoundedSearch.minimal_n.
+Definition Book_3_19 := @HoTT.Misc.BoundedSearch.minimal_n.
 
 (* ================================================== ex:omit-contr2 *)
 (** Exercise 3.20 *)
