@@ -697,7 +697,208 @@ Definition Book_2_16 := @HoTT.Metatheory.FunextVarieties.NaiveFunext_implies_Fun
 (* ================================================== ex:equiv-functor-types *)
 (** Exercise 2.17 *)
 
+Section Book_2_17_prod.
+  Context {A A' B B' : Type} (f : A <~> A') (g : B <~> B').
 
+  Definition Book_2_17_i_prod : A * B <~> A' * B'
+    := HoTT.Types.Prod.equiv_functor_prod' f g.
+
+  Definition Book_2_17_ii_prod `{Univalence} : A * B <~> A' * B'.
+  Proof.
+    apply equiv_path.
+    exact (ap011 prod (path_universe_uncurried f) (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_prod' (p : A = A') (q : B = B')
+    : transport idmap (ap011 prod p q)
+      = functor_prod (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_prod `{Univalence}
+    : Book_2_17_ii_prod = Book_2_17_i_prod.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply Book_2_17_eq_prod'.
+    snrapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - apply transport_idmap_path_universe_uncurried.
+  Qed.
+End Book_2_17_prod.
+
+Section Book_2_17_sigma.
+  Context {A A' : Type} {B : A -> Type} {B' : A' -> Type}
+    (f : A <~> A') (g : forall a, B a <~> B' (f a)).
+
+  Definition Book_2_17_i_sigma : {a : A & B a} <~> {a' : A' & B' a'}
+    := HoTT.Types.Sigma.equiv_functor_sigma' f g.
+
+  Definition Book_2_17_path_fibr_1 (p : A = A')
+    (q : B = B' o (transport idmap p))
+    : (transport (fun A0 => A0 -> Type) p B) = B'
+    := moveR_transport_p _ _ _ _
+        (transport (fun p0 => B = B' o (_ p0)) (inv_V p)^ q
+           @ (transport_arrow_toconst' p^ B')^). 
+
+  Definition Book_2_17_ii_sigma `{Univalence}
+    : {a : A & B a} <~> {a' : A' & B' a'}.
+  Proof.
+    apply equiv_path.
+    snrapply ap011D.
+    - exact (path_universe_uncurried f).
+    - apply Book_2_17_path_fibr_1.
+      apply path_arrow; intro a.
+      apply path_universe_uncurried.
+      apply (transport (fun f0 => _ <~> _ (f0 _))
+        (transport_idmap_path_universe_uncurried _)^).
+      apply g.
+  Defined.
+
+  Definition Book_2_17_eq_sigma' (p : A = A')
+    (q : B = B' o (transport idmap p))
+    : transport idmap (ap011D (@sig) p (Book_2_17_path_fibr_1 p q))
+      = functor_sigma (transport idmap p)
+          (fun a => transport idmap (ap10 q a)).
+  Proof.
+    unfold Book_2_17_path_fibr_1; destruct p.
+    change (B = B') in q; destruct q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_sigma `{Univalence}
+    : Book_2_17_ii_sigma = Book_2_17_i_sigma.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply Book_2_17_eq_sigma'.
+    snrapply ap011D.
+    - apply transport_idmap_path_universe_uncurried.
+    - destruct (transport_idmap_path_universe_uncurried f); simpl.
+      apply path_forall; intro a.
+      lhs nrapply (ap (fun h => _ (h _)) (eisretr _ _)).
+      apply transport_idmap_path_universe_uncurried.
+  Defined.
+End Book_2_17_sigma.
+
+Section Book_2_17_arrow.
+  Context `{Funext} {A A' B B' : Type} (f : A' <~> A) (g : B <~> B').
+
+  Definition Book_2_17_i_arrow : (A -> B) <~> (A' -> B')
+    := HoTT.Types.Arrow.equiv_functor_arrow' f g.
+
+  Definition Book_2_17_ii_arrow `{Univalence} : (A -> B) <~> (A' -> B').
+  Proof.
+    apply equiv_path.
+    exact (ap011 arrow (path_universe_uncurried f)^ (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_arrow' (p : A' = A) (q : B = B')
+    : transport idmap (ap011 arrow p^ q)
+      = functor_arrow (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_arrow `{Univalence}
+    : Book_2_17_ii_arrow = Book_2_17_i_arrow.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply Book_2_17_eq_arrow'.
+    snrapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - exact (ap (fun g0 _ => g0)
+        (transport_idmap_path_universe_uncurried g)).
+  Qed.
+End Book_2_17_arrow.
+
+Section Book_2_17_forall.
+  Context `{Funext} {A A' : Type} {B : A -> Type} {B' : A' -> Type}
+    (f : A' <~> A) (g : forall a', B (f a') <~> B' a').
+
+  Definition Book_2_17_i_forall : (forall a, B a) <~> (forall a', B' a')
+    := HoTT.Types.Forall.equiv_functor_forall' f g.
+
+  Definition Book_2_17_path_fibr_2 (p : A' = A)
+    (q : B o (transport idmap p) = B')
+    : (transport (fun A0 => A0 -> Type) p^ B) = B'
+    := (transport_arrow_toconst' p^ B)
+       @ (transport (fun p0 => B o (_ p0) = B') (inv_V p)^ q).
+
+  Definition Book_2_17_ii_forall `{Univalence}
+    : (forall a, B a) <~> (forall a', B' a').
+  Proof.
+    apply equiv_path.
+    snrapply (ap011D (fun A0 B0 => forall a0, B0 a0)).
+    - exact (path_universe_uncurried f)^.
+    - apply Book_2_17_path_fibr_2.
+      apply path_arrow; intro a.
+      apply path_universe_uncurried.
+      nrapply (transport (fun f0 => B (f0 _) <~> _)
+        (transport_idmap_path_universe_uncurried f)^).
+      apply g.
+  Defined.
+
+  Definition Book_2_17_eq_forall' (p : A' = A)
+    (q : B o (transport idmap p) = B')
+    : transport idmap
+      (ap011D (fun A0 B0 => forall a0, B0 a0) p^ (Book_2_17_path_fibr_2 p q))
+      = functor_forall (transport idmap p)
+          (fun a => transport idmap (ap10 q a)).
+  Proof.
+    unfold Book_2_17_path_fibr_2; destruct p.
+    simpl in q; destruct q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_forall `{Univalence}
+    : Book_2_17_ii_forall = Book_2_17_i_forall.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply Book_2_17_eq_forall'.
+    snrapply ap011D.
+    - apply transport_idmap_path_universe_uncurried.
+    - destruct (transport_idmap_path_universe_uncurried f); simpl.
+      apply path_forall; intro a.
+      lhs nrapply (ap (fun h => _ (h _)) (eisretr _ _)).
+      apply transport_idmap_path_universe_uncurried.
+  Defined.
+End Book_2_17_forall.
+
+Section Book_2_17_sum.
+  Context {A A' B B' : Type} (f : A <~> A') (g : B <~> B').
+
+  Definition Book_2_17_i_sum : A + B <~> A' + B'
+    := HoTT.Types.Sum.equiv_functor_sum' f g.
+
+  Definition Book_2_17_ii_sum `{Univalence} : A + B <~> A' + B'.
+  Proof.
+    apply equiv_path.
+    exact (ap011 sum (path_universe_uncurried f) (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_sum' `{Funext} (p : A = A') (q : B = B')
+    : transport idmap (ap011 sum p q)
+      = functor_sum (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    apply path_arrow; intros [?|?]; reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_sum `{Univalence}
+    : Book_2_17_ii_sum = Book_2_17_i_sum.
+  Proof.
+    apply path_equiv; simpl.
+    lhs nrapply Book_2_17_eq_sum'.
+    snrapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - apply transport_idmap_path_universe_uncurried.
+  Qed.
+End Book_2_17_sum.
 
 (* ================================================== ex:dep-htpy-natural *)
 (** Exercise 2.18 *)
