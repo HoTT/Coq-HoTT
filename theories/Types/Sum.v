@@ -588,6 +588,7 @@ Proof.
 Defined.
 
 (** ** Functoriality on equivalences *)
+
 Global Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_sum f g) | 1000.
 Proof.
