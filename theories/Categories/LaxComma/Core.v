@@ -170,7 +170,7 @@ End lax_arrow_category.
 Arguments lax_arrow_category {_} P {_}.
 Arguments oplax_arrow_category {_} P {_}.
 
-Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
+Local Set Warnings "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Module Export LaxCommaCoreNotations.
   (** We play some games to get nice notations for lax comma categories. *)
   Section tc_notation_boiler_plate.
