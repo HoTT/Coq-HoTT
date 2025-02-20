@@ -733,11 +733,11 @@ Section Book_2_17_sigma.
   Context {A A' : Type} {B : A -> Type} {B' : A' -> Type}
     (f : A <~> A') (g : forall a, B a <~> B' (f a)).
 
-  Definition Book_2_17_i_sigma : (exists a, B a) <~> (exists a', B' a')
+  Definition Book_2_17_i_sigma : {a : A & B a} <~> {a' : A' & B' a'}
     := HoTT.Types.Sigma.equiv_functor_sigma' f g.
 
   Definition Book_2_17_ii_sigma `{Univalence}
-    : (exists a, B a) <~> (exists a', B' a').
+    : {a : A & B a} <~> {a' : A' & B' a'}.
   Proof.
     apply equiv_path.
     snrapply ap011D.
@@ -838,13 +838,13 @@ Section Book_2_17_forall.
 
   Definition Book_2_17_eq_forall' (p : A' = A)
     (q : B o (transport idmap p) = B')
-    : transport idmap (ap011D (fun A0 B0 => forall a0, B0 a0) p^
-        ((transport_arrow_toconst' p^ B)
-        @ (transport (fun p0 => B o (_ p0) = B') (inv_V p)^ q)))
+    : transport idmap
+        (ap011D (fun A0 B0 => forall a0, B0 a0) p^
+          ((transport_arrow_toconst' p^ B)
+             @ (transport (fun p0 => B o (_ p0) = B') (inv_V p)^ q)))
       = functor_forall (transport idmap p)
-        (fun a => transport idmap (ap10 q a)).
+          (fun a => transport idmap (ap10 q a)).
   Proof.
-    clear f g.
     destruct p; simpl in q; destruct q.
     reflexivity.
   Defined.
