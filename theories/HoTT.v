@@ -28,7 +28,6 @@ Require Export HoTT.Extensions.
 
 Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
-Require Export HoTT.Constant.
 
 Require Export HoTT.Universes.Smallness.
 Require Export HoTT.Universes.TruncType.

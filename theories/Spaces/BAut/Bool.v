@@ -1,6 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import Constant.
-Require Import HoTT.Truncations.Core HoTT.Truncations.Connectedness.
+Require Import Truncations.
 Require Import Universes.BAut.
 Require Import Pointed.Core.
 

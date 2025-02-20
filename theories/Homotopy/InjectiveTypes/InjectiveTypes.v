@@ -3,11 +3,10 @@
 (** Formalization of the paper: Injective Types in Univalent Mathematics by Martin Escardo (with some extra results). *)
 
 Require Import Basics Types.
-Require Import Truncations.Core.
+Require Import Truncations.Core Truncations.Constant.
 Require Import Modalities.Modality.
 Require Import HFiber.
 Require Import Universes.HProp.
-Require Import Constant.
 Require Import ExcludedMiddle.
 Require Import InjectiveTypes.TypeFamKanExt.
 
