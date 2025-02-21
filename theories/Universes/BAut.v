@@ -1,6 +1,5 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import Constant.
-Require Import HoTT.Truncations.
+Require Import Basics Types.
+Require Import Truncations.
 Require Import ObjectClassifier Homotopy.ExactSequence Pointed.
 
 Local Open Scope type_scope.
