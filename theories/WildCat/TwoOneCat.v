@@ -117,6 +117,9 @@ Proof.
   exact _.
 Defined.
 
+Module Category.
+End Category.
+
 (** * Wild (2,1)-categories *)
 Class Is21Cat (A : Type) `{Is01Cat A,!Is2Graph A,!Is3Graph A} :=
 { 

@@ -115,6 +115,26 @@ Arguments cat_assoc_opp {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl {_ _ _ _ _ _ _} f.
 Arguments cat_idr {_ _ _ _ _ _ _} f.
 
+
+Module Category.
+  Record class_of (A : Type) := Class {
+    is_graph : IsGraph A;
+    is_01_cat : Is01Cat A;
+    is2graph : Is2Graph A;
+    is1cat : Is1Cat A (* This can be seen as the "mixin" in the sense of packed classes. *)
+  }.
+
+  Record Category := {
+    Ob :> Type;
+    is_class_of : class_of Ob
+  }.
+
+  Module Exports.
+    Notation Category := Category.
+  End Exports.
+End Category.
+Export Category.Exports.
+
 (** An alternate constructor that doesn't require the proof of [cat_assoc_opp].  This can be used for defining examples of wild categories, but shouldn't be used for the general theory of wild categories. *)
 Definition Build_Is1Cat' (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A}
   (is01cat_hom : forall a b : A, Is01Cat (a $-> b))
