@@ -386,6 +386,8 @@ Proof.
   by pelim f p g h.
 Defined.
 
+(** ** 1-categorical properties of [pType]. *)
+
 (** Composition of pointed maps is associative up to pointed homotopy *)
 Definition pmap_compose_assoc {A B C D : pType} (h : C ->* D)
   (g : B ->* C) (f : A ->* B)
