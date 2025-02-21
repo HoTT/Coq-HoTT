@@ -5,7 +5,8 @@ Require Import WildCat.Core WildCat.TwoOneCat WildCat.NatTrans WildCat.Bifunctor
 
 (** Not global instances for now *)
 
-(** These are written so that they can be augmented with an existing wildcat structure. For instance, you may partially define a wildcat and ask for paths for the higher cells. *)
+(** These are written so that they can be augmented with an existing wildcat structure. 
+    For instance, you may partially define a wildcat and ask for paths for the higher cells. *)
 
 (** Any type is a graph with morphisms given by the identity type. *)
 Definition isgraph_paths (A : Type) : IsGraph A
@@ -48,6 +49,13 @@ Proof.
   exact (@ap _ _ (cat_precomp c f)).
 Defined.
 
+(** Composition is a 0-bifunctor when the 2-cells are paths. *)
+Global Instance is0bifunctor_cat_comp_paths (A :Type) `{Is01Cat A} (a b c :A)
+    : Is0Bifunctor (cat_comp (a:=a) (b:=b) (c:=c)).
+Proof.
+  snrapply Build_Is0Bifunctor''; exact _.
+Defined.
+
 (** Any type is a 1-category with n-morphisms given by paths. *)
 Global Instance is1cat_paths {A : Type} : Is1Cat A.
 Proof.
@@ -62,6 +70,20 @@ Proof.
   - exact (@concat_1p A).
 Defined.
 
+Global Instance IsTruncatedBicat_paths (A: Type) : IsTruncatedBicat A.
+Proof.
+  snrapply Build_IsTruncatedBicat.
+  - exact _.
+  - intros a b c. simpl. change concatR with (cat_comp (a:=a) (b:=b) (c:=c)).
+    rapply is0bifunctor_cat_comp_paths.        
+  - intros a b c d; apply concat_p_pp.
+  - intros a b c d; apply concat_pp_p.
+  - intros a b f; apply concat_p1.
+  - intros a b f; symmetry; apply concat_p1.
+  - intros a b f; apply concat_1p.
+  - intros a b f; symmetry; apply concat_1p.
+Defined.
+
 (** Any type is a 1-groupoid with morphisms given by paths. *)
 Global Instance is1gpd_paths {A : Type} : Is1Gpd A.
 Proof.
@@ -70,41 +92,35 @@ Proof.
   - exact (@concat_Vp A).
 Defined.
 
-Locate concat_pp_p.
+Global Instance Is1Bifunctor_cat_comp_paths (A: Type) (a b c : A)
+  : Is1Bifunctor (cat_comp (a:=a) (b:=b) (c:=c)).
+Proof.
+  apply Build_Is1Bifunctor''.
+  - intro q. snrapply Build_Is1Functor.
+    + intros ? ? ? ?. exact( (ap (fun x => whiskerR x _))).
+    + reflexivity.
+    + intros p0 p1 p2. apply whiskerR_pp.
+  - intro p. snrapply Build_Is1Functor.
+    + intros ? ? ? ?. exact (ap (whiskerL p)).
+    + reflexivity.
+    + intros p0 p1 p2. exact (whiskerL_pp p).
+  - intros q q' beta p p' alpha. exact (concat_whisker _ _ _ _ _ _)^.
+Defined.
 
-(** Any type is a 2-category with higher morphhisms given by paths. *)
-Global Instance is21cat_paths {A : Type} : Is21Cat A.
+(** Any type is a 2-category with higher morphisms given by paths. *)
+Local Instance is21cat_paths {A : Type} : Is21Cat A.
 Proof.
   snrapply Build_Is21Cat.
   { 
     snrapply Build_IsBicategory.
-    { snrapply Build_IsTruncatedBicat.
-      - exact _.
-      - intros a b c. simpl. apply Build_Is0Bifunctor''. (* composition is a bifunctor*)
-        + intro q; apply (is0functor_cat_postcomp_paths _ (H0:=(is01cat_paths A))).
-        + intro q; apply (is0functor_cat_precomp_paths _ (H0:=(is01cat_paths A))).
-      - intros a b c d; apply concat_p_pp.
-      - intros a b c d; apply concat_pp_p.
-      - intros a b f; apply concat_p1.
-      - intros a b f; symmetry; apply concat_p1.
-      - intros a b f; apply concat_1p.
-      - intros a b f; symmetry; apply concat_1p.
-    } 
+    { (* Paths form a truncated bicategory *)
+      exact _.
+    }
     { (* Hom(a,b) is a 1-cat *)
       exact _ .
     }
-    {  (* Path composition is a bifunctor. *)
-      intros a b c.
-      apply Build_Is1Bifunctor''.
-      - intro q. snrapply Build_Is1Functor.
-        + intros ? ? ? ?. exact( (ap (fun x => whiskerR x _))).
-        + reflexivity.
-        + intros p0 p1 p2. apply whiskerR_pp.
-      - intro p. snrapply Build_Is1Functor.
-        + intros ? ? ? ?. exact (ap (whiskerL p)).
-        + reflexivity.
-        + intros p0 p1 p2. exact (whiskerL_pp p).
-      - intros q q' beta p p' alpha. exact (concat_whisker _ _ _ _ _ _)^.
+    { (* cat_comp of paths is a 1-bifunctor. *)
+      exact _. 
     }
     { (* assoc and assoc_opp are inverse *)
        intros a b c d f g h. constructor; simpl; destruct h, g, f; reflexivity. }

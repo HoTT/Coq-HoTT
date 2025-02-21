@@ -173,19 +173,19 @@ Record RetractionOf {A} `{Is1Cat A} {a b : A} (f : a $-> b) :=
     is_retraction : comp_left_inverse $o f $== Id a
   }.
 
-Record Inverse {A} `{Is1Cat A} {a b : A} (f : a $->b) (g : b $->a) := {
+Record AreInverse {A} `{Is1Cat A} {a b : A} (f : a $->b) (g : b $->a) := {
   gf_id : Id a $== g $o f;
   fg_id : Id b $== f $o g
 }.
 
-Definition inverse_op {A} `{Is1Cat A} {a b : A} (f : a $-> b) (g : b $->a) (p : Inverse f g) : Inverse g f :=
+Definition inverse_op {A} `{Is1Cat A} {a b : A} (f : a $-> b) (g : b $->a) (p : AreInverse f g) : AreInverse g f :=
 {|
   gf_id := fg_id _ _ p;
   fg_id := gf_id _ _ p
 |}.
 
 Succeed Definition inverse_op_definitionally_involutive {A} `{Is1Cat A} {a b :A}
-  (f : a $->b) (g : b $->a) (p : Inverse f g)
+  (f : a $->b) (g : b $->a) (p : AreInverse f g)
   : p = inverse_op _ _ (inverse_op _ _ p) := idpath.
 
 (** Often, the coherences are actually equalities rather than homotopies. *)

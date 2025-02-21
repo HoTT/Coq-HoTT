@@ -11,9 +11,6 @@ Class IsTruncatedBicat (A: Type) `{Is01Cat A} `{!Is2Graph A} := {
   is01cat_bicat_hom :: forall (a b : A), Is01Cat (a $-> b);
   is0bifunctor_bicat_comp :: forall (a b c : A),
     Is0Bifunctor (cat_comp (a:=a) (b:=b) (c:=c));
-    (* (fun (f: a$->b) (g: b$->c)=>cat_comp (a:=a) (b:=b) (c:=c) g f); *)
-  (* is0functor_bicat_postcomp : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
-  is0functor_bicat_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ; *)
   bicat_assoc : forall {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f $-> h $o (g $o f);
   bicat_assoc_opp : forall {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d),
@@ -50,24 +47,6 @@ Notation "beta $@@ alpha" := (fmap11 (cat_comp) beta alpha) : twocat_scope.
 Open Scope twocat_scope.
 
 Set Typeclasses Dependency Order.
-(* 
-Definition assoc_nat (A: Type)
-  (H : IsGraph A)
-  (H2: Is2Graph A)
-  (Is01Cat0 : Is01Cat A)
- `{!IsTruncatedBicat A} 
- `{!Is3Graph (H:=H) A} 
-  (is1cat_2cells: forall (a b : A), Is1Cat (Hom a b))
-  (is1bifunctor_bicat_comp : forall (a b c : A), 
-    Is1Bifunctor (cat_comp (a:=a) (b:=b) (c :=c)))
-    :=
-  forall (a b c d: A),
-  Is1Natural
-  (fun (p : (c $-> d) * (b $->c) * (a $-> b)) => let '(h,g,f) := p in
-    (cat_comp h g) $o f)
-  (fun (p : (c $-> d) * (b $->c) * (a $-> b)) => let '(h,g,f) := p in h $o (g $o f))
-  (fun (p : (c $-> d) * (b $->c) * (a $-> b)) => 
-    let '(h,g,f) := p in bicat_assoc (a:=a) (b:=b) (c:=c) (d:=d) f g h). *)
 
 Class IsBicategory (A : Type) `{Is01Cat A} `{!Is2Graph A} `{!Is3Graph A} := {
   is_truncated_bicat:: IsTruncatedBicat A;
@@ -75,13 +54,10 @@ Class IsBicategory (A : Type) `{Is01Cat A} `{!Is2Graph A} `{!Is3Graph A} := {
   is1bifunctor_bicat_comp :: forall (a b c : A), Is1Bifunctor (cat_comp (a:=a) (b:=b) (c:=c));
   is1functor_bicat_postcomp :: forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) := _;
   is1functor_bicat_precomp :: forall (a b c : A) (f : a $-> b), Is1Functor (cat_precomp c f) := _;
-  (* bifunctor_coh_comp : forall {a b c : A} {f f' : a $-> b}  {g g' : b $-> c}
-    (p : f $=> f') (p' : g $=> g'),
-    (g' $@L p) * (p' $@R f) $== (p' $@R f') * (g $@L p) ; *)
   bicat_assoc_inv: forall {a b c d} (f : a $->b) (g : b $-> c) (h : c $->d),
-    Inverse (bicat_assoc f g h) (bicat_assoc_opp f g h);
-  bicat_idl_inv : forall {a b} (f : a $-> b), Inverse (bicat_idl f) (bicat_idl_opp f);
-  bicat_idr_inv : forall {a b} (f : a $-> b), Inverse (bicat_idr f) (bicat_idr_opp f);
+    AreInverse (bicat_assoc f g h) (bicat_assoc_opp f g h);
+  bicat_idl_inv : forall {a b} (f : a $-> b), AreInverse (bicat_idl f) (bicat_idl_opp f);
+  bicat_idr_inv : forall {a b} (f : a $-> b), AreInverse (bicat_idr f) (bicat_idr_opp f);
   bicat_assoc_nat :: forall {a b c d: A},
     Is1Natural
     (fun '(h, g, f) => h $o g $o f)
@@ -132,8 +108,6 @@ Proof.
   exact _.
 Defined.
 
-Check @fmap11.
-Print cat_comp2.
 Definition cat_exchange {A : Type} `{IsBicategory A} {a b c : A}
   {f f' f'' : a $-> b} {g g' g'' : b $-> c}
   (p : f $=> f') (q : f' $=> f'') (r : g $=> g') (s : g' $=> g'')
