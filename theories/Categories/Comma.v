@@ -1,6 +1,6 @@
 (** * Comma Categories *)
 (** Since there are only notations in [Comma.Notations], we can just export those. *)
-Local Set Warnings Append "-notation-overridden".
+Local Set Warnings "-notation-overridden".
 Require Import Basics.Notations.
 Require Export Comma.Notations.
 

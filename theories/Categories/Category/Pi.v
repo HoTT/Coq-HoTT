@@ -45,7 +45,7 @@ Proof.
   typeclasses eauto.
 Qed.
 
-Local Set Warnings Append "-notation-overridden".
+Local Set Warnings "-notation-overridden".
 Module Export CategoryPiNotations.
   Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..)%type : type_scope.
   Notation "'forall'  x .. y , P" := (pi (fun x => .. (pi (fun y => P)) .. )) : category_scope.
