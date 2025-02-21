@@ -385,29 +385,6 @@ Proof.
   1: exact (fun x => p (f x)).
   by pelim f p g h.
 Defined.
-  (* refine (concat (y:= (ap g (dpoint_eq f) @ (p pt) @ (ap h (dpoint_eq f))^)) _ _).
-  { apply moveL_pV.
-    apply symmetry.
-    apply concat_Ap. 
-  }
-  {
-    refine (concat (y:= (ap g (point_eq f) @ (point_eq g @ 
-      (point_eq h)^) @ (ap h (point_eq f))^)) _ _).
-    { 
-      change (point_eq h) with (dpoint_eq h).
-      change (point_eq g) with (dpoint_eq g).
-      destruct (dpoint_eq p)^.
-      reflexivity.
-    }
-    {
-      rewrite inv_pp.
-      rewrite concat_p_pp.
-      rewrite concat_pp_p.
-      reflexivity.
-    }
-  }
-Defined. *)
-(** ** 1-categorical properties of [pType]. *)
 
 (** Composition of pointed maps is associative up to pointed homotopy *)
 Definition pmap_compose_assoc {A B C D : pType} (h : C ->* D)
