@@ -21,11 +21,9 @@ Definition is3graph_paths (A : Type) `{Is2Graph A} : Is3Graph A
   := fun _ _ => is2graph_paths _.
 
 (** We assume these as instances for the rest of the file with a low priority. *)
-Local Existing Instances isgraph_paths is2graph_paths is3graph_paths | 10.
+Local Existing Instances isgraph_paths is2graph_paths is3graph_paths | 0.
 
-(** Any type has composition and identity morphisms given by path concatenation and reflexivity. *)
-Global Instance is01cat_paths (A : Type) : Is01Cat A
-  := {| Id := @idpath _ ; cat_comp := fun _ _ _ x y => concat y x |}.
+Global Instance is01cat_paths (A : Type) : Is01Cat A := {| Id := @idpath A; cat_comp := fun _ _ _ x y => concat y x |}.
 
 (** Any type has a 0-groupoid structure with inverse morphisms given by path inversion. *)
 Global Instance is0gpd_paths (A : Type) : Is0Gpd A

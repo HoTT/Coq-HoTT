@@ -117,8 +117,17 @@ Proof.
   exact _.
 Defined.
 
-Module Category.
-End Category.
+(* (** We have presented a bicategory by stratifying it into
+    the lower portion (of 0, 1, and 2-cells) and then the 
+    upper portion consisting of 3-cells. We give another
+    constructor that takes advantage of existing hom structure
+*)
+Local Instance Bicat_from_hom_1cat {A :Type}
+ ` {H : forall (a b : A), Is1Cat (a $-> b)}: Is1Cat A.
+ *)
+(* Module Category.
+  
+End Category. *)
 
 (** * Wild (2,1)-categories *)
 Class Is21Cat (A : Type) `{Is01Cat A,!Is2Graph A,!Is3Graph A} :=
@@ -127,5 +136,80 @@ Class Is21Cat (A : Type) `{Is01Cat A,!Is2Graph A,!Is3Graph A} :=
   is0gpd_hom : forall (a b : A), Is0Gpd (a $-> b) ;
   is1gpd_hom : forall (a b : A), Is1Gpd (a $-> b) ;
 }.
+
+(* We have to construct several natural transformations which turn out to be
+   the identity once the functors are unpacked, so we eliminate the boilerplate *)
+#[local]
+Ltac construct_nat_Trans := 
+  snrapply Build_NatTrans; [
+    unfold Transformation; exact (fun _ => Id _)
+  | snrapply Build_Is1Natural;
+    intros a a' f;
+    exact (cat_idl _ $@ (cat_idr _)^$ )
+  ].
+
+Definition Cat_assoc {A B C D : Category} 
+  (F : A $-> B) (G : B $-> C) (H : C $-> D) :
+  NatTrans (H $o G $o F) (H $o (G $o F)) := ltac:(construct_nat_Trans).
+
+Definition Cat_assoc_opp {A B C D : Category} 
+  (F : A $-> B) (G : B $-> C) (H : C $-> D) :
+  NatTrans (H $o (G $o F)) (H $o G $o F) := ltac:(construct_nat_Trans).
+
+Definition Cat_idl {A B : Category} 
+  (F : A $-> B) : NatTrans (F $o Id A) F := ltac:(construct_nat_Trans).
+
+Definition Cat_idl_opp {A B : Category} 
+  (F : A $-> B) : NatTrans F (F $o Id A):= ltac:(construct_nat_Trans).
+
+Definition Cat_idr {A B : Category} 
+  (F : A $-> B) : NatTrans (Id B $o F) F := ltac:(construct_nat_Trans).
+
+Definition Cat_idr_opp {A B : Category} 
+  (F : A $-> B) : NatTrans F (Id B $o F):= ltac:(construct_nat_Trans).
+
+(** The bicategory of categories *)
+Instance IsTruncatedBicatCat : IsTruncatedBicat Category := {
+  is01cat_bicat_hom := _; 
+  is0bifunctor_bicat_comp A B C := (Build_Is0Bifunctor'' _); 
+  bicat_assoc _ _ _ _ := Cat_assoc ;
+  bicat_assoc_opp _ _ _ _ := Cat_assoc_opp;
+  bicat_idl _ _ := Cat_idl; 
+  bicat_idl_opp _ _ :=  Cat_idl_opp ;
+  bicat_idr _ _ := Cat_idr;
+  bicat_idr_opp _ _ := Cat_idr_opp; 
+}.
+
+(* Instance is1bifunctor_Cat_comp : forall A B C : Category, 
+  Is1Bifunctor (cat_comp (a:=A) (b:=B) (c :=C)).
+Proof.
+  intros A B C.
+  snrapply Build_Is1Bifunctor''.
+  - 
+Defined. *)
+
+(* Definition isoingeo : IsTruncatedBicat Category := _. *)
+(* Print IsBicategory.
+#[refine]
+Instance IsBicat : IsBicategory Category := {
+  is_truncated_bicat := _;
+  is1cat_2cells := _;
+  is1bifunctor_bicat_comp := _;
+  bicat_assoc_inv := _;
+  bicat_idl_inv := _;
+  bicat_idr_inv := _;
+  bicat_assoc_nat := _ ;
+  bicat_idl_nat := _ ;
+  bicat_idr_nat := _;
+  bicat_pentagon := _;
+  bicat_triangle := _
+}.
+Proof.
+- exact _.
+Defined.
+
+Module Cat.
+  
+End Cat. *)
 
 Close Scope twocat_scope.

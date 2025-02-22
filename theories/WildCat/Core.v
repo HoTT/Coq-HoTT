@@ -9,6 +9,20 @@ Class IsGraph (A : Type) :=
   Hom : A -> A -> Type
 }.
 
+Module Graph.
+  Record type := Build_Graph {
+  Ob : Type;
+  is_graph : IsGraph (Ob : Type)
+}.
+End Graph.
+(* Have to define these outside the module because 
+   you have to import the module to use it 
+   and it seems preferable to keep a more fine-grained 
+   namespace. *)
+Coercion Graph.Ob : Graph.type >-> Sortclass.
+Existing Instance Graph.is_graph.
+Notation Graph := Graph.type.
+
 Notation "a $-> b" := (Hom a b).
 
 Definition graph_hfiber {B C : Type} `{IsGraph C} (F : B -> C) (c : C)
@@ -108,34 +122,35 @@ Class Is1Cat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
 
 Global Existing Instance is01cat_hom.
 Global Existing Instance is0gpd_hom.
-Global Existing Instance is0functor_postcomp.
+Global Existing Instance is0functor_postcomp. 
 Global Existing Instance is0functor_precomp.
 Arguments cat_assoc {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_assoc_opp {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl {_ _ _ _ _ _ _} f.
 Arguments cat_idr {_ _ _ _ _ _ _} f.
 
-
 Module Category.
-  Record class_of (A : Type) := Class {
+  Class class_of (A : Type) := Class {
     is_graph : IsGraph A;
-    is_01_cat : Is01Cat A;
+    is01cat : Is01Cat A;
     is2graph : Is2Graph A;
     is1cat : Is1Cat A (* This can be seen as the "mixin" in the sense of packed classes. *)
   }.
 
-  Record Category := {
-    Ob :> Type;
+  Record type := {
+    Ob : Type;
     is_class_of : class_of Ob
   }.
-
-  Module Exports.
-    Notation Category := Category.
-  End Exports.
 End Category.
-Export Category.Exports.
+Coercion Category.Ob : Category.type >-> Sortclass.
+Existing Instance Category.is_class_of.
+Existing Instance Category.is_graph.
+Existing Instance Category.is2graph.
+Existing Instance Category.is01cat.
+Existing Instance Category.is1cat.
+Notation Category := Category.type.
 
-(** An alternate constructor that doesn't require the proof of [cat_assoc_opp].  This can be used for defining examples of wild categories, but shouldn't be used for the general theory of wild categories. *)
+(** An alternate constructor that doesn't require the proof of [cat_assoc_opp]. This can be used for defining examples of wild categories, but shouldn't be used for the general theory of wild categories. *)
 Definition Build_Is1Cat' (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A}
   (is01cat_hom : forall a b : A, Is01Cat (a $-> b))
   (is0gpd_hom : forall a b : A, Is0Gpd (a $-> b))
