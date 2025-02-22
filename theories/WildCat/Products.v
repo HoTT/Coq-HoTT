@@ -489,6 +489,7 @@ Defined.
 Global Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is1Functor (fun x => cat_binprod x y).
+Proof.
   exact (is1functor10_bifunctor _ y).
 Defined.
 
