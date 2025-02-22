@@ -5,7 +5,6 @@ Require Import WildCat.Equiv.
 Require Import WildCat.Prod.
 Require Import WildCat.Opposite.
 Require Import WildCat.Yoneda.
-Require Import WildCat.FunctorCat.
 Require Import WildCat.Universe.
 Require Import Types.Prod.
 
