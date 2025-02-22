@@ -22,20 +22,6 @@ Arguments Build_Fun01 A B {isgraph_A isgraph_B} F {fun01_is0functor} : rename.
 Definition issig_Fun01 (A B : Type) `{IsGraph A} `{IsGraph B}
   : _  <~> Fun01 A B := ltac:(issig).
 
-(* * There is a graph whose nodes are graphs and whose edges are graph homomorphisms.
-Module Gph_Hom.
-  Record type (G H : Graph) := {
-    F0 : G -> H;
-    fmap : Is0Functor F0
-  }.
-End Gph_Hom.
-Arguments Gph_Hom.F0 {G H}.
-Notation Gph_Hom := Gph_Hom.type.
-Coercion Gph_Hom.F0 : Gph_Hom >-> Funclass.
-#[reversible] Coercion Gph_Hom.fmap : Gph_Hom >-> Is0Functor.
-Existing Instance Gph_Hom.fmap.
- *)
-
 Instance is0Graph_Graph : IsGraph Graph := {
   Hom A B := Fun01 A B
 }.
@@ -102,24 +88,6 @@ Proof.
   rapply (Build_Fun01 A^op B^op F).
 Defined.
 
-
-(* Module Functor.
-  Class class (A B : Category) (F : A -> B) := {
-    is0functor : Is0Functor F;
-    is1functor : Is1Functor F
-  }.
-  Record type (A B : Category) := {
-    fmap : A -> B;
-    class_of : class A B fmap
-  }.
-End Functor.
-Arguments Functor.fmap {A B}.
-Coercion Functor.fmap : Functor.type >-> Funclass.
-Existing Instance Functor.class_of.
-Existing Instance Functor.is0functor.
-Existing Instance Functor.is1functor.
-Notation Functor := Functor.type. *)
-
 (** ** Categories of 1-coherent 1-functors *)
 
 (* Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
@@ -157,22 +125,6 @@ Definition fun01_id {A} `{IsGraph A} : Fun01 A A
 Print Implicit Build_Fun11.
 Definition fun11_id {A} `{Is1Cat A} : Fun11 A A
   := Build_Fun11 _ _ idmap.
-
-(* Definition functor_id {A : Category} : Functor A A := 
-{| Functor.fmap := idmap;
-   Functor.class_of := 
-   {| Functor.is0functor := _ ; 
-      Functor.is1functor := _|}
-|}.
-
-Definition functor_compose {A B C : Category} (G : B $-> C) (F : A $-> B) 
-  : Functor A C  := {|
-    Functor.fmap := compose G F;
-    Functor.class_of := {|
-      Functor.is0functor := _;
-      Functor.is1functor := _
-  |}
-|}. *)
 
 (** ** Naturality *)
 
@@ -677,10 +629,6 @@ Notation "h $@* k" := (ptransformation_compose h k) (at level 40).
 
 Instance Is3GraphCat : Is3Graph Category := fun A B F G => 
    {| Hom (sigma tau : NatTrans F G) := Transformation sigma tau |}.
-(* 
-Definition WildModification {A B : Type} (F G: A -> B)
-  `{Is1Functor A B F} `{!Is0Functor G,!Is1Functor G} 
-  (sigma tau : F $=> G) := Transformation sigma tau. *)
 
 (* TODO: *)
 (* Morphisms of natural transformations - Modifications *)
