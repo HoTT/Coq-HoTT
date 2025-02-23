@@ -1,6 +1,7 @@
 Require Import Basics Types.
 Require Import HSet Limits.Pullback.
 Require Import WildCat Pointed.Core Homotopy.ExactSequence.
+Import WildCat.Core.Strong.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.DirectSum.

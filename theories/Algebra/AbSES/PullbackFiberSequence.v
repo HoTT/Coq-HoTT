@@ -1,5 +1,6 @@
 Require Import Basics Types HSet HFiber Limits.Pullback.
 Require Import WildCat Pointed.Core Homotopy.ExactSequence.
+Import WildCat.Core.Strong.
 Require Import Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.Pullback. 
