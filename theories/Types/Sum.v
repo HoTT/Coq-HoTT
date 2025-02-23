@@ -592,11 +592,13 @@ Defined.
 Global Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_sum f g) | 1000.
 Proof.
-  apply (isequiv_adjointify
-           (functor_sum f g)
-           (functor_sum f^-1 g^-1));
-  [ intros [?|?]; simpl; apply ap; apply eisretr
-  | intros [?|?]; simpl; apply ap; apply eissect ].
+  snrapply Build_IsEquiv.
+  - exact (functor_sum f^-1 g^-1).
+  - intros [?|?]; simpl; apply ap; apply eisretr.
+  - intros [?|?]; simpl; apply ap; apply eissect.
+  - intros [?|?]; simpl; lhs nrapply (ap _ (eisadj _ _)); symmetry.
+    + exact ((ap_compose inl _ _)^ @ ap_compose f inl _).
+    + exact ((ap_compose inr _ _)^ @ ap_compose g inr _).
 Defined.
 
 Definition equiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}

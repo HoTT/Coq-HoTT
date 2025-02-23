@@ -237,19 +237,16 @@ Defined.
 Global Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_prod f g) | 1000.
 Proof.
-  refine (Build_IsEquiv
-            _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
-            (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z))
-                      @ eta_prod z)
-            (fun w => path_prod' (eissect f (fst w)) (eissect g (snd w))
-                      @ eta_prod w)
-            _).
-  intros [a b]; simpl.
-  unfold path_prod'.
-  rewrite !concat_p1.
-  rewrite ap_functor_prod.
-  rewrite !eisadj.
-  reflexivity.
+  snrapply Build_IsEquiv.
+  - exact (functor_prod f^-1 g^-1).
+  - intro z.
+    exact (path_prod' (eisretr f _) (eisretr g _)).
+  - intro w.
+    exact (path_prod' (eissect f _) (eissect g _)).
+  - intros [a b]; simpl.
+    lhs nrapply (ap (fun p => path_prod' p _) (eisadj f _)).
+    rhs nrapply ap_functor_prod.
+    nrapply (ap _ (eisadj g _)).
 Defined.
 
 Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}

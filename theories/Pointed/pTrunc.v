@@ -159,7 +159,7 @@ Defined.
 
 (** ** Truncatedness of [pForall] and [pMap] *)
 
-(** Buchholtz-van Doorn-Rijke, Theorem 4.2:  Let [j >= -1] and [n >= -2].  When [X] is [j]-connected and [Y] is a pointed family of [j+k+1]-truncated types, the type of pointed sections is [n]-truncated.  We formalize it with [j] replaced with a trunc index [m], and so there is a shift compared to the informal statement. This version also allows [n] to be one smaller than BvDR allow. *)
+(** Buchholtz-van Doorn-Rijke, Theorem 4.2:  Let [j >= -1] and [n >= -2].  When [X] is [j]-connected and [Y] is a pointed family of [j+n+1]-truncated types, the type of pointed sections is [n]-truncated.  We formalize it with [j] replaced with a trunc index [m.+1] to enforce [j >= -1]. This version also allows [n] to be one smaller than BvDR allow. *)
 Definition istrunc_pforall `{Univalence} {m n : trunc_index}
   (X : pType@{u}) {iscX : IsConnected m.+1 X}
   (Y : pFam@{u v} X) {istY : forall x, IsTrunc (n +2+ m) (Y x)}
@@ -175,7 +175,7 @@ Definition istrunc_pmap `{Univalence} {m n : trunc_index} (X Y : pType)
   : IsTrunc n (X ->* Y)
   := istrunc_pforall X (pfam_const Y).
 
-(** We can give a different proof of the [n = -1] case (with the conclusion upgraded to contractibility).  This proof works for any reflective subuniverse and avoids univalence.  Is it possible to generalize this to dependent functions while still avoiding univalence and/or keeping [O] a general RSU or modality?  Can [istrunc_pmap] be proven without univalence?  What about [istrunc_pforall]?  If the [n = -2] or [n = -1] cases can be proven without univalence, the rest can be done inductively without univalence. *)
+(** We can give a different proof of the [n = -1] case (with the conclusion upgraded to contractibility).  This proof works with [Tr (m.+1)] replaced with any reflective subuniverse [O] and doesn't require univalence.  Is it possible to generalize this to dependent functions while still avoiding univalence and/or keeping [O] a general RSU or modality?  Can [istrunc_pmap] be proven without univalence?  What about [istrunc_pforall]?  If the [n = -2] or [n = -1] cases can be proven without univalence, the rest can be done inductively without univalence. *)
 Definition contr_pmap_isconnected_inO `{Funext} (O : ReflectiveSubuniverse)
   (X : pType) `{IsConnected O X} (Y : pType) `{In O Y}
   : Contr (X ->* Y).

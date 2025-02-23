@@ -1,5 +1,5 @@
 (** * Unicode notations for categories *)
-Local Set Warnings Append "-notation-overridden".
+Local Set Warnings "-notation-overridden".
 Require Export HoTT.Categories.Notations.
 Require Export Category.Utf8 Functor.Utf8 NaturalTransformation.Utf8.
 Require Export Comma.Utf8.

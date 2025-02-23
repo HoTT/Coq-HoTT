@@ -6,9 +6,9 @@ Require Import NaturalTransformation.Identity.
 Require Import FunctorCategory.Core Cat.Core.
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Comma.Core.
-Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
+Local Set Warnings "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
-Local Set Warnings Append "notation-overridden".
+Local Set Warnings "notation-overridden".
 Require Import HoTT.Tactics.
 Require Import Basics.Tactics.
 

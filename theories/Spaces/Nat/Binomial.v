@@ -96,9 +96,8 @@ Proof.
   (* The case when [m = n]. *)
   { rewrite nat_sub_cancel.
     rewrite nat_mul_one_r.
-    rewrite nat_div_cancel.
-    1: nrapply nat_choose_diag.
-    exact _. }
+    rhs rapply nat_div_cancel.
+    nrapply nat_choose_diag. }
   (* The case with [n.+1] and [m.+1] with [m < n] and an induction hypothesis. *)
   intros m H IHn.
   rewrite_refl nat_choose_succ.

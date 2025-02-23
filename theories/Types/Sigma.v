@@ -397,22 +397,20 @@ Global Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
   : IsEquiv (functor_sigma f g) | 1000.
 Proof.
-  refine (isequiv_adjointify (functor_sigma f g)
-                             (functor_sigma (f^-1)
-                                            (fun x y => ((g (f^-1 x))^-1 ((eisretr f x)^ # y)))) _ _);
-  intros [x y].
-  - refine (path_sigma' _ (eisretr f x) _); simpl.
-    abstract (
-        rewrite (eisretr (g (f^-1 x)));
-        apply transport_pV
-      ).
-  - refine (path_sigma' _ (eissect f x) _); simpl.
-    refine ((ap_transport (eissect f x) (fun x' => (g x') ^-1)
-                          (transport Q (eisretr f (f x)) ^ (g x y)))^ @ _).
-    abstract (
-        rewrite transport_compose, eisadj, transport_pV;
-        apply eissect
-      ).
+  snrapply isequiv_adjointify.
+  - nrapply (functor_sigma f^-1).
+    exact (fun b q => (g (f^-1 b))^-1 ((transport Q (eisretr f b)^) q)).
+  - intros [b q].
+    apply (path_sigma' _ (eisretr f _)); simpl.
+    lhs nrapply (ap _ (eisretr (g (f^-1 _)) _)).
+    apply transport_pV.
+  - intros [a p].
+    apply (path_sigma' _ (eissect f _)); simpl.
+    lhs_V rapply (ap_transport _ (fun a' => (g a') ^-1) _).
+    lhs nrapply (ap _ (transport_compose _ _ _ _)).
+    lhs_V nrapply (ap (fun x => (g _)^-1 (transport Q x _)) (eisadj f _)).
+    lhs nrapply (ap _ (transport_pV _ _ _)).
+    apply eissect.
 Defined.
 
 Definition equiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}

@@ -18,9 +18,9 @@ Fixpoint code_nat (m n : nat) {struct m} : DProp.DHProp :=
               end
   end.
 
-Local Set Warnings Append "-notation-overridden".
+Local Set Warnings "-notation-overridden".
 Notation "x =n y" := (code_nat x y) : nat_scope.
-Local Set Warnings Append "notation-overridden".
+Local Set Warnings "notation-overridden".
 Bind Scope nat_scope with nat.
 Axiom equiv_path_nat :
   forall n m : nat,
