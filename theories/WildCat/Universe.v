@@ -1,7 +1,7 @@
 Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.PathGroupoids.
 Require Import Types.Equiv.
 Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat.
-
+Import WildCat.Core.Strong.
 (** ** The (1-)category of types *)
 
 Global Instance isgraph_type@{u v} : IsGraph@{v u} Type@{u}
@@ -48,6 +48,8 @@ Global Instance is1cat_strong_type : Is1Cat_Strong Type.
 Proof.
   srapply Build_Is1Cat_Strong; cbn; intros; reflexivity.
 Defined.
+
+Global Instance is1cat_type : Is1Cat Type := _.
 
 Global Instance hasmorext_type `{Funext} : HasMorExt Type.
 Proof.

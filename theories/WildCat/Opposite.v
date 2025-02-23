@@ -1,5 +1,6 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
+Import WildCat.Core.Strong.
 
 (** ** Opposite categories *)
 
