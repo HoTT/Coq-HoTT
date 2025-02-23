@@ -839,9 +839,9 @@ Proof.
     exact (isequiv_adjointify f g p q).
 Defined.
 
-Global Instance is1cat_strong `{Funext} : Is1Cat_Strong Group.
+Global Instance is1cat_strong `{Funext} : Strong.Is1Cat_Strong Group.
 Proof.
-  rapply Build_Is1Cat_Strong.
+  rapply Strong.Build_Is1Cat_Strong.
   all: intros; apply equiv_path_grouphomomorphism; intro; reflexivity.
 Defined.
 

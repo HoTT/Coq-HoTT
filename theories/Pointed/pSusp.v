@@ -288,13 +288,15 @@ Proof.
   exact (fmap_comp psusp g f).
 Defined.
 
-Global Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
+Module Strong.
+Import WildCat.Core.Strong.
+Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
   : Is1Natural (opyon (psusp A)) (opyon A o loops)
       (loop_susp_adjoint A).
 Proof.
   snrapply Build_Is1Natural.
   intros B B' g f.
-  refine ( _ @ cat_assoc_strong _ _ _).
+  refine ( _ @ Strong.cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).
   apply path_pforall.
   rapply (fmap_comp loops).
@@ -305,4 +307,5 @@ Lemma natequiv_loop_susp_adjoint_r `{Funext} (A : pType)
 Proof.
   rapply Build_NatEquiv.
 Defined.
-
+End Strong.
+Export Strong.

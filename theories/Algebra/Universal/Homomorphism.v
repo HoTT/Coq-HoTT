@@ -9,6 +9,8 @@ Require Export
 Require Import
   HoTT.Types.
 
+Import HoTT.WildCat.Core.Strong.
+
 Local Open Scope Algebra_scope.
 
 Section is_homomorphism.

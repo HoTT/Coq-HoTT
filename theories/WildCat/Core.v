@@ -173,6 +173,19 @@ Record RetractionOf {A} `{Is1Cat A} {a b : A} (f : a $-> b) :=
     is_retraction : comp_left_inverse $o f $== Id a
   }.
 
+(** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
+Class HasMorExt (A : Type) `{Is1Cat A} := {
+  isequiv_Htpy_path : forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
+}.
+
+Global Existing Instance isequiv_Htpy_path.
+
+Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g)
+  : f = g
+  := GpdHom_path^-1 p.
+
+Module Strong.
+
 (** Often, the coherences are actually equalities rather than homotopies. *)
 Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
 {
@@ -197,7 +210,7 @@ Arguments cat_assoc_opp_strong {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl_strong {_ _ _ _ _ _ _} f.
 Arguments cat_idr_strong {_ _ _ _ _ _ _} f.
 
-Global Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
+Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
   : Is1Cat A | 1000.
 Proof.
   srapply Build_Is1Cat.
@@ -211,6 +224,19 @@ Proof.
   - intros; apply GpdHom_path, cat_idl_strong.
   - intros; apply GpdHom_path, cat_idr_strong.
 Defined.
+
+(** A 1-category with morphism extensionality induces a strong 1-category *)
+Instance is1cat_strong_hasmorext {A : Type} `{HasMorExt A}
+  : Is1Cat_Strong A.
+Proof.
+  rapply Build_Is1Cat_Strong; hnf; intros; apply path_hom.
+  + apply cat_assoc.
+  + apply cat_assoc_opp.
+  + apply cat_idl.
+  + apply cat_idr.
+Defined.
+
+End Strong.
 
 (** Initial objects *)
 Definition IsInitial {A : Type} `{Is1Cat A} (x : A)
@@ -239,28 +265,6 @@ Definition mor_terminal_unique {A : Type} `{Is1Cat A} (x y : A) {h : IsTerminal 
   (f : x $-> y)
   : mor_terminal x y $== f
   := (h x).2 f.
-
-(** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
-Class HasMorExt (A : Type) `{Is1Cat A} := {
-  isequiv_Htpy_path : forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
-}.
-
-Global Existing Instance isequiv_Htpy_path.
-
-Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g)
-  : f = g
-  := GpdHom_path^-1 p.
-
-(** A 1-category with morphism extensionality induces a strong 1-category *)
-Global Instance is1cat_strong_hasmorext {A : Type} `{HasMorExt A}
-  : Is1Cat_Strong A.
-Proof.
-  rapply Build_Is1Cat_Strong; hnf; intros; apply path_hom.
-  + apply cat_assoc.
-  + apply cat_assoc_opp.
-  + apply cat_idl.
-  + apply cat_idr.
-Defined.
 
 (** A 1-functor acts on 2-cells (satisfying no axioms) and also preserves composition and identities up to a 2-cell. *)
   (* The [!] tells Coq to use typeclass search to find the [IsGraph] parameters of [Is0Functor] instead of assuming additional copies of them. *)

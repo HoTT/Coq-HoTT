@@ -3,6 +3,7 @@ Require Import Basics.PathGroupoids.
 Require Import Basics.Tactics.
 Require Import Types.Sigma.
 Require Import WildCat.Core.
+Import WildCat.Core.Strong.
 Require Import WildCat.Prod.
 
 Class IsDGraph {A : Type} `{IsGraph A} (D : A -> Type)

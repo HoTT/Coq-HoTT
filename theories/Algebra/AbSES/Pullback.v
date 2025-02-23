@@ -444,7 +444,7 @@ Proof.
   nrefine (_ @ (ap (fun x => x $@ _)) _).
   2: { refine (_ @ ap _ equiv_path_absesV_1^).
        exact (fmap_id_strong _ _)^. }
-  exact (cat_idr_strong _)^.
+  exact (Strong.cat_idr_strong _)^.
 Defined.
 
 Definition equiv_hfiber_abses_pullback `{Univalence} {A B B' : AbGroup} {f : B' $-> B}
