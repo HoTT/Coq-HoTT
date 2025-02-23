@@ -1,7 +1,7 @@
 Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.PathGroupoids.
 Require Import Types.Equiv.
 Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat.
-
+Import WildCat.Core.Strong.
 (** ** The (1-)category of types *)
 
 Global Instance isgraph_type@{u v} : IsGraph@{v u} Type@{u}
@@ -57,6 +57,8 @@ Proof.
   intros p.
   destruct p; reflexivity.
 Defined.
+
+Global Instance is1cat_type : Is1Cat Type := _.
 
 Global Instance hasequivs_type : HasEquivs Type.
 Proof.

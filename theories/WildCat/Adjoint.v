@@ -1,5 +1,6 @@
 Require Import Basics.Utf8 Basics.Overture Basics.Tactics Basics.Equivalences.
 Require Import WildCat.Core.
+Import WildCat.Core.Strong.
 Require Import WildCat.NatTrans.
 Require Import WildCat.Equiv.
 Require Import WildCat.Prod.
@@ -161,7 +162,7 @@ Section AdjunctionData.
     : equiv_adjunction adj x y f = fmap G f $o adjunction_counit x.
   Proof.
     refine (_ @ is1natural_equiv_adjunction_r adj _ _ _ _ _).
-    by cbv; rewrite (cat_idr_strong f).
+    by cbv; rewrite (Strong.cat_idr_strong f).
   Qed.
 
   Lemma triangle_helper2 x y g

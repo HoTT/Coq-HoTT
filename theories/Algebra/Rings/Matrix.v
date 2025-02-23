@@ -1013,7 +1013,8 @@ Defined.
 
 (** Skew-symmetric matrices degenerate to symmetric matrices in rings with characteristic 2. In odd characteristic the module of matrices can be decomposed into the direct sum of symmetric and skew-symmetric matrices. *)
 
-Section MatrixCat.
+Module MatrixCat.
+  Import WildCat.Core.Strong.
 
   (** The wild category [MatrixCat R] of [R]-valued matrices. This category has natural numbers as objects and m x n matrices as the arrows between [m] and [n]. *)
   Definition MatrixCat (R : Ring) := nat.
@@ -1047,3 +1048,4 @@ Section MatrixCat.
 (** TODO: Define HasEquivs for MatrixCat.  *)
 
 End MatrixCat.
+Export MatrixCat.
