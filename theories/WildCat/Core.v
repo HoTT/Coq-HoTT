@@ -197,8 +197,8 @@ Arguments cat_assoc_opp_strong {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl_strong {_ _ _ _ _ _ _} f.
 Arguments cat_idr_strong {_ _ _ _ _ _ _} f.
 
-Global Instance is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
-  : Is1Cat A | 1000.
+Definition is1cat_is1cat_strong (A : Type) `{Is1Cat_Strong A}
+  : Is1Cat A.
 Proof.
   srapply Build_Is1Cat.
   all: intros a b.
@@ -211,6 +211,8 @@ Proof.
   - intros; apply GpdHom_path, cat_idl_strong.
   - intros; apply GpdHom_path, cat_idr_strong.
 Defined.
+
+Hint Immediate is1cat_is1cat_strong : typeclass_instances.
 
 (** Initial objects *)
 Definition IsInitial {A : Type} `{Is1Cat A} (x : A)
