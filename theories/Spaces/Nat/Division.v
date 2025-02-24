@@ -646,7 +646,7 @@ Proof.
   rapply nat_div_mul_cancel_r.
 Defined.
 
-Definition nat_divides_div_l n m l
+Definition nat_divides_l_div n m l
   : 0 < m -> (m | n) -> (n | l * m) -> (n / m | l).
 Proof.
   intros H1 H2 [y q].
@@ -655,7 +655,7 @@ Proof.
   by rapply nat_div_moveR_nV.
 Defined.
 
-Definition nat_divides_div_r n m l
+Definition nat_divides_r_div n m l
   : (n * l | m) -> (n | m / l).
 Proof.
   destruct l; only 1: exact _.
@@ -1014,7 +1014,7 @@ Proof.
   apply nat_moveR_nV in p.
   rewrite nat_div_mul_l.
   2: exact _.
-  rapply nat_divides_div_l.
+  rapply nat_divides_l_div.
   destruct p.
   rewrite nat_dist_sub_l.
   napply nat_divides_sub.
