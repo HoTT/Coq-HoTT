@@ -889,7 +889,7 @@ Defined.
 (** Products of ideals are included in their left factor *)
 Definition ideal_product_subset_l {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ I.
 Proof.
-  nrapply subgroup_generated_subset_subgroup.
+  nrapply subgroup_generated_rec.
   intros _ [].
   by rapply isrightideal.
 Defined.
@@ -897,7 +897,7 @@ Defined.
 (** Products of ideals are included in their right factor. *)
 Definition ideal_product_subset_r {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ J.
 Proof.
-  nrapply subgroup_generated_subset_subgroup.
+  nrapply subgroup_generated_rec.
   intros _ [].
   by rapply isleftideal.
 Defined.
@@ -951,7 +951,7 @@ Definition ideal_product_assoc {R : Ring} (I J K : Ideal R)
 Proof.
   assert (f : forall (R : Ring) (I J K : Ideal R), I ⋅ (J ⋅ K) ⊆ (I ⋅ J) ⋅ K).
   - clear R I J K; intros R I J K.
-    nrapply subgroup_generated_subset_subgroup.
+    nrapply subgroup_generated_rec.
     intros _ [r s IHr IHs].
     revert IHs.
     rapply (functor_subgroup_generated _ _ (grp_homo_rng_left_mult r)); clear s.
