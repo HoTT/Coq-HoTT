@@ -39,6 +39,7 @@ Definition groupcoeq_rec {A B C : Group} (f g : A $-> B)
 Proof.
   rapply (AmalgamatedFreeProduct_rec C (h $o f) h).
   snrapply freeproduct_ind_homotopy.
+  (** The goals generated are very simple, but we give explicit proofs with wild cat terms to stop Coq from unfolding terms when checking the proof. Note that the category of groups is definitionally associative. *)
   - refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
     exact ((_ $@L freeproduct_rec_beta_inl _ _) $@ cat_idr _
       $@ (_ $@L freeproduct_rec_beta_inl _ _)^$).
