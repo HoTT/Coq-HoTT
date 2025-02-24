@@ -351,8 +351,6 @@ Proof.
   intros a b f; exact (fmap G (fmap F f)).
 Defined.
 
-Hint Immediate is0functor_compose : typeclass_instances.
-
 Global Instance is1functor_compose {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
