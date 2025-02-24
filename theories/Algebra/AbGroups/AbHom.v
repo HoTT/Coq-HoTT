@@ -6,7 +6,6 @@ Require Import Groups.QuotientGroup AbelianGroup Biproduct.
 
 (** In this file, we use additive notation for the group operation, even though some of the groups we deal with are not assumed to be abelian. *)
 Local Open Scope mc_add_scope.
-(* Local Arguments cat_comp {A} & {H _ _ _}. *)
 
 (** The sum of group homomorphisms [f] and [g] is [fun a => f(a) + g(a)].  While the group *laws* require [Funext], the operations do not, so we make them instances. *)
 Global Instance sgop_hom {A : Group} {B : AbGroup} : SgOp (A $-> B).
