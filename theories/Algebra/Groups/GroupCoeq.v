@@ -49,47 +49,29 @@ Proof.
 Defined.
 
 (** TODO: unify this with [groupcoeq_rec]. It will require doing the analagous thing for [AmalgamatedFreeProduct]. *)
-Definition equiv_groupcoeq_rec `{Funext} {A B C : Group} (f g : GroupHomomorphism A B)
-  : {h : B $-> C & h o f == h o g} <~> (GroupCoeq f g $-> C).
+Definition equiv_groupcoeq_rec `{Funext} {A B C : Group} (f g : A $-> B)
+  : {h : B $-> C & h $o f $== h $o g} <~> (GroupCoeq f g $-> C).
 Proof.
-  refine (equiv_amalgamatedfreeproduct_rec _ _ _ _ _ _ oE _).
-  refine (equiv_sigma_symm _ oE _).
-  apply equiv_functor_sigma_id.
+  nrefine (equiv_amalgamatedfreeproduct_rec _ _ _ _ _ _ oE _).
+  nrefine (equiv_sigma_symm _ oE _).
+  nrapply equiv_functor_sigma_id.
   intros h.
-  snapply equiv_adjointify.
-  { intros p.
-    exists (grp_homo_compose h f).
-    hnf; intro x.
-    refine (p _ @ _).
-    revert x.
-    rapply Trunc_ind.
-    srapply Coeq_ind_hprop.
-    intros w. hnf.
-    induction w.
-    1: apply ap, grp_homo_unit.
-    simpl.
-    destruct a as [a|a].
-    1,2: refine (ap _ (grp_homo_op _ _ _) @ _).
-    1,2: napply grp_homo_op_agree; trivial.
-    symmetry.
-    apply p. }
-  { intros [k p] x.
-    assert (q1 := p (freeproduct_inl x)).
-    assert (q2 := p (freeproduct_inr x)).
-    simpl in q1, q2.
-    rewrite 2 right_identity in q1, q2.
-    exact (q1^ @ q2). }
-  { hnf. intros [k p].
-    apply path_sigma_hprop.
-    simpl.
-    apply equiv_path_grouphomomorphism.
-    intro y.
-    pose (q1 := p (freeproduct_inl y)).
-    simpl in q1.
-    rewrite 2 right_identity in q1.
-    symmetry.
-    exact q1. }
-  hnf; intros; apply path_ishprop.
+  transitivity {b : A $-> C & (b $== h $o f) * (b $== h $o g)}%type.
+  { nrefine (equiv_functor_sigma_id (fun b => equiv_sigma_prod0 _ _) oE _).
+    nrefine ((equiv_sigma_assoc' _ _)^-1 oE _).
+    transitivity {fp' : {f' : A $-> C & f' = h $o f} & fp'.1 $== h $o g}.
+    - refine ((@equiv_contr_sigma _ _ _)^-1 oE _).
+      reflexivity.
+    - exact (equiv_functor_sigma_pb
+        (equiv_functor_sigma_id (fun _ => equiv_path_grouphomomorphism))^-1). }
+  snrapply equiv_functor_sigma_id.
+  intros h'.
+  nrefine (equiv_freeproduct_ind_homotopy _ _ oE _).
+  snrapply equiv_functor_prod'.
+  - snrapply equiv_functor_forall_id; simpl; intros a.
+    by rewrite 2 grp_unit_r.
+  - snrapply equiv_functor_forall_id; simpl; intros a.
+    by rewrite 2 grp_unit_r.
 Defined.
 
 Definition groupcoeq_ind_hprop {G H : Group} {f g : G $-> H}

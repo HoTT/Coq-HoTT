@@ -14,6 +14,7 @@ Local Open Scope mc_mult_scope.
 
 (** We wish to define the amalgamated free product of a span of group homomorphisms f : G -> H, g : G -> K as the following HIT:
 
+<<
   HIT M(f,g)
    | amal_eta : list (H + K) -> M(f,g)
    | mu_H : forall (x y : list (H + K)) (h1 h2 : H),
@@ -26,6 +27,7 @@ Local Open Scope mc_mult_scope.
       amal_eta (x ++ [inl mon_unit] ++ y) = amal_eta (x ++ y)
    | omega_K : forall (x y : list (H + K)),
       amal_eta (x ++ [inr mon_unit] ++ y) = amal_eta (x ++ y).
+>>
 
   We will build this HIT up successively out of coequalizers. *)
 
@@ -624,7 +626,7 @@ Section FreeProduct.
   Defined.
 
   Theorem equiv_amalgamatedfreeproduct_rec `{Funext} (X : Group)
-    : {h : H $-> X & {k : K $-> X & h o f == k o g }}
+    : {h : H $-> X & {k : K $-> X & h $o f $== k $o g }}
       <~> (AmalgamatedFreeProduct $-> X).
   Proof.
     snapply equiv_adjointify.
@@ -678,8 +680,8 @@ Section FreeProduct.
         by apply Hop.
   Defined.
 
-  Definition amalgamatedfreeproduct_ind_homotopy
-    {k k' : AmalgamatedFreeProduct $-> G}
+  Definition amalgamatedfreeproduct_ind_homotopy (P : Group)
+    {k k' : AmalgamatedFreeProduct $-> P}
     (l : k $o amal_inl $== k' $o amal_inl)
     (r : k $o amal_inr $== k' $o amal_inr)
     : k $== k'.
@@ -688,6 +690,16 @@ Section FreeProduct.
     intros x y; napply grp_homo_op_agree. (* A bit slow, ~0.05s *)
   Defined. (* A bit slow, ~0.05s *)
 
+  Definition equiv_amalgamatedfreeproduct_ind_homotopy `{Funext} (P : Group)
+    (k k' : AmalgamatedFreeProduct $-> P)
+    : (k $o amal_inl $== k' $o amal_inl) * (k $o amal_inr $== k' $o amal_inr)
+      <~> k $== k'.
+  Proof.
+    rapply equiv_iff_hprop.
+    - exact (uncurry (amalgamatedfreeproduct_ind_homotopy P)).
+    - intros p; split; exact (p $@R _).
+  Defined.
+
 End FreeProduct.
 
 Arguments amal_eta {G H K f g} x.
@@ -695,7 +707,8 @@ Arguments amal_inl {G H K f g}.
 Arguments amal_inr {G H K f g}.
 Arguments AmalgamatedFreeProduct_rec {G H K f g}.
 Arguments amalgamatedfreeproduct_ind_hprop {G H K f g} _ {_}.
-Arguments amalgamatedfreeproduct_ind_homotopy {G H K f g _}.
+Arguments amalgamatedfreeproduct_ind_homotopy {G H K f g P k k'} l r.
+Arguments equiv_amalgamatedfreeproduct_ind_homotopy {G H K f g _ P} k k'.
 Arguments amal_glue {G H K f g}.
 
 Definition FreeProduct (G H : Group) : Group
@@ -712,7 +725,7 @@ Definition FreeProduct_rec {G H K : Group} (f : G $-> K) (g : H $-> K)
 Proof.
   snapply (AmalgamatedFreeProduct_rec _ f g).
   intros [].
-  exact (grp_homo_unit _ @ (grp_homo_unit _)^).
+  exact (grp_homo_unit f @ (grp_homo_unit g)^).
 Defined.
 
 Definition freeproduct_ind_hprop {G H} (P : FreeProduct G H -> Type)
@@ -727,11 +740,15 @@ Definition freeproduct_ind_homotopy {G H K : Group}
   {f f' : FreeProduct G H $-> K}
   (l : f $o freeproduct_inl $== f' $o freeproduct_inl)
   (r : f $o freeproduct_inr $== f' $o freeproduct_inr)
-  : f $== f'.
-Proof.
-  rapply (freeproduct_ind_hprop _ l r).
-  intros x y; napply grp_homo_op_agree. (* Slow, ~0.2s. *)
-Defined. (* Slow, ~0.15s. *)
+  : f $== f'
+  := amalgamatedfreeproduct_ind_homotopy l r.
+
+Definition equiv_freeproduct_ind_homotopy {Funext : Funext} {G H K : Group}
+  (f f' : FreeProduct G H $-> K)
+  : (f $o freeproduct_inl $== f' $o freeproduct_inl)
+    * (f $o freeproduct_inr $== f' $o freeproduct_inr)
+    <~> f $== f'
+  := equiv_amalgamatedfreeproduct_ind_homotopy _ _.
 
 Definition freeproduct_rec_beta_inl {G H K : Group}
   (f : G $-> K) (g : H $-> K)
