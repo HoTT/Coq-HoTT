@@ -665,7 +665,7 @@ Proof.
   by lhs_V napply nat_mul_assoc.
 Defined.
 
-Definition nat_divides_div_r_inv n m l
+Definition nat_divides_l_mul n m l
   : (l | m) -> (n | m / l) -> (n * l | m).
 Proof.
   intros H [k p].
