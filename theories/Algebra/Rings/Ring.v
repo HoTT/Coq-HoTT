@@ -261,7 +261,7 @@ Global Instance isgraph_ring : IsGraph Ring
   := Build_IsGraph _ RingHomomorphism.
 
 Global Instance is01cat_ring : Is01Cat Ring
-  := Build_Is01Cat _ _ rng_homo_id (@rng_homo_compose).
+  := Build_Is01Cat Ring _ rng_homo_id (@rng_homo_compose).
 
 Global Instance is2graph_ring : Is2Graph Ring
   := fun A B => isgraph_induced (@rng_homo_map A B : _ -> (group_type _ $-> _)).

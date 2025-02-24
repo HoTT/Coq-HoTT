@@ -78,11 +78,10 @@ Definition AbSES (B A : AbGroup@{u}) : pType
   := [AbSES' B A, _].
 
 (** ** Paths in [AbSES B A] *)
-
 Definition abses_path_data_iso
   {B A : AbGroup@{u}} (E F : AbSES B A)
   := {phi : GroupIsomorphism E F
-            & (phi $o inclusion _ == inclusion _)
+            & (cat_comp (A:=Group) phi (inclusion _) == inclusion _)
               * (projection _ == projection _ $o phi)}.
 
 (** Having the path data in a slightly different form is useful for [equiv_path_abses_iso]. *)
@@ -90,7 +89,7 @@ Local Lemma shuffle_abses_path_data_iso `{Funext}
   {B A : AbGroup@{u}} (E F : AbSES B A)
   : (abses_path_data_iso E F)
       <~> {phi : GroupIsomorphism E F
-                 & (phi $o inclusion _ == inclusion _)
+                 & (cat_comp (A:=Group) phi (inclusion _) == inclusion _)
                    * (projection _ $o grp_iso_inverse phi
                       == projection _)}.
 Proof.
@@ -115,7 +114,7 @@ Proof.
   1: exact equiv_path_abgroup.
   intro q; lazy beta.
   snrefine (equiv_concat_l _ _ oE _).
-  1: exact (q $o inclusion _, projection _ $o grp_iso_inverse q).
+  1: exact (cat_comp (A:=Group) q (inclusion _), projection _ $o grp_iso_inverse q).
   2: { refine (equiv_path_prod _ _ oE _).
        exact (equiv_functor_prod'
                 equiv_path_grouphomomorphism
@@ -139,7 +138,7 @@ Defined.
 
 Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
   {E F : AbSES B A}
-  (phi : GroupIsomorphism E F) (p : phi $o inclusion _ == inclusion _)
+  (phi : GroupIsomorphism E F) (p : cat_comp (A:=Group) phi (inclusion _) == inclusion _)
   (q : projection _ == projection _ $o phi)
   : E = F := equiv_path_abses_iso (phi; (p,q)).
 
@@ -148,7 +147,7 @@ Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
 (** A special case of the "short 5-lemma" where the two outer maps are (definitionally) identities. *)
 Lemma short_five_lemma {B A : AbGroup@{u}}
   {E F : AbSES B A} (phi : GroupHomomorphism E F)
-  (p0 : phi $o inclusion E == inclusion F) (p1 : projection E == projection F $o phi)
+  (p0 : cat_comp (A:=Group) phi (inclusion E) == inclusion F) (p1 : projection E == projection F $o phi)
   : IsEquiv phi.
 Proof.
   apply isequiv_surj_emb.
@@ -186,7 +185,7 @@ Defined.
 (** Below we prove that homomorphisms respecting [projection] and [inclusion] correspond to paths in [AbSES B A]. We refer to such homomorphisms simply as path data in [AbSES B A]. *)
 Definition abses_path_data {B A : AbGroup@{u}} (E F : AbSES B A)
   := {phi : GroupHomomorphism E F
-            & (phi $o inclusion _ == inclusion _)
+            & (cat_comp (A:=Group) phi (inclusion _) == inclusion _)
               * (projection _ == projection _ $o phi)}.
 
 Definition abses_path_data_to_iso {B A : AbGroup@{u}} (E F: AbSES B A)

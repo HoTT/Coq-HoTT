@@ -270,7 +270,7 @@ End Subgroups.
 Global Instance isgraph_oogroup : IsGraph ooGroup
   := Build_IsGraph _ ooGroupHom.
 Global Instance is01cat_oogroup : Is01Cat ooGroup
-  := Build_Is01Cat _ _ grouphom_idmap (@grouphom_compose).
+  := Build_Is01Cat ooGroup _ grouphom_idmap (@grouphom_compose).
 Global Instance is2graph_oogroup : Is2Graph ooGroup
   := is2graph_induced classifying_space.
 Global Instance is1cat_oogroup : Is1Cat ooGroup

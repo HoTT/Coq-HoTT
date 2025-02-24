@@ -12,7 +12,7 @@ Local Open Scope mc_add_scope.
 
 Definition ab_pushout_subgroup {A B C : AbGroup} (f : A $-> B) (g : A $-> C)
   : Subgroup (ab_biprod B C)
-  := grp_image (ab_biprod_corec (ab_homo_negation $o f) g).
+  := grp_image (ab_biprod_corec (cat_comp (A:=Group) ab_homo_negation f) g).
 
 Definition ab_pushout {A B C : AbGroup}
            (f : A $-> B) (g : A $-> C) : AbGroup
