@@ -17,6 +17,12 @@ Defined.
 
 Definition Sequence := Diagram sequence_graph.
 
+Definition sequence_arr (X : Sequence) (n : nat) : X n -> X n.+1.
+Proof.
+  snrapply arr.
+  exact idpath.
+Defined.
+
 Definition Build_Sequence
   (X : nat -> Type)
   (f : forall n, X n -> X n.+1)
@@ -27,6 +33,21 @@ Proof.
   intros ? ? p.
   destruct p.
   apply f.
+Defined.
+
+Definition Build_SequenceMap
+  {X Y : Sequence}
+  (f : forall n, X n -> Y n)
+  (H : forall n, f n.+1 o (sequence_arr X n) == (sequence_arr Y n) o f n)
+  : DiagramMap X Y.
+Proof.
+  snrapply Build_DiagramMap.
+  - exact f.
+  - intros i j; revert j.
+    snrapply paths_ind.
+    intros x.
+    symmetry.
+    apply H.
 Defined.
 
 (** A useful lemma to show than two sequences are equivalent. *)
