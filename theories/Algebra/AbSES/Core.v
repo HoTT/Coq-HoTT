@@ -78,7 +78,6 @@ Definition AbSES (B A : AbGroup@{u}) : pType
   := [AbSES' B A, _].
 
 (** ** Paths in [AbSES B A] *)
-(* Local Arguments cat_comp {A} & {H _ _ _}. *)
 Definition abses_path_data_iso
   {B A : AbGroup@{u}} (E F : AbSES B A)
   := {phi : GroupIsomorphism E F
