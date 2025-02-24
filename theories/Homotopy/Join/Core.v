@@ -132,7 +132,7 @@ Section Join.
     : ap (Join_rec P_A P_B P_g) (jglue a b) = P_g a b.
   Proof.
     unfold Join_rec.
-    snrapply Pushout_rec_beta_pglue.
+    snrapply (Pushout_rec_beta_pglue _ _ _ _ (a, b)).
   Defined.
 
   (** If [A] is ipointed, so is [Join A B]. *)
