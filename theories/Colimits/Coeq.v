@@ -176,7 +176,7 @@ Proof.
   snrapply Coeq_ind.
   1: reflexivity.
   intros b.
-  nrapply transport_paths_Flr'.
+  transport_paths transport_paths_Flr.
   apply moveR_pM.
   nrapply functor_coeq_beta_cglue.
 Defined.

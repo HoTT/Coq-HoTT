@@ -154,15 +154,6 @@ Tactic Notation "transport_paths" uconstr(lemma) :=
   nrapply moveR_Vp;
   nrefine (_^).
 
-(** Variants of the above that do the most common rearranging. We could add similar variants for the others as needed. *)
-Definition transport_paths_Flr' {A : Type} {f : A -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = x1) (r : f x2 = x2)
-  (h : (ap f p) @ r = q @ p)
-  : transport (fun x => f x = x) p q = r.
-Proof.
-  by transport_paths transport_paths_Flr.
-Defined.
-
 Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
   (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
   (h : (ap f p) @ r = q @ (ap g p))
