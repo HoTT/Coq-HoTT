@@ -69,8 +69,8 @@ Section Coequalizer.
         | [|- ?G == _ ] => simple refine (Coeq_ind (fun w => G w = F w) _ _)
       end.
       + reflexivity.
-      + intros b; simpl.
-        nrapply (transport_paths_FlFr' (g:=F)).
+      + intros b.
+        transport_paths FlFr.
         apply equiv_p1_1q.
         refine (Coeq_rec_beta_cglue _ _ _ _ @ _).
         apply concat_p1.

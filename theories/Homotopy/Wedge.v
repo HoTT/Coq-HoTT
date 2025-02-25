@@ -89,7 +89,7 @@ Proof.
   snrapply Build_pHomotopy.
   - snrapply (Pushout_ind _ p q).
     intros [].
-    nrapply transport_paths_FlFr'.
+    transport_paths FlFr.
     lhs nrapply (whiskerL _ (dpoint_eq q)).
     rhs nrapply (whiskerR (dpoint_eq p)).
     clear p q.
@@ -241,7 +241,7 @@ Proof.
       * intros [].
         exact (point_eq _ @ (point_eq _)^).
       * intros i; cbn.
-        nrapply transport_paths_FlFr'.
+        transport_paths FlFr.
         lhs nrapply concat_p_pp.
         apply moveR_pV.
         rhs nrapply concat_pp_p.

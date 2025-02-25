@@ -221,8 +221,7 @@ Proof.
     apply path_arrow.
     srapply Circle_ind.
     + reflexivity.
-    + unfold Circle_rec_uncurried; cbn.
-      apply transport_paths_FlFr'.
+    + transport_paths FlFr.
       apply equiv_p1_1q.
       apply Circle_rec_beta_loop.
   - intros [b p]; apply ap.

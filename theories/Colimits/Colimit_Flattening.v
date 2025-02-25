@@ -134,12 +134,12 @@ Section Flattening.
       funext y.
       set (L := cocone_extends Z (cocone_postcompose cocone_E' f)).
       refine (transport_forall _ _ _ @ _).
-      nrapply (transport_paths_FlFr' (f:=fun y0 => L (_; y0))).
+      transport_paths (transport_paths_FlFr (f:=fun y0 => L (_; y0))).
       lhs nrapply concat_p1.
       lhs_V nrapply concat_1p.
       refine (_^ @@ 1).
       lhs rapply (transportD_is_transport E' (fun w => L w = f w)).
-      nrapply transport_paths_FlFr'; apply equiv_p1_1q.
+      transport_paths FlFr; apply equiv_p1_1q.
       rewrite ap_path_sigma.
       rewrite Colimit_ind_beta_colimp.
       rewrite ap10_path_forall.

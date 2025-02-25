@@ -29,8 +29,8 @@ Proof.
   snrapply (isequiv_adjointify _ (susp_to_join A)).
   - snrapply Susp_ind.
     1,2: reflexivity.
-    intros a.
-    apply (transport_paths_FFlr' (f:=susp_to_join A)).
+    intros a; cbn beta.
+    transport_paths FFlr.
     apply equiv_p1_1q.
     lhs nrapply (ap _ _); [nrapply Susp_rec_beta_merid | ].
     lhs nrapply (ap_pp _ _ (jglue false a)^).

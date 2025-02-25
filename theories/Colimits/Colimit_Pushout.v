@@ -138,7 +138,7 @@ Section PO.
         apply ap, eisretr.
       + reflexivity.
       + intro a; cbn.
-        nrapply transport_paths_FFlr'.
+        transport_paths FFlr.
         refine (concat_p1 _ @ _).
         rewrite PO_rec_beta_pp.
         rewrite eisadj.
@@ -192,7 +192,7 @@ Section is_PO_pushout.
         srapply Pushout_ind; cbn.
         1,2: reflexivity.
         intro a; cbn beta.
-        nrapply transport_paths_FlFr'; apply equiv_p1_1q.
+        transport_paths FlFr; apply equiv_p1_1q.
         unfold popp'; cbn.
         rhs_V nrapply concat_p1.
         nrapply Pushout_rec_beta_pglue.
@@ -223,7 +223,7 @@ Section is_PO_pushout.
     snrapply Pushout_ind.
     1, 2: reflexivity.
     intro a; cbn beta.
-    nrapply transport_paths_FlFr'; apply equiv_p1_1q.
+    transport_paths FlFr; apply equiv_p1_1q.
     lhs exact (Pushout_rec_beta_pglue P pushb pushc pusha a).
     symmetry.
     lhs nrapply (ap_compose equiv_pushout_PO _ (pglue a)).
