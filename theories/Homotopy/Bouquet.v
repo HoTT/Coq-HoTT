@@ -1,5 +1,6 @@
 Require Import Basics Types.
 Require Import Pointed WildCat.
+Import WildCat.Core.Strong.
 Require Import Algebra.Groups.
 Require Import Modalities.ReflectiveSubuniverse Truncations.Core.
 Require Import Homotopy.Suspension.
