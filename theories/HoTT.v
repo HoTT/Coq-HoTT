@@ -41,7 +41,6 @@ Require Export HoTT.Universes.Rigid.
 
 Require Export HoTT.Idempotents.
 Require Export HoTT.ExcludedMiddle.
-Require Export HoTT.BoundedSearch.
 
 Require Export HoTT.HIT.Interval.
 Require Export HoTT.HIT.Flattening.
@@ -186,6 +185,7 @@ Require Export HoTT.Sets.Hartogs.
 Require Export HoTT.Sets.Ordinals.
 Require Export HoTT.Sets.Powers.
 
+Require Export HoTT.Misc.BoundedSearch.
 Require Export HoTT.Misc.UStructures.
 
 (** We do _not_ export [UnivalenceAxiom], [FunextAxiom], or any of the files in [Metatheory] from this file.  Thus, importing this file does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)

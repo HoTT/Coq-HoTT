@@ -1250,7 +1250,7 @@ Proof.
   exact _.
 Defined.
 
-(** A common special case.  See also [decidable_search] in BoundedSearch.v for a similar result with different dependencies. *)
+(** A common special case.  See also [decidable_search] in Misc/BoundedSearch.v for a similar result with different dependencies. *)
 Definition decidable_exists_bounded_nat (n : nat) (P : nat -> Type)
   (H2 : forall k, Decidable (P k))
   : Decidable { k : nat & prod (k < n) (P k) }
