@@ -177,15 +177,6 @@ Tactic Notation "transport_paths" "lFFFr" := transport_paths transport_paths_lFF
 Tactic Notation "transport_paths" "FFFlFr" := transport_paths transport_paths_FFFlFr.
 Tactic Notation "transport_paths" "FFlFFr" := transport_paths transport_paths_FFlFFr.
 
-(** Sometimes we are required to reason about the term produced by [transport_paths FlFr] so we give it a name. It is local so to discourage its use. *)
-Local Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
-  (h : (ap f p) @ r = q @ (ap g p))
-  : transport (fun x => f x = g x) p q = r.
-Proof.
-  by transport_paths transport_paths_FlFr.
-Defined.
-
 Definition transport011_paths {A B X} (f : A -> X) (g : B -> X)
   {a1 a2 : A} {b1 b2 : B} (p : a1 = a2) (q : b1 = b2)
   (r : f a1 = g b1)
