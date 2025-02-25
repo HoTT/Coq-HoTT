@@ -61,7 +61,7 @@ Definition Susp_ind_FlFr {X Y : Type} (f g : Susp X -> Y)
 Proof.
   snrapply (Susp_ind _ HN HS).
   intros x.
-  nrapply transport_paths_FlFr'.
+  transport_paths FlFr.
   exact (Hmerid x).
 Defined.
 

@@ -414,12 +414,12 @@ Local Definition isinj_trijoin_rec_inv_helper {J P : Type} {f g : J -> P}
   {H23 : ap f bc @ H3 = H2 @ ap g bc}
   (H123 : prism (ap_triangle f abc) (ap_triangle g abc) H12 H13 H23)
   : (transport_pp (fun x => f x = g x) ab bc H1 @ ap (transport (fun x => f x = g x) bc)
-       (transport_paths_FlFr' ab H1 H2 H12)) @ transport_paths_FlFr' bc H2 H3 H23
-    = transport2 (fun x => f x = g x) abc H1 @ transport_paths_FlFr' ac H1 H3 H13.
+       (Paths.transport_paths_FlFr' ab H1 H2 H12)) @ Paths.transport_paths_FlFr' bc H2 H3 H23
+    = transport2 (fun x => f x = g x) abc H1 @ Paths.transport_paths_FlFr' ac H1 H3 H13.
 Proof.
   revert b c ab ac bc abc H2 H3 H12 H13 H23 H123.
   nrapply triangle_ind; cbn.
-  unfold ap_triangle, transport_paths_FlFr', transport; cbn -[concat_pp_p].
+  unfold ap_triangle, Paths.transport_paths_FlFr', transport; cbn -[concat_pp_p].
   generalize dependent (f a); intro fa; clear f.
   generalize dependent (g a); intro ga; clear g a.
   intros H1 H2 H3 H12 H13 H23.
@@ -445,7 +445,7 @@ Proof.
   1: apply (h1 h).
   1: apply (h2 h).
   1: apply (h3 h).
-  1, 2, 3: intros; nrapply transport_paths_FlFr'.
+  1, 2, 3: intros; transport_paths FlFr.
   1: apply (h12 h).
   1: apply (h13 h).
   1: apply (h23 h).

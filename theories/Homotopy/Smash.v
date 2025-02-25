@@ -231,10 +231,10 @@ Definition Smash_ind_FlFr {A B : pType} {P : Type} (f g : Smash A B -> P)
 Proof.
   snrapply (Smash_ind Hsm Hl Hr).
   - intros a.
-    nrapply transport_paths_FlFr'.
+    transport_paths FlFr.
     exact (Hgluel a).
   - intros b.
-    nrapply transport_paths_FlFr'.
+    transport_paths FlFr.
     exact (Hgluer b).
 Defined.
 

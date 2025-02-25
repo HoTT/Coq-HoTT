@@ -154,7 +154,11 @@ Tactic Notation "transport_paths" uconstr(lemma) :=
   nrapply moveR_Vp;
   nrefine (_^).
 
-Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
+Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
+Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
+Tactic Notation "transport_paths" "FFlFr" := transport_paths transport_paths_FFlFr.
+
+Local Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
   (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
   (h : (ap f p) @ r = q @ (ap g p))
   : transport (fun x => f x = g x) p q = r.

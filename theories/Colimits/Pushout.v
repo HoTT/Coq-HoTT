@@ -98,7 +98,7 @@ Proof.
   snrapply Pushout_ind.
   1, 2: reflexivity.
   intro a; cbn beta.
-  apply transport_paths_FlFr'.
+  transport_paths FlFr.
   apply equiv_p1_1q.
   nrapply Pushout_rec_beta_pglue.
 Defined.

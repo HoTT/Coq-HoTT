@@ -170,7 +170,7 @@ Proof.
                       (concat_pV (merid North)))
                (ap_compose (fun u => merid u @ (merid North)^) (ap S2_to_TwoSphere)
                            (merid North @ (merid South)^))).
-  apply transport_paths_FlFr'; symmetry.
+  transport_paths FlFr; symmetry.
   lhs_V refine (1 @@ ap_pp_concat_pV S2_to_TwoSphere (merid North)).
   lhs_V refine (1 @@ (1 @@ (1 @@
                               (concat_pV_inverse2 (ap S2_to_TwoSphere (merid North))

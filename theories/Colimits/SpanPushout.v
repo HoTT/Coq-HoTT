@@ -114,7 +114,7 @@ Proof.
   - intros y; cbn.
     exact (ap (spushr Q') (k y)).
   - intros x y q.
-    snrapply transport_paths_FlFr'.
+    transport_paths FlFr.
     lhs nrapply whiskerR.
     1: apply spushout_rec_beta_spglue.
     rhs nrapply whiskerL.
