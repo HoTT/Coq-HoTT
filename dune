@@ -129,3 +129,35 @@
   (file file_to_bench))
  (action
   (run echo "Starting bench. This may take a while.")))
+
+; Timing report
+
+(rule
+ (alias timing-html-hint)
+ (deps (universe) %{bin:lua})
+ (action
+  (run echo "Generating timing report. This may take a while.")))
+
+(rule
+ (alias timing-html)
+ (target
+  (dir timing-html))
+ (deps
+  (alias timing-html-hint)
+  etc/generate_coqproject.sh
+  etc/time2html
+  Makefile
+  Makefile.coq.local
+  Makefile.coq.local-early
+  (sandbox always)
+  (sandbox preserve_file_kind)
+  (glob_files_rec ./theories/*.v)
+  (glob_files_rec ./contrib/*.v)
+  (glob_files_rec ./test/*.v))
+ (action
+  (setenv
+   GENERATE_COQPROJECT_FOR_DUNE
+   true
+   (progn
+    (ignore-outputs
+     (run %{bin:make} timing-html))))))
