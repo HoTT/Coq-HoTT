@@ -85,6 +85,14 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+Definition transport_paths_lFr {A : Type} {f : A -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = f x1)
+  : transport (fun x => x = f x) p q = p^ @ q @ (ap f p).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
 Definition transport_paths_FFlr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : g (f x1) = x1)
   : transport (fun x => g (f x) = x) p q = (ap g (ap f p))^ @ q @ p.
@@ -155,6 +163,7 @@ Tactic Notation "transport_paths" uconstr(lemma) :=
   nrefine (_^).
 
 Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
+Tactic Notation "transport_paths" "lFr" := transport_paths transport_paths_lFr.
 Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
 Tactic Notation "transport_paths" "FFlr" := transport_paths transport_paths_FFlr.
 Tactic Notation "transport_paths" "FFlFr" := transport_paths transport_paths_FFlFr.
