@@ -483,7 +483,7 @@ Global Instance is0functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is0Functor (fun x => cat_binprod x y).
 Proof.
-  exact (is0functor10_bifunctor _ y).
+  exact (is0functor10_bifunctor (fun x y => cat_binprod x y) y).
 Defined.
 
 Global Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
@@ -497,7 +497,7 @@ Global Instance is0functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is0Functor (fun y => cat_binprod x y).
 Proof.
-  exact (is0functor01_bifunctor _ x).
+  exact (is0functor01_bifunctor (fun x y => cat_binprod x y) x).
 Defined.
 
 Global Instance is1functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}

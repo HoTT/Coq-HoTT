@@ -131,7 +131,7 @@ Section Join.
     (P_B : B -> P) (P_g : forall a b, P_A a = P_B b) a b
     : ap (Join_rec P_A P_B P_g) (jglue a b) = P_g a b.
   Proof.
-    snrapply Pushout_rec_beta_pglue.
+    snrapply (Pushout_rec_beta_pglue _ _ _ _ (a, b)).
   Defined.
 
   (** If [A] is ipointed, so is [Join A B]. *)
