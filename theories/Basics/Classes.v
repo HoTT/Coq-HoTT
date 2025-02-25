@@ -2,6 +2,34 @@ Require Import Basics.Overture Basics.Tactics.
 
 (** * Classes *)
 
+(** ** Pointwise Lemmas *)
+
+Section Pointwise.
+
+  Context {A : Type} {B : A -> Type} (R : forall a, Relation (B a)).
+
+  Definition reflexive_pointwise `{!forall a, Reflexive (R a)}
+    : Reflexive (fun (P Q : forall x, B x) => forall x, R x (P x) (Q x)).
+  Proof.
+    intros P x; reflexivity.
+  Defined.
+
+  Definition transitive_pointwise `{!forall a, Transitive (R a)}
+    : Transitive (fun (P Q : forall x, B x) => forall x, R x (P x) (Q x)).
+  Proof.
+    intros P Q S x y a.
+    by transitivity (Q a).
+  Defined.
+
+  Definition symmetric_pointwise `{!forall a, Symmetric (R a)}
+    : Symmetric (fun (P Q : forall x, B x) => forall x, R x (P x) (Q x)).
+  Proof.
+    intros P Q x a.
+    by symmetry.
+  Defined.
+
+End Pointwise.
+
 (** ** Injective Functions *)
 
 Class IsInjective {A B : Type} (f : A -> B)

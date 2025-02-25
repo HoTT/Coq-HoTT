@@ -121,7 +121,7 @@ Section IdealCRing.
   (** Ideal products are commutative in commutative rings. Note that we are using ideal notations here and [↔] corresponds to equality of ideals. Essentially a subset in each direction. *)
   Lemma ideal_product_comm (I J : Ideal R) : I ⋅ J ↔ J ⋅ I.
   Proof.
-    apply ideal_subset_antisymm;
+    apply pred_subset_antisymm;
     apply ideal_product_subset_product_commutative.
   Defined.
   
@@ -143,7 +143,7 @@ Section IdealCRing.
   Proof.
     intros p.
     etransitivity.
-    { apply ideal_eq_subset.
+    { apply pred_eq_subset.
       symmetry.
       apply ideal_product_unit_r. }
     etransitivity.
@@ -156,7 +156,7 @@ Section IdealCRing.
     : Coprime I J -> I ∩ J ↔ I ⋅ J.
   Proof.
     intros p.
-    apply ideal_subset_antisymm.
+    apply pred_subset_antisymm.
     - apply ideal_intersection_subset_product.
       unfold Coprime in p.
       apply symmetry in p.
@@ -167,7 +167,7 @@ Section IdealCRing.
   Lemma ideal_quotient_product (I J K : Ideal R)
     : (I :: J) :: K ↔ (I :: (J ⋅ K)).
   Proof.
-    apply ideal_subset_antisymm.
+    apply pred_subset_antisymm.
     - intros x [p q]; strip_truncations; split; apply tr;
       intros r; rapply Trunc_rec; intros jk.
       + induction jk as [y [z z' j k] | | ? ? ? ? ? ? ].

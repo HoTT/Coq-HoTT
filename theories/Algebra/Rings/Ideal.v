@@ -145,11 +145,9 @@ End IdealElements.
 
 (** *** Ideal equality *)
 
-(** Classically, set based equality suffices for ideals. Since we are talking about predicates, we use pointwise iffs. This can of course be shown to be equivalent to the identity type. *)
-Definition ideal_eq {R : Ring} (I J : Subgroup R) := forall x, I x <-> J x.
-
 (** With univalence we can characterize equality of ideals. *)
-Definition equiv_path_ideal `{Univalence} {R : Ring} {I J : Ideal R} : ideal_eq I J <~> I = J.
+Definition equiv_path_ideal `{Univalence} {R : Ring} {I J : Ideal R}
+  : pred_eq I J <~> I = J.
 Proof.
   refine ((equiv_ap' (issig_Ideal R)^-1 _ _)^-1 oE _).
   refine (equiv_path_sigma_hprop _ _ oE _).
@@ -158,52 +156,12 @@ Defined.
 
 (** Under funext, ideal equality is a proposition. *)
 Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
-  : IsHProp (ideal_eq I J) := _.
-
-(** Ideal equality is reflexive. *)
-Instance reflexive_ideal_eq {R : Ring} : Reflexive (@ideal_eq R).
-Proof.
-  intros I x; by split.
-Defined.
-
-(** Ideal equality is symmetric. *)
-Instance symmetric_ideal_eq {R : Ring} : Symmetric (@ideal_eq R).
-Proof.
-  intros I J p x; specialize (p x); by symmetry.
-Defined.
-
-(** Ideal equality is transitive. *)
-Instance transitive_ideal_eq {R : Ring} : Transitive (@ideal_eq R).
-Proof.
-  intros I J K p q x; specialize (p x); specialize (q x); by transitivity (J x).
-Defined.
-
-(** *** Subset relation on ideals *)
-
-(** We define the subset relation on ideals in the usual way: *)
-Definition ideal_subset {R : Ring} (I J : Subgroup R) := (forall x, I x -> J x).
-
-(** The subset relation is reflexive. *)
-Instance reflexive_ideal_subset {R : Ring} : Reflexive (@ideal_subset R)
-  := fun _ _ => idmap.
-
-(** The subset relation is transitive. *)
-Instance transitive_ideal_subset {R : Ring} : Transitive (@ideal_subset R).
-Proof.
-  intros x y z p q a.
-  exact (q a o p a).
-Defined.
-
-(** We can coerce equality to the subset relation, since equality is defined to be the subset relation in each direction. *)
-Coercion ideal_eq_subset {R : Ring} {I J : Subgroup R} : ideal_eq I J -> ideal_subset I J.
-Proof.
-  intros f x; apply f.
-Defined.
+  : IsHProp (pred_eq I J) := _.
 
 (** *** Left and right ideals are invariant under ideal equality *)
 
 (** Left ideals are invariant under ideal equality. *)
-Definition isleftideal_eq {R : Ring} (I J : Subgroup R) (p : ideal_eq I J)
+Definition isleftideal_eq {R : Ring} (I J : Subgroup R) (p : pred_eq I J)
   : IsLeftIdeal I -> IsLeftIdeal J.
 Proof.
   intros i r x j.
@@ -213,7 +171,7 @@ Proof.
 Defined.
 
 (** Right ideals are invariant under ideal equality. *)
-Definition isrightideal_eq {R : Ring} (I J : Subgroup R) (p : ideal_eq I J)
+Definition isrightideal_eq {R : Ring} (I J : Subgroup R) (p : pred_eq I J)
   : IsRightIdeal I -> IsRightIdeal J
   := isleftideal_eq (R := rng_op R) I J p.
 
@@ -375,7 +333,7 @@ Definition ideal_product_type {R : Ring} (I J : Subgroup R) : Subgroup R
 
 (** The product ideal swapped is just the product ideal of the opposite ring. *)
 Definition ideal_product_type_op {R : Ring} (I J : Subgroup R)
-  : ideal_eq (ideal_product_type (R:=R) I J) (ideal_product_type (R:=rng_op R) J I).
+  : pred_eq (ideal_product_type (R:=R) I J) (ideal_product_type (R:=rng_op R) J I).
 Proof.
   intros x; split; tapply (functor_subgroup_generated _ _ (Id _)); intros r []; by napply ipn_in.
 Defined.
@@ -747,7 +705,7 @@ Definition ideal_annihilator {R : Ring} (I : Ideal R) : Ideal R
 
 (** Two ideals are coprime if their sum is the unit ideal. *)
 Definition Coprime {R : Ring} (I J : Ideal R) : Type
-  := ideal_eq (ideal_sum I J) (ideal_unit R).
+  := pred_eq (ideal_sum I J) (ideal_unit R).
 Existing Class Coprime.
 
 Instance ishprop_coprime `{Funext} {R : Ring}
@@ -818,8 +776,8 @@ Defined.
 (** We declare and import a module for various (Unicode) ideal notations. These exist in their own special case, and can be imported and used in other files when needing to reason about ideals. *)
 
 Module Import Notation.
-  Infix "⊆" := ideal_subset       : ideal_scope.
-  Infix "↔" := ideal_eq           : ideal_scope.
+  Infix "⊆" := pred_subset        : ideal_scope.
+  Infix "↔" := pred_eq            : ideal_scope.
   Infix "+" := ideal_sum          : ideal_scope.
   Infix "⋅" := ideal_product      : ideal_scope.
   Infix "∩" := ideal_intersection : ideal_scope.
@@ -829,13 +787,6 @@ Module Import Notation.
 End Notation.
 
 (** *** Ideal Lemmas *)
-
-(** Subset relation is antisymmetric. *)
-Definition ideal_subset_antisymm {R : Ring} (I J : Subgroup R)
-  : I ⊆ J -> J ⊆ I -> I ↔ J.
-Proof.
-  intros p q x; split; by revert x.
-Defined.
 
 (** The zero ideal is contained in all ideals. *)
 Definition ideal_zero_subset {R : Ring} (I : Subgroup R) : ideal_zero R ⊆ I.
@@ -958,7 +909,7 @@ Proof.
     intros _ [s t IHs IHt]; cbn.
     rewrite rng_mult_assoc.
     by apply ipn_in; [ apply tr, sgt_in, ipn_in | ].
-  - apply ideal_subset_antisymm; only 1: apply f.
+  - apply pred_subset_antisymm; only 1: apply f.
     intros x i.
     apply (ideal_product_op_triple (R:=rng_op R) I J K).
     napply f.
@@ -990,7 +941,7 @@ Defined.
 Definition ideal_sum_self {R : Ring} (I : Ideal R)
   : I + I ↔ I.
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   1: by rapply ideal_sum_smallest.
   rapply ideal_sum_subset_l.
 Defined.
@@ -1034,20 +985,20 @@ Definition ideal_sum_eq {R : Ring} (I J K L : Ideal R)
   : I ↔ J -> K ↔ L -> (I + K) ↔ (J + L).
 Proof.
   intros p q.
-  by apply ideal_subset_antisymm; apply ideal_sum_subset_pres; apply ideal_eq_subset.
+  by apply pred_subset_antisymm; apply ideal_sum_subset_pres; apply pred_eq_subset.
 Defined.
 
 (** The sum of two opposite ideals is the opposite of their sum. *)
 Definition ideal_sum_op {R : Ring} (I J : Ideal R)
   : ideal_op R I + ideal_op R J ↔ ideal_op R (I + J)
-  := reflexive_ideal_eq _.
+  := reflexive_pred_eq _.
 
 (** Products left distribute over sums. Note that this follows from left adjoints preserving colimits. The product of ideals is a functor whose right adjoint is the quotient ideal. *)
 Definition ideal_dist_l {R : Ring} (I J K : Ideal R)
   : I ⋅ (J + K) ↔ I ⋅ J + I ⋅ K.
 Proof.
   (** We split into two directions. *)
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   (** We deal with the difficult inclusion first. The proof comes down to breaking down the definition and reassembling into the right. *)
   { intros r p.
     strip_truncations.
@@ -1093,7 +1044,7 @@ Defined.
 (** Ideal sums are commutative *)
 Definition ideal_sum_comm {R : Ring} (I J : Ideal R) : I + J ↔ J + I.
 Proof.
-  apply ideal_subset_antisymm; apply ideal_sum_smallest.
+  apply pred_subset_antisymm; apply ideal_sum_smallest.
   1,3: apply ideal_sum_subset_r.
   1,2: apply ideal_sum_subset_l.
 Defined.
@@ -1101,7 +1052,7 @@ Defined.
 (** Zero ideal is left additive identity. *) 
 Definition ideal_sum_zero_l {R : Ring} I : ideal_zero R + I ↔ I.
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   1: apply ideal_sum_smallest.
   1: apply ideal_zero_subset.
   1: reflexivity.
@@ -1111,7 +1062,7 @@ Defined.
 (** Zero ideal is right additive identity. *)
 Definition ideal_sum_zero_r {R : Ring} I : I + ideal_zero R ↔ I.
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   1: apply ideal_sum_smallest.
   1: reflexivity.
   1: apply ideal_zero_subset.
@@ -1121,7 +1072,7 @@ Defined.
 (** Unit ideal is left multiplicative identity. *)
 Definition ideal_product_unit_l {R : Ring} I : ideal_unit R ⋅ I ↔ I.
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   1: apply ideal_product_subset_r.
   intros r p.
   rewrite <- rng_mult_one_l.
@@ -1131,7 +1082,7 @@ Defined.
 (** Unit ideal is right multiplicative identity. *)
 Definition ideal_product_unit_r {R : Ring} I : I ⋅ ideal_unit R ↔ I.
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   1: apply ideal_product_subset_l.
   intros r p.
   rewrite <- rng_mult_one_r.
@@ -1141,7 +1092,7 @@ Defined.
 (** Intersecting with unit ideal on the left does nothing. *)
 Definition ideal_intresection_unit_l {R : Ring} I : ideal_unit R ∩ I ↔ I.
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   1: apply ideal_intersection_subset_r.
   apply ideal_intersection_subset.
   1: apply ideal_unit_subset.
@@ -1151,7 +1102,7 @@ Defined.
 (** Intersecting with unit ideal on right does nothing. *)
 Definition ideal_intersection_unit_r {R : Ring} I : I ∩ ideal_unit R ↔ I.
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   1: apply ideal_intersection_subset_l.
   apply ideal_intersection_subset.
   1: reflexivity.
@@ -1188,7 +1139,7 @@ Definition ideal_quotient_trivial {R : Ring} (I J : Ideal R)
   : I ⊆ J -> J :: I ↔ ideal_unit R.
 Proof.
   intros p.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   1: cbv; trivial.
   intros r _; split; apply tr; intros x q; cbn.
   - by apply isleftideal, p. 
@@ -1200,7 +1151,7 @@ Defined.
 Definition ideal_quotient_unit_bottom {R : Ring} (I : Ideal R)
   : (I :: ideal_unit R) ↔ I.
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   - intros r [p q].
     strip_truncations.
     rewrite <- rng_mult_one_r.
@@ -1222,7 +1173,7 @@ Defined.
 Definition ideal_quotient_sum {R : Ring} (I J K : Ideal R)
   : (I :: (J + K)) ↔ (I :: J) ∩ (I :: K).
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   { intros r [p q]; strip_truncations; split; split; apply tr; intros x jk.
     - by rapply p; rapply ideal_sum_subset_l.
     - by rapply q; rapply ideal_sum_subset_l.
@@ -1251,7 +1202,7 @@ Defined.
 Definition ideal_quotient_intersection {R : Ring} (I J K : Ideal R)
   : (I ∩ J :: K) ↔ (I :: K) ∩ (J :: K).
 Proof.
-  apply ideal_subset_antisymm.
+  apply pred_subset_antisymm.
   - intros r [p q]; strip_truncations; split; split; apply tr; intros x k.
     1,3: by apply p.
     1,2: by apply q.
