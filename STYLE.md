@@ -116,8 +116,8 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
   try to limit the number of files in the top-level folder, and would
   like to reduce the number.
 
-- Some files don't have a logical home, so they instead live in the
-  `Misc/` directiory. We try to limit the number of files here.
+- `Misc/*`: Some files don't have a logical home, so they instead live here. We
+  try to limit the number of files living here.
 
 - `WildCat/*`: Files related to wild categories.  They are used
   extensively in the library, so we try to minimize the files they
