@@ -173,6 +173,17 @@ Record RetractionOf {A} `{Is1Cat A} {a b : A} (f : a $-> b) :=
     is_retraction : comp_left_inverse $o f $== Id a
   }.
 
+Record AreInverse {A} `{Is1Cat A} {a b : A} (f : a $->b) (g : b $->a) := {
+  gf_id : Id a $== g $o f;
+  fg_id : Id b $== f $o g
+}.
+
+Definition inverse_op {A} `{Is1Cat A} {a b : A} (f : a $-> b) (g : b $->a) (p : AreInverse f g) : AreInverse g f :=
+{|
+  gf_id := fg_id _ _ p;
+  fg_id := gf_id _ _ p
+|}.
+
 (** Often, the coherences are actually equalities rather than homotopies. *)
 Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
 {
