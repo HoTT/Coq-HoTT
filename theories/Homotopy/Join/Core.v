@@ -90,7 +90,7 @@ Section Join.
   Proof.
     snrapply (Join_ind _ Hl Hr).
     intros a b; cbn beta.
-    nrapply transport_paths_FFlFr'.
+    transport_paths FFlFr.
     apply Hglue.
   Defined.
   
@@ -103,7 +103,7 @@ Section Join.
   Proof.
     snrapply (Join_ind _ Hl Hr).
     intros a b; cbn beta.
-    nrapply transport_paths_FlFFr'.
+    transport_paths FlFFr.
     apply Hglue.
   Defined.
   
@@ -116,7 +116,7 @@ Section Join.
   Proof.
     snrapply (Join_ind _ Hl Hr).
     intros a b; cbn beta.
-    nrapply transport_paths_FFlFFr'.
+    transport_paths FFlFFr.
     apply Hglue.
   Defined.
 

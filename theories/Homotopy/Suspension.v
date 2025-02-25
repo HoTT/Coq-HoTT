@@ -86,8 +86,8 @@ Definition Susp_ind_FFlFr {X Y Z : Type}
   : g o f == h.
 Proof.
   snrapply (Susp_ind _ HN HS).
-  intros x.
-  snrapply (transport_paths_FFlFr' (f:=f) (g:=g) (h:=h)).
+  intros x; cbn beta.
+  transport_paths FFlFr.
   exact (Hmerid x).
 Defined.
 
@@ -99,8 +99,8 @@ Definition Susp_ind_FFlFFr {X Y Y' Z : Type}
   : g o f == g' o f'.
 Proof.
   snrapply (Susp_ind _ HN HS).
-  intros x.
-  snrapply (transport_paths_FFlFFr' (f:=f) (f':=f') (g:=g) (g':=g')).
+  intros x; cbn beta.
+  transport_paths FFlFFr.
   exact (Hmerid x).
 Defined.
 

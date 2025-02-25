@@ -77,7 +77,7 @@ Proof.
   snrapply spushout_ind.
   1,2: reflexivity.
   intros x y q; cbn beta.
-  snrapply transport_paths_FFlFr'.
+  transport_paths FFlFr.
   apply equiv_p1_1q.
   lhs nrapply ap.
   1: nrapply spushout_rec_beta_spglue.

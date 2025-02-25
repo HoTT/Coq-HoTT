@@ -164,9 +164,18 @@ Tactic Notation "transport_paths" uconstr(lemma) :=
 
 Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
 Tactic Notation "transport_paths" "lFr" := transport_paths transport_paths_lFr.
-Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
+
 Tactic Notation "transport_paths" "FFlr" := transport_paths transport_paths_FFlr.
+Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
+Tactic Notation "transport_paths" "lFFr" := transport_paths transport_paths_lFFr.
+
+Tactic Notation "transport_paths" "FFFlr" := transport_paths transport_paths_FFFlr.
 Tactic Notation "transport_paths" "FFlFr" := transport_paths transport_paths_FFlFr.
+Tactic Notation "transport_paths" "FlFFr" := transport_paths transport_paths_FlFFr.
+Tactic Notation "transport_paths" "lFFFr" := transport_paths transport_paths_lFFr.
+
+Tactic Notation "transport_paths" "FFFlFr" := transport_paths transport_paths_FFFlFr.
+Tactic Notation "transport_paths" "FFlFFr" := transport_paths transport_paths_FFlFFr.
 
 (** Sometimes we are required to reason about the term produced by [transport_paths FlFr] so we give it a name. It is local so to discourage its use. *)
 Local Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
@@ -175,51 +184,6 @@ Local Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
   : transport (fun x => f x = g x) p q = r.
 Proof.
   by transport_paths transport_paths_FlFr.
-Defined.
-
-Definition transport_paths_FFFlr' {A B C : Type}
-  {f : A -> B} {g : B -> C} {h : C -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : h (g (f x1)) = x1) (r : h (g (f x2)) = x2)
-  (h' : ap h (ap g (ap f p)) @ r = q @ p)
-  : transport (fun x => h (g (f x)) = x) p q = r.
-Proof.
-  by transport_paths (transport_paths_FFFlr (f:=f) (g:=g)).
-Defined.
-
-Definition transport_paths_FFFlFr' {A B C D : Type}
-  {f : A -> B} {g : B -> C} {h : C -> D} {k : A -> D} {x1 x2 : A}
-  (p : x1 = x2) (q : h (g (f x1)) = k x1) (r : h (g (f x2)) = k x2)
-  (h' : ap h (ap g (ap f p)) @ r = q @ (ap k p))
-  : transport (fun x => h (g (f x)) = k x) p q = r.
-Proof.
-  by transport_paths (transport_paths_FFFlFr (f:=f) (g:=g)).
-Defined.
-
-Definition transport_paths_FFlFr' {A B C : Type}
-  {f : A -> B} {g : B -> C} {h : A -> C} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = h x1) (r : g (f x2) = h x2)
-  (h' : (ap g (ap f p)) @ r = q @ (ap h p))
-  : transport (fun x => g (f x) = h x) p q = r.
-Proof.
-  by transport_paths transport_paths_FFlFr.
-Defined.
-
-Definition transport_paths_FlFFr' {A B C : Type}
-  {f : A -> C} {g : B -> C} {h : A -> B} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = g (h x1)) (r : f x2 = g (h x2))
-  (h' : (ap f p) @ r = q @ (ap g (ap h p)))
-  : transport (fun x => f x = g (h x)) p q = r.
-Proof.
-  by transport_paths transport_paths_FlFFr.
-Defined.
-
-Definition transport_paths_FFlFFr' {A B B' C : Type}
-  {f : A -> B} {f' : A -> B'} {g : B -> C} {g' : B' -> C} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = g' (f' x1)) (r : g (f x2) = g' (f' x2))
-  (h : ap g (ap f p) @ r = q @ ap g' (ap f' p))
-  : transport (fun x => g (f x) = g' (f' x)) p q = r.
-Proof.
-  by transport_paths transport_paths_FFlFFr.
 Defined.
 
 Definition transport011_paths {A B X} (f : A -> X) (g : B -> X)
