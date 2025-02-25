@@ -706,7 +706,7 @@ Section Flattening.
     - snrapply Coeq_ind.
       1: reflexivity.
       intros [b pf]; cbn.
-      nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+      transport_paths FFlr; apply equiv_p1_1q.
       rewrite Coeq_rec_beta_cglue.
       lhs nrapply cdepdescent_rec_beta_cglue.
       nrapply concat_p1.
@@ -716,7 +716,7 @@ Section Flattening.
       + by intros a pa.
       + intros b pf; cbn.
         lhs nrapply transportDD_is_transport.
-        nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+        transport_paths FFlr; apply equiv_p1_1q.
         rewrite <- (concat_p1 (transport_fam_cdescent_cglue _ _ _)).
         rewrite cdepdescent_rec_beta_cglue. (* This needs to be in the form [transport_fam_cdescent_cglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).

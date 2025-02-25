@@ -77,7 +77,7 @@ Section Join.
   Proof.
     snrapply (Join_ind _ Hl Hr).
     intros a b.
-    nrapply transport_paths_FFlr'.
+    transport_paths FFlr.
     apply Hglue.
   Defined.
   

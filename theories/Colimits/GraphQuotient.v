@@ -303,7 +303,7 @@ Section Flattening.
       1: reflexivity.
       intros [a x] [b y] [r pr]; cbn in r, pr; cbn.
       destruct pr.
-      nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+      transport_paths FFlr; apply equiv_p1_1q.
       rewrite GraphQuotient_rec_beta_gqglue.
       lhs nrapply gqdepdescent_rec_beta_gqglue.
       nrapply concat_p1.
@@ -313,7 +313,7 @@ Section Flattening.
       + by intros a pa.
       + intros a b r pa; cbn.
         lhs nrapply transportDD_is_transport.
-        nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+        transport_paths FFlr; apply equiv_p1_1q.
         rewrite <- (concat_p1 (transport_fam_gqdescent_gqglue _ _ _)).
         rewrite gqdepdescent_rec_beta_gqglue. (* This needs to be in the form [transport_fam_gqdescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).

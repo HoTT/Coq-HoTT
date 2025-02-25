@@ -73,8 +73,8 @@ Definition Susp_ind_FFlr {X Y : Type} (f : Susp X -> Y) (g : Y -> Susp X)
   : g o f == idmap.
 Proof.
   snrapply (Susp_ind _ HN HS).
-  intros x.
-  snrapply (transport_paths_FFlr' (f:=f) (g:=g)).
+  intros x; cbn beta.
+  transport_paths FFlr.
   exact (Hmerid x).
 Defined.
 

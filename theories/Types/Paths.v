@@ -156,22 +156,16 @@ Tactic Notation "transport_paths" uconstr(lemma) :=
 
 Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
 Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
+Tactic Notation "transport_paths" "FFlr" := transport_paths transport_paths_FFlr.
 Tactic Notation "transport_paths" "FFlFr" := transport_paths transport_paths_FFlFr.
 
+(** Sometimes we are required to reason about the term produced by [transport_paths FlFr] so we give it a name. It is local so to discourage its use. *)
 Local Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
   (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
   (h : (ap f p) @ r = q @ (ap g p))
   : transport (fun x => f x = g x) p q = r.
 Proof.
   by transport_paths transport_paths_FlFr.
-Defined.
-
-Definition transport_paths_FFlr' {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = x1) (r : g (f x2) = x2)
-  (h : (ap g (ap f p)) @ r = q @ p)
-  : transport (fun x => g (f x) = x) p q = r.
-Proof.
-  by transport_paths transport_paths_FFlr.
 Defined.
 
 Definition transport_paths_FFFlr' {A B C : Type}

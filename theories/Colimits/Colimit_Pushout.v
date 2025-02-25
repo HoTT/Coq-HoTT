@@ -138,7 +138,7 @@ Section PO.
         apply ap, eisretr.
       + reflexivity.
       + intro a; cbn.
-        nrapply transport_paths_FFlr'.
+        transport_paths FFlr.
         refine (concat_p1 _ @ _).
         rewrite PO_rec_beta_pp.
         rewrite eisadj.

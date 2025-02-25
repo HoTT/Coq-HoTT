@@ -88,7 +88,7 @@ Global Instance isequiv_S1_to_Circle : IsEquiv (S1_to_Circle) | 0.
 Proof.
   apply isequiv_adjointify with Circle_to_S1.
   - refine (Circle_ind _ 1 _).
-    nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+    transport_paths FFlr; apply equiv_p1_1q.
     refine (ap _ (Circle_rec_beta_loop _ _ _) @ _).
     refine (ap_pp _ _ (merid South)^ @ _).
     refine ((1 @@ ap_V _ _) @ _).
@@ -97,7 +97,7 @@ Proof.
     apply concat_p1.
   - refine (Susp_ind (fun x => Circle_to_S1 (S1_to_Circle x) = x)
                      1 (merid South) _); intros x.
-    nrapply transport_paths_FFlr'; symmetry.
+    transport_paths FFlr; symmetry.
     unfold S1_to_Circle; rewrite (Susp_rec_beta_merid x).
     revert x. change (Susp Empty) with (Sphere 0).
     apply (equiv_ind (S0_to_Bool ^-1)); intros x.
