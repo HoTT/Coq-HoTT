@@ -1,0 +1,11 @@
+digraph HoTT_Algebra_AbGroups_AbProjective {
+  graph [ratio=0.5]
+  node [style=filled]
+AbProjective_iff_isabprojective_surjections_split [label="iff_isabprojective_surjections_split", URL=<AbProjective.html#iff_isabprojective_surjections_split>, peripheries=3, fillcolor="#F070D1"] ;
+AbProjective_isabprojective [label="isabprojective", URL=<AbProjective.html#isabprojective>, peripheries=3, fillcolor="#F070D1"] ;
+AbProjective_IsAbProjective [label="IsAbProjective", URL=<AbProjective.html#IsAbProjective>, fillcolor="#F070D1"] ;
+  AbProjective_iff_isabprojective_surjections_split -> AbProjective_IsAbProjective [] ;
+  AbProjective_isabprojective -> AbProjective_IsAbProjective [] ;
+subgraph cluster_AbProjective { label="AbProjective"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+AbProjective_IsAbProjective; AbProjective_isabprojective; AbProjective_iff_isabprojective_surjections_split; };
+} /* END */

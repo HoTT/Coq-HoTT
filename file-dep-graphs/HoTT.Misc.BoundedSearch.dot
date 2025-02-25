@@ -1,0 +1,29 @@
+digraph HoTT_Misc_BoundedSearch {
+  graph [ratio=0.5]
+  node [style=filled]
+BoundedSearch_minimal_n_alt_type [label="minimal_n_alt_type", URL=<BoundedSearch.html#minimal_n_alt_type>, peripheries=3, fillcolor="#F070D1"] ;
+BoundedSearch_decidable_search [label="decidable_search", URL=<BoundedSearch.html#decidable_search>, peripheries=3, fillcolor="#F070D1"] ;
+BoundedSearch_minimal_n [label="minimal_n", URL=<BoundedSearch.html#minimal_n>, fillcolor="#F070D1"] ;
+BoundedSearch_prop_n_to_min_n [label="prop_n_to_min_n", URL=<BoundedSearch.html#prop_n_to_min_n>, fillcolor="#F070D1"] ;
+BoundedSearch_n_to_min_n [label="n_to_min_n", URL=<BoundedSearch.html#n_to_min_n>, fillcolor="#F070D1"] ;
+BoundedSearch_bounded_search [label="bounded_search", URL=<BoundedSearch.html#bounded_search>, fillcolor="#F070D1"] ;
+BoundedSearch_smaller_S [label="smaller_S", URL=<BoundedSearch.html#smaller_S>, fillcolor="#F070D1"] ;
+BoundedSearch_smaller [label="smaller", URL=<BoundedSearch.html#smaller>, fillcolor="#F070D1"] ;
+BoundedSearch_ishpropmin_n [label="ishpropmin_n", URL=<BoundedSearch.html#ishpropmin_n>, fillcolor="#F070D1"] ;
+BoundedSearch_min_n_Type [label="min_n_Type", URL=<BoundedSearch.html#min_n_Type>, fillcolor="#F070D1"] ;
+BoundedSearch_minimal [label="minimal", URL=<BoundedSearch.html#minimal>, fillcolor="#F070D1"] ;
+  BoundedSearch_minimal_n_alt_type -> BoundedSearch_minimal_n [] ;
+  BoundedSearch_decidable_search -> BoundedSearch_bounded_search [] ;
+  BoundedSearch_minimal_n -> BoundedSearch_prop_n_to_min_n [] ;
+  BoundedSearch_prop_n_to_min_n -> BoundedSearch_n_to_min_n [] ;
+  BoundedSearch_prop_n_to_min_n -> BoundedSearch_ishpropmin_n [] ;
+  BoundedSearch_n_to_min_n -> BoundedSearch_bounded_search [] ;
+  BoundedSearch_n_to_min_n -> BoundedSearch_min_n_Type [] ;
+  BoundedSearch_bounded_search -> BoundedSearch_smaller_S [] ;
+  BoundedSearch_smaller_S -> BoundedSearch_smaller [] ;
+  BoundedSearch_smaller -> BoundedSearch_minimal [] ;
+  BoundedSearch_ishpropmin_n -> BoundedSearch_min_n_Type [] ;
+  BoundedSearch_min_n_Type -> BoundedSearch_minimal [] ;
+subgraph cluster_BoundedSearch { label="BoundedSearch"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+BoundedSearch_minimal; BoundedSearch_min_n_Type; BoundedSearch_ishpropmin_n; BoundedSearch_smaller; BoundedSearch_smaller_S; BoundedSearch_bounded_search; BoundedSearch_n_to_min_n; BoundedSearch_prop_n_to_min_n; BoundedSearch_minimal_n; BoundedSearch_decidable_search; BoundedSearch_minimal_n_alt_type; };
+} /* END */
