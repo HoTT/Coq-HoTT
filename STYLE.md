@@ -1472,6 +1472,9 @@ When it exits, the minimized code producing the bug will be in
 
 Note that sometimes `coqc` and
 `coqtop` can exhibit different behavior, and one may produce a bug
-while the other doesn't.
+while the other doesn't. The bug-finder normally uses
+both `coqc` and `coqtop`, but you can tell it to "fake" `coqc` using
+`coqtop` by passing the argument `--coqc-as-coqtop` instead of
+`--coqc`.
 
 [coq-tools]: https://github.com/JasonGross/coq-tools
