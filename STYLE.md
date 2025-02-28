@@ -1472,17 +1472,9 @@ When it exits, the minimized code producing the bug will be in
 
 Note that sometimes `coqc` and
 `coqtop` can exhibit different behavior, and one may produce a bug
-while the other doesn't.  (One reason for this is that they give
-different names to universe parameters, `Top.1` versus `Filename.1`,
-and this can result in different results from sorting, which can
-affect the output of the universe minimization algorithm, yielding
-different numbers or different ordering of universe parameters for the
-same definitions.  This is [itself a bug][instance bug], but as of
-June 2015 it has not yet been fixed.)  The bug-finder normally uses
+while the other doesn't. The bug-finder normally uses
 both `coqc` and `coqtop`, but you can tell it to "fake" `coqc` using
 `coqtop` by passing the argument `--coqc-as-coqtop` instead of
 `--coqc`.
 
 [coq-tools]: https://github.com/JasonGross/coq-tools
-
-[instance bug]: https://coq.inria.fr/bugs/show_bug.cgi?id=3863
