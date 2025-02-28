@@ -157,8 +157,8 @@ Defined.
 (** The above lemmas have some common rearrangements that are useful. Since these all follow the same pattern, we introduce a tactic to apply it. *)
 
 (** TODO: move to PathGroupoids and rename? *) 
-(** The most common rearrangment after applying the [transport_paths_] lemmas on the [lhs]. *)
-Definition moveR_Vpp_inv {A : Type} {w x y z : A}
+(** The most common rearrangement after applying the [transport_paths_] lemmas on the [lhs]. *)
+Definition moveR_Vp_p_inv {A : Type} {w x y z : A}
   (p : x = w) (q : x = y) (r : y = z) (s : w = z)
   (h : p @ s = q @ r)
   : p^ @ q @ r = s.
@@ -168,7 +168,7 @@ Proof.
 Defined.
 
 Tactic Notation "transport_paths" uconstr(lemma) :=
-  lhs nrapply lemma; apply moveR_Vpp_inv.
+  lhs nrapply lemma; apply moveR_Vp_p_inv.
 
 Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
 Tactic Notation "transport_paths" "lFr" := transport_paths transport_paths_lFr.
