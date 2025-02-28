@@ -217,7 +217,7 @@ Proof.
   1,2: reflexivity.
   simpl.
   intros a.
-  transport_paths transport_paths_Flr.
+  transport_paths Flr.
   nrapply moveR_pM.
   nrapply functor_pushout_beta_pglue.
 Defined.

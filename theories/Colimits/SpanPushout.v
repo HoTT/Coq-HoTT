@@ -92,7 +92,7 @@ Proof.
   snrapply spushout_ind.
   1,2: reflexivity.
   intros x y q; cbn.
-  transport_paths transport_paths_Flr.
+  transport_paths Flr.
   apply equiv_p1_1q.
   nrapply spushout_rec_beta_spglue.
 Defined.

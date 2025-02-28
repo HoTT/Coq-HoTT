@@ -70,7 +70,7 @@ Section Coequalizer.
       end.
       + reflexivity.
       + intros b.
-        transport_paths FlFr.
+        transport_paths FlFr; simpl.
         apply equiv_p1_1q.
         refine (Coeq_rec_beta_cglue _ _ _ _ @ _).
         apply concat_p1.

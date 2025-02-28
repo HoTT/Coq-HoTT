@@ -64,7 +64,7 @@ Section Join.
   Proof.
     snrapply (Join_ind _ Hl Hr).
     intros a b.
-    transport_paths transport_paths_Flr.
+    transport_paths Flr.
     apply Hglue.
   Defined.
 
