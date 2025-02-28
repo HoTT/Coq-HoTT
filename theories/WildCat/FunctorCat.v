@@ -14,10 +14,25 @@ Record Fun01 (A B : Type) `{IsGraph A} `{IsGraph B} := {
   fun01_is0functor : Is0Functor fun01_F;
 }.
 
+Instance is0Graph_Graph : IsGraph Graph := {
+  Hom A B := Fun01 A B
+}.
+
 Coercion fun01_F : Fun01 >-> Funclass.
+Arguments fun01_F {A B H H0}.
 Global Existing Instance fun01_is0functor.
 
 Arguments Build_Fun01 A B {isgraph_A isgraph_B} F {fun01_is0functor} : rename.
+
+Instance Is2GraphGraph : Is2Graph Graph :=
+  fun A B => {| Hom F G := Transformation (fun01_F F) (fun01_F G)|}.
+
+(** There is a (0,1)-category of graphs under composition. *)
+Instance is01cat_Graph : Is01Cat Graph := {
+    Id A := {| fun01_F := idmap; fun01_is0functor := _ |};
+    cat_comp A B C G F :=
+     {| fun01_F := compose G F ; fun01_is0functor := _ |}
+}.
 
 Definition issig_Fun01 (A B : Type) `{IsGraph A} `{IsGraph B}
   : _  <~> Fun01 A B := ltac:(issig).
@@ -132,9 +147,15 @@ Proof.
   exists F; exact _.
 Defined.
 
+Instance isgraph_Cat : IsGraph Category := { Hom A B := Fun11 A B }.
+
 Global Instance isgraph_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
   : IsGraph (Fun11 A B)
   := isgraph_induced fun01_fun11.
+
+Instance Is2GraphCategory : Is2Graph Category := fun (A B : Category) => {|
+    Hom (F G : Fun11 A B) := NatTrans F G
+|}.
 
 Global Instance is01cat_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
   : Is01Cat (Fun11 A B)
@@ -143,6 +164,8 @@ Global Instance is01cat_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
 Global Instance is2graph_fun11 {A B : Type} `{Is1Cat A, Is1Cat B}
   : Is2Graph (Fun11 A B)
   := is2graph_induced fun01_fun11.
+
+Instance is3graph_Cat : Is3Graph Category := fun (A B : Category) => _.
 
 Global Instance is1cat_fun11 {A B :Type} `{Is1Cat A} `{Is1Cat B}
   : Is1Cat (Fun11 A B)
