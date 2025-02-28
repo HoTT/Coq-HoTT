@@ -9,6 +9,18 @@ Class IsGraph (A : Type) :=
   Hom : A -> A -> Type
 }.
 
+Module Graph.
+  Record type := Build_Graph {
+  Ob : Type;
+  is_graph : IsGraph (Ob : Type)
+}.
+End Graph.
+
+(* We choose to define these outside the module because otherwise you have to import the module to activate them, and it seems preferable to keep a more fine-grained namespace.*)
+Coercion Graph.Ob : Graph.type >-> Sortclass.
+Existing Instance Graph.is_graph.
+Notation Graph := Graph.type.
+
 Notation "a $-> b" := (Hom a b).
 
 Definition graph_hfiber {B C : Type} `{IsGraph C} (F : B -> C) (c : C)
@@ -115,6 +127,27 @@ Arguments cat_assoc_opp {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl {_ _ _ _ _ _ _} f.
 Arguments cat_idr {_ _ _ _ _ _ _} f.
 
+Module Category.
+  Class class_of (A : Type) := Class {
+    is_graph : IsGraph A;
+    is01cat : Is01Cat A;
+    is2graph : Is2Graph A;
+    is1cat : Is1Cat A (* This can be seen as the "mixin" in the sense of packed classes. *)
+  }.
+
+  Record type := {
+    Ob : Type;
+    is_class_of : class_of Ob
+  }.
+End Category.
+Coercion Category.Ob : Category.type >-> Sortclass.
+Existing Instance Category.is_class_of.
+Existing Instance Category.is_graph.
+Existing Instance Category.is2graph.
+Existing Instance Category.is01cat.
+Existing Instance Category.is1cat.
+Notation Category := Category.type.
+
 (** An alternate constructor that doesn't require the proof of [cat_assoc_opp].  This can be used for defining examples of wild categories, but shouldn't be used for the general theory of wild categories. *)
 Definition Build_Is1Cat' (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A}
   (is01cat_hom : forall a b : A, Is01Cat (a $-> b))
@@ -128,6 +161,17 @@ Definition Build_Is1Cat' (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A}
   : Is1Cat A
   := Build_Is1Cat A _ _ _ is01cat_hom is0gpd_hom is0functor_postcomp is0functor_precomp
       cat_assoc (fun a b c d f g h => (cat_assoc a b c d f g h)^$) cat_idl cat_idr.
+
+Record AreInverse {A} `{Is1Cat A} {a b : A} (f : a $->b) (g : b $->a) := {
+  gf_id : Id a $== g $o f;
+  fg_id : Id b $== f $o g
+}.
+
+Definition inverse_op {A} `{Is1Cat A} {a b : A} (f : a $-> b) (g : b $->a) (p : AreInverse f g) : AreInverse g f :=
+{|
+  gf_id := fg_id _ _ p;
+  fg_id := gf_id _ _ p
+|}.
 
 (** Whiskering and horizontal composition of 2-cells. *)
 
