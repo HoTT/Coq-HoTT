@@ -377,8 +377,7 @@ Proof.
       (natequiv_adjunction_l adj2 y) F). }
   intros x.
   rapply is1natural_comp.
-  + exact (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).
-  + exact (is1natural_equiv_adjunction_r _ _).
+  exact (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).
 Defined.
 
 (** Replace the left functor in an adjunction by a naturally equivalent one. *)
@@ -409,7 +408,6 @@ Proof.
     rapply (natequiv_postwhisker _ e). }
   intros y.
   rapply is1natural_comp.
-  2: exact _.
   rapply is1natural_yoneda.
 Defined.
 

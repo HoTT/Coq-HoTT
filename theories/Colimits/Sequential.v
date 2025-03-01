@@ -42,8 +42,8 @@ Proof.
     intros n.
     exact (const (a n.+1)). }
   rapply contr_equiv'.
-  1: rapply equiv_functor_colimit.
-  1: rapply (equiv_sequence B A).
+  2: rapply equiv_functor_colimit.
+  2: rapply (equiv_sequence B A).
   1: reflexivity.
   { intros n e.
     exists equiv_idmap.

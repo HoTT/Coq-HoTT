@@ -128,10 +128,7 @@ Section UnivPropNat.
 
   (** Help Coq find the same graph structure for the sigma-groupoid of [Coeq_ind_data] when precomposing with [functor_coeq]. *)
   Local Instance isgraph_Coeq_ind_data_total
-    : IsGraph (sig (Coeq_ind_data f g (P o functor_coeq h k p q))).
-  Proof.
-    rapply isgraph_total.
-  Defined.
+    : IsGraph (sig (Coeq_ind_data f g (P o functor_coeq h k p q))) := isgraph_total _.
 
   (** Given a map out of [A'] that coequalizes the parallel pair [f'] and [g'], we construct a map out of [A] that coequalizes [f] and [g]. Precomposing with [k] yields a dependent map [forall a : A, P (coeq (k a))], and [functor_coeq_beta_cglue] gives us a way to relate the paths. *)
   Definition functor_Coeq_ind_data

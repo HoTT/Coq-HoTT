@@ -836,7 +836,7 @@ Section Associativity.
     nrefine ((cat_assoc_opp _ _ _ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L (_ $@ _)) $@ _). 
     1: nrapply cat_binprod_fmap01_corec.
     1: rapply (cat_binprod_corec_eta _ _ _ _ (Id _)).
-    1: nrapply cat_binprod_swap_corec.
+    2: nrapply cat_binprod_swap_corec.
     nrefine (cat_assoc _ _ _ $@ (_ $@L _) $@ _).
     1: nrapply cat_binprod_twist_corec.
     nrapply cat_binprod_swap_corec.

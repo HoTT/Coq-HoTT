@@ -187,7 +187,7 @@ Proof.
   unfold IsPullback.
   apply isequiv_contr_map; intro x.
   rapply contr_equiv'.
-  - symmetry; apply hfiber_pullback_corec.
+  2: symmetry; apply hfiber_pullback_corec.
   - exact _.
 Defined.
 
@@ -417,11 +417,11 @@ Section Pullback3x3.
   Theorem pullback3x3 : Pullback fX1 fX3 <~> Pullback f1X f3X.
   Proof.
     refine (_ oE _ oE _).
-    1,3:do 2 (rapply equiv_functor_sigma_id; intro).
+    1,3:do 2 (refine (equiv_functor_sigma_id _); intro).
     1:apply equiv_path_pullback.
     1:symmetry; apply equiv_path_pullback.
     refine (_ oE _).
-    { do 4 (rapply equiv_functor_sigma_id; intro).
+    { do 4 (refine (equiv_functor_sigma_id _); intro).
       refine (sq_tr oE _).
       refine (sq_move_14^-1 oE _).
       refine (sq_move_31 oE _).

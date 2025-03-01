@@ -411,7 +411,7 @@ Definition dcate_inv2 {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   apply dcate_moveL_V1.
   rapply ((p'^$' $@R' _) $@' dcate_isretr _).
-  exact isd0gpd_hom.
+  2: exact isd0gpd_hom.
 Defined.
 
 Definition dcate_inv_compose {A} {D : A -> Type} `{DHasEquivs A D}

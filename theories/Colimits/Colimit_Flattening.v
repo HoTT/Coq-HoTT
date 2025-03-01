@@ -226,7 +226,6 @@ Section Flattening.
     srapply colimit_unicity.
     3: apply iscolimit_colimit.
     rapply Build_IsColimit.
-    apply unicocone_cocone_E'.
   Defined.
 
 End Flattening.
