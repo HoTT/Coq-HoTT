@@ -126,7 +126,7 @@ Definition hfiber_functor_hfiber {A B C D}
   : hfiber (functor_hfiber p b) (c;q)
     <~> hfiber (functor_hfiber (fun x => (p x)^) c) (b;q^).
 Proof.
-  rapply (equiv_functor_sigma_id _ oE _ oE (equiv_functor_sigma_id _)^-1).
+  refine (equiv_functor_sigma_id _ oE _ oE (equiv_functor_sigma_id _)^-1).
   1,3:intros; rapply equiv_path_sigma.
   refine (equiv_sigma_assoc _ _ oE _ oE (equiv_sigma_assoc _ _)^-1).
   apply equiv_functor_sigma_id; intros a; cbn.

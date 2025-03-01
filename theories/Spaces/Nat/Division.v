@@ -734,8 +734,8 @@ Proof.
   nrapply nat_gcd_unique.
   - intros q H1 H2.
     rapply nat_divides_r_gcd.
-  - rapply (nat_divides_trans (nat_divides_l_gcd_l _ _)).
-  - apply nat_divides_r_gcd; rapply nat_divides_trans.
+  - exact (nat_divides_trans (nat_divides_l_gcd_l _ _) _).
+  - apply nat_divides_r_gcd; exact (nat_divides_trans _ _).
 Defined.
 
 (** If [nat_gcd n m] is [0], then [n] must also be [0]. *)

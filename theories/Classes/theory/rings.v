@@ -254,9 +254,8 @@ Section ring_props.
   Lemma negate_swap_r : forall x y, x - y = -(y - x).
   Proof.
     intros; symmetry.
-    lhs rapply groups.inverse_sg_op.
-    f_ap.
-    apply involutive.
+    lhs apply groups.inverse_sg_op.
+    f_ap; apply involutive.
   Defined.
 
   Lemma negate_swap_l x y : -x + y = -(x - y).
@@ -465,7 +464,7 @@ Section ringmor_props.
 
   Definition preserves_negate x : f (- x) = - f x.
   Proof.
-    rapply preserves_inverse.
+    apply preserves_inverse.
   Defined.
 
   Lemma preserves_minus x y : f (x - y) = f x - f y.

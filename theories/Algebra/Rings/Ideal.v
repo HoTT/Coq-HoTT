@@ -1096,12 +1096,12 @@ Section IdealLemmas.
     1: rapply ideal_dist_l.
     etransitivity.
     1: rapply ideal_sum_subset_pres_r.
-    1: rapply ideal_product_subset_pres_l.
-    1: apply ideal_intersection_subset_l.
+    2: rapply ideal_product_subset_pres_l.
+    2: apply ideal_intersection_subset_l.
     etransitivity.
     1: rapply ideal_sum_subset_pres_l.
-    1: rapply ideal_product_subset_pres_l.
-    1: apply ideal_intersection_subset_r.
+    2: rapply ideal_product_subset_pres_l.
+    2: apply ideal_intersection_subset_r.
     rapply ideal_sum_comm.
   Defined.
 

@@ -719,9 +719,9 @@ Proof.
              ExtendableAlong 1 cyl (fun x:Cyl h => DPath C' (cglue x) (u x) (v x))).
   { intros u v.
     rapply extendable_postcompose'.
-    2:{ rapply (cancelL_extendable 1 _ cyl pr_cyl).
-        - rapply extendable_equiv.
-        - exact (eh (fun x => cglue x # u (cyr x)) (v o cyr)). }
+    3:{ rapply (cancelL_extendable 1 _ cyl pr_cyl).
+        2: rapply extendable_equiv.
+        2: exact (eh (fun x => cglue x # u (cyr x)) (v o cyr)). }
     intros x; subst C'.
     refine ((dp_compose (pr_cylcoeq p q) C _)^-1 oE _).
     symmetry; srapply equiv_ds_fill_lr.

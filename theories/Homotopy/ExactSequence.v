@@ -151,7 +151,6 @@ Global Instance ishprop_isexact_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
   : IsHProp (IsExact n i f).
 Proof.
   rapply (transport (fun A => IsHProp A) (x := { cx : IsComplex i f & IsConnMap n (cxfib cx) })).
-  2: exact _.
   apply path_universe_uncurried; issig.
 Defined.
 
@@ -288,7 +287,6 @@ Global Instance isequiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : 
   : IsEquiv (cxfib cx_isexact).
 Proof.
   rapply isequiv_conn_ino_map.
-  1: apply ex.
   rapply (cancelL_mapinO _ _ pr1).
 Defined.
 
@@ -302,7 +300,7 @@ Proposition equiv_cxfib_beta {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   : i o pequiv_inverse (equiv_cxfib ex) == pfib _.
 Proof.
   rapply equiv_ind.
-  1: exact (isequiv_cxfib ex).
+  3: exact (isequiv_cxfib ex).
   intro x.
   exact (ap (fun g => i g) (eissect _ x)).
 Defined.
@@ -555,7 +553,7 @@ Definition classify_fiberseq `{Univalence} {Y F : pType@{u}}
 Proof.
   refine (_ oE _).
   (** To apply [equiv_sigma_pfibration] we need to invert the equivalence on the fiber. *)
-  { do 2 (rapply equiv_functor_sigma_id; intro).
+  { do 2 (refine (equiv_functor_sigma_id _); intro).
     apply equiv_pequiv_inverse. }
   exact ((equiv_sigma_assoc _ _)^-1 oE equiv_sigma_pfibration).
 Defined.

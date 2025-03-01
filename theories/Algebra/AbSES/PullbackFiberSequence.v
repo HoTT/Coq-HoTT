@@ -396,6 +396,6 @@ Proof.
   srapply (equiv_ind (equiv_hfiber_abses (abses_pullback (inclusion E)) (point (AbSES B A)))).
   intros [F p].
   rapply contr_equiv'.
-  1: apply equiv_hfiber_cxfib'.
+  2: apply equiv_hfiber_cxfib'.
   apply contr_hfiber_cxfib'.
 Defined.

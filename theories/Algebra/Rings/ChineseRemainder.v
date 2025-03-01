@@ -147,7 +147,7 @@ Theorem chinese_remainder_prod `{Univalence}
 Proof.
   etransitivity.
   { rapply rng_quotient_invar.
-    symmetry.
-    rapply ideal_intersection_is_product. }
+    2: symmetry; rapply ideal_intersection_is_product. 
+  }
   rapply chinese_remainder.
 Defined.

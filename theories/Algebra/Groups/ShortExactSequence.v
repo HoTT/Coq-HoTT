@@ -21,7 +21,7 @@ Proposition grp_iso_cxfib_beta {A B C : Group} {i : A $-> B} {f : B $-> C}
   : i $o (grp_iso_inverse (grp_iso_cxfib ex)) $== subgroup_incl (grp_kernel f).
 Proof.
   rapply equiv_ind.
-  1: exact (isequiv_cxfib ex).
+  3: exact (isequiv_cxfib ex).
   intro x.
   exact (ap (fun y => i y) (eissect _ x)).
 Defined.

@@ -248,7 +248,7 @@ Section AbelGroup.
     intros x y z; cbn beta.
     lhs nrapply ap.
     2: rhs nrapply ap.
-    1,3: lhs rapply inverse_sg_op; nrapply (ap (.* _)); rapply inverse_sg_op.
+    1,3: lhs apply inverse_sg_op; nrapply (ap (.* _)); rapply inverse_sg_op.
     change (abel_in z^ * abel_in y^ * abel_in x^
       = abel_in y^ * abel_in z^ * abel_in x^).
     apply (ap (.* _)).

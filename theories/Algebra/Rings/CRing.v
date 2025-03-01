@@ -29,7 +29,7 @@ Definition Build_CRing' (R : AbGroup) `(!One R, !Mult R)
   : CRing.
 Proof.
   snrapply Build_CRing.
-  - rapply (Build_Ring R); only 1,2,4: exact _.
+  - rapply (Build_Ring R). 
     + intros x y z.
       lhs nrapply comm.
       lhs rapply dist_l.
@@ -133,7 +133,7 @@ Section IdealCRing.
     2: rapply ideal_sum_self.
     etransitivity.
     2: rapply ideal_sum_subset_pres_r.
-    2: rapply ideal_product_comm.
+    3: rapply ideal_product_comm.
     apply ideal_product_intersection_sum_subset.
   Defined.
  

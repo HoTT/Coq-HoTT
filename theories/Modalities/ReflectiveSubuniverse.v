@@ -122,8 +122,9 @@ Section Subuniverse.
   Proof.
     split.
     - exact _. (* Uses the instance mapinO_pr1 above. *)
-    - rapply functor_forall; intros a x.
-      exact (inO_equiv_inO (hfiber pr1 a)
+    - rapply functor_forall.
+      2: intros a x;
+        exact (inO_equiv_inO (hfiber pr1 a)
                            (hfiber_fibration a B)^-1%equiv).
   Defined.
 

@@ -734,7 +734,7 @@ Proof.
     refine (ap _ p^ @ _).
     refine (cx_isexact _).
   - apply isequiv_surj_emb.
-    1: rapply cancelR_conn_map.
+    1: exact (cancelR_conn_map _ _ _).
     apply isembedding_isinj_hset.
     srapply Quotient_ind2_hprop; intros x y.
     intro p.

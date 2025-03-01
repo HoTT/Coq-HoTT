@@ -476,8 +476,8 @@ Section decidable.
     intros p.
     change ((fun x => match x with | double1 y => Unit | _ => Empty end) bzero).
     rapply (@transport binnat).
-    - exact p^.
-    - exact tt.
+    2: exact p^.
+    exact tt.
   Qed.
 
   Local Definition ineq_bzero_double2 n : bzero <> double2 n.
@@ -485,8 +485,8 @@ Section decidable.
     intros p.
     change ((fun x => match x with | double2 y => Unit | _ => Empty end) bzero).
     rapply (@transport binnat).
-    - exact p^.
-    - exact tt.
+    2: exact p^.
+    exact tt.
   Qed.
 
   Local Definition ineq_double1_double2 m n : double1 m <> double2 n.
@@ -494,8 +494,8 @@ Section decidable.
     intros p.
     change ((fun x => match x with | double2 y => Unit | _ => Empty end) (double1 m)).
     rapply (@transport binnat).
-    - exact p^.
-    - exact tt.
+    2: exact p^.
+    exact tt.
   Qed.
 
   Local Definition undouble (m : binnat) : binnat :=
