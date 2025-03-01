@@ -793,7 +793,7 @@ Definition functor2_trijoin {A B C A' B' C'}
   : functor_trijoin f g h == functor_trijoin f' g' h'.
 Proof.
   unfold functor_trijoin.
-  rapply (fmap trijoin_rec).
+  refine (fmap trijoin_rec _).
   apply (trijoinrecdata_tricomp2 _ p q r).
 Defined.
 

@@ -117,7 +117,7 @@ Proof.
   intros A n.
   cbn; etransitivity.
   1: apply ptr_loops.
-  rapply (emap loops).
+  refine (emap loops _).
   apply IHk.
 Defined.
 

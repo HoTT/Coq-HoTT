@@ -105,13 +105,13 @@ Proof.
       revert_opaque f; apply Trunc_rec; intros [f q0].
       (* Since [projection F f] is in the kernel of [projection E], we find a preimage in [B]. *)
       assert (b : merely (hfiber (inclusion E) (projection F f))).
-      1: { rapply isexact_preimage.
+      1: { refine (isexact_preimage _ _ _ _ _).
            exact (ap _ q0 @ q). }
       revert_opaque b; apply Trunc_rec; intros [b q1].
       (* The difference [f - b] in [F] is in the kernel of [projection F], hence lies in [A]. *)
       assert (a : merely (hfiber (inclusion F)
                                  (sg_op f (-(grp_pullback_pr1 _ _ (p^$.1 (ab_biprod_inr b))))))).
-      1: { rapply isexact_preimage.
+      1: { refine (isexact_preimage _ _ _ _ _).
            refine (grp_homo_op _ _ _ @ _).
            refine (ap (fun x => _ + x) (grp_homo_inv _ _) @ _).
            refine (ap (fun x => _ - x) (abses_pullback_inclusion_transpose_beta (inclusion E) F p b @ q1) @ _).
@@ -171,7 +171,7 @@ Proof.
   change (equiv_ptransformation_phomotopy (iscomplex_abses_pullback' _ _ (iscomplex_abses E)) U)
     with (equiv_path_abses_iso ((iscomplex_abses_pullback' _ _ (iscomplex_abses E)).1 U)).
   apply (ap equiv_path_abses_iso).
-  rapply path_hom.
+  refine (path_hom _ ).
   refine (_ $@R abses_pullback_compose' (inclusion E) (projection E) U);
     unfold trans_comp.
   refine (_ $@R abses_pullback_homotopic' (projection E $o inclusion E) grp_homo_const (iscomplex_abses E) U).
@@ -248,7 +248,7 @@ Proof.
        apply eissect. }
   refine (equiv_concat_l _ _ oE _).
   1: { refine (ap (fun x => (x $@ _).1) _).
-       rapply gpd_strong_1functor_V. }
+       exact (gpd_strong_1functor_V _ _). }
   apply equiv_path_groupisomorphism.
 Defined.
 
@@ -366,8 +366,8 @@ Lemma hfiber_cxfib'_induced_path' `{Univalence} {A B C : AbGroup} (E : AbSES C B
   : path_hfiber_cxfib' (hfiber_cxfib'_inhabited E F p) Y.
 Proof.
   exists (hfiber_cxfib'_induced_path'0 E F p Y).
-  rapply gpd_moveR_Vh.
-  rapply gpd_moveL_hM.
+  refine (gpd_moveR_Vh _).
+  refine (gpd_moveL_hM _).
   rapply gpd_moveR_Vh.
   intro x.
   srapply equiv_path_pullback_hset; split.

@@ -31,14 +31,14 @@ Section UniverseStructure.
     (P : X -> Type@{w}) (j : X -> Y) (isem : IsEmbedding@{u v uv} j) (x : X)
     : Equiv@{uvw w} (LeftKanFam@{} P j (j x)) (P x).
   Proof.
-    rapply (@equiv_contr_sigma (hfiber j (j x)) _ _).
+    exact (@equiv_contr_sigma (hfiber j (j x)) _ _).
   Defined.
 
   Definition isext_equiv_rightkanfam@{} `{Funext} {X : Type@{u}} {Y : Type@{v}}
     (P : X -> Type@{w}) (j : X -> Y) (isem : IsEmbedding@{u v uv} j) (x : X)
     : Equiv@{uvw w} (RightKanFam@{} P j (j x)) (P x).
   Proof.
-    rapply (@equiv_contr_forall _ (hfiber j (j x)) _ _).
+    exact (@equiv_contr_forall _ (hfiber j (j x)) _ _).
   Defined.
 
   Definition isext_leftkanfam@{suvw | uvw < suvw} `{Univalence} {X : Type@{u}} {Y : Type@{v}}

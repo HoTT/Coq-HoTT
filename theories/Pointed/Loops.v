@@ -106,7 +106,7 @@ Defined.
 
 Lemma fmap_loops_pconst {A B : pType} : fmap loops (@pconst A B) ==* pconst.
 Proof.
-  rapply fmap_zero_morphism.
+  exact (fmap_zero_morphism _).
 Defined.
 
 (** *** Iterated loops functor *)
@@ -234,7 +234,7 @@ Proof.
       exact ((ap_idmap _)^).
   - refine ((fmap_comp loops _ _)^* @* _).
     refine (_ @* (fmap_comp loops _ _)).
-    rapply (fmap2 loops).
+    refine (fmap2 loops _).
     apply IHn.
 Defined.
 
@@ -292,7 +292,7 @@ Proof.
     refine (pmap_prewhisker _ (pfst_loops_prod _ _) @* _).
     refine ((fmap_comp loops _ _)^* @* _).
     change (?L ==* _) with (L ==* fmap loops (fmap (iterated_loops n) pfst)).
-    rapply (fmap2 loops); simpl.
+    refine (fmap2 loops _); simpl.
     exact IHn.
 Defined.
 
@@ -306,7 +306,7 @@ Proof.
     refine (pmap_prewhisker _ (psnd_loops_prod _ _) @* _).
     refine ((fmap_comp loops _ _)^* @* _).
     change (?L ==* _) with (L ==* fmap loops (fmap (iterated_loops n) psnd)).
-    rapply (fmap2 loops); simpl.
+    refine (fmap2 loops _); simpl.
     exact IHn.
 Defined.
 
@@ -346,7 +346,7 @@ Proof.
   induction n.
   1: reflexivity.
   refine (loops_pproduct_commute _ _ o*E _).
-  rapply (emap loops).
+  refine (emap loops _).
   exact IHn.
 Defined.
 
@@ -362,7 +362,7 @@ Proof.
   refine (pequiv_inverse (unfold_iterated_loops' _ _) o*E _
     o*E unfold_iterated_loops' _ _).
   refine (IHn _ _ _ o*E _).
-  rapply (emap (iterated_loops _)).
+  refine (emap (iterated_loops _) _).
   apply loops_psigma_commute.
 Defined.
 
@@ -416,7 +416,7 @@ Proof.
   rapply equiv_iff_hprop.
   intros X p.
   refine (@contr_equiv' _ _ _ X).
-  rapply (emap (iterated_loops _)).
+  refine (emap (iterated_loops _) _).
   srapply Build_pEquiv'.
   1: exact (equiv_concat_lr p 1).
   cbn; unfold ispointed_loops.

@@ -320,7 +320,7 @@ Tactic Notation "snrefine" uconstr(term) := simple notypeclasses refine term; gl
 
 (** Note that the Coq standard library has a [rapply], but it is like our [rapply'] with many-holes first.  We prefer fewer-holes first, for instance so that a theorem producing an equivalence will by preference be used to produce an equivalence rather than to apply the coercion of that equivalence to a function. *)
 Tactic Notation "rapply" uconstr(term)
-  := do_with_holes ltac:(fun x => refine x) term.
+  := do_with_holes ltac:(fun x => try (try (nrefine x || fail 2); fail); refine x) term.
 Tactic Notation "rapply'" uconstr(term)
   := do_with_holes' ltac:(fun x => refine x) term.
 

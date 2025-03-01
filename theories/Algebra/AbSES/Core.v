@@ -403,7 +403,7 @@ Proof.
   induction p.
   refine (ap (ap f) (eisretr _ _) @ _).
   nrefine (_ @ ap equiv_path_abses_iso _).
-  2: { rapply path_hom.
+  2: { refine (path_hom _).
        srefine (_ $@ fmap2 _ _).
        2: exact (Id E).
        2: intro x; reflexivity.
@@ -426,7 +426,7 @@ Proof.
   2: apply (abses_ap_fmap g).
   nrefine (_ @ (abses_path_data_compose_beta _ _)^).
   nrapply (ap equiv_path_abses_iso).
-  rapply path_hom.
+  refine (path_hom _).
   reflexivity.
 Defined.
 
@@ -575,7 +575,7 @@ Proof.
   apply path_sigma_hprop; cbn.
   apply grp_cancelL1.
   refine (ap (fun x => - s x) _ @ _).
-  1: rapply cx_isexact.
+  1: refine (cx_isexact  _ ).
   exact (ap _ (grp_homo_unit _) @ grp_inv_unit).
 Defined.
 
@@ -629,7 +629,7 @@ Proof.
   lhs nrapply ab_biprod_functor_beta.
   *)
   nrapply path_prod'.
-  2: rapply cx_isexact.
+  2: refine (cx_isexact _).
   (* The LHS of the remaining goal is definitionally equal to
        (grp_iso_inverse (grp_iso_cxfib (isexact_inclusion_projection E)) $o
          (projection_split_to_kernel E h $o inclusion E)) a
@@ -686,12 +686,12 @@ Lemma abses_kernel_iso `{Funext} {A E B : AbGroup} (i : A $-> E) (p : E $-> B)
 Proof.
   snrapply Build_GroupIsomorphism.
   - apply (grp_kernel_corec i).
-    rapply cx_isexact.
+    refine cx_isexact.
   - apply isequiv_surj_emb.
-    2: rapply (cancelL_mapinO _ (grp_kernel_corec _ _) _).
+    2: refine (cancelL_mapinO _ (grp_kernel_corec _ _) _ _ _).
     intros [y q].
     assert (a : Tr (-1) (hfiber i y)).
-    1: by rapply isexact_preimage.
+    1: by refine (isexact_preimage _ _ _ _ _).
     strip_truncations; destruct a as [a r].
     rapply contr_inhabited_hprop.
     refine (tr (a; _)); cbn.
@@ -732,7 +732,7 @@ Proof.
   - snrapply (quotient_abgroup_rec _ _ g).
     intros e; rapply Trunc_rec; intros [a p].
     refine (ap _ p^ @ _).
-    rapply cx_isexact.
+    refine (cx_isexact _).
   - apply isequiv_surj_emb.
     1: rapply cancelR_conn_map.
     apply isembedding_isinj_hset.

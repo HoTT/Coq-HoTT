@@ -119,13 +119,13 @@ Proof.
           intros x; unfold composeD; cbn.
           apply equiv_path_arrow. }
         refine ((isconnected_elim (Nul D) (A := D (inl a)) _ _).1).
-        { rapply isconnected_acc_ngen. }
+        { exact (isconnected_acc_ngen _ _). }
         intros b; cbn in b. strip_truncations.
         assert (bc : IsConnMap (Nul D) (unit_name b)).
         { intros x; unfold hfiber.
           apply (isconnected_equiv (Nul D) (b = x)
                                    (equiv_contr_sigma _)^-1).
-          rapply (isconnected_acc_ngen (Nul D) (inr (a;(b,x)))). }
+          exact (isconnected_acc_ngen (Nul D) (inr (a;(b,x)))). }
         pose (p := conn_map_elim (Nul D) (unit_name b)
                                  (fun u => f b = f u) (fun _ => 1)).
         apply (Build_Contr _ (f b ; p)); intros [x q].

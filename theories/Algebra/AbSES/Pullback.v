@@ -460,7 +460,7 @@ Proof.
     { refine (ap _ (abses_path_data_V p) @ _).
       apply eissect. }
     refine (ap (fun x => x $@ _) _).
-    rapply gpd_strong_1functor_V. }
+    exact (gpd_strong_1functor_V _ _). }
   refine (equiv_path_sigma_hprop _ _ oE _).
   apply equiv_path_groupisomorphism.
 Defined.

@@ -82,7 +82,7 @@ Section AssumeUnivalence.
     intros f.
     refine (_ @ @is1natural_equiv_pi1bouquet_rec S _ _ f grp_homo_id).
     simpl; f_ap; symmetry.
-    rapply (cat_idr_strong f).
+    exact (cat_idr_strong f).
   Defined.
 
 End AssumeUnivalence.
