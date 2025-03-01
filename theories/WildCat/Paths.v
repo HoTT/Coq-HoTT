@@ -24,7 +24,7 @@ Local Existing Instances isgraph_paths is2graph_paths is3graph_paths | 10.
 
 (** Any type has composition and identity morphisms given by path concatenation and reflexivity. *)
 Global Instance is01cat_paths (A : Type) : Is01Cat A
-  := {| Id := @idpath _ ; cat_comp := fun _ _ _ x y => concat y x |}.
+  := { Id := @idpath _ ; cat_comp := fun _ _ _ x y => concat y x }.
 
 (** Any type has a 0-groupoid structure with inverse morphisms given by path inversion. *)
 Global Instance is0gpd_paths (A : Type) : Is0Gpd A

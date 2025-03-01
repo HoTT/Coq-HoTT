@@ -771,6 +771,9 @@ Defined.
 Global Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
 
+Definition isHom_GroupIsomorphism (G H : Group) : GroupIsomorphism G H -> Hom G H := idmap.
+Coercion isHom_GroupIsomorphism  : GroupIsomorphism >-> Hom.
+
 Global Instance is01cat_group : Is01Cat Group :=
   Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose).
 

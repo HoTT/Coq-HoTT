@@ -419,7 +419,7 @@ Global Instance isgraph_leftmodule {R : Ring} : IsGraph (LeftModule R)
   := Build_IsGraph _ LeftModuleHomomorphism.
 
 Global Instance is01cat_leftmodule {R : Ring} : Is01Cat (LeftModule R)
-  := Build_Is01Cat _ _ lm_homo_id (@lm_homo_compose R).
+  := Build_Is01Cat (LeftModule R) _ lm_homo_id (@lm_homo_compose R).
 
 Global Instance is2graph_leftmodule {R : Ring} : Is2Graph (LeftModule R)
   := fun M N => isgraph_induced (@lm_homo_map R M N).

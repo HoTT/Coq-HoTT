@@ -147,7 +147,7 @@ Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
 
 (** A special case of the "short 5-lemma" where the two outer maps are (definitionally) identities. *)
 Lemma short_five_lemma {B A : AbGroup@{u}}
-  {E F : AbSES B A} (phi : GroupHomomorphism E F)
+  {E F : AbSES B A} (phi : Hom (A:=Group) E F)
   (p0 : phi $o inclusion E == inclusion F) (p1 : projection E == projection F $o phi)
   : IsEquiv phi.
 Proof.
@@ -185,7 +185,7 @@ Defined.
 
 (** Below we prove that homomorphisms respecting [projection] and [inclusion] correspond to paths in [AbSES B A]. We refer to such homomorphisms simply as path data in [AbSES B A]. *)
 Definition abses_path_data {B A : AbGroup@{u}} (E F : AbSES B A)
-  := {phi : GroupHomomorphism E F
+  := {phi : Hom (A:=Group) E F
             & (phi $o inclusion _ == inclusion _)
               * (projection _ == projection _ $o phi)}.
 

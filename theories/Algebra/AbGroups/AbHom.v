@@ -40,10 +40,10 @@ Defined.
 (** ** Coequalizers *)
 
 (** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)
-Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
+Definition ab_coeq {A B : AbGroup} (f g : Hom A B)
   := ab_cokernel ((-f) + g).
 
-Definition ab_coeq_in {A B} {f g : A $-> B} : B $-> ab_coeq f g.
+Definition ab_coeq_in {A B : AbGroup} {f g : A $-> B} : B $-> ab_coeq f g.
 Proof.
   snrapply grp_quotient_map.
 Defined.
@@ -97,7 +97,7 @@ Proof.
   exact p.
 Defined.
 
-Definition functor_ab_coeq {A B} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
+Definition functor_ab_coeq {A B : AbGroup} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
   (a : A $-> A') (b : B $-> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
   : ab_coeq f g $-> ab_coeq f' g'.
 Proof.
@@ -109,7 +109,7 @@ Proof.
   nrapply ab_coeq_glue.
 Defined.
 
-Definition functor2_ab_coeq {A B} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
+Definition functor2_ab_coeq {A B : AbGroup} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
   {a a' : A $-> A'} {b b' : B $-> B'}
   (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
   (p' : f' $o a' $== b' $o f) (q' : g' $o a' $== b' $o g)
@@ -121,7 +121,7 @@ Proof.
   exact (ap ab_coeq_in (s x)).
 Defined.
 
-Definition functor_ab_coeq_compose {A B} {f g : A $-> B}
+Definition functor_ab_coeq_compose {A B : AbGroup} {f g : A $-> B}
   {A' B'} {f' g' : A' $-> B'} 
   (a : A $-> A') (b : B $-> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
   {A'' B''} {f'' g'' : A'' $-> B''}
@@ -206,10 +206,7 @@ Proof.
 Defined.
 
 Global Instance is0bifunctor_ab_hom `{Funext}
-  : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
-Proof.
-  rapply Build_Is0Bifunctor''.
-Defined.
+  : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup) := Build_Is0Bifunctor'' _.
 
 Global Instance is1bifunctor_ab_hom `{Funext}
   : Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
