@@ -156,7 +156,6 @@ Defined.
 
 (** The above lemmas have some common rearrangements that are useful. Since these all follow the same pattern, we introduce a tactic to apply it. *)
 
-(** TODO: move to PathGroupoids and rename? *) 
 (** The most common rearrangement after applying the [transport_paths_] lemmas on the [lhs]. *)
 Definition moveR_Vp_p_inv {A : Type} {w x y z : A}
   (p : x = w) (q : x = y) (r : y = z) (s : w = z)
