@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.PathGroupoids.
 Require Import Types.Equiv.
-Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat.
+Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.Bifunctor WildCat.TwoOneCat.
 
 (** ** The (1-)category of types *)
 
@@ -43,6 +43,10 @@ Proof.
   apply Build_Is0Functor.
   intros f g p a; exact (p (h a)).
 Defined.
+
+Instance is0bifunctor_type_comp {A B C : Type} :
+  Is0Bifunctor (cat_comp (a:=A) (b:=B) (c:=C))
+  := Build_Is0Bifunctor'' _.
 
 Global Instance is1cat_strong_type : Is1Cat_Strong Type.
 Proof.
@@ -147,25 +151,44 @@ Proof.
   intros ? ? ? ? p ?; exact (p _).
 Defined.
 
-Global Instance is21cat_type : Is21Cat Type.
+Instance is1bifunctor_cat_comp {A B C :Type}:
+  Is1Bifunctor (cat_comp (A:=Type) (a:=A) (b:=B) (c:=C)).
 Proof.
-  snrapply Build_Is21Cat.
-  1-4, 6-7: exact _.
-  - intros a b c f g h k p q x; cbn.
-    symmetry.
-    apply concat_Ap.
-  - intros a b c d f g.
-    snrapply Build_Is1Natural.
-    intros h i p x; cbn.
-    exact (concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
-  - intros a b.
-    snrapply Build_Is1Natural.
-    intros f g p x; cbn.
-    exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
-  - intros a b.
-    snrapply Build_Is1Natural.
-    intros f g p x; cbn.
-    exact (concat_p1 _ @ (concat_1p _)^).
+  apply Build_Is1Bifunctor''.
+  1-2: exact _.
+  intros g g' h_g f f' h_f a; cbn.
+  symmetry; apply concat_Ap.
+Defined.
+
+Instance isTruncatedBicat_Type : IsTruncatedBicat Type.
+Proof.
+  snrapply Build_IsTruncatedBicat; intros; cbn.
+  1-2: exact _.
+  all: reflexivity.
+Defined.
+
+Instance is21cat_type : Is21Cat Type.
+Proof.
+  snrapply Build_Is21Cat; [snrapply Build_IsBicategory | | ].
+  1-3, 12-13: exact _.
+  1-3: intros; constructor; reflexivity.
+  - intros A B C D. snrapply Build_Is1Natural.
+    intros ((h,g),f) ((h',g'),f').
+    intros ((gamma,beta),alpha) a; simpl.
+    unfold fmap11; simpl.
+    rewrite concat_1p.
+    rewrite concat_p1.
+    rewrite concat_p_pp.
+    apply (ap (fun z => z @ gamma (g' (f' a)))).
+    rewrite ap_compose.
+    rewrite ap_pp.
+    reflexivity.
+  - intros A B; snrapply Build_Is1Natural.
+    intros f f' h a; simpl.
+    rewrite ap_idmap.
+    exact (concat_p1_1p _).
+  - intros A B; snrapply Build_Is1Natural.
+    intros f f' h a. exact (concat_p1_1p _).
   - reflexivity.
   - reflexivity.
 Defined.
