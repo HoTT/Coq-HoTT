@@ -40,7 +40,7 @@ Defined.
 (** ** Coequalizers *)
 
 (** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)
-Definition ab_coeq {A B : AbGroup} (f g : Hom A B)
+Definition ab_coeq {A B : AbGroup} (f g : A $-> B)
   := ab_cokernel ((-f) + g).
 
 Definition ab_coeq_in {A B : AbGroup} {f g : A $-> B} : B $-> ab_coeq f g.
