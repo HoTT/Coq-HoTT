@@ -76,17 +76,17 @@ Class Stable P := stable : ~~P -> P.
 Definition not_not_unit {P : Type} : P -> ~~P
   := fun x np => np x.
 
-Global Instance ishprop_stable_hprop `{Funext} P `{IsHProp P} : IsHProp (Stable P)
+Instance ishprop_stable_hprop `{Funext} P `{IsHProp P} : IsHProp (Stable P)
   := istrunc_forall.
 
-Global Instance stable_decidable P `{Decidable P} : Stable P.
+Instance stable_decidable P `{Decidable P} : Stable P.
 Proof.
   intros dn.
   (* [dec P] either solves the goal or contradicts [dn]. *)
   by destruct (dec P).
 Defined.
 
-Global Instance stable_negation P : Stable (~ P).
+Instance stable_negation P : Stable (~ P).
 Proof.
   intros nnnp p.
   exact (nnnp (not_not_unit p)).
@@ -136,17 +136,17 @@ Definition decide_rel {A B} (R : A -> B -> Type)
 
 (** Contractible types are decidable. *)
 
-Global Instance decidable_contr X `{Contr X} : Decidable X
+Instance decidable_contr X `{Contr X} : Decidable X
   := inl (center X).
 
 (** Thus, hprops have decidable equality. *)
 
-Global Instance decidablepaths_hprop X `{IsHProp X} : DecidablePaths X
+Instance decidablepaths_hprop X `{IsHProp X} : DecidablePaths X
   := fun x y => dec (x = y).
 
 (** Empty types are trivial. *)
 
-Global Instance decidable_empty : Decidable Empty
+Instance decidable_empty : Decidable Empty
   := inr idmap.
 
 
@@ -201,13 +201,13 @@ Class Collapsible (A : Type) :=
   { collapse : A -> A ;
     wconst_collapse : WeaklyConstant collapse
   }.
-Global Existing Instance wconst_collapse.
+Existing Instance wconst_collapse.
 
 Class PathCollapsible (A : Type) :=
   path_coll : forall (x y : A), Collapsible (x = y).
 Global Existing Instance path_coll.
 
-Global Instance collapsible_decidable (A : Type) `{Decidable A}
+Instance collapsible_decidable (A : Type) `{Decidable A}
 : Collapsible A.
 Proof.
   destruct (dec A) as [a | na].
@@ -217,14 +217,14 @@ Proof.
     intros x y; destruct (na x).
 Defined.
 
-Global Instance pathcoll_decpaths (A : Type) `{DecidablePaths A}
+Instance pathcoll_decpaths (A : Type) `{DecidablePaths A}
 : PathCollapsible A.
 Proof.
   intros x y; exact _.
 Defined.
 
 (** We give this a relatively high-numbered priority so that in deducing [IsHProp -> IsHSet] Coq doesn't detour via [DecidablePaths]. *)
-Global Instance hset_pathcoll (A : Type) `{PathCollapsible A}
+Instance hset_pathcoll (A : Type) `{PathCollapsible A}
 : IsHSet A | 1000.
 Proof.
   apply istrunc_S.
@@ -275,7 +275,7 @@ Defined.
 
 (** Having decidable equality (which implies being an hset, by Hedberg's theorem above) is itself an hprop. *)
 
-Global Instance ishprop_decpaths `{Funext} (A : Type)
+Instance ishprop_decpaths `{Funext} (A : Type)
 : IsHProp (DecidablePaths A).
 Proof.
   apply hprop_inhabited_contr; intros d.

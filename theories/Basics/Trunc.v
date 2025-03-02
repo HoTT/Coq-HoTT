@@ -157,9 +157,9 @@ Existing Class trunc_index_leq.
 
 Notation "m <= n" := (trunc_index_leq m n) : trunc_scope.
 
-Global Instance trunc_index_leq_minus_two_n@{} n : -2 <= n := tt.
+Instance trunc_index_leq_minus_two_n@{} n : -2 <= n := tt.
 
-Global Instance trunc_index_leq_succ@{} n : n <= n.+1.
+Instance trunc_index_leq_succ@{} n : n <= n.+1.
 Proof.
   by induction n as [|n IHn] using trunc_index_ind.
 Defined.
@@ -203,14 +203,14 @@ Proof.
   apply IHn, p.
 Defined.
 
-Global Instance trunc_index_leq_refl@{}
+Instance trunc_index_leq_refl@{}
   : Reflexive trunc_index_leq.
 Proof.
   intro n.
   by induction n as [|n IHn] using trunc_index_ind.
 Defined.
 
-Global Instance trunc_index_leq_transitive@{}
+Instance trunc_index_leq_transitive@{}
   : Transitive trunc_index_leq.
 Proof.
   intros a b c p q.
@@ -310,7 +310,7 @@ Definition contr_istrunc_minus_two `{H : IsTrunc (-2) A} : Contr A
   := H.
 
 (** Truncation levels are cumulative. *)
-Global Instance istrunc_paths' {n : trunc_index} {A : Type} `{IsTrunc n A}
+Instance istrunc_paths' {n : trunc_index} {A : Type} `{IsTrunc n A}
   : forall x y : A, IsTrunc n (x = y) | 1000.
 Proof.
   generalize dependent A.
@@ -319,7 +319,7 @@ Proof.
   - apply istrunc_S.  rapply IH.
 Defined.
 
-Global Instance istrunc_succ {n : trunc_index} {A : Type} `{IsTrunc n A}
+Instance istrunc_succ {n : trunc_index} {A : Type} `{IsTrunc n A}
   : IsTrunc n.+1 A | 1000.
 Proof.
   apply istrunc_S.
@@ -380,7 +380,7 @@ Definition istrunc_equiv_istrunc A {B} (f : A <~> B) `{IsTrunc n A}
 Class IsTruncMap (n : trunc_index) {X Y : Type} (f : X -> Y)
   := istruncmap_fiber : forall y:Y, IsTrunc n (hfiber f y).
 
-Global Existing Instance istruncmap_fiber.
+Existing Instance istruncmap_fiber.
 
 Notation IsEmbedding := (IsTruncMap (-1)).
 
@@ -398,7 +398,7 @@ Arguments trunctype_type {_} _.
 Arguments trunctype_istrunc [_] _.
 
 Coercion trunctype_type : TruncType >-> Sortclass.
-Global Existing Instance trunctype_istrunc.
+Existing Instance trunctype_istrunc.
 
 Notation "n -Type" := (TruncType n) : type_scope.
 Notation HProp := (-1)-Type.
@@ -432,7 +432,7 @@ Proof.
 Defined.
 
 (** If inhabitation implies contractibility, then we have an h-proposition.  We probably won't often have a hypothesis of the form [A -> Contr A], so we make sure we give priority to other instances. *)
-Global Instance hprop_inhabited_contr (A : Type)
+Instance hprop_inhabited_contr (A : Type)
   : (A -> Contr A) -> IsHProp A | 10000.
 Proof.
   intros H; apply istrunc_S; intros x y.
@@ -495,7 +495,7 @@ Proof.
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
-Global Instance istrunc_forall `{Funext} `{P : A -> Type} `{forall a, IsTrunc n (P a)}
+Instance istrunc_forall `{Funext} `{P : A -> Type} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (forall a, P a) | 100.
 Proof.
   generalize dependent P.
@@ -508,7 +508,7 @@ Proof.
 Defined.
 
 (** Truncatedness is an hprop. *)
-Global Instance ishprop_istrunc `{Funext} (n : trunc_index) (A : Type)
+Instance ishprop_istrunc `{Funext} (n : trunc_index) (A : Type)
   : IsHProp (IsTrunc n A) | 0.
 Proof.
   revert A; simple_induction n n IH; cbn; intro A.
@@ -526,7 +526,7 @@ Defined.
 (** By [trunc_hprop], it follows that [IsTrunc n A] is also [m]-truncated for any [m >= -1]. *)
 
 (** Similarly, a map being truncated is also a proposition. *)
-Global Instance ishprop_istruncmap `{Funext} (n : trunc_index) {X Y : Type} (f : X -> Y)
+Instance ishprop_istruncmap `{Funext} (n : trunc_index) {X Y : Type} (f : X -> Y)
 : IsHProp (IsTruncMap n f).
 Proof.
   apply hprop_allpath; intros s t.
@@ -535,7 +535,7 @@ Proof.
 Defined.
 
 (** If a type [A] is [n]-truncated, then [IsTrunc n A] is contractible. *)
-Global Instance contr_istrunc `{Funext} (n : trunc_index) (A : Type) `{istruncA : IsTrunc n A}
+Instance contr_istrunc `{Funext} (n : trunc_index) (A : Type) `{istruncA : IsTrunc n A}
   : Contr (IsTrunc n A) | 100
   := contr_inhabited_hprop _ _.
 
