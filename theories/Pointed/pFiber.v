@@ -61,7 +61,7 @@ Proof.
   induction n.
   1: reflexivity.
   refine (_ o*E pfiber_fmap_loops _ ).
-  rapply (emap loops).
+  refine (emap loops _).
   exact IHn.
 Defined.
 

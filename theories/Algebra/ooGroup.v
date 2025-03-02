@@ -133,7 +133,7 @@ Proof.
   rewrite <- p.
   rewrite !loops_functor_group.
   apply ap.
-  symmetry; rapply (fmap_comp loops).
+  symmetry; exact (fmap_comp loops _ _ _).
 Qed.
 
 Definition grouphom_idmap (G : ooGroup) : ooGroupHom G G
@@ -285,13 +285,13 @@ Global Instance is0functor_group_to_oogroup : Is0Functor group_to_oogroup.
 Proof.
   snrapply Build_Is0Functor.
   intros G H f.
-  by rapply (fmap pClassifyingSpace).
+  by exact (fmap pClassifyingSpace f).
 Defined.
 
 Global Instance is1functor_group_to_oogroup : Is1Functor group_to_oogroup.
 Proof.
   snrapply Build_Is1Functor; hnf; intros.
-  1: by rapply (fmap2 pClassifyingSpace).
-  1: by rapply (fmap_id pClassifyingSpace).
-  by rapply (fmap_comp pClassifyingSpace).
+  1: by exact (fmap2 pClassifyingSpace X).
+  1: by exact (fmap_id pClassifyingSpace _).
+  by exact (fmap_comp pClassifyingSpace _ _).
 Defined.

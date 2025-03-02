@@ -48,7 +48,7 @@ Definition iscomplex_ptr (n : trunc_index) {F X Y : pType}
 Proof.
   refine ((fmap_comp (pTr n) i f)^* @* _).
   refine (_ @* ptr_functor_pconst n).
-  rapply (fmap2 (pTr _)); assumption.
+  refine (fmap2 (pTr _) _); assumption.
 Defined.
 
 (** Loop spaces preserve complexes. *)
@@ -57,7 +57,7 @@ Definition iscomplex_loops {F X Y : pType}
   : IsComplex (fmap loops i) (fmap loops f).
 Proof.
   refine ((fmap_comp loops i f)^$ $@ _ $@ fmap_zero_morphism _).
-  rapply (fmap2 loops); assumption.
+  refine (fmap2 loops _); assumption.
 Defined.
 
 Definition iscomplex_iterated_loops {F X Y : pType}
@@ -151,7 +151,6 @@ Global Instance ishprop_isexact_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
   : IsHProp (IsExact n i f).
 Proof.
   rapply (transport (fun A => IsHProp A) (x := { cx : IsComplex i f & IsConnMap n (cxfib cx) })).
-  2: exact _.
   apply path_universe_uncurried; issig.
 Defined.
 
@@ -288,7 +287,6 @@ Global Instance isequiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : 
   : IsEquiv (cxfib cx_isexact).
 Proof.
   rapply isequiv_conn_ino_map.
-  1: apply ex.
   rapply (cancelL_mapinO _ _ pr1).
 Defined.
 
@@ -302,7 +300,7 @@ Proposition equiv_cxfib_beta {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   : i o pequiv_inverse (equiv_cxfib ex) == pfib _.
 Proof.
   rapply equiv_ind.
-  1: exact (isequiv_cxfib ex).
+  3: exact (isequiv_cxfib ex).
   intro x.
   exact (ap (fun g => i g) (eissect _ x)).
 Defined.
@@ -387,7 +385,7 @@ Proof.
     (isexact_purely_fiberseq (fiberseq_loops (fiberseq_isexact_purely i f)))).
   transitivity (fmap loops (pfib f) o* fmap loops (cxfib cx_isexact)).
   - refine (_ @* fmap_comp loops _ _).
-    rapply (fmap2 loops).
+    refine (fmap2 loops _).
     symmetry; apply pfib_cxfib.
   - refine (_ @* pmap_compose_assoc _ _ _).
     refine (pmap_prewhisker (fmap loops (cxfib cx_isexact)) _).
@@ -555,7 +553,7 @@ Definition classify_fiberseq `{Univalence} {Y F : pType@{u}}
 Proof.
   refine (_ oE _).
   (** To apply [equiv_sigma_pfibration] we need to invert the equivalence on the fiber. *)
-  { do 2 (rapply equiv_functor_sigma_id; intro).
+  { do 2 (refine (equiv_functor_sigma_id _); intro).
     apply equiv_pequiv_inverse. }
   exact ((equiv_sigma_assoc _ _)^-1 oE equiv_sigma_pfibration).
 Defined.

@@ -266,7 +266,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
           etransitivity.
           2:{ rapply equiv_functor_sigma_id; intros s.
               (** Here's frobnicate showing up again! *)
-              apply frobnicate. }
+              2: apply frobnicate. }
           make_equiv.
         Defined.
 

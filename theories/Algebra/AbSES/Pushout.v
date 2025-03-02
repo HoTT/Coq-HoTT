@@ -77,7 +77,7 @@ Definition abses_pushout_morphism_rec `{Univalence} {A B X Y : AbGroup}
 Proof.
   snrapply (Build_AbSESMorphism grp_homo_id _ (component3 f)).
   - rapply ab_pushout_rec.
-    apply left_square.
+    3: apply left_square.
   - intro x; simpl.
     rewrite grp_homo_unit.
     exact (right_identity _)^.

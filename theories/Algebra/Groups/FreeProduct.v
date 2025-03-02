@@ -367,8 +367,7 @@ Section FreeProduct.
       { refine (word_inverse_ww _ _ @ _).
         apply ap; simpl.
         rapply (ap (fun s => [s])).
-        apply ap.
-        apply inverse_sg_op. }
+        2:apply ap, inverse_sg_op. }
       simpl.
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply app_assoc.
@@ -380,8 +379,7 @@ Section FreeProduct.
       { refine (word_inverse_ww _ _ @ _).
         apply ap; simpl.
         rapply (ap (fun s => [s])).
-        apply ap.
-        apply inverse_sg_op. }
+        2: apply ap, inverse_sg_op. }
       simpl.
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply app_assoc.
@@ -391,7 +389,7 @@ Section FreeProduct.
       1,3: refine (word_inverse_ww _ _ @ ap (fun s => s ++ _) _).
       1,2: cbn; refine (ap _ _).
       1,2: rapply (ap (fun s => [s])).
-      1,2: apply ap.
+      2,4: apply ap.
       1,2: symmetry; apply grp_homo_inv.
       refine (ap amal_eta _^ @ _ @ ap amal_eta _).
       1,3: apply app_assoc.
@@ -482,8 +480,8 @@ Section FreeProduct.
       refine (_ @ _).
       { apply ap, ap.
         rapply (ap (fun x => x ++ _)).
-        rapply (ap (fun x => [x])).
-        apply ap.
+        2: rapply (ap (fun x => [x])).
+        2: apply ap.
         apply right_inverse. }
       apply amal_omega_H.
     +  cbn.
@@ -499,8 +497,8 @@ Section FreeProduct.
       refine (_ @ _).
       { apply ap, ap.
         rapply (ap (fun x => x ++ _)).
-        rapply (ap (fun x => [x])).
-        apply ap.
+        2: rapply (ap (fun x => [x])).
+        2: apply ap.
         apply right_inverse. }
       apply amal_omega_K.
   Defined.

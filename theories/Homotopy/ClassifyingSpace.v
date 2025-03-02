@@ -96,8 +96,8 @@ Section Eliminators.
     intros x y.
     apply ds_const'.
     rapply sq_GGcc.
-    2: refine (_ @ ap _ (dp_const_pp _ _)).
-    1,2: symmetry; apply eissect.
+    4: refine (_ @ ap _ (dp_const_pp _ _)).
+    3, 4: symmetry; apply eissect.
     by apply sq_G1.
   Defined.
 
@@ -478,7 +478,7 @@ Proof.
       intro x.
       rapply equiv_sq_dp^-1.
       simpl.
-      rapply sq_ccGG.
+      refine (sq_ccGG _ _ _).
       1,2: symmetry.
       2: refine (ap_compose (ClassifyingSpace_rec _ _ _ (fun x y =>
         ap bloop (grp_homo_op g x y) @ bloop_pp (g x) (g y))) _ (bloop x)
@@ -509,7 +509,7 @@ Proof.
         rapply equiv_sq_dp^-1.
         rewrite ClassifyingSpace_rec_beta_bloop.
         simpl.
-        rapply sq_ccGc.
+        refine (sq_ccGc _ _).
         1: symmetry; rapply decode_encode.
         apply equiv_sq_path.
         rewrite concat_pp_p.
@@ -565,7 +565,7 @@ Proof.
   snrapply (cancelR_isequiv bloop).
   1: exact _.
   rapply isequiv_homotopic'; symmetry.
-  nrapply pClassifyingSpace_rec_beta_bloop.
+  2: nrapply pClassifyingSpace_rec_beta_bloop.
 Defined.
 
 Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}

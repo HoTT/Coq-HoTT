@@ -141,7 +141,7 @@ Definition pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
   snrapply Build_pEquiv.
-  1:rapply (fmap (pTr _) (loop_susp_unit _)).
+  1:exact (fmap (pTr _) (loop_susp_unit _)).
   rapply O_inverts_conn_map.
 Defined.
 
@@ -263,7 +263,7 @@ Proof.
   - apply path_pforall.
     unfold equiv_adjointify, equiv_fun.
     nrapply (pmap_prewhisker _ fmap_loops_pconst @* _).
-    rapply cat_zero_l.
+    exact (cat_zero_l _).
 Defined.
 
 (** And its naturality is easy. *)
@@ -297,7 +297,7 @@ Proof.
   refine ( _ @ cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).
   apply path_pforall.
-  rapply (fmap_comp loops).
+  exact (fmap_comp loops _ _).
 Defined.
 
 Lemma natequiv_loop_susp_adjoint_r `{Funext} (A : pType)

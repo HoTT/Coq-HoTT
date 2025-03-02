@@ -1404,7 +1404,7 @@ Proof.
   intros H.
   rewrite nat_add_comm.
   apply (nat_add_r_monotone k) in H.
-  rapply leq_trans.
+  exact (leq_trans _ _).
 Defined.
 
 Definition leq_moveL_nM {n m} k : n - k <= m -> n <= m + k.

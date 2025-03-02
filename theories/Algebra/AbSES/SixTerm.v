@@ -18,7 +18,7 @@ Definition isexact_abses_sixterm_i `{Funext}
 Proof.
   apply isexact_purely_O.
   rapply isexact_homotopic_i.
-  2: apply iff_grp_isexact_isembedding.
+  3: apply iff_grp_isexact_isembedding.
   1: by apply phomotopy_homotopy_hset.
   exact _. (* [isembedding_precompose_surjection_ab] *)
 Defined.

@@ -85,11 +85,11 @@ Proof.
                                          { e : hfiber p (point Y) <~> F
                                                & e^-1 (point F) = (x; eq) } } } })).
   - refine (_ oE _).
-    + do 5 (rapply equiv_functor_sigma_id; intro).
+    + do 5 (refine (equiv_functor_sigma_id _); intro).
       apply equiv_path_sigma.
     + cbn; make_equiv_contr_basedpaths.
   - refine (_ oE _).
-    2: { do 5 (rapply equiv_functor_sigma_id; intro).
+    2: { do 5 (refine (equiv_functor_sigma_id _); intro).
          exact (equiv_path_inverse _ _ oE equiv_moveL_equiv_M _ _). }
     make_equiv.
 Defined.

@@ -695,7 +695,7 @@ Proof.
     + rapply (fmap01 ab_tensor_prod A).
       nrapply ab_coeq_in.
     + refine (_^$ $@ fmap02 ab_tensor_prod _ _ $@ _).
-      1,3: rapply fmap01_comp.
+      1,3: exact (fmap01_comp _ _ _ _).
       nrapply ab_coeq_glue.
   - snrapply ab_tensor_prod_rec'.
     + intros a.

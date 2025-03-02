@@ -298,7 +298,7 @@ Section LexMeet.
     apply IHn.
     - rapply mapinO_diagonal.
       pose (O_eq_Tr n.+1).
-      rapply (mapinO_O_leq _ (Sep (Tr n.+1))).
+      exact (mapinO_O_leq _ (Sep (Tr n.+1)) _).
     - apply plusconnmap_diagonal; assumption.
   Defined.
 
