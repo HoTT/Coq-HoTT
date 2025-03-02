@@ -47,7 +47,7 @@ It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is
       nrefine (ispullback_connmap_mapino_commsq O2 _).
       1-3:exact _.
       2:rapply mapinO_between_inO.
-      intros x; refine (ino2_isconnectedo1 _ _).
+      intros x; exact (ino2_isconnectedo1 _ _).
     Defined.
 
     (** ** The fracture gluing theorem *)
@@ -88,11 +88,11 @@ It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is
       (** Now we start building the path. *)
       simple refine (path_sigma' _ _ _).
       { apply path_TypeO; unfold ".1", ".2".
-        refine (path_universe (O_rec ((to O2 B)^*' f))). }
+        exact (path_universe (O_rec ((to O2 B)^*' f))). }
       refine (transport_sigma' _ _ @ _); unfold ".1", ".2".
       simple refine (path_sigma' _ _ _).
       { apply path_TypeO; unfold ".1", ".2".
-        refine (path_universe (O_rec (f^* (to O2 B)))). }
+        exact (path_universe (O_rec (f^* (to O2 B)))). }
       (** It remains to identify the induced function with the given [f].  We begin with some boilerplate. *)
       apply path_arrow; intros c.
       refine (transport_arrow_toconst _ _ _ @ _).
@@ -109,17 +109,17 @@ It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is
         | transitivity (O_functor O2 (O_rec ((to O2 B)^*' f))
                           (O_functor O2 (to O1 (Pullback f (to O2 B)))
                                      ((O_rec (f^* (to O2 B)))^-1 c))) ].
-      + refine (pr1_path_sigma_uncurried _ @ eisretr pr1 _).
+      + exact (pr1_path_sigma_uncurried _ @ eisretr pr1 _).
       + refine (transport_compose idmap (TypeO_pr1 O2)
                   (path_TypeO O2 (O2 (Pullback f (to O2 B)); _) C _)^
                   c @ _).
         refine (ap (fun p => transport idmap p c) (ap_V _ _) @ _).
         refine (ap (fun p => transport idmap p^ c)
                    (pr1_path_sigma_uncurried _ @ eisretr pr1 _) @ _).
-        refine (transport_path_universe_V _ _).
+        exact (transport_path_universe_V _ _).
       + refine (ap (fun p => transport idmap p _)
                    (ap_O_path_universe O2 _) @ _).
-        refine (transport_path_universe _ _).
+        exact (transport_path_universe _ _).
       (** Now we're down to the real point. *)
       + refine ((O_functor_compose O2 _ _ _)^ @ _).
         refine (O_functor_homotopy O2 _ _ (O_rec_beta _) _ @ _).
@@ -188,7 +188,7 @@ Proof.
     - refine (O_rec idmap).
       intros []; simpl.
       apply ooextendable_equiv.
-      refine (equiv_isequiv (@equiv_contr_contr U Unit _ _)).
+      exact (equiv_isequiv (@equiv_contr_contr U Unit _ _)).
     - refine (isequiv_adjointify _ (to (Op' U) A) _ _).
       + intros a; apply O_rec_beta.
       + apply O_indpaths; cbn. reflexivity. }

@@ -54,10 +54,10 @@ Section Induced_category.
     + nrapply is0gpd_hom.
     + rapply is0functor_postcomp.
     + rapply is0functor_precomp.
-    + rapply cat_assoc.
-    + rapply cat_assoc_opp.
-    + rapply cat_idl.
-    + rapply cat_idr.
+    + exact cat_assoc.
+    + exact cat_assoc_opp.
+    + exact cat_idl.
+    + exact cat_idr.
   Defined.
 
   Local Instance is1functor_induced `{Is1Cat B} : Is1Functor f.

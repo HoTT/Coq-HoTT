@@ -122,7 +122,7 @@ Instance hasmorext_op {A : Type} `{H0 : HasMorExt A}
 Proof.
   snrapply Build_HasMorExt.
   intros a b f g.
-  refine (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
+  exact (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
 Defined.
 
 Instance isinitial_op_isterminal {A : Type} `{Is1Cat A} (x : A)

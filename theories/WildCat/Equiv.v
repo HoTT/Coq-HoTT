@@ -242,8 +242,8 @@ Definition compose_cate_assoc {A} `{HasEquivs A}
 Proof.
   refine (compose_cate_fun _ f $@ _ $@ cat_assoc f g h $@ _ $@
                            compose_cate_funinv h _).
-  - refine (compose_cate_fun h g $@R _).
-  - refine (_ $@L compose_cate_funinv g f).
+  - exact (compose_cate_fun h g $@R _).
+  - exact (_ $@L compose_cate_funinv g f).
 Defined.
 
 Definition compose_cate_assoc_opp {A} `{HasEquivs A}
@@ -261,7 +261,7 @@ Definition compose_cate_idl {A} `{HasEquivs A}
   : cate_fun (id_cate b $oE f) $== cate_fun f.
 Proof.
   refine (compose_cate_fun _ f $@ _ $@ cat_idl f).
-  refine (cate_buildequiv_fun _ $@R _).
+  exact (cate_buildequiv_fun _ $@R _).
 Defined.
 
 Definition compose_cate_idr {A} `{HasEquivs A}
@@ -432,8 +432,8 @@ Instance iemap {A B : Type} `{HasEquivs A} `{HasEquivs B}
   : CatIsEquiv (fmap F f).
 Proof.
   refine (catie_adjointify (fmap F f) (fmap F f^-1$) _ _).
-  - refine ((fmap_comp F f^-1$ f)^$ $@ fmap2 F (cate_isretr _) $@ fmap_id F _).
-  - refine ((fmap_comp F f f^-1$)^$ $@ fmap2 F (cate_issect _) $@ fmap_id F _).
+  - exact ((fmap_comp F f^-1$ f)^$ $@ fmap2 F (cate_isretr _) $@ fmap_id F _).
+  - exact ((fmap_comp F f f^-1$)^$ $@ fmap2 F (cate_issect _) $@ fmap_id F _).
 Defined.
 
 Definition emap {A B : Type} `{HasEquivs A} `{HasEquivs B}
@@ -627,7 +627,7 @@ Proof.
   intros X Y f g; cbn in *.
   snrapply isequiv_homotopic.
   - exact (GpdHom_path o (ap (x:=f) (y:=g) cate_fun)).
-  - rapply isequiv_compose.
+  - exact isequiv_compose.
   - intro p; by induction p.
 Defined.
 

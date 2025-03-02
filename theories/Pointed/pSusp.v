@@ -103,10 +103,10 @@ Module Book_Loop_Susp_Adjunction.
     ==* fmap loops g o* loop_susp_adjoint A B f.
   Proof.
     pointed_reduce. (* Very slow for some reason. *)
-    srefine (Build_pHomotopy _ _).
+    exact (Build_pHomotopy _ _).
     - intros a. simpl.
-      refine (_ @ (concat_1p _)^).
-      refine (_ @ (concat_p1 _)^).
+      exact (_ @ (concat_1p _)^).
+      exact (_ @ (concat_p1 _)^).
       rewrite !transport_sigma. simpl.
       rewrite !(transport_arrow_fromconst (B := A)).
       rewrite !transport_paths_Fr.
@@ -133,7 +133,7 @@ Global Instance conn_map_loop_susp_unit `{Univalence} (n : trunc_index)
   (X : pType) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (loop_susp_unit X).
 Proof.
-  refine (conn_map_compose _ merid (equiv_concat_r (merid pt)^ _)).
+  exact (conn_map_compose _ merid (equiv_concat_r (merid pt)^ _)).
 Defined.
 
 (** We also have this corollary: *)
@@ -141,7 +141,7 @@ Definition pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
   snrapply Build_pEquiv.
-  1:rapply (fmap (pTr _) (loop_susp_unit _)).
+  1:exact (fmap (pTr _) (loop_susp_unit _)).
   rapply O_inverts_conn_map.
 Defined.
 
@@ -156,7 +156,7 @@ Proof.
     refine (ap_pp (Susp_rec North South (merid o f))
                   (merid x) (merid (point X))^ @ _).
     refine ((1 @@ ap_V _ _) @ _).
-    refine (Susp_rec_beta_merid _ @@ inverse2 (Susp_rec_beta_merid _)).
+    exact (Susp_rec_beta_merid _ @@ inverse2 (Susp_rec_beta_merid _)).
   - cbn. apply moveL_pV. rewrite !inv_pp, !concat_pp_p, concat_1p; symmetry.
     apply moveL_Vp.
     refine (concat_pV_inverse2 _ _ (Susp_rec_beta_merid (point X)) @ _).
@@ -171,7 +171,7 @@ Proof.
       (fun p' => 1 @ p')
       (concat_pV (merid (point X))) @ _).
     apply ap.
-    refine (ap_compose (ap (Susp_rec North South (merid o f)))
+    exact (ap_compose (ap (Susp_rec North South (merid o f)))
       (fun p' => p' @ 1) _).
 Qed.
 
@@ -192,7 +192,7 @@ Proof.
               (Susp_rec (point Y) (point Y) idmap) (merid p) @ _).
     do 2 rewrite Susp_rec_beta_merid.
     refine (concat_1p _ @ _). f_ap. f_ap. symmetry.
-    refine (Susp_rec_beta_merid _). 
+    exact (Susp_rec_beta_merid _).
   - reflexivity.
 Qed.
 
@@ -275,7 +275,7 @@ Proof.
   cbn.
   refine (_ @* pmap_compose_assoc _ _ _).
   apply pmap_prewhisker.
-  refine (fmap_comp loops f g).
+  exact (fmap_comp loops f g).
 Defined.
 
 Definition loop_susp_adjoint_nat_l `{Funext} (A A' B : pType)

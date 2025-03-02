@@ -445,7 +445,7 @@ Proof.
                              (fun a => (a ; center (P a))) _ _).
   - intros a; reflexivity.
   - intros [a p].
-    refine (path_sigma' P 1 (contr _)).
+    exact (path_sigma' P 1 (contr _)).
 Defined.
 
 Definition equiv_sigma_contr {A : Type} (P : A -> Type)
@@ -593,10 +593,10 @@ Proof.
   simple_induction' n; simpl; intros A P ac Pc.
   { apply (Build_Contr _ (center A; center (P (center A)))).
     intros [a ?].
-    refine (path_sigma' P (contr a) (path_contr _ _)). }
+    exact (path_sigma' P (contr a) (path_contr _ _)). }
   apply istrunc_S.
   intros u v.
-  refine (istrunc_isequiv_istrunc _ (path_sigma_uncurried P u v)).
+  exact (istrunc_isequiv_istrunc _ (path_sigma_uncurried P u v)).
 Defined.
 
 (** The sigma of an arbitrary family of *disjoint* hprops is an hprop. *)
@@ -652,7 +652,7 @@ Proof.
   unfold path_sigma_hprop.
   unfold isequiv_pr1_contr; simpl.
   (** Ugh *)
-  refine (ap (fun p => match p in (_ = v2) return (u = (u.1; v2)) with 1 => 1 end)
+  exact (ap (fun p => match p in (_ = v2) return (u = (u.1; v2)) with 1 => 1 end)
              (contr (idpath u.2))).
 Defined.
 
@@ -663,7 +663,7 @@ Definition path_sigma_hprop_V {A : Type} {P : A -> Type}
 Proof.
   destruct p; simpl.
   rewrite (path_ishprop x y).
-  refine (path_sigma_hprop_1 _ @ (ap inverse (path_sigma_hprop_1 _))^).
+  exact (path_sigma_hprop_1 _ @ (ap inverse (path_sigma_hprop_1 _))^).
 Qed.
 
 Definition path_sigma_hprop_pp {A : Type} {P : A -> Type}

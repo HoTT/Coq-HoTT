@@ -180,7 +180,7 @@ Proof.
   simple_induction n n IHn.
   1: reflexivity.
   unfold nat_to_trunc_index in *; cbn in *.
-  refine (ap trunc_S IHn).
+  exact (ap trunc_S IHn).
 Defined.
 
 Definition trunc_index_leq_minus_two@{} {n}
@@ -368,7 +368,7 @@ Proof.
   - exact (contr_equiv _ f).
   - apply istrunc_S.
     intros x y.
-    refine (IH _ _ _ (ap (f^-1))^-1 _).
+    exact (IH _ _ _ (ap (f^-1))^-1 _).
 Defined.
 
 Definition istrunc_equiv_istrunc A {B} (f : A <~> B) `{IsTrunc n A}
@@ -519,7 +519,7 @@ Proof.
     apply (ap (exist _ a1)).
     funext x.
     pose (Build_Contr _ a1 c1); apply path2_contr.
-  - rapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold n.+1 A)^-1%equiv).
+  - exact (istrunc_equiv_istrunc _ (equiv_istrunc_unfold n.+1 A)^-1%equiv).
     (* This case follows from [istrunc_forall]. *)
 Defined.
 

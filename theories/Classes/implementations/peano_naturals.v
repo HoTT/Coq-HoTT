@@ -643,9 +643,9 @@ Section for_another_semiring.
     : IsSemiRingPreserving (naturals_to_semiring nat R).
   Proof.
     split; split.
-    - rapply f_preserves_plus.
+    - exact f_preserves_plus.
     - reflexivity.
-    - rapply f_preserves_mult.
+    - exact f_preserves_mult.
     - reflexivity.
   Defined.
 

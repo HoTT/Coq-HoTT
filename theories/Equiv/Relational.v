@@ -29,7 +29,7 @@ Defined.
 
 Definition relequiv_of_equiv {A B} (e : A <~> B) : RelEquiv A B.
 Proof.
-  refine {| equiv_rel a b := e a = b |}.
+  exact {| equiv_rel a b := e a = b |}.
   (** The rest is found by typeclass inference! *)
 Defined.
 

@@ -18,7 +18,7 @@ Local Open Scope pointed_scope.
 
 Global Instance is1type_torus `{Univalence} : IsTrunc 1 Torus.
 Proof.
-  refine (istrunc_equiv_istrunc _ equiv_torus_prod_Circle^-1).
+  exact (istrunc_equiv_istrunc _ equiv_torus_prod_Circle^-1).
 Qed.
 
 (** The torus is 0-connected *)
@@ -59,5 +59,5 @@ Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
 Proof.
   (* Since [T] is 1-truncated, [loops T] is 0-truncated, and is therefore equivalent to its 0-truncation. *)
   refine (_ o*E pequiv_ptr (n:=0)).
-  nrapply pi1_torus.
+  exact pi1_torus.
 Defined.

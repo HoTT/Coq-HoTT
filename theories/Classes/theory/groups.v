@@ -41,12 +41,12 @@ Section group_props.
   Proof.
     intros z x y E.
     rhs_V rapply left_identity.
-    rhs_V rapply (ap (.* y) (left_inverse z)).
+    rhs_V exact (ap (.* y) (left_inverse z)).
     rhs_V rapply simple_associativity.
     rhs_V rapply (ap (-z *.) E).
     symmetry.
     lhs rapply simple_associativity.
-    lhs rapply (ap (.* x) (left_inverse z)).
+    lhs exact (ap (.* x) (left_inverse z)).
     apply left_identity.
   Defined.
 

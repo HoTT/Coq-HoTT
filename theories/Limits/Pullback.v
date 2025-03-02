@@ -297,7 +297,7 @@ Section Functor_Pullback.
     refine (equiv_moveR_Vp _ _ _ oE _).
     do 2 refine (equiv_concat_r (concat_pp_p _ _ _) _ oE _).
     refine (equiv_moveL_pM _ _ _ oE _).
-    abstract (rewrite !ap_V, inv_V; refine (equiv_path_inverse _ _)).
+    abstract (rewrite !ap_V, inv_V; exact (equiv_path_inverse _ _)).
   Defined.
 
 End Functor_Pullback.
@@ -315,7 +315,7 @@ Section EquivPullback.
     apply (equiv_functor_sigma' eC); intro c.
     refine (equiv_concat_l (p _) _ oE _).
     refine (equiv_concat_r (q _)^ _ oE _).
-    refine (equiv_ap' eA _ _).
+    exact (equiv_ap' eA _ _).
   Defined.
 
 End EquivPullback.

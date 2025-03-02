@@ -220,7 +220,7 @@ Section EncodeDecode.
   Local Definition codes : B G -> HSet.
   Proof.
     srapply ClassifyingSpace_rec.
-    + srapply (Build_HSet G).
+    + exact (Build_HSet G).
     + intro x.
       apply path_trunctype.
       exact (Build_Equiv _ _ (fun t => t * x) _).
@@ -431,7 +431,7 @@ Definition natequiv_g_loops_bg `{Univalence}
   : NatEquiv ptype_group (loops o B).
 Proof.
   snrapply Build_NatEquiv.
-  1: intros G; rapply pequiv_g_loops_bg.
+  1: intros G; exact pequiv_g_loops_bg.
   snrapply Build_Is1Natural.
   intros X Y f.
   symmetry.
@@ -496,7 +496,7 @@ Proof.
   snrapply isequiv_adjointify.
   { intros f.
     refine (grp_homo_compose (grp_iso_inverse _) (grp_homo_compose _ _)).
-    1,3: rapply grp_iso_g_loopgroup_bg.
+    1,3: exact grp_iso_g_loopgroup_bg.
     exact (grp_homo_loops f). }
   { intros f.
     rapply equiv_path_pforall.

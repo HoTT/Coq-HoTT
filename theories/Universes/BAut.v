@@ -283,7 +283,7 @@ Section ClassifyingMaps.
     : (Y ->* pBAut F) <~> (Y ->* [Type@{u}, F]).
   Proof.
     refine (_ oE pequiv_pequiv_postcompose pequiv_pbaut_typeOp).
-    rapply equiv_pmap_typeO_type_connected.
+    exact equiv_pmap_typeO_type_connected.
   Defined.
 
   (** When [Y] is connected, [pBAut F] classifies fiber sequences over [Y] with fiber [F]. *)

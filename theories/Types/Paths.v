@@ -214,7 +214,7 @@ Proof.
   { intros p' q'. destruct q'. reflexivity. }
   transitivity (q @ (concat_p1 1)^ @ (concat_1p 1)^).
   { simpl; exact ((concat_p1 _)^ @ (concat_p1 _)^). }
-  refine (H 1 q).
+  exact (H 1 q).
 Defined.
 
 (** ** Functorial action *)
@@ -595,7 +595,7 @@ Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveR_equiv_M A B f _ x y).
 Proof.
   unfold moveR_equiv_M.
-  refine (@isequiv_compose _ _ (ap f) _ _ (fun q => q @ eisretr f y) _).
+  exact (@isequiv_compose _ _ (ap f) _ _ (fun q => q @ eisretr f y) _).
 Defined.
 
 Definition equiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
@@ -606,7 +606,7 @@ Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveR_equiv_V A B f _ x y).
 Proof.
   unfold moveR_equiv_V.
-  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => q @ eissect f y) _).
+  exact (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => q @ eissect f y) _).
 Defined.
 
 Definition equiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
@@ -617,7 +617,7 @@ Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveL_equiv_M A B f _ x y).
 Proof.
   unfold moveL_equiv_M.
-  refine (@isequiv_compose _ _ (ap f) _ _ (fun q => (eisretr f y)^ @ q) _).
+  exact (@isequiv_compose _ _ (ap f) _ _ (fun q => (eisretr f y)^ @ q) _).
 Defined.
 
 Definition equiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
@@ -628,7 +628,7 @@ Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveL_equiv_V A B f _ x y).
 Proof.
   unfold moveL_equiv_V.
-  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => (eissect f y)^ @ q) _).
+  exact (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => (eissect f y)^ @ q) _).
 Defined.
 
 Definition equiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)

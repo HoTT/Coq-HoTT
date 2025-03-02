@@ -62,7 +62,7 @@ Section EilenbergMacLane.
     : pTr n.+2 X <~>* pTr n.+2 (loops (psusp X)).
   Proof.
     snrapply Build_pEquiv.
-    1: rapply (fmap (pTr _) (loop_susp_unit _)).
+    1: exact (fmap (pTr _) (loop_susp_unit _)).
     nrapply O_inverts_conn_map.
     nrapply (isconnmap_pred_add n.-2).
     rewrite 2 trunc_index_add_succ.

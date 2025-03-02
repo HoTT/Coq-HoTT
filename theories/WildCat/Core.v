@@ -407,7 +407,7 @@ Definition gpd_moveL_1M {A} `{Is1Gpd A} {x y : A} {p q : x $-> y}
   (r : p $o q^$ $== Id _) : p $== q.
 Proof.
   refine ((cat_idr p)^$ $@ (p $@L (gpd_issect q)^$) $@ (cat_assoc _ _ _)^$ $@ _).
-  refine ((r $@R q) $@ cat_idl q).
+  exact ((r $@R q) $@ cat_idl q).
 Defined.
 
 Definition gpd_moveR_V1 {A} `{Is1Gpd A} {x y : A} {p : x $-> y}

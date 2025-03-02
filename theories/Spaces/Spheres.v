@@ -131,7 +131,7 @@ Definition TwoSphere_to_S2 : TwoSphere -> (Sphere 2).
 Proof.
   apply (TwoSphere_rec (Sphere 2) North).
   refine (transport (fun x => x = x) (concat_pV (merid North)) _).
-  refine (((ap (fun u => merid u @ (merid North)^) 
+  exact (((ap (fun u => merid u @ (merid North)^) 
                (merid North @ (merid South)^)))).
 Defined.
 
@@ -139,7 +139,7 @@ Definition issect_TwoSphere_to_S2 : S2_to_TwoSphere o TwoSphere_to_S2 == idmap.
 Proof.
   refine (TwoSphere_ind _ 1 _). 
   rhs_V rapply concat_p1.
-  rhs refine (@concat_Ap (base = base) _ _
+  rhs exact (@concat_Ap (base = base) _ _
                           (fun p => (p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))^)
                           (fun x =>
                              (transport_paths_FFlr x 1) 
@@ -148,14 +148,14 @@ Proof.
                                @ (inv_pp _ _)^) 
                           1 1 surf).
   rhs rapply concat_1p.
-  rhs refine (ap_compose (fun p => p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))
+  rhs exact (ap_compose (fun p => p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))
                           inverse
                           surf).
   refine (@ap _ _ (ap inverse) 1 _ _).
   rhs_V rapply concat2_ap_ap.
-  rhs refine (ap (fun w => inverse2 surf @@ w)
+  rhs exact (ap (fun w => inverse2 surf @@ w)
                   (ap_compose (ap TwoSphere_to_S2) (ap S2_to_TwoSphere) surf)).
-  lhs_V refine (concat_Vp_inverse2 _ _ surf).
+  lhs_V exact (concat_Vp_inverse2 _ _ surf).
   lhs rapply concat_p1.
   refine (ap (fun p : 1 = 1 => inverse2 surf @@ p) _).
 
@@ -166,7 +166,7 @@ Proof.
                         (ap (fun u => merid u @ (merid North)^)
                             (merid North @ (merid South)^))).
   
-  lhs_V refine (ap (transport (fun z => ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)
+  lhs_V exact (ap (transport (fun z => ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)
                       (concat_pV (merid North)))
                (ap_compose (fun u => merid u @ (merid North)^) (ap S2_to_TwoSphere)
                            (merid North @ (merid South)^))).
@@ -176,7 +176,7 @@ Proof.
                               (concat_pV_inverse2 (ap S2_to_TwoSphere (merid North))
                                   _
                                   (Susp_rec_beta_merid North))))).
-  lhs refine (@concat_Ap (Sphere 1) _
+  lhs exact (@concat_Ap (Sphere 1) _
                       (fun x => ap S2_to_TwoSphere (merid x @ (merid North)^))
                       (fun x => Susp_rec 1 1 
                                 (Susp_rec surf 1 
@@ -190,7 +190,7 @@ Proof.
                       North North (merid North @ (merid South)^)). f_ap.
   { rhs_V refine (ap_pp_concat_pV _ _).
     exact (1 @@ (1 @@ (concat_pV_inverse2 _ _ _))). }
-  lhs_V refine (concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1
+  lhs_V exact (concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1
                                          Empty_rec)) 
                          (fun _ => 1) 
                          (merid North @ (merid South)^)).
@@ -236,7 +236,7 @@ Proof.
     symmetry. generalize dependent x.
     
     simple refine (Susp_ind _ _ _ _).
-    + refine (TwoSphere_rec_beta_surf _ _ _).
+    + exact (TwoSphere_rec_beta_surf _ _ _).
     + refine (_ @ (ap (fun w => transport _ _ (ap _ w))
                       (concat_pV (merid South))^)).
       refine (_ @ (transport_paths_lr _ _)^).
@@ -260,7 +260,7 @@ Definition equiv_S2_TwoSphere : Sphere 2 <~> TwoSphere
 (** S0 is 0-truncated. *)
 Global Instance istrunc_s0 : IsHSet (Sphere 0).
 Proof.
-  srapply (istrunc_isequiv_istrunc _ S0_to_Bool^-1).
+  exact (istrunc_isequiv_istrunc _ S0_to_Bool^-1).
 Defined.
 
 (** S1 is 1-truncated. *)

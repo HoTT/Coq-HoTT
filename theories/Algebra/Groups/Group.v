@@ -470,7 +470,7 @@ Instance isequiv_group_inverse {G : Group}
   : IsEquiv ((^) : G -> G).
 Proof.
   srapply isequiv_involution.
-  rapply inverse_involutive.
+  exact inverse_involutive.
 Defined.
 
 (** ** Reasoning with equations in groups. *)
@@ -612,9 +612,9 @@ Definition grp_commutes_op {G : Group} (g h h' : G)
   : g * (h * h') = (h * h') * g.
 Proof.
   lhs apply simple_associativity.
-  lhs nrapply (ap (.* h') p).
+  lhs exact (ap (.* h') p).
   lhs_V apply simple_associativity.
-  lhs nrapply (ap (h *.) p').
+  lhs exact (ap (h *.) p').
   by apply simple_associativity.
 Defined.
 
@@ -854,7 +854,7 @@ Defined.
 Instance is0functor_type_group : Is0Functor group_type.
 Proof.
   apply Build_Is0Functor.
-  rapply @grp_homo_map.
+  exact @grp_homo_map.
 Defined.
 
 Instance is1functor_type_group : Is1Functor group_type.
@@ -884,7 +884,7 @@ Proof.
   snrapply Build_Equiv.
   { srapply (functor_hfiber (h := (.* a0^)) (k := (.* b^))).
     intro a; cbn; symmetry.
-    rhs_V nrapply (ap (fun x => f a * x^) p).
+    rhs_V exact (ap (fun x => f a * x^) p).
     exact (grp_homo_op f _ _ @ ap (f a *.) (grp_homo_inv f a0)). }
   srapply isequiv_functor_hfiber.
 Defined.
@@ -1033,7 +1033,7 @@ Definition grp_iso_prod {A B C D : Group}
 Proof.
   intros f g.
   srapply Build_GroupIsomorphism'.
-  1: srapply (equiv_functor_prod (f:=f) (g:=g)).
+  1: exact (equiv_functor_prod (f:=f) (g:=g)).
   simpl.
   unfold functor_prod.
   intros x y.

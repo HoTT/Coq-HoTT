@@ -47,7 +47,7 @@ Proof.
     intros y. apply (allpath_extension_conn_map n); assumption.
     (* m = S m' *)
   - apply istrunc_S.
-    intros e e'. refine (istrunc_isequiv_istrunc _ (path_extension e e')).
+    intros e e'. exact (istrunc_isequiv_istrunc _ (path_extension e e')).
     (* Magically infers: paths in extensions = extensions into paths, which by induction is [m']-truncated. *)
 Defined.
 
@@ -57,7 +57,7 @@ Global Instance isconnected_paths `{Univalence} {n A}
        `{IsConnected n.+1 A} (x y : A)
   : IsConnected n (x = y).
 Proof.
-  refine (contr_equiv' _ (equiv_path_Tr x y)^-1).
+  exact (contr_equiv' _ (equiv_path_Tr x y)^-1).
 Defined.
 
 (** ** Connectivity of pointed types *)
@@ -106,7 +106,7 @@ Definition isconnected_pred n A `{IsConnected n.+1 A}
   : IsConnected n A.
 Proof.
   apply isconnected_from_elim; intros C ? f.
-  refine (isconnected_elim n.+1 C f).
+  exact (isconnected_elim n.+1 C f).
 Defined.
 
 (** A [k]-connected type is [n]-connected, when [k >= n].  We constrain [k] by making it of the form [n +2+ m], which makes the induction go through smoothly. *)
@@ -209,7 +209,7 @@ Global Instance indecomposable_0connected `{Univalence}
        (X : Type) `{IsConnected 0 X}
   : Indecomposable X.
 Proof.
-  assert (IsConnected (-1) X) by refine (isconnected_pred (-1) X).
+  assert (IsConnected (-1) X) by exact (isconnected_pred (-1) X).
   constructor.
   - intros A B f.
     assert (z := center (merely X) : merely X); generalize z.
@@ -234,7 +234,7 @@ Global Instance isconnected_trunc {X : Type} (n m : trunc_index) `{IsConnected n
   : IsConnected n (Tr m X).
 Proof.
   unfold IsConnected.
-  srapply (contr_equiv' _ (Trunc_swap n m X)^-1).
+  exact (contr_equiv' _ (Trunc_swap n m X)^-1).
 Defined.
 
 Section Wedge_Incl_Conn.
@@ -310,5 +310,5 @@ Definition wedge_incl_elim_uncurried `{Univalence}
   : forall (a : A) (b : B), P a b.
 Proof.
   destruct fs as [f_a0 [f_b0 f_a0b0]].
-  refine (wedge_incl_elim _ _ _ _ _ f_a0b0).
+  exact (wedge_incl_elim _ _ _ _ _ f_a0b0).
 Defined.

@@ -214,8 +214,8 @@ Proof.
   - exact (@hspace_op A m).
   - exact (@hspace_left_identity A m).
   - intro a.
-    lhs nrapply (ap (a *.) (hspace_right_identity pt))^.
-    lhs nrapply (ap (a *.) (hspace_left_identity pt)).
+    lhs exact (ap (a *.) (hspace_right_identity pt))^.
+    lhs exact (ap (a *.) (hspace_left_identity pt)).
     exact (hspace_right_identity a).
   - unfold IsCoherent; cbn.
     apply moveL_Vp.

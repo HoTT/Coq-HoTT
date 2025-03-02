@@ -89,7 +89,7 @@ Proof.
   exists (y - x).
   lhs nrapply nat_dist_sub_r.
   apply nat_moveR_nV.
-  lhs nrapply q.
+  lhs exact q.
   lhs nrapply nat_add_comm.
   exact (ap _ p^).
 Defined.
@@ -795,7 +795,7 @@ Defined.
 
 Definition nat_gcd_l_add_r n m : nat_gcd (n + m) m = nat_gcd n m.
 Proof.
-  rhs_V nrapply (nat_gcd_l_add_r_mul n m 1).
+  rhs_V exact (nat_gcd_l_add_r_mul n m 1).
   by rewrite nat_mul_one_l.
 Defined.
 
@@ -858,7 +858,7 @@ Proof.
     2: { apply nat_mul_r_monotone.
       rewrite 2 nat_mul_succ_r.
       nrapply (leq_trans _ (leq_add_l _ _)).
-      rapply (leq_trans _ (leq_add_r _ _)). }
+      exact (leq_trans _ (leq_add_r _ _)). }
     apply nat_moveL_nV.
     rewrite nat_add_comm.
     snrapply (ap011 nat_add p).
@@ -1142,7 +1142,7 @@ Definition not_isprime_iff_iscomposite@{} n
 Proof.
   nrapply iff_compose.
   - nrapply iff_functor_prod.
-    1: nrapply iff_refl.
+    1: exact iff_refl.
     nrapply iff_compose.
     + apply iff_not.
       rapply isprime_iff_not_iscomposite.
@@ -1153,7 +1153,7 @@ Proof.
     + nrapply iff_functor_sum.
       1: apply iff_contradiction.
       nrapply iff_functor_prod.
-      1: nrapply iff_refl.
+      1: exact iff_refl.
       rapply iff_stable.
     + nrapply iff_compose.
       1: rapply sum_empty_l.

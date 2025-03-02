@@ -180,7 +180,7 @@ Section Associator.
       $== fmap10 F (fmap10 F f y) z $o associator x y z.
   Proof.
     refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: rapply (associator_nat f (Id _) (Id _)).
+    2: exact (associator_nat f (Id _) (Id _)).
     - exact (fmap12 _ _ (fmap11_id _ _ _) $@ fmap10_is_fmap11 _ _ _).
     - exact (fmap21 _ (fmap10_is_fmap11 _ _ _) _ $@ fmap10_is_fmap11 _ _ _).
   Defined.
@@ -190,7 +190,7 @@ Section Associator.
       $== fmap10 F (fmap01 F x g) z $o associator x y z.
   Proof.
     refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: nrapply (associator_nat (Id _) g (Id _)).
+    2: exact (associator_nat (Id _) g (Id _)).
     - exact (fmap12 _ _ (fmap10_is_fmap11 _ _ _) $@ fmap01_is_fmap11 _ _ _).
     - exact (fmap21 _ (fmap01_is_fmap11 _ _ _) _ $@ fmap10_is_fmap11 _ _ _).
   Defined.
@@ -200,7 +200,7 @@ Section Associator.
       $== fmap01 F (F x y) h $o associator x y z.
   Proof.
     refine ((_ $@L _^$) $@ _ $@ (_ $@R _)).
-    2: nrapply (associator_nat (Id _) (Id _) h).
+    2: exact (associator_nat (Id _) (Id _) h).
     - exact (fmap12 _ _ (fmap01_is_fmap11 _ _ _) $@ fmap01_is_fmap11 _ _ _).
     - exact (fmap21 _ (fmap11_id _ _ _) _ $@ fmap01_is_fmap11 F _ _).
   Defined.
@@ -477,7 +477,7 @@ Instance issymmetricmonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
 Proof.
   snrapply Build_IsSymmetricMonoidal.
   - rapply ismonoidal_op.
-  - rapply symmetricbraiding_op.
+  - exact symmetricbraiding_op.
   - intros a b c; unfold op in a, b, c; simpl.
     snrefine (_ $@ (_ $@L (_ $@R _))).
     2: exact ((braide _ _)^-1$).
@@ -576,7 +576,7 @@ Proof.
   apply cate_moveR_eV.
   refine (_ $@ (_ $@L left_unitor_associator _ _ _ _)^$).
   nrefine (_ $@ (_ $@R _) $@ cat_assoc _ _ _). 
-  2: rapply (isnat_natequiv right_unitor _)^$.
+  2: exact (isnat_natequiv right_unitor _)^$.
   nrefine ((_ $@L _) $@ cat_assoc_opp _ _ _).
   refine (triangle_identity _ _ _ _ _ _ $@ _).
   nrefine (_ $@R _).

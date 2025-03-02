@@ -30,7 +30,7 @@ Section Flattening.
     - exact (fun i x => E (i; x)).
     - intros i j g x; cbn.
       symmetry.
-      srapply (path_universe (E_f _ _)).
+      exact (path_universe (E_f _ _)).
   Defined.
 
   (** ** Helper lemmas *)
@@ -194,7 +194,7 @@ Section Flattening.
       srefine (_ @ _).
       - refine (ap (transport E' (colimp i j g x)) _).
         refine ((transport_E'_V _ _ _)^ @ _).
-        refine (ap _ (transport_pV _ _ _)).
+        exact (ap _ (transport_pV _ _ _)).
       - f_ap.
         refine (1 @@ _).
         apply transport_VpV.

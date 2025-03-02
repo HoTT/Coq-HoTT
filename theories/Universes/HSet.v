@@ -176,5 +176,5 @@ Lemma cancelL_isembedding {A B C : Type} `{IsHSet B} {f : A -> B} {g : B -> C} `
   : IsEmbedding f.
 Proof.
   rapply isembedding_isinj_hset.
-  rapply (isinj_cancelL _ g).
+  exact (isinj_cancelL _ g).
 Defined.

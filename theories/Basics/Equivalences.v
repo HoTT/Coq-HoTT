@@ -470,7 +470,7 @@ Definition isequiv_commsq {A B C D}
 : IsEquiv g.
 Proof.
   refine (@cancelR_isequiv _ _ _ h g _ _).
-  refine (isequiv_homotopic _ p).
+  exact (isequiv_homotopic _ p).
 Defined.
 
 Definition isequiv_commsq' {A B C D}
@@ -480,7 +480,7 @@ Definition isequiv_commsq' {A B C D}
 : IsEquiv f.
 Proof.
   refine (@cancelL_isequiv _ _ _ k f _ _).
-  refine (isequiv_homotopic _ p).
+  exact (isequiv_homotopic _ p).
 Defined.
 
 (** Based homotopy spaces *)

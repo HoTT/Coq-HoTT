@@ -208,7 +208,7 @@ Proof.
   refine (conn_map_homotopic n (cxfib (cx_isexact)) _ _ _).
   intro u. simpl. srapply path_hfiber.
   1: reflexivity.
-  refine (concat_1p _ @ concat_V_pp _ _)^.
+  exact (concat_1p _ @ concat_V_pp _ _)^.
 Defined.
 
 (** And also passage across squares with equivalences. *)

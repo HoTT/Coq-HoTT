@@ -46,7 +46,7 @@ Proof.
   cut (IsConnected 0 BG).
   { exact (Build_ooGroup BG). }
   cut (IsSurjection (unit_name (point BG))).
-  { intros; refine (conn_pointed_type pt). }
+  { intros; exact (conn_pointed_type pt). }
   apply BuildIsSurjection; simpl; intros [x p].
   strip_truncations; apply tr; exists tt.
   apply path_sigma_hprop; simpl.
@@ -103,7 +103,7 @@ Proof.
                    (path_sigma_hprop (point X; tr 1) (point X; tr 1) x)).
   - match goal with
         |- ap ?f (ap ?g ?p) = ?z =>
-        symmetry; refine (ap_compose g f p)
+        symmetry; exact (ap_compose g f p)
     end.
   - rewrite ap_compose; apply ap.
     apply ap_pr1_path_sigma_hprop.
@@ -233,14 +233,14 @@ Section Subgroups.
   Proof.
     intros g1 g2 [h p].
     exists (h^).
-    refine (grouphom_V incl h @ inverse2 p @ inv_pp _ _ @ whiskerR (inv_V _) _).
+    exact (grouphom_V incl h @ inverse2 p @ inv_pp _ _ @ whiskerR (inv_V _) _).
   Defined.
 
   Instance transitive_coset : Transitive in_coset.
   Proof.
     intros g1 g2 g3 [h1 p1] [h2 p2].
     exists (h1 @ h2).
-    refine (grouphom_pp incl h1 h2
+    exact (grouphom_pp incl h1 h2
             @ (p1 @@ p2)
             @ concat_p_pp _ _ _
             @ whiskerR (concat_pV_p _ _) _).

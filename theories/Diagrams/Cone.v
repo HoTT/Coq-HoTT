@@ -145,7 +145,7 @@ Section FunctorialityCone.
     1: reflexivity.
     intros; simpl.
     refine (_ @ (concat_1p _)^).
-    refine (concat_p1 _ @ concat_1p _ @ ap_idmap _).
+    exact (concat_p1 _ @ concat_1p _ @ ap_idmap _).
   Defined.
 
   Definition cone_postcompose_comp {D1 D2 D3 : Diagram G}
@@ -234,7 +234,7 @@ Section FunctorialityCone.
   Proof.
     srapply Build_UniversalCone; intro.
     rewrite (path_forall _ _ (fun f => cone_postcompose_precompose m f C)).
-    srapply isequiv_compose.
+    exact isequiv_compose.
   Defined.
 
   Global Instance cone_precompose_equiv_universality {D: Diagram G} `(f: Y <~> X)
@@ -243,7 +243,7 @@ Section FunctorialityCone.
   Proof.
     srapply Build_UniversalCone; intro.
     rewrite <- (path_forall _ _ (fun g => cone_precompose_comp g f C)).
-    srapply isequiv_compose.
+    exact isequiv_compose.
   Defined.
 
 End FunctorialityCone.

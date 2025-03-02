@@ -62,7 +62,7 @@ Proof.
     apply ap_idmap.
   - simpl.
     rhs_V nrapply ap_pp.
-    rhs_V nrapply (ap (ap (cons a)) (IHw x y z)).
+    rhs_V exact (ap (ap (cons a)) (IHw x y z)).
     rhs nrapply ap_pp.
     f_ap.
     { rhs nrapply ap_pp.
@@ -594,7 +594,7 @@ Proof.
   1: rewrite drop_nil in H; contradiction.
   destruct n.
   1: exact H.
-  right; nrapply (IHl _ _ H).
+  right; exact (IHl _ _ H).
 Defined.
 
 (** *** Take *)

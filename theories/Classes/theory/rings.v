@@ -279,7 +279,7 @@ Section ring_props.
   - path_via (1 * x + (- 1) * x).
     + rhs_V rapply distribute_r.
       symmetry.
-      rhs_V rapply (left_absorb x).
+      rhs_V exact (left_absorb x).
       f_ap.
       rapply inverse_r.
     + apply ap011;try reflexivity.
@@ -292,7 +292,7 @@ Section ring_props.
     transitivity (x * -1 + x * 1).
     - lhs apply left_inverse.
       rhs_V rapply simple_distribute_l.
-      lhs_V rapply (right_absorb x).
+      lhs_V exact (right_absorb x).
       apply (ap (x *.)).
       symmetry.
       rapply inverse_l.
@@ -303,7 +303,7 @@ Section ring_props.
   Lemma negate_mult_distr_l x y : -(x * y) = -x * y.
   Proof.
     lhs nrapply negate_mult_l.
-    lhs rapply (simple_associativity (f := (.*.)) (-1) x y).
+    lhs exact (simple_associativity (f := (.*.)) (-1) x y).
     apply (ap (.* y)).
     symmetry.
     apply negate_mult_l.

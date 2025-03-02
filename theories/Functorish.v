@@ -20,7 +20,7 @@ Proposition isequiv_fmap {A B} (f : A -> B) `{IsEquiv _ _ f}
   : IsEquiv (fmap F f).
 Proof.
   refine (equiv_induction (fun A' e => IsEquiv (fmap F e)) _ _ (Build_Equiv _ _ f _)).
-  refine (transport _ (fmap_idmap F)^ _);
+  exact (transport _ (fmap_idmap F)^ _);
     try apply isequiv_idmap. (* This line may not be needed in a new enough coq. *)
 Defined.
 

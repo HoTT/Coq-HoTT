@@ -57,7 +57,7 @@ Proof.
   srapply GraphQuotient_ind.
   1: exact c.
   intros a b s.
-  refine (transport_const _ _ @ g a b s).
+  exact (transport_const _ _ @ g a b s).
 Defined.
 
 Definition GraphQuotient_rec_beta_gqglue {A R P}
@@ -181,7 +181,7 @@ Section Descent.
       rhs nrefine (ap (gqdd_fam Qe b) _).
       + exact (path_universe (gqdd_e Qe r pa)).
       + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (gqglue r))).
-        nrapply (transport_fam_gqdescent_gqglue _ _ _).
+        exact (transport_fam_gqdescent_gqglue _ _ _).
   Defined.
 
   (** A section of dependent descent data [Qe : gqDepDescent Pe] is a fiberwise section [gqdds_sect], together with coherences [gqdd_e]. *)
@@ -204,7 +204,7 @@ Section Descent.
       apply dpath_forall.
       intro pa.
       apply (equiv_inj (transport (Q (gq b)) (transport_fam_gqdescent_gqglue Pe r pa))).
-      rhs nrapply (apD (gqdds_sect f b) (transport_fam_gqdescent_gqglue Pe r pa)).
+      rhs exact (apD (gqdds_sect f b) (transport_fam_gqdescent_gqglue Pe r pa)).
       exact (gqdds_e f r pa).
     Defined.
 
@@ -254,7 +254,7 @@ Section Descent.
       lhs nrapply concat_V_pp.
       lhs nrapply (1 @@ concat_pp_p _ _ _).
       rewrite concat_p1.
-      nrapply (1 @@ (1 @@ concat_pV_p _ _)). }
+      exact (1 @@ (1 @@ concat_pV_p _ _)). }
     nrapply concat_V_pp.
     Close Scope long_path_scope.
   Defined.
@@ -317,7 +317,7 @@ Section Flattening.
         rewrite <- (concat_p1 (transport_fam_gqdescent_gqglue _ _ _)).
         rewrite gqdepdescent_rec_beta_gqglue. (* This needs to be in the form [transport_fam_gqdescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).
-        nrapply (GraphQuotient_rec_beta_gqglue _ _ (a; pa) (b; _) (r; 1)).
+        exact (GraphQuotient_rec_beta_gqglue _ _ (a; pa) (b; _) (r; 1)).
   Defined.
 
 End Flattening.

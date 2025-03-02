@@ -415,7 +415,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       refine (_ oE equiv_transport codeleft (transport_paths_r _ _)).
       refine (_ oE codeglue _ q11).
       refine (equiv_transport coderight _).
-      refine (concat_pV_p z (glue q11)).
+      exact (concat_pV_p z (glue q11)).
     Defined.
 
     (** Here's the final definition of [code]. *)
@@ -443,7 +443,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
                                   (@codeleft x0) (@coderight x0)
                                   ap_code_glue
                                   x1 y1 q11) @ _).
-      refine (ap10_path_arrow _ _ _ _).
+      exact (ap10_path_arrow _ _ _ _).
     Defined.
 
     (** ** Contractibility of codes *)

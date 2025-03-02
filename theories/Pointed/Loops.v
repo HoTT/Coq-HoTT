@@ -357,7 +357,7 @@ Lemma loops_psigma_trunc (n : nat) (Aa : pType)
 Proof.
   induction n in Aa, Pp, istrunc_Pp |- *.
   { snrapply Build_pEquiv'.
-    1: refine (@equiv_sigma_contr _ _ istrunc_Pp).
+    1: exact (@equiv_sigma_contr _ _ istrunc_Pp).
     reflexivity. }
   refine (pequiv_inverse (unfold_iterated_loops' _ _) o*E _
     o*E unfold_iterated_loops' _ _).
@@ -430,7 +430,7 @@ Proof.
   intros A B f.
   srapply Build_pHomotopy.
   + intros p. refine (inv_Vp _ _ @ whiskerR _ (point_eq f) @ concat_pp_p _ _ _).
-    refine (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
+    exact (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
   + pointed_reduce. reflexivity.
 Defined.
 

@@ -284,7 +284,7 @@ Definition dcompose_cate_idr {A} {D : A -> Type} `{DHasEquivs A D}
     (dcate_fun f').
 Proof.
   refine (dcompose_cate_fun f' _ $@' _ $@' dcat_idr (dcate_fun f')).
-  rapply (_ $@L' dcate_buildequiv_fun _).
+  exact (_ $@L' dcate_buildequiv_fun _).
 Defined.
 
 (** Some more convenient equalities for equivalences. The naming scheme is similar to [PathGroupoids.v].*)

@@ -295,7 +295,7 @@ Section UnitCounitAdjunction.
     nrapply is1functor_compose.
     1: nrapply is1functor_op; exact _.
     nrapply is1functor_opyon.
-    nrapply hasmorext_op; exact _.
+    exact hasmorext_op.
   Defined.
 
   (** And natural in the right. *)
@@ -377,7 +377,7 @@ Proof.
       (natequiv_adjunction_l adj2 y) F). }
   intros x.
   rapply is1natural_comp.
-  + rapply (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).
+  + exact (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).
   + rapply is1natural_equiv_adjunction_r.
 Defined.
 
@@ -391,7 +391,7 @@ Proof.
   snrapply Build_Adjunction_natequiv_nat_right.
   { intros y.
     refine (natequiv_compose (natequiv_adjunction_l adj _) _).
-    rapply (natequiv_postwhisker _ (natequiv_op e)). }
+    exact (natequiv_postwhisker _ (natequiv_op e)). }
   intros x.
   rapply is1natural_comp.
 Defined.
@@ -406,7 +406,7 @@ Proof.
   snrapply Build_Adjunction_natequiv_nat_left.
   { intros x.
     refine (natequiv_compose _ (natequiv_adjunction_r adj _)).
-    rapply (natequiv_postwhisker _ e). }
+    exact (natequiv_postwhisker _ e). }
   intros y.
   rapply is1natural_comp.
   2: exact _.

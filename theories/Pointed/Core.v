@@ -756,7 +756,7 @@ Proof.
     cbn; apply moveR_equiv_V.
     funext i.
     rhs nrapply ap_pp.
-    lhs nrapply (dpoint_eq (p i)).
+    lhs exact (dpoint_eq (p i)).
     cbn; f_ap.
     + apply concat_p1.
     + rhs nrapply (ap_V _ (dpoint_eq g)).
@@ -912,7 +912,7 @@ Proof.
   simpl. unfold moveR_equiv_V.
   pointed_reduce.
   symmetry.
-  refine (concat_p1 _ @ concat_1p _ @ concat_1p _).
+  exact (concat_p1 _ @ concat_1p _ @ concat_1p _).
 Defined.
 
 (* A pointed equivalence is a retraction of its inverse *)
@@ -1003,7 +1003,7 @@ Proof.
   - reflexivity.
   - exact (pequiv_inverse f).
   - apply peissect.
-  - cbn. refine (peisretr f).
+  - cbn. exact (peisretr f).
   - rapply (isequiv_adjointify f g).
     + intros x; exact (r x).
     + intros x; exact (s x).

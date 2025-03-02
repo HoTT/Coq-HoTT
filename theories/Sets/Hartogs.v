@@ -202,7 +202,7 @@ Section Hartogs_Number.
     revert X.
     nrapply power_morph.
     nrapply power_morph.
-    nrapply power_inj.
+    exact power_inj.
   Defined.
 
   Lemma injective_uni_fix : IsInjective uni_fix.

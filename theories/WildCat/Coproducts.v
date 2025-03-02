@@ -324,7 +324,7 @@ Proof.
   unfold Associator.
   snrapply associator_op'.
   1: exact _.
-  nrapply associator_cat_binprod.
+  exact associator_cat_binprod.
 Defined.
 
 (** *** Codiagonal *)

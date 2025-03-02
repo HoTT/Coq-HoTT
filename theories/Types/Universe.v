@@ -126,8 +126,8 @@ Proof.
   transitivity (p^).
     2: exact (inverse2 (eisretr (equiv_path_universe A B) p)^).
   transitivity (path_universe_uncurried (equiv_path B A p^)).
-  - by refine (ap _ (equiv_path_V A B p)^).
-  - by refine (eissect (equiv_path B A) p^).
+  - by exact (ap _ (equiv_path_V A B p)^).
+  - by exact (eissect (equiv_path B A) p^).
 Defined.
 
 Definition path_universe_V `(f : A -> B) `{IsEquiv A B f}
@@ -365,8 +365,8 @@ Section PathEquivSimplNever.
       apply concat2.
       + apply whiskerR.
         apply inverse2, symmetry.
-        refine (eisadj (equiv_path A C)^-1 g).
-      + symmetry; refine (eisadj (equiv_path A C)^-1 g).
+        exact (eisadj (equiv_path A C)^-1 g).
+      + symmetry; exact (eisadj (equiv_path A C)^-1 g).
     - generalize (path_universe g).
       intros h. destruct h. cbn.
       rewrite !concat_1p, !concat_p1.
@@ -401,8 +401,8 @@ Section PathEquivSimplNever.
       apply concat2.
       + apply whiskerR.
         apply inverse2, symmetry.
-        refine (eisadj (equiv_path A B)^-1 g).
-      + symmetry; refine (eisadj (equiv_path A B)^-1 g).
+        exact (eisadj (equiv_path A B)^-1 g).
+      + symmetry; exact (eisadj (equiv_path A B)^-1 g).
     - generalize (path_universe g).
       intros h. destruct h. cbn.
       rewrite !concat_p1.
@@ -424,7 +424,7 @@ Proof.
   refine (_ oE equiv_ap (equiv_path_arrow f g) p q).
   refine (_ oE equiv_ap (equiv_path_equiv f g) _ _).
   unfold path2_universe, equiv_path2_universe.
-  simpl. refine (equiv_ap (ap (equiv_path A B)^-1) _ _).
+  simpl. exact (equiv_ap (ap (equiv_path A B)^-1) _ _).
 Defined.
 
 Definition path3_universe
@@ -521,7 +521,7 @@ Proof.
   srapply Build_Contr.
   - exact (X; equiv_idmap).
   - intros [Y f]; revert Y f.
-    refine (equiv_induction_inv _ idpath).
+    exact (equiv_induction_inv _ idpath).
 Defined.
 
 (** Any two functions that act like transport along an equivalence, i.e. maps of the type [T : forall X Y, X <~> Y -> S X -> S Y] with a computation rule of type [Trefl : forall X, (T (equiv_idmap X) == idmap)], are homotopic. This can be useful when we want to transport along an equivalence, but [univalent_transport] does not have the computational properties that we want. *)
@@ -545,7 +545,7 @@ Defined.
   {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
   : IsTrunc n.+1 (A = B).
 Proof.
-  refine (istrunc_isequiv_istrunc _ path_universe_uncurried).
+  exact (istrunc_isequiv_istrunc _ path_universe_uncurried).
 Defined.
 
 (** We can also say easily that the universe is not a set. *)

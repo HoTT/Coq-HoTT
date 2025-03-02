@@ -115,7 +115,7 @@ Section AssumeFunext.
     : (e1 = e2 :> (A -> B)) <~> (e1 = e2 :> (A <~> B)).
   Proof.
     equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
-    2: symmetry; apply equiv_ap; refine _.
+    2: symmetry; rapply equiv_ap.
     exact (equiv_path_sigma_hprop ((issig_equiv A B)^-1 e1) ((issig_equiv A B)^-1 e2)).
   Defined.
 

@@ -106,9 +106,9 @@ Proof.
     1: exact (fmap (Pi k.+1) (fmap loops (pmap_from_point f x))).
     2:{ rapply (fmap2 (Pi k.+1)); srefine (Build_pHomotopy _ _).
         - intros p; cbn.
-          refine (concat_1p _ @ concat_p1 _).
+          exact (concat_1p _ @ concat_p1 _).
         - reflexivity. }
     nrefine (isequiv_commsq _ _ _ _ (fmap_pi_loops k.+1 (pmap_from_point f x))).
-    2-3:refine (equiv_isequiv (pi_loops _ _)).
+    2-3:exact (equiv_isequiv (pi_loops _ _)).
     exact (ii x k.+1).
 Defined.

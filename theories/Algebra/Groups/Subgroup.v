@@ -621,7 +621,7 @@ Proof.
     change ((x; Hx).1 = (1; idpath).1).
     snrapply (pr1_path (u:=(_;_)) (v:=(_;_))).
     1: apply subgroup_in_unit.
-    rhs_V nrapply (grp_homo_unit e^-1$).
+    rhs_V exact (grp_homo_unit e^-1$).
     apply moveL_equiv_V.
     apply path_contr.
 Defined.
@@ -1157,7 +1157,7 @@ Proof.
   srapply path_sigma_hprop; unfold pr1.
   apply grp_moveL_1M.
   apply triv; simpl.
-  rhs_V nrapply (grp_inv_r h).
+  rhs_V exact (grp_inv_r h).
   lhs nrapply grp_homo_op.
   nrapply (ap011 (.*.) p).
   lhs nrapply grp_homo_inv.

@@ -449,9 +449,9 @@ Proof.
     + intros x y p q; strip_truncations.
       by apply tr, igt_add_neg.
   - intros r x; apply Trunc_functor.
-    nrapply igt_mul_l.
+    exact igt_mul_l.
   - intros x r; apply Trunc_functor.
-    nrapply igt_mul_r.
+    exact igt_mul_r.
 Defined. 
 
 (** *** Finitely generated ideal *)
@@ -747,7 +747,7 @@ Proof.
       * exact (y - z).
       * by apply ideal_in_plus_negate.
       * cbn.
-        rhs_V nrapply (ap011 (fun x y => x - y) p q).
+        rhs_V exact (ap011 (fun x y => x - y) p q).
         lhs_V nrapply rng_plus_assoc.
         rhs_V nrapply rng_plus_assoc.
         f_ap.

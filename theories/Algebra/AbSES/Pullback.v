@@ -169,7 +169,7 @@ Lemma ap_abses_pullback `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
 Proof.
   induction p.
   nrefine (_ @ ap equiv_path_abses_iso _).
-  2: refine ((fmap_id_strong _ _)^ @ ap _ equiv_path_absesV_1^).
+  2: exact ((fmap_id_strong _ _)^ @ ap _ equiv_path_absesV_1^).
   exact equiv_path_abses_1^.
 Defined.
 

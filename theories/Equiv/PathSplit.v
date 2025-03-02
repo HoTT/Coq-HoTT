@@ -63,7 +63,7 @@ Definition equiv_pathsplit_isequiv (n : nat) `(f : A -> B)
 Proof.
   refine (equiv_iff_hprop _ _).
   - apply isequiv_pathsplit.
-  - intros ?; refine (center _).
+  - intros ?; exact (center _).
 Defined.
 
 (** Path-splitness transfers across commutative squares of equivalences. *)
@@ -85,8 +85,8 @@ Proof.
   - refine (_ oE equiv_pathsplit_isequiv n f).
     refine ((equiv_pathsplit_isequiv n g)^-1 oE _).
     apply equiv_iff_hprop; intros e.
-    + refine (isequiv_commsq f g h k (fun a => (p a)^)).
-    + refine (isequiv_commsq' f g h k p).
+    + exact (isequiv_commsq f g h k (fun a => (p a)^)).
+    + exact (isequiv_commsq' f g h k p).
 Defined.
 
 (** A map is oo-path-split if it is n-path-split for all n.  This is also equivalent to being an equivalence. *)
@@ -118,7 +118,7 @@ Definition equiv_oopathsplit_isequiv `(f : A -> B)
 Proof.
   refine (equiv_iff_hprop _ _).
   - apply isequiv_oopathsplit.
-  - intros ?; refine (center _).
+  - intros ?; exact (center _).
 Defined.
 
 End AssumeFunext.

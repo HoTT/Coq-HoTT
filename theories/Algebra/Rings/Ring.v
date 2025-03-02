@@ -687,7 +687,7 @@ Defined.
 Definition rng_inv_r {R : Ring} (x : R) `{IsInvertible R x}
   : x * inverse_elem x = 1.
 Proof.
-  rhs_V nrapply (right_inverse_eq x).
+  rhs_V exact (right_inverse_eq x).
   f_ap.
   apply path_left_inverse_elem_right_inverse_elem.
 Defined.
@@ -730,7 +730,7 @@ Instance isleftinvertible_mult {R : Ring} (x y : R)
 Proof.
   intros [x' p] [y' q].
   exists (y' * x').
-  rhs_V nrapply q.
+  rhs_V exact q.
   lhs nrapply rng_mult_assoc.
   f_ap.
   rhs_V nrapply rng_mult_one_r.

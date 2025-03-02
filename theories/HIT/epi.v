@@ -61,14 +61,14 @@ Section cones.
     pose (tot:= { h : B -> setcone f & tr o push o inl o f = h o f }).
     transparent assert (l : tot).
     { simple refine (tr o _ o inl; _).
-      { refine push. }
-      { refine idpath. } }
+      { exact push. }
+      { exact idpath. } }
     pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f => @tr 0 _ o f) (path_forall _ _ alpha1))) : tot).
     subst tot.
     assert (X : l = r).
       { let lem := constr:(fun X push' => hepi (Build_HSet (setcone f)) (tr o push' o @inl _ X)) in
         pose (lem _ push).
-        refine (path_contr l r). }
+        exact (path_contr l r). }
     subst l r.
 
     pose (I0 b := ap10 (X ..1) b).

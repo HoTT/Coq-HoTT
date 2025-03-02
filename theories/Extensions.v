@@ -350,7 +350,7 @@ Section Extensions.
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ooExtendableAlong f C).
   Proof.
-    refine (istrunc_equiv_istrunc _ (equiv_ooextendable_pathsplit C f)^-1).
+    exact (istrunc_equiv_istrunc _ (equiv_ooextendable_pathsplit C f)^-1).
   Defined.
 
   Definition equiv_ooextendable_isequiv `{Funext}

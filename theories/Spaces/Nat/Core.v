@@ -317,7 +317,7 @@ Proof.
   intros x y H.
   nrapply (isinj_nat_add_l k).
   lhs nrapply nat_add_comm.
-  lhs nrapply H.
+  lhs exact H.
   nrapply nat_add_comm.
 Defined.
 
@@ -692,7 +692,7 @@ Defined.
 (** We can cancel a right summand when subtracting it from a sum. *)
 Definition nat_add_sub_cancel_r m n : m + n - n = m.
 Proof.
-  rhs_V nrapply (nat_add_sub_cancel_l m n).
+  rhs_V exact (nat_add_sub_cancel_l m n).
   nrapply (ap (fun x => x - n)).
   nrapply nat_add_comm.
 Defined.
@@ -716,7 +716,7 @@ Defined.
 Definition nat_add_sub_r_cancel {n m} : n <= m -> n + (m - n) = m.
 Proof.
   intros H.
-  rhs_V nrapply (nat_add_sub_l_cancel H).
+  rhs_V exact (nat_add_sub_l_cancel H).
   apply nat_add_comm.
 Defined.
 
@@ -1025,7 +1025,7 @@ Definition nat_trichotomy m n : (m < n) + (m = n) + (m > n).
 Proof.
   generalize (leq_dichotomy m n).
   snrapply (functor_sum _ idmap).
-  snrapply equiv_leq_lt_or_eq.
+  exact equiv_leq_lt_or_eq.
 Defined.
 
 (** *** Negation lemmas *)
@@ -1593,5 +1593,5 @@ Proof.
       destruct H as [H | []].
       2: apply Hnn.
       rapply IH.
-      rapply IHn.
+      exact IHn.
 Defined.

@@ -162,9 +162,9 @@ Section join_semilattice_order.
     }
     assert (le2 : x ≤ x ⊔ x).
     {
-      refine (join_ub_l _ _).
+      exact (join_ub_l _ _).
     }
-    refine (antisymmetry _ _ _ le1 le2).
+    exact (antisymmetry _ _ _ le1 le2).
   Qed.
 End join_semilattice_order.
 
@@ -332,13 +332,13 @@ Section meet_semilattice_order.
   Proof.
     assert (le1 : x ⊓ x ≤ x).
     {
-      refine (meet_lb_l _ _).
+      exact (meet_lb_l _ _).
     }
     assert (le2 : x ≤ x ⊓ x).
     {
       refine (meet_glb _ _ _ _ _); apply reflexivity.
     }
-    refine (antisymmetry _ _ _ le1 le2).
+    exact (antisymmetry _ _ _ le1 le2).
   Qed.
 
 End meet_semilattice_order.
@@ -577,7 +577,7 @@ Section strict_ordered_field.
         {
           apply le_iff_not_lt_flip.
           intros ltyx.
-          refine (nleyx (lt_le _ _ _)).
+          exact (nleyx (lt_le _ _ _)).
         }
         assert (ineqy : x ⊔ y <> y).
         {
@@ -589,10 +589,10 @@ Section strict_ordered_field.
         {
           apply le_iff_not_lt_flip.
           intros ltxy.
-          refine (nlexy (lt_le _ _ _)).
+          exact (nlexy (lt_le _ _ _)).
         }
         assert (eqxy : x = y)
-          by refine (antisymmetry _ _ _ lexy leyx).
+          by exact (antisymmetry _ _ _ lexy leyx).
         rewrite <- eqxy in ineqx.
         destruct (ineqx (join_idempotent x)).
       + assumption.
@@ -632,7 +632,7 @@ Section strict_ordered_field.
         {
           apply le_iff_not_lt_flip.
           intros ltzy.
-          refine (nleyz (lt_le _ _ _)).
+          exact (nleyz (lt_le _ _ _)).
         }
         assert (ineqz : y ⊓ z <> z).
         {
@@ -644,10 +644,10 @@ Section strict_ordered_field.
         {
           apply le_iff_not_lt_flip.
           intros ltzy.
-          refine (nlezy (lt_le _ _ _)).
+          exact (nlezy (lt_le _ _ _)).
         }
         assert (eqyz : y = z)
-          by refine (antisymmetry _ _ _ leyz lezy).
+          by exact (antisymmetry _ _ _ leyz lezy).
         rewrite <- eqyz in ineqy.
         destruct (ineqy (meet_idempotent y)).
   Qed.

@@ -52,7 +52,7 @@ Section AssumeUnivalence.
     refine (_ @ ap (equiv_path_sigma_hprop _ _)
                    (oops @ path_universe_1) @ _).
     - symmetry.
-      refine (eisretr (equiv_path_sigma_hprop Z Z) _).
+      exact (eisretr (equiv_path_sigma_hprop Z Z) _).
     - apply moveR_equiv_M; reflexivity.
   Defined.
 
@@ -169,8 +169,8 @@ First we define the function that will be the equivalence. *)
       refine (ap10 (inhab_baut_bool_from_bool_bool t) (e t) @ _).
       apply path_arrow; intros []; destruct t.
       * reflexivity.
-      * refine (abelian_aut_bool equiv_negb e false).
-      * refine (abelian_aut_bool equiv_negb e true).
+      * exact (abelian_aut_bool equiv_negb e false).
+      * exact (abelian_aut_bool equiv_negb e true).
       * reflexivity.
     + intros z.
       refine (ap10 (ap10 (inhab_baut_bool_from_bool_bool t) z) t @ _).
@@ -265,7 +265,7 @@ First we define the function that will be the equivalence. *)
       destruct (path_baut_bool_inhab W w).
       destruct (path_baut_bool_inhab Z z).
       simpl.
-      destruct z,w; simpl; refine (ap10_equiv (eisretr e _) _).
+      destruct z,w; simpl; exact (ap10_equiv (eisretr e _) _).
     + intros y.
       destruct (path_baut_bool_inhab Y y).
       destruct (path_baut_bool_inhab Z z).
@@ -334,7 +334,7 @@ First we define the function that will be the equivalence. *)
       refine (Trunc_rec _ (merely_inhab_baut_bool Y)); intros y.
       refine (ap (baut_bool_pairing_ZZ_Z_symm_lemma e _)
                  (path_ishprop _ (tr y)) @ _).
-      simpl. refine (eissect _ _).
+      simpl. exact (eissect _ _).
   Defined.
 
   Definition baut_bool_pairing_ZZ_Z_symm_inv Y Z W
@@ -351,7 +351,7 @@ First we define the function that will be the equivalence. *)
   Definition baut_bool_pairing_ZZ_Z_symm Y Z W
   : Y ** (Z ** W) <~> Z ** (Y ** W).
   Proof.
-    refine (equiv_adjointify
+    exact (equiv_adjointify
               (baut_bool_pairing_ZZ_Z_symm_map Y Z W)
               (baut_bool_pairing_ZZ_Z_symm_map Z Y W)
               (baut_bool_pairing_ZZ_Z_symm_inv Y Z W)

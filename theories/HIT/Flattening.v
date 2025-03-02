@@ -55,7 +55,7 @@ Proof.
   eapply (cancelL (transport_const (ppt (C:=C) b y) _)).
   refine ((apD_const
     (@Wtil_ind A B f g C D (fun _ => Q) cct' _) (ppt b y))^ @ _).
-  refine (Wtil_ind_beta_ppt (fun _ => Q) _ _ _ _).
+  exact (Wtil_ind_beta_ppt (fun _ => Q) _ _ _ _).
 Defined.
 
 

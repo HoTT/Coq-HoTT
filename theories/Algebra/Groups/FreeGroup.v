@@ -181,7 +181,7 @@ Section Reduction.
       nrapply (ap (fun x => x ++ _)). 
       lhs nrapply word_change_sign_ww.
       nrapply (ap (fun x => _ ++ x)).
-      nrapply (word_change_sign_inv [a]). }
+      exact (word_change_sign_inv [a]). }
     lhs_V nrapply ap.
     1: rhs_V nrapply app_assoc.
     1: nrapply app_assoc.
@@ -575,7 +575,7 @@ Proof.
     snrapply FreeGroup_ind_homotopy.
     intros x.
     exact (ap freegroup_in (p x)).
-  - intro; nrapply freegroup_rec_in.
+  - intro; exact freegroup_rec_in.
   - intros X Y Z f g.
     by snrapply FreeGroup_ind_homotopy.
 Defined.

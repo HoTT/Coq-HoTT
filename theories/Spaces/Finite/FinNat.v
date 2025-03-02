@@ -115,8 +115,8 @@ Proof.
   snrapply finnat_ind.
   1: reflexivity.
   intros n u; cbn beta; intros p.
-  lhs nrapply (path_finnat_to_fin_succ (incl_finnat u)).
-  lhs nrapply (ap fsucc p).
+  lhs exact (path_finnat_to_fin_succ (incl_finnat u)).
+  lhs exact (ap fsucc p).
   exact (ap fin_incl (path_finnat_to_fin_succ _))^.
 Defined.
 

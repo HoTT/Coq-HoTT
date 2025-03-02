@@ -89,9 +89,9 @@ Section Addition.
         assert (InSort S L'' R'') by (apply sum_options; exact _).
         exists ({{ zL | zR // zcut }}); split.
         + intros l.
-          refine (lt_lopt zL zR zcut (inl l)).
+          exact (lt_lopt zL zR zcut (inl l)).
         + intros r.
-          refine (lt_ropt zL zR zcut (inl r)).
+          exact (lt_ropt zL zR zcut (inl r)).
       - abstract (
         intros x y [a ?] [b ?] p q r s;
         rewrite transport_sigma; cbn in *;
@@ -105,11 +105,11 @@ Section Addition.
         apply le_lr; [ intros [l|l] | intros [r|r] ]; cbn;
         [ refine (le_lt_trans (fst (xL_plus l).2 _ {{ zL | zR // zcut}} _) _);
           [ by (apply le_lr; assumption)
-          | refine (lt_lopt _ _ _ (inl l)) ]
+          | exact (lt_lopt _ _ _ (inl l)) ]
         | exact (x_plus_yL_lt_z l)
         | refine (lt_le_trans _
                     (fst (xR_plus r).2 {{ yL | yR // ycut}} _ _));
-          [ refine (lt_ropt _ _ _ (inl r))
+          [ exact (lt_ropt _ _ _ (inl r))
           | by (apply le_lr; assumption) ]
         | exact (x_plus_y_lt_zR r) ] ).
       - abstract (
@@ -193,14 +193,14 @@ Section Addition.
         exact xL_lt_y_plus
       | (** x + z^L < y + z *)
         refine (le_lt_trans (x_le_y_plus_zL l) _);
-        refine (lt_lopt _ _ _ (inr l))
+        exact (lt_lopt _ _ _ (inr l))
       | (** x + z < y^R + z *)
         specialize (x_lt_yR_plus r {{ zL | zR // zcut }});
         rewrite p in x_lt_yR_plus;
         exact x_lt_yR_plus
       | (** x + z < y + z^R *)
         refine (lt_le_trans _ (x_le_y_plus_zR r));
-        refine (lt_ropt _ _ _ (inr r)) ]).
+        exact (lt_ropt _ _ _ (inr r)) ]).
     - abstract (
       intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
              L' R' ? yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
@@ -213,7 +213,7 @@ Section Addition.
       destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
                                zL zR zcut) as [yzcut q];rewrite q;
       refine (le_lt_trans (x_le_yL_plus {{ zL | zR // zcut }}) _);
-      refine (lt_lopt _ _ _ (inl l)) ).
+      exact (lt_lopt _ _ _ (inl l)) ).
     - abstract (
       intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
              L' R' ? yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
@@ -226,7 +226,7 @@ Section Addition.
       destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
                                zL zR zcut) as [yzcut q];rewrite q;
       refine (lt_le_trans _ (xR_le_y_plus {{ zL | zR // zcut }}));
-      refine (lt_ropt _ _ _ (inl r)) ).
+      exact (lt_ropt _ _ _ (inl r)) ).
   Defined.
 
   Definition plus (x y : No) : No
@@ -365,17 +365,17 @@ Section Addition.
     - apply le_lr; [ intros [l|r]; cbn [sum_ind] | intros [] ].
       + unfold zero in IHL; rewrite <- (IHL l); clear IHL.
         apply plus_lt_r.
-        refine (lt_ropt _ _ _ l).
+        exact (lt_ropt _ _ _ l).
       + unfold zero in IHR; rewrite <- (IHR r); clear IHR.
         apply plus_lt_l.
-        refine (lt_ropt _ _ _ r).
+        exact (lt_ropt _ _ _ r).
     - apply le_lr; [ intros [] | intros [r|l] ]; cbn [sum_ind].
       + unfold zero in IHR; rewrite <- (IHR r); clear IHR.
         apply plus_lt_r.
-        refine (lt_lopt _ _ _ r).
+        exact (lt_lopt _ _ _ r).
       + unfold zero in IHL; rewrite <- (IHL l); clear IHL.
         apply plus_lt_l.
-        refine (lt_lopt _ _ _ l).
+        exact (lt_lopt _ _ _ l).
   Defined.
 
   Definition sub (x y : No) : No := x + (negate y).

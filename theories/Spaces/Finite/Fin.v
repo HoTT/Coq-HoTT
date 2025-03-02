@@ -48,7 +48,7 @@ Defined.
 
 Global Instance contr_fin1 : Contr (Fin 1).
 Proof.
-  refine (contr_equiv' Unit (sum_empty_l Unit)^-1).
+  exact (contr_equiv' Unit (sum_empty_l Unit)^-1).
 Defined.
 
 Definition fin_empty (n : nat) (f : Fin n -> Empty) : n = 0.
@@ -162,7 +162,7 @@ Proof.
       * refine ((fin_transpose_last_two n)
                   oE _
                   oE (fin_transpose_last_two n)).
-        refine ((fin_transpose_last_with n (inl k)) +E 1).
+        exact ((fin_transpose_last_with n (inl k)) +E 1).
       * apply fin_transpose_last_two.
   - exact (equiv_idmap _).
 Defined.
@@ -284,7 +284,7 @@ Proof.
     destruct x as [x|[]]; simpl.
     * rewrite unfunctor_sum_l_beta.
       apply fin_transpose_last_with_invol.
-    * refine (fin_transpose_last_with_last _ _ @ p^).
+    * exact (fin_transpose_last_with_last _ _ @ p^).
   + simple refine (equiv_unfunctor_sum_l@{Set Set Set Set Set Set} e _ _ ; _).
     { intros a.
       destruct (is_inl_or_is_inr (e (inl a))) as [l|r].
@@ -345,9 +345,9 @@ Proof.
     apply (ap equiv_fun) in p.
     apply ap10 in p.
     apply path_prod'.
-    + refine (fin_equiv_inj_fst n m k l e f p).
+    + exact (fin_equiv_inj_fst n m k l e f p).
     + apply path_equiv, path_arrow.
-      refine (fin_equiv_inj_snd n m k l e f p).
+      exact (fin_equiv_inj_snd n m k l e f p).
 Defined.
 
 Definition equiv_fin_equiv `{Funext} (n m : nat)

@@ -90,7 +90,7 @@ Definition rng_quotient_map {R : Ring} (I : Ideal R)
   : RingHomomorphism R (R / I).
 Proof.
   snrapply Build_RingHomomorphism'.
-  1: rapply grp_quotient_map.
+  1: exact grp_quotient_map.
   repeat split.
 Defined.
 
@@ -177,7 +177,7 @@ Proof.
   etransitivity.
   1: apply (rng_quotient_invar p).
   etransitivity.
-  2: rapply (rng_image_issurj f).
+  2: exact (rng_image_issurj f).
   apply rng_first_iso.
 Defined.
 

@@ -401,7 +401,7 @@ Section Reflective_Subuniverse.
     Proof.
       unfold O_functor_homotopy, to_O_natural.
       refine (O_indpaths_beta _ _ _ x @ _).
-      refine (concat_p_pp _ _ _).
+      exact (concat_p_pp _ _ _).
     Defined.
 
     (** The pointed endofunctor ([O],[to O]) is well-pointed *)
@@ -591,7 +591,7 @@ Section Reflective_Subuniverse.
     Proof.
       (* Not sure why we need [C:=O B] on the next line to get Coq to use two typeclass instances. *)
       rapply (cancelL_isequiv (C:=O B) (to O B)).
-      rapply (isequiv_homotopic (O_functor f) (fun x => (O_rec_postcompose_to_O f x)^)).
+      exact (isequiv_homotopic (O_functor f) (fun x => (O_rec_postcompose_to_O f x)^)).
     Defined.
 
     Definition equiv_O_rec_O_inverts
@@ -902,7 +902,7 @@ Section Reflective_Subuniverse.
         exists (O_rec (fun p => p.2.1) op).
         revert op; apply O_indpaths; intros [b [c a]].
         refine (ap f (O_rec_beta _ _) @ _); cbn.
-        refine (a @ ap g (O_rec_beta _ _)^).
+        exact (a @ ap g (O_rec_beta _ _)^).
       - intros [b [c a]]; cbn.
         srapply path_sigma'.
         { apply O_rec_beta. }
@@ -1069,8 +1069,8 @@ Section Reflective_Subuniverse.
     Proof.
       generalize dependent A; simple_induction n n IH; intros A ?.
       - (** We have to be slightly clever here: the actual definition of [Contr] involves a sigma, which [O] is not generally closed under, but fortunately we have [equiv_contr_inhabited_allpath]. *)
-        refine (inO_equiv_inO _ equiv_contr_inhabited_allpath^-1).
-      - refine (inO_equiv_inO _ (equiv_istrunc_unfold n.+1 A)^-1).
+        exact (inO_equiv_inO _ equiv_contr_inhabited_allpath^-1).
+      - exact (inO_equiv_inO _ (equiv_istrunc_unfold n.+1 A)^-1).
     Defined.
 
     (** ** Coproducts *)
@@ -1136,7 +1136,7 @@ Section Reflective_Subuniverse.
         : equiv_O_coeq (to O (Coeq f g) (coeq a))
           = to O (Coeq (O_functor f) (O_functor g)) (coeq (to O A a)).
       Proof.
-        refine (to_O_natural _ _).
+        exact (to_O_natural _ _).
       Defined.
 
       Definition inverse_equiv_O_coeq_to_O (a : A)
@@ -1362,7 +1362,7 @@ Section ConnectedTypes.
   Definition isconnected_equiv (A : Type) {B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : IsConnected O A -> IsConnected O B.
   Proof.
-    intros ?; refine (contr_equiv (O A) (O_functor O f)).
+    intros ?; exact (contr_equiv (O A) (O_functor O f)).
   Defined.
 
   Definition isconnected_equiv' (A : Type) {B : Type} (f : A <~> B)
@@ -1468,7 +1468,7 @@ Section ConnectedTypes.
              {A : Type} `{IsConnected O A} (C : Type) `{In O C}
   : IsEquiv (@const A C).
   Proof.
-    refine (@isequiv_compose _ _ (fun c u => c) _ _ _
+    exact (@isequiv_compose _ _ (fun c u => c) _ _ _
               (isequiv_ooextendable (fun _ => C) (const_tt A)
                                     (ooextendable_const_isconnected_inO A C))).
   Defined.
@@ -1517,7 +1517,7 @@ Section ModalMaps.
   : MapIn O g -> MapIn O (g o f) -> MapIn O f.
   Proof.
     intros ? ? b.
-    refine (inO_equiv_inO _ (hfiber_hfiber_compose_map f g b)).
+    exact (inO_equiv_inO _ (hfiber_hfiber_compose_map f g b)).
   Defined.
 
   (** Modal maps also cancel with equivalences on the other side. *)
@@ -1541,7 +1541,7 @@ Section ModalMaps.
   : MapIn O (f^* g).
   Proof.
     intros b.
-    refine (inO_equiv_inO _ (hfiber_pullback_along f g b)^-1).
+    exact (inO_equiv_inO _ (hfiber_pullback_along f g b)^-1).
   Defined.
 
   Global Instance mapinO_pullback' {A B C}
@@ -1549,7 +1549,7 @@ Section ModalMaps.
   : MapIn O (g^*' f).
   Proof.
     intros c.
-    refine (inO_equiv_inO _ (hfiber_pullback_along' g f c)^-1).
+    exact (inO_equiv_inO _ (hfiber_pullback_along' g f c)^-1).
   Defined.
 
   (** [functor_sum] preserves modal maps. *)
@@ -1558,8 +1558,8 @@ Section ModalMaps.
   : MapIn O (functor_sum f g).
   Proof.
     intros [a|b].
-    - refine (inO_equiv_inO _ (hfiber_functor_sum_l f g a)^-1).
-    - refine (inO_equiv_inO _ (hfiber_functor_sum_r f g b)^-1).
+    - exact (inO_equiv_inO _ (hfiber_functor_sum_l f g a)^-1).
+    - exact (inO_equiv_inO _ (hfiber_functor_sum_r f g b)^-1).
   Defined.
 
   (** So does [unfunctor_sum], if both summands are preserved.  These can't be [Instance]s since they require [Ha] and [Hb] to be supplied. *)
@@ -1571,7 +1571,7 @@ Section ModalMaps.
   : MapIn O (unfunctor_sum_l h Ha).
   Proof.
     intros a.
-    refine (inO_equiv_inO _ (hfiber_unfunctor_sum_l h Ha Hb a)^-1).
+    exact (inO_equiv_inO _ (hfiber_unfunctor_sum_l h Ha Hb a)^-1).
   Defined.
 
   Definition mapinO_unfunctor_sum_r {A A' B B'}
@@ -1582,7 +1582,7 @@ Section ModalMaps.
   : MapIn O (unfunctor_sum_r h Hb).
   Proof.
     intros b.
-    refine (inO_equiv_inO _ (hfiber_unfunctor_sum_r h Ha Hb b)^-1).
+    exact (inO_equiv_inO _ (hfiber_unfunctor_sum_r h Ha Hb b)^-1).
   Defined.
 
   (** Given a family of maps [f : forall a, P a -> Q a] which are in [O], the induced map on Pi types is also in [O]. *)
@@ -1591,7 +1591,7 @@ Section ModalMaps.
     : MapIn O (functor_forall_id f).
   Proof.
     intro g.
-    rapply (inO_equiv_inO _ (hfiber_functor_forall_id f g)^-1%equiv).
+    exact (inO_equiv_inO _ (hfiber_functor_forall_id f g)^-1%equiv).
   Defined.
 
 End ModalMaps.
@@ -1634,7 +1634,7 @@ Section ConnectedMaps.
   : IsConnMap O (f^* g).
   Proof.
     intros b.
-    refine (isconnected_equiv _ _ (hfiber_pullback_along f g b)^-1 _).
+    exact (isconnected_equiv _ _ (hfiber_pullback_along f g b)^-1 _).
   Defined.
 
   Global Instance conn_map_pullback' {A B C}
@@ -1642,7 +1642,7 @@ Section ConnectedMaps.
   : IsConnMap O (g^*' f).
   Proof.
     intros c.
-    refine (isconnected_equiv _ _ (hfiber_pullback_along' g f c)^-1 _).
+    exact (isconnected_equiv _ _ (hfiber_pullback_along' g f c)^-1 _).
   Defined.
 
   (** The projection from a family of connected types is connected. *)
@@ -1651,7 +1651,7 @@ Section ConnectedMaps.
   : IsConnMap O (@pr1 A B).
   Proof.
     intros a.
-    refine (isconnected_equiv O (B a) (hfiber_fibration a B) _).
+    exact (isconnected_equiv O (B a) (hfiber_fibration a B) _).
   Defined.
 
   (** Being connected is an hprop *)
@@ -1733,7 +1733,7 @@ Section ConnectedMaps.
   : e = e'.
   Proof.
     apply path_extension.
-    refine (extension_conn_map_elim _ _ _).
+    exact (extension_conn_map_elim _ _ _).
   Defined.
 
   (** It follows that [conn_map_elim] is actually an equivalence. *)
@@ -1773,7 +1773,7 @@ Section ConnectedMaps.
     - split; [ apply extP | ].                  (* n > 1 *)
       (** What remains is to extend families of paths. *)
       intros P Q; rapply (ooextendable_postcompose' (fun b => P b <~> Q b)).
-      + intros x; refine (equiv_path_TypeO _ _ _ oE equiv_path_universe _ _).
+      + intros x; exact (equiv_path_TypeO _ _ _ oE equiv_path_universe _ _).
       + rapply ooextendable_conn_map_inO.
   Defined.
 
@@ -1831,7 +1831,7 @@ Section ConnectedMaps.
              `{IsConnMap O _ _ (const_tt A)}
   : IsConnected O A.
   Proof.
-    refine (isconnected_equiv O (hfiber (const_tt A) tt)
+    exact (isconnected_equiv O (hfiber (const_tt A) tt)
               (equiv_sigma_contr _) _).
   Defined.
 
@@ -1843,7 +1843,7 @@ Section ConnectedMaps.
   : IsConnMap O (const_tt A).
   Proof.
     intros u.
-    refine (isconnected_equiv O A
+    exact (isconnected_equiv O A
               (equiv_sigma_contr _)^-1 _).
   Defined.
 
@@ -1860,7 +1860,7 @@ Section ConnectedMaps.
                 @ O_rec_beta f a).
     - apply O_indpaths; intros a; simpl.
       refine (ap _ (O_rec_beta f a) @ _).
-      refine (conn_map_comp f (fun _ => O A) (to O A) a).
+      exact (conn_map_comp f (fun _ => O A) (to O A) a).
   Defined.
 
   (** Lemma 7.5.12 *)
@@ -1885,7 +1885,7 @@ Section ConnectedMaps.
     : IsConnMap O (functor_sigma f g).
     Proof.
       intros [b v].
-      refine (contr_equiv' _ (equiv_inverse (equiv_O_hfiber_functor_sigma b v))).
+      exact (contr_equiv' _ (equiv_inverse (equiv_O_hfiber_functor_sigma b v))).
     Defined.
 
     Definition conn_map_base_inhabited (inh : forall b, Q b)
@@ -1893,7 +1893,7 @@ Section ConnectedMaps.
     : IsConnMap O f.
     Proof.
       intros b.
-      refine (contr_equiv _ (equiv_O_hfiber_functor_sigma b (inh b))).
+      exact (contr_equiv _ (equiv_O_hfiber_functor_sigma b (inh b))).
     Defined.
 
   End ConnMapFunctorSigma.
@@ -2061,7 +2061,7 @@ Defined.
 
 Global Instance transitive_O_eq : Transitive O_eq | 10.
 Proof.
-  intros O1 O2 O3; split; refine (transitivity (y := O2) _ _).
+  intros O1 O2 O3; split; exact (transitivity (y := O2) _ _).
 Defined.
 
 Global Instance symmetric_O_eq : Symmetric O_eq | 10.
@@ -2124,7 +2124,7 @@ Proof.
   - intros A; exact (forall (x y:A), In O (x = y)).
   - exact _.
   - intros T U ? f ? x y; cbn in *.
-    refine (inO_equiv_inO' _ (equiv_ap f^-1 x y)^-1).
+    exact (inO_equiv_inO' _ (equiv_ap f^-1 x y)^-1).
 Defined.
 
 Global Instance inO_paths_SepO (O : Subuniverse)

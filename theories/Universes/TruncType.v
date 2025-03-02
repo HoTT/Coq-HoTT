@@ -63,7 +63,7 @@ Section TruncType.
     rewrite (path_sigma_hprop_V (path_universe_uncurried f)).
     refine (concat_p1 _ @ concat_1p _ @ _).
     refine (_ @ (ap inverse (concat_1p _))^ @ (ap inverse (concat_p1 _))^).
-    refine (ap_V _ _).
+    exact (ap_V _ _).
   Qed.
 
   Definition path_trunctype_pp {n : trunc_index} {A B C : TruncType n}
@@ -76,7 +76,7 @@ Section TruncType.
     refine (concat_p1 _ @ concat_1p _ @ _).
     refine (_ @ (ap _ (concat_1p _))^ @ (ap _ (concat_p1 _))^).
     refine (_ @ (ap (fun z => z @ _) (concat_1p _))^ @ (ap (fun z => z @ _) (concat_p1 _))^).
-    refine (ap_pp _ _ _).
+    exact (ap_pp _ _ _).
   Qed.
 
   Definition ap_trunctype {n : trunc_index} {A B : TruncType n} {f : A <~> B}
@@ -166,7 +166,7 @@ Section TruncType.
   Lemma equiv_path_iff_hprop {A B : HProp}
     : (A <-> B) <~> (A = B).
   Proof.
-    refine (equiv_path_trunctype' _ _ oE equiv_path_iff_ishprop).
+    exact (equiv_path_trunctype' _ _ oE equiv_path_iff_ishprop).
   Defined.
 
 End TruncType.

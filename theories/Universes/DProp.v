@@ -89,7 +89,7 @@ Proof.
             oE _).
   refine (equiv_path_sigma_hprop _ _ oE _); cbn.
   { intros [X hX]; exact _. }
-  refine (equiv_path_sigma_hprop (P;hP) (Q;hQ)).
+  exact (equiv_path_sigma_hprop (P;hP) (Q;hQ)).
 Defined.
 
 Definition path_dprop `{Funext} {P Q : DProp}
@@ -108,7 +108,7 @@ Proof.
   destruct P as [P dP]. destruct Q as [Q dQ].
   refine (((equiv_ap' issig_dhprop^-1 _ _)^-1)
             oE _); cbn.
-  refine ((equiv_path_sigma_hprop (P; dP) (Q; dQ))).
+  exact ((equiv_path_sigma_hprop (P; dP) (Q; dQ))).
 Defined.
 
 Definition equiv_path_dhprop `{Univalence} (P Q : DHProp)
@@ -116,7 +116,7 @@ Definition equiv_path_dhprop `{Univalence} (P Q : DHProp)
 Proof.
   assert (eq_type_hprop : (P = Q :> Type) <~> (P = Q :> HProp)) by apply equiv_path_trunctype'.
   assert (eq_hprop_dhprop : (P = Q :> HProp) <~> (P = Q :> DHProp)) by apply equiv_path_dhprop'.
-  refine (eq_hprop_dhprop oE eq_type_hprop).
+  exact (eq_hprop_dhprop oE eq_type_hprop).
 Defined.
 
 Definition path_dhprop `{Univalence} {P Q : DHProp}
@@ -126,7 +126,7 @@ Definition path_dhprop `{Univalence} {P Q : DHProp}
 Global Instance ishset_dprop `{Univalence} : IsHSet DProp.
 Proof.
   apply istrunc_S; intros P Q.
-  refine (istrunc_equiv_istrunc _ (n := -1) (equiv_path_dprop P Q)).
+  exact (istrunc_equiv_istrunc _ (n := -1) (equiv_path_dprop P Q)).
 Defined.
 
 Global Instance isequiv_dprop_to_bool `{Univalence}

@@ -347,7 +347,7 @@ Proof.
       simpl; induction (q y); simpl.
       rhs_V nrapply concat_pp_p.
       apply whiskerR.
-      nrapply (ap011_pp _ _ _ 1 1). }
+      exact (ap011_pp _ _ _ 1 1). }
   exact (ap022 _ (concat_p1 (p pt))^ (concat_p1 (q pt))^ @ (concat_p1 _)^).
 Defined.
 

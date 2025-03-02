@@ -508,7 +508,7 @@ Proof.
   - intros ab1 ab2 ab1' ab2'.
     srapply isd01cat_prod.
   - intros ab1 ab2 ab1' ab2'.
-    srapply (isd0gpd_prod _ _).
+    exact (isd0gpd_prod _ _).
   - intros ab1 ab2 ab3 fg ab1' ab2' ab3' [f' g'].
     intros hk1 hk2 pq hk1' hk2' [p' q'].
     exact (f' $@L' p', g' $@L' q').

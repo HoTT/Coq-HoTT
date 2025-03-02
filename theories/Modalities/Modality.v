@@ -204,7 +204,7 @@ Proof.
   - srapply reflectsD_from_OO_ind. 
     + rapply O_ind'.
     + rapply O_ind_beta'.
-    + rapply inO_paths'.
+    + exact inO_paths'.
 Defined.
 
 (** A tactic that extends [strip_reflections] to modalities. It handles non-dependent elimination for reflective subuniverses and dependent elimination for modalities. [strip_truncations] does the same for truncations, but introduces fewer universe variables, so tends to work better when removing truncations. *)
@@ -256,7 +256,7 @@ Global Instance mapinO_compose {O : Modality} {A B C : Type} (f : A -> B) (g : B
   : MapIn O (g o f).
 Proof.
   intros c.
-  refine (inO_equiv_inO' _ (hfiber_compose f g c)^-1).
+  exact (inO_equiv_inO' _ (hfiber_compose f g c)^-1).
 Defined.
 
 (** It also implies Corollary 7.3.10 from the book, generalized to modalities.  (Theorem 7.3.9 is true for any reflective subuniverse; we called it [equiv_O_sigma_O].) *)
@@ -458,7 +458,7 @@ Section EasyModalities.
     simple refine (isequiv_commsq (to A) (to B) f
              (O_ind_easy A (fun _ => O_reflector B) _ (fun a => to B (f a))) _).
     - intros; apply O_inO_easy.
-    - intros a; refine (O_ind_easy_beta A (fun _ => O_reflector B) _ _ a).
+    - intros a; exact (O_ind_easy_beta A (fun _ => O_reflector B) _ _ a).
     - apply A_inO.
     - simple refine (isequiv_adjointify _
                (O_ind_easy B (fun _ => O_reflector A) _ (fun b => to A (f^-1 b))) _ _);
@@ -478,7 +478,7 @@ Section EasyModalities.
     simple refine (inO_equiv_inO_easy (to A a = to A a') _ _
                                       (@ap _ _ (to A) a a')^-1 _).
     - apply inO_pathsO.
-    - refine (@isequiv_ap _ _ _ A_inO _ _).
+    - exact (@isequiv_ap _ _ _ A_inO _ _).
     - apply isequiv_inverse.
   Defined.
 
@@ -587,7 +587,7 @@ Section ModalFact.
                           (factor2 fact o factor1 fact)
                           (factor2 fact' o factor1 fact') H
                           (factor2 fact (factor1 fact a)) (a;1))).
-      - refine (to_O_natural O _ _).
+      - exact (to_O_natural O _ _).
       - apply ap.
         simpl.
         apply ap; auto with path_hints.

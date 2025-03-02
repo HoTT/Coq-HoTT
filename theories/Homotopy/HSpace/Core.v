@@ -173,14 +173,14 @@ Proof.
   snrapply Build_IsHSpace.
   - exact (fun a b => f^-1 (f a * f b)).
   - intro b.
-    rhs_V nrapply (eissect f b).
+    rhs_V exact (eissect f b).
     apply ap.
-    lhs nrapply (ap (.* f b) (point_eq f)).
+    lhs exact (ap (.* f b) (point_eq f)).
     apply left_identity.
   - intro a.
-    rhs_V nrapply (eissect f a).
+    rhs_V exact (eissect f a).
     apply ap.
-    lhs nrapply (ap (f a *.) (point_eq f)).
+    lhs exact (ap (f a *.) (point_eq f)).
     apply right_identity.
 Defined.
 

@@ -712,7 +712,7 @@ Definition FreeProduct_rec {G H K : Group} (f : G $-> K) (g : H $-> K)
 Proof.
   snrapply (AmalgamatedFreeProduct_rec _ f g).
   intros [].
-  refine (grp_homo_unit _ @ (grp_homo_unit _)^).
+  exact (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
 
 Definition freeproduct_ind_hprop {G H} (P : FreeProduct G H -> Type)
@@ -753,7 +753,7 @@ Proof.
   rapply contr_forall.
   intros []; apply contr_inhab_prop.
   apply tr.
-  refine (grp_homo_unit _ @ (grp_homo_unit _)^).
+  exact (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
 
 (** The freeproduct is the coproduct in the category of groups. *)

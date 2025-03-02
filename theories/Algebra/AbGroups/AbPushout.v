@@ -28,7 +28,7 @@ Proof.
   - exact (ab_biprod_rec b c).
   - intros [x y] q; strip_truncations; simpl.
     destruct q as [a q]. cbn in q.
-    lhs_V nrapply (ap (fun '(x, y) => b x + c y) q); cbn.
+    lhs_V exact (ap (fun '(x, y) => b x + c y) q); cbn.
     lhs rapply (ap011 (+) (preserves_inverse _) (p a)^).
     apply left_inverse.
 Defined.

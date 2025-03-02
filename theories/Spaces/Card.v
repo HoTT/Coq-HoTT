@@ -15,19 +15,19 @@ Definition card A `{IsHSet A} : Card
 Definition sum_card (a b : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (Build_HSet (a + b))).
+  exact (tr (Build_HSet (a + b))).
 Defined.
 
 Definition prod_card (a b : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (Build_HSet (a * b))).
+  exact (tr (Build_HSet (a * b))).
 Defined.
 
 Definition exp_card `{Funext} (b a : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (Build_HSet (b -> a))).
+  exact (tr (Build_HSet (b -> a))).
 Defined.
 
 Definition leq_card `{Univalence} : Card -> Card -> HProp.
@@ -125,7 +125,7 @@ Section contents.
   Instance reflexive_card : Reflexive leq_card.
   Proof.
     intro x. strip_truncations.
-    apply tr. exists idmap. refine (fun _ _ => idmap).
+    apply tr. exists idmap. exact (fun _ _ => idmap).
   Defined.
 
   Instance transitive_card : Transitive leq_card.

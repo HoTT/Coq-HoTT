@@ -189,7 +189,7 @@ Proof.
         refine ((fst (snd (snd (ext 3) _ _) (fun b' => 1)
                           ((fst (snd (ext 2) _ _) (fun a : A => 1)).1)
                 ) _).1 b); intros a.
-        symmetry; refine ((fst (snd (ext 2) _ _) (fun a' => 1)).2 a).
+        symmetry; exact ((fst (snd (ext 2) _ _) (fun a' => 1)).2 a).
       * intros a; simpl.
         refine (_ @
           ap (transport (D (f a)) ((fst (ext n.+1) g).2 a)^) (g' a)
@@ -238,7 +238,7 @@ Proof.
   - intros h k h' k'.
     refine (extendable_over_postcompose' _ _ _ _ _ _
              (fun b c => equiv_cancelL (apD (r b) c) _ _) _).
-    refine (IHn _ _ _ _ _
+    exact (IHn _ _ _ _ _
                 (fun n => snd (ext' n.+1) h k
                               (fun b => r b (h b)) (fun b => s b (k b)))).
 Qed.

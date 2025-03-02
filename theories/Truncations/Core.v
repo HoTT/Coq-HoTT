@@ -55,7 +55,7 @@ Definition Trunc_rec_tr n {A : Type}
 Definition Tr (n : trunc_index) : Modality.
 Proof.
   srapply (Build_Modality (fun A => IsTrunc n A)); cbn.
-  - intros A B ? f ?; rapply (istrunc_isequiv_istrunc A f).
+  - intros A B ? f ?; exact (istrunc_isequiv_istrunc A f).
   - exact (Trunc n).
   - intros; apply istrunc_truncation.
   - intros A; apply tr.
@@ -203,7 +203,7 @@ Definition himage {X Y} (f : X -> Y) := image (Tr (-1)) f.
 Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
 Proof.
   refine (@contr_trunc_conn (Tr (-1)) A _ _); try assumption.
-  refine (contr_inhabited_hprop _ ma).
+  exact (contr_inhabited_hprop _ ma).
 Defined.
 
 (** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)

@@ -221,7 +221,7 @@ Definition ap_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
 Proof.
   induction p.
   refine (_ @ ap _ _).
-  2: refine ((abses_pushout_path_data_1 f)^ @ ap _ equiv_path_absesV_1^).
+  2: exact ((abses_pushout_path_data_1 f)^ @ ap _ equiv_path_absesV_1^).
   exact equiv_path_abses_1^.
 Defined.
 

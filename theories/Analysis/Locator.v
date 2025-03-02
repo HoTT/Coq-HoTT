@@ -147,7 +147,7 @@ Section locator.
       : locator_locator' (locator'_locator l') = l'.
     Proof.
       enough (p : locsig ^-1 (locator_locator' (locator'_locator l')) = locsig ^-1 l').
-      - refine (equiv_inj (locsig ^-1) p).
+      - exact (equiv_inj (locsig ^-1) p).
       - unfold locsig; simpl.
         destruct l'; unfold locator'_locator, locator_locator'; simpl.
         apply path_sigma_hprop; simpl.
@@ -246,7 +246,7 @@ Section locator.
     Definition lower_bound : {q : Q | ' q < x}.
     Proof.
       assert (qP_lower : {q : Q | P_lower q})
-        by refine (minimal_n_alt_type Q Q_eq P_lower _ P_lower_inhab).
+        by exact (minimal_n_alt_type Q Q_eq P_lower _ P_lower_inhab).
       destruct qP_lower as [q Pq].
       exists (q - 1).
       unfold P_lower in Pq. simpl in *.
@@ -284,7 +284,7 @@ Section locator.
     Definition upper_bound : {r : Q | x < ' r}.
     Proof.
       assert (rP_upper : {r : Q | P_upper r})
-        by refine (minimal_n_alt_type Q Q_eq P_upper _ P_upper_inhab).
+        by exact (minimal_n_alt_type Q Q_eq P_upper _ P_upper_inhab).
       destruct rP_upper as [r Pr].
       exists (r + 1).
       unfold P_upper in Pr. simpl in *.
@@ -481,7 +481,7 @@ Section locator.
       assert (ltst : s < t).
       {
         Existing Instance full_pseudo_order_reflecting.
-        refine (strictly_order_reflecting _ _ _ ltst').
+        exact (strictly_order_reflecting _ _ _ ltst').
       }
       set (epsilon := (Qpos_diff s t ltst) / 2).
       apply tr.
@@ -523,8 +523,8 @@ Section locator.
       unfold P in R.
       destruct R as [[q eps] [lleft mright]].
       exists q; split.
-      - nrefine (locates_right_false l _ lleft).
-      - nrefine (locates_right_true  m _ mright).
+      - exact (locates_right_false l _ lleft).
+      - exact (locates_right_true  m _ mright).
     Qed.
 
   End arch_struct.

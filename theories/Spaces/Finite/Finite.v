@@ -34,7 +34,7 @@ Proof.
   refine (istrunc_equiv_istrunc _ (issig_finite X)).
   apply ishprop_sigma_disjoint; intros n m Hn Hm.
   strip_truncations.
-  refine (nat_eq_fin_equiv n m (Hm oE Hn^-1)).
+  exact (nat_eq_fin_equiv n m (Hm oE Hn^-1)).
 Defined.
 
 (** ** Preservation of finiteness by equivalences *)
@@ -153,7 +153,7 @@ Global Instance decidablepaths_finite `{Funext} X `{Finite X}
 Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
-  refine (decidablepaths_equiv _ e^-1 _).
+  exact (decidablepaths_equiv _ e^-1 _).
 Defined.
 
 (** However, contrary to what you might expect, we cannot assert that "every finite set is decidable"!  That would be claiming a *uniform* way to select an element from every nonempty finite set, which contradicts univalence. *)
@@ -202,7 +202,7 @@ Proof.
   generalize (fcard X); intros n.
   induction n as [|n IH].
   - exact f0.
-  - refine (transport (P (Fin n.+1)) (path_ishprop _ _) (fs _ _ IH)).
+  - exact (transport (P (Fin n.+1)) (path_ishprop _ _) (fs _ _ IH)).
 Defined.
 
 (** ** The finite axiom of choice, and projectivity *)
@@ -229,7 +229,7 @@ Defined.
 Corollary isprojective_fin_n (n : nat) : IsProjective (Fin n).
 Proof.
   apply (iff_isoprojective_hasochoice _ (Fin n)).
-  rapply finite_choice.
+  exact finite_choice.
 Defined.
 
 (** ** Constructions on finite sets *)
@@ -246,8 +246,8 @@ Proof.
   refine (finite_equiv _ (functor_sum idmap e^-1) _).
   generalize (fcard Y); intros n.
   induction n as [|n IH].
-  - refine (finite_equiv _ (sum_empty_r X)^-1 _).
-  - refine (finite_equiv _ (equiv_sum_assoc X _ Unit) _).
+  - exact (finite_equiv _ (sum_empty_r X)^-1 _).
+  - exact (finite_equiv _ (equiv_sum_assoc X _ Unit) _).
 Defined.
 
 (** Note that the cardinality function [fcard] actually computes.  The same will be true of all the other proofs in this section, though we don't always verify it. *)
@@ -265,7 +265,7 @@ Proof.
   refine (_ @ ap (fun y => (y + fcard X)) (fcard_equiv e^-1)).
   generalize (fcard Y); intros n.
   induction n as [|n IH].
-  - refine (fcard_equiv (sum_empty_r X)^-1).
+  - exact (fcard_equiv (sum_empty_r X)^-1).
   - refine (fcard_equiv (equiv_sum_assoc _ _ _)^-1 @ _).
     exact (ap S IH).
 Defined.
@@ -409,11 +409,11 @@ Proof.
   assert (forall x, Finite (Y' x)) by exact _; clearbody Y'; clear e.
   generalize dependent (fcard X); intros n Y' ?.
   induction n as [|n IH].
-  - refine (finite_equiv Empty pr1^-1 _).
+  - exact (finite_equiv Empty pr1^-1 _).
   - refine (finite_equiv _ (equiv_sigma_sum (Fin n) Unit Y')^-1 _).
     apply finite_sum.
     + apply IH; exact _.
-    + refine (finite_equiv _ (equiv_contr_sigma _)^-1 _).
+    + exact (finite_equiv _ (equiv_contr_sigma _)^-1 _).
 Defined.
 
 (** Amusingly, this automatically gives us a way to add up a family of natural numbers indexed by any finite set.  (We could of course also define such an operation directly, probably using [merely_ind_hset].) *)
@@ -430,7 +430,7 @@ Proof.
   apply finite_choice in g; [| exact _].
   strip_truncations.
   unfold finadd.
-  refine (fcard_equiv' (equiv_functor_sigma_id g)).
+  exact (fcard_equiv' (equiv_functor_sigma_id g)).
 Defined.
 
 (** The sum of a finite constant family is the product by its cardinality. *)
@@ -455,7 +455,7 @@ Definition fcard_domain {X Y} (f : X -> Y) `{Finite X} `{Finite Y}
 : fcard X = finadd (fun y => fcard (hfiber f y)).
 Proof.
   refine (_ @ fcard_sigma (hfiber f)).
-  refine (fcard_equiv' (equiv_fibration_replacement f)).
+  exact (fcard_equiv' (equiv_fibration_replacement f)).
 Defined.
 
 (** In particular, the image of a map between finite sets is finite. *)
@@ -482,14 +482,14 @@ Proof.
   apply finite_choice in g; [| exact _].
   strip_truncations.
   unfold finmult.
-  refine (fcard_equiv' (equiv_functor_forall' (equiv_idmap X) g)).
+  exact (fcard_equiv' (equiv_functor_forall' (equiv_idmap X) g)).
 Defined.
 
 (** The product of a finite constant family is the exponential by its cardinality. *)
 Definition finmult_const `{Funext} X `{Finite X} n
 : finmult (fun x:X => n) = nat_pow n (fcard X).
 Proof.
-  refine (fcard_arrow X (Fin n)).
+  exact (fcard_arrow X (Fin n)).
 Defined.
 
 
@@ -554,7 +554,7 @@ Section DecidableQuotients.
     generalize dependent (fcard X);
       intros n; induction n as [|n IH]; intros R' ? ? ? ? ?.
     - refine (finite_equiv Empty _^-1 _).
-      refine (Quotient_rec R' _ Empty_rec (fun x _ _ => match x with end)).
+      exact (Quotient_rec R' _ Empty_rec (fun x _ _ => match x with end)).
     - pose (R'' x y := R' (inl x) (inl y)).
       assert (is_mere_relation _ R'') by exact _.
       assert (Reflexive R'') by (intros ?; unfold R''; apply reflexivity).
@@ -660,7 +660,7 @@ Proof.
       rewrite p in q; apply symmetric_neq in q.
       assert (r : h (inl a) = inl b).
       { unfold h; apply moveR_equiv_V; symmetry.
-        refine (fin_transpose_last_with_rest m (g (inr tt)) b q @ p^). }
+        exact (fin_transpose_last_with_rest m (g (inr tt)) b q @ p^). }
       rewrite r; exact tt.
     - assert (q : h (inl a) = g (inr tt)).
       { unfold h; apply moveR_equiv_V; symmetry.

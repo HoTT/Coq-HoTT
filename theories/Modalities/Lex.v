@@ -198,7 +198,7 @@ Section LexModality.
     - apply istrunc_S.
       refine (O_ind (fun x => forall y, IsTrunc n (x = y)) _); intros x.
       refine (O_ind (fun y => IsTrunc n (to O A x = y)) _); intros y.
-      refine (istrunc_equiv_istrunc _ (equiv_path_O x y)).
+      exact (istrunc_equiv_istrunc _ (equiv_path_O x y)).
   Defined.
 
 End LexModality.
@@ -406,7 +406,7 @@ Proof.
   assert (wc : forall y z, P y <~> P z).
   { intros y z.
     (** Here we use the hypothesis [lexgen] (typeclass inference finds it automatically). *)
-    refine (pr1 (isconnected_elim O _ (@equiv_transport _ P y z))). }
+    exact (pr1 (isconnected_elim O _ (@equiv_transport _ P y z))). }
   intros x; apply path_TypeO, path_universe_uncurried.
   refine (equiv_adjointify (fun f => f x) (fun u y => wc x y ((wc x x)^-1 u)) _ _).
   - intros u; apply eisretr.

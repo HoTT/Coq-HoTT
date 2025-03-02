@@ -304,7 +304,7 @@ Section MovePaths.
   Proof.
     clear f12. destruct f12''.
     refine (sq_cGcc (concat_1p _) oE _).
-    refine (sq_ccGc (concat_p1 _)^).
+    exact (sq_ccGc (concat_p1 _)^).
   Defined.
 
   Definition equiv_sq_move_14 {f10'' : x00 = x} {f10' : x = x20} 
@@ -312,7 +312,7 @@ Section MovePaths.
   Proof.
     clear f10. destruct f10'.
     refine (sq_cccG (concat_1p _)^ oE _).
-    refine (sq_Gccc (concat_p1 _)).
+    exact (sq_Gccc (concat_p1 _)).
   Defined.
 
   Definition equiv_sq_move_24 {f12'' : x02 = x} {f12' : x22 = x} 
@@ -320,7 +320,7 @@ Section MovePaths.
   Proof.
     clear f12. destruct f12'.
     refine (sq_cccG (concat_p1 _)^ oE _).
-    refine (sq_cGcc (concat_p1 _)).
+    exact (sq_cGcc (concat_p1 _)).
   Defined.
 
   Definition equiv_sq_move_42 {f12'' : x02 = x} {f12' : x = x22} 
@@ -328,7 +328,7 @@ Section MovePaths.
   Proof.
     clear f12. destruct f12'.
     refine (sq_cGcc (concat_p1 _)^ oE _).
-    refine (sq_cccG (concat_p1 _)).
+    exact (sq_cccG (concat_p1 _)).
   Defined.
 
   Definition equiv_sq_move_13 {f10'' : x = x00} {f10' : x = x20} 
@@ -336,7 +336,7 @@ Section MovePaths.
   Proof.
     clear f10. destruct f10''.
     refine (sq_ccGc (concat_1p _)^ oE _).
-    refine (sq_Gccc (concat_1p _)).
+    exact (sq_Gccc (concat_1p _)).
   Defined.
 
   Definition equiv_sq_move_31 {f10'' : x00 = x} {f10' : x = x20} 
@@ -344,7 +344,7 @@ Section MovePaths.
   Proof.
     clear f10. destruct f10''.
     refine (sq_Gccc (concat_1p _)^ oE _).
-    refine (sq_ccGc (concat_1p _)).
+    exact (sq_ccGc (concat_1p _)).
   Defined.
 
 End MovePaths.
