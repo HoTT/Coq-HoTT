@@ -303,7 +303,7 @@ Section Flattening.
       1: reflexivity.
       intros [a x] [b y] [r pr]; cbn in r, pr; cbn.
       destruct pr.
-      nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+      transport_paths FFlr; apply equiv_p1_1q.
       rewrite GraphQuotient_rec_beta_gqglue.
       lhs nrapply gqdepdescent_rec_beta_gqglue.
       nrapply concat_p1.
@@ -313,7 +313,7 @@ Section Flattening.
       + by intros a pa.
       + intros a b r pa; cbn.
         lhs nrapply transportDD_is_transport.
-        nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+        transport_paths FFlr; apply equiv_p1_1q.
         rewrite <- (concat_p1 (transport_fam_gqdescent_gqglue _ _ _)).
         rewrite gqdepdescent_rec_beta_gqglue. (* This needs to be in the form [transport_fam_gqdescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).
@@ -369,15 +369,21 @@ Proof.
   exact r.
 Defined.
 
+Definition functor_gq_beta_gqglue {A B : Type} (f : A -> B)
+  {R : A -> A -> Type} {S : B -> B -> Type}
+  (e : forall a b, R a b -> S (f a) (f b))
+  {a b : A} (s : R a b)
+  : ap (functor_gq f e) (gqglue s) = gqglue (e a b s)
+  := GraphQuotient_rec_beta_gqglue _ _ _ _ _.
+
 Lemma functor_gq_idmap {A : Type} {R : A -> A -> Type}
   : functor_gq (A:=A) (B:=A) (S:=R) idmap (fun a b r => r) == idmap.
 Proof.
   snrapply GraphQuotient_ind.
   1: reflexivity.
   intros a b r.
-  nrapply (transport_paths_FlFr' (gqglue r)).
+  transport_paths Flr.
   apply equiv_p1_1q.
-  rhs nrapply ap_idmap.
   nrapply GraphQuotient_rec_beta_gqglue.
 Defined.
 
@@ -388,14 +394,13 @@ Lemma functor_gq_compose {A B C : Type} (f : A -> B) (g : B -> C)
 Proof.
   snrapply GraphQuotient_ind.
   1: reflexivity.
-  intros a b s.
-  nrapply (transport_paths_FlFr' (gqglue s)).
+  intros a b s; cbn beta.
+  transport_paths FFlFr.
   apply equiv_p1_1q.
-  lhs nrapply (ap_compose (functor_gq f e) (functor_gq g e') (gqglue s)).
   lhs nrapply ap.
-  1: apply GraphQuotient_rec_beta_gqglue.
-  lhs nrapply GraphQuotient_rec_beta_gqglue.
-  exact (GraphQuotient_rec_beta_gqglue _ _ _ _ s)^.
+  1: apply functor_gq_beta_gqglue.
+  rhs nrapply (functor_gq_beta_gqglue (g o f)).
+  nrapply (functor_gq_beta_gqglue g).
 Defined.
 
 Lemma functor2_gq {A B : Type} (f f' : A -> B)
@@ -409,12 +414,12 @@ Proof.
   - simpl; intro.
     apply ap.
     apply p.
-  - intros a b s.
-    nrapply (transport_paths_FlFr' (gqglue s)).
-    rhs nrefine (1 @@ _).
-    2: apply GraphQuotient_rec_beta_gqglue.
-    lhs nrefine (_ @@ 1).
-    1: apply GraphQuotient_rec_beta_gqglue.
+  - intros a b s; simpl.
+    transport_paths (transport_paths_FlFr (gqglue s)).
+    rhs nrapply whiskerL.
+    2: nrapply functor_gq_beta_gqglue.
+    lhs nrapply whiskerR.
+    1: nrapply functor_gq_beta_gqglue.
     apply moveL_Mp.
     symmetry.
     destruct (q a b s).

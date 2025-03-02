@@ -98,7 +98,7 @@ Proof.
   snrapply Pushout_ind.
   1, 2: reflexivity.
   intro a; cbn beta.
-  apply transport_paths_FlFr'.
+  transport_paths FlFr.
   apply equiv_p1_1q.
   nrapply Pushout_rec_beta_pglue.
 Defined.
@@ -217,7 +217,7 @@ Proof.
   1,2: reflexivity.
   simpl.
   intros a.
-  nrapply transport_paths_Flr'.
+  transport_paths Flr.
   nrapply moveR_pM.
   nrapply functor_pushout_beta_pglue.
 Defined.
@@ -845,7 +845,7 @@ Section Flattening.
     - snrapply Pushout_ind.
       1, 2: reflexivity.
       intros [a pf]; cbn.
-      nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+      transport_paths FFlr; apply equiv_p1_1q.
       rewrite Pushout_rec_beta_pglue.
       lhs nrapply podepdescent_rec_beta_pglue.
       nrapply concat_p1.
@@ -856,7 +856,7 @@ Section Flattening.
       + by intros c pc.
       + intros a pf; cbn.
         lhs nrapply transportDD_is_transport.
-        nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+        transport_paths FFlr; apply equiv_p1_1q.
         rewrite <- (concat_p1 (transport_fam_podescent_pglue _ _ _)).
         rewrite podepdescent_rec_beta_pglue. (* This needs to be in the form [transport_fam_podescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).

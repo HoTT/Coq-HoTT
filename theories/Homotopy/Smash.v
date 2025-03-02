@@ -231,10 +231,10 @@ Definition Smash_ind_FlFr {A B : pType} {P : Type} (f g : Smash A B -> P)
 Proof.
   snrapply (Smash_ind Hsm Hl Hr).
   - intros a.
-    nrapply transport_paths_FlFr'.
+    transport_paths FlFr.
     exact (Hgluel a).
   - intros b.
-    nrapply transport_paths_FlFr'.
+    transport_paths FlFr.
     exact (Hgluer b).
 Defined.
 
@@ -248,11 +248,11 @@ Definition Smash_ind_FFlr {A B : pType} {P : Type}
   : g o f == idmap.
 Proof.
   snrapply (Smash_ind Hsm Hl Hr).
-  - intros a.
-    nrapply (transport_paths_FFlr' (f := f) (g := g)).
+  - intros a; cbn beta.
+    transport_paths FFlr.
     exact (Hgluel a).
-  - intros b.
-    nrapply (transport_paths_FFlr' (f := f) (g := g)).
+  - intros b; cbn beta.
+    transport_paths FFlr.
     exact (Hgluer b).
 Defined.
 

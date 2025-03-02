@@ -85,9 +85,35 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+Definition transport_paths_lFr {A : Type} {f : A -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = f x1)
+  : transport (fun x => x = f x) p q = p^ @ q @ (ap f p).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
 Definition transport_paths_FFlr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : g (f x1) = x1)
   : transport (fun x => g (f x) = x) p q = (ap g (ap f p))^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FFFlr {A B C : Type}
+  {f : A -> B} {g : B -> C} {h : C -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = x1)
+  : transport (fun x => h (g (f x)) = x) p q = (ap h (ap g (ap f p)))^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FFFlFr {A B C D : Type}
+  {f : A -> B} {g : B -> C} {h : C -> D} {k : A -> D} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = k x1)
+  : transport (fun x => h (g (f x)) = k x) p q = (ap h (ap g (ap f p)))^ @ q @ (ap k p).
 Proof.
   destruct p; simpl.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
@@ -128,75 +154,35 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
-(** Variants of the above that do the most common rearranging. We could add similar variants for the others as needed. *)
-Definition transport_paths_Flr' {A : Type} {f : A -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = x1) (r : f x2 = x2)
-  (h : (ap f p) @ r = q @ p)
-  : transport (fun x => f x = x) p q = r.
-Proof.
-  refine (transport_paths_Flr _ _ @ _).
-  refine (concat_pp_p _ _ _ @ _).
-  apply moveR_Vp.
-  exact h^.
-Defined.
+(** The above lemmas have some common rearrangements that are useful. Since these all follow the same pattern, we introduce a tactic to apply it. *)
 
-Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
-  (h : (ap f p) @ r = q @ (ap g p))
-  : transport (fun x => f x = g x) p q = r.
+(** The most common rearrangement after applying the [transport_paths_] lemmas on the [lhs]. *)
+Definition moveR_Vp_p_inv {A : Type} {w x y z : A}
+  (p : x = w) (q : x = y) (r : y = z) (s : w = z)
+  (h : p @ s = q @ r)
+  : p^ @ q @ r = s.
 Proof.
-  refine (transport_paths_FlFr _ _ @ _).
-  refine (concat_pp_p _ _ _ @ _).
-  apply moveR_Vp.
-  exact h^.
-Defined.
-
-Definition transport_paths_FFlr' {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = x1) (r : g (f x2) = x2)
-  (h : (ap g (ap f p)) @ r = q @ p)
-  : transport (fun x => g (f x) = x) p q = r.
-Proof.
-  refine (transport_paths_FFlr _ _ @ _).
-  refine (concat_pp_p _ _ _ @ _).
-  apply moveR_Vp.
-  exact h^.
-Defined.
-
-Definition transport_paths_FFlFr' {A B C : Type}
-  {f : A -> B} {g : B -> C} {h : A -> C} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = h x1) (r : g (f x2) = h x2)
-  (h' : (ap g (ap f p)) @ r = q @ (ap h p))
-  : transport (fun x => g (f x) = h x) p q = r.
-Proof.
-  lhs nrapply (transport_paths_FFlFr p q).
   lhs nrapply concat_pp_p.
-  apply moveR_Vp.
-  exact h'^.
+  apply moveR_Vp, h^.
 Defined.
 
-Definition transport_paths_FlFFr' {A B C : Type}
-  {f : A -> C} {g : B -> C} {h : A -> B} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = g (h x1)) (r : f x2 = g (h x2))
-  (h' : (ap f p) @ r = q @ (ap g (ap h p)))
-  : transport (fun x => f x = g (h x)) p q = r.
-Proof.
-  lhs nrapply (transport_paths_FlFFr p q).
-  lhs nrapply concat_pp_p.
-  apply moveR_Vp.
-  exact h'^.
-Defined.
+Tactic Notation "transport_paths" uconstr(lemma) :=
+  lhs nrapply lemma; apply moveR_Vp_p_inv.
 
-Definition transport_paths_FFlFFr' {A B B' C : Type}
-  {f : A -> B} {f' : A -> B'} {g : B -> C} {g' : B' -> C} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = g' (f' x1)) (r : g (f x2) = g' (f' x2))
-  (h : ap g (ap f p) @ r = q @ ap g' (ap f' p))
-  : transport (fun x => g (f x) = g' (f' x)) p q = r.
-Proof.
-  lhs nrapply (transport_paths_FFlFFr p q).
-  lhs nrapply concat_pp_p.
-  apply moveR_Vp.
-  exact h^.
-Defined.
+Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
+Tactic Notation "transport_paths" "lFr" := transport_paths transport_paths_lFr.
+
+Tactic Notation "transport_paths" "FFlr" := transport_paths transport_paths_FFlr.
+Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
+Tactic Notation "transport_paths" "lFFr" := transport_paths transport_paths_lFFr.
+
+Tactic Notation "transport_paths" "FFFlr" := transport_paths transport_paths_FFFlr.
+Tactic Notation "transport_paths" "FFlFr" := transport_paths transport_paths_FFlFr.
+Tactic Notation "transport_paths" "FlFFr" := transport_paths transport_paths_FlFFr.
+Tactic Notation "transport_paths" "lFFFr" := transport_paths transport_paths_lFFr.
+
+Tactic Notation "transport_paths" "FFFlFr" := transport_paths transport_paths_FFFlFr.
+Tactic Notation "transport_paths" "FFlFFr" := transport_paths transport_paths_FFlFFr.
 
 Definition transport011_paths {A B X} (f : A -> X) (g : B -> X)
   {a1 a2 : A} {b1 b2 : B} (p : a1 = a2) (q : b1 = b2)

@@ -84,7 +84,8 @@ Proof.
   unfold pointwise_paths.
   nrapply (Coeq_ind _ (fun _ => 1)).
   intros b.
-  apply transport_paths_FlFr', equiv_p1_1q.
+  transport_paths FlFr.
+  apply equiv_p1_1q.
   symmetry; nrapply Coeq_rec_beta_cglue.
 Defined.
 
@@ -135,7 +136,7 @@ Proof.
     srapply Coeq_ind; intros b.
     1: cbn;reflexivity.
     cbn.
-    nrapply transport_paths_FlFr'.
+    transport_paths FlFr.
     apply equiv_p1_1q.
     nrapply Coeq_rec_beta_cglue.
   - intros [h q]; srapply path_sigma'.
@@ -176,7 +177,7 @@ Proof.
   snrapply Coeq_ind.
   1: reflexivity.
   intros b.
-  nrapply transport_paths_Flr'.
+  transport_paths Flr.
   apply moveR_pM.
   nrapply functor_coeq_beta_cglue.
 Defined.
@@ -192,7 +193,7 @@ Definition functor_coeq_compose {B A f g B' A' f' g' B'' A'' f'' g''}
   == functor_coeq h' k' p' q' o functor_coeq h k p q.
 Proof.
   refine (Coeq_ind _ (fun a => 1) _); cbn; intros b.
-  nrapply transport_paths_FlFr'.
+  transport_paths FlFr.
   apply equiv_p1_1q; symmetry.
   rewrite ap_compose.
   rewrite !functor_coeq_beta_cglue, !ap_pp, functor_coeq_beta_cglue.
@@ -212,7 +213,7 @@ Definition functor_coeq_homotopy {B A f g B' A' f' g'}
 : functor_coeq h k p q == functor_coeq h' k' p' q'.
 Proof.
   refine (Coeq_ind _ (fun a => ap coeq (s a)) _); cbn; intros b.
-  apply transport_paths_FlFr'.
+  transport_paths FlFr.
   rewrite !functor_coeq_beta_cglue.
   Open Scope long_path_scope.
   rewrite 2 ap_V.
@@ -357,7 +358,7 @@ Section CoeqRec2.
         cbn.
         apply cgluel.
       + intros b'.
-        nrapply (transport_paths_FlFr' (cglue b')).
+        transport_paths (transport_paths_FlFr (cglue b')).
         lhs nrapply (_ @@ 1).
         1: apply Coeq_rec_beta_cglue.
         rhs nrapply (1 @@ _).
@@ -705,7 +706,7 @@ Section Flattening.
     - snrapply Coeq_ind.
       1: reflexivity.
       intros [b pf]; cbn.
-      nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+      transport_paths FFlr; apply equiv_p1_1q.
       rewrite Coeq_rec_beta_cglue.
       lhs nrapply cdepdescent_rec_beta_cglue.
       nrapply concat_p1.
@@ -715,7 +716,7 @@ Section Flattening.
       + by intros a pa.
       + intros b pf; cbn.
         lhs nrapply transportDD_is_transport.
-        nrapply transport_paths_FFlr'; apply equiv_p1_1q.
+        transport_paths FFlr; apply equiv_p1_1q.
         rewrite <- (concat_p1 (transport_fam_cdescent_cglue _ _ _)).
         rewrite cdepdescent_rec_beta_cglue. (* This needs to be in the form [transport_fam_cdescent_cglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).

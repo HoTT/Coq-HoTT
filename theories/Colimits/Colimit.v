@@ -145,7 +145,7 @@ Proof.
   snrapply Colimit_ind.
   - simpl. exact h_obj.
   - cbn beta; intros i j g x.
-    nrapply (transport_paths_FlFr' (colimp i j g x)).
+    transport_paths FlFr.
     lhs nrapply (Colimit_rec_beta_colimp _ _ _ _ _ _ @@ 1).
     apply h_comm.
 Defined.

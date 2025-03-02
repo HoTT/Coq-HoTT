@@ -375,9 +375,8 @@ Section HSpace_bg.
     snrapply ClassifyingSpace_ind_hprop.
     1: exact _.
     simpl.
-    nrapply (transport_paths_FFlr' (g := idmap)).
+    transport_paths Flr.
     apply equiv_p1_1q.
-    lhs nrapply ap_idmap.
     nrapply ClassifyingSpace_rec_beta_bloop.
   Defined.
 

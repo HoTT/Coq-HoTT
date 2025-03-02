@@ -61,7 +61,7 @@ Definition Susp_ind_FlFr {X Y : Type} (f g : Susp X -> Y)
 Proof.
   snrapply (Susp_ind _ HN HS).
   intros x.
-  nrapply transport_paths_FlFr'.
+  transport_paths FlFr.
   exact (Hmerid x).
 Defined.
 
@@ -73,8 +73,8 @@ Definition Susp_ind_FFlr {X Y : Type} (f : Susp X -> Y) (g : Y -> Susp X)
   : g o f == idmap.
 Proof.
   snrapply (Susp_ind _ HN HS).
-  intros x.
-  snrapply (transport_paths_FFlr' (f:=f) (g:=g)).
+  intros x; cbn beta.
+  transport_paths FFlr.
   exact (Hmerid x).
 Defined.
 
@@ -86,8 +86,8 @@ Definition Susp_ind_FFlFr {X Y Z : Type}
   : g o f == h.
 Proof.
   snrapply (Susp_ind _ HN HS).
-  intros x.
-  snrapply (transport_paths_FFlFr' (f:=f) (g:=g) (h:=h)).
+  intros x; cbn beta.
+  transport_paths FFlFr.
   exact (Hmerid x).
 Defined.
 
@@ -99,8 +99,8 @@ Definition Susp_ind_FFlFFr {X Y Y' Z : Type}
   : g o f == g' o f'.
 Proof.
   snrapply (Susp_ind _ HN HS).
-  intros x.
-  snrapply (transport_paths_FFlFFr' (f:=f) (f':=f') (g:=g) (g':=g')).
+  intros x; cbn beta.
+  transport_paths FFlFFr.
   exact (Hmerid x).
 Defined.
 

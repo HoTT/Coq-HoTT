@@ -405,6 +405,15 @@ Proof.
   apply s.
 Defined.
 
+(** We need to explicitly reason about the proof given by [transport_paths FlFr] so we give it a name here. *)
+Local Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
+  (h : (ap f p) @ r = q @ (ap g p))
+  : transport (fun x => f x = g x) p q = r.
+Proof.
+  by transport_paths FlFr.
+Defined.
+
 (** This lemma handles the path algebra in the last goal of the next result. *)
 Local Definition isinj_trijoin_rec_inv_helper {J P : Type} {f g : J -> P}
   {a b c : J} {ab : a = b} {ac : a = c} {bc : b = c} {abc : ab @ bc = ac}
