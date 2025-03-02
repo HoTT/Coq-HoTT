@@ -9,8 +9,8 @@ Class IsPointedCat (A : Type) `{Is1Cat A} := {
   isterminal_zero_object : IsTerminal zero_object;
 }.
 
-Global Existing Instance isinitial_zero_object.
-Global Existing Instance isterminal_zero_object.
+Existing Instance isinitial_zero_object.
+Existing Instance isterminal_zero_object.
 
 (** The zero morphism between objects [a] and [b] of a pointed category [A] is the unique morphism that factors throguh the zero object. *)
 Definition zero_morphism {A : Type} `{IsPointedCat A} {a b : A} : a $-> b
@@ -63,7 +63,7 @@ Class IsPointedFunctor {A B : Type} (F : A -> B) `{Is1Functor A B F} :=
   preservesinitial_pfunctor : PreservesInitial F ;
   preservesterminal_pfunctor : PreservesTerminal F ;
 }.
-Global Existing Instances preservesinitial_pfunctor preservesterminal_pfunctor.
+Existing Instances preservesinitial_pfunctor preservesterminal_pfunctor.
 
 (** Here is an alternative constructor using preservation of the zero object. This requires more structure on the categories however. *)
 Definition Build_IsPointedFunctor' {A B : Type} (F : A -> B)
@@ -111,7 +111,7 @@ Proof.
 Defined.
 
 (** Opposite category of a pointed category is also pointed. *)
-Global Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
+Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
 Proof.
   snrapply Build_IsPointedCat.
   1: unfold op; exact zero_object.

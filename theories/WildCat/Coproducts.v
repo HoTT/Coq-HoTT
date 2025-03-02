@@ -22,7 +22,7 @@ Definition cat_in {I : Type} {A : Type} {x : I -> A} `{Coproduct I _ x}
   : forall (i : I), x i $-> cat_coprod I x
   := cat_pr (A:=A^op) (x:=x).
 
-Global Instance cat_isequiv_cat_coprod_rec_inv {I : Type} {A : Type}
+Instance cat_isequiv_cat_coprod_rec_inv {I : Type} {A : Type}
   {x : I -> A} `{Coproduct I _ x}
   : forall (z : A), CatIsEquiv (cat_coprod_rec_inv (cat_coprod I x) x z cat_in)
   := cat_isequiv_cat_prod_corec_inv (A:=A^op) (x:=x).
@@ -110,7 +110,7 @@ Local Instance hasproductsop_hascoproducts {I A : Type} `{HasCoproducts I A}
   : HasProducts I A^op
   := fun x : I -> A^op => @has_coproducts I A _ _ _ _ _ x.
 
-Global Instance is0functor_cat_coprod (I : Type) `{IsGraph I}
+Instance is0functor_cat_coprod (I : Type) `{IsGraph I}
   (A : Type) `{HasCoproducts I A}
   : @Is0Functor (I -> A) A (isgraph_forall I (fun _ => A)) _
     (fun x : I -> A => cat_coprod I x).
@@ -119,7 +119,7 @@ Proof.
   exact (is0functor_cat_prod I A^op).
 Defined.
 
-Global Instance is1functor_cat_coprod (I : Type) `{IsGraph I}
+Instance is1functor_cat_coprod (I : Type) `{IsGraph I}
   (A : Type) `{HasCoproducts I A}
   : @Is1Functor (I -> A) A _ _ _ (is1cat_forall I (fun _ => A)) _ _ _ _
     (fun x : I -> A => cat_coprod I x) _.
@@ -158,7 +158,7 @@ Definition cat_inr {A : Type} `{Is1Cat A} {x y : A} `{!BinaryCoproduct x y}
 Class HasBinaryCoproducts (A : Type) `{Is1Cat A}
   := binary_coproducts :: forall x y, BinaryCoproduct x y.
 
-Global Instance hasbinarycoproducts_hascoproductsbool {A : Type}
+Instance hasbinarycoproducts_hascoproductsbool {A : Type}
   `{HasCoproducts Bool A}
   : HasBinaryCoproducts A
   := fun x y => has_coproducts (fun b : Bool => if b then x else y).
@@ -215,7 +215,7 @@ End Lemmata.
 
 (** Hint: Use [Set Printing Implicit] to see the implicit arguments in the following proofs. *)
 
-Global Instance is0functor_cat_bincoprod_l {A : Type}
+Instance is0functor_cat_bincoprod_l {A : Type}
   `{hbc : HasBinaryCoproducts A} y
   : Is0Functor (A:=A) (fun x => cat_bincoprod x y).
 Proof.
@@ -223,7 +223,7 @@ Proof.
   exact (is0functor_cat_binprod_l (A:=A^op) (H0:=hbc) y).
 Defined.
 
-Global Instance is1functor_cat_bincoprod_l {A : Type}
+Instance is1functor_cat_bincoprod_l {A : Type}
   `{hbc : HasBinaryCoproducts A} y
   : Is1Functor (fun x => cat_bincoprod x y).
 Proof.
@@ -231,7 +231,7 @@ Proof.
   exact (is1functor_cat_binprod_l (A:=A^op) (H0:=hbc) y).
 Defined.
 
-Global Instance is0functor_cat_bincoprod_r {A : Type}
+Instance is0functor_cat_bincoprod_r {A : Type}
   `{hbc : HasBinaryCoproducts A} x
   : Is0Functor (fun y => cat_bincoprod x y).
 Proof.
@@ -239,7 +239,7 @@ Proof.
   exact (is0functor_cat_binprod_r (A:=A^op) (H0:=hbc) x).
 Defined.
 
-Global Instance is1functor_cat_bincoprod_r {A : Type}
+Instance is1functor_cat_bincoprod_r {A : Type}
   `{hbc : HasBinaryCoproducts A} x
   : Is1Functor (fun y => cat_bincoprod x y).
 Proof.
@@ -247,7 +247,7 @@ Proof.
   exact (is1functor_cat_binprod_r (A:=A^op) (H0:=hbc) x).
 Defined.
 
-Global Instance is0bifunctor_cat_bincoprod {A : Type}
+Instance is0bifunctor_cat_bincoprod {A : Type}
   `{hbc : HasBinaryCoproducts A}
   : Is0Bifunctor (fun x y => cat_bincoprod x y).
 Proof.
@@ -255,7 +255,7 @@ Proof.
   exact (is0bifunctor_cat_binprod (A:=A^op) (H0:=hbc)).
 Defined.
 
-Global Instance is1bifunctor_cat_bincoprod {A : Type}
+Instance is1bifunctor_cat_bincoprod {A : Type}
   `{hbc : HasBinaryCoproducts A}
   : Is1Bifunctor (fun x y => cat_bincoprod x y).
 Proof.
@@ -379,7 +379,7 @@ Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
 
 (** *** Cocartesian Monoidal Structure *)
 
-Global Instance ismonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
+Instance ismonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
   : IsMonoidal A (fun x y => cat_bincoprod x y) zero | 10.
 Proof.
@@ -388,7 +388,7 @@ Proof.
   by nrapply isterminal_op_isinitial.
 Defined.
 
-Global Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
+Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
   : IsSymmetricMonoidal A (fun x y => cat_bincoprod x y) zero | 10.
 Proof.
@@ -400,7 +400,7 @@ Defined.
 (** *** Coproducts in Type *)
 
 (** [Type] has all coproducts. *)
-Global Instance hasallcoproducts_type : HasAllCoproducts Type.
+Instance hasallcoproducts_type : HasAllCoproducts Type.
 Proof.
   intros I x.
   snrapply Build_Coproduct.
@@ -414,7 +414,7 @@ Proof.
 Defined.
 
 (** In particular, [Type] has all binary coproducts. *)
-Global Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
+Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
   := {}.
 
 (** ** Canonical coproduct-product map *)

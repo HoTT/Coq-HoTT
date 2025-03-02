@@ -14,9 +14,9 @@ Record ZeroGpd := {
   is0gpd_carrier : Is0Gpd carrier;
 }.
 
-Global Existing Instance isgraph_carrier.
-Global Existing Instance is01cat_carrier.
-Global Existing Instance is0gpd_carrier.
+Existing Instance isgraph_carrier.
+Existing Instance is01cat_carrier.
+Existing Instance is0gpd_carrier.
 
 (* The morphisms of 0-groupoids are the 0-functors.  This is the same as [Fun01], but we put a different graph and 01-category structure on it, so we give this a custom name. *)
 Record Morphism_0Gpd (G H : ZeroGpd) := {
@@ -24,16 +24,16 @@ Record Morphism_0Gpd (G H : ZeroGpd) := {
   is0functor_fun_0gpd : Is0Functor fun_0gpd;
 }.
 
-Global Existing Instance is0functor_fun_0gpd.
+Existing Instance is0functor_fun_0gpd.
 
 (** Now we show that the type [ZeroGpd] of 0-groupoids is itself a 1-category, with morphisms the 0-functors. *)
-Global Instance isgraph_0gpd : IsGraph ZeroGpd.
+Instance isgraph_0gpd : IsGraph ZeroGpd.
 Proof.
   apply Build_IsGraph.
   exact Morphism_0Gpd.
 Defined.
 
-Global Instance is01cat_0gpd : Is01Cat ZeroGpd.
+Instance is01cat_0gpd : Is01Cat ZeroGpd.
 Proof.
   srapply Build_Is01Cat.
   - intro G.
@@ -43,7 +43,7 @@ Proof.
 Defined.
 
 (* The 2-cells are unnatural transformations, and are analogous to homotopies. *)
-Global Instance is2graph_0gpd : Is2Graph ZeroGpd.
+Instance is2graph_0gpd : Is2Graph ZeroGpd.
 Proof.
   intros G H.
   snrapply Build_IsGraph.
@@ -51,7 +51,7 @@ Proof.
   exact (forall x : G, f x $== g x).
 Defined.
 
-Global Instance is1cat_0gpd : Is1Cat ZeroGpd.
+Instance is1cat_0gpd : Is1Cat ZeroGpd.
 Proof.
   snrapply Build_Is1Cat.
   - intros G H.
@@ -79,7 +79,7 @@ Defined.
 
 (** We define equivalences of 0-groupoids as the bi-invertible maps, using [Cat_BiInv] and [Cat_IsBiInv].  This definition is chosen to provide what is needed for the Yoneda lemma, and because it specializes to one of the correct definitions for types. *)
 
-Global Instance hasequivs_0gpd : HasEquivs ZeroGpd
+Instance hasequivs_0gpd : HasEquivs ZeroGpd
   := cat_hasequivs ZeroGpd.
 
 (** Coq can't find the composite of the coercions [cate_fun : G $<~> H >-> G $-> H] and [fun_0gpd : Morphism_0Gpd G H >-> G -> H], probably because it passes through the definitional equality of [G $-> H] and [Morphism_0Gpd G H].  I couldn't find a solution, so instead here is a helper function to manually do the coercion when needed. *)
@@ -113,7 +113,7 @@ Definition moveL_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p 
   We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors, which are defined in EquivGpd.  Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and that in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also works in any 1-category. *)
 
 (** Every equivalence is injective and split essentially surjective. *)
-Global Instance issurjinj_equiv_0gpd {G H : ZeroGpd} (f : G $<~> H)
+Instance issurjinj_equiv_0gpd {G H : ZeroGpd} (f : G $<~> H)
   : IsSurjInj (equiv_fun_0gpd f).
 Proof.
   econstructor.

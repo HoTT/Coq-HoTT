@@ -208,12 +208,12 @@ Section MonoidEnriched.
     `{!HasMorExt A} `{forall x y, IsHSet (x $-> y)}.
 
   Section Monoid.
-    Context `{!IsMonoidObject _ _ y}.
+    Context `{!IsMonoidObject (fun a b : A => cat_binprod a b) unit y}.
 
     Local Instance sgop_hom : SgOp (x $-> y)
-      := fun f g => mo_mult $o cat_binprod_corec f g.
+      := fun f g => mo_mult (tensor := fun a b : A => cat_binprod a b) $o cat_binprod_corec f g.
 
-    Local Instance monunit_hom : MonUnit (x $-> y) := mo_unit $o mor_terminal _ _.
+    Local Instance monunit_hom : MonUnit (x $-> y) := mo_unit (tensor := fun a b : A => cat_binprod a b) $o mor_terminal _ _.
 
     Local Instance associative_hom : Associative sgop_hom.
     Proof.
@@ -259,7 +259,8 @@ Section MonoidEnriched.
 
   End Monoid.
 
-  Context `{!IsCommutativeMonoidObject _ _ y}.
+  Context `{!IsCommutativeMonoidObject 
+                        (fun a b :A => cat_binprod a b) unit y}.
   Local Existing Instances sgop_hom monunit_hom ismonoid_hom.
 
   Local Instance commutative_hom : Commutative sgop_hom.
@@ -277,6 +278,7 @@ End MonoidEnriched.
 
 (** ** Preservation of monoid objects by lax monoidal functors *)
 
+Local Set Typeclasses Depth 2.
 Definition mo_preserved {A B : Type}
   {tensorA : A -> A -> A} {tensorB : B -> B -> B} {IA : A} {IB : B} 
   (F : A -> B) `{IsMonoidalFunctor A B tensorA tensorB IA IB F} (x : A)

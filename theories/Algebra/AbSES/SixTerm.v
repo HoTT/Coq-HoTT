@@ -38,7 +38,8 @@ Proof.
   hnf. intros [f q]; rapply contr_inhabited_hprop.
   srefine (tr (_; _)).
   { refine (grp_homo_compose _
-              (abses_cokernel_iso (inclusion E) (projection E))^-1$).
+              (abses_cokernel_iso (inclusion E) (projection E)
+                : CatEquiv (H0:=hasequivs_group) _ _)^-1$).
     apply (quotient_abgroup_rec _ _ f).
     intros e; rapply Trunc_ind.
     intros [b r].

@@ -46,7 +46,7 @@ Coercion cate_fun : CatEquiv >-> Hom.
 Class CatIsEquiv {A} `{HasEquivs A} {a b : A} (f : a $-> b)
   := catisequiv : CatIsEquiv' a b f.
 
-Global Instance cate_isequiv {A} `{HasEquivs A} {a b : A} (f : a $<~> b)
+Instance cate_isequiv {A} `{HasEquivs A} {a b : A} (f : a $<~> b)
   : CatIsEquiv f
   := cate_isequiv' a b f.
 
@@ -85,7 +85,7 @@ Defined.
 Notation "f ^-1$" := (cate_inv f).
 
 (** * Opposite categories preserve having equivalences. *)
-Global Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
+Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
 Proof.
   snrapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
   - exact (b $<~> a).
@@ -101,7 +101,7 @@ Proof.
     exact (catie_adjointify f g t s).
 Defined.
 
-Global Instance isequiv_op {A : Type} `{HasEquivs A}
+Instance isequiv_op {A : Type} `{HasEquivs A}
        {a b : A} (f : a $-> b) {ief : CatIsEquiv f}
   : @CatIsEquiv A^op _ _ _ _ _ b a f
   := ief.
@@ -146,7 +146,7 @@ Proof.
 Defined.
 
 (** The identity morphism is an equivalence *)
-Global Instance catie_id {A} `{HasEquivs A} (a : A)
+Instance catie_id {A} `{HasEquivs A} (a : A)
   : CatIsEquiv (Id a)
   := catie_adjointify (Id a) (Id a) (cat_idl (Id a)) (cat_idr (Id a)).
 
@@ -154,11 +154,11 @@ Definition id_cate {A} `{HasEquivs A} (a : A)
   : a $<~> a
   := Build_CatEquiv (Id a).
 
-Global Instance reflexive_cate {A} `{HasEquivs A}
+Instance reflexive_cate {A} `{HasEquivs A}
   : Reflexive (@CatEquiv A _ _ _ _ _)
   := id_cate.
 
-Global Instance symmetric_cate {A} `{HasEquivs A}
+Instance symmetric_cate {A} `{HasEquivs A}
   : Symmetric (@CatEquiv A _ _ _ _ _)
   := fun a b f => cate_inv f.
 
@@ -195,7 +195,7 @@ Definition compose_catie_issect {A} `{HasEquivs A} {a b c : A}
   : (f^-1$ $o g^-1$ $o (g $o f) $== Id a)
   := compose_catie_isretr (A:=A^op) (a:=c) (b:=b) (c:=a) f g.
 
-Global Instance compose_catie {A} `{HasEquivs A} {a b c : A}
+Instance compose_catie {A} `{HasEquivs A} {a b c : A}
   (g : b $<~> c) (f : a $<~> b)
   : CatIsEquiv (g $o f).
 Proof.
@@ -204,7 +204,7 @@ Proof.
   - apply compose_catie_issect.
 Defined.
 
-Global Instance compose_catie' {A} `{HasEquivs A} {a b c : A}
+Instance compose_catie' {A} `{HasEquivs A} {a b c : A}
   (g : b $-> c) `{!CatIsEquiv g} (f : a $-> b) `{!CatIsEquiv f}
   : CatIsEquiv (g $o f)
   := catie_homotopic _ (cate_buildequiv_fun _ $@@ cate_buildequiv_fun _).
@@ -269,7 +269,7 @@ Definition compose_cate_idr {A} `{HasEquivs A}
   : cate_fun (f $oE id_cate a) $== cate_fun f
   := compose_cate_idl (A:=A^op) (a:=b) (b:=a) f.
 
-Global Instance transitive_cate {A} `{HasEquivs A}
+Instance transitive_cate {A} `{HasEquivs A}
   : Transitive (@CatEquiv A _ _ _ _ _)
   := fun a b c f g => g $oE f.
 
@@ -426,7 +426,7 @@ Proof.
 Defined.
 
 (** Any sufficiently coherent functor preserves equivalences.  *)
-Global Instance iemap {A B : Type} `{HasEquivs A} `{HasEquivs B}
+Instance iemap {A B : Type} `{HasEquivs A} `{HasEquivs B}
        (F : A -> B) `{!Is0Functor F, !Is1Functor F}
        {a b : A} (f : a $<~> b)
   : CatIsEquiv (fmap F f).
@@ -497,7 +497,7 @@ Defined.
 
 Class IsUnivalent1Cat (A : Type) `{HasEquivs A}
   := { isequiv_cat_equiv_path : forall a b, IsEquiv (@cat_equiv_path A _ _ _ _ _ a b) }.
-Global Existing Instance isequiv_cat_equiv_path.
+Existing Instance isequiv_cat_equiv_path.
 
 Definition cat_path_equiv {A : Type} `{IsUnivalent1Cat A} (a b : A)
   : (a $<~> b) -> (a = b)
@@ -509,14 +509,14 @@ Record core (A : Type) := { uncore : A }.
 Arguments uncore {A} c.
 Arguments Build_core {A} a : rename.
 
-Global Instance isgraph_core {A : Type} `{HasEquivs A}
+Instance isgraph_core {A : Type} `{HasEquivs A}
   : IsGraph (core A).
 Proof.
   srapply Build_IsGraph.
   intros a b ; exact (uncore a $<~> uncore b).
 Defined.
 
-Global Instance is01cat_core {A : Type} `{HasEquivs A}
+Instance is01cat_core {A : Type} `{HasEquivs A}
   : Is01Cat (core A).
 Proof.
   srapply Build_Is01Cat ; cbv.
@@ -524,7 +524,7 @@ Proof.
   - intros a b c ; apply compose_cate.
 Defined.
 
-Global Instance is2graph_core {A : Type} `{HasEquivs A}
+Instance is2graph_core {A : Type} `{HasEquivs A}
   : Is2Graph (core A).
 Proof.
   intros a b.
@@ -532,7 +532,7 @@ Proof.
   intros f g ; exact (cate_fun f $== cate_fun g).
 Defined.
 
-Global Instance is01cat_core_hom {A : Type} `{HasEquivs A} (a b : core A)
+Instance is01cat_core_hom {A : Type} `{HasEquivs A} (a b : core A)
   : Is01Cat (a $-> b).
 Proof.
   srapply Build_Is01Cat.
@@ -540,7 +540,7 @@ Proof.
   - intros f g h; cbn; apply cat_comp.
 Defined.
 
-Global Instance is0gpd_core_hom {A : Type} `{HasEquivs A} (a b : core A)
+Instance is0gpd_core_hom {A : Type} `{HasEquivs A} (a b : core A)
   : Is0Gpd (a $-> b).
 Proof.
   apply Build_Is0Gpd.
@@ -548,7 +548,7 @@ Proof.
   apply gpd_rev.
 Defined.
 
-Global Instance is0functor_core_postcomp {A : Type} `{HasEquivs A}
+Instance is0functor_core_postcomp {A : Type} `{HasEquivs A}
        (a b c : core A) (h : b $-> c) :
   Is0Functor (cat_postcomp a h).
 Proof.
@@ -559,7 +559,7 @@ Proof.
            $@ (compose_cate_fun h g)^$).
 Defined.
 
-Global Instance is0functor_core_precomp {A : Type} `{HasEquivs A}
+Instance is0functor_core_precomp {A : Type} `{HasEquivs A}
        (a b c : core A) (h : a $-> b) :
   Is0Functor (cat_precomp c h).
 Proof.
@@ -572,7 +572,7 @@ Proof.
   exact al.
 Defined.
 
-Global Instance is1cat_core {A : Type} `{HasEquivs A}
+Instance is1cat_core {A : Type} `{HasEquivs A}
   : Is1Cat (core A).
 Proof.
   rapply Build_Is1Cat.
@@ -582,14 +582,14 @@ Proof.
   - intros; apply compose_cate_idr.
 Defined.
 
-Global Instance is0gpd_core {A : Type} `{HasEquivs A}
+Instance is0gpd_core {A : Type} `{HasEquivs A}
   : Is0Gpd (core A).
 Proof.
   apply Build_Is0Gpd.
   intros a b f; cbn in *; exact (f^-1$).
 Defined.
 
-Global Instance is1gpd_core {A : Type} `{HasEquivs A}
+Instance is1gpd_core {A : Type} `{HasEquivs A}
   : Is1Gpd (core A).
 Proof.
   apply Build_Is1Gpd; cbn ; intros a b f;
@@ -598,7 +598,7 @@ Proof.
   - apply cate_isretr.
 Defined.
 
-Global Instance hasequivs_core {A : Type} `{HasEquivs A}
+Instance hasequivs_core {A : Type} `{HasEquivs A}
   : HasEquivs (core A).
 Proof.
   srapply Build_HasEquivs.
@@ -619,7 +619,7 @@ Proof.
   - exact tt.
 Defined.
 
-Global Instance hasmorext_core {A : Type} `{HasEquivs A, !HasMorExt A}
+Instance hasmorext_core {A : Type} `{HasEquivs A, !HasMorExt A}
   `{forall x y (f g : uncore x $<~> uncore y), IsEquiv (ap (x := f) (y := g) cate_fun)} 
   : HasMorExt (core A).
 Proof.
@@ -684,7 +684,7 @@ Record Cat_BiInv A `{Is1Cat A} (x y : A) := {
   cat_equiv_isequiv : Cat_IsBiInv cat_equiv_fun;
 }.
 
-Global Existing Instance cat_equiv_isequiv.
+Existing Instance cat_equiv_isequiv.
 
 (** The two inverses are necessarily homotopic. *)
 Definition cat_inverses_homotopic {A} `{Is1Cat A} {x y : A} (f : x $-> y) {bif : Cat_IsBiInv f}

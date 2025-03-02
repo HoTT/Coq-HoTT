@@ -84,7 +84,7 @@ Theorem grp_pres_rec {funext : Funext} (G : Group) (P : HasPresentation G) (H : 
       FreeGroup_rec f (gp_relators P r) = group_unit}
     <~> GroupHomomorphism G H.
 Proof.
-  refine ((equiv_precompose_cat_equiv grp_iso_presentation)^-1 oE _).
+  refine ((equiv_precompose_cat_equiv grp_iso_presentation (z:=H))^-1 oE _).
   refine (equiv_groupcoeq_rec _ _ oE _).
   srefine (equiv_functor_sigma_pb _ oE _).
   2: apply equiv_freegroup_rec.

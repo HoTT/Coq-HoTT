@@ -56,7 +56,7 @@ Arguments is1natural_equiv_adjunction_r {C D F G
   isgraph_C is2graph_C is01cat_C is1cat_C
   isgraph_D is2graph_D is01cat_D is1cat_D
   is0functor_F is0functor_G} adj x : rename.
-Global Existing Instances
+Existing Instances
   is1natural_equiv_adjunction_l
   is1natural_equiv_adjunction_r.
 

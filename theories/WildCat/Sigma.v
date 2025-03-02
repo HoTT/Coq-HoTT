@@ -10,14 +10,14 @@ Section Sigma.
     `{forall a, Is01Cat (B a)}
     `{forall a, Is0Gpd (B a)}.
 
-Global Instance isgraph_sigma : IsGraph (sig B).
+#[export] Instance isgraph_sigma : IsGraph (sig B).
 Proof.
   srapply Build_IsGraph.
   intros [x u] [y v].
   exact {p : x = y & p # u $-> v}.
 Defined.
 
-Global Instance is01cat_sigma : Is01Cat (sig B).
+#[export] Instance is01cat_sigma : Is01Cat (sig B).
 Proof.
   srapply Build_Is01Cat.
   + intros [x u].
@@ -28,7 +28,7 @@ Proof.
     exact (g $o f).
 Defined.
 
-Global Instance is0gpd_sigma : Is0Gpd (sig B).
+#[export] Instance is0gpd_sigma : Is0Gpd (sig B).
 Proof.
   constructor.
   intros [x u] [y v] [p f].
@@ -39,7 +39,7 @@ Defined.
 
 End Sigma.
 
-Global Instance is0functor_sigma {A : Type} (B C : A -> Type)
+Instance is0functor_sigma {A : Type} (B C : A -> Type)
        `{forall a, IsGraph (B a)} `{forall a, IsGraph (C a)}
        `{forall a, Is01Cat (B a)} `{forall a, Is01Cat (C a)}
        (F : forall a, B a -> C a) {ff : forall a, Is0Functor (F a)}
