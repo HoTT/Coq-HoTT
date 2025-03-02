@@ -29,8 +29,13 @@
 #   export COQC_SEARCH='\W*`{Univalence}'
 #   export COQC_REPLACE=''
 #
-#   export COQC_SEARCH='(Truncations|Spaces\.Nat|Spaces\.Pos|Spaces\.Int|Spaces\.No|Pointed|Homotopy.Join|Homotopy.HSpace|WildCat|Algebra.AbSES)'
+#   export COQC_SEARCH='\b(Truncations|Spaces\.Nat|Spaces\.Pos|Spaces\.Int|Spaces\.No|Pointed|Homotopy.Join|Homotopy.HSpace|WildCat|Algebra.AbSES)\b'
 #   export COQC_REPLACE='\1.Core'
+# Some useful character classes:
+#   \b word boundary (negation \B)
+#   \w word character (negation \W)
+#   \s whitespace character (negation \S)
+#
 # Search for "min(20" below for how to restrict this to the start of each file.
 
 # Can be used as
@@ -123,6 +128,7 @@ def coqc(quiet=False, timeout=60):
         return cp.returncode, elapsed
 
 # Files to not process, e.g. summary files, files defining tactics used elsewhere, etc.
+# Example:  'theories/Basics/Tactics.v',
 file_excludes=[
     ]
 
