@@ -95,8 +95,8 @@ Class PreOrder {A} (R : Relation A) :=
   { PreOrder_Reflexive : Reflexive R | 2 ;
     PreOrder_Transitive : Transitive R | 2 }.
 
-Global Existing Instance PreOrder_Reflexive.
-Global Existing Instance PreOrder_Transitive.
+Existing Instance PreOrder_Reflexive.
+Existing Instance PreOrder_Transitive.
 
 Arguments reflexivity {A R _} / _.
 Arguments symmetry {A R _} / _ _ _.

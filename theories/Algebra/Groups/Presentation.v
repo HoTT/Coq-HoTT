@@ -113,7 +113,7 @@ Proof.
   - exact f.
 Defined.
 
-Global Instance FinitelyGeneratedPresentation_Build_Finite_GroupPresentation
+Instance FinitelyGeneratedPresentation_Build_Finite_GroupPresentation
   {n m f}
   : FinitelyGeneratedPresentation (Build_Finite_GroupPresentation n m f).
 Proof.
@@ -121,7 +121,7 @@ Proof.
   2: simpl; apply tr; reflexivity.
 Defined.
 
-Global Instance FinitelyRelatedPresentation_Build_Finite_GroupPresentation
+Instance FinitelyRelatedPresentation_Build_Finite_GroupPresentation
   {n m f}
   : FinitelyRelatedPresentation (Build_Finite_GroupPresentation n m f).
 Proof.

@@ -1,6 +1,6 @@
 Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
-Require Import Groups.QuotientGroup AbelianGroup Biproduct.
+Require Import Groups.Group Groups.QuotientGroup AbelianGroup Biproduct.
 
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
@@ -8,14 +8,14 @@ Require Import Groups.QuotientGroup AbelianGroup Biproduct.
 Local Open Scope mc_add_scope.
 
 (** The sum of group homomorphisms [f] and [g] is [fun a => f(a) + g(a)].  While the group *laws* require [Funext], the operations do not, so we make them instances. *)
-Global Instance sgop_hom {A : Group} {B : AbGroup} : SgOp (A $-> B).
+Instance sgop_hom {A : Group} {B : AbGroup} : SgOp (A $-> B).
 Proof.
   intros f g.
   exact (grp_homo_compose ab_codiagonal (grp_prod_corec f g)).
 Defined.
 
 (** We can negate a group homomorphism [A -> B] by post-composing with [ab_homo_negation : B -> B]. *)
-Global Instance inverse_hom {A : Group} {B : AbGroup}
+Instance inverse_hom {A : Group} {B : AbGroup}
   : Inverse (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.
 
 (** For [A] and [B] groups, with [B] abelian, homomorphisms [A $-> B] form an abelian group. *)
@@ -43,12 +43,12 @@ Defined.
 Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
   := ab_cokernel ((-f) + g).
 
-Definition ab_coeq_in {A B} {f g : A $-> B} : B $-> ab_coeq f g.
+Definition ab_coeq_in {A B : AbGroup} {f g : A $-> B} : B $-> ab_coeq f g.
 Proof.
   snrapply grp_quotient_map.
 Defined.
 
-Definition ab_coeq_glue {A B} {f g : A $-> B}
+Definition ab_coeq_glue {A B : AbGroup} {f g : A $-> B}
   : ab_coeq_in (f:=f) (g:=g) $o f $== ab_coeq_in $o g.
 Proof.
   intros x.
@@ -97,7 +97,7 @@ Proof.
   exact p.
 Defined.
 
-Definition functor_ab_coeq {A B} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
+Definition functor_ab_coeq {A B : AbGroup} {f g : A $-> B} {A' B' : AbGroup} {f' g' : A' $-> B'}
   (a : A $-> A') (b : B $-> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
   : ab_coeq f g $-> ab_coeq f' g'.
 Proof.
@@ -109,7 +109,7 @@ Proof.
   nrapply ab_coeq_glue.
 Defined.
 
-Definition functor2_ab_coeq {A B} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
+Definition functor2_ab_coeq {A B : AbGroup} {f g : A $-> B} {A' B' : AbGroup} {f' g' : A' $-> B'}
   {a a' : A $-> A'} {b b' : B $-> B'}
   (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
   (p' : f' $o a' $== b' $o f) (q' : g' $o a' $== b' $o g)
@@ -121,10 +121,10 @@ Proof.
   exact (ap ab_coeq_in (s x)).
 Defined.
 
-Definition functor_ab_coeq_compose {A B} {f g : A $-> B}
-  {A' B'} {f' g' : A' $-> B'} 
+Definition functor_ab_coeq_compose {A B : AbGroup} {f g : A $-> B}
+  {A' B' : AbGroup} {f' g' : A' $-> B'} 
   (a : A $-> A') (b : B $-> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
-  {A'' B''} {f'' g'' : A'' $-> B''}
+  {A'' B'' : AbGroup} {f'' g'' : A'' $-> B''}
   (a' : A' $-> A'') (b' : B' $-> B'')
   (p' : f'' $o a' $== b' $o f') (q' : g'' $o a' $== b' $o g')
   : functor_ab_coeq a' b' p' q' $o functor_ab_coeq a b p q
@@ -134,14 +134,15 @@ Proof.
   simpl; reflexivity.
 Defined.
 
-Definition functor_ab_coeq_id {A B} (f g : A $-> B)
+Definition functor_ab_coeq_id {A B : AbGroup} (f g : A $-> B)
   : functor_ab_coeq (f:=f) (g:=g) (Id _) (Id _) (hrefl _) (hrefl _) $== Id _.
 Proof.
   snrapply ab_coeq_ind_homotopy.
   reflexivity.
 Defined.
 
-Definition grp_iso_ab_coeq {A B} {f g : A $-> B} {A' B'} {f' g' : A' $-> B'}
+Definition grp_iso_ab_coeq {A B : AbGroup} {f g : A $-> B}
+  {A' B' : AbGroup} {f' g' : A' $-> B'}
   (a : A $<~> A') (b : B $<~> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
   : ab_coeq f g $<~> ab_coeq f' g'.
 Proof.
@@ -158,7 +159,7 @@ Defined.
 
 (** ** The bifunctor [ab_hom] *)
 
-Global Instance is0functor_ab_hom01 `{Funext} {A : Group^op}
+Instance is0functor_ab_hom01 `{Funext} {A : Group^op}
   : Is0Functor (ab_hom A).
 Proof.
   snrapply (Build_Is0Functor _ AbGroup); intros B B' f.
@@ -169,7 +170,7 @@ Proof.
   exact (grp_homo_op f _ _).
 Defined.
 
-Global Instance is0functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
+Instance is0functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
   : Is0Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B).
 Proof.
   snrapply (Build_Is0Functor (Group^op) AbGroup); intros A A' f.
@@ -179,7 +180,7 @@ Proof.
   by apply equiv_path_grouphomomorphism.
 Defined.
 
-Global Instance is1functor_ab_hom01 `{Funext} {A : Group^op}
+Instance is1functor_ab_hom01 `{Funext} {A : Group^op}
   : Is1Functor (ab_hom A).
 Proof.
   nrapply Build_Is1Functor.
@@ -192,7 +193,7 @@ Proof.
     by apply equiv_path_grouphomomorphism.
 Defined.
 
-Global Instance is1functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
+Instance is1functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
   : Is1Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B).
 Proof.
   nrapply Build_Is1Functor.
@@ -205,13 +206,13 @@ Proof.
     by apply equiv_path_grouphomomorphism.
 Defined.
 
-Global Instance is0bifunctor_ab_hom `{Funext}
+Instance is0bifunctor_ab_hom `{Funext}
   : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
 Proof.
   rapply Build_Is0Bifunctor''.
 Defined.
 
-Global Instance is1bifunctor_ab_hom `{Funext}
+Instance is1bifunctor_ab_hom `{Funext}
   : Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
 Proof.
   nrapply Build_Is1Bifunctor''.
@@ -224,7 +225,7 @@ Defined.
 
 (** Precomposition with a surjection is an embedding. *)
 (* This could be deduced from [isembedding_precompose_surjection_hset], but relating precomposition of homomorphisms with precomposition of the underlying maps is tedious, so we give a direct proof. *)
-Global Instance isembedding_precompose_surjection_ab `{Funext} {A B C : AbGroup}
+Instance isembedding_precompose_surjection_ab `{Funext} {A B C : AbGroup}
   (f : A $-> B) `{IsSurjection f}
   : IsEmbedding (fmap10 (A:=Group^op) ab_hom f C).
 Proof.

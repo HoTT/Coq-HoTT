@@ -72,7 +72,7 @@ Section Reduction.
   Defined.
 
   (** The group operation *)
-  Global Instance sgop_freegroup : SgOp freegroup_type.
+  #[export] Instance sgop_freegroup : SgOp freegroup_type.
   Proof.
     intros x y.
     strip_truncations.
@@ -107,7 +107,7 @@ Section Reduction.
   Defined.
 
   (** The unit of the free group is the empty word *)
-  Global Instance monunit_freegroup_type : MonUnit freegroup_type
+  #[export] Instance monunit_freegroup_type : MonUnit freegroup_type
     := freegroup_eta nil.
 
   (** We can change the sign of all the elements in a word and reverse the order. This will be the inversion in the group *)
@@ -164,7 +164,7 @@ Section Reduction.
   Defined.
 
   (** Inverses are defined by changing the order of a word that appears in eta. Most of the work here is checking that it is agreeable with the path constructor. *)
-  Global Instance inverse_freegroup_type : Inverse freegroup_type.
+  #[export] Instance inverse_freegroup_type : Inverse freegroup_type.
   Proof.
     intro x.
     strip_truncations.
@@ -193,7 +193,7 @@ Section Reduction.
   (** Now we can start to prove the group laws. Since these are hprops we can ignore what happens with the path constructor. *)
 
   (** Our operation is associative *)
-  Global Instance associative_freegroup_type : Associative sg_op.
+  #[export] Instance associative_freegroup_type : Associative sg_op.
   Proof.
     intros x y z.
     strip_truncations.
@@ -205,7 +205,7 @@ Section Reduction.
   Defined.
 
   (** Left identity *)
-  Global Instance leftidentity_freegroup_type : LeftIdentity sg_op mon_unit.
+  #[export] Instance leftidentity_freegroup_type : LeftIdentity sg_op mon_unit.
   Proof.
     rapply Trunc_ind.
     srapply Coeq_ind_hprop; intros x.
@@ -213,7 +213,7 @@ Section Reduction.
   Defined.
 
   (** Right identity *)
-  Global Instance rightidentity_freegroup_type : RightIdentity sg_op mon_unit.
+  #[export] Instance rightidentity_freegroup_type : RightIdentity sg_op mon_unit.
   Proof.
     rapply Trunc_ind.
     srapply Coeq_ind_hprop; intros x.
@@ -222,7 +222,7 @@ Section Reduction.
   Defined.
 
   (** Left inverse *)
-  Global Instance leftinverse_freegroup_type : LeftInverse (.*.) (^) mon_unit.
+  #[export] Instance leftinverse_freegroup_type : LeftInverse (.*.) (^) mon_unit.
   Proof.
     rapply Trunc_ind.
     srapply Coeq_ind_hprop; intro x.
@@ -230,7 +230,7 @@ Section Reduction.
   Defined.
 
   (** Right inverse *)
-  Global Instance rightinverse_freegroup_type : RightInverse (.*.) (^) mon_unit.
+  #[export] Instance rightinverse_freegroup_type : RightInverse (.*.) (^) mon_unit.
   Proof.
     rapply Trunc_ind.
     srapply Coeq_ind_hprop; intro x.
@@ -373,7 +373,7 @@ Section Reduction.
 
   (** Now we need to prove that the free group satisifes the unviersal property of the free group. *)
   (** TODO: remove funext from here and universal property of free group *)
-  Global Instance isfreegroupon_freegroup `{Funext}
+  #[export] Instance isfreegroupon_freegroup `{Funext}
     : IsFreeGroupOn A FreeGroup freegroup_in.
   Proof.
     intros G f.
@@ -425,7 +425,7 @@ Proof.
   exact (path_contr (f; K) (g; fun x => idpath))..1.
 Defined.
 
-Global Instance isequiv_isfreegroupon_rec `{Funext} {S : Type}
+Instance isequiv_isfreegroupon_rec `{Funext} {S : Type}
   {F_S : Group} {i : S -> F_S} `{IsFreeGroupOn S F_S i} {G : Group}
   : IsEquiv (@isfreegroupon_rec S F_S i _ G).
 Proof.
@@ -448,7 +448,7 @@ Definition equiv_freegroup_rec `{Funext} (G : Group) (A : Type)
   : (A -> G) <~> (FreeGroup A $-> G)
   := equiv_isfreegroupon_rec.
 
-Global Instance ishprop_isfreegroupon `{Funext} (F : Group) (A : Type) (i : A -> F)
+Instance ishprop_isfreegroupon `{Funext} (F : Group) (A : Type) (i : A -> F)
   : IsHProp (IsFreeGroupOn A F i).
 Proof.
   unfold IsFreeGroupOn.
@@ -560,7 +560,7 @@ Defined.
   
 (** ** Functoriality *)
 
-Global Instance is0functor_freegroup : Is0Functor FreeGroup.
+Instance is0functor_freegroup : Is0Functor FreeGroup.
 Proof.
   snrapply Build_Is0Functor.
   intros X Y f.
@@ -568,7 +568,7 @@ Proof.
   exact (freegroup_in o f).
 Defined.
 
-Global Instance is1functor_freegroup : Is1Functor FreeGroup.
+Instance is1functor_freegroup : Is1Functor FreeGroup.
 Proof.
   snrapply Build_Is1Functor.
   - intros X Y f g p.

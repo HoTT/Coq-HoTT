@@ -84,7 +84,7 @@ Section GrpPullback.
     apply path_ishprop.
   Defined.
 
-  Global Instance isgroup_grp_pullback : IsGroup (Pullback f g) := {}.
+  #[export] Instance isgroup_grp_pullback : IsGroup (Pullback f g) := {}.
 
   Definition grp_pullback : Group
     := Build_Group (Pullback f g) _ _ _ _.

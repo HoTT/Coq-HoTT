@@ -94,7 +94,7 @@ Proof.
   repeat split.
 Defined.
 
-Global Instance issurj_rng_quotient_map {R : Ring} (I : Ideal R)
+Instance issurj_rng_quotient_map {R : Ring} (I : Ideal R)
   : IsSurjection (rng_quotient_map I).
 Proof.
   exact _.

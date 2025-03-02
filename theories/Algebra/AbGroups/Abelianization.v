@@ -23,7 +23,7 @@ Class IsAbelianization {G : Group} (G_ab : AbGroup)
       (eta : GroupHomomorphism G G_ab)
   := issurjinj_isabel : forall (A : AbGroup),
       IsSurjInj (group_precomp A eta).
-Global Existing Instance issurjinj_isabel.
+Existing Instance issurjinj_isabel.
 
 Definition isequiv_group_precomp_isabelianization `{Funext}
   {G : Group} {G_ab : AbGroup} (eta : GroupHomomorphism G G_ab)
@@ -163,7 +163,7 @@ Section AbelGroup.
         abel_in x * abel_in y := abel_in (x * y)
 >>
       But we need to also check that it preserves [ab_comm] in the appropriate way. *)
-  Global Instance sgop_abel : SgOp (Abel G).
+  #[export] Instance sgop_abel : SgOp (Abel G).
   Proof.
     intro a.
     srapply Abel_rec.
@@ -190,7 +190,7 @@ Section AbelGroup.
   Defined.
 
   (** We can now easily show that this operation is associative by [associativity] in [G] and the fact that being associative is a proposition. *)
-  Global Instance associative_abel_sgop : Associative (.*.).
+  #[export] Instance associative_abel_sgop : Associative (.*.).
   Proof.
     intros x y.
     Abel_ind_hprop z; revert y.
@@ -200,29 +200,29 @@ Section AbelGroup.
   Defined.
 
   (** From this we know that [Abel G] is a semigroup. *)
-  Global Instance issemigroup_abel : IsSemiGroup (Abel G) := {}.
+  #[export] Instance issemigroup_abel : IsSemiGroup (Abel G) := {}.
 
   (** We define the group unit as [abel_in] of the unit of [G] *)
-  Global Instance monunit_abel_zero : MonUnit (Abel G) := abel_in mon_unit.
+  #[export] Instance monunit_abel_zero : MonUnit (Abel G) := abel_in mon_unit.
 
   (** By using Abel_ind_hprop we can prove the left and right identity laws. *)
-  Global Instance leftidentity_abel : LeftIdentity (.*.) 1.
+  #[export] Instance leftidentity_abel : LeftIdentity (.*.) 1.
   Proof.
     Abel_ind_hprop x; cbn beta.
     nrapply (ap abel_in); apply left_identity.
   Defined.
 
-  Global Instance rightidentity_abel : RightIdentity (.*.) 1.
+  #[export] Instance rightidentity_abel : RightIdentity (.*.) 1.
   Proof.
     Abel_ind_hprop x; cbn beta.
     nrapply (ap abel_in); apply right_identity.
   Defined.
 
   (** Hence [Abel G] is a monoid *)
-  Global Instance ismonoid_abel : IsMonoid (Abel G) := {}.
+  #[export] Instance ismonoid_abel : IsMonoid (Abel G) := {}.
 
   (** We can also prove that the operation is commutative! This will come in handy later. *)
-  Global Instance commutative_abel : Commutative (.*.).
+  #[export] Instance commutative_abel : Commutative (.*.).
   Proof.
     intro x.
     Abel_ind_hprop y.
@@ -242,7 +242,7 @@ Section AbelGroup.
         abel_in (z^ * y^ * x^) = abel_in (y^ * z^ * x^)
 >>
       there is no obvious way to do this, but we note that [abel_in (x * y)] is exactly the definition of [abel_in x * abel_in y]! Hence by [commutativity] we can show this. *)
-  Global Instance inverse_abel : Inverse (Abel G).
+  #[export] Instance inverse_abel : Inverse (Abel G).
   Proof.
     srapply (Abel_rec _ _ (abel_in o inv)).
     intros x y z; cbn beta.
@@ -256,7 +256,7 @@ Section AbelGroup.
   Defined.
 
   (** Again by [Abel_ind_hprop] and the corresponding laws for [G] we can prove the left and right inverse laws. *)
-  Global Instance leftinverse_abel : LeftInverse (.*.) (^) 1.
+  #[export] Instance leftinverse_abel : LeftInverse (.*.) (^) 1.
   Proof.
     Abel_ind_hprop x; simpl.
     nrapply (ap abel_in); apply left_inverse.
@@ -269,13 +269,13 @@ Section AbelGroup.
   Defined.
 
   (** Thus [Abel G] is a group *)
-  Global Instance isgroup_abel : IsGroup (Abel G) := {}.
+  #[export] Instance isgroup_abel : IsGroup (Abel G) := {}.
 
   (** And furthermore, since the operation is commutative, it is an abelian group. *)
-  Global Instance isabgroup_abel : IsAbGroup (Abel G) := {}.
+  #[export] Instance isabgroup_abel : IsAbGroup (Abel G) := {}.
 
   (** By definition, the map [abel_in] is also a group homomorphism. *)
-  Global Instance issemigrouppreserving_abel_in : IsSemiGroupPreserving abel_in.
+  #[export] Instance issemigrouppreserving_abel_in : IsSemiGroupPreserving abel_in.
   Proof.
     by unfold IsSemiGroupPreserving.
   Defined.
@@ -283,7 +283,7 @@ Section AbelGroup.
 End AbelGroup.
 
 (** We can easily prove that [abel_in] is a surjection. *)
-Global Instance issurj_abel_in {G : Group} : IsSurjection (@abel_in G).
+Instance issurj_abel_in {G : Group} : IsSurjection (@abel_in G).
 Proof.
   apply BuildIsSurjection.
   Abel_ind_hprop x; cbn beta.
@@ -334,7 +334,7 @@ Proof.
 Defined.
 
 (** Finally we can prove that our construction abel is an abelianization. *)
-Global Instance isabelianization_abel {G : Group}
+Instance isabelianization_abel {G : Group}
   : IsAbelianization (abel G) abel_unit.
 Proof.
   intros A. constructor.
@@ -381,7 +381,7 @@ Proof.
 Defined.
 
 (** Hence any abelianization is surjective. *)
-Global Instance issurj_isabelianization {G : Group}
+Instance issurj_isabelianization {G : Group}
   (A : AbGroup) (eta : GroupHomomorphism G A)
   : IsAbelianization A eta -> IsSurjection eta.
 Proof.
@@ -391,14 +391,14 @@ Proof.
     (conn_map_homotopic _ _ _ p _)).
 Defined.
 
-Global Instance isabelianization_identity (A : AbGroup) : IsAbelianization A grp_homo_id.
+Instance isabelianization_identity (A : AbGroup) : IsAbelianization A grp_homo_id.
 Proof.
   intros B. constructor.
   - intros h; exact (h ; fun _ => idpath).
   - intros g h p; exact p.
 Defined.
 
-Global Instance isequiv_abgroup_abelianization
+Instance isequiv_abgroup_abelianization
   (A B : AbGroup) (eta : GroupHomomorphism A B) {isab : IsAbelianization B eta}
   : IsEquiv eta.
 Proof.
@@ -410,7 +410,7 @@ Defined.
 
 (** ** Functoriality *)
 
-Global Instance is0functor_abel : Is0Functor abel.
+Instance is0functor_abel : Is0Functor abel.
 Proof.
   snrapply Build_Is0Functor.
   intros A B f.
@@ -418,7 +418,7 @@ Proof.
   exact (abel_unit $o f).
 Defined.
 
-Global Instance is1functor_abel : Is1Functor abel.
+Instance is1functor_abel : Is1Functor abel.
 Proof.
   snrapply Build_Is1Functor.
   - intros A B f g p.

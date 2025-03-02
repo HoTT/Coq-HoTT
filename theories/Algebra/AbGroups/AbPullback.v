@@ -12,7 +12,7 @@ Section AbPullback.
   (* Variables are named to correspond with Limits.Pullback. *)
   Context {A B C : AbGroup} (f : B $-> A) (g : C $-> A).
 
-  Global Instance ab_pullback_commutative
+  Instance ab_pullback_commutative
     : Commutative (@group_sgop (grp_pullback f g)).
   Proof.
     unfold Commutative.

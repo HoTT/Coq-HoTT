@@ -68,7 +68,7 @@ Ltac decidable_false p n :=
 
 Class DecidablePaths (A : Type) :=
   dec_paths : forall (x y : A), Decidable (x = y).
-Global Existing Instance dec_paths.
+Existing Instance dec_paths.
 
 Class Stable P := stable : ~~P -> P.
 
@@ -205,7 +205,7 @@ Existing Instance wconst_collapse.
 
 Class PathCollapsible (A : Type) :=
   path_coll : forall (x y : A), Collapsible (x = y).
-Global Existing Instance path_coll.
+Existing Instance path_coll.
 
 Instance collapsible_decidable (A : Type) `{Decidable A}
 : Collapsible A.

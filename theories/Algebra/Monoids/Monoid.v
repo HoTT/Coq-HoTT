@@ -79,7 +79,7 @@ Proof.
   apply equiv_path_forall.
 Defined.
 
-Global Instance ishset_monoidhomomorphism `{Funext} {M N : Monoid}
+Instance ishset_monoidhomomorphism `{Funext} {M N : Monoid}
   : IsHSet (MonoidHomomorphism M N).
 Proof.
   apply istrunc_S.
@@ -130,42 +130,42 @@ Definition mnd_iso_inverse {M N : Monoid}
   : MonoidIsomorphism M N -> MonoidIsomorphism N M
   := fun f => Build_MonoidIsomorphism _ _ (Build_MonoidHomomorphism f^-1 _) _.
 
-Global Instance reflexive_monoidisomorphism
+Instance reflexive_monoidisomorphism
   : Reflexive MonoidIsomorphism
   := fun M => mnd_iso_id.
 
-Global Instance symmetric_monoidisomorphism
+Instance symmetric_monoidisomorphism
   : Symmetric MonoidIsomorphism
   := fun M N => mnd_iso_inverse.
 
-Global Instance transitive_monoidisomorphism
+Instance transitive_monoidisomorphism
   : Transitive MonoidIsomorphism
   := fun M N P f g => mnd_iso_compose g f.
 
 (** ** The category of monoids *)
 
-Global Instance isgraph_monoid : IsGraph Monoid
+Instance isgraph_monoid : IsGraph Monoid
   := Build_IsGraph Monoid MonoidHomomorphism.
 
-Global Instance is01cat_monoid : Is01Cat Monoid
+Instance is01cat_monoid : Is01Cat Monoid
   := Build_Is01Cat Monoid _ (@mnd_homo_id) (@mnd_homo_compose).
 
 Local Notation mnd_homo_map' M N
   := (@mnd_homo_map M N : _ -> (monoid_type M $-> _)).
 
-Global Instance is2graph_monoid : Is2Graph Monoid
+Instance is2graph_monoid : Is2Graph Monoid
   := fun M N => isgraph_induced (mnd_homo_map' M N).
 
-Global Instance isgraph_monoidhomomorphism {M N : Monoid} : IsGraph (M $-> N)
+Instance isgraph_monoidhomomorphism {M N : Monoid} : IsGraph (M $-> N)
   := isgraph_induced (mnd_homo_map' M N).
 
-Global Instance is01cat_monoidhomomorphism {M N : Monoid} : Is01Cat (M $-> N)
+Instance is01cat_monoidhomomorphism {M N : Monoid} : Is01Cat (M $-> N)
   := is01cat_induced (mnd_homo_map' M N).
 
-Global Instance is0gpd_monoidhomomorphism {M N : Monoid} : Is0Gpd (M $-> N)
+Instance is0gpd_monoidhomomorphism {M N : Monoid} : Is0Gpd (M $-> N)
   := is0gpd_induced (mnd_homo_map' M N).
 
-Global Instance is0functor_postcomp_monoidhomomorphism
+Instance is0functor_postcomp_monoidhomomorphism
   {M N P : Monoid} (h : N $-> P)
   : Is0Functor (@cat_postcomp Monoid _ _ M N P h).
 Proof.
@@ -173,7 +173,7 @@ Proof.
   intros ? ? p a; exact (ap h (p a)).
 Defined.
 
-Global Instance is0functor_precomp_monoidhomomorphism
+Instance is0functor_precomp_monoidhomomorphism
   {M N P : Monoid} (h : M $-> N)
   : Is0Functor (@cat_precomp Monoid _ _ M N P h).
 Proof.
@@ -181,12 +181,12 @@ Proof.
   intros ? ? p; exact (p o h).
 Defined.
 
-Global Instance is1cat_monoid : Is1Cat Monoid.
+Instance is1cat_monoid : Is1Cat Monoid.
 Proof.
   by rapply Build_Is1Cat.
 Defined.
 
-Global Instance hasequivs_monoid : HasEquivs Monoid.
+Instance hasequivs_monoid : HasEquivs Monoid.
 Proof.
   snrapply Build_HasEquivs.
   - exact MonoidIsomorphism.
@@ -201,10 +201,10 @@ Proof.
   - intros M N; exact isequiv_adjointify.
 Defined.
 
-Global Instance is0functor_monoid_type : Is0Functor monoid_type
+Instance is0functor_monoid_type : Is0Functor monoid_type
   := Build_Is0Functor _ _ _ _ monoid_type (@mnd_homo_map).
 
-Global Instance is1functor_monoid_type : Is1Functor monoid_type.
+Instance is1functor_monoid_type : Is1Functor monoid_type.
 Proof.
   by apply Build_Is1Functor.
 Defined.
@@ -253,7 +253,7 @@ Proof.
   - snrapply path_prod; nrapply mnd_homo_unit.
 Defined.
 
-Global Instance hasbinaryproducts_monoid : HasBinaryProducts Monoid.
+Instance hasbinaryproducts_monoid : HasBinaryProducts Monoid.
 Proof.
   intros M N.
   snrapply Build_BinaryProduct.

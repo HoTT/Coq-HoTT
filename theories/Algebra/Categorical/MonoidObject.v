@@ -146,7 +146,7 @@ Section ComonoidObject.
     - exact cco_cocomm.
   Defined.
 
-  Global Instance co_cco {x : A} `{!IsCocommutativeComonoidObject x}
+  #[export] Instance co_cco {x : A} `{!IsCocommutativeComonoidObject x}
     : IsComonoidObject x.
   Proof.
     apply cmo_mo.
