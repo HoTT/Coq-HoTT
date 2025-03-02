@@ -100,7 +100,7 @@ Proof.
   destruct z, z', p; exact idpath.
 Defined.
 
-Global Instance isequiv_path_sum {A B : Type} {z z' : A + B}
+Instance isequiv_path_sum {A B : Type} {z z' : A + B}
 : IsEquiv (@path_sum _ _ z z') | 0.
 Proof.
   refine (Build_IsEquiv _ _ path_sum path_sum_inv
@@ -117,7 +117,7 @@ Definition equiv_path_sum {A B : Type} (z z' : A + B)
 
 (** It follows that the fibers of [inl] and [inr] are decidable hprops. *)
 
-Global Instance ishprop_hfiber_inl {A B : Type} (z : A + B)
+Instance ishprop_hfiber_inl {A B : Type} (z : A + B)
 : IsHProp (hfiber inl z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
@@ -128,7 +128,7 @@ Proof.
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1).
 Defined.
 
-Global Instance decidable_hfiber_inl {A B : Type} (z : A + B)
+Instance decidable_hfiber_inl {A B : Type} (z : A + B)
 : Decidable (hfiber inl z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
@@ -139,7 +139,7 @@ Proof.
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1 _).
 Defined.
 
-Global Instance ishprop_hfiber_inr {A B : Type} (z : A + B)
+Instance ishprop_hfiber_inr {A B : Type} (z : A + B)
 : IsHProp (hfiber inr z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
@@ -150,7 +150,7 @@ Proof.
                  (fun x => equiv_path_sum (inr x) (inr b)))).
 Defined.
 
-Global Instance decidable_hfiber_inr {A B : Type} (z : A + B)
+Instance decidable_hfiber_inr {A B : Type} (z : A + B)
 : Decidable (hfiber inr z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
@@ -237,25 +237,25 @@ Definition is_inl {A B} : A + B -> Type0
 Definition is_inr {A B} : A + B -> Type0
   := is_inr_and (fun _ => Unit).
 
-Global Instance ishprop_is_inl {A B} (x : A + B)
+Instance ishprop_is_inl {A B} (x : A + B)
 : IsHProp (is_inl x).
 Proof.
   destruct x; exact _.
 Defined.
 
-Global Instance ishprop_is_inr {A B} (x : A + B)
+Instance ishprop_is_inr {A B} (x : A + B)
 : IsHProp (is_inr x).
 Proof.
   destruct x; exact _.
 Defined.
 
-Global Instance decidable_is_inl {A B} (x : A + B)
+Instance decidable_is_inl {A B} (x : A + B)
 : Decidable (is_inl x).
 Proof.
   destruct x; exact _.
 Defined.
 
-Global Instance decidable_is_inr {A B} (x : A + B)
+Instance decidable_is_inr {A B} (x : A + B)
 : Decidable (is_inr x).
 Proof.
   destruct x; exact _.
@@ -589,7 +589,7 @@ Defined.
 
 (** ** Functoriality on equivalences *)
 
-Global Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
+Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_sum f g) | 1000.
 Proof.
   snrapply Build_IsEquiv.
@@ -625,7 +625,7 @@ Definition iff_functor_sum {A A' B B' : Type} (f : A <-> A') (g : B <-> B')
 
 (** ** Unfunctoriality on equivalences *)
 
-Global Instance isequiv_unfunctor_sum_l {A A' B B' : Type}
+Instance isequiv_unfunctor_sum_l {A A' B B' : Type}
            (h : A + B <~> A' + B')
            (Ha : forall a:A, is_inl (h (inl a)))
            (Hb : forall b:B, is_inr (h (inr b)))
@@ -658,7 +658,7 @@ Definition equiv_unfunctor_sum_l {A A' B B' : Type}
   := Build_Equiv _ _ (unfunctor_sum_l h Ha)
                 (isequiv_unfunctor_sum_l h Ha Hb).
 
-Global Instance isequiv_unfunctor_sum_r {A A' B B' : Type}
+Instance isequiv_unfunctor_sum_r {A A' B B' : Type}
            (h : A + B <~> A' + B')
            (Ha : forall a:A, is_inl (h (inl a)))
            (Hb : forall b:B, is_inr (h (inr b)))
@@ -844,7 +844,7 @@ Class Indecomposable (X : Type) :=
   ; indecompose0 : ~~X }.
 
 (** For instance, contractible types are indecomposable. *)
-Global Instance indecomposable_contr `{Contr X} : Indecomposable X.
+Instance indecomposable_contr `{Contr X} : Indecomposable X.
 Proof.
   constructor.
   - intros A B f.
@@ -921,7 +921,7 @@ Definition sum_ind_uncurried {A B} (P : A + B -> Type)
 
 (* First the positive universal property.
    Doing this sort of thing without adjointifying will require very careful use of funext. *)
-Global Instance isequiv_sum_ind `{Funext} `(P : A + B -> Type)
+Instance isequiv_sum_ind `{Funext} `(P : A + B -> Type)
 : IsEquiv (sum_ind_uncurried P) | 0.
 Proof.
   apply (isequiv_adjointify
@@ -943,7 +943,7 @@ Definition equiv_sum_distributive `{Funext} (A B C : Type)
 
 (** ** Sums preserve most truncation *)
 
-Global Instance istrunc_sum n' (n := n'.+2)
+Instance istrunc_sum n' (n := n'.+2)
          `{IsTrunc n A, IsTrunc n B}
 : IsTrunc n (A + B) | 100.
 Proof.
@@ -954,12 +954,12 @@ Proof.
   destruct a, b; exact _.
 Defined.
 
-Global Instance ishset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
+Instance ishset_sum `{HA : IsHSet A, HB : IsHSet B} : IsHSet (A + B) | 100
   := @istrunc_sum (-2) A HA B HB.
 
 (** Sums don't preserve hprops in general, but they do for disjoint sums. *)
 
-Global Instance ishprop_sum A B `{IsHProp A} `{IsHProp B}
+Instance ishprop_sum A B `{IsHProp A} `{IsHProp B}
 : (A -> B -> Empty) -> IsHProp (A + B).
 Proof.
   intros H.
@@ -973,7 +973,7 @@ Defined.
 (** ** Decidability *)
 
 (** Sums preserve decidability *)
-Global Instance decidable_sum@{u v k | u <= k, v <= k} {A : Type@{u}} {B : Type@{v}}
+Instance decidable_sum@{u v k | u <= k, v <= k} {A : Type@{u}} {B : Type@{v}}
   `{Decidable A} `{Decidable B}
   : Decidable@{k} (A + B).
 Proof.
@@ -988,7 +988,7 @@ Proof.
 Defined.
 
 (** Sums preserve decidable paths *)
-Global Instance decidablepaths_sum {A B}
+Instance decidablepaths_sum {A B}
        `{DecidablePaths A} `{DecidablePaths B}
 : DecidablePaths (A + B).
 Proof.
@@ -1006,7 +1006,7 @@ Proof.
 Defined.
 
 (** Because of [ishprop_sum], decidability of an hprop is again an hprop. *)
-Global Instance ishprop_decidable_hprop `{Funext} A `{IsHProp A}
+Instance ishprop_decidable_hprop `{Funext} A `{IsHProp A}
 : IsHProp (Decidable A).
 Proof.
   unfold Decidable; refine (ishprop_sum _ _ _).
@@ -1037,7 +1037,7 @@ Definition sum_of_sig A B (x : { b : Bool & if b then A else B })
        | (false; b) => inr b
      end.
 
-Global Instance isequiv_sig_of_sum A B : IsEquiv (@sig_of_sum A B) | 0.
+Instance isequiv_sig_of_sum A B : IsEquiv (@sig_of_sum A B) | 0.
 Proof.
   apply (isequiv_adjointify (@sig_of_sum A B)
                             (@sum_of_sig A B)).
@@ -1045,7 +1045,7 @@ Proof.
   - intros []; exact idpath.
 Defined.
 
-Global Instance isequiv_sum_of_sig A B : IsEquiv (sum_of_sig A B)
+Instance isequiv_sum_of_sig A B : IsEquiv (sum_of_sig A B)
   := isequiv_inverse (@sig_of_sum A B).
 
 (** An alternative way of proving the truncation property of [sum]. *)
