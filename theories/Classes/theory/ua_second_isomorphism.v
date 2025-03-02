@@ -214,7 +214,7 @@ Section second_isomorphism.
     intro s. apply isequiv_surj_emb; exact _.
   Qed.
 
-  Global Existing Instance is_isomorphism_second_isomorphism.
+  #[export] Existing Instance is_isomorphism_second_isomorphism.
 
   Theorem isomorphic_second_isomorphism : (A&&P) / Ψ ≅ (A/Φ) && Q.
   Proof.

@@ -70,7 +70,7 @@ End subalgebra_predicate.
 
 Global Arguments BuildIsSubalgebraPredicate {σ A P hprop_subalgebra_predicate}.
 
-Global Existing Instance hprop_subalgebra_predicate.
+Existing Instance hprop_subalgebra_predicate.
 
 (** The next section defines subalgebra. *)
 

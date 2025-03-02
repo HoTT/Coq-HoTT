@@ -666,7 +666,7 @@ Proof.
 split;try apply _.
 intros;apply toR_unique, _.
 Qed.
-Global Existing Instance nat_naturals.
+#[export] Existing Instance nat_naturals.
 
 Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.nat_sub.
 

@@ -50,11 +50,11 @@ Section congruence.
                                      {equiv_rel_cong}
                                      {ops_compatible_cong}.
 
-  Global Existing Instance is_mere_relation_cong.
+  #[export] Existing Instance is_mere_relation_cong.
 
-  Global Existing Instance equiv_rel_cong.
+  #[export] Existing Instance equiv_rel_cong.
 
-  Global Existing Instance ops_compatible_cong.
+  #[export] Existing Instance ops_compatible_cong.
 
   Global Instance hprop_is_congruence `{Funext} : IsHProp IsCongruence.
   Proof.

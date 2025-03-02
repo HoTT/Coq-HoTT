@@ -25,7 +25,7 @@ Axiom setext : forall {A B : Type} (R : A -> B -> HProp)
 set (h o (spushl R)) = set (h o (spushr R)).
 
 Axiom ishset_V : IsHSet V.
-Global Existing Instance ishset_V.
+Existing Instance ishset_V.
 
 (** The induction principle.  Annotating the universes here greatly reduces the number of universe variables later in the file.  For example, [function] below went from 279 to 3.  If [V_ind] needs to be generalized in the future, check [function] to make sure things haven't exploded again. *)
 Fixpoint V_ind@{U' U u | U < U'} (P : V@{U' U} -> Type@{u})

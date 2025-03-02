@@ -173,7 +173,7 @@ Defined.
 Class IsTruncAlgebra (n : trunc_index) {σ : Signature} (A : Algebra σ)
   := trunc_carriers_algebra : ∀ (s : Sort σ), IsTrunc n (A s).
 
-Global Existing Instance trunc_carriers_algebra.
+Existing Instance trunc_carriers_algebra.
 
 Notation IsHSetAlgebra := (IsTruncAlgebra 0).
 

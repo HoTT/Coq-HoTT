@@ -476,7 +476,7 @@ repeat (constructor; try apply _).
 - intros x y. apply Z_path. red;simpl.
   ring_with_nat.
 Qed.
-Global Existing Instance Z_of_N_morphism.
+Existing Instance Z_of_N_morphism.
 
 Global Instance Z_of_N_injective@{} : IsInjective (cast N Z).
 Proof.
@@ -1109,8 +1109,8 @@ Global Instance Z_zero_product@{} : ZeroProduct Z
 End contents.
 
 Module Instances.
-  Global Existing Instances
+  Existing Instances
     T_set inject Tle_hprop Tlt_hprop Tapart_hprop Z_of_pair Z_of_N R_dec Z0 Z1 Z_plus Z_mult Z_negate Z_of_N_injective Zle ishprop_Zle Zle_cast_embedding Z_order Zle_dec Zlt ishprop_Zlt Z_strict_srorder Zlt_dec Zapart ishprop_Zapart Z_trivial_apart Z_to_ring Z_integers Z_abs Z_zero_product Z_of_N_morphism.
 End Instances.
-
+Export Instances.
 End NatPair.

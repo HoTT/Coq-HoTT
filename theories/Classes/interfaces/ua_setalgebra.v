@@ -10,7 +10,7 @@ Record SetAlgebra {σ : Signature} : Type := BuildSetAlgebra
 
 Arguments SetAlgebra : clear implicits.
 
-Global Existing Instance is_hset_algebra_setalgebra.
+Existing Instance is_hset_algebra_setalgebra.
 
 Global Coercion algebra_setalgebra : SetAlgebra >-> Algebra.
 

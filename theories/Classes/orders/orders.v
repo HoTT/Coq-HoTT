@@ -558,6 +558,6 @@ Section pseudo.
     - destruct (pseudo_order_antisym y z (ltyz , ltzy)).
   Qed.
 
-  Global Existing Instance lt_transitive.
+  Existing Instance lt_transitive.
 
 End pseudo.

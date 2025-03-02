@@ -177,14 +177,14 @@ Definition close_prod_rounded@{j} := ltac:(first [exact @close_prod_rounded'@{j 
                                                   exact @close_prod_rounded'@{j j}|
                                                   exact @close_prod_rounded'@{j j j}]).
 Arguments close_prod_rounded {_ _} _ _ _.
-Global Existing Instance close_prod_rounded.
+#[export] Existing Instance close_prod_rounded.
 
 Lemma prod_premetric@{j} `{!PreMetric@{UA j} A} `{!PreMetric@{UB j} B}
   : PreMetric@{i j} (A /\ B).
 Proof.
 split;try apply _.
 Qed.
-Global Existing Instance prod_premetric.
+#[export] Existing Instance prod_premetric.
 
 Context {Alim : Lim A} {Blim : Lim B}.
 
@@ -329,7 +329,7 @@ Definition nonexpanding_lipschitz@{} `{!NonExpanding f}
   : Lipschitz f 1
   := ltac:(first [exact nonexpanding_lipschitz'@{Ularge}|
                   exact nonexpanding_lipschitz'@{}]).
-Global Existing Instance nonexpanding_lipschitz.
+#[export] Existing Instance nonexpanding_lipschitz.
 
 
 Lemma lipschitz_nonexpanding@{} `{!Lipschitz f 1} : NonExpanding f.
@@ -364,7 +364,7 @@ hnf.
 intros u e;apply tr;exists (mu e).
 apply (uniform f mu).
 Qed.
-Global Existing Instance uniform_continuous | 5.
+Existing Instance uniform_continuous | 5.
 
 Definition lipschitz_continuous@{} (L:Q+) `{!Lipschitz f L} : Continuous f
   := _.
@@ -432,7 +432,7 @@ Proof.
 intros e u v xi. unfold Compose.
 apply (uniform g _),(uniform f _),xi.
 Qed.
-Global Existing Instance uniform_compose.
+Existing Instance uniform_compose.
 
 Global Instance continuous_compose@{} {Eg : Continuous g} {Ef : Continuous f}
   : Continuous (Compose g f).
@@ -581,7 +581,7 @@ Qed.
 
 Definition map2_nonexpanding@{i} := @map2_nonexpanding'@{i i}.
 Arguments map2_nonexpanding {_ _} e x y xi.
-Global Existing Instance map2_nonexpanding.
+Existing Instance map2_nonexpanding.
 
 Lemma map2_lipschitz' `{!Rounded C} `{!Rounded D} Lf Lg
   `{!Lipschitz f Lf} `{!Lipschitz g Lg}
@@ -601,7 +601,7 @@ Qed.
 (* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
 Definition map2_lipschitz@{i} := ltac:(first [exact @map2_lipschitz'@{i i i}|exact @map2_lipschitz'@{i i i i}]).
 Arguments map2_lipschitz {_ _} Lf Lg {_ _} e x y xi.
-Global Existing Instance map2_lipschitz.
+Existing Instance map2_lipschitz.
 
 Lemma map2_continuous' `{!Rounded A} `{!Rounded B}
   `{!Continuous f} `{!Continuous g}
@@ -623,7 +623,7 @@ Qed.
 (* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
 Definition map2_continuous@{i} := ltac:(first [exact @map2_continuous'@{i i i}|exact @map2_continuous'@{i i i i}]).
 Arguments map2_continuous {_ _ _ _} u e.
-Global Existing Instance map2_continuous.
+Existing Instance map2_continuous.
 
 End map2.
 
@@ -684,7 +684,7 @@ split.
   + intros E. unfold close,Interval_close in E. apply (snd (rounded _ _ _)) in E.
     exact E.
 Qed.
-Global Existing Instance Interval_premetric.
+Existing Instance Interval_premetric.
 
 Global Instance interval_proj_nonexpanding (a b : A)
   : NonExpanding (interval_proj a b)

@@ -179,7 +179,7 @@ Section third_isomorphism.
     exact _.
   Qed.
 
-  Global Existing Instance is_isomorphism_third_isomorphism.
+  #[export] Existing Instance is_isomorphism_third_isomorphism.
 
   (** The third isomorphism theorem. *)
 

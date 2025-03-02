@@ -67,7 +67,7 @@ Arguments BuildHomomorphism {σ A B} def_hom {is_homomorphism_hom}.
 
 Global Coercion def_hom : Homomorphism >-> Funclass.
 
-Global Existing Instance is_homomorphism_hom.
+Existing Instance is_homomorphism_hom.
 
 Lemma apD10_homomorphism {σ} {A B : Algebra σ} {f g : Homomorphism A B}
   : f = g → ∀ s, f s == g s.
@@ -127,7 +127,7 @@ Class IsIsomorphism {σ : Signature} {A B : Algebra σ}
   (f : ∀ s, A s → B s) `{!IsHomomorphism f}
   := isequiv_isomorphism : ∀ (s : Sort σ), IsEquiv (f s).
 
-Global Existing Instance isequiv_isomorphism.
+Existing Instance isequiv_isomorphism.
 
 Definition equiv_isomorphism {σ : Signature} {A B : Algebra σ}
   (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}

@@ -236,7 +236,7 @@ Section ring_props.
 
   (** This hint helps other results go through.  We do it in two steps, since if we specify the type [IsGroup R], Coq infers the wrong implicit arguments to [IsGroup]. *)
   Definition isgroup_ring := abgroup_group R.
-  Global Existing Instance isgroup_ring.
+  #[export] Existing Instance isgroup_ring.
 
   Global Instance negate_involutive : Involutive (-) := inverse_involutive.
   (* alias for convenience *)
