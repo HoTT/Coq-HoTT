@@ -1,0 +1,1431 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Sum.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Functors involving coproduct categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2bf" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2bf"><span class="kn">Require Import</span> Category.Sum Functor.Core Functor.Composition.Core Functor.Identity.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths HoTT.Tactics Types.Forall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We save [inl] and [inr] so we can use them to refer to the functors, too.  Outside of the [Categories/] directory, they should always be referred to as [Functor.inl] and [Functor.inr], after a [Require Functor].  Outside of this file, but in the [Categories/] directory, if you do not want to depend on all of [Functor] (for e.g., speed reasons), they should be referred to as [Functor.Sum.inl] and [Functor.Sum.inr] after a [Require Functor.Sum]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">type_inl</span> := inl.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">type_inr</span> := inr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Injections [inl : C → C + D] and [inr : D → C + D] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">sum_functors</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inl</span> : Functor C (C + D)
+    := Build_Functor C (C + D)
+                     (@inl _ _)
+                     (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">m</span> =&gt; m)
+                     (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                     (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inr</span> : Functor D (C + D)
+    := Build_Functor D (C + D)
+                     (@inr _ _)
+                     (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">m</span> =&gt; m)
+                     (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                     (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">sum_functors</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Coproduct of functors [F + F&#39; : C + C&#39; → D] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">sum</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">C&#39;</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c0" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c0"><span class="kn">Definition</span> <span class="nf">sum</span> (<span class="nv">F</span> : Functor C D) (<span class="nv">F&#39;</span> : Functor C&#39; D)
+  : Functor (C + C&#39;) D.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, C', D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C + C&#39;) D</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c1" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, C', D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C + C&#39;) D</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+              (C + C&#39;) D
+              (<span class="kr">fun</span> <span class="nv">cc&#39;</span>
+               =&gt; <span class="kr">match</span> cc&#39; <span class="kr">with</span>
+                    | type_inl c =&gt; F c
+                    | type_inr c&#39; =&gt; F&#39; c&#39;
+                  <span class="kr">end</span>)
+              (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span>
+               =&gt; <span class="kr">match</span> s, d <span class="kr">with</span>
+                    | type_inl cs, type_inl cd
+                      =&gt; <span class="kr">fun</span> <span class="nv">m</span> : morphism _ cs cd =&gt; F _1 m
+                    | type_inr c&#39;s, type_inr c&#39;d
+                      =&gt; <span class="kr">fun</span> <span class="nv">m</span> : morphism _ c&#39;s c&#39;d =&gt; F&#39; _1 m
+                    | _, _ =&gt; <span class="kr">fun</span> <span class="nv">m</span> =&gt; <span class="kr">match</span> m <span class="kr">with</span> <span class="kr">end</span>
+                  <span class="kr">end</span>%morphism)
+              _
+              _);
+    <span class="kp">abstract</span> (
+        <span class="kp">repeat</span> (<span class="nb">intros</span> [] || <span class="nb">intro</span>);
+        <span class="nb">simpl</span> <span class="kr">in</span> *;
+          <span class="nb">auto with</span> functor
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">sum</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** swap : [C + D → D + C] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">swap_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">swap</span> <span class="nv">C</span> <span class="nv">D</span>
+  : Functor (C + D) (D + C)
+    := sum (inr _ _) (inl _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">swap_involutive_helper</span> {<span class="nv">C</span> <span class="nv">D</span>} <span class="nv">c</span>
+  : (<span class="nb">swap</span> C D) ((<span class="nb">swap</span> D C) c)
+    = c
+    := <span class="kr">match</span> c <span class="kr">with</span> type_inl _ =&gt; idpath | type_inr _ =&gt; idpath <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c2" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c2"><span class="kn">Lemma</span> <span class="nf">swap_involutive</span> `{Funext} C D
+  : <span class="nb">swap</span> C D o <span class="nb">swap</span> D C = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nb">swap</span> C D o <span class="nb">swap</span> D C = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c3" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c3"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nb">swap</span> C D o <span class="nb">swap</span> D C = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c4" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c4">path_functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{HO
+: (<span class="kr">fun</span> <span class="nv">c</span> : D + C =&gt;
+   <span class="kr">match</span>
+     <span class="kr">match</span> c <span class="kr">with</span>
+     | type_inl _ _ c0 =&gt; type_inr C c0
+     | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+     <span class="kr">end</span>
+   <span class="kr">with</span>
+   | type_inl _ _ c0 =&gt; type_inr D c0
+   | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+   <span class="kr">end</span>) = idmap &amp;
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : D + C -&gt; D + C =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : D + C,
+   <span class="kr">match</span> s <span class="kr">with</span>
+   | type_inl _ _ s0 =&gt;
+       <span class="kr">match</span> d <span class="kr">with</span>
+       | type_inl _ _ d0 =&gt; morphism D s0 d0
+       | type_inr _ _ _ =&gt; Empty
+       <span class="kr">end</span>
+   | type_inr _ _ s0 =&gt;
+       <span class="kr">match</span> d <span class="kr">with</span>
+       | type_inl _ _ _ =&gt; Empty
+       | type_inr _ _ d0 =&gt; morphism C s0 d0
+       <span class="kr">end</span>
+   <span class="kr">end</span> -&gt;
+   <span class="kr">match</span> GO s <span class="kr">with</span>
+   | type_inl _ _ s0 =&gt;
+       <span class="kr">match</span> GO d <span class="kr">with</span>
+       | type_inl _ _ d0 =&gt; morphism D s0 d0
+       | type_inr _ _ _ =&gt; Empty
+       <span class="kr">end</span>
+   | type_inr _ _ s0 =&gt;
+       <span class="kr">match</span> GO d <span class="kr">with</span>
+       | type_inl _ _ _ =&gt; Empty
+       | type_inr _ _ d0 =&gt; morphism C s0 d0
+       <span class="kr">end</span>
+   <span class="kr">end</span>) HO
+  (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : D + C)
+     (<span class="nv">m</span> : <span class="kr">match</span> s <span class="kr">with</span>
+          | type_inl _ _ s0 =&gt;
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ d0 =&gt; morphism D s0 d0
+              | type_inr _ _ _ =&gt; Empty
+              <span class="kr">end</span>
+          | type_inr _ _ s0 =&gt;
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ _ =&gt; Empty
+              | type_inr _ _ d0 =&gt; morphism C s0 d0
+              <span class="kr">end</span>
+          <span class="kr">end</span>) =&gt;
+   <span class="kr">match</span>
+     <span class="kr">match</span> s <span class="kr">with</span>
+     | type_inl _ _ c =&gt; type_inr C c
+     | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+     <span class="kr">end</span> <span class="kr">as</span> s0
+     <span class="kr">return</span>
+       (<span class="kr">match</span> s0 <span class="kr">with</span>
+        | type_inl _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d0 =&gt; morphism C s1 d0
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>
+        | type_inr _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d0 =&gt; morphism D s1 d0
+            <span class="kr">end</span>
+        <span class="kr">end</span> -&gt;
+        <span class="kr">match</span>
+          <span class="kr">match</span> s0 <span class="kr">with</span>
+          | type_inl _ _ c =&gt; type_inr D c
+          | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+          <span class="kr">end</span>
+        <span class="kr">with</span>
+        | type_inl _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span>
+                <span class="kr">match</span> d <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d0 =&gt; morphism D s1 d0
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>
+        | type_inr _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span>
+                <span class="kr">match</span> d <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d0 =&gt; morphism C s1 d0
+            <span class="kr">end</span>
+        <span class="kr">end</span>)
+   <span class="kr">with</span>
+   | type_inl _ _ cs =&gt;
+       <span class="kr">match</span>
+         <span class="kr">match</span> d <span class="kr">with</span>
+         | type_inl _ _ c =&gt; type_inr C c
+         | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+         <span class="kr">end</span> <span class="kr">as</span> d0
+         <span class="kr">return</span>
+           (<span class="kr">match</span> d0 <span class="kr">with</span>
+            | type_inl _ _ d1 =&gt; morphism C cs d1
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span> -&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d1 =&gt; morphism C cs d1
+            <span class="kr">end</span>)
+       <span class="kr">with</span>
+       | type_inl _ _ cd =&gt; idmap
+       | type_inr _ _ _ =&gt;
+           <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+           <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+           <span class="kr">end</span>
+       <span class="kr">end</span>
+   | type_inr _ _ c&#39;s =&gt;
+       <span class="kr">match</span>
+         <span class="kr">match</span> d <span class="kr">with</span>
+         | type_inl _ _ c =&gt; type_inr C c
+         | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+         <span class="kr">end</span> <span class="kr">as</span> d0
+         <span class="kr">return</span>
+           (<span class="kr">match</span> d0 <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d1 =&gt; morphism D c&#39;s d1
+            <span class="kr">end</span> -&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d1 =&gt; morphism D c&#39;s d1
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>)
+       <span class="kr">with</span>
+       | type_inl _ _ _ =&gt;
+           <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+           <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+           <span class="kr">end</span>
+       | type_inr _ _ c&#39;d =&gt; idmap
+       <span class="kr">end</span>
+   <span class="kr">end</span>
+     (<span class="kr">match</span>
+        s <span class="kr">as</span> s0
+        <span class="kr">return</span>
+          (<span class="kr">match</span> s0 <span class="kr">with</span>
+           | type_inl _ _ s1 =&gt;
+               <span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism D s1 d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s1 =&gt;
+               <span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism C s1 d0
+               <span class="kr">end</span>
+           <span class="kr">end</span> -&gt;
+           <span class="kr">match</span>
+             <span class="kr">match</span> s0 <span class="kr">with</span>
+             | type_inl _ _ c =&gt; type_inr C c
+             | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+             <span class="kr">end</span>
+           <span class="kr">with</span>
+           | type_inl _ _ s1 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism C s1 d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s1 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism D s1 d0
+               <span class="kr">end</span>
+           <span class="kr">end</span>)
+      <span class="kr">with</span>
+      | type_inl _ _ cs =&gt;
+          <span class="kr">match</span>
+            d <span class="kr">as</span> d0
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d0 <span class="kr">with</span>
+               | type_inl _ _ d1 =&gt; morphism D cs d1
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d1 =&gt; morphism D cs d1
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ cd =&gt; idmap
+          | type_inr _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+              <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          <span class="kr">end</span>
+      | type_inr _ _ c&#39;s =&gt;
+          <span class="kr">match</span>
+            d <span class="kr">as</span> d0
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d0 <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d1 =&gt; morphism C c&#39;s d1
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d1 =&gt; morphism C c&#39;s d1
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+              <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          | type_inr _ _ c&#39;d =&gt; idmap
+          <span class="kr">end</span>
+      <span class="kr">end</span> m)) = (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> : D + C =&gt; idmap)}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c5" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c5"><span class="kr">exists</span> (<span class="nv">path_forall</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">swap_involutive_helper</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : D + C -&gt; D + C =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : D + C,
+   <span class="kr">match</span> s <span class="kr">with</span>
+   | type_inl _ _ s0 =&gt;
+       <span class="kr">match</span> d <span class="kr">with</span>
+       | type_inl _ _ d0 =&gt; morphism D s0 d0
+       | type_inr _ _ _ =&gt; Empty
+       <span class="kr">end</span>
+   | type_inr _ _ s0 =&gt;
+       <span class="kr">match</span> d <span class="kr">with</span>
+       | type_inl _ _ _ =&gt; Empty
+       | type_inr _ _ d0 =&gt; morphism C s0 d0
+       <span class="kr">end</span>
+   <span class="kr">end</span> -&gt;
+   <span class="kr">match</span> GO s <span class="kr">with</span>
+   | type_inl _ _ s0 =&gt;
+       <span class="kr">match</span> GO d <span class="kr">with</span>
+       | type_inl _ _ d0 =&gt; morphism D s0 d0
+       | type_inr _ _ _ =&gt; Empty
+       <span class="kr">end</span>
+   | type_inr _ _ s0 =&gt;
+       <span class="kr">match</span> GO d <span class="kr">with</span>
+       | type_inl _ _ _ =&gt; Empty
+       | type_inr _ _ d0 =&gt; morphism C s0 d0
+       <span class="kr">end</span>
+   <span class="kr">end</span>)
+  (path_forall
+     (<span class="kr">fun</span> <span class="nv">c</span> : (D + C)%category =&gt;
+      ((<span class="nb">swap</span> C D) _0 ((<span class="nb">swap</span> D C) _0 c))%object) idmap
+     swap_involutive_helper)
+  (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : D + C)
+     (<span class="nv">m</span> : <span class="kr">match</span> s <span class="kr">with</span>
+          | type_inl _ _ s0 =&gt;
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ d0 =&gt; morphism D s0 d0
+              | type_inr _ _ _ =&gt; Empty
+              <span class="kr">end</span>
+          | type_inr _ _ s0 =&gt;
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ _ =&gt; Empty
+              | type_inr _ _ d0 =&gt; morphism C s0 d0
+              <span class="kr">end</span>
+          <span class="kr">end</span>) =&gt;
+   <span class="kr">match</span>
+     <span class="kr">match</span> s <span class="kr">with</span>
+     | type_inl _ _ c =&gt; type_inr C c
+     | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+     <span class="kr">end</span> <span class="kr">as</span> s0
+     <span class="kr">return</span>
+       (<span class="kr">match</span> s0 <span class="kr">with</span>
+        | type_inl _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d0 =&gt; morphism C s1 d0
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>
+        | type_inr _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d0 =&gt; morphism D s1 d0
+            <span class="kr">end</span>
+        <span class="kr">end</span> -&gt;
+        <span class="kr">match</span>
+          <span class="kr">match</span> s0 <span class="kr">with</span>
+          | type_inl _ _ c =&gt; type_inr D c
+          | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+          <span class="kr">end</span>
+        <span class="kr">with</span>
+        | type_inl _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span>
+                <span class="kr">match</span> d <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d0 =&gt; morphism D s1 d0
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>
+        | type_inr _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span>
+                <span class="kr">match</span> d <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d0 =&gt; morphism C s1 d0
+            <span class="kr">end</span>
+        <span class="kr">end</span>)
+   <span class="kr">with</span>
+   | type_inl _ _ cs =&gt;
+       <span class="kr">match</span>
+         <span class="kr">match</span> d <span class="kr">with</span>
+         | type_inl _ _ c =&gt; type_inr C c
+         | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+         <span class="kr">end</span> <span class="kr">as</span> d0
+         <span class="kr">return</span>
+           (<span class="kr">match</span> d0 <span class="kr">with</span>
+            | type_inl _ _ d1 =&gt; morphism C cs d1
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span> -&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d1 =&gt; morphism C cs d1
+            <span class="kr">end</span>)
+       <span class="kr">with</span>
+       | type_inl _ _ cd =&gt; idmap
+       | type_inr _ _ _ =&gt;
+           <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+           <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+           <span class="kr">end</span>
+       <span class="kr">end</span>
+   | type_inr _ _ c&#39;s =&gt;
+       <span class="kr">match</span>
+         <span class="kr">match</span> d <span class="kr">with</span>
+         | type_inl _ _ c =&gt; type_inr C c
+         | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+         <span class="kr">end</span> <span class="kr">as</span> d0
+         <span class="kr">return</span>
+           (<span class="kr">match</span> d0 <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d1 =&gt; morphism D c&#39;s d1
+            <span class="kr">end</span> -&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d1 =&gt; morphism D c&#39;s d1
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>)
+       <span class="kr">with</span>
+       | type_inl _ _ _ =&gt;
+           <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+           <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+           <span class="kr">end</span>
+       | type_inr _ _ c&#39;d =&gt; idmap
+       <span class="kr">end</span>
+   <span class="kr">end</span>
+     (<span class="kr">match</span>
+        s <span class="kr">as</span> s0
+        <span class="kr">return</span>
+          (<span class="kr">match</span> s0 <span class="kr">with</span>
+           | type_inl _ _ s1 =&gt;
+               <span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism D s1 d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s1 =&gt;
+               <span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism C s1 d0
+               <span class="kr">end</span>
+           <span class="kr">end</span> -&gt;
+           <span class="kr">match</span>
+             <span class="kr">match</span> s0 <span class="kr">with</span>
+             | type_inl _ _ c =&gt; type_inr C c
+             | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+             <span class="kr">end</span>
+           <span class="kr">with</span>
+           | type_inl _ _ s1 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism C s1 d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s1 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism D s1 d0
+               <span class="kr">end</span>
+           <span class="kr">end</span>)
+      <span class="kr">with</span>
+      | type_inl _ _ cs =&gt;
+          <span class="kr">match</span>
+            d <span class="kr">as</span> d0
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d0 <span class="kr">with</span>
+               | type_inl _ _ d1 =&gt; morphism D cs d1
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d1 =&gt; morphism D cs d1
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ cd =&gt; idmap
+          | type_inr _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+              <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          <span class="kr">end</span>
+      | type_inr _ _ c&#39;s =&gt;
+          <span class="kr">match</span>
+            d <span class="kr">as</span> d0
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d0 <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d1 =&gt; morphism C c&#39;s d1
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d1 =&gt; morphism C c&#39;s d1
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+              <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          | type_inr _ _ c&#39;d =&gt; idmap
+          <span class="kr">end</span>
+      <span class="kr">end</span> m)) = (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> : D + C =&gt; idmap)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c6" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c6"><span class="kp">repeat</span> (<span class="nb">apply</span> (@path_forall _); <span class="nb">intro</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>D + C</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span><span class="kr">match</span> x <span class="kr">with</span>
+| type_inl _ _ s =&gt;
+    <span class="kr">match</span> x0 <span class="kr">with</span>
+    | type_inl _ _ d =&gt; morphism D s d
+    | type_inr _ _ _ =&gt; Empty
+    <span class="kr">end</span>
+| type_inr _ _ s =&gt;
+    <span class="kr">match</span> x0 <span class="kr">with</span>
+    | type_inl _ _ _ =&gt; Empty
+    | type_inr _ _ d =&gt; morphism C s d
+    <span class="kr">end</span>
+<span class="kr">end</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : D + C -&gt; D + C =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : D + C,
+   <span class="kr">match</span> s <span class="kr">with</span>
+   | type_inl _ _ s0 =&gt;
+       <span class="kr">match</span> d <span class="kr">with</span>
+       | type_inl _ _ d0 =&gt; morphism D s0 d0
+       | type_inr _ _ _ =&gt; Empty
+       <span class="kr">end</span>
+   | type_inr _ _ s0 =&gt;
+       <span class="kr">match</span> d <span class="kr">with</span>
+       | type_inl _ _ _ =&gt; Empty
+       | type_inr _ _ d0 =&gt; morphism C s0 d0
+       <span class="kr">end</span>
+   <span class="kr">end</span> -&gt;
+   <span class="kr">match</span> GO s <span class="kr">with</span>
+   | type_inl _ _ s0 =&gt;
+       <span class="kr">match</span> GO d <span class="kr">with</span>
+       | type_inl _ _ d0 =&gt; morphism D s0 d0
+       | type_inr _ _ _ =&gt; Empty
+       <span class="kr">end</span>
+   | type_inr _ _ s0 =&gt;
+       <span class="kr">match</span> GO d <span class="kr">with</span>
+       | type_inl _ _ _ =&gt; Empty
+       | type_inr _ _ d0 =&gt; morphism C s0 d0
+       <span class="kr">end</span>
+   <span class="kr">end</span>)
+  (path_forall
+     (<span class="kr">fun</span> <span class="nv">c</span> : (D + C)%category =&gt;
+      ((<span class="nb">swap</span> C D) _0 ((<span class="nb">swap</span> D C) _0 c))%object) idmap
+     swap_involutive_helper)
+  (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : D + C)
+     (<span class="nv">m</span> : <span class="kr">match</span> s <span class="kr">with</span>
+          | type_inl _ _ s0 =&gt;
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ d0 =&gt; morphism D s0 d0
+              | type_inr _ _ _ =&gt; Empty
+              <span class="kr">end</span>
+          | type_inr _ _ s0 =&gt;
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ _ =&gt; Empty
+              | type_inr _ _ d0 =&gt; morphism C s0 d0
+              <span class="kr">end</span>
+          <span class="kr">end</span>) =&gt;
+   <span class="kr">match</span>
+     <span class="kr">match</span> s <span class="kr">with</span>
+     | type_inl _ _ c =&gt; type_inr C c
+     | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+     <span class="kr">end</span> <span class="kr">as</span> s0
+     <span class="kr">return</span>
+       (<span class="kr">match</span> s0 <span class="kr">with</span>
+        | type_inl _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d0 =&gt; morphism C s1 d0
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>
+        | type_inr _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d0 =&gt; morphism D s1 d0
+            <span class="kr">end</span>
+        <span class="kr">end</span> -&gt;
+        <span class="kr">match</span>
+          <span class="kr">match</span> s0 <span class="kr">with</span>
+          | type_inl _ _ c =&gt; type_inr D c
+          | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+          <span class="kr">end</span>
+        <span class="kr">with</span>
+        | type_inl _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span>
+                <span class="kr">match</span> d <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d0 =&gt; morphism D s1 d0
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>
+        | type_inr _ _ s1 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span>
+                <span class="kr">match</span> d <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d0 =&gt; morphism C s1 d0
+            <span class="kr">end</span>
+        <span class="kr">end</span>)
+   <span class="kr">with</span>
+   | type_inl _ _ cs =&gt;
+       <span class="kr">match</span>
+         <span class="kr">match</span> d <span class="kr">with</span>
+         | type_inl _ _ c =&gt; type_inr C c
+         | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+         <span class="kr">end</span> <span class="kr">as</span> d0
+         <span class="kr">return</span>
+           (<span class="kr">match</span> d0 <span class="kr">with</span>
+            | type_inl _ _ d1 =&gt; morphism C cs d1
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span> -&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d1 =&gt; morphism C cs d1
+            <span class="kr">end</span>)
+       <span class="kr">with</span>
+       | type_inl _ _ cd =&gt; idmap
+       | type_inr _ _ _ =&gt;
+           <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+           <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+           <span class="kr">end</span>
+       <span class="kr">end</span>
+   | type_inr _ _ c&#39;s =&gt;
+       <span class="kr">match</span>
+         <span class="kr">match</span> d <span class="kr">with</span>
+         | type_inl _ _ c =&gt; type_inr C c
+         | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+         <span class="kr">end</span> <span class="kr">as</span> d0
+         <span class="kr">return</span>
+           (<span class="kr">match</span> d0 <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d1 =&gt; morphism D c&#39;s d1
+            <span class="kr">end</span> -&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d1 =&gt; morphism D c&#39;s d1
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>)
+       <span class="kr">with</span>
+       | type_inl _ _ _ =&gt;
+           <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+           <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+           <span class="kr">end</span>
+       | type_inr _ _ c&#39;d =&gt; idmap
+       <span class="kr">end</span>
+   <span class="kr">end</span>
+     (<span class="kr">match</span>
+        s <span class="kr">as</span> s0
+        <span class="kr">return</span>
+          (<span class="kr">match</span> s0 <span class="kr">with</span>
+           | type_inl _ _ s1 =&gt;
+               <span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism D s1 d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s1 =&gt;
+               <span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism C s1 d0
+               <span class="kr">end</span>
+           <span class="kr">end</span> -&gt;
+           <span class="kr">match</span>
+             <span class="kr">match</span> s0 <span class="kr">with</span>
+             | type_inl _ _ c =&gt; type_inr C c
+             | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+             <span class="kr">end</span>
+           <span class="kr">with</span>
+           | type_inl _ _ s1 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism C s1 d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s1 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism D s1 d0
+               <span class="kr">end</span>
+           <span class="kr">end</span>)
+      <span class="kr">with</span>
+      | type_inl _ _ cs =&gt;
+          <span class="kr">match</span>
+            d <span class="kr">as</span> d0
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d0 <span class="kr">with</span>
+               | type_inl _ _ d1 =&gt; morphism D cs d1
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d1 =&gt; morphism D cs d1
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ cd =&gt; idmap
+          | type_inr _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+              <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          <span class="kr">end</span>
+      | type_inr _ _ c&#39;s =&gt;
+          <span class="kr">match</span>
+            d <span class="kr">as</span> d0
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d0 <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d1 =&gt; morphism C c&#39;s d1
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d1 =&gt; morphism C c&#39;s d1
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m0</span> : Empty =&gt;
+              <span class="kr">match</span> m0 <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          | type_inr _ _ c&#39;d =&gt; idmap
+          <span class="kr">end</span>
+      <span class="kr">end</span> m)) x x0 x1 = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c7" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c7"><span class="kp">repeat</span> <span class="kr">match goal with</span>
+               | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">x&#39;</span> =&gt; <span class="kr">forall</span> <span class="nv">y</span>, @<span class="nl">?C</span> x&#39; y) <span class="nl">?p</span> <span class="nl">?f</span> <span class="nl">?x</span>] ]
+                 =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@transport_forall_constant _ _ C _ _ p f x)
+           <span class="kr">end</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>D + C</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span><span class="kr">match</span> x <span class="kr">with</span>
+| type_inl _ _ s =&gt;
+    <span class="kr">match</span> x0 <span class="kr">with</span>
+    | type_inl _ _ d =&gt; morphism D s d
+    | type_inr _ _ _ =&gt; Empty
+    <span class="kr">end</span>
+| type_inr _ _ s =&gt;
+    <span class="kr">match</span> x0 <span class="kr">with</span>
+    | type_inl _ _ _ =&gt; Empty
+    | type_inr _ _ d =&gt; morphism C s d
+    <span class="kr">end</span>
+<span class="kr">end</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x1</span> : D + C -&gt; D + C =&gt;
+   <span class="kr">match</span> x1 x <span class="kr">with</span>
+   | type_inl _ _ s =&gt;
+       <span class="kr">match</span> x1 x0 <span class="kr">with</span>
+       | type_inl _ _ d =&gt; morphism D s d
+       | type_inr _ _ _ =&gt; Empty
+       <span class="kr">end</span>
+   | type_inr _ _ s =&gt;
+       <span class="kr">match</span> x1 x0 <span class="kr">with</span>
+       | type_inl _ _ _ =&gt; Empty
+       | type_inr _ _ d =&gt; morphism C s d
+       <span class="kr">end</span>
+   <span class="kr">end</span>)
+  (path_forall
+     (<span class="kr">fun</span> <span class="nv">c</span> : D + C =&gt;
+      <span class="kr">match</span>
+        <span class="kr">match</span> c <span class="kr">with</span>
+        | type_inl _ _ c0 =&gt; type_inr C c0
+        | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+        <span class="kr">end</span>
+      <span class="kr">with</span>
+      | type_inl _ _ c0 =&gt; type_inr D c0
+      | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+      <span class="kr">end</span>) idmap swap_involutive_helper)
+  (<span class="kr">match</span>
+     <span class="kr">match</span> x <span class="kr">with</span>
+     | type_inl _ _ c =&gt; type_inr C c
+     | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+     <span class="kr">end</span> <span class="kr">as</span> s
+     <span class="kr">return</span>
+       (<span class="kr">match</span> s <span class="kr">with</span>
+        | type_inl _ _ s0 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> x0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d =&gt; morphism C s0 d
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>
+        | type_inr _ _ s0 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> x0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d =&gt; morphism D s0 d
+            <span class="kr">end</span>
+        <span class="kr">end</span> -&gt;
+        <span class="kr">match</span>
+          <span class="kr">match</span> s <span class="kr">with</span>
+          | type_inl _ _ c =&gt; type_inr D c
+          | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+          <span class="kr">end</span>
+        <span class="kr">with</span>
+        | type_inl _ _ s0 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span>
+                <span class="kr">match</span> x0 <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d =&gt; morphism D s0 d
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>
+        | type_inr _ _ s0 =&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span>
+                <span class="kr">match</span> x0 <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d =&gt; morphism C s0 d
+            <span class="kr">end</span>
+        <span class="kr">end</span>)
+   <span class="kr">with</span>
+   | type_inl _ _ cs =&gt;
+       <span class="kr">match</span>
+         <span class="kr">match</span> x0 <span class="kr">with</span>
+         | type_inl _ _ c =&gt; type_inr C c
+         | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+         <span class="kr">end</span> <span class="kr">as</span> d
+         <span class="kr">return</span>
+           (<span class="kr">match</span> d <span class="kr">with</span>
+            | type_inl _ _ d0 =&gt; morphism C cs d0
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span> -&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d0 =&gt; morphism C cs d0
+            <span class="kr">end</span>)
+       <span class="kr">with</span>
+       | type_inl _ _ cd =&gt; idmap
+       | type_inr _ _ _ =&gt;
+           <span class="kr">fun</span> <span class="nv">m</span> : Empty =&gt;
+           <span class="kr">match</span> m <span class="kr">return</span> Empty <span class="kr">with</span>
+           <span class="kr">end</span>
+       <span class="kr">end</span>
+   | type_inr _ _ c&#39;s =&gt;
+       <span class="kr">match</span>
+         <span class="kr">match</span> x0 <span class="kr">with</span>
+         | type_inl _ _ c =&gt; type_inr C c
+         | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+         <span class="kr">end</span> <span class="kr">as</span> d
+         <span class="kr">return</span>
+           (<span class="kr">match</span> d <span class="kr">with</span>
+            | type_inl _ _ _ =&gt; Empty
+            | type_inr _ _ d0 =&gt; morphism D c&#39;s d0
+            <span class="kr">end</span> -&gt;
+            <span class="kr">match</span>
+              <span class="kr">match</span> d <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr D c
+              | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ d0 =&gt; morphism D c&#39;s d0
+            | type_inr _ _ _ =&gt; Empty
+            <span class="kr">end</span>)
+       <span class="kr">with</span>
+       | type_inl _ _ _ =&gt;
+           <span class="kr">fun</span> <span class="nv">m</span> : Empty =&gt;
+           <span class="kr">match</span> m <span class="kr">return</span> Empty <span class="kr">with</span>
+           <span class="kr">end</span>
+       | type_inr _ _ c&#39;d =&gt; idmap
+       <span class="kr">end</span>
+   <span class="kr">end</span>
+     (<span class="kr">match</span>
+        x <span class="kr">as</span> s
+        <span class="kr">return</span>
+          (<span class="kr">match</span> s <span class="kr">with</span>
+           | type_inl _ _ s0 =&gt;
+               <span class="kr">match</span> x0 <span class="kr">with</span>
+               | type_inl _ _ d =&gt; morphism D s0 d
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s0 =&gt;
+               <span class="kr">match</span> x0 <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d =&gt; morphism C s0 d
+               <span class="kr">end</span>
+           <span class="kr">end</span> -&gt;
+           <span class="kr">match</span>
+             <span class="kr">match</span> s <span class="kr">with</span>
+             | type_inl _ _ c =&gt; type_inr C c
+             | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+             <span class="kr">end</span>
+           <span class="kr">with</span>
+           | type_inl _ _ s0 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> x0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d =&gt; morphism C s0 d
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s0 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> x0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d =&gt; morphism D s0 d
+               <span class="kr">end</span>
+           <span class="kr">end</span>)
+      <span class="kr">with</span>
+      | type_inl _ _ cs =&gt;
+          <span class="kr">match</span>
+            x0 <span class="kr">as</span> d
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism D cs d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism D cs d0
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ cd =&gt; idmap
+          | type_inr _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m</span> : Empty =&gt;
+              <span class="kr">match</span> m <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          <span class="kr">end</span>
+      | type_inr _ _ c&#39;s =&gt;
+          <span class="kr">match</span>
+            x0 <span class="kr">as</span> d
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism C c&#39;s d0
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism C c&#39;s d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m</span> : Empty =&gt;
+              <span class="kr">match</span> m <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          | type_inr _ _ c&#39;d =&gt; idmap
+          <span class="kr">end</span>
+      <span class="kr">end</span> x1)) = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="sum-v-chk2c8" style="display: none" type="checkbox"><label class="alectryon-input" for="sum-v-chk2c8">transport_path_forall_hammer.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>D + C</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span><span class="kr">match</span> x <span class="kr">with</span>
+| type_inl _ _ s =&gt;
+    <span class="kr">match</span> x0 <span class="kr">with</span>
+    | type_inl _ _ d =&gt; morphism D s d
+    | type_inr _ _ _ =&gt; Empty
+    <span class="kr">end</span>
+| type_inr _ _ s =&gt;
+    <span class="kr">match</span> x0 <span class="kr">with</span>
+    | type_inl _ _ _ =&gt; Empty
+    | type_inr _ _ d =&gt; morphism C s d
+    <span class="kr">end</span>
+<span class="kr">end</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : D + C =&gt;
+   <span class="kr">match</span> x <span class="kr">with</span>
+   | type_inl _ _ s =&gt;
+       <span class="kr">match</span> y <span class="kr">with</span>
+       | type_inl _ _ d =&gt; morphism D s d
+       | type_inr _ _ _ =&gt; Empty
+       <span class="kr">end</span>
+   | type_inr _ _ s =&gt;
+       <span class="kr">match</span> y <span class="kr">with</span>
+       | type_inl _ _ _ =&gt; Empty
+       | type_inr _ _ d =&gt; morphism C s d
+       <span class="kr">end</span>
+   <span class="kr">end</span>) (swap_involutive_helper x0)
+  (transport
+     (<span class="kr">fun</span> <span class="nv">y</span> : D + C =&gt;
+      <span class="kr">match</span> y <span class="kr">with</span>
+      | type_inl _ _ s =&gt;
+          <span class="kr">match</span>
+            <span class="kr">match</span>
+              <span class="kr">match</span> x0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ c =&gt; type_inr D c
+            | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+            <span class="kr">end</span>
+          <span class="kr">with</span>
+          | type_inl _ _ d =&gt; morphism D s d
+          | type_inr _ _ _ =&gt; Empty
+          <span class="kr">end</span>
+      | type_inr _ _ s =&gt;
+          <span class="kr">match</span>
+            <span class="kr">match</span>
+              <span class="kr">match</span> x0 <span class="kr">with</span>
+              | type_inl _ _ c =&gt; type_inr C c
+              | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+              <span class="kr">end</span>
+            <span class="kr">with</span>
+            | type_inl _ _ c =&gt; type_inr D c
+            | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+            <span class="kr">end</span>
+          <span class="kr">with</span>
+          | type_inl _ _ _ =&gt; Empty
+          | type_inr _ _ d =&gt; morphism C s d
+          <span class="kr">end</span>
+      <span class="kr">end</span>) (swap_involutive_helper x)
+     (<span class="kr">match</span>
+        <span class="kr">match</span> x <span class="kr">with</span>
+        | type_inl _ _ c =&gt; type_inr C c
+        | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+        <span class="kr">end</span> <span class="kr">as</span> s
+        <span class="kr">return</span>
+          (<span class="kr">match</span> s <span class="kr">with</span>
+           | type_inl _ _ s0 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> x0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d =&gt; morphism C s0 d
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s0 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> x0 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr C c
+                 | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d =&gt; morphism D s0 d
+               <span class="kr">end</span>
+           <span class="kr">end</span> -&gt;
+           <span class="kr">match</span>
+             <span class="kr">match</span> s <span class="kr">with</span>
+             | type_inl _ _ c =&gt; type_inr D c
+             | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+             <span class="kr">end</span>
+           <span class="kr">with</span>
+           | type_inl _ _ s0 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span>
+                   <span class="kr">match</span> x0 <span class="kr">with</span>
+                   | type_inl _ _ c =&gt; type_inr C c
+                   | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                   <span class="kr">end</span>
+                 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr D c
+                 | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d =&gt; morphism D s0 d
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>
+           | type_inr _ _ s0 =&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span>
+                   <span class="kr">match</span> x0 <span class="kr">with</span>
+                   | type_inl _ _ c =&gt; type_inr C c
+                   | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                   <span class="kr">end</span>
+                 <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr D c
+                 | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d =&gt; morphism C s0 d
+               <span class="kr">end</span>
+           <span class="kr">end</span>)
+      <span class="kr">with</span>
+      | type_inl _ _ cs =&gt;
+          <span class="kr">match</span>
+            <span class="kr">match</span> x0 <span class="kr">with</span>
+            | type_inl _ _ c =&gt; type_inr C c
+            | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+            <span class="kr">end</span> <span class="kr">as</span> d
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism C cs d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr D c
+                 | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism C cs d0
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ cd =&gt; idmap
+          | type_inr _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m</span> : Empty =&gt;
+              <span class="kr">match</span> m <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          <span class="kr">end</span>
+      | type_inr _ _ c&#39;s =&gt;
+          <span class="kr">match</span>
+            <span class="kr">match</span> x0 <span class="kr">with</span>
+            | type_inl _ _ c =&gt; type_inr C c
+            | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+            <span class="kr">end</span> <span class="kr">as</span> d
+            <span class="kr">return</span>
+              (<span class="kr">match</span> d <span class="kr">with</span>
+               | type_inl _ _ _ =&gt; Empty
+               | type_inr _ _ d0 =&gt; morphism D c&#39;s d0
+               <span class="kr">end</span> -&gt;
+               <span class="kr">match</span>
+                 <span class="kr">match</span> d <span class="kr">with</span>
+                 | type_inl _ _ c =&gt; type_inr D c
+                 | type_inr _ _ c&#39; =&gt; type_inl C c&#39;
+                 <span class="kr">end</span>
+               <span class="kr">with</span>
+               | type_inl _ _ d0 =&gt; morphism D c&#39;s d0
+               | type_inr _ _ _ =&gt; Empty
+               <span class="kr">end</span>)
+          <span class="kr">with</span>
+          | type_inl _ _ _ =&gt;
+              <span class="kr">fun</span> <span class="nv">m</span> : Empty =&gt;
+              <span class="kr">match</span> m <span class="kr">return</span> Empty <span class="kr">with</span>
+              <span class="kr">end</span>
+          | type_inr _ _ c&#39;d =&gt; idmap
+          <span class="kr">end</span>
+      <span class="kr">end</span>
+        (<span class="kr">match</span>
+           x <span class="kr">as</span> s
+           <span class="kr">return</span>
+             (<span class="kr">match</span> s <span class="kr">with</span>
+              | type_inl _ _ s0 =&gt;
+                  <span class="kr">match</span> x0 <span class="kr">with</span>
+                  | type_inl _ _ d =&gt; morphism D s0 d
+                  | type_inr _ _ _ =&gt; Empty
+                  <span class="kr">end</span>
+              | type_inr _ _ s0 =&gt;
+                  <span class="kr">match</span> x0 <span class="kr">with</span>
+                  | type_inl _ _ _ =&gt; Empty
+                  | type_inr _ _ d =&gt; morphism C s0 d
+                  <span class="kr">end</span>
+              <span class="kr">end</span> -&gt;
+              <span class="kr">match</span>
+                <span class="kr">match</span> s <span class="kr">with</span>
+                | type_inl _ _ c =&gt; type_inr C c
+                | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                <span class="kr">end</span>
+              <span class="kr">with</span>
+              | type_inl _ _ s0 =&gt;
+                  <span class="kr">match</span>
+                    <span class="kr">match</span> x0 <span class="kr">with</span>
+                    | type_inl _ _ c =&gt; type_inr C c
+                    | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                    <span class="kr">end</span>
+                  <span class="kr">with</span>
+                  | type_inl _ _ d =&gt; morphism C s0 d
+                  | type_inr _ _ _ =&gt; Empty
+                  <span class="kr">end</span>
+              | type_inr _ _ s0 =&gt;
+                  <span class="kr">match</span>
+                    <span class="kr">match</span> x0 <span class="kr">with</span>
+                    | type_inl _ _ c =&gt; type_inr C c
+                    | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                    <span class="kr">end</span>
+                  <span class="kr">with</span>
+                  | type_inl _ _ _ =&gt; Empty
+                  | type_inr _ _ d =&gt; morphism D s0 d
+                  <span class="kr">end</span>
+              <span class="kr">end</span>)
+         <span class="kr">with</span>
+         | type_inl _ _ cs =&gt;
+             <span class="kr">match</span>
+               x0 <span class="kr">as</span> d
+               <span class="kr">return</span>
+                 (<span class="kr">match</span> d <span class="kr">with</span>
+                  | type_inl _ _ d0 =&gt;
+                      morphism D cs d0
+                  | type_inr _ _ _ =&gt; Empty
+                  <span class="kr">end</span> -&gt;
+                  <span class="kr">match</span>
+                    <span class="kr">match</span> d <span class="kr">with</span>
+                    | type_inl _ _ c =&gt; type_inr C c
+                    | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                    <span class="kr">end</span>
+                  <span class="kr">with</span>
+                  | type_inl _ _ _ =&gt; Empty
+                  | type_inr _ _ d0 =&gt;
+                      morphism D cs d0
+                  <span class="kr">end</span>)
+             <span class="kr">with</span>
+             | type_inl _ _ cd =&gt; idmap
+             | type_inr _ _ _ =&gt;
+                 <span class="kr">fun</span> <span class="nv">m</span> : Empty =&gt;
+                 <span class="kr">match</span> m <span class="kr">return</span> Empty <span class="kr">with</span>
+                 <span class="kr">end</span>
+             <span class="kr">end</span>
+         | type_inr _ _ c&#39;s =&gt;
+             <span class="kr">match</span>
+               x0 <span class="kr">as</span> d
+               <span class="kr">return</span>
+                 (<span class="kr">match</span> d <span class="kr">with</span>
+                  | type_inl _ _ _ =&gt; Empty
+                  | type_inr _ _ d0 =&gt;
+                      morphism C c&#39;s d0
+                  <span class="kr">end</span> -&gt;
+                  <span class="kr">match</span>
+                    <span class="kr">match</span> d <span class="kr">with</span>
+                    | type_inl _ _ c =&gt; type_inr C c
+                    | type_inr _ _ c&#39; =&gt; type_inl D c&#39;
+                    <span class="kr">end</span>
+                  <span class="kr">with</span>
+                  | type_inl _ _ d0 =&gt;
+                      morphism C c&#39;s d0
+                  | type_inr _ _ _ =&gt; Empty
+                  <span class="kr">end</span>)
+             <span class="kr">with</span>
+             | type_inl _ _ _ =&gt;
+                 <span class="kr">fun</span> <span class="nv">m</span> : Empty =&gt;
+                 <span class="kr">match</span> m <span class="kr">return</span> Empty <span class="kr">with</span>
+                 <span class="kr">end</span>
+             | type_inr _ _ c&#39;d =&gt; idmap
+             <span class="kr">end</span>
+         <span class="kr">end</span> x1))) = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="kp">repeat</span> <span class="kr">match goal with</span>
+                  | [ H : Empty |- _ ] =&gt; <span class="nb">destruct</span> H
+                  | [ H : (_ + _) |- _ ] =&gt; <span class="nb">destruct</span> H
+                  | _ =&gt; <span class="kp">progress</span> <span class="nb">hnf</span> <span class="kr">in</span> *
+                <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">swap_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> FunctorSumNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;F + G&quot;</span> := (sum F G) : functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">FunctorSumNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>
