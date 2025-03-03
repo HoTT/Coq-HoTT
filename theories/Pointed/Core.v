@@ -599,6 +599,27 @@ Defined.
 Definition path_zero_morphism_pconst (A B : pType)
   : (@pconst A B) = zero_morphism := idpath.
 
+Instance Is0Bifunctor_ptype_comp (A B C : pType)
+  : Is0Bifunctor (cat_comp (A:= pType)(a:=A)(b:=B)(c:=C)).
+Proof.
+  apply Build_Is0Bifunctor''; constructor; intros.
+  - by apply pmap_postwhisker.
+  - by apply pmap_prewhisker.
+Defined.
+
+Instance isTruncatedBicat_ptype : IsTruncatedBicat pType.
+Proof.
+  snrapply Build_IsTruncatedBicat.
+  - exact _.
+  - exact _.
+  - intros A B C D f g h. apply pmap_compose_assoc.
+  - intros; symmetry; apply pmap_compose_assoc.
+  - intros. apply pmap_postcompose_idmap.
+  - intros. symmetry; apply pmap_postcompose_idmap.
+  - intros. apply pmap_precompose_idmap.
+  - intros; symmetry; apply pmap_precompose_idmap.
+Defined.
+
 (** pForall is a 1-category *)
 Global Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.
 Proof.
@@ -624,80 +645,83 @@ Defined.
 Global Instance is3graph_ptype : Is3Graph pType
   := fun f g => is2graph_pforall _ _.
 
-Global Instance is21cat_ptype : Is21Cat pType.
+Instance is1Bifunctor_ptype_comp (A B C : pType): Is1Bifunctor (cat_comp (a:=A) (b:=B) (c:=C)).
 Proof.
-  unshelve econstructor.
-  - exact _.
-  - intros A B C f; nrapply Build_Is1Functor.
-    + intros g h p q r.
+  snrapply Build_Is1Bifunctor''.
+  - intro g. apply Build_Is1Functor.
+    + intros f f' h h' eq_h. simpl. srapply Build_pHomotopy.
+      * intro. apply (ap (ap g)). apply eq_h.
+      * by pelim eq_h h h' f f' g.
+    + intro f; srapply Build_pHomotopy.
+      * reflexivity.
+      * by pelim f g.
+    + intros f0 f1 f2 alpha beta. srapply Build_pHomotopy.
+      * intro. cbn; exact (ap_pp _ _ _).
+      * by pelim beta alpha f0 f1 f2 g.
+  - intro f. apply Build_Is1Functor.
+    + intros g g' h h' eqh. simpl.
       srapply Build_pHomotopy.
-      1: exact (fun _ => ap _ (r _)).
-      by pelim r p q g h f.
-    + intros g.
-      srapply Build_pHomotopy.
-      1: reflexivity.
-      by pelim g f.
-    + intros g h i p q.
-      srapply Build_pHomotopy.
-      1: cbn; exact (fun _ => ap_pp _ _ _).
-      by pelim p q g h i f.
-  - intros A B C f; nrapply Build_Is1Functor.
-    + intros g h p q r.
-      srapply Build_pHomotopy.
-      1: intro; exact (r _).
-      by pelim f r p q g h.
-    + intros g.
-      srapply Build_pHomotopy.
-      1: reflexivity.
-      by pelim f g.
-    + intros g h i p q.
-      srapply Build_pHomotopy.
-      1: reflexivity.
-      by pelim f p q i g h.
-  - intros A B C f g h k p q.
-    snrapply Build_pHomotopy.
-    + intros x.
-      exact (concat_Ap q _)^.
-    + by pelim p f g q h k.
-  - intros A B C D f g.
-    snrapply Build_Is1Natural.
-    intros r1 r2 s1.
+      * intro. simpl. apply eqh.
+      * cbn beta zeta. by pelim f eqh h h' g g'.
+    + intro g. srapply Build_pHomotopy.
+      * reflexivity.
+      * destruct f as [f f_eq], g as [g g_eq]. simpl in *.
+        destruct f_eq, g_eq; reflexivity.
+    + intros g0 g1 g2 alpha beta. simpl. snrapply Build_pHomotopy.
+      * reflexivity.
+      * by pelim f beta alpha g0 g1 g2.
+  - intros g g' beta f f' alpha.
+    simpl.
+    unfold pmap_compose, fmap10, fmap01; simpl.
     srapply Build_pHomotopy.
-    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
-    by pelim f g s1 r1 r2.
-  - intros A B C D f g.
-    snrapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
-    by pelim f s1 r1 r2 g.
-  - intros A B C D f g.
-    snrapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: cbn; exact (fun _ => concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
-    by pelim s1 r1 r2 f g.
-  - intros A B.
-    snrapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: exact (fun _ => concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
-    by pelim s1 r1 r2.
-  - intros A B.
-    snrapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
-    simpl; by pelim s1 r1 r2.
-  - intros A B C D E f g h j.
-    srapply Build_pHomotopy.
-    1: reflexivity.
-    by pelim f g h j.
-  - intros A B C f g.
-    srapply Build_pHomotopy.
-    1: reflexivity.
-    by pelim f g.
+    * simpl. intro x. symmetry; apply concat_Ap.
+    * by pelim alpha f f' beta g g'.
 Defined.
+
+Instance isbicat_ptype : IsBicategory pType.
+Proof.
+  snrapply Build_IsBicategory.
+  1-3: exact _.
+  - intros; constructor.
+    + unfold bicat_assoc_opp; symmetry.
+      apply (phomotopy_compose_pV (pmap_compose_assoc h g f)).
+    + unfold bicat_assoc_opp; symmetry; apply (phomotopy_compose_Vp).
+  - intros; constructor; unfold bicat_idl_opp; symmetry.
+    + apply (phomotopy_compose_pV).
+    + apply (phomotopy_compose_Vp).
+  - intros; constructor; unfold bicat_idr_opp; symmetry.
+    + apply (phomotopy_compose_pV).
+    + apply (phomotopy_compose_Vp).
+  - intros a b c d. snrapply Build_Is1Natural.
+    intros ((h, g), f) ((h',g'),f') ((tau,sigma),rho). simpl in *.
+    snrapply Build_pHomotopy.
+    + simpl. intro x.
+      rewrite concat_1p, concat_p1.
+      rewrite ap_compose.
+      rewrite concat_p_pp.
+      apply (ap (fun z => z @ tau (g' (f' x)))).
+      rewrite <- ap_pp.
+      reflexivity.
+    + pelim rho f f' sigma g g' tau.
+      by pelim h h'.
+  - intros a b; snrapply Build_Is1Natural.
+    intros f f' h; snrapply Build_pHomotopy.
+    + intro; simpl; by autorewrite with paths.
+    + by pelim h f f'.
+  - intros a b; snrapply Build_Is1Natural.
+    intros f f' h; snrapply Build_pHomotopy.
+    + intro; simpl; by autorewrite with paths.
+    + by pelim h f f'.
+  - intros a b c d e f g h k.
+    snrapply Build_pHomotopy.
+    + reflexivity.
+    + by pelim f g h k.
+  - intros a b c f g. snrapply Build_pHomotopy.
+    + reflexivity.
+    + by pelim f g.
+Defined.
+
+Global Instance is21cat_ptype : Is21Cat pType := {}.
 
 (** The forgetful map from pType to Type is a 0-functor *)
 Global Instance is0functor_pointed_type : Is0Functor pointed_type.
@@ -742,7 +766,7 @@ Proof.
   intros I x.
   snrapply Build_Product.
   - exact (pproduct x).
-  - exact pproduct_proj. 
+  - exact pproduct_proj.
   - exact (pproduct_corec x).
   - intros Z f i.
     snrapply Build_pHomotopy.
