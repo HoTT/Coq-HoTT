@@ -8,7 +8,7 @@ Section group_props.
   Context `{IsGroup G}.
 
   (** Group inverses are involutive *)
-  Global Instance inverse_involutive : Involutive (^).
+  #[export] Instance inverse_involutive : Involutive (^).
   Proof.
     intros x.
     transitivity (mon_unit * x).
@@ -23,7 +23,7 @@ Section group_props.
     apply symmetry, right_identity.
   Qed.
 
-  Global Instance isinj_group_inverse : IsInjective (^).
+  #[export] Instance isinj_group_inverse : IsInjective (^).
   Proof.
     intros x y E.
     refine ((involutive x)^ @ _ @ involutive y).
@@ -37,7 +37,7 @@ Section group_props.
     apply symmetry, right_identity.
   Qed.
 
-  Global Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.
+  #[export] Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.
   Proof.
     intros z x y E.
     rhs_V rapply left_identity.
@@ -50,7 +50,7 @@ Section group_props.
     apply left_identity.
   Defined.
 
-  Global Instance group_cancelR: forall z : G, RightCancellation (.*.) z.
+  #[export] Instance group_cancelR: forall z : G, RightCancellation (.*.) z.
   Proof.
     intros z x y E.
     rewrite <-(right_identity x).

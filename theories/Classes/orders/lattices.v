@@ -105,7 +105,7 @@ Section join_semilattice_order.
   - rewrite <-E. apply join_ub_l.
   Qed.
 
-  Global Instance join_le_preserving_l : forall z, OrderPreserving (z ⊔).
+  #[export] Instance join_le_preserving_l : forall z, OrderPreserving (z ⊔).
   Proof.
   red;intros.
   apply join_lub.
@@ -113,7 +113,7 @@ Section join_semilattice_order.
   - apply join_le_compat_l. trivial.
   Qed.
 
-  Global Instance join_le_preserving_r : forall z, OrderPreserving (⊔ z).
+  #[export] Instance join_le_preserving_r : forall z, OrderPreserving (⊔ z).
   Proof.
   intros. apply maps.order_preserving_flip.
   Qed.
@@ -279,7 +279,7 @@ Section meet_semilattice_order.
   - rewrite <-E. apply meet_lb_r.
   Qed.
 
-  Global Instance: forall z, OrderPreserving (z ⊓).
+  #[export] Instance: forall z, OrderPreserving (z ⊓).
   Proof.
   red;intros.
   apply meet_glb.
@@ -287,7 +287,7 @@ Section meet_semilattice_order.
   - apply  meet_le_compat_l. trivial.
   Qed.
 
-  Global Instance: forall z, OrderPreserving (⊓ z).
+  #[export] Instance: forall z, OrderPreserving (⊓ z).
   Proof.
   intros. apply maps.order_preserving_flip.
   Qed.

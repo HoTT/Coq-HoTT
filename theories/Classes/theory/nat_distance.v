@@ -36,7 +36,7 @@ End contents.
 
 (* An existing instance of [CutMinus]
    allows to create an instance of [NatDistance] *)
-Global Instance natdistance_cut_minus `{Naturals N} `{!TrivialApart N}
+Instance natdistance_cut_minus `{Naturals N} `{!TrivialApart N}
    {cm} `{!CutMinusSpec N cm} `{forall x y, Decidable (x ≤ y)} : NatDistance N.
 Proof.
 red. intros. destruct (decide_rel (<=) x y) as [E|E].
@@ -49,7 +49,7 @@ Defined.
 (* Using the preceding instance we can make an instance
    for arbitrary models of the naturals
    by translation into [nat] on which we already have a [CutMinus] instance. *)
-Global Instance natdistance_default `{Naturals N} : NatDistance N | 10.
+Instance natdistance_default `{Naturals N} : NatDistance N | 10.
 Proof.
 intros x y.
 destruct (nat_distance_sig (naturals_to_semiring N nat x)

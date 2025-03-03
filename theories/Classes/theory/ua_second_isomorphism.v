@@ -29,7 +29,7 @@ Section cong_trace.
   Definition cong_trace (s : Sort σ) (x : (A&&P) s) (y : (A&&P) s)
     := Φ s (i s x) (i s y).
 
-  Global Instance equiv_rel_trace_congruence (s : Sort σ)
+  #[export] Instance equiv_rel_trace_congruence (s : Sort σ)
     : EquivRel (cong_trace s).
   Proof.
     unfold cong_trace.
@@ -51,7 +51,7 @@ Section cong_trace.
     apply IHw...
   Qed.
 
-  Global Instance ops_compatible_trace_trace
+  #[export] Instance ops_compatible_trace_trace
     : OpsCompatible (A&&P) cong_trace.
   Proof.
     intros u a b R.
@@ -63,7 +63,7 @@ Section cong_trace.
     exact (for_all_2_family_prod_trace_congruence a b R).
   Qed.
 
-  Global Instance is_congruence_trace : IsCongruence (A&&P) cong_trace.
+  #[export] Instance is_congruence_trace : IsCongruence (A&&P) cong_trace.
   Proof.
     apply (@BuildIsCongruence _ (A&&P) cong_trace);
       [intros; apply (is_mere_relation_cong A Φ) | exact _ ..].
@@ -113,7 +113,7 @@ Section is_subalgebra_class.
     - apply is_closed_under_ops_subalgebra_predicate. exact _.
   Qed.
 
-  Global Instance is_subalgebra_predicate_is_subalgebra_class
+  #[export] Instance is_subalgebra_predicate_is_subalgebra_class
     : IsSubalgebraPredicate (A/Φ) is_subalgebra_class.
   Proof.
     apply BuildIsSubalgebraPredicate.
@@ -171,7 +171,7 @@ Section second_isomorphism.
       + intro a. exact (QB (x, a)).
   Defined.
 
-  Global Instance is_homomorphism_second_isomorphism
+  #[export] Instance is_homomorphism_second_isomorphism
     : IsHomomorphism def_second_isomorphism.
   Proof.
     intro u.
@@ -184,7 +184,7 @@ Section second_isomorphism.
     : Homomorphism ((A&&P) / Ψ) ((A/Φ) && Q)
     := BuildHomomorphism def_second_isomorphism.
 
-  Global Instance embedding_second_isomorphism (s : Sort σ)
+  #[export] Instance embedding_second_isomorphism (s : Sort σ)
     : IsEmbedding (hom_second_isomorphism s).
   Proof.
     apply isembedding_isinj_hset.
@@ -194,7 +194,7 @@ Section second_isomorphism.
     exact (related_quotient_paths (Φ s) (i s x) (i s y) (p..1)).
   Qed.
 
-  Global Instance surjection_second_isomorphism (s : Sort σ)
+  #[export] Instance surjection_second_isomorphism (s : Sort σ)
     : IsSurjection (hom_second_isomorphism s).
   Proof.
     apply BuildIsSurjection.

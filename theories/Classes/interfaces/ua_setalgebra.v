@@ -41,7 +41,7 @@ Qed.
 (** The function [path_setalgebra A B] is an equivalence with inverse
     [ap algebra_setalgebra]. *)
 
-Global Instance isequiv_path_setalgebra `{Funext} {σ : Signature}
+Instance isequiv_path_setalgebra `{Funext} {σ : Signature}
   (A B : SetAlgebra σ)
   : IsEquiv (path_setalgebra A B).
 Proof.

@@ -23,19 +23,19 @@ assert (E : sig (fun n : R => sig (fun d : R => d <> 0 )) <~> Frac).
 - apply (istrunc_equiv_istrunc _ E).
 Qed.
 
-Global Instance Frac_ishset@{} : IsHSet Frac
+#[export] Instance Frac_ishset@{} : IsHSet Frac
   := ltac:(first [exact Frac_ishset'@{UR Ularge Set}|
                   exact Frac_ishset'@{}]).
 
 Local Existing Instance den_ne_0.
 
-Global Instance Frac_inject@{} : Cast R Frac.
+#[export] Instance Frac_inject@{} : Cast R Frac.
 Proof.
 intros x. apply (frac x 1 _).
 Defined.
 
-Global Instance Frac_0@{} : Zero Frac := ('0 : Frac).
-Global Instance Frac_1@{} : One Frac := ('1 : Frac).
+#[export] Instance Frac_0@{} : Zero Frac := ('0 : Frac).
+#[export] Instance Frac_1@{} : One Frac := ('1 : Frac).
 
 Instance pl@{} : Plus Frac.
 Proof.
@@ -44,7 +44,7 @@ Defined.
 
 Definition equiv@{} := fun x y => num x * den y = num y * den x.
 
-Global Instance equiv_equiv_rel@{} : EquivRel equiv.
+#[export] Instance equiv_equiv_rel@{} : EquivRel equiv.
 Proof.
 split.
 - intros x. hnf. reflexivity.
@@ -60,7 +60,7 @@ split.
     reflexivity.
 Qed.
 
-Global Instance equiv_dec@{} : forall x y: Frac, Decidable (equiv x y)
+#[export] Instance equiv_dec@{} : forall x y: Frac, Decidable (equiv x y)
   := fun x y => decide_rel (=) (num x * den y) (num y * den x).
 
 Lemma pl_respect@{} : forall q1 q2, equiv q1 q2 -> forall r1 r2, equiv r1 r2 ->
@@ -237,11 +237,11 @@ Local Existing Instance den_ne_0.
 
 Definition F@{} := quotient equiv.
 
-Global Instance class@{} : Cast (Frac R) F := class_of _.
+#[export] Instance class@{} : Cast (Frac R) F := class_of _.
 
 (* injection from R *)
 
-Global Instance inject@{} : Cast R F := Compose class (Frac_inject _).
+#[export] Instance inject@{} : Cast R F := Compose class (Frac_inject _).
 
 Definition path@{} {x y} : equiv x y -> ' x = ' y := related_classes_eq _.
 
@@ -309,10 +309,10 @@ Definition F_rec2_compute {T sT} dclass dequiv x y
 
 (* Relations, operations and constants *)
 
-Global Instance F0@{} : Zero F := ('0 : F).
-Global Instance F1@{} : One F := ('1 : F).
+#[export] Instance F0@{} : Zero F := ('0 : F).
+#[export] Instance F1@{} : One F := ('1 : F).
 
-Global Instance Fplus@{} : Plus F.
+#[export] Instance Fplus@{} : Plus F.
 Proof.
 refine (F_rec2 (fun x y => ' (Frac.pl _ x y)) _).
 intros. apply path. apply Frac.pl_respect;trivial.
@@ -321,7 +321,7 @@ Defined.
 Definition Fplus_compute@{} q r : (' q) + (' r) = ' (Frac.pl _ q r)
   := 1.
 
-Global Instance Fneg@{} : Negate F.
+#[export] Instance Fneg@{} : Negate F.
 Proof.
 refine (F_rec (fun x => ' (Frac.neg _ x)) _).
 intros;apply path; eapply Frac.neg_respect;try apply _. trivial.
@@ -329,7 +329,7 @@ Defined.
 
 Definition Fneg_compute@{} q : - (' q) = ' (Frac.neg _ q) := 1.
 
-Global Instance Fmult@{} : Mult F.
+#[export] Instance Fmult@{} : Mult F.
 Proof.
 refine (F_rec2 (fun x y => ' (Frac.ml _ x y)) _).
 intros. apply path. apply Frac.ml_respect;trivial.
@@ -392,7 +392,7 @@ first [change sg_op with mult; change mon_unit with 1|
   rewrite (mult_comm (den a)). apply associativity.
 Qed.
 
-Global Instance Fdec_rec@{} : DecRecip F.
+#[export] Instance Fdec_rec@{} : DecRecip F.
 Proof.
 refine (F_rec (fun x => ' (Frac.dec_rec _ x)) _).
 intros. apply path. apply Frac.dec_recip_respect;trivial.
@@ -438,7 +438,7 @@ destruct (decide_rel paths (num q) 0) as [E'|?];[destruct E;apply E'|].
 simpl. reflexivity.
 Qed.
 
-Global Instance F_field@{} : IsDecField F.
+#[export] Instance F_field@{} : IsDecField F.
 Proof.
 split;try apply _.
 - red. apply class_neq.
@@ -460,7 +460,7 @@ destruct (dec (equiv q r)) as [E|E].
   apply E. apply (classes_eq_related _ _ E').
 Defined.
 
-Global Instance F_dec@{} : DecidablePaths F.
+#[export] Instance F_dec@{} : DecidablePaths F.
 Proof.
 hnf. apply (F_ind2 _).
 apply dec_class.
@@ -487,7 +487,7 @@ destruct (decide_rel paths (num q) 0) as [E|E];simpl.
 Qed.
 
 (* A final word about inject *)
-Global Instance inject_sr_morphism@{} : IsSemiRingPreserving (cast R F).
+#[export] Instance inject_sr_morphism@{} : IsSemiRingPreserving (cast R F).
 Proof.
 repeat (split; try apply _).
 - intros x y. apply path. change ((x + y) * (1 * 1) = (x * 1 + y * 1) * 1).
@@ -496,7 +496,7 @@ repeat (split; try apply _).
   rewrite !mult_1_r. reflexivity.
 Qed.
 
-Global Instance inject_injective@{} : IsInjective (cast R F).
+#[export] Instance inject_injective@{} : IsInjective (cast R F).
 Proof.
 repeat (split; try apply _).
 intros x y E. apply classes_eq_related in E.
@@ -522,7 +522,7 @@ apply (F_rec (fun x => class (Frac.lift f x))).
 intros;apply path,Frac.lift_respects;trivial.
 Defined.
 
-Global Instance lift_sr_morphism@{i} : IsSemiRingPreserving lift.
+#[export] Instance lift_sr_morphism@{i} : IsSemiRingPreserving lift.
 Proof.
 (* This takes a few seconds. *)
 split;split;red.
@@ -542,7 +542,7 @@ split;split;red.
   red;simpl. apply commutativity.
 Qed.
 
-Global Instance lift_injective@{i} : IsInjective lift.
+#[export] Instance lift_injective@{i} : IsInjective lift.
 Proof.
 red.
 apply (F_ind2@{UR1 i i} (fun _ _ => _ -> _)).

@@ -151,7 +151,7 @@ Section isequiv_isomorphic_id.
     exact _.
   Qed.
 
-  Global Instance isequiv_isomorphic_id : IsEquiv (@isomorphic_id σ A B)
+  #[export] Instance isequiv_isomorphic_id : IsEquiv (@isomorphic_id σ A B)
     := isequiv_adjointify
           isomorphic_id
           id_isomorphic

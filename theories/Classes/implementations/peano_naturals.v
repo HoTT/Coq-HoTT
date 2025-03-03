@@ -23,14 +23,14 @@ Proof.
   unfold natpaths; apply _.
 Defined.
 
-Global Instance nat_0: Zero@{N} nat := 0%nat.
-Global Instance nat_1: One@{N} nat := 1%nat.
+#[export] Instance nat_0: Zero@{N} nat := 0%nat.
+#[export] Instance nat_1: One@{N} nat := 1%nat.
 
-Global Instance nat_plus: Plus@{N} nat := Nat.Core.nat_add.
+#[export] Instance nat_plus: Plus@{N} nat := Nat.Core.nat_add.
 
 Notation mul := Nat.Core.nat_mul.
 
-Global Instance nat_mult: Mult@{N} nat := Nat.Core.nat_mul.
+#[export] Instance nat_mult: Mult@{N} nat := Nat.Core.nat_mul.
 
 Ltac simpl_nat :=
   change (@plus nat _) with Nat.Core.nat_add;
@@ -160,7 +160,7 @@ Proof.
     apply ap, IHa.
 Qed.
 
-Global Instance S_neq_0 x : PropHolds (~ (S x =N= 0)).
+#[export] Instance S_neq_0 x : PropHolds (~ (S x =N= 0)).
 Proof.
 intros E.
 change ((fun a => match a with S _ => Unit | 0%nat => Empty end) 0).
@@ -171,11 +171,11 @@ Qed.
 
 Definition pred x := match x with | 0%nat => 0 | S k => k end.
 
-Global Instance S_inj : IsInjective@{N N} S
+#[export] Instance S_inj : IsInjective@{N N} S
   := { injective := fun a b E => ap pred E }.
 
 (** This is also in Spaces.Nat.Core. *)
-Global Instance nat_dec: DecidablePaths@{N} nat.
+#[export] Instance nat_dec: DecidablePaths@{N} nat.
 Proof.
 hnf.
 apply (nat_rect@{N} (fun x => forall y, _)).
@@ -189,7 +189,7 @@ apply (nat_rect@{N} (fun x => forall y, _)).
     * right;intros E. apply (injective S) in E. auto.
 Defined.
 
-Global Instance nat_set : IsTrunc@{N} 0 nat.
+#[export] Instance nat_set : IsTrunc@{N} 0 nat.
 Proof.
 apply hset_pathcoll, pathcoll_decpaths, nat_dec.
 Qed.
@@ -264,8 +264,8 @@ induction b as [|b IHb];intros [|c];simpl_nat;intros a Ea E.
 Qed.
 
 (* Order *)
-Global Instance nat_le: Le@{N N} nat := Nat.Core.leq.
-Global Instance nat_lt: Lt@{N N} nat := Nat.Core.lt.
+#[export] Instance nat_le: Le@{N N} nat := Nat.Core.leq.
+#[export] Instance nat_lt: Lt@{N N} nat := Nat.Core.lt.
 
 Lemma le_plus : forall n k, n <= k + n.
 Proof.
@@ -431,7 +431,7 @@ split.
   reflexivity.
 Qed.
 
-Instance nat_trichotomy : Trichotomy@{N N i} (lt:Lt nat).
+#[export] Instance nat_trichotomy : Trichotomy@{N N i} (lt:Lt nat).
 Proof.
 hnf. fold natpaths.
 intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
@@ -439,7 +439,7 @@ intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
 - left. apply le_S_S. trivial.
 Qed.
 
-Global Instance nat_apart : Apart@{N N} nat := fun n m => n < m |_| m < n.
+#[export] Instance nat_apart : Apart@{N N} nat := fun n m => n < m |_| m < n.
 
 Instance nat_apart_mere : is_mere_relation nat nat_apart.
 Proof.
@@ -453,7 +453,7 @@ Proof.
   rapply decidable_sum@{N N N}; apply Nat.Core.decidable_lt.
 Defined.
 
-Global Instance nat_trivial_apart : TrivialApart nat.
+#[export] Instance nat_trivial_apart : TrivialApart nat.
 Proof.
 split.
 - apply _.
@@ -486,7 +486,7 @@ rewrite (add_assoc k1), (add_comm k1), <-(add_assoc k2).
 apply natpaths_symm,E2.
 Qed.
 
-Global Instance nat_le_dec: forall x y : nat, Decidable (x ≤ y).
+#[export] Instance nat_le_dec: forall x y : nat, Decidable (x ≤ y).
 Proof.
 intros a b. destruct (le_lt_dec a b).
 - left;trivial.
@@ -593,12 +593,12 @@ split.
 - intros ??;apply le_S_S.
 Qed.
 
-Global Instance S_strict_embedding : StrictOrderEmbedding S.
+#[export] Instance S_strict_embedding : StrictOrderEmbedding S.
 Proof.
 split;apply _.
 Qed.
 
-Global Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
+#[export] Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
   fun _ _ _ _ _ _ => fix f (n: nat) := match n with 0%nat => 0 | 1%nat => 1 |
    S n' => 1 + f n' end.
 
@@ -639,7 +639,7 @@ Section for_another_semiring.
     reflexivity.
   Qed.
 
-  Global Instance nat_to_sr_morphism
+  #[export] Instance nat_to_sr_morphism
     : IsSemiRingPreserving (naturals_to_semiring nat R).
   Proof.
     split; split.
@@ -668,7 +668,7 @@ intros;apply toR_unique, _.
 Qed.
 #[export] Existing Instance nat_naturals.
 
-Global Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.nat_sub.
+#[export] Instance nat_cut_minus: CutMinus@{N} nat := Nat.Core.nat_sub.
 
 Lemma plus_minus : forall a b, cut_minus (a + b) b =N= a.
 Proof.
@@ -700,7 +700,7 @@ intros a b;revert a;induction b as [|b IH];intros [|a];simpl.
 - intros E. apply IH;apply le_S_S,E.
 Qed.
 
-Global Instance nat_cut_minus_spec : CutMinusSpec@{N N} nat nat_cut_minus.
+#[export] Instance nat_cut_minus_spec : CutMinusSpec@{N N} nat nat_cut_minus.
 Proof.
 split.
 - intros x y E. rewrite add_comm.

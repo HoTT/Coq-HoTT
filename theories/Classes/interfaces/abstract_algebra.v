@@ -40,7 +40,7 @@ Class IsApart A {Aap : Apart A} : Type :=
   apart_symmetric
   apart_cotrans.
 
-Global Instance apart_irrefl `{IsApart A} : Irreflexive (≶).
+Instance apart_irrefl `{IsApart A} : Irreflexive (≶).
 Proof.
 intros x ap.
 apply (tight_apart x x).
@@ -159,7 +159,7 @@ Section upper_classes.
 
   #[export] Existing Instances cring_group cring_monoid cring_dist.
 
-  Global Instance isring_iscring : IsCRing -> IsRing.
+  #[export] Instance isring_iscring : IsCRing -> IsRing.
   Proof.
     intros H.
     econstructor; try exact _.
@@ -351,12 +351,12 @@ End morphism_classes.
 Section id_mor.
   Context `{SgOp A} `{MonUnit A}.
 
-  Global Instance id_sg_morphism : IsSemiGroupPreserving (@id A).
+  #[export] Instance id_sg_morphism : IsSemiGroupPreserving (@id A).
   Proof.
     split.
   Defined.
 
-  Global Instance id_monoid_morphism : IsMonoidPreserving (@id A).
+  #[export] Instance id_monoid_morphism : IsMonoidPreserving (@id A).
   Proof.
     split; split.
   Defined.
@@ -465,13 +465,13 @@ Class CutMinusSpec A (cm : CutMinus A) `{Zero A} `{Plus A} `{Le A} := {
   cut_minus_0 : forall x y, x ≤ y -> x ∸ y = 0
 }.
 
-Global Instance istrunc_isunitpreserving `{Funext} {n A B} unitA unitB f
+#[export] Instance istrunc_isunitpreserving `{Funext} {n A B} unitA unitB f
   : IsTrunc n.+1 B -> IsTrunc n (@IsUnitPreserving A B unitA unitB f).
 Proof.
   unfold IsUnitPreserving; exact _.
 Defined.
 
-Global Instance istrunc_issemigrouppreserving `{Funext} {n A B} opA opB f
+#[export] Instance istrunc_issemigrouppreserving `{Funext} {n A B} opA opB f
   : IsTrunc n.+1 B -> IsTrunc n (@IsSemiGroupPreserving A B opA opB f).
 Proof.
   unfold IsSemiGroupPreserving; exact _.
@@ -485,12 +485,12 @@ Definition issig_IsMonoidPreserving {A B : Type} `{SgOp A} `{SgOp B}
   `{MonUnit A} `{MonUnit B} {f : A -> B} : _ <~> IsMonoidPreserving f
   := ltac:(issig).
 
-Global Instance ishprop_ismonoidpreserving `{Funext} {A B : Type} `{SgOp A}
+#[export] Instance ishprop_ismonoidpreserving `{Funext} {A B : Type} `{SgOp A}
   `{SgOp B} `{IsHSet B} `{MonUnit A} `{MonUnit B} (f : A -> B)
   : IsHProp (IsMonoidPreserving f)
   := istrunc_equiv_istrunc _ issig_IsMonoidPreserving.
 
-Global Instance ishprop_issemiringpreserving `{Funext} {A B : Type} `{IsHSet B}
+#[export] Instance ishprop_issemiringpreserving `{Funext} {A B : Type} `{IsHSet B}
   `{Plus A, Plus B, Mult A, Mult B, Zero A, Zero B, One A, One B}
   (f : A -> B)
   : IsHProp (IsSemiRingPreserving f)
@@ -498,18 +498,18 @@ Global Instance ishprop_issemiringpreserving `{Funext} {A B : Type} `{IsHSet B}
 
 Definition issig_issemigroup x y : _ <~> @IsSemiGroup x y := ltac:(issig).
 
-Global Instance ishprop_issemigroup `{Funext} x y
+#[export] Instance ishprop_issemigroup `{Funext} x y
   : IsHProp (@IsSemiGroup x y)
   := istrunc_equiv_istrunc _ (issig_issemigroup _ _).
 
 Definition issig_ismonoid x y z : _ <~> @IsMonoid x y z := ltac:(issig).
 
-Global Instance ishprop_ismonoid `{Funext} x y z : IsHProp (@IsMonoid x y z)
+#[export] Instance ishprop_ismonoid `{Funext} x y z : IsHProp (@IsMonoid x y z)
   := istrunc_equiv_istrunc _ (issig_ismonoid _ _ _).
 
 Definition issig_isgroup w x y z : _ <~> @IsGroup w x y z := ltac:(issig).
 
-Global Instance ishprop_isgroup `{Funext} w x y z : IsHProp (@IsGroup w x y z)
+#[export] Instance ishprop_isgroup `{Funext} w x y z : IsHProp (@IsGroup w x y z)
   := istrunc_equiv_istrunc _ (issig_isgroup _ _ _ _).
 
 End extras.

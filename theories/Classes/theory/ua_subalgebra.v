@@ -30,7 +30,7 @@ Section closed_under_op.
                     ∀ (x : A s), P s x → ClosedUnderOp (α x)
     end.
 
-  Global Instance trunc_closed_under_op {n} `{∀ s x, IsTrunc n (P s x)}
+  #[export] Instance trunc_closed_under_op {n} `{∀ s x, IsTrunc n (P s x)}
     {w : SymbolType σ} (α : Operation A w)
     : IsTrunc n (ClosedUnderOp α).
   Proof.
@@ -40,7 +40,7 @@ Section closed_under_op.
   Definition IsClosedUnderOps : Type
     := ∀ (u : Symbol σ), ClosedUnderOp u.#A.
 
-  Global Instance trunc_is_closed_under_ops
+  #[export] Instance trunc_is_closed_under_ops
     {n} `{∀ s x, IsTrunc n (P s x)}
     : IsTrunc n IsClosedUnderOps.
   Proof.
@@ -59,7 +59,7 @@ Section subalgebra_predicate.
     { hprop_subalgebra_predicate : ∀ s x, IsHProp (P s x);
       is_closed_under_ops_subalgebra_predicate : IsClosedUnderOps A P }.
 
-  Global Instance hprop_is_subalgebra_predicate `{Funext}
+  #[export] Instance hprop_is_subalgebra_predicate `{Funext}
     : IsHProp IsSubalgebraPredicate.
   Proof.
     apply hprop_allpath.
@@ -113,7 +113,7 @@ Section subalgebra.
   Definition Subalgebra : Algebra σ
     := BuildAlgebra carriers_subalgebra ops_subalgebra.
 
-  Global Instance trunc_subalgebra {n : trunc_index}
+  #[export] Instance trunc_subalgebra {n : trunc_index}
     `{!IsTruncAlgebra n.+1 A}
     : IsTruncAlgebra n.+1 Subalgebra.
   Proof.
@@ -152,7 +152,7 @@ Section hom_inc_subalgebra.
     - intros x. apply IHw.
   Defined.
 
-  Global Instance is_homomorphism_inc_subalgebra
+  #[export] Instance is_homomorphism_inc_subalgebra
     : IsHomomorphism def_inc_subalgebra.
   Proof.
     intro u. apply oppreserving_inc_subalgebra.

@@ -141,7 +141,7 @@ Section pseudo_order.
   auto using pseudo_order_lt_apart.
   Qed.
 
-  Global Instance pseudoorder_strictorder : StrictOrder (_ : Lt A).
+  #[export] Instance pseudoorder_strictorder : StrictOrder (_ : Lt A).
   Proof.
   split.
   - apply _.
@@ -152,7 +152,7 @@ Section pseudo_order.
     destruct (pseudo_order_antisym y z); auto.
   Qed.
 
-  Global Instance nlt_trans : Transitive (complement (<)).
+  #[export] Instance nlt_trans : Transitive (complement (<)).
   Proof.
   intros x y z.
   intros E1 E2 E3.
@@ -160,7 +160,7 @@ Section pseudo_order.
   intros [?|?]; contradiction.
   Qed.
 
-  Global Instance nlt_antisymm : AntiSymmetric (complement (<)).
+  #[export] Instance nlt_antisymm : AntiSymmetric (complement (<)).
   Proof.
   intros x y H1 H2.
   apply tight_apart. intros nap. apply apart_iff_total_lt in nap.
@@ -173,7 +173,7 @@ Section pseudo_order.
   apply apart_total_lt. assumption.
   Qed.
 
-  Global Instance lt_trichotomy `{!TrivialApart A} `{DecidablePaths A}
+  #[export] Instance lt_trichotomy `{!TrivialApart A} `{DecidablePaths A}
     : Trichotomy (<).
   Proof.
   intros x y.
@@ -194,7 +194,7 @@ Section full_partial_order.
   intros; apply _.
   Qed.
 
-  Global Instance fullpartialorder_strictorder : StrictOrder (<).
+  #[export] Instance fullpartialorder_strictorder : StrictOrder (<).
   Proof.
   split; try apply _.
   - apply strict_po_mere_lt.
@@ -365,11 +365,11 @@ Section full_pseudo_order.
     apply le_iff_not_lt_flip. trivial.
   Qed.
 
-  Global Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
+  #[export] Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
     := ltac:(first [exact fullpseudo_fullpartial'@{i i Set Set Set}|
                     exact fullpseudo_fullpartial'@{i i}]).
 
-  Global Instance le_stable : forall x y, Stable (x ≤ y).
+  #[export] Instance le_stable : forall x y, Stable (x ≤ y).
   Proof.
   intros x y. unfold Stable.
   intros dn. apply le_iff_not_lt_flip.
@@ -384,7 +384,7 @@ Section full_pseudo_order.
   - left. apply eq_le;trivial.
   Qed.
 
-  Global Instance le_total `{!TrivialApart A} `{DecidablePaths A}
+  #[export] Instance le_total `{!TrivialApart A} `{DecidablePaths A}
     : TotalOrder (≤).
   Proof.
   split; try apply _.

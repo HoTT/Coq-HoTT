@@ -98,7 +98,7 @@ Fixpoint Operation {σ} (A : Carriers σ) (w : SymbolType σ) : Type
      | s ::: w' => A s → Operation A w'
      end.
 
-Global Instance trunc_operation `{Funext} {σ : Signature}
+Instance trunc_operation `{Funext} {σ : Signature}
   (A : Carriers σ) {n} `{!∀ s, IsTrunc n (A s)} (w : SymbolType σ)
   : IsTrunc n (Operation A w).
 Proof.
@@ -177,14 +177,14 @@ Existing Instance trunc_carriers_algebra.
 
 Notation IsHSetAlgebra := (IsTruncAlgebra 0).
 
-Global Instance hprop_is_trunc_algebra `{Funext} (n : trunc_index)
+Instance hprop_is_trunc_algebra `{Funext} (n : trunc_index)
   {σ : Signature} (A : Algebra σ)
   : IsHProp (IsTruncAlgebra n A).
 Proof.
   apply istrunc_forall.
 Qed.
 
-Global Instance trunc_algebra_succ {σ : Signature} (A : Algebra σ)
+Instance trunc_algebra_succ {σ : Signature} (A : Algebra σ)
   {n} `{!IsTruncAlgebra n A}
   : IsTruncAlgebra n.+1 A | 1000.
 Proof.

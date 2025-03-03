@@ -56,7 +56,7 @@ Section strong_cancellation.
   apply (strong_left_cancellation op z);trivial.
   Qed.
 
-  Global Instance strong_left_cancellation_cancel `{!StrongLeftCancellation op z}
+  #[export] Instance strong_left_cancellation_cancel `{!StrongLeftCancellation op z}
     : LeftCancellation op z | 20.
   Proof.
   intros x y E1.
@@ -64,7 +64,7 @@ Section strong_cancellation.
   apply E1. apply (strong_left_cancellation op);trivial.
   Qed.
 
-  Global Instance strong_right_cancellation_cancel `{!StrongRightCancellation op z}
+  #[export] Instance strong_right_cancellation_cancel `{!StrongRightCancellation op z}
     : RightCancellation op z | 20.
   Proof.
   intros x y E1.
@@ -85,27 +85,27 @@ Section semiring_props.
   apply (no_zero_divisors x); split; eauto.
   Qed.
 
-  Global Instance plus_0_r: RightIdentity (+) 0 := right_identity.
-  Global Instance plus_0_l: LeftIdentity (+) 0 := left_identity.
-  Global Instance mult_1_l: LeftIdentity (.*.) 1 := left_identity.
-  Global Instance mult_1_r: RightIdentity (.*.) 1 := right_identity.
+  #[export] Instance plus_0_r: RightIdentity (+) 0 := right_identity.
+  #[export] Instance plus_0_l: LeftIdentity (+) 0 := left_identity.
+  #[export] Instance mult_1_l: LeftIdentity (.*.) 1 := left_identity.
+  #[export] Instance mult_1_r: RightIdentity (.*.) 1 := right_identity.
 
-  Global Instance plus_assoc: Associative (+) := simple_associativity.
-  Global Instance mult_assoc: Associative (.*.) := simple_associativity.
+  #[export] Instance plus_assoc: Associative (+) := simple_associativity.
+  #[export] Instance mult_assoc: Associative (.*.) := simple_associativity.
 
-  Global Instance plus_comm: Commutative (+) := commutativity.
-  Global Instance mult_comm: Commutative (.*.) := commutativity.
+  #[export] Instance plus_comm: Commutative (+) := commutativity.
+  #[export] Instance mult_comm: Commutative (.*.) := commutativity.
 
-  Global Instance mult_0_l: LeftAbsorb (.*.) 0 := left_absorb.
+  #[export] Instance mult_0_l: LeftAbsorb (.*.) 0 := left_absorb.
 
-  Global Instance mult_0_r: RightAbsorb (.*.) 0.
+  #[export] Instance mult_0_r: RightAbsorb (.*.) 0.
   Proof.
   intro. path_via (0 * x).
   - apply mult_comm.
   - apply left_absorb.
   Qed.
 
-  Global Instance plus_mult_distr_r : RightDistribute (.*.) (+).
+  #[export] Instance plus_mult_distr_r : RightDistribute (.*.) (+).
   Proof.
   intros x y z.
   etransitivity;[|etransitivity].
@@ -119,7 +119,7 @@ Section semiring_props.
   apply _.
   Qed.
 
-  Global Instance: forall r : R, @IsMonoidPreserving R R (+) (+) 0 0 (r *.).
+  #[export] Instance: forall r : R, @IsMonoidPreserving R R (+) (+) 0 0 (r *.).
   Proof.
   repeat (constructor; try apply _).
   - red. apply distribute_l.
@@ -203,7 +203,7 @@ Section cring_props.
   - apply ap. apply right_identity.
   Qed.
 
-  Global Instance CRing_Semi: IsSemiCRing R.
+  #[export] Instance CRing_Semi: IsSemiCRing R.
   Proof.
   repeat (constructor; try apply _).
   Qed.
@@ -214,7 +214,7 @@ End cring_props.
 Section ring_props.
   Context `{IsRing R}.
 
-  Global Instance mult_left_absorb : LeftAbsorb (.*.) 0.
+  #[export] Instance mult_left_absorb : LeftAbsorb (.*.) 0.
   Proof.
     intro y.
     rapply (right_cancellation (+) (0 * y)).
@@ -224,7 +224,7 @@ Section ring_props.
     apply left_identity.
   Defined.
 
-  Global Instance mult_right_absorb : RightAbsorb (.*.) 0.
+  #[export] Instance mult_right_absorb : RightAbsorb (.*.) 0.
   Proof.
     intro x.
     rapply (right_cancellation (+) (x * 0)).
@@ -238,15 +238,15 @@ Section ring_props.
   Definition isgroup_ring := abgroup_group R.
   #[export] Existing Instance isgroup_ring.
 
-  Global Instance negate_involutive : Involutive (-) := inverse_involutive.
+  #[export] Instance negate_involutive : Involutive (-) := inverse_involutive.
   (* alias for convenience *)
 
-  Global Instance plus_negate_r : RightInverse (+) (-) 0.
+  #[export] Instance plus_negate_r : RightInverse (+) (-) 0.
   Proof.
     rapply inverse_r.
   Defined.
 
-  Global Instance plus_negate_l : LeftInverse (+) (-) 0.
+  #[export] Instance plus_negate_l : LeftInverse (+) (-) 0.
   Proof.
     rapply inverse_l.
   Defined.
@@ -265,7 +265,7 @@ Section ring_props.
     apply commutativity.
   Defined.
 
-  Global Instance isinj_ring_neg : IsInjective (-)
+  #[export] Instance isinj_ring_neg : IsInjective (-)
     := groups.isinj_group_inverse.
 
   Lemma negate_plus_distr : forall x y, -(x + y) = -x + -y.
@@ -327,7 +327,7 @@ Section ring_props.
   Lemma negate_0: -0 = 0.
   Proof. exact groups.inverse_mon_unit. Qed.
 
-  Global Instance minus_0_r: RightIdentity (fun x y => x - y) 0.
+  #[export] Instance minus_0_r: RightIdentity (fun x y => x - y) 0.
   Proof.
   intro x; rewrite negate_0. apply right_identity.
   Qed.
@@ -391,7 +391,7 @@ Section ring_props.
 
   Context `{!NoZeroDivisors R} `{forall x y:R, Stable (x = y)}.
 
-  Global Instance mult_left_cancel:  forall z, PropHolds (z <> 0) ->
+  #[export] Instance mult_left_cancel:  forall z, PropHolds (z <> 0) ->
     LeftCancellation (.*.) z.
   Proof.
   intros z z_nonzero x y E.
@@ -412,7 +412,7 @@ Section ring_props.
   apply (no_zero_divisors x); split; eauto.
   Qed.
 
-  Global Instance mult_right_cancel : forall z, PropHolds (z <> 0) ->
+  #[export] Instance mult_right_cancel : forall z, PropHolds (z <> 0) ->
     RightCancellation (.*.) z.
   Proof.
     intros z ? x y p.
@@ -538,7 +538,7 @@ Section from_stdlib_ring_theory.
   Qed.
 End from_stdlib_ring_theory. *)
 
-Global Instance id_sr_morphism `{IsSemiCRing A}: IsSemiRingPreserving (@id A) := {}.
+Instance id_sr_morphism `{IsSemiCRing A}: IsSemiRingPreserving (@id A) := {}.
 
 Section morphism_composition.
   Context `{Mult A} `{Plus A} `{One A} `{Zero A}
