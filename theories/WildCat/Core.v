@@ -9,6 +9,7 @@ Class IsGraph (A : Type) :=
   Hom : A -> A -> Type
 }.
 
+(** This tells Coq to not perform typeclass search on a goal of the form `IsGraph A` when the head of `A` is an evar, avoiding what is often a search involving all possible graph structures on all types.  With this hint in place, we need to occasionally annotate our terms to explicitly give the underlying type. *) 
 Hint Mode IsGraph ! : typeclass_instances.
 
 Notation "a $-> b" := (Hom a b).
@@ -48,7 +49,7 @@ Global Instance reflexive_GpdHom {A} `{Is0Gpd A}
   := fun a => Id a.
 
 Global Instance reflexive_Hom {A} `{Is01Cat A}
-  : Reflexive Hom (A:=A)
+  : Reflexive (A:=A) Hom
   := fun a => Id a.
 
 Definition gpd_comp {A} `{Is0Gpd A} {a b c : A}
@@ -57,21 +58,21 @@ Definition gpd_comp {A} `{Is0Gpd A} {a b c : A}
 Infix "$@" := gpd_comp.
 
 Global Instance transitive_GpdHom {A} `{Is0Gpd A}
-  : Transitive GpdHom (A:=A)
+  : Transitive (A:=A) GpdHom
   := fun a b c f g => f $@ g.
 
 Global Instance transitive_Hom {A} `{Is01Cat A}
-  : Transitive Hom (A:=A)
+  : Transitive (A:=A) Hom
   := fun a b c f g => g $o f.
 
 Notation "p ^$" := (gpd_rev p).
 
 Global Instance symmetric_GpdHom {A} `{Is0Gpd A}
-  : Symmetric GpdHom (A:=A)
+  : Symmetric (A:=A) GpdHom
   := fun a b f => f^$.
 
 Global Instance symmetric_GpdHom' {A} `{Is0Gpd A}
-  : Symmetric Hom (A:=A)
+  : Symmetric (A:=A) Hom
   := fun a b f => f^$.
 
 Definition Hom_path {A : Type} `{Is01Cat A} {a b : A} (p : a = b) : (a $-> b).

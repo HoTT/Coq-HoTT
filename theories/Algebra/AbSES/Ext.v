@@ -119,7 +119,8 @@ Proof.
 Defined.
 
 Global Instance is0bifunctor_abext `{Univalence}
-  : Is0Bifunctor (A:=AbGroup^op) ab_ext := Build_Is0Bifunctor'' _.
+  : Is0Bifunctor (A:=AbGroup^op) ab_ext 
+  := Build_Is0Bifunctor'' _.
 
 Global Instance is1bifunctor_abext `{Univalence}
   : Is1Bifunctor (A:=AbGroup^op) ab_ext.

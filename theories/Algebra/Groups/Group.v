@@ -771,6 +771,7 @@ Defined.
 Global Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
 
+(** We add this coercion to make it easier to use a group isomorphism where Coq expects a category morphism. *)
 Definition isHom_GroupIsomorphism (G H : Group) : GroupIsomorphism G H -> Hom G H := idmap.
 Coercion isHom_GroupIsomorphism  : GroupIsomorphism >-> Hom.
 

@@ -121,7 +121,7 @@ Defined.
 
 #[export] Instance gpd_hom_is_proper1 {A : Type} `{Is0Gpd A}
  : CMorphisms.Proper
-     (Hom (A:=A)==> Hom ==> CRelationClasses.arrow) Hom.
+     (Hom (A:=A) ==> Hom ==> CRelationClasses.arrow) Hom.
 Proof.
   intros x y eq_xy a b eq_ab f.
   refine (transitivity _ eq_ab).
