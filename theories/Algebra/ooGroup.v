@@ -23,7 +23,7 @@ Record ooGroup :=
     isconn_classifying_space : IsConnected 0 classifying_space
   }.
 
-Global Existing Instance isconn_classifying_space.
+Existing Instance isconn_classifying_space.
 
 Local Notation B := classifying_space.
 
@@ -218,25 +218,25 @@ Section Subgroups.
   Definition in_coset : G -> G -> Type
     := fun g1 g2 => hfiber incl (g1 @ g2^).
 
-  Global Instance ishprop_in_coset : is_mere_relation G in_coset.
+  Instance ishprop_in_coset : is_mere_relation G in_coset.
   Proof.
     exact _.
   Defined.
 
-  Global Instance reflexive_coset : Reflexive in_coset.
+  Instance reflexive_coset : Reflexive in_coset.
   Proof.
     intros g.
     exact (1 ; grouphom_1 incl @ (concat_pV g)^).
   Defined.
 
-  Global Instance symmetric_coset : Symmetric in_coset.
+  Instance symmetric_coset : Symmetric in_coset.
   Proof.
     intros g1 g2 [h p].
     exists (h^).
     refine (grouphom_V incl h @ inverse2 p @ inv_pp _ _ @ whiskerR (inv_V _) _).
   Defined.
 
-  Global Instance transitive_coset : Transitive in_coset.
+  Instance transitive_coset : Transitive in_coset.
   Proof.
     intros g1 g2 g3 [h1 p1] [h2 p2].
     exists (h1 @ h2).
@@ -267,13 +267,13 @@ End Subgroups.
 
 (** The wild category of oo-groups is induced by the wild category of pTypes *)
 
-Global Instance isgraph_oogroup : IsGraph ooGroup
+Instance isgraph_oogroup : IsGraph ooGroup
   := Build_IsGraph _ ooGroupHom.
-Global Instance is01cat_oogroup : Is01Cat ooGroup
+Instance is01cat_oogroup : Is01Cat ooGroup
   := Build_Is01Cat _ _ grouphom_idmap (@grouphom_compose).
-Global Instance is2graph_oogroup : Is2Graph ooGroup
+Instance is2graph_oogroup : Is2Graph ooGroup
   := is2graph_induced classifying_space.
-Global Instance is1cat_oogroup : Is1Cat ooGroup
+Instance is1cat_oogroup : Is1Cat ooGroup
   := is1cat_induced classifying_space.
 
 (** ** 1-groups as oo-groups *)
@@ -281,14 +281,14 @@ Global Instance is1cat_oogroup : Is1Cat ooGroup
 Definition group_to_oogroup : Group -> ooGroup
   := fun G => Build_ooGroup (pClassifyingSpace G) _.
 
-Global Instance is0functor_group_to_oogroup : Is0Functor group_to_oogroup.
+Instance is0functor_group_to_oogroup : Is0Functor group_to_oogroup.
 Proof.
   snrapply Build_Is0Functor.
   intros G H f.
   by rapply (fmap pClassifyingSpace).
 Defined.
 
-Global Instance is1functor_group_to_oogroup : Is1Functor group_to_oogroup.
+Instance is1functor_group_to_oogroup : Is1Functor group_to_oogroup.
 Proof.
   snrapply Build_Is1Functor; hnf; intros.
   1: by rapply (fmap2 pClassifyingSpace).

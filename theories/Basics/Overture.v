@@ -95,8 +95,8 @@ Class PreOrder {A} (R : Relation A) :=
   { PreOrder_Reflexive : Reflexive R | 2 ;
     PreOrder_Transitive : Transitive R | 2 }.
 
-Global Existing Instance PreOrder_Reflexive.
-Global Existing Instance PreOrder_Transitive.
+Existing Instance PreOrder_Reflexive.
+Existing Instance PreOrder_Transitive.
 
 Arguments reflexivity {A R _} / _.
 Arguments symmetry {A R _} / _ _ _.
@@ -255,7 +255,7 @@ Register paths_rect as core.identity.ind.
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
 
-Global Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
+Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 Arguments reflexive_paths / .
 
 (** Our identity type is the Paulin-Mohring style.  We derive the Martin-Lof eliminator. *)
@@ -294,7 +294,7 @@ Register inverse as core.identity.sym.
 (** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
 
-Global Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
+Instance symmetric_paths {A} : Symmetric (@paths A) | 0 := @inverse A.
 Arguments symmetric_paths / .
 
 (** If we wanted to not have the constant [symmetric_paths] floating around, and wanted to resolve [inverse] directly, instead, we could play this trick, discovered by Georges Gonthier to fool Coq's restriction on [Identity Coercion]s:
@@ -326,7 +326,7 @@ Definition concat {A : Type} {x y z : A} (p : x = y) (q : y = z) : x = z :=
 (** See above for the meaning of [simpl nomatch]. *)
 Arguments concat {A x y z} p q : simpl nomatch.
 
-Global Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
+Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
 Arguments transitive_paths / .
 
 Register concat as core.identity.trans.
@@ -403,20 +403,20 @@ Definition pointwise_paths_concat {A} {P : A -> Type} {f g h : forall x, P x}
   : pointwise_paths A P f g -> pointwise_paths A P g h
     -> pointwise_paths A P f h := fun p q x => p x @ q x.
 
-Global Instance reflexive_pointwise_paths A P
+Instance reflexive_pointwise_paths A P
   : Reflexive (pointwise_paths A P).
 Proof.
   intros ? ?; reflexivity.
 Defined.
 
-Global Instance transitive_pointwise_paths A P
+Instance transitive_pointwise_paths A P
   : Transitive (pointwise_paths A P).
 Proof.
   intros f g h.
   apply pointwise_paths_concat.
 Defined.
 
-Global Instance symmetric_pointwise_paths A P
+Instance symmetric_pointwise_paths A P
   : Symmetric (pointwise_paths A P).
 Proof.
   intros ? ? p ?; symmetry; apply p.
@@ -493,7 +493,7 @@ Record Equiv A B := {
 
 Coercion equiv_fun : Equiv >-> Funclass.
 
-Global Existing Instance equiv_isequiv.
+Existing Instance equiv_isequiv.
 
 Arguments equiv_fun {A B} _ _.
 Arguments equiv_isequiv {A B} _.
@@ -522,7 +522,7 @@ Definition ap10_equiv {A B : Type} {f g : A <~> B} (h : f = g) : f == g
 Monomorphic Axiom Funext : Type0.
 Existing Class Funext.
 Axiom isequiv_apD10 : forall `{Funext} (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
-Global Existing Instance isequiv_apD10.
+Existing Instance isequiv_apD10.
 
 Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x)
   : f == g -> f = g
@@ -616,7 +616,7 @@ Definition equiv_istrunc_unfold (n : trunc_index) (A : Type)
   := Build_Equiv _ _ _  (isequiv_istrunc_unfold n A).
 
 (** A version of [istrunc_unfold] for successors. *)
-Global Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
+Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
   : IsTrunc n (x = y)
   := istrunc_unfold n.+1 A H x y.
 
@@ -732,7 +732,7 @@ Record pType :=
 
 Coercion pointed_type : pType >-> Sortclass.
 
-Global Existing Instance ispointed_type.
+Existing Instance ispointed_type.
 
 (** *** Homotopy fibers *)
 

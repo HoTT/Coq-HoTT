@@ -10,7 +10,7 @@ Record SetAlgebra {σ : Signature} : Type := BuildSetAlgebra
 
 Arguments SetAlgebra : clear implicits.
 
-Global Existing Instance is_hset_algebra_setalgebra.
+Existing Instance is_hset_algebra_setalgebra.
 
 Global Coercion algebra_setalgebra : SetAlgebra >-> Algebra.
 
@@ -41,7 +41,7 @@ Qed.
 (** The function [path_setalgebra A B] is an equivalence with inverse
     [ap algebra_setalgebra]. *)
 
-Global Instance isequiv_path_setalgebra `{Funext} {σ : Signature}
+Instance isequiv_path_setalgebra `{Funext} {σ : Signature}
   (A B : SetAlgebra σ)
   : IsEquiv (path_setalgebra A B).
 Proof.

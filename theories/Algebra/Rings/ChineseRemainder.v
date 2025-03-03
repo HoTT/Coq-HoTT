@@ -90,7 +90,7 @@ Section ChineseRemainderTheorem.
   End rng_homo_crt_beta.
 
   (** We can now show the map is surjective from coprimality of [I] and [J]. *)
-  Global Instance issurjection_rng_homo_crt
+  #[export] Instance issurjection_rng_homo_crt
     : Coprime I J -> IsSurjection rng_homo_crt.
   Proof.
     intros c.

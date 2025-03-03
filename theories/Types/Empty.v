@@ -14,7 +14,7 @@ Local Open Scope path_scope.
 (** ** Equivalences *)
 (** ** Universal mapping properties *)
 
-Global Instance contr_from_Empty@{u} {_ : Funext} (A : Empty -> Type@{u})
+Instance contr_from_Empty@{u} {_ : Funext} (A : Empty -> Type@{u})
   : Contr@{u} (forall x:Empty, A x).
 Proof.
   refine (Build_Contr@{u} _ (Empty_ind A) _).
@@ -24,7 +24,7 @@ Defined.
 Lemma Empty_rec {T : Type} (falso: Empty) : T.
 Proof. case falso. Defined.
 
-Global Instance isequiv_empty_rec@{u} `{Funext} (A : Type@{u})
+Instance isequiv_empty_rec@{u} `{Funext} (A : Type@{u})
   : IsEquiv@{Set u} (fun (_ : Unit) => @Empty_rec A) | 0
   := isequiv_adjointify@{Set u} _
   (fun _ => tt)
@@ -37,14 +37,14 @@ Definition equiv_empty_rec@{u} `{Funext} (A : Type@{u})
 
 (** ** Behavior with respect to truncation *)
 
-Global Instance istrunc_Empty@{} (n : trunc_index) : IsTrunc n.+1 Empty.
+Instance istrunc_Empty@{} (n : trunc_index) : IsTrunc n.+1 Empty.
 Proof.
   refine (@istrunc_leq (-1) n.+1 tt _ _).
   apply istrunc_S.
   intros [].
 Defined.
 
-Global Instance isequiv_all_to_empty (T : Type) (f : T -> Empty) : IsEquiv f.
+Instance isequiv_all_to_empty (T : Type) (f : T -> Empty) : IsEquiv f.
 Proof.
   refine (Build_IsEquiv _ _ _ 
     (Empty_ind (fun _ => T))                (* := equiv_inv *)

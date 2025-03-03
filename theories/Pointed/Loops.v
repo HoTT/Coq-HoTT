@@ -106,7 +106,7 @@ Defined.
 
 Lemma fmap_loops_pconst {A B : pType} : fmap loops (@pconst A B) ==* pconst.
 Proof.
-  rapply fmap_zero_morphism.
+  exact (fmap_zero_morphism loops).
 Defined.
 
 (** *** Iterated loops functor *)

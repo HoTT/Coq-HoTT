@@ -33,8 +33,8 @@ Record DProp :=
 At some point we may want to go that route, but it would be more work.  In particualar, [Instance]s of [Decidable] wouldn't be automatically computed for us, and the characterization of the homotopy type of [DProp] itself would be a lot harder. *)
 
 Coercion dprop_type : DProp >-> Sortclass.
-Global Existing Instance ishprop_dprop.
-Global Existing Instance dec_dprop.
+Existing Instance ishprop_dprop.
+Existing Instance dec_dprop.
 
 (** Sometimes, however, we have decidable props that are hprops without funext, and we want to remember that. *)
 
@@ -44,7 +44,7 @@ Record DHProp :=
   }.
 
 Coercion dhprop_hprop : DHProp >-> HProp.
-Global Existing Instance dec_dhprop.
+Existing Instance dec_dhprop.
 
 Definition dhprop_to_dprop : DHProp -> DProp
   := fun P => Build_DProp P (fun _ => _) _.

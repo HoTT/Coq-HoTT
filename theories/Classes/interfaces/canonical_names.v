@@ -86,27 +86,27 @@ Definition NonPos R `{Zero R} `{Le R} := sig (fun y => le y zero).
 
 (** *** Hints for converting between types of operations *)
 
-Global Instance plus_is_sg_op `{f : Plus A} : SgOp A := f.
+Instance plus_is_sg_op `{f : Plus A} : SgOp A := f.
 Definition sg_op_is_plus `{f : SgOp A} : Plus A := f.
 
-Global Instance mult_is_sg_op `{f : Mult A} : SgOp A := f.
+Instance mult_is_sg_op `{f : Mult A} : SgOp A := f.
 Definition sg_op_is_mult `{f : SgOp A} : Mult A := f.
 
-Global Instance zero_is_mon_unit `{c : Zero A} : MonUnit A := c.
+Instance zero_is_mon_unit `{c : Zero A} : MonUnit A := c.
 Definition mon_unit_is_zero `{c : MonUnit A} : Zero A := c.
 
-Global Instance one_is_mon_unit `{c : One A} : MonUnit A := c.
+Instance one_is_mon_unit `{c : One A} : MonUnit A := c.
 Definition mon_unit_is_one `{c : MonUnit A} : One A := c.
 
-Global Instance meet_is_sg_op `{f : Meet A} : SgOp A := f.
+Instance meet_is_sg_op `{f : Meet A} : SgOp A := f.
 
-Global Instance join_is_sg_op `{f : Join A} : SgOp A := f.
+Instance join_is_sg_op `{f : Join A} : SgOp A := f.
 
 Definition top_is_mon_unit `{s : Top A} : MonUnit A := s.
 
 Definition bottom_is_mon_unit `{s : Bottom A} : MonUnit A := s.
 
-Global Instance negate_is_inverse `{i : Negate A} : Inverse A := i.
+Instance negate_is_inverse `{i : Negate A} : Inverse A := i.
 Definition inverse_is_negate `{i : Inverse A} : Negate A := i.
 
 #[export]
@@ -271,7 +271,7 @@ Class BinaryIdempotent `(op: A -> A -> A) : Type
 Class LeftIdentity {A B} (op : A -> B -> B) (x : A): Type
   := left_identity: forall y, op x y = y.
 
-Global Instance istrunc_leftidentity `{Funext} {n A B} op x
+Instance istrunc_leftidentity `{Funext} {n A B} op x
    : IsTrunc n.+1 B -> IsTrunc n (@LeftIdentity A B op x).
 Proof.
   unfold LeftIdentity; exact _.
@@ -280,7 +280,7 @@ Defined.
 Class RightIdentity {A B} (op : A -> B -> A) (y : B): Type
   := right_identity: forall x, op x y = x.
 
-Global Instance istrunc_rightidentity `{Funext} {n A B} op y
+Instance istrunc_rightidentity `{Funext} {n A B} op y
   : IsTrunc n.+1 A -> IsTrunc n (@RightIdentity A B op y).
 Proof.
   unfold RightIdentity; exact _.
@@ -297,7 +297,7 @@ Class RightAbsorb {A B} (op : A -> B -> B) (y : B): Type
 Class LeftInverse {A} {B} {C} (op : A -> B -> C) (inv : B -> A) (unit : C)
   := left_inverse: forall x, op (inv x) x = unit.
 
-Global Instance istrunc_leftinverse `{Funext} {n A B C} op inv unit
+Instance istrunc_leftinverse `{Funext} {n A B C} op inv unit
   : IsTrunc n.+1 C -> IsTrunc n (@LeftInverse A B C op inv unit).
 Proof.
   unfold LeftInverse; exact _.
@@ -306,7 +306,7 @@ Defined.
 Class RightInverse {A} {B} {C} (op : A -> B -> C) (inv : A -> B) (unit : C)
   := right_inverse: forall x, op x (inv x) = unit.
 
-Global Instance istrunc_rightinverse `{Funext} {n A B C} op inv unit
+Instance istrunc_rightinverse `{Funext} {n A B C} op inv unit
   : IsTrunc n.+1 C -> IsTrunc n (@RightInverse A B C op inv unit).
 Proof.
   unfold RightInverse; exact _.
@@ -325,7 +325,7 @@ Class Associative {A} (f : A -> A -> A)
   := simple_associativity : HeteroAssociative f f f f.
 #[export] Existing Instances simple_associativity.
 
-Global Instance istrunc_associative `{Funext} A n f `{IsTrunc n.+1 A}
+Instance istrunc_associative `{Funext} A n f `{IsTrunc n.+1 A}
   : IsTrunc n (@Associative A f).
 Proof.
   unfold Associative, HeteroAssociative; exact _.
@@ -363,7 +363,7 @@ Class EquivRel `(R : Relation A) : Type := Build_EquivRel
 Definition SigEquivRel {A:Type} (R : Relation A) : Type :=
   {_ : Reflexive R | { _ : Symmetric R | Transitive R}}.
 
-Global Instance trunc_sig_equiv_rel `{Funext} {A : Type}
+Instance trunc_sig_equiv_rel `{Funext} {A : Type}
   (R : Relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
   :  IsTrunc n (SigEquivRel R).
 Proof.
@@ -378,7 +378,7 @@ Proof.
   issig.
 Defined.
 
-Global Instance istrunc_equiv_rel `{Funext} {A : Type}
+Instance istrunc_equiv_rel `{Funext} {A : Type}
   (R : Relation A) {n} `{!forall (x y : A), IsTrunc n (R x y)}
   : IsTrunc n (EquivRel R).
 Proof.
@@ -443,7 +443,7 @@ Class ZeroDivisor {R} `{Zero R} `{Mult R} (x : R) : Type
 Class NoZeroDivisors R `{Zero R} `{Mult R} : Type
   := no_zero_divisors x : ~ZeroDivisor x.
 
-Global Instance zero_product_no_zero_divisors `{ZeroProduct A}
+Instance zero_product_no_zero_divisors `{ZeroProduct A}
   : NoZeroDivisors A.
 Proof.
 intros x [? [? [? E]]].

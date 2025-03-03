@@ -150,7 +150,7 @@ Definition ab_biprod_functor_beta {Z X Y A B : AbGroup} (f0 : Z $-> X) (f1 : Z $
                       $== ab_biprod_corec (g0 $o f0) (g1 $o f1)
   := fun _ => idpath.
 
-Global Instance is0bifunctor_ab_biprod : Is0Bifunctor ab_biprod.
+Instance is0bifunctor_ab_biprod : Is0Bifunctor ab_biprod.
 Proof.
   srapply Build_Is0Bifunctor'.
   snrapply Build_Is0Functor.
@@ -158,7 +158,7 @@ Proof.
   exact (functor_ab_biprod f g).
 Defined.
 
-Global Instance is1bifunctor_ab_biprod : Is1Bifunctor ab_biprod.
+Instance is1bifunctor_ab_biprod : Is1Bifunctor ab_biprod.
 Proof.
   snrapply Build_Is1Bifunctor'.
   snrapply Build_Is1Functor.

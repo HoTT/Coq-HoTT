@@ -24,13 +24,13 @@ Monomorphic Axiom Univalence : Type0.
 Existing Class Univalence.
 
 (** Mark this axiom as a "global axiom", which some of our tactics will automatically handle. *)
-Global Instance is_global_axiom_univalence : IsGlobalAxiom Univalence := {}.
+Instance is_global_axiom_univalence : IsGlobalAxiom Univalence := {}.
 
 Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type@{u}), IsEquiv (equiv_path A B).
-Global Existing Instance isequiv_equiv_path.
+Existing Instance isequiv_equiv_path.
 
 (** A proof that univalence implies function extensionality can be found in the metatheory file [UnivalenceImpliesFunext], but that actual proof can't be used on our dummy typeclasses.  So we assert the following axiomatic instance.  *)
-Global Instance Univalence_implies_Funext `{Univalence} : Funext.
+Instance Univalence_implies_Funext `{Univalence} : Funext.
 Admitted.
 
 Section Univalence.
@@ -506,7 +506,7 @@ Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
 
 (** ** Based equivalence types *)
 
-Global Instance contr_basedequiv@{u +} {X : Type@{u}}
+#[export] Instance contr_basedequiv@{u +} {X : Type@{u}}
   : Contr {Y : Type@{u} & X <~> Y}.
 Proof.
   apply (Build_Contr _ (X; equiv_idmap)).
@@ -514,7 +514,7 @@ Proof.
   exact (equiv_induction _ idpath).
 Defined.
 
-Global Instance contr_basedequiv'@{u +} {X : Type@{u}}
+#[export] Instance contr_basedequiv'@{u +} {X : Type@{u}}
   : Contr {Y : Type@{u} & Y <~> X}.
 Proof.
   (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)
@@ -541,7 +541,7 @@ Defined.
 (** ** Truncations *)
 
 (** Truncatedness of the universe is a subtle question, but with univalence we can conclude things about truncations of certain of its path-spaces. *)
-Global Instance istrunc_paths_Type
+#[export] Instance istrunc_paths_Type
   {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
   : IsTrunc n.+1 (A = B).
 Proof.

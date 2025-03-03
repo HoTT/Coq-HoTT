@@ -43,7 +43,7 @@ Proof.
 Defined.
 
 (** [rng_int_mult R 1] preserves multiplication.  This requires that the specified ring element is the unit. *)
-Global Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
+Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
   : IsSemiGroupPreserving (A:=cring_Z) (Aop:=(.*.)) (Bop:=(.*.)) (rng_int_mult R 1).
 Proof.
   intros x y.
@@ -63,7 +63,7 @@ Proof.
 Defined.
 
 (** The integers are the initial commutative ring *)
-Global Instance isinitial_cring_Z : IsInitial cring_Z.
+Instance isinitial_cring_Z : IsInitial cring_Z.
 Proof.
   unfold IsInitial.
   intro R.

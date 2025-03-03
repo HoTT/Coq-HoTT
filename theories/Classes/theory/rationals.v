@@ -33,7 +33,7 @@ Context {Q : Type@{UQ} } {Qap : Apart@{UQ UQ} Q}
   {Qle_total : TotalRelation (@le Q _)}
   {Qabs : Abs Q}.
 
-Global Instance rational_1_neq_0 : PropHolds (@apart Q _ 1 0).
+#[export] Instance rational_1_neq_0 : PropHolds (@apart Q _ 1 0).
 Proof.
 red. apply trivial_apart. solve_propholds.
 Qed.
@@ -41,7 +41,7 @@ Qed.
 Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
 Notation "Q+" := Qpos.
 
-Global Instance Qpos_Q@{} : Cast Qpos Q := pos.
+#[export] Instance Qpos_Q@{} : Cast Qpos Q := pos.
 Arguments Qpos_Q /.
 
 Lemma Qpos_plus_pr@{} : forall a b : Qpos, 0 < 'a + 'b.
@@ -50,9 +50,9 @@ intros.
 apply semirings.pos_plus_compat;apply is_pos.
 Qed.
 
-Global Instance Qpos_plus@{} : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
+#[export] Instance Qpos_plus@{} : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
 
-Global Instance pos_is_pos@{} : forall q : Q+, PropHolds (0 < ' q)
+#[export] Instance pos_is_pos@{} : forall q : Q+, PropHolds (0 < ' q)
   := is_pos.
 
 Lemma pos_eq@{} : forall a b : Q+, @paths Q (' a) (' b) -> a = b.
@@ -62,7 +62,7 @@ change (a = b) in E.
 destruct E;apply ap;apply path_ishprop.
 Qed.
 
-Global Instance Qpos_isset : IsHSet Q+.
+#[export] Instance Qpos_isset : IsHSet Q+.
 Proof.
 apply (@HSet.ishset_hrel_subpaths _ (fun e d => ' e = ' d)).
 - intros e; reflexivity.
@@ -70,37 +70,37 @@ apply (@HSet.ishset_hrel_subpaths _ (fun e d => ' e = ' d)).
 - exact pos_eq.
 Qed.
 
-Global Instance Qpos_one@{} : One Q+.
+#[export] Instance Qpos_one@{} : One Q+.
 Proof.
 exists 1. apply lt_0_1.
 Defined.
 
-Global Instance Qpos_mult@{} : Mult Q+.
+#[export] Instance Qpos_mult@{} : Mult Q+.
 Proof.
 intros a b;exists (' a * ' b).
 solve_propholds.
 Defined.
 
-Global Instance qpos_plus_comm@{} : Commutative (@plus Q+ _).
+#[export] Instance qpos_plus_comm@{} : Commutative (@plus Q+ _).
 Proof.
 hnf. intros.
 apply pos_eq. change (' x + ' y = ' y + ' x).
 apply plus_comm.
 Qed.
 
-Global Instance qpos_mult_comm@{} : Commutative (@mult Q+ _).
+#[export] Instance qpos_mult_comm@{} : Commutative (@mult Q+ _).
 Proof.
 hnf;intros;apply pos_eq,mult_comm.
 Qed.
 
-Global Instance pos_recip@{} : DecRecip Q+.
+#[export] Instance pos_recip@{} : DecRecip Q+.
 Proof.
 intros e. exists (/ ' e).
 apply pos_dec_recip_compat.
 solve_propholds.
 Defined.
 
-Global Instance pos_of_nat@{} : Cast nat Q+.
+#[export] Instance pos_of_nat@{} : Cast nat Q+.
 Proof.
 intros n. destruct n as [|k].
 - exists 1;apply lt_0_1.
@@ -150,26 +150,26 @@ path_via (e * (3 / 3)).
   ring_tac.ring_with_nat.
 Qed.
 
-Global Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
+#[export] Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
 Proof.
 hnf.
 intros;apply pos_eq.
 apply mult_assoc.
 Qed.
 
-Global Instance Qpos_plus_assoc@{} : Associative (@plus Q+ _).
+#[export] Instance Qpos_plus_assoc@{} : Associative (@plus Q+ _).
 Proof.
 hnf.
 intros;apply pos_eq.
 apply plus_assoc.
 Qed.
 
-Global Instance Qpos_mult_1_l@{} : LeftIdentity (@mult Q+ _) 1.
+#[export] Instance Qpos_mult_1_l@{} : LeftIdentity (@mult Q+ _) 1.
 Proof.
 hnf;intros;apply pos_eq;apply mult_1_l.
 Qed.
 
-Global Instance Qpos_mult_1_r@{} : RightIdentity (@mult Q+ _) 1.
+#[export] Instance Qpos_mult_1_r@{} : RightIdentity (@mult Q+ _) 1.
 Proof.
 hnf;intros;apply pos_eq;apply mult_1_r.
 Qed.
@@ -199,7 +199,7 @@ Proof.
 hnf. intros;apply pos_eq,plus_mult_distr_l.
 Qed.
 
-Global Instance Qpos_meet@{} : Meet Q+.
+#[export] Instance Qpos_meet@{} : Meet Q+.
 Proof.
 intros a b. exists (meet (' a) (' b)).
 apply not_le_lt_flip. intros E.
@@ -208,7 +208,7 @@ rewrite E1 in E;(eapply le_iff_not_lt_flip;[exact E|]);
 solve_propholds.
 Defined.
 
-Global Instance Qpos_join@{} : Join Q+.
+#[export] Instance Qpos_join@{} : Join Q+.
 Proof.
 intros a b. exists (join (' a) (' b)).
 apply not_le_lt_flip. intros E.
@@ -563,7 +563,7 @@ Proof.
 intros x. exists (join x (' e)). apply join_ub_r.
 Defined.
 
-Global Instance QLe_dec : forall q r : Q, Decidable (q <= r).
+#[export] Instance QLe_dec : forall q r : Q, Decidable (q <= r).
 Proof.
 intros q r;destruct (le_or_lt q r).
 - left;trivial.
@@ -571,7 +571,7 @@ intros q r;destruct (le_or_lt q r).
   apply le_lt_trans with r;trivial.
 Qed.
 
-Global Instance QLt_dec : forall q r : Q, Decidable (q < r).
+#[export] Instance QLt_dec : forall q r : Q, Decidable (q < r).
 Proof.
 intros q r;destruct (le_or_lt r q).
 - right;intros ?. apply (irreflexivity lt q).
@@ -603,7 +603,7 @@ unfold Qpos_enumerator. destruct (le_or_lt (enumerator Q n) 0) as [E1|E1].
 - apply pos_eq,E.
 Qed.
 
-Global Instance Qpos_enumerable : Enumerable Q+.
+#[export] Instance Qpos_enumerable : Enumerable Q+.
 Proof.
   exists Qpos_enumerator.
   first [exact Qpos_is_enumerator@{Uhuge Ularge}|

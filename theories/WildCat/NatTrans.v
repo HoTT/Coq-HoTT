@@ -82,7 +82,7 @@ Proof.
 Defined.
 
 (** The identity transformation is 1-natural. *)
-Global Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
+Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
   (F : A -> B) `{!Is0Functor F}
   : Is1Natural F F (trans_id F).
 Proof.
@@ -92,7 +92,7 @@ Proof.
 Defined.
 
 (** The composite of 1-natural transformations is 1-natural. *)
-Global Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
+Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
   {F G K : A -> B} `{!Is0Functor F} `{!Is0Functor G} `{!Is0Functor K}
   (gamma : G $=> K) `{!Is1Natural G K gamma}
   (alpha : F $=> G) `{!Is1Natural F G alpha}
@@ -106,7 +106,7 @@ Proof.
 Defined.
 
 (** Prewhiskering a transformation preserves naturality. *)
-Global Instance is1natural_prewhisker {A B C : Type} {F G : B -> C} (K : A -> B)
+Instance is1natural_prewhisker {A B C : Type} {F G : B -> C} (K : A -> B)
   `{IsGraph A, Is01Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G, !Is0Functor K}
   (gamma : F $=> G) `{L : !Is1Natural F G gamma}
   : Is1Natural (F o K) (G o K) (trans_prewhisker gamma K).
@@ -117,7 +117,7 @@ Proof.
 Defined.
 
 (** Postwhiskering a transformation preserves naturality. *)
-Global Instance is1natural_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C)
+Instance is1natural_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C)
   `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G,
     !Is0Functor K, !Is1Functor K}
   (gamma : F $=> G) `{L : !Is1Natural F G gamma}
@@ -144,7 +144,7 @@ Proof.
 Defined.
 
 (** The opposite of a natural transformation is natural. *)
-Global Instance is1natural_op A B `{Is01Cat A} `{Is1Cat B}
+Instance is1natural_op A B `{Is01Cat A} `{Is1Cat B}
   (F : A -> B) `{!Is0Functor F} (G : A -> B) `{!Is0Functor G}
   (alpha : F $=> G) `{!Is1Natural F G alpha}
   : Is1Natural (G : A^op -> B^op) (F : A^op -> B^op) (trans_op F G alpha).
@@ -174,7 +174,7 @@ Arguments NatTrans {A B} {isgraph_A}
 Arguments Build_NatTrans {A B isgraph_A isgraph_B is2graph_B is01cat_B is1cat_B
   F G is0functor_F is0functor_G} alpha isnat_alpha : rename.
 
-Global Existing Instance is1natural_nattrans.
+Existing Instance is1natural_nattrans.
 
 Definition issig_NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
   {ff : Is0Functor F} {fg : Is0Functor G}

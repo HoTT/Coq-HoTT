@@ -163,7 +163,7 @@ Definition transport_pr1_path_sigma
 
 (** This lets us identify the path space of a sigma-type, up to equivalence. *)
 
-Global Instance isequiv_path_sigma `{P : A -> Type} {u v : sig P}
+Instance isequiv_path_sigma `{P : A -> Type} {u v : sig P}
   : IsEquiv (path_sigma_uncurried P u v) | 0.
 Proof.
   simple refine (Build_IsEquiv
@@ -182,7 +182,7 @@ Definition equiv_path_sigma `(P : A -> Type) (u v : sig P)
   := Build_Equiv _ _ (path_sigma_uncurried P u v) _.
 
 (* A contravariant version of [isequiv_path_sigma'] *)
-Global Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sig P}
+Instance isequiv_path_sigma_contra `{P : A -> Type} {u v : sig P}
   : IsEquiv (path_sigma_uncurried_contra P u v) | 0.
 Proof.
   apply (isequiv_adjointify (path_sigma_uncurried_contra P u v)
@@ -393,7 +393,7 @@ Defined.
 (** ** Equivalences *)
 
 (** The converse to [isequiv_functor_sigma] when [f] is [idmap] is [isequiv_from_functor_sigma] in Types/Equiv.v, which also contains Theorem 4.7.7 *)
-Global Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
+Instance isequiv_functor_sigma `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv A B f} `{forall a, @IsEquiv (P a) (Q (f a)) (g a)}
   : IsEquiv (functor_sigma f g) | 1000.
 Proof.
@@ -437,7 +437,7 @@ Definition equiv_functor_sigma_pb {A B : Type} {Q : B -> Type}
   := equiv_functor_sigma f (fun a => 1%equiv).
 
 (** Lemma 3.11.9(i): Summing up a contractible family of types does nothing. *)
-Global Instance isequiv_pr1_contr {A} {P : A -> Type}
+Instance isequiv_pr1_contr {A} {P : A -> Type}
   `{forall a, Contr (P a)}
   : IsEquiv (@pr1 A P) | 100.
 Proof.
@@ -531,7 +531,7 @@ Defined.
 (** ** Universal mapping properties *)
 
 (** *** The positive universal property. *)
-Global Instance isequiv_sig_ind `{P : A -> Type} (Q : sig P -> Type)
+Instance isequiv_sig_ind `{P : A -> Type} (Q : sig P -> Type)
   : IsEquiv (sig_ind Q) | 0
   := Build_IsEquiv
        _ _
@@ -564,7 +564,7 @@ Definition sig_coind
   : (forall x, sig (P x))
   := sig_coind_uncurried P (f;g).
 
-Global Instance isequiv_sig_coind
+Instance isequiv_sig_coind
   `{A : X -> Type} {P : forall x, A x -> Type}
   : IsEquiv (sig_coind_uncurried P) | 0
   := Build_IsEquiv
@@ -585,7 +585,7 @@ Definition equiv_sig_coind
 
 (** ** Sigmas preserve truncation *)
 
-Global Instance istrunc_sigma `{P : A -> Type}
+Instance istrunc_sigma `{P : A -> Type}
   `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (sig P) | 100.
 Proof.
@@ -618,7 +618,7 @@ Definition path_sigma_hprop {A : Type} {P : A -> Type}
   : u.1 = v.1 -> u = v
   := path_sigma_uncurried P u v o pr1^-1.
 
-Global Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sig P}
+Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sig P}
   : IsEquiv (@path_sigma_hprop A P _ u v) | 100
   := isequiv_compose.
 
@@ -719,7 +719,7 @@ Proof.
   apply equiv_moveL_transport_V.
 Defined.
 
-Global Instance istruncmap_functor_sigma n {A B P Q}
+Instance istruncmap_functor_sigma n {A B P Q}
   (f : A -> B) (g : forall a, P a -> Q (f a))
   {Hf : IsTruncMap n f} {Hg : forall a, IsTruncMap n (g a)}
   : IsTruncMap n (functor_sigma f g).

@@ -28,7 +28,7 @@ Arguments mss_mult {R _ _ _ _}.
 (** *** Examples *)
 
 (** The multiplicative subset of powers of a ring element. *)
-Global Instance ismultiplicative_powers (R : CRing) (x : R)
+Instance ismultiplicative_powers (R : CRing) (x : R)
   : IsMultiplicativeSubset (fun r => exists n, rng_power x n = r).
 Proof.
   srapply Build_IsMultiplicativeSubset; cbn beta.
@@ -41,7 +41,7 @@ Proof.
 Defined.
 
 (** Invertible elements of a ring form a multiplicative subset. *)
-Global Instance ismultiplicative_isinvertible (R : CRing)
+Instance ismultiplicative_isinvertible (R : CRing)
   : IsMultiplicativeSubset (@IsInvertible R) := {}.
 
 (** TODO: Property of being a localization. *)
@@ -475,7 +475,7 @@ Section Localization.
   End Rec.
   
   (** Elements belonging to the multiplicative subset [S] of [R] become invertible in [rng_localization R S]. *)
-  Global Instance isinvertible_rng_localization (x : R) (Sx : S x)
+  #[export] Instance isinvertible_rng_localization (x : R) (Sx : S x)
     : IsInvertible rng_localization (loc_in x).
   Proof.
     snrapply isinvertible_cring.
@@ -485,7 +485,7 @@ Section Localization.
   Defined.
   
   (** As a special case, any denominator of a fraction must necessarily be invertible. *)
-  Global Instance isinvertible_denominator (f : Fraction)
+  #[export] Instance isinvertible_denominator (f : Fraction)
     : IsInvertible rng_localization (loc_in (denominator f)).
   Proof.
     snrapply isinvertible_rng_localization.

@@ -39,7 +39,7 @@ Class DHasEquivs {A : Type} `{HasEquivs A}
 
 (** Being an equivalence is a typeclass. *)
 Existing Class DCatIsEquiv.
-Global Existing Instance dcate_isequiv.
+Existing Instance dcate_isequiv.
 
 Coercion dcate_fun : DCatEquiv >-> DHom.
 
@@ -136,7 +136,7 @@ Proof.
 Defined.
 
 (** If the base category has equivalences and the displayed category has displayed equivalences, then the total category has equivalences. *)
-Global Instance hasequivs_total {A} (D : A -> Type) `{DHasEquivs A D}
+Instance hasequivs_total {A} (D : A -> Type) `{DHasEquivs A D}
   : HasEquivs (sig D).
 Proof.
   snrapply Build_HasEquivs.
@@ -157,7 +157,7 @@ Proof.
 Defined.
 
 (** The identity morphism is an equivalence *)
-Global Instance dcatie_id {A} {D : A -> Type} `{DHasEquivs A D}
+Instance dcatie_id {A} {D : A -> Type} `{DHasEquivs A D}
   {a : A} (a' : D a)
   : DCatIsEquiv (DId a')
   := dcatie_adjointify (DId a') (DId a') (dcat_idl (DId a')) (dcat_idr (DId a')).
@@ -167,7 +167,7 @@ Definition did_cate {A} {D : A -> Type} `{DHasEquivs A D}
   : DCatEquiv (id_cate a) a' a'
   := Build_DCatEquiv (DId a').
 
-Global Instance reflexive_dcate {A} {D : A -> Type} `{DHasEquivs A D} {a : A}
+Instance reflexive_dcate {A} {D : A -> Type} `{DHasEquivs A D} {a : A}
   : Reflexive (DCatEquiv (id_cate a))
   := did_cate.
 
@@ -193,7 +193,7 @@ Proof.
 Defined.
 
 (** Equivalences can be composed. *)
-Global Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
+Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $<~> c} {f : a $<~> b} {a' : D a} {b' : D b} {c' : D c}
   (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
   : DCatIsEquiv (dcate_fun g' $o' f').
@@ -212,7 +212,7 @@ Proof.
     apply dcate_issect.
 Defined.
 
-Global Instance dcompose_catie' {A} {D : A -> Type} `{DHasEquivs A D}
+Instance dcompose_catie' {A} {D : A -> Type} `{DHasEquivs A D}
   {a b c : A} {g : b $-> c} `{!CatIsEquiv g} {f : a $-> b} `{!CatIsEquiv f}
   {a' : D a} {b' : D b} {c' : D c}
   (g' : DHom g b' c') `{ge' : !DCatIsEquiv g'}
@@ -436,7 +436,7 @@ Proof.
 Defined.
 
 (** Any sufficiently coherent displayed functor preserves displayed equivalences. *)
-Global Instance diemap {A B : Type}
+Instance diemap {A B : Type}
   {DA : A -> Type} `{DHasEquivs A DA} {DB : B -> Type} `{DHasEquivs B DB}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
   (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
@@ -532,7 +532,7 @@ Class IsDUnivalent1Cat {A} (D : A -> Type) `{DHasEquivs A D} :=
   isequiv_dcat_equiv_path : forall {a b : A} (p : a = b) a' b',
     IsEquiv (dcat_equiv_path p a' b')
 }.
-Global Existing Instance isequiv_dcat_equiv_path.
+Existing Instance isequiv_dcat_equiv_path.
 
 Definition dcat_path_equiv {A} {D : A -> Type} `{IsDUnivalent1Cat A D}
   {a b : A} (p : a = b) (a' : D a) (b' : D b)
@@ -546,7 +546,7 @@ Definition dcat_equiv_path_total {A} {D : A -> Type} `{DHasEquivs A D}
   := functor_sigma (cat_equiv_path a b) (fun p => dcat_equiv_path p a' b').
 
 (** If the base category and the displayed category are both univalent, then the total category is univalent. *)
-Global Instance isunivalent1cat_total {A} `{IsUnivalent1Cat A} (D : A -> Type)
+Instance isunivalent1cat_total {A} `{IsUnivalent1Cat A} (D : A -> Type)
   `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D, !IsD1Cat D, !DHasEquivs D}
   `{!IsDUnivalent1Cat D}
   : IsUnivalent1Cat (sig D).

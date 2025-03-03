@@ -40,9 +40,9 @@ Arguments ring_isring {R} : rename.
 
 Definition issig_Ring : _ <~> Ring := ltac:(issig).
 
-Global Instance ring_plus {R : Ring} : Plus R := plus_abgroup (ring_abgroup R).
-Global Instance ring_zero {R : Ring} : Zero R := zero_abgroup (ring_abgroup R).
-Global Instance ring_negate {R : Ring} : Negate R := negate_abgroup (ring_abgroup R).
+Instance ring_plus {R : Ring} : Plus R := plus_abgroup (ring_abgroup R).
+Instance ring_zero {R : Ring} : Zero R := zero_abgroup (ring_abgroup R).
+Instance ring_negate {R : Ring} : Negate R := negate_abgroup (ring_abgroup R).
 
 (** A ring homomorphism between rings is a map of the underlying type and a proof that this map is a ring homomorphism. *)
 Record RingHomomorphism (A B : Ring) := {
@@ -149,7 +149,7 @@ Record RingIsomorphism (A B : Ring) := {
 
 Arguments rng_iso_homo {_ _ }.
 Coercion rng_iso_homo : RingIsomorphism >-> RingHomomorphism.
-Global Existing Instance isequiv_rng_iso_homo.
+Existing Instance isequiv_rng_iso_homo.
 
 Definition issig_RingIsomorphism {A B : Ring}
   : _ <~> RingIsomorphism A B := ltac:(issig).
@@ -173,15 +173,15 @@ Proof.
 Defined.
 
 (** Ring isomorphisms are a reflexive relation *)
-Global Instance reflexive_ringisomorphism : Reflexive RingIsomorphism
+Instance reflexive_ringisomorphism : Reflexive RingIsomorphism
   := fun x => Build_RingIsomorphism _ _ (rng_homo_id x) _.
 
 (** Ring isomorphisms are a symmetric relation *)
-Global Instance symmetry_ringisomorphism : Symmetric RingIsomorphism
+Instance symmetry_ringisomorphism : Symmetric RingIsomorphism
   := fun x y => rng_iso_inverse.
 
 (** Ring isomorphisms are a transitive relation *)
-Global Instance transitive_ringisomorphism : Transitive RingIsomorphism
+Instance transitive_ringisomorphism : Transitive RingIsomorphism
   := fun x y z f g => Build_RingIsomorphism _ _ (rng_homo_compose g f) _.
 
 (** Underlying group homomorphism of a ring homomorphism *)
@@ -257,29 +257,29 @@ End RingMovement.
 
 (** ** Wild category of rings *)
 
-Global Instance isgraph_ring : IsGraph Ring
+Instance isgraph_ring : IsGraph Ring
   := Build_IsGraph _ RingHomomorphism.
 
-Global Instance is01cat_ring : Is01Cat Ring
+Instance is01cat_ring : Is01Cat Ring
   := Build_Is01Cat _ _ rng_homo_id (@rng_homo_compose).
 
-Global Instance is2graph_ring : Is2Graph Ring
+Instance is2graph_ring : Is2Graph Ring
   := fun A B => isgraph_induced (@rng_homo_map A B : _ -> (group_type _ $-> _)).
 
-Global Instance is01cat_ringhomomorphism {A B : Ring} : Is01Cat (A $-> B)
+Instance is01cat_ringhomomorphism {A B : Ring} : Is01Cat (A $-> B)
   := is01cat_induced (@rng_homo_map A B).
 
-Global Instance is0gpd_ringhomomorphism {A B : Ring} : Is0Gpd (A $-> B)
+Instance is0gpd_ringhomomorphism {A B : Ring} : Is0Gpd (A $-> B)
   := is0gpd_induced (@rng_homo_map A B).
 
-Global Instance is0functor_postcomp_ringhomomorphism {A B C : Ring} (h : B $-> C)
+Instance is0functor_postcomp_ringhomomorphism {A B C : Ring} (h : B $-> C)
   : Is0Functor (@cat_postcomp Ring _ _ A B C h).
 Proof.
   apply Build_Is0Functor.
   intros [f ?] [g ?] p a ; exact (ap h (p a)).
 Defined.
 
-Global Instance is0functor_precomp_ringhomomorphism
+Instance is0functor_precomp_ringhomomorphism
        {A B C : Ring} (h : A $-> B)
   : Is0Functor (@cat_precomp Ring _ _ A B C h).
 Proof.
@@ -288,12 +288,12 @@ Proof.
 Defined.
 
 (** Ring forms a 1-category. *)
-Global Instance is1cat_ring : Is1Cat Ring.
+Instance is1cat_ring : Is1Cat Ring.
 Proof.
   by rapply Build_Is1Cat.
 Defined.
 
-Global Instance hasmorext_ring `{Funext} : HasMorExt Ring.
+Instance hasmorext_ring `{Funext} : HasMorExt Ring.
 Proof.
   srapply Build_HasMorExt.
   intros A B f g; cbn in *.
@@ -303,7 +303,7 @@ Proof.
   intros []; reflexivity. 
 Defined.
 
-Global Instance hasequivs_ring : HasEquivs Ring.
+Instance hasequivs_ring : HasEquivs Ring.
 Proof.
   unshelve econstructor.
   + exact RingIsomorphism.
@@ -333,7 +333,7 @@ Definition issig_IsSubring {R : Ring} (S : R -> Type)
   : _ <~> IsSubring S
   := ltac:(issig).
 
-Global Instance ishprop_issubring `{Funext} {R : Ring} (S : R -> Type)
+Instance ishprop_issubring `{Funext} {R : Ring} (S : R -> Type)
   : IsHProp (IsSubring S).
 Proof.
   exact (istrunc_equiv_istrunc _ (issig_IsSubring S)).
@@ -464,7 +464,7 @@ Proof.
   1,2: by apply path_hom.
 Defined.
 
-Global Instance hasbinaryproducts_ring : HasBinaryProducts Ring.
+Instance hasbinaryproducts_ring : HasBinaryProducts Ring.
 Proof.
   intros R S.
   snrapply Build_BinaryProduct.
@@ -540,7 +540,7 @@ Proof.
 Defined.
 
 (** The opposite ring is a functor. *)
-Global Instance is0functor_rng_op : Is0Functor rng_op.
+Instance is0functor_rng_op : Is0Functor rng_op.
 Proof.
   snrapply Build_Is0Functor.
   intros R S f.
@@ -551,7 +551,7 @@ Proof.
     + exact (rng_homo_one f).
 Defined.
 
-Global Instance is1functor_rng_op : Is1Functor rng_op.
+Instance is1functor_rng_op : Is1Functor rng_op.
 Proof.
   snrapply Build_Is1Functor.
   - intros R S f g p.
@@ -714,7 +714,7 @@ Proof.
 Defined.
 
 (** Being invertible is a proposition. *)
-Global Instance ishprop_isinvertible {R x} : IsHProp (IsInvertible R x).
+Instance ishprop_isinvertible {R x} : IsHProp (IsInvertible R x).
 Proof.
   nrapply (istrunc_equiv_istrunc _ (equiv_isinvertible_left_right_inverse x)).
   snrapply hprop_allpath; intros [y [p1 p2]] [z [q1 q2]].
@@ -725,7 +725,7 @@ Defined.
 (** *** Closure of invertible elements under multiplication *)
 
 (** Left invertible elements are closed under multiplication. *)
-Global Instance isleftinvertible_mult {R : Ring} (x y : R)
+Instance isleftinvertible_mult {R : Ring} (x y : R)
   : IsLeftInvertible R x -> IsLeftInvertible R y -> IsLeftInvertible R (x * y).
 Proof.
   intros [x' p] [y' q].
@@ -739,7 +739,7 @@ Proof.
 Defined.
 
 (** Right invertible elements are closed under multiplication. *)
-Global Instance isrightinvertible_mult {R : Ring} (x y : R)
+Instance isrightinvertible_mult {R : Ring} (x y : R)
   : IsRightInvertible R x -> IsRightInvertible R y -> IsRightInvertible R (x * y).
 Proof.
   change (x * y) with (ring_mult (R:=rng_op R) y x).
@@ -748,12 +748,12 @@ Proof.
 Defined.
 
 (** Invertible elements are closed under multiplication. *)
-Global Instance isinvertible_mult {R : Ring} (x y : R)
+Instance isinvertible_mult {R : Ring} (x y : R)
   : IsInvertible R x -> IsInvertible R y -> IsInvertible R (x * y)
   := {}.
 
 (** Left invertible elements are closed under negation. *)
-Global Instance isleftinvertible_neg {R : Ring} (x : R)
+Instance isleftinvertible_neg {R : Ring} (x : R)
   : IsLeftInvertible R x -> IsLeftInvertible R (-x).
 Proof.
   intros H.
@@ -763,7 +763,7 @@ Proof.
 Defined.
 
 (** Right invertible elements are closed under negation. *)
-Global Instance isrightinvertible_neg {R : Ring} (x : R)
+Instance isrightinvertible_neg {R : Ring} (x : R)
   : IsRightInvertible R x -> IsRightInvertible R (-x).
 Proof.
   intros H.
@@ -771,12 +771,12 @@ Proof.
 Defined.
 
 (** Invertible elements are closed under negation. *)
-Global Instance isinvertible_neg {R : Ring} (x : R)
+Instance isinvertible_neg {R : Ring} (x : R)
   : IsInvertible R x -> IsInvertible R (-x)
   := {}.
 
 (** Inverses of left invertible elements are themselves right invertible. *)
-Global Instance isrightinvertible_left_inverse_elem {R : Ring} (x : R)
+Instance isrightinvertible_left_inverse_elem {R : Ring} (x : R)
   `{IsLeftInvertible R x}
   : IsRightInvertible R (left_inverse_elem x).
 Proof.
@@ -785,7 +785,7 @@ Proof.
 Defined.
 
 (** Inverses of right invertible elements are themselves left invertible. *)
-Global Instance isleftinvertible_right_inverse_elem {R : Ring} (x : R)
+Instance isleftinvertible_right_inverse_elem {R : Ring} (x : R)
   `{IsRightInvertible R x}
   : IsLeftInvertible R (right_inverse_elem x).
 Proof.
@@ -794,7 +794,7 @@ Proof.
 Defined.
 
 (** Inverses of invertible elements are themselves invertible.  We take both inverses of [inverse_elem x] to be [x]. *)
-Global Instance isinvertible_inverse_elem {R : Ring} (x : R)
+Instance isinvertible_inverse_elem {R : Ring} (x : R)
   `{IsInvertible R x}
   : IsInvertible R (inverse_elem x).
 Proof.
@@ -814,7 +814,7 @@ Proof.
 Defined.
 
 (** [1] is always invertible, and by the above [-1]. *)
-Global Instance isinvertible_one {R} : IsInvertible R 1.
+Instance isinvertible_one {R} : IsInvertible R 1.
 Proof.
   snrapply Build_IsInvertible.
   - exact one.
@@ -823,7 +823,7 @@ Proof.
 Defined.
 
 (** Ring homomorphisms preserve invertible elements. *)
-Global Instance isinvertible_rng_homo {R S} (f : R $-> S)
+Instance isinvertible_rng_homo {R S} (f : R $-> S)
   : forall x, IsInvertible R x -> IsInvertible S (f x).
 Proof.
   intros x H.
@@ -864,7 +864,7 @@ Defined.
 
 (** *** Multiplication by an invertible element is an equivalence *)
 
-Global Instance isequiv_rng_inv_mult_l {R : Ring} {x : R}
+Instance isequiv_rng_inv_mult_l {R : Ring} {x : R}
   `{IsInvertible R x}
   : IsEquiv (x *.).
 Proof.
@@ -879,7 +879,7 @@ Proof.
 Defined.
 
 (** This can be proved by combining [isequiv_rng_inv_mult_l (R:=rng_op R)] with [isinvertible_rng_op], but then the inverse map is given by multiplying by [right_inverse_elem x] not [inverse_elem x], which complicates calculations. *)
-Global Instance isequiv_rng_inv_mult_r {R : Ring} {x : R}
+Instance isequiv_rng_inv_mult_r {R : Ring} {x : R}
   `{IsInvertible R x}
   : IsEquiv (.* x).
 Proof.

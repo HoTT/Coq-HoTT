@@ -133,7 +133,7 @@ Infix "<~>*" := pEquiv : pointed_scope.
 
 (** Note: because we define pMap as a special case of pForall, we must declare all coercions into pForall, *not* into pMap. *)
 Coercion pointed_equiv_fun : pEquiv >-> pForall.
-Global Existing Instance pointed_isequiv.
+Existing Instance pointed_isequiv.
 
 Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
   : A <~> B := Build_Equiv A B f _.

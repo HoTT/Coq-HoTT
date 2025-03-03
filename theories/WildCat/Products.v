@@ -189,7 +189,7 @@ Class HasAllProducts (A : Type) `{Is1Cat A}
 
 (** *** Product functor *)
 
-Global Instance is0functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
+Instance is0functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
   : Is0Functor (fun x : I -> A => cat_prod I x).
 Proof.
   nrapply Build_Is0Functor.
@@ -197,7 +197,7 @@ Proof.
   exact (cat_prod_corec I (fun i => f i $o cat_pr i)).
 Defined.
 
-Global Instance is1functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
+Instance is1functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
   : Is1Functor (fun x : I -> A => cat_prod I x).
 Proof.
   nrapply Build_Is1Functor.
@@ -237,7 +237,7 @@ Class BinaryProduct {A : Type} `{Is1Cat A} (x y : A)
 Class HasBinaryProducts (A : Type) `{Is1Cat A}
   := has_binary_products :: forall x y : A, BinaryProduct x y.
 
-Global Instance hasbinaryproducts_hasproductsbool {A : Type} `{HasProducts Bool A}
+Instance hasbinaryproducts_hasproductsbool {A : Type} `{HasProducts Bool A}
   : HasBinaryProducts A
   := fun x y => has_products (fun b : Bool => if b then x else y).
 
@@ -462,7 +462,7 @@ Proof.
 Defined.
 
 (** As a special case of the product functor, restriction along [Bool_rec A] yields bifunctoriality of [cat_binprod]. *)
-Global Instance is0bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
+Instance is0bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : Is0Bifunctor (fun x y => cat_binprod x y).
 Proof.
   pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).
@@ -470,7 +470,7 @@ Proof.
           (Bool_rec A) (fun x => cat_prod Bool x (product:=p x))).
 Defined.
 
-Global Instance is1bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
+Instance is1bifunctor_cat_binprod {A : Type} `{HasBinaryProducts A}
   : Is1Bifunctor (fun x y => cat_binprod x y).
 Proof.
   pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).
@@ -479,28 +479,28 @@ Proof.
 Defined.
 
 (** Binary products are functorial in each argument. *)
-Global Instance is0functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
+Instance is0functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is0Functor (fun x => cat_binprod x y).
 Proof.
   exact (is0functor10_bifunctor (fun x y => cat_binprod x y) y).
 Defined.
 
-Global Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
+Instance is1functor_cat_binprod_l {A : Type} `{HasBinaryProducts A}
   (y : A)
   : Is1Functor (fun x => cat_binprod x y).
 Proof.
   exact (is1functor10_bifunctor _ y).
 Defined.
 
-Global Instance is0functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
+Instance is0functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is0Functor (fun y => cat_binprod x y).
 Proof.
   exact (is0functor01_bifunctor (fun x y => cat_binprod x y) x).
 Defined.
 
-Global Instance is1functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
+Instance is1functor_cat_binprod_r {A : Type} `{HasBinaryProducts A}
   (x : A)
   : Is1Functor (fun y => cat_binprod x y).
 Proof.
@@ -509,7 +509,7 @@ Defined.
 
 (** [cat_binprod_corec] is also functorial in each morphsism. *)
 
-Global Instance is0functor_cat_binprod_corec_l {A : Type}
+Instance is0functor_cat_binprod_corec_l {A : Type}
   `{HasBinaryProducts A} {x y z : A} (g : z $-> y)
   : Is0Functor (fun f : z $-> y => cat_binprod_corec f g).
 Proof.
@@ -518,7 +518,7 @@ Proof.
   by nrapply cat_binprod_corec_eta.
 Defined.
 
-Global Instance is0functor_cat_binprod_corec_r {A : Type}
+Instance is0functor_cat_binprod_corec_r {A : Type}
   `{HasBinaryProducts A} {x y z : A} (f : z $-> x)
   : Is0Functor (fun g : z $-> x => cat_binprod_corec f g).
 Proof.
@@ -987,11 +987,11 @@ Section Associativity.
     nrapply cat_pr2_pr1_associator_binprod.
   Defined.
 
-  Global Instance ismonoidal_cat_binprod
+  #[export] Instance ismonoidal_cat_binprod
     : IsMonoidal A (fun x y => cat_binprod x y) unit
     := {}.
 
-  Global Instance issymmetricmonoidal_cat_binprod
+  #[export] Instance issymmetricmonoidal_cat_binprod
     : IsSymmetricMonoidal A (fun x y => cat_binprod x y) unit
     := {}.
 
@@ -1000,7 +1000,7 @@ End Associativity.
 (** *** Products in Type *)
 
 (** Since we use the Yoneda lemma in this file, we therefore depend on WildCat.Universe which means these instances have to live here. *)
-Global Instance hasbinaryproducts_type : HasBinaryProducts Type.
+Instance hasbinaryproducts_type : HasBinaryProducts Type.
 Proof.
   intros X Y.
   snrapply Build_BinaryProduct.
@@ -1017,7 +1017,7 @@ Proof.
 Defined.
 
 (** Assuming [Funext], [Type] has all products. *)
-Global Instance hasallproducts_type `{Funext} : HasAllProducts Type.
+Instance hasallproducts_type `{Funext} : HasAllProducts Type.
 Proof.
   intros I x.
   snrapply Build_Product.

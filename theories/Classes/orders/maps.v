@@ -11,7 +11,7 @@ Generalizable Variables A B C R S f g z.
 Section strictly_order_preserving.
   Context `{FullPartialOrder A} `{FullPartialOrder B}.
 
-  Global Instance strictly_order_preserving_inj  `{!OrderPreserving (f : A -> B)}
+  #[export] Instance strictly_order_preserving_inj  `{!OrderPreserving (f : A -> B)}
     `{!IsStrongInjective f} :
     StrictlyOrderPreserving f | 20.
   Proof.
@@ -22,7 +22,7 @@ Section strictly_order_preserving.
   - apply (strong_injective f);trivial.
   Qed.
 
-  Global Instance strictly_order_reflecting_mor `{!OrderReflecting (f : A -> B)}
+  #[export] Instance strictly_order_reflecting_mor `{!OrderReflecting (f : A -> B)}
     `{!StrongExtensionality f} :
     StrictlyOrderReflecting f | 20.
   Proof.
@@ -42,7 +42,7 @@ Section strictly_order_preserving_dec.
 
   Local Existing Instance strict_po_apart.
 
-  Global Instance dec_strictly_order_preserving_inj
+  #[export] Instance dec_strictly_order_preserving_inj
     `{!OrderPreserving (f : A -> B)}
     `{!IsInjective f} :
     StrictlyOrderPreserving f | 19.
@@ -51,7 +51,7 @@ Section strictly_order_preserving_dec.
   apply _.
   Qed.
 
-  Global Instance dec_strictly_order_reflecting_mor
+  #[export] Instance dec_strictly_order_reflecting_mor
     `{!OrderReflecting (f : A -> B)}
     : StrictlyOrderReflecting f | 19.
   Proof.
@@ -272,12 +272,12 @@ intros P1 P2. split.
     intros F. apply E,P2. trivial.
 Qed.
 
-Global Instance id_order_preserving `{PartialOrder A} : OrderPreserving (@id A).
+Instance id_order_preserving `{PartialOrder A} : OrderPreserving (@id A).
 Proof.
 red;trivial.
 Qed.
 
-Global Instance id_order_reflecting `{PartialOrder A} : OrderReflecting (@id A).
+Instance id_order_reflecting `{PartialOrder A} : OrderReflecting (@id A).
 Proof.
 red;trivial.
 Qed.

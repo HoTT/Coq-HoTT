@@ -140,7 +140,7 @@ Cumulative Class IsExact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->*
   conn_map_isexact : IsConnMap n (cxfib cx_isexact)
 }.
 
-Global Existing Instance conn_map_isexact.
+Existing Instance conn_map_isexact.
 
 Definition issig_isexact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y)
   : _ <~> IsExact n i f := ltac:(issig).
@@ -506,7 +506,7 @@ Record LongExactSequence (k : Modality) (N : SuccStr) : Type :=
 
 Coercion les_carrier : LongExactSequence >-> Funclass.
 Arguments les_fn {k N} S n : rename.
-Global Existing Instance les_isexact.
+Existing Instance les_isexact.
 
 (** Long exact sequences are preserved by truncation. *)
 Definition trunc_les `{Univalence} (k : trunc_index) {N : SuccStr}

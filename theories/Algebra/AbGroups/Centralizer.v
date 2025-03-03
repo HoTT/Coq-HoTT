@@ -39,7 +39,7 @@ Proof.
   exact (ap (h^ *.) p).
 Defined.
 
-Global Instance issubgroup_centralizer {G : Group} (g : G)
+Instance issubgroup_centralizer {G : Group} (g : G)
   : IsSubgroup (centralizer g).
 Proof.
   srapply Build_IsSubgroup.
@@ -58,7 +58,7 @@ Definition cyclic_subgroup_from_unit {G : Group} (gen : Unit -> G) := subgroup_g
 Definition cyclic_subgroup {G : Group} (g : G) := cyclic_subgroup_from_unit (unit_name g).
 
 (* Any cyclic subgroup is commutative. *)
-Global Instance commutative_cyclic_subgroup {G : Group} (gen : Unit -> G)
+Instance commutative_cyclic_subgroup {G : Group} (gen : Unit -> G)
   : Commutative (@group_sgop (cyclic_subgroup_from_unit gen)).
 Proof.
   intros h k.

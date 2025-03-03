@@ -58,7 +58,7 @@ rewrite <-(to_semiring_twice f g id x), <-(to_semiring_twice f g id y).
 apply ap,E.
 Qed.
 
-Global Instance naturals_to_naturals_injective `{Naturals N} `{Naturals N2}
+Instance naturals_to_naturals_injective `{Naturals N} `{Naturals N2}
   (f: N -> N2) `{!IsSemiRingPreserving f}
   : IsInjective f | 15.
 Proof. exact (to_semiring_injective (naturals_to_semiring N2 N) _). Qed.
@@ -101,7 +101,7 @@ Section nat_to_nat_iso.
 
 Context `{Naturals N1} `{Naturals N2}.
 
-Global Instance nat_to_nat_equiv : IsEquiv (naturals_to_semiring N1 N2).
+#[export] Instance nat_to_nat_equiv : IsEquiv (naturals_to_semiring N1 N2).
 Proof.
 apply Equivalences.isequiv_adjointify with (naturals_to_semiring N2 N1);
 red;apply (to_semiring_involutive _ _).
@@ -144,31 +144,31 @@ Section borrowed_from_nat.
   simpl. intros [|x];eauto.
   Qed.
 
-  Global Instance: Biinduction N.
+  #[export] Instance: Biinduction N.
   Proof.
   hnf. intros P E0 ES.
   apply induction;trivial.
   apply ES.
   Qed.
 
-  Global Instance nat_plus_cancel_l : forall z : N, LeftCancellation (+) z.
+  #[export] Instance nat_plus_cancel_l : forall z : N, LeftCancellation (+) z.
   Proof.
   refine (from_nat_stmt@{i U}
     nat (fun s => forall z : s, LeftCancellation plus z) _).
   simpl. first [exact nat_plus_cancel_l@{U i}|exact nat_plus_cancel_l@{U}].
   Qed.
 
-  Global Instance: forall z : N, RightCancellation (+) z.
+  #[export] Instance: forall z : N, RightCancellation (+) z.
   Proof. intro. apply (right_cancel_from_left (+)). Qed.
 
-  Global Instance: forall z : N, PropHolds (z <> 0) -> LeftCancellation (.*.) z.
+  #[export] Instance: forall z : N, PropHolds (z <> 0) -> LeftCancellation (.*.) z.
   Proof.
   refine (from_nat_stmt nat (fun s =>
     forall z : s, PropHolds (z <> 0) -> LeftCancellation mult z) _).
   simpl. apply nat_mult_cancel_l.
   Qed.
 
-  Global Instance: forall z : N, PropHolds (z <> 0) -> RightCancellation (.*.) z.
+  #[export] Instance: forall z : N, PropHolds (z <> 0) -> RightCancellation (.*.) z.
   Proof. intros ? ?. apply (right_cancel_from_left (.*.)). Qed.
 
   Instance nat_nontrivial: PropHolds ((1:N) <> 0).
@@ -202,7 +202,7 @@ Section borrowed_from_nat.
     apply S_inj in E. destruct (S_neq_0 _ E).
   Qed.
 
-  Global Instance: ZeroProduct N.
+  #[export] Instance: ZeroProduct N.
   Proof.
   refine (from_nat_stmt nat (fun s => ZeroProduct s) _).
   simpl. red. apply mult_eq_zero.
@@ -214,7 +214,7 @@ Proof.
 intro E. destruct (zero_sum 1 x E). apply nat_nontrivial. trivial.
 Qed.
 
-Global Instance slow_naturals_dec : DecidablePaths N.
+#[export] Instance slow_naturals_dec : DecidablePaths N.
 Proof.
 apply decidablepaths_equiv with nat (naturals_to_semiring nat N);apply _.
 Qed.

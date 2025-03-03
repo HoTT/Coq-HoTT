@@ -170,7 +170,7 @@ Defined.
 
 (** ** Precomposing normal subgroups with commutators *)
 
-Global Instance issubgroup_precomp_commutator_l {G : Group} (H : Subgroup G)
+Instance issubgroup_precomp_commutator_l {G : Group} (H : Subgroup G)
   `{!IsNormalSubgroup H} (y : G)
   : IsSubgroup (fun x => H [x, y]).
 Proof.
@@ -200,7 +200,7 @@ Proof.
 Defined.
 
 (** So we get this symmetrical version as well. *)
-Global Instance issubgroup_precomp_commutator_r {G : Group} (H : Subgroup G)
+Instance issubgroup_precomp_commutator_r {G : Group} (H : Subgroup G)
   `{!IsNormalSubgroup H} (x : G)
   : IsSubgroup (fun y => H [x, y])
   := issubgroup_equiv (fun y => issubgroup_precomp_commutator_agree H y x) _.
@@ -321,7 +321,7 @@ Proof.
 Defined.
 
 (** A commutator of normal subgroups is normal. *)
-Global Instance isnormal_subgroup_commutator {G : Group} (H J : Subgroup G)
+Instance isnormal_subgroup_commutator {G : Group} (H J : Subgroup G)
   `{!IsNormalSubgroup H, !IsNormalSubgroup J}
   : IsNormalSubgroup [H, J].
 Proof.
@@ -402,7 +402,7 @@ Definition grp_derived_quotient (G : Group) : Group
   := QuotientGroup G (normalsubgroup_derived G).
 
 (** We can show that the multiplication then becomes commutative. *)
-Global Instance commutative_grp_derived_quotient (G : Group)
+Instance commutative_grp_derived_quotient (G : Group)
   : Commutative (A:=grp_derived_quotient G) (.*.).
 Proof.
   intros x.

@@ -41,11 +41,11 @@ Class Is0Gpd (A : Type) `{Is01Cat A} :=
 Definition GpdHom {A} `{Is0Gpd A} (a b : A) := a $-> b.
 Notation "a $== b" := (GpdHom a b).
 
-Global Instance reflexive_GpdHom {A} `{Is0Gpd A}
+Instance reflexive_GpdHom {A} `{Is0Gpd A}
   : Reflexive GpdHom
   := fun a => Id a.
 
-Global Instance reflexive_Hom {A} `{Is01Cat A}
+Instance reflexive_Hom {A} `{Is01Cat A}
   : Reflexive Hom
   := fun a => Id a.
 
@@ -54,21 +54,21 @@ Definition gpd_comp {A} `{Is0Gpd A} {a b c : A}
   := fun p q => q $o p.
 Infix "$@" := gpd_comp.
 
-Global Instance transitive_GpdHom {A} `{Is0Gpd A}
+Instance transitive_GpdHom {A} `{Is0Gpd A}
   : Transitive GpdHom
   := fun a b c f g => f $@ g.
 
-Global Instance transitive_Hom {A} `{Is01Cat A}
+Instance transitive_Hom {A} `{Is01Cat A}
   : Transitive Hom
   := fun a b c f g => g $o f.
 
 Notation "p ^$" := (gpd_rev p).
 
-Global Instance symmetric_GpdHom {A} `{Is0Gpd A}
+Instance symmetric_GpdHom {A} `{Is0Gpd A}
   : Symmetric GpdHom
   := fun a b f => f^$.
 
-Global Instance symmetric_GpdHom' {A} `{Is0Gpd A}
+Instance symmetric_GpdHom' {A} `{Is0Gpd A}
   : Symmetric Hom
   := fun a b f => f^$.
 
@@ -88,7 +88,7 @@ Arguments fmap {A B isgraph_A isgraph_B} F {is0functor_F a b} f : rename.
 
 Class Is2Graph (A : Type) `{IsGraph A}
   := isgraph_hom : forall (a b : A), IsGraph (a $-> b).
-Global Existing Instance isgraph_hom | 20.
+Existing Instance isgraph_hom | 20.
 #[global] Typeclasses Transparent Is2Graph.
 
 (** ** Wild 1-categorical structures *)
@@ -106,10 +106,10 @@ Class Is1Cat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
   cat_idr : forall (a b : A) (f : a $-> b), f $o Id a $== f;
 }.
 
-Global Existing Instance is01cat_hom.
-Global Existing Instance is0gpd_hom.
-Global Existing Instance is0functor_postcomp.
-Global Existing Instance is0functor_precomp.
+Existing Instance is01cat_hom.
+Existing Instance is0gpd_hom.
+Existing Instance is0functor_postcomp.
+Existing Instance is0functor_precomp.
 Arguments cat_assoc {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_assoc_opp {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl {_ _ _ _ _ _ _} f.
@@ -247,14 +247,14 @@ Class HasMorExt (A : Type) `{Is1Cat A} := {
   isequiv_Htpy_path : forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
 }.
 
-Global Existing Instance isequiv_Htpy_path.
+Existing Instance isequiv_Htpy_path.
 
 Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g)
   : f = g
   := GpdHom_path^-1 p.
 
 (** A 1-category with morphism extensionality induces a strong 1-category *)
-Global Instance is1cat_strong_hasmorext {A : Type} `{HasMorExt A}
+Instance is1cat_strong_hasmorext {A : Type} `{HasMorExt A}
   : Is1Cat_Strong A.
 Proof.
   rapply Build_Is1Cat_Strong; hnf; intros; apply path_hom.
@@ -296,12 +296,12 @@ Class Faithful {A B : Type} (F : A -> B) `{Is1Functor A B F} :=
 
 Section IdentityFunctor.
 
-  Global Instance is0functor_idmap {A : Type} `{IsGraph A} : Is0Functor idmap.
+  #[export] Instance is0functor_idmap {A : Type} `{IsGraph A} : Is0Functor idmap.
   Proof.
     by apply Build_Is0Functor.
   Defined.
 
-  Global Instance is1functor_idmap {A : Type} `{Is1Cat A} : Is1Functor idmap.
+  #[export] Instance is1functor_idmap {A : Type} `{Is1Cat A} : Is1Functor idmap.
   Proof.
     by apply Build_Is1Functor.
   Defined.
@@ -318,7 +318,7 @@ Section ConstantFunctor.
 
   Context {A B : Type}.
 
-  Global Instance is01functor_const
+  #[export] Instance is01functor_const
     `{IsGraph A} `{Is01Cat B} (x : B)
     : Is0Functor (fun _ : A => x).
   Proof.
@@ -326,7 +326,7 @@ Section ConstantFunctor.
     intros a b f; apply Id.
   Defined.
 
-  Global Instance is1functor_const
+  #[export] Instance is1functor_const
    `{Is1Cat A} `{Is1Cat B} (x : B)
     : Is1Functor (fun _ : A => x).
   Proof.
@@ -342,7 +342,7 @@ End ConstantFunctor.
 
 (** Composite functors *)
 
-Global Instance is0functor_compose {A B C : Type}
+Instance is0functor_compose {A B C : Type}
   `{IsGraph A, IsGraph B, IsGraph C}
   (F : A -> B) `{!Is0Functor F} (G : B -> C) `{!Is0Functor G}
   : Is0Functor (G o F).
@@ -351,7 +351,7 @@ Proof.
   intros a b f; exact (fmap G (fmap F f)).
 Defined.
 
-Global Instance is1functor_compose {A B C : Type}
+Instance is1functor_compose {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A -> B) `{!Is0Functor F, !Is1Functor F}
   (G : B -> C) `{!Is0Functor G, !Is1Functor G}
@@ -552,7 +552,7 @@ Definition gpd_strong_1functor_V {A B} `{Is1Gpd A, Is1Gpd B, !HasMorExt B}
 
 Class Is3Graph (A : Type) `{Is2Graph A}
   := isgraph_hom_hom : forall (a b : A), Is2Graph (a $-> b).
-Global Existing Instance isgraph_hom_hom | 30.
+Existing Instance isgraph_hom_hom | 30.
 #[global] Typeclasses Transparent Is3Graph.
 
 (** *** Preservation of initial and terminal objects *)
@@ -561,7 +561,7 @@ Class PreservesInitial {A B : Type} (F : A -> B)
   `{Is1Functor A B F} : Type
   := isinitial_preservesinitial
     : forall (x : A), IsInitial x -> IsInitial (F x).
-Global Existing Instance isinitial_preservesinitial.
+Existing Instance isinitial_preservesinitial.
 
 (** The initial morphism is preserved by such a functor. *)
 Lemma fmap_initial {A B : Type} (F : A -> B)
@@ -575,7 +575,7 @@ Class PreservesTerminal {A B : Type} (F : A -> B)
   `{Is1Functor A B F} : Type
   := isterminal_preservesterminal
     : forall (x : A), IsTerminal x -> IsTerminal (F x).
-Global Existing Instance isterminal_preservesterminal.
+Existing Instance isterminal_preservesterminal.
 
 (** The terminal morphism is preserved by such a functor. *)
 Lemma fmap_terminal {A B : Type} (F : A -> B)
@@ -600,7 +600,7 @@ Arguments Build_BasepointPreservingFunctor {B C}%_type_scope {H H0 H1 H2 H3 H4}
 
 Coercion bp_map : BasepointPreservingFunctor >-> Funclass.
 
-Global Existing Instance bp_is0functor.
+Existing Instance bp_is0functor.
 
 Notation "B -->* C" := (BasepointPreservingFunctor B C) (at level 70).
 

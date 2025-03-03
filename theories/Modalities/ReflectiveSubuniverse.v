@@ -85,7 +85,7 @@ Global Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
 Class MapIn (O : Subuniverse) {A B : Type} (f : A -> B)
   := inO_hfiber_ino_map : forall (b:B), In O (hfiber f b).
 
-Global Existing Instance inO_hfiber_ino_map.
+Existing Instance inO_hfiber_ino_map.
 
 Section Subuniverse.
   Context (O : Subuniverse).
@@ -148,7 +148,7 @@ Class PreReflects@{i} (O : Subuniverse@{i}) (T : Type@{i}) :=
 Arguments O_reflector O T {_}.
 Arguments to O T {_}.
 Arguments O_inO {O} T {_}.
-Global Existing Instance O_inO.
+Existing Instance O_inO.
 
 (** It is a reflection if it has the requisite universal property. *)
 Class Reflects@{i} (O : Subuniverse@{i}) (T : Type@{i})
@@ -192,8 +192,8 @@ Record ReflectiveSubuniverse@{i} :=
 }.
 
 Coercion rsu_subuniv : ReflectiveSubuniverse >-> Subuniverse.
-Global Existing Instance rsu_prereflects.
-Global Existing Instance rsu_reflects.
+Existing Instance rsu_prereflects.
+Existing Instance rsu_reflects.
 
 (** We allow the name of a subuniverse or modality to be used as the name of its reflector.  This means that when defining a particular example, you should generally put the parametrizing family in a wrapper, so that you can notate the subuniverse as parametrized by, rather than identical to, its parameter.  See Modality.v, Truncations.v, and Localization.v for examples. *)
 Definition rsu_reflector (O : ReflectiveSubuniverse) (T : Type) : Type
@@ -1040,7 +1040,7 @@ Section Reflective_Subuniverse.
       - simpl.
         rewrite O_indpaths_beta; reflexivity.
     Qed.
-    Global Existing Instance inO_paths.
+    #[export] Existing Instance inO_paths.
 
     Lemma O_concat {A : Type} {a0 a1 a2 : A}
       : O (a0 = a1) -> O (a1 = a2) -> O (a0 = a2).
@@ -1346,7 +1346,7 @@ Question: is there a definition of connectedness (say, for n-types) that neither
 Class IsConnected (O : ReflectiveSubuniverse@{i}) (A : Type@{i})
   := isconnected_contr_O : Contr@{i} (O A).
 
-Global Existing Instance isconnected_contr_O.
+Existing Instance isconnected_contr_O.
 
 Section ConnectedTypes.
   Context (O : ReflectiveSubuniverse).
@@ -1606,7 +1606,7 @@ Class IsConnMap (O : ReflectiveSubuniverse@{i})
      (** The extra universe [k] is >= max(i,j). *)
      : forall b:B, IsConnected@{i} O (hfiber@{i i} f b).
 
-Global Existing Instance isconnected_hfiber_conn_map.
+Existing Instance isconnected_hfiber_conn_map.
 
 Section ConnectedMaps.
   Universe i.
@@ -2048,7 +2048,7 @@ Class O_eq@{i1 i2 j} (O1 : Subuniverse@{i1}) (O2 : Subuniverse@{i2}) :=
   O_eq_r : O_leq@{i2 i1 j} O2 O1 ;
 }.
 
-Global Existing Instances O_eq_l O_eq_r.
+Existing Instances O_eq_l O_eq_r.
 
 Infix "<=>" := O_eq : subuniverse_scope.
 

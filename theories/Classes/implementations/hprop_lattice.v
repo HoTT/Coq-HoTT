@@ -4,11 +4,11 @@ Require Import
 
 (** Demonstrate the [HProp] is a (bounded) lattice w.r.t. the logical
 operations. This requires Univalence. *)
-Global Instance join_hor : Join HProp := hor.
+Instance join_hor : Join HProp := hor.
 Definition hand (X Y : HProp) : HProp := Build_HProp (X * Y).
-Global Instance meet_hprop : Meet HProp := hand.
-Global Instance bottom_hprop : Bottom HProp := False_hp.
-Global Instance top_hprop : Top HProp := Unit_hp.
+Instance meet_hprop : Meet HProp := hand.
+Instance bottom_hprop : Bottom HProp := False_hp.
+Instance top_hprop : Top HProp := Unit_hp.
 
 Section contents.
   Context `{Univalence}.
@@ -111,6 +111,6 @@ Section contents.
       * by apply tr, inl.
   Defined.
 
-  Global Instance boundedlattice_hprop : IsBoundedLattice HProp.
+  #[export] Instance boundedlattice_hprop : IsBoundedLattice HProp.
   Proof. repeat split; apply _. Defined.
 End contents.

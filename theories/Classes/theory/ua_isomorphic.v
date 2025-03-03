@@ -22,8 +22,8 @@ Arguments def_isomorphic {σ A B}.
 Arguments is_homomorphism_isomorphic {σ A B}.
 Arguments is_isomorphism_isomorphic {σ A B}.
 
-Global Existing Instance is_homomorphism_isomorphic.
-Global Existing Instance is_isomorphism_isomorphic.
+Existing Instance is_homomorphism_isomorphic.
+Existing Instance is_isomorphism_isomorphic.
 
 Module isomorphic_notations.
   Global Notation "A ≅ B" := (Isomorphic A B) : Algebra_scope.
@@ -151,7 +151,7 @@ Section isequiv_isomorphic_id.
     exact _.
   Qed.
 
-  Global Instance isequiv_isomorphic_id : IsEquiv (@isomorphic_id σ A B)
+  #[export] Instance isequiv_isomorphic_id : IsEquiv (@isomorphic_id σ A B)
     := isequiv_adjointify
           isomorphic_id
           id_isomorphic

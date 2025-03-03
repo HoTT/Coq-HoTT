@@ -227,7 +227,7 @@ Defined.
 
 (** ** Path operations are equivalences *)
 
-Global Instance isequiv_path_inverse {A : Type} (x y : A)
+Instance isequiv_path_inverse {A : Type} (x y : A)
   : IsEquiv (@inverse A x y) | 0.
 Proof.
   refine (Build_IsEquiv _ _ _ (@inverse A y x)
@@ -239,7 +239,7 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   : (x = y) <~> (y = x)
   := Build_Equiv _ _ (@inverse A x y) _.
 
-Global Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
+Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
   : IsEquiv (@transitivity A _ _ x y z p) | 0.
 Proof.
   refine (Build_IsEquiv _ _ _ (concat p^)
@@ -251,7 +251,7 @@ Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   : (y = z) <~> (x = z)
   := Build_Equiv _ _ (concat p) _.
 
-Global Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
+Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
   : IsEquiv (fun q:x=y => q @ p) | 0.
 Proof.
   refine (Build_IsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
@@ -263,7 +263,7 @@ Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
   : (x = y) <~> (x = z)
   := Build_Equiv _ _ (fun q => q @ p) _.
 
-Global Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
+Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : IsEquiv (fun r:x=y => p @ r @ q) | 0
   := @isequiv_compose _ _ (fun r => p @ r) _ _ (fun r => r @ q) _.
 
@@ -279,7 +279,7 @@ Definition equiv_1p_q1 {A : Type} {x y : A} {p q : x = y}
   : p = q <~> 1 @ p = q @ 1
   := equiv_concat_lr (concat_1p p) (concat_p1 q)^.
 
-Global Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
+Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
 : IsEquiv (@whiskerL A x y z p q r).
 Proof.
   simple refine (isequiv_adjointify _ _ _ _).
@@ -309,7 +309,7 @@ Proof.
   change (IsEquiv (equiv_cancelL p q r)); exact _.
 Defined.
 
-Global Instance isequiv_whiskerR {A} {x y z : A} {p q : x = y} (r : y = z)
+Instance isequiv_whiskerR {A} {x y z : A} {p q : x = y} (r : y = z)
 : IsEquiv (fun h => @whiskerR A x y z p q h r).
 Proof.
   simple refine (isequiv_adjointify _ _ _ _).
@@ -345,7 +345,7 @@ In particular, all of the [move] family are equivalences.
 
 (Note: currently, some but not all of these [isequiv_] lemmas have corresponding [equiv_] lemmas.  Also, they do *not* currently contain the computational content that e.g. the inverse of [moveR_Mp] is [moveL_Vp]; perhaps it would be useful if they did? *)
 
-Global Instance isequiv_moveR_Mp
+Instance isequiv_moveR_Mp
  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_Mp p q r).
 Proof.
@@ -358,7 +358,7 @@ Definition equiv_moveR_Mp
 : (p = r^ @ q) <~> (r @ p = q)
 := Build_Equiv _ _ (moveR_Mp p q r) _.
 
-Global Instance isequiv_moveR_pM
+Instance isequiv_moveR_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pM p q r).
 Proof.
@@ -371,7 +371,7 @@ Definition equiv_moveR_pM
 : (r = q @ p^) <~> (r @ p = q)
 := Build_Equiv _ _ (moveR_pM p q r) _.
 
-Global Instance isequiv_moveR_Vp
+Instance isequiv_moveR_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveR_Vp p q r).
 Proof.
@@ -384,7 +384,7 @@ Definition equiv_moveR_Vp
 : (p = r @ q) <~> (r^ @ p = q)
 := Build_Equiv _ _ (moveR_Vp p q r) _.
 
-Global Instance isequiv_moveR_pV
+Instance isequiv_moveR_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pV p q r).
 Proof.
@@ -397,7 +397,7 @@ Definition equiv_moveR_pV
 : (r = q @ p) <~> (r @ p^ = q)
 := Build_Equiv _ _ (moveR_pV p q r) _.
 
-Global Instance isequiv_moveL_Mp
+Instance isequiv_moveL_Mp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveL_Mp p q r).
 Proof.
@@ -423,7 +423,7 @@ Definition equiv_moveL_pM
   q @ p^ = r <~> q = r @ p
   := Build_Equiv _ _ _ (isequiv_moveL_pM p q r).
 
-Global Instance isequiv_moveL_Vp
+Instance isequiv_moveL_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveL_Vp p q r).
 Proof.
@@ -436,7 +436,7 @@ Definition equiv_moveL_Vp
 : r @ q = p <~> q = r^ @ p
 := Build_Equiv _ _ (moveL_Vp p q r) _.
 
-Global Instance isequiv_moveL_pV
+Instance isequiv_moveL_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveL_pV p q r).
 Proof.
@@ -479,7 +479,7 @@ Proof.
   destruct p. apply isequiv_concat_r.
 Defined.
 
-Global Instance isequiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
+Instance isequiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
 : IsEquiv (moveR_1M p q).
 Proof.
   destruct p. apply isequiv_concat_r.
@@ -516,7 +516,7 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Global Instance isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
+Instance isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_p P p u v).
 Proof.
@@ -546,7 +546,7 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Global Instance isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
+Instance isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_V P p u v).
 Proof.
@@ -561,7 +561,7 @@ Definition equiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
 : u = transport P p v <~> transport P p^ u = v
 := Build_Equiv _ _ (moveR_transport_V P p u v) _.
 
-Global Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
+Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_V P p u v).
 Proof.
@@ -576,7 +576,7 @@ Definition equiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
 : transport P p u = v <~> u = transport P p^ v
 := Build_Equiv _ _ (moveL_transport_V P p u v) _.
 
-Global Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
+Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_p P p u v).
 Proof.
@@ -591,7 +591,7 @@ Definition equiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
 : transport P p^ u = v <~> u = transport P p v
 := Build_Equiv _ _ (moveL_transport_p P p u v) _.
 
-Global Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveR_equiv_M A B f _ x y).
 Proof.
   unfold moveR_equiv_M.
@@ -602,7 +602,7 @@ Definition equiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
   : (x = f^-1 y) <~> (f x = y)
   := Build_Equiv _ _ (@moveR_equiv_M A B f _ x y) _.
 
-Global Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveR_equiv_V A B f _ x y).
 Proof.
   unfold moveR_equiv_V.
@@ -613,7 +613,7 @@ Definition equiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
   : (x = f y) <~> (f^-1 x = y)
   := Build_Equiv _ _ (@moveR_equiv_V A B f _ x y) _.
 
-Global Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveL_equiv_M A B f _ x y).
 Proof.
   unfold moveL_equiv_M.
@@ -624,7 +624,7 @@ Definition equiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
   : (f^-1 y = x) <~> (y = f x)
   := Build_Equiv _ _ (@moveL_equiv_M A B f _ x y) _.
 
-Global Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveL_equiv_V A B f _ x y).
 Proof.
   unfold moveL_equiv_V.
@@ -747,7 +747,7 @@ Defined.
 
 (** ** Universal mapping property *)
 
-Global Instance isequiv_paths_ind `{Funext} {A : Type} (a : A)
+Instance isequiv_paths_ind `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
   : IsEquiv (paths_ind a P) | 0.
 Proof.
@@ -764,7 +764,7 @@ Definition equiv_paths_ind `{Funext} {A : Type} (a : A)
   : P a 1 <~> forall x p, P x p
   := Build_Equiv _ _ (paths_ind a P) _.
 
-Global Instance isequiv_paths_ind_r `{Funext} {A : Type} (a : A)
+Instance isequiv_paths_ind_r `{Funext} {A : Type} (a : A)
   (P : forall x, (x = a) -> Type)
   : IsEquiv (paths_ind_r a P) | 0.
 Proof.

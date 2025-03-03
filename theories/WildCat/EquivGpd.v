@@ -23,7 +23,7 @@ Class IsSurjInj {A B : Type} `{Is0Gpd A, Is0Gpd B}
   essinj : forall (x y:A), (F x $== F y) -> (x $== y) ;
 }.
 
-Global Existing Instance esssurj_issurjinj.
+Existing Instance esssurj_issurjinj.
 Arguments essinj {A B _ _ _ _ _ _} F {_ _ x y} f.
 
 Definition surjinj_inv {A B : Type} (F : A -> B) `{IsSurjInj A B F} : B -> A
@@ -33,7 +33,7 @@ Definition surjinj_inv {A B : Type} (F : A -> B) `{IsSurjInj A B F} : B -> A
 
 (** Equivalences have inverses *)
 
-Global Instance is0functor_surjinj_inv
+Instance is0functor_surjinj_inv
        {A B : Type} (F : A -> B) `{IsSurjInj A B F}
   : Is0Functor (surjinj_inv F).
 Proof.
@@ -92,7 +92,7 @@ Section ComposeAndCancel.
   Context {A B C} `{Is0Gpd A, Is0Gpd B, Is0Gpd C}
        (G : B -> C) (F : A -> B) `{!Is0Functor G, !Is0Functor F}.
 
-  Global Instance isesssurj_compose
+  #[export] Instance isesssurj_compose
          `{!SplEssSurj G, !SplEssSurj F}
     : SplEssSurj (G o F).
   Proof.
@@ -103,7 +103,7 @@ Section ComposeAndCancel.
     apply (esssurj F).
   Defined.
 
-  Global Instance issurjinj_compose
+  #[export] Instance issurjinj_compose
          `{!IsSurjInj G, !IsSurjInj F}
     : IsSurjInj (G o F).
   Proof.

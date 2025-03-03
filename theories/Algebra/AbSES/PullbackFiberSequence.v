@@ -388,7 +388,7 @@ Proof.
 Defined.
 
 (** From this we deduce exactness. *)
-Global Instance isexact_abses_pullback `{Univalence} {A B C : AbGroup} {E : AbSES C B}
+Instance isexact_abses_pullback `{Univalence} {A B C : AbGroup} {E : AbSES C B}
   : IsExact purely (abses_pullback_pmap (A:=A) (projection E)) (abses_pullback_pmap (inclusion E)).
 Proof.
   srapply Build_IsExact.

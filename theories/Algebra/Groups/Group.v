@@ -109,7 +109,7 @@ Tactic Notation "grp_auto" := hnf; intros; eauto with group_db.
 (** ** Some basic properties of groups *)
 
 (** Groups are pointed sets with point the identity. *)
-Global Instance ispointed_group (G : Group)
+Instance ispointed_group (G : Group)
   : IsPointed G := @mon_unit G _.
 
 Definition ptype_group : Group -> pType
@@ -226,7 +226,7 @@ Definition grp_homo_op
 #[export] Hint Immediate grp_homo_op : group_db.
 
 (** Group homomorphisms are unit preserving. *)
-Global Instance isunitpreserving_grp_homo {G H : Group}
+Instance isunitpreserving_grp_homo {G H : Group}
   (f : GroupHomomorphism G H)
   : IsUnitPreserving f.
 Proof.
@@ -247,7 +247,7 @@ Definition grp_homo_unit
 #[export] Hint Immediate grp_homo_unit : group_db.
 
 (** Therefore, group homomorphisms are monoid homomorphisms. *)
-Global Instance ismonoidpreserving_grp_homo {G H : Group}
+Instance ismonoidpreserving_grp_homo {G H : Group}
   (f : GroupHomomorphism G H)
   : IsMonoidPreserving f
   := {}.
@@ -270,7 +270,7 @@ Proof.
 Defined.
 
 (** Group homomorphisms are sets, in the presence of funext. *)
-Global Instance ishset_grouphomomorphism {F : Funext} {G H : Group}
+Instance ishset_grouphomomorphism {F : Funext} {G H : Group}
   : IsHSet (GroupHomomorphism G H).
 Proof.
   apply istrunc_S.
@@ -378,17 +378,17 @@ Proof.
 Defined.
 
 (** Group isomorphism is a reflexive relation. *)
-Global Instance reflexive_groupisomorphism
+Instance reflexive_groupisomorphism
   : Reflexive GroupIsomorphism
   := fun G => grp_iso_id.
 
 (** Group isomorphism is a symmetric relation. *)
-Global Instance symmetric_groupisomorphism
+Instance symmetric_groupisomorphism
   : Symmetric GroupIsomorphism
   := fun G H => grp_iso_inverse.
 
 (** Group isomorphism is a transitive relation. *)
-Global Instance transitive_groupisomorphism
+Instance transitive_groupisomorphism
   : Transitive GroupIsomorphism
   := fun G H K f g => grp_iso_compose g f.
 
@@ -438,7 +438,7 @@ Definition equiv_path_group@{u v | u < v} {U : Univalence} {G H : Group@{u}}
 (** ** Simple group equivalences *)
 
 (** Left multiplication is an equivalence. *)
-Global Instance isequiv_group_left_op {G : Group}
+Instance isequiv_group_left_op {G : Group}
   : forall (x : G), IsEquiv (x *.).
 Proof.
   intro x.
@@ -452,7 +452,7 @@ Proof.
 Defined.
 
 (** Right multiplication is an equivalence. *)
-Global Instance isequiv_group_right_op (G : Group)
+Instance isequiv_group_right_op (G : Group)
   : forall (x : G), IsEquiv (fun y => y * x).
 Proof.
   intro x.
@@ -466,7 +466,7 @@ Proof.
 Defined.
 
 (** The operation inverting group elements is an equivalence. Note that, since the order of the operation will change after inversion, this isn't a group homomorphism. *)
-Global Instance isequiv_group_inverse {G : Group}
+Instance isequiv_group_inverse {G : Group}
   : IsEquiv ((^) : G -> G).
 Proof.
   srapply isequiv_involution.
@@ -768,35 +768,39 @@ Defined.
 
 (** ** Groups together with homomorphisms form a 1-category whose equivalences are the group isomorphisms. *)
 
-Global Instance isgraph_group : IsGraph Group
+Instance isgraph_group : IsGraph Group
   := Build_IsGraph Group GroupHomomorphism.
 
-Global Instance is01cat_group : Is01Cat Group :=
+(** We add this coercion to make it easier to use a group isomorphism where Coq expects a category morphism. *)
+Definition isHom_GroupIsomorphism (G H : Group) : GroupIsomorphism G H -> Hom G H := idmap.
+Coercion isHom_GroupIsomorphism  : GroupIsomorphism >-> Hom.
+
+Instance is01cat_group : Is01Cat Group :=
   Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose).
 
 (** Helper notation so that the wildcat instances can easily be inferred. *)
 Local Notation grp_homo_map' A B := (@grp_homo_map A B : _ -> (group_type A $-> _)).
 
-Global Instance is2graph_group : Is2Graph Group
+Instance is2graph_group : Is2Graph Group
   := fun A B => isgraph_induced (grp_homo_map' A B).
 
-Global Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
+Instance isgraph_grouphomomorphism {A B : Group} : IsGraph (A $-> B)
   := isgraph_induced (grp_homo_map' A B).
 
-Global Instance is01cat_grouphomomorphism {A B : Group} : Is01Cat (A $-> B)
+Instance is01cat_grouphomomorphism {A B : Group} : Is01Cat (A $-> B)
   := is01cat_induced (grp_homo_map' A B).
 
-Global Instance is0gpd_grouphomomorphism {A B : Group}: Is0Gpd (A $-> B)
+Instance is0gpd_grouphomomorphism {A B : Group}: Is0Gpd (A $-> B)
   := is0gpd_induced (grp_homo_map' A B).
 
-Global Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $-> C)
+Instance is0functor_postcomp_grouphomomorphism {A B C : Group} (h : B $-> C)
   : Is0Functor (@cat_postcomp Group _ _ A B C h).
 Proof.
   apply Build_Is0Functor.
   intros f g p a ; exact (ap h (p a)).
 Defined.
 
-Global Instance is0functor_precomp_grouphomomorphism
+Instance is0functor_precomp_grouphomomorphism
        {A B C : Group} (h : A $-> B)
   : Is0Functor (@cat_precomp Group _ _ A B C h).
 Proof.
@@ -805,13 +809,13 @@ Proof.
 Defined.
 
 (** Group forms a 1Cat *)
-Global Instance is1cat_group : Is1Cat Group.
+Instance is1cat_group : Is1Cat Group.
 Proof.
   by rapply Build_Is1Cat.
 Defined.
 
 (** Under [Funext], the category of groups has morphism extensionality. *)
-Global Instance hasmorext_group `{Funext} : HasMorExt Group.
+Instance hasmorext_group `{Funext} : HasMorExt Group.
 Proof.
   srapply Build_HasMorExt.
   intros A B f g; cbn in *.
@@ -822,7 +826,7 @@ Proof.
 Defined.
 
 (** Group isomorphisms become equivalences in the category of groups. *)
-Global Instance hasequivs_group
+Instance hasequivs_group
   : HasEquivs Group.
 Proof.
   unshelve econstructor.
@@ -839,7 +843,7 @@ Proof.
     exact (isequiv_adjointify f g p q).
 Defined.
 
-Global Instance is1cat_strong `{Funext} : Is1Cat_Strong Group.
+Instance is1cat_strong `{Funext} : Is1Cat_Strong Group.
 Proof.
   rapply Build_Is1Cat_Strong.
   all: intros; apply equiv_path_grouphomomorphism; intro; reflexivity.
@@ -847,26 +851,26 @@ Defined.
 
 (** The [group_type] map is a 1-functor. *)
 
-Global Instance is0functor_type_group : Is0Functor group_type.
+Instance is0functor_type_group : Is0Functor group_type.
 Proof.
   apply Build_Is0Functor.
   rapply @grp_homo_map.
 Defined.
 
-Global Instance is1functor_type_group : Is1Functor group_type.
+Instance is1functor_type_group : Is1Functor group_type.
 Proof.
   by apply Build_Is1Functor.
 Defined.
 
 (** The [ptype_group] map is a 1-functor. *)
 
-Global Instance is0functor_ptype_group : Is0Functor ptype_group.
+Instance is0functor_ptype_group : Is0Functor ptype_group.
 Proof.
   apply Build_Is0Functor.
   rapply @pmap_GroupHomomorphism.
 Defined.
 
-Global Instance is1functor_ptype_group : Is1Functor ptype_group.
+Instance is1functor_ptype_group : Is1Functor ptype_group.
 Proof.
   apply Build_Is1Functor; intros; by apply phomotopy_homotopy_hset.
 Defined.
@@ -910,7 +914,7 @@ Proof.
 Defined.
 
 (** Group is a pointed category. *)
-Global Instance ispointedcat_group : IsPointedCat Group.
+Instance ispointedcat_group : IsPointedCat Group.
 Proof.
   snrapply Build_IsPointedCat.
   - exact grp_trivial.
@@ -1001,7 +1005,7 @@ Definition grp_prod_inl {H K : Group}
   := grp_prod_corec grp_homo_id grp_homo_const.
 
 (** The left injection is an embedding. *)
-Global Instance isembedding_grp_prod_inl {H K : Group}
+Instance isembedding_grp_prod_inl {H K : Group}
   : IsEmbedding (@grp_prod_inl H K).
 Proof.
   apply isembedding_isinj_hset.
@@ -1015,7 +1019,7 @@ Definition grp_prod_inr {H K : Group}
   := grp_prod_corec grp_homo_const grp_homo_id.
 
 (** The right injection is an embedding. *)
-Global Instance isembedding_grp_prod_inr {H K : Group}
+Instance isembedding_grp_prod_inr {H K : Group}
   : IsEmbedding (@grp_prod_inr H K).
 Proof.
   apply isembedding_isinj_hset.
@@ -1047,7 +1051,7 @@ Proof.
 Defined.
 
 (** The first projection is a surjection. *)
-Global Instance issurj_grp_prod_pr1 {G H : Group}
+Instance issurj_grp_prod_pr1 {G H : Group}
   : IsSurjection (@grp_prod_pr1 G H)
   := issurj_retr grp_prod_inl (fun _ => idpath).
 
@@ -1070,12 +1074,12 @@ Proof.
 Defined.
 
 (** The second projection is a surjection. *)
-Global Instance issurj_grp_prod_pr2 {G H : Group}
+Instance issurj_grp_prod_pr2 {G H : Group}
   : IsSurjection (@grp_prod_pr2 G H)
   := issurj_retr grp_prod_inr (fun _ => idpath).
 
 (** [Group] is a category with binary products given by the direct product. *)
-Global Instance hasbinaryproducts_group : HasBinaryProducts Group.
+Instance hasbinaryproducts_group : HasBinaryProducts Group.
 Proof.
   intros G H.
   snrapply Build_BinaryProduct.
@@ -1094,7 +1098,7 @@ Defined.
 
 (** *** Properties of maps to and from the trivial group *)
 
-Global Instance isinitial_grp_trivial : IsInitial grp_trivial.
+Instance isinitial_grp_trivial : IsInitial grp_trivial.
 Proof.
   intro G.
   exists (grp_trivial_rec _).
@@ -1102,7 +1106,7 @@ Proof.
   apply (grp_homo_unit g)^%path.
 Defined.
 
-Global Instance contr_grp_homo_trivial_source `{Funext} G
+Instance contr_grp_homo_trivial_source `{Funext} G
   : Contr (GroupHomomorphism grp_trivial G).
 Proof.
   snrapply Build_Contr.
@@ -1114,7 +1118,7 @@ Proof.
   rapply grp_homo_unit.
 Defined.
 
-Global Instance isterminal_grp_trivial : IsTerminal grp_trivial.
+Instance isterminal_grp_trivial : IsTerminal grp_trivial.
 Proof.
   intro G.
   exists (grp_trivial_corec _).
@@ -1122,7 +1126,7 @@ Proof.
   apply path_contr.
 Defined.
 
-Global Instance contr_grp_homo_trivial_target `{Funext} G
+Instance contr_grp_homo_trivial_target `{Funext} G
   : Contr (GroupHomomorphism G grp_trivial).
 Proof.
   snrapply Build_Contr.
@@ -1133,7 +1137,7 @@ Proof.
   apply path_contr.
 Defined.
 
-Global Instance ishprop_grp_iso_trivial `{Funext} (G : Group)
+Instance ishprop_grp_iso_trivial `{Funext} (G : Group)
   : IsHProp (G ≅ grp_trivial).
 Proof.
   apply equiv_hprop_allpath.
@@ -1151,13 +1155,13 @@ Definition FactorsThroughFreeGroup (S : Type) (F_S : Group)
 Class IsFreeGroupOn (S : Type) (F_S : Group) (i : S -> F_S)
   := contr_isfreegroupon : forall (A : Group) (g : S -> A),
       Contr (FactorsThroughFreeGroup S F_S i A g).
-Global Existing Instance contr_isfreegroupon.
+Existing Instance contr_isfreegroupon.
 
 (** A group is free if there exists a generating type on which it is a free group. *)
 Class IsFreeGroup (F_S : Group)
   := isfreegroup : {S : _ & {i : _ & IsFreeGroupOn S F_S i}}.
 
-Global Instance isfreegroup_isfreegroupon (S : Type) (F_S : Group) (i : S -> F_S)
+Instance isfreegroup_isfreegroupon (S : Type) (F_S : Group) (i : S -> F_S)
   {H : IsFreeGroupOn S F_S i}
   : IsFreeGroup F_S
   := (S; i; H).

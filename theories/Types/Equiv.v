@@ -7,7 +7,7 @@ Local Open Scope path_scope.
 
 (** ** [IsEquiv f] is logically equivalent to [IsTruncMap (-2) f] *)
 
-Global Instance contr_map_isequiv {A B} (f : A -> B) `{IsEquiv _ _ f}
+Instance contr_map_isequiv {A B} (f : A -> B) `{IsEquiv _ _ f}
   : IsTruncMap (-2) f.
 Proof.
   intros b; refine (contr_equiv' {a : A & a = f^-1 b} _).
@@ -65,7 +65,7 @@ Defined.
 Section AssumeFunext.
   Context `{Funext}.
 
-  Global Instance contr_sect_equiv {A B} (f : A -> B) `{IsEquiv A B f}
+  #[export] Instance contr_sect_equiv {A B} (f : A -> B) `{IsEquiv A B f}
     : Contr {g : B -> A & f o g == idmap}.
   Proof.
     refine (contr_change_center (f^-1 ; eisretr f)).
@@ -75,7 +75,7 @@ Section AssumeFunext.
     apply equiv_ap10.
   Defined.
 
-  Global Instance contr_retr_equiv {A B} (f : A -> B) `{IsEquiv A B f}
+  #[export] Instance contr_retr_equiv {A B} (f : A -> B) `{IsEquiv A B f}
     : Contr {g : B -> A & g o f == idmap}.
   Proof.
     refine (contr_change_center (f^-1 ; eissect f)).
@@ -84,7 +84,7 @@ Section AssumeFunext.
     apply equiv_ap10.
   Defined.
 
-  Global Instance hprop_isequiv {A B} (f : A -> B)
+  #[export] Instance hprop_isequiv {A B} (f : A -> B)
     : IsHProp (IsEquiv f).
   Proof.
     (* We will show that assuming [f] is an equivalence, [IsEquiv f] decomposes into a sigma of two contractible types. *)
@@ -123,13 +123,13 @@ Section AssumeFunext.
     : (e1 = e2 :> (A -> B)) -> (e1 = e2 :> (A <~> B))
     := equiv_path_equiv e1 e2.
 
-  Global Instance isequiv_path_equiv {A B : Type} {e1 e2 : A <~> B}
+  #[export] Instance isequiv_path_equiv {A B : Type} {e1 e2 : A <~> B}
     : IsEquiv (@path_equiv _ _ e1 e2)
     (* Coq can find this instance by itself, but it's slow. *)
     := equiv_isequiv (equiv_path_equiv e1 e2).
 
   (** The inverse equivalence is homotopic to [ap equiv_fun], so that is also an equivalence. *)
-  Global Instance isequiv_ap_equiv_fun {A B : Type} (e1 e2 : A <~> B)
+  #[export] Instance isequiv_ap_equiv_fun {A B : Type} (e1 e2 : A <~> B)
     : IsEquiv (ap (x:=e1) (y:=e2) (@equiv_fun A B)).
   Proof.
     snrapply isequiv_homotopic.
@@ -141,7 +141,7 @@ Section AssumeFunext.
   (** This implies that types of equivalences inherit truncation.  Note that we only state the theorem for [n.+1]-truncatedness, since it is not true for contractibility: if [B] is contractible but [A] is not, then [A <~> B] is not contractible because it is not inhabited.
 
    Don't confuse this lemma with [trunc_equiv], which says that if [A] is truncated and [A] is equivalent to [B], then [B] is truncated.  It would be nice to find a better pair of names for them. *)
-  Global Instance istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
+  #[export] Instance istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
     : IsTrunc n.+1 (A <~> B).
   Proof.
     apply istrunc_S.
@@ -150,7 +150,7 @@ Section AssumeFunext.
   Defined.
 
   (** In the contractible case, we have to assume that *both* types are contractible to get a contractible type of equivalences. *)
-  Global Instance contr_equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
+  #[export] Instance contr_equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
     : Contr (A <~> B).
   Proof.
     apply (Build_Contr _ equiv_contr_contr).
@@ -158,7 +158,7 @@ Section AssumeFunext.
   Defined.
 
   (** The type of *automorphisms* of an hprop is always contractible *)
-  Global Instance contr_aut_hprop A `{IsHProp A}
+  #[export] Instance contr_aut_hprop A `{IsHProp A}
     : Contr (A <~> A).
   Proof.
     apply (Build_Contr _ 1%equiv).
@@ -170,7 +170,7 @@ Section AssumeFunext.
     : (A <~> B) -> (C <~> D)
     := fun f => ((k oE f) oE h^-1).
 
-  Global Instance isequiv_functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
+  #[export] Instance isequiv_functor_equiv {A B C D} (h : A <~> C) (k : B <~> D)
     : IsEquiv (functor_equiv h k).
   Proof.
     refine (isequiv_adjointify _
@@ -196,7 +196,7 @@ Section AssumeFunext.
     := equiv_functor_equiv 1%equiv e.
 
   (** Reversing equivalences is an equivalence *)
-  Global Instance isequiv_equiv_inverse {A B}
+  #[export]  Instance isequiv_equiv_inverse {A B}
     : IsEquiv (@equiv_inverse A B).
   Proof.
     refine (isequiv_adjointify _ equiv_inverse _ _);

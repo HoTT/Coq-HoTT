@@ -15,8 +15,8 @@ Record RelEquiv A B :=
     relequiv_contr_g : forall b, Contr { a : A & equiv_rel a b } }.
 
 Arguments equiv_rel {A B} _ _ _.
-Global Existing Instance relequiv_contr_f.
-Global Existing Instance relequiv_contr_g.
+Existing Instance relequiv_contr_f.
+Existing Instance relequiv_contr_g.
 
 Definition issig_relequiv {A B}
   : { equiv_rel : A -> B -> Type

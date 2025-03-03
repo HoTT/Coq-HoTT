@@ -40,7 +40,7 @@ We do not require [R] to be an equivalence relation, but implicitly consider its
                         class_of x = class_of y.
 
     Axiom quotient_set : IsHSet (@quotient sR).
-    Global Existing Instance quotient_set.
+    #[export] Existing Instance quotient_set.
 
     Definition quotient_ind (P : (@quotient sR) -> Type) {sP : forall x, IsHSet (P x)}
                (dclass : forall x, P (class_of x))

@@ -18,7 +18,7 @@ Definition iff_refl {A} : A <-> A
   := (idmap , idmap).
 
 (** [iff] is a reflexive relation. *)
-Global Instance iff_reflexive : Reflexive iff | 1
+Instance iff_reflexive : Reflexive iff | 1
   := @iff_refl.
 
 (** Logical equivalences can be inverted. *)
@@ -26,7 +26,7 @@ Definition iff_inverse {A B} : (A <-> B) -> (B <-> A)
   :=  fun f => (snd f , fst f).
 
 (** [iff] is a symmetric relation. *)
-Global Instance symmetric_iff : Symmetric iff | 1
+Instance symmetric_iff : Symmetric iff | 1
   := @iff_inverse.
 
 (** Logical equivalences can be composed. *)
@@ -34,7 +34,7 @@ Definition iff_compose {A B C} (f : A <-> B) (g : B <-> C) : A <-> C
   := (fst g o fst f , snd f o snd g).
 
 (** [iff] is a transitive relation. *)
-Global Instance transitive_iff : Transitive iff | 1
+Instance transitive_iff : Transitive iff | 1
   := @iff_compose.
 
 (** Any equivalence can be considered a logical equivalence by discarding everything but the maps. We make this a coercion so that equivalences can be used in place of logical equivalences. *)

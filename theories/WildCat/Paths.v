@@ -23,15 +23,15 @@ Definition is3graph_paths (A : Type) `{Is2Graph A} : Is3Graph A
 Local Existing Instances isgraph_paths is2graph_paths is3graph_paths | 10.
 
 (** Any type has composition and identity morphisms given by path concatenation and reflexivity. *)
-Global Instance is01cat_paths (A : Type) : Is01Cat A
+Instance is01cat_paths (A : Type) : Is01Cat A
   := {| Id := @idpath _ ; cat_comp := fun _ _ _ x y => concat y x |}.
 
 (** Any type has a 0-groupoid structure with inverse morphisms given by path inversion. *)
-Global Instance is0gpd_paths (A : Type) : Is0Gpd A
+Instance is0gpd_paths (A : Type) : Is0Gpd A
   := {| gpd_rev := @inverse _ |}.
 
 (** Postcomposition is a 0-functor when the 2-cells are paths. *)
-Global Instance is0functor_cat_postcomp_paths (A : Type) `{Is01Cat A}
+Instance is0functor_cat_postcomp_paths (A : Type) `{Is01Cat A}
   (a b c : A) (g : b $-> c)
   : Is0Functor (cat_postcomp a g).
 Proof.
@@ -40,7 +40,7 @@ Proof.
 Defined.
 
 (** Precomposition is a 0-functor when the 2-cells are paths. *)
-Global Instance is0functor_cat_precomp_paths (A : Type) `{Is01Cat A}
+Instance is0functor_cat_precomp_paths (A : Type) `{Is01Cat A}
   (a b c : A) (f : a $-> b)
   : Is0Functor (cat_precomp c f).
 Proof.
@@ -49,7 +49,7 @@ Proof.
 Defined.
 
 (** Any type is a 1-category with n-morphisms given by paths. *)
-Global Instance is1cat_paths {A : Type} : Is1Cat A.
+Instance is1cat_paths {A : Type} : Is1Cat A.
 Proof.
   snrapply Build_Is1Cat.
   - exact _.
@@ -63,7 +63,7 @@ Proof.
 Defined.
 
 (** Any type is a 1-groupoid with morphisms given by paths. *)
-Global Instance is1gpd_paths {A : Type} : Is1Gpd A.
+Instance is1gpd_paths {A : Type} : Is1Gpd A.
 Proof.
   snrapply Build_Is1Gpd.
   - exact (@concat_pV A).
@@ -71,7 +71,7 @@ Proof.
 Defined.
 
 (** Any type is a 2-category with higher morphhisms given by paths. *)
-Global Instance is21cat_paths {A : Type} : Is21Cat A.
+Instance is21cat_paths {A : Type} : Is21Cat A.
 Proof.
   snrapply Build_Is21Cat.
   - exact _.

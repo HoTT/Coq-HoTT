@@ -41,7 +41,7 @@ Definition equiv_apD10 {A : Type} (P : A -> Type) f g
 : (f = g) <~> (f == g)
   := Build_Equiv _ _ (@apD10 A P f g) _.
 
-Global Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
+#[export] Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : IsEquiv (path_forall f g) | 0
   := @isequiv_inverse _ _ (@apD10 A P f g) _.
 
@@ -243,7 +243,7 @@ Defined.
 (** ** Equivalences *)
 
 (** If *both* maps in [functor_forall] are equivalences, then so is the output. *)
-Global Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
+#[export] Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : IsEquiv (functor_forall f g) | 1000.
 Proof.
@@ -330,7 +330,7 @@ Definition path_forall11 {A : Type} {B : A -> Type} {P : forall a : A, B a -> Ty
   : (forall x y, f x y = g x y) -> f = g
   := equiv_path_forall11 f g.
 
-Global Instance isequiv_path_forall11 {A : Type} {B : A -> Type} `{P : forall a : A, B a -> Type} (f g : forall a b, P a b)
+#[export] Instance isequiv_path_forall11 {A : Type} {B : A -> Type} `{P : forall a : A, B a -> Type} (f g : forall a b, P a b)
   : IsEquiv (path_forall11 f g) | 0
   := _.
 
@@ -367,7 +367,7 @@ Definition flip `{P : A -> B -> Type}
 
 Arguments flip {A B P} f b a /.
 
-Global Instance isequiv_flip `{P : A -> B -> Type}
+Instance isequiv_flip `{P : A -> B -> Type}
   : IsEquiv (@flip _ _ P) | 0.
 Proof.
   set (flip_P := @flip _ _ P).

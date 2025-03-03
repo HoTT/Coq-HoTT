@@ -31,18 +31,18 @@ Section contents.
 Universe UN UNalt.
 Context (N : Type@{UN}) `{Naturals@{UN UN UN UN UN UN UN UNalt} N}.
 
-Global Instance T_set : IsHSet (T N).
+#[export] Instance T_set : IsHSet (T N).
 Proof.
 assert (E : sig (fun _ : N => N) <~> (T N)).
 - issig.
 - apply (istrunc_equiv_istrunc _ E).
 Qed.
 
-Global Instance inject : Cast N (T N) := fun x => C x 0.
+#[export] Instance inject : Cast N (T N) := fun x => C x 0.
 
 Definition equiv := fun x y => pos x + neg y = pos y + neg x.
 
-Global Instance equiv_is_equiv_rel@{} : EquivRel equiv.
+#[export] Instance equiv_is_equiv_rel@{} : EquivRel equiv.
 Proof.
 split.
 - hnf. reflexivity.
@@ -130,21 +130,21 @@ Definition Tlt : Lt (T N)
 Definition Tapart : Apart (T N)
   := fun a b => apart (pos a + neg b) (pos b + neg a).
 
-Global Instance Tle_hprop@{}
+#[export] Instance Tle_hprop@{}
   : is_mere_relation (T N) Tle.
 Proof.
 intros;unfold Tle.
 apply full_pseudo_srorder_le_hprop.
 Qed.
 
-Global Instance Tlt_hprop@{}
+#[export] Instance Tlt_hprop@{}
   : is_mere_relation (T N) Tlt.
 Proof.
 intros;unfold Tlt;apply _.
 Qed.
 
 Local Existing Instance pseudo_order_apart.
-Global Instance Tapart_hprop@{} : is_mere_relation (T N) Tapart.
+#[export] Instance Tapart_hprop@{} : is_mere_relation (T N) Tapart.
 Proof.
 intros;unfold Tapart;apply _.
 Qed.
@@ -304,9 +304,9 @@ Instance N_fullpartial : FullPartialOrder Ale Alt
 
 Definition Z@{} : Type@{UN} := @quotient _ PairT.equiv@{UN UNalt} _.
 
-Global Instance Z_of_pair : Cast (PairT.T N) Z := class_of _.
+#[export] Instance Z_of_pair : Cast (PairT.T N) Z := class_of _.
 
-Global Instance Z_of_N : Cast N Z := Compose Z_of_pair (PairT.inject@{UN UNalt} _).
+#[export] Instance Z_of_N : Cast N Z := Compose Z_of_pair (PairT.inject@{UN UNalt} _).
 
 Definition Z_path {x y} : PairT.equiv x y -> Z_of_pair x = Z_of_pair y
   := related_classes_eq _.
@@ -384,7 +384,7 @@ destruct (dec (PairT.equiv q r)) as [E|E].
   apply E. apply (related_path E').
 Defined.
 
-Global Instance R_dec `{DecidablePaths N}
+#[export] Instance R_dec `{DecidablePaths N}
   : DecidablePaths Z.
 Proof.
 hnf. apply (Z_ind2 _).
@@ -393,10 +393,10 @@ Defined.
 
 (* Relations, operations and constants *)
 
-Global Instance Z0 : Zero Z := ' 0.
-Global Instance Z1 : One Z := ' 1.
+#[export] Instance Z0 : Zero Z := ' 0.
+#[export] Instance Z1 : One Z := ' 1.
 
-Global Instance Z_plus@{} : Plus Z.
+#[export] Instance Z_plus@{} : Plus Z.
 Proof.
 refine (Z_rec2 (fun x y => ' (PairT.pl@{UN UNalt} _ x y)) _).
 intros;apply Z_path;eapply PairT.pl_respects;trivial.
@@ -405,7 +405,7 @@ Defined.
 Definition Z_plus_compute q r : (' q) + (' r) = ' (PairT.pl _ q r)
   := 1.
 
-Global Instance Z_mult@{} : Mult Z.
+#[export] Instance Z_mult@{} : Mult Z.
 Proof.
 refine (Z_rec2 (fun x y => ' (PairT.ml@{UN UNalt} _ x y)) _).
 intros;apply Z_path;eapply PairT.ml_respects;trivial.
@@ -417,7 +417,7 @@ Global Typeclasses Opaque Z_plus Z_mult.
 Definition Z_mult_compute q r : (' q) * (' r) = ' (PairT.ml _ q r)
   := 1.
 
-Global Instance Z_negate@{} : Negate Z.
+#[export] Instance Z_negate@{} : Negate Z.
 Proof.
 red. apply (Z_rec (fun x => ' (PairT.opp@{UN UNalt} _ x))).
 intros;apply Z_path;eapply PairT.opp_respects;trivial.
@@ -476,9 +476,9 @@ repeat (constructor; try apply _).
 - intros x y. apply Z_path. red;simpl.
   ring_with_nat.
 Qed.
-Global Existing Instance Z_of_N_morphism.
+Existing Instance Z_of_N_morphism.
 
-Global Instance Z_of_N_injective@{} : IsInjective (cast N Z).
+#[export] Instance Z_of_N_injective@{} : IsInjective (cast N Z).
 Proof.
 intros x y E. apply related_path in E.
 red in E. simpl in E. rewrite 2!plus_0_r in E. trivial.
@@ -499,9 +499,9 @@ intros. apply path_hprop. simpl.
 apply (PairT.le_respects _);trivial.
 Defined.
 
-Global Instance Zle@{} : Le Z := fun x y => Zle_HProp x y.
+#[export] Instance Zle@{} : Le Z := fun x y => Zle_HProp x y.
 
-Global Instance ishprop_Zle : is_mere_relation _ Zle.
+#[export] Instance ishprop_Zle : is_mere_relation _ Zle.
 Proof. unfold Zle;exact _. Qed.
 
 Lemma Zle_def@{} : forall a b : PairT.T N,
@@ -545,7 +545,7 @@ split;red.
 Qed.
 
 (* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
-Global Instance Zle_cast_embedding@{} : OrderEmbedding (cast N Z)
+#[export] Instance Zle_cast_embedding@{} : OrderEmbedding (cast N Z)
   := ltac:(first [exact Zle_cast_embedding'@{Ularge Ularge}|
                   exact Zle_cast_embedding']).
 
@@ -588,11 +588,11 @@ Instance Zmult_nonneg@{} : forall x y : Z, PropHolds (0 â‰¤ x) -> PropHolds (0 â
   := ltac:(first [exact Zmult_nonneg'@{Ularge Ularge Ularge}|
                   exact Zmult_nonneg']).
 
-Global Instance Z_order@{} : SemiRingOrder Zle.
+#[export] Instance Z_order@{} : SemiRingOrder Zle.
 Proof. pose proof Z_ring; apply rings.from_ring_order; apply _. Qed.
 
 (* Make this computable? Would need to compute through Z_ind2. *)
-Global Instance Zle_dec `{forall x y : N, Decidable (x <= y)}
+#[export] Instance Zle_dec `{forall x y : N, Decidable (x <= y)}
   : forall x y : Z, Decidable (x <= y).
 Proof.
 apply (Z_ind2 _).
@@ -608,9 +608,9 @@ intros. apply path_hprop. simpl.
 apply (PairT.lt_respects _);trivial.
 Defined.
 
-Global Instance Zlt@{} : Lt Z := fun x y => Zlt_HProp x y.
+#[export] Instance Zlt@{} : Lt Z := fun x y => Zlt_HProp x y.
 
-Global Instance ishprop_Zlt : is_mere_relation _ Zlt.
+#[export] Instance ishprop_Zlt : is_mere_relation _ Zlt.
 Proof. unfold Zlt;exact _. Qed.
 
 Lemma Zlt_def' : forall a b, ' a < ' b = PairT.Tlt a b.
@@ -682,10 +682,10 @@ Instance Zmult_pos@{} : forall x y : Z, PropHolds (0 < x) -> PropHolds (0 < y) -
   := ltac:(first [exact Zmult_pos'@{Ularge Ularge Ularge}|
                   exact Zmult_pos'@{}]).
 
-Global Instance Z_strict_srorder : StrictSemiRingOrder Zlt.
+#[export] Instance Z_strict_srorder : StrictSemiRingOrder Zlt.
 Proof. pose proof Z_ring; apply from_strict_ring_order; apply _. Qed.
 
-Global Instance Zlt_dec `{forall x y : N, Decidable (x < y)}
+#[export] Instance Zlt_dec `{forall x y : N, Decidable (x < y)}
   : forall x y : Z, Decidable (x < y).
 Proof.
 apply (Z_ind2 _).
@@ -704,7 +704,7 @@ intros. apply path_hprop. simpl.
 apply (PairT.apart_respects _);trivial.
 Defined.
 
-Global Instance Zapart@{} : Apart Z := fun x y => Zapart_HProp x y.
+#[export] Instance Zapart@{} : Apart Z := fun x y => Zapart_HProp x y.
 
 Lemma Zapart_def' : forall a b, apart (' a) (' b) = PairT.Tapart a b.
 Proof. reflexivity. Qed.
@@ -713,7 +713,7 @@ Proof. reflexivity. Qed.
 Definition Zapart_def@{i} := ltac:(first [exact Zapart_def'@{Uhuge i}|
                                           exact Zapart_def'@{i}]).
 
-Global Instance ishprop_Zapart : is_mere_relation _ Zapart.
+#[export] Instance ishprop_Zapart : is_mere_relation _ Zapart.
 Proof. unfold Zapart;exact _. Qed.
 
 Lemma Z_trivial_apart' `{!TrivialApart N}
@@ -730,7 +730,7 @@ split;intros E1.
   apply E1,Z_path. red;simpl. trivial.
 Qed.
 
-Global Instance Z_trivial_apart@{} `{!TrivialApart N}
+#[export] Instance Z_trivial_apart@{} `{!TrivialApart N}
   : TrivialApart Z
   := ltac:(first [exact Z_trivial_apart'@{Ularge}|
                   exact Z_trivial_apart'@{}]).
@@ -855,7 +855,7 @@ Proof.
 Fail exact Z_full_pseudo_srorder@{i}.
 Abort.
 
-Global Instance Z_to_ring@{} : IntegersToRing@{UN UNalt} Z.
+#[export] Instance Z_to_ring@{} : IntegersToRing@{UN UNalt} Z.
 Proof.
 red. intros R ??????.
 eapply Z_rec.
@@ -917,7 +917,7 @@ rewrite 2!(naturals_initial (h:=Compose h (cast N Z))).
 trivial.
 Qed.
 
-Global Instance Z_integers@{} : Integers Z.
+#[export] Instance Z_integers@{} : Integers Z.
 Proof.
 split;try apply _.
 - apply Z_ring.
@@ -1045,7 +1045,7 @@ red. apply (Z_rect _ Z_abs_def).
 exact Z_abs_respects'.
 Qed.
 
-Global Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
+#[export] Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
   UN UN UN UN UN
   UN UN UN UN UN
   UN UN} Z N
@@ -1102,15 +1102,15 @@ destruct (int_abs_sig Z N x) as [[a Ea]|[a Ea]],
     rewrite negate_0,<-Eb;trivial.
 Qed.
 
-Global Instance Z_zero_product@{} : ZeroProduct Z
+#[export] Instance Z_zero_product@{} : ZeroProduct Z
   := ltac:(first [exact Z_zero_product'@{Ularge Ularge}|
                   exact Z_zero_product'@{}]).
 
 End contents.
 
 Module Instances.
-  Global Existing Instances
+  Existing Instances
     T_set inject Tle_hprop Tlt_hprop Tapart_hprop Z_of_pair Z_of_N R_dec Z0 Z1 Z_plus Z_mult Z_negate Z_of_N_injective Zle ishprop_Zle Zle_cast_embedding Z_order Zle_dec Zlt ishprop_Zlt Z_strict_srorder Zlt_dec Zapart ishprop_Zapart Z_trivial_apart Z_to_ring Z_integers Z_abs Z_zero_product Z_of_N_morphism.
 End Instances.
-
+Export Instances.
 End NatPair.

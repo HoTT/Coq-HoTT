@@ -42,11 +42,11 @@ Fixpoint Peqb P Q : Bool :=
   | _, _ => false
   end.
 
-Global Instance Peqb_instance : Eqb Pol := Peqb.
+#[export] Instance Peqb_instance : Eqb Pol := Peqb.
 Arguments Peqb_instance _ _ /.
 
-Global Instance P0 : canonical_names.Zero Pol := Pconst 0.
-Global Instance P1 : canonical_names.One Pol := Pconst 1.
+#[export] Instance P0 : canonical_names.Zero Pol := Pconst 0.
+#[export] Instance P1 : canonical_names.One Pol := Pconst 1.
 
 Universe UR.
 Context {R : Type@{UR} } `{AlmostRing R}

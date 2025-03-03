@@ -25,7 +25,7 @@ Section GroupCongruenceQuotient.
   (** The type underlying the quotient group is [Quotient R]. *)
   Definition CongruenceQuotient := G / R.
 
-  Global Instance congquot_sgop : SgOp CongruenceQuotient.
+  #[export] Instance congquot_sgop : SgOp CongruenceQuotient.
   Proof.
     srapply Quotient_rec2.
     - intros x y.
@@ -34,12 +34,12 @@ Section GroupCongruenceQuotient.
     - intros x y y' q. apply qglue. by apply iscong.
   Defined.
 
-  Global Instance congquot_mon_unit : MonUnit CongruenceQuotient.
+  #[export] Instance congquot_mon_unit : MonUnit CongruenceQuotient.
   Proof.
     apply class_of, mon_unit.
   Defined.
 
-  Global Instance congquot_inverse : Inverse CongruenceQuotient.
+  #[export] Instance congquot_inverse : Inverse CongruenceQuotient.
   Proof.
     srapply Quotient_rec.
     1: exact (class_of R o (^)).
@@ -58,7 +58,7 @@ Section GroupCongruenceQuotient.
         reflexivity.
   Defined.
 
-  Global Instance congquot_sgop_associative : Associative congquot_sgop.
+  #[export] Instance congquot_sgop_associative : Associative congquot_sgop.
   Proof.
     srapply Quotient_ind3_hprop; intros x y z.
     snrapply (ap (class_of R)).
@@ -66,9 +66,9 @@ Section GroupCongruenceQuotient.
   Defined.
   Global Opaque congquot_sgop_associative.
 
-  Global Instance issemigroup_congquot : IsSemiGroup CongruenceQuotient := {}.
+  #[export] Instance issemigroup_congquot : IsSemiGroup CongruenceQuotient := {}.
 
-  Global Instance congquot_leftidentity : LeftIdentity (.*.) mon_unit.
+  #[export] Instance congquot_leftidentity : LeftIdentity (.*.) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     snrapply (ap (class_of R)).
@@ -76,7 +76,7 @@ Section GroupCongruenceQuotient.
   Defined.
   Global Opaque congquot_leftidentity.
 
-  Global Instance congquot_rightidentity : RightIdentity (.*.) mon_unit.
+  #[export] Instance congquot_rightidentity : RightIdentity (.*.) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
     snrapply (ap (class_of R)).
@@ -84,9 +84,9 @@ Section GroupCongruenceQuotient.
   Defined.
   Global Opaque congquot_rightidentity.
 
-  Global Instance ismonoid_quotientgroup : IsMonoid CongruenceQuotient := {}.
+  #[export] Instance ismonoid_quotientgroup : IsMonoid CongruenceQuotient := {}.
 
-  Global Instance quotientgroup_leftinverse : LeftInverse (.*.) (^) mon_unit.
+  #[export] Instance quotientgroup_leftinverse : LeftInverse (.*.) (^) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x; cbn beta.
     snrapply (ap (class_of R)).
@@ -94,7 +94,7 @@ Section GroupCongruenceQuotient.
   Defined.
   Global Opaque quotientgroup_leftinverse.
 
-  Global Instance quotientgroup_rightinverse : RightInverse (.*.) (^) mon_unit.
+  #[export] Instance quotientgroup_rightinverse : RightInverse (.*.) (^) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x; cbn beta.
     snrapply (ap (class_of R)).
@@ -102,7 +102,7 @@ Section GroupCongruenceQuotient.
   Defined.
   Global Opaque quotientgroup_rightinverse.
 
-  Global Instance isgroup_quotientgroup : IsGroup CongruenceQuotient := {}.
+  #[export] Instance isgroup_quotientgroup : IsGroup CongruenceQuotient := {}.
 
 End GroupCongruenceQuotient.
 
@@ -116,7 +116,7 @@ Section Cosets.
 
   (** TODO: Way too many universes, needs fixing *)
   (** The set of left cosets of a finite subgroup of a finite group is finite. *)
-  Global Instance finite_leftcoset `{Univalence, Finite G, Finite H}
+  #[export] Instance finite_leftcoset `{Univalence, Finite G, Finite H}
     : Finite LeftCoset.
   Proof.
     nrapply finite_quotient.
@@ -143,7 +143,7 @@ Section Cosets.
   Defined.
 
   (** The set of right cosets of a finite subgroup of a finite group is finite since it is equivalent to the set of left cosets. *)
-  Global Instance finite_rightcoset `{Univalence, Finite G, Finite H}
+  #[export] Instance finite_rightcoset `{Univalence, Finite G, Finite H}
     : Finite RightCoset.
   Proof.
     nrapply finite_equiv'.
@@ -161,13 +161,13 @@ Section QuotientGroup.
 
   Context (G : Group) (N : NormalSubgroup G).
 
-  Global Instance iscongruence_in_cosetL : IsCongruence (in_cosetL N).
+  #[export] Instance iscongruence_in_cosetL : IsCongruence (in_cosetL N).
   Proof.
     srapply Build_IsCongruence.
     intros; by apply in_cosetL_cong.
   Defined.
 
-  Global Instance iscongruence_in_cosetR: IsCongruence (in_cosetR N).
+  #[export] Instance iscongruence_in_cosetR: IsCongruence (in_cosetR N).
   Proof.
     srapply Build_IsCongruence.
     intros; by apply in_cosetR_cong.
@@ -296,7 +296,7 @@ Section FirstIso.
   Defined.
 
   (** The underlying map of this homomorphism is an equivalence *)
-  Global Instance isequiv_grp_image_quotient
+  #[export] Instance isequiv_grp_image_quotient
     : IsEquiv grp_image_quotient.
   Proof.
     snrapply isequiv_surj_emb.
@@ -320,7 +320,7 @@ End FirstIso.
 
 (** Quotient groups are finite. *)
 (** Note that we cannot constructively conclude that the normal subgroup [H] must be finite since [G] is, therefore we keep it as an assumption. *)
-Global Instance finite_quotientgroup {U : Univalence} (G : Group) (H : NormalSubgroup G)
+Instance finite_quotientgroup {U : Univalence} (G : Group) (H : NormalSubgroup G)
   (fin_G : Finite G) (fin_H : Finite H)
   : Finite (QuotientGroup G H).
 Proof.
@@ -354,7 +354,7 @@ Proof.
 Defined.
 
 (** When the normal subgroup [N] is trivial, the inclusion map [G $-> G / N] is an isomorphism. *)
-Global Instance catie_grp_quotient_map_trivial {G : Group} (N : NormalSubgroup G)
+Instance catie_grp_quotient_map_trivial {G : Group} (N : NormalSubgroup G)
   (triv : IsTrivialGroup N)
   : CatIsEquiv (@grp_quotient_map G N).
 Proof.
@@ -372,7 +372,7 @@ Definition grp_quotient_trivial (G : Group) (N : NormalSubgroup G)
   := Build_CatEquiv grp_quotient_map.
 
 (** A quotient by a maximal subgroup is trivial. *)
-Global Instance istrivial_grp_quotient_maximal
+Instance istrivial_grp_quotient_maximal
   (G : Group) (N : NormalSubgroup G)
   : IsMaximalSubgroup N -> IsTrivialGroup (G / N).
 Proof.

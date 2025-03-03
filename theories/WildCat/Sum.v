@@ -3,7 +3,7 @@ Require Import WildCat.Core.
 
 (** ** Sum categories *)
 
-Global Instance isgraph_sum A B `{IsGraph A} `{IsGraph B}
+Instance isgraph_sum A B `{IsGraph A} `{IsGraph B}
   : IsGraph (A + B).
 Proof.
   econstructor.
@@ -14,7 +14,7 @@ Proof.
   + exact (b1 $-> b2).
 Defined.
 
-Global Instance is01cat_sum A B `{ Is01Cat A } `{ Is01Cat B}
+Instance is01cat_sum A B `{ Is01Cat A } `{ Is01Cat B}
   : Is01Cat (A + B).
 Proof.
   srapply Build_Is01Cat.
@@ -23,7 +23,7 @@ Proof.
     try contradiction; cbn; apply cat_comp.
 Defined.
 
-Global Instance is2graph_sum A B `{Is2Graph A, Is2Graph B}
+Instance is2graph_sum A B `{Is2Graph A, Is2Graph B}
   : Is2Graph (A + B).
 Proof.
   intros x y; apply Build_IsGraph.
@@ -32,7 +32,7 @@ Proof.
 Defined.
 
 (* Note: [try contradiction] deals with empty cases. *)
-Global Instance is1cat_sum A B `{ Is1Cat A } `{ Is1Cat B}
+Instance is1cat_sum A B `{ Is1Cat A } `{ Is1Cat B}
   : Is1Cat (A + B).
 Proof.
   snrapply Build_Is1Cat.

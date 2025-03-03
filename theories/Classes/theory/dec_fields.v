@@ -12,7 +12,7 @@ Context `{IsDecField F} `{forall x y: F, Decidable (x = y)}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
 
-Global Instance decfield_zero_product : ZeroProduct F.
+#[export] Instance decfield_zero_product : ZeroProduct F.
 Proof.
 intros x y E.
 destruct (dec (x = 0)) as [? | Ex];auto.
@@ -22,7 +22,7 @@ rewrite associativity, (commutativity y), E.
 apply mult_0_l.
 Qed.
 
-Global Instance decfield_integral_domain : IsIntegralDomain F.
+#[export] Instance decfield_integral_domain : IsIntegralDomain F.
 Proof.
 split; try apply _.
 Qed.
@@ -85,7 +85,7 @@ destruct (dec (y = 0)) as [Ey|Ey].
   + rewrite dec_recip_inverse;trivial.
 Qed.
 
-Global Instance dec_recip_inj: IsInjective (/).
+#[export] Instance dec_recip_inj: IsInjective (/).
 Proof.
 repeat (split; try apply _).
 intros x y E.
@@ -100,7 +100,7 @@ destruct (dec (y = 0)) as [Ey|Ey].
     apply dec_recip_ne_0. trivial.
 Qed.
 
-Global Instance dec_recip_involutive: Involutive (/).
+#[export] Instance dec_recip_involutive: Involutive (/).
 Proof.
 intros x. destruct (dec (x = 0)) as [Ex|Ex].
 - rewrite Ex, !dec_recip_0. trivial.
@@ -186,11 +186,11 @@ Section is_field.
   Context `{IsDecField F} `{Apart F} `{!TrivialApart F}
     `{Decidable.DecidablePaths F}.
 
-  Global Instance recip_dec_field: Recip F := fun x => / x.1.
+  #[export] Instance recip_dec_field: Recip F := fun x => / x.1.
 
   Local Existing Instance dec_strong_setoid.
 
-  Global Instance decfield_field : IsField F.
+  #[export] Instance decfield_field : IsField F.
   Proof.
   split; try apply _.
   - apply (dec_strong_binary_morphism (+)).
@@ -250,7 +250,7 @@ End from_stdlib_field_theory. *)
 Section morphisms.
   Context  `{IsDecField F} `{TrivialApart F} `{Decidable.DecidablePaths F}.
 
-  Global Instance dec_field_to_domain_inj `{IsIntegralDomain R}
+  #[export] Instance dec_field_to_domain_inj `{IsIntegralDomain R}
     `{!IsSemiRingPreserving (f : F -> R)} : IsInjective f.
   Proof.
   apply injective_preserves_0.

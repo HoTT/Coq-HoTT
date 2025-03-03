@@ -1,5 +1,6 @@
 Require Import Basics Types Truncations.Core.
 Require Import WildCat.Core HSet.
+Require Import Algebra.Groups.Group.
 Require Export Algebra.Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
 
@@ -166,7 +167,7 @@ Defined.
 (** ** Properties of pushouts of maps *)
 
 (** The pushout of an epimorphism is an epimorphism. *)
-Global Instance ab_pushout_surjection_inr {A B C : AbGroup}
+Instance ab_pushout_surjection_inr {A B C : AbGroup}
   (f : A $-> B) (g : A $-> C) `{S : IsSurjection f}
   : IsSurjection (ab_pushout_inr (f:=f) (g:=g)).
 Proof.

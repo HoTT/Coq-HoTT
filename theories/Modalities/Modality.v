@@ -87,7 +87,7 @@ Defined.
 (** Note the reversal of the order: [O1 << O2] means that [O2] has dependent eliminators into [O1]. *)
 Class O_strong_leq (O1 O2 : ReflectiveSubuniverse)
   := reflectsD_strong_leq : forall A, ReflectsD O2 O1 A.
-Global Existing Instance reflectsD_strong_leq.
+Existing Instance reflectsD_strong_leq.
 
 Infix "<<" := O_strong_leq : subuniverse_scope.
 Open Scope subuniverse_scope.
@@ -129,7 +129,7 @@ Record Modality@{i} := Build_Modality'
       ReflectsD modality_subuniv modality_subuniv T ;
 }.
 
-Global Existing Instance modality_reflectsD.
+Existing Instance modality_reflectsD.
 (** We don't declare [modality_subuniv] as a coercion or [modality_prereflects] as a global instance, because we want them only to be found by way of the following "unbundling" coercion to reflective subuniverses. *)
 
 Definition modality_to_reflective_subuniverse (O : Modality@{i})

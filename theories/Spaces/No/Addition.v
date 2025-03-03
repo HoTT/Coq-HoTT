@@ -12,8 +12,8 @@ Class HasAddition (S : OptionSort) :=
     ; sum_options : forall L R L' R',
         InSort S L R -> InSort S L' R' -> InSort S (L + L') (R + R')
   }.
-Global Existing Instance empty_options.
-Global Existing Instance sum_options.
+Existing Instance empty_options.
+Existing Instance sum_options.
 
 Global Instance hasaddition_maxsort : HasAddition MaxSort
   := { empty_options := tt ;

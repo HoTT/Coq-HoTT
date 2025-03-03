@@ -44,15 +44,15 @@ Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=
       (g $@L cat_idl f) $o (cat_assoc f (Id b) g) $== (cat_idr g $@R f)
 }.
 
-Global Existing Instance is1cat_hom.
-Global Existing Instance is1gpd_hom.
-Global Existing Instance is1functor_precomp.
-Global Existing Instance is1functor_postcomp.
-Global Existing Instance is1natural_cat_assoc_l.
-Global Existing Instance is1natural_cat_assoc_m.
-Global Existing Instance is1natural_cat_assoc_r.
-Global Existing Instance is1natural_cat_idl.
-Global Existing Instance is1natural_cat_idr.
+Existing Instance is1cat_hom.
+Existing Instance is1gpd_hom.
+Existing Instance is1functor_precomp.
+Existing Instance is1functor_postcomp.
+Existing Instance is1natural_cat_assoc_l.
+Existing Instance is1natural_cat_assoc_m.
+Existing Instance is1natural_cat_assoc_r.
+Existing Instance is1natural_cat_idl.
+Existing Instance is1natural_cat_idr.
 
 (** *** Whiskering functoriality *)
 
