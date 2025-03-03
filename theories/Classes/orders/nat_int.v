@@ -155,7 +155,7 @@ Section another_semiring.
   apply nonneg_plus_le_compat_r. apply to_semiring_nonneg.
   Qed.
 
-  Global Instance: StrictlyOrderPreserving f | 50.
+  #[export] Instance: StrictlyOrderPreserving f | 50.
   Proof.
   repeat (split; try apply _).
   intros x y E. apply nat_int_lt_plus in E. destruct E as [z E].
@@ -166,7 +166,7 @@ Section another_semiring.
   - apply pos_plus_lt_compat_r; solve_propholds.
   Qed.
 
-  Global Instance nat_morphism_order_embedding : OrderEmbedding f | 50.
+  #[export] Instance nat_morphism_order_embedding : OrderEmbedding f | 50.
   Proof. split; try apply _. apply full_pseudo_order_reflecting. Qed.
 End another_semiring.
 End nat_int_order.

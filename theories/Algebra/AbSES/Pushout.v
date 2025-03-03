@@ -158,7 +158,7 @@ Defined.
 
 (** In this file we will prove various "levels" of functoriality of pushing out. Here we show that the induced map between [AbSES B A] respect the groupoid structure of [is1gpd_abses] from AbSES.Core. *)
 
-Global Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
+Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
   : Is0Functor (abses_pushout (B:=B) f).
 Proof.
   srapply Build_Is0Functor;
@@ -175,7 +175,7 @@ Proof.
     exact (left_identity _)^.
 Defined.
 
-Global Instance is1functor_abses_pushout `{Univalence}
+Instance is1functor_abses_pushout `{Univalence}
   {A A' B : AbGroup} (f : A $-> A')
   : Is1Functor (abses_pushout (B:=B) f).
 Proof.
@@ -419,14 +419,14 @@ Defined.
 
 (** [AbSES B : AbGroup -> pType] and [AbSES' B : AbGroup -> Type] are covariant functors, for any [B]. *)
 
-Global Instance is0functor_abses'01 `{Univalence} {B : AbGroup^op}
+Instance is0functor_abses'01 `{Univalence} {B : AbGroup^op}
   : Is0Functor (AbSES' B).
 Proof.
   apply Build_Is0Functor.
   exact (fun _ _ g => abses_pushout g).
 Defined.
 
-Global Instance is1functor_abses'01 `{Univalence} {B : AbGroup^op}
+Instance is1functor_abses'01 `{Univalence} {B : AbGroup^op}
   : Is1Functor (AbSES' B).
 Proof.
   apply Build_Is1Functor; intros; cbn.
@@ -435,14 +435,14 @@ Proof.
   - apply abses_pushout_compose.
 Defined.
 
-Global Instance is0functor_abses01 `{Univalence} {B : AbGroup^op}
+Instance is0functor_abses01 `{Univalence} {B : AbGroup^op}
   : Is0Functor (AbSES B).
 Proof.
   apply Build_Is0Functor.
   exact (fun _ _ g => abses_pushout_pmap g).
 Defined.
 
-Global Instance is1functor_abses01 `{Univalence} {B : AbGroup^op}
+Instance is1functor_abses01 `{Univalence} {B : AbGroup^op}
   : Is1Functor (AbSES B).
 Proof.
   apply Build_Is1Functor; intros; cbn.

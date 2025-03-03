@@ -32,7 +32,7 @@ Section cong_ker.
 (* Leave the following results about [cong_ker] opaque because they
    are h-props. *)
 
-  Global Instance equiv_rel_ker (s : Sort σ)
+  #[export] Instance equiv_rel_ker (s : Sort σ)
     : EquivRel (cong_ker s).
   Proof.
     repeat constructor.
@@ -52,7 +52,7 @@ Section cong_ker.
       cbn. destruct r. by apply IHw.
   Qed.
 
-  Global Instance ops_compatible_ker : OpsCompatible A cong_ker.
+  #[export] Instance ops_compatible_ker : OpsCompatible A cong_ker.
   Proof.
     intros u a b R.
     unfold cong_ker.
@@ -61,7 +61,7 @@ Section cong_ker.
     by apply path_ap_operation_ker_related.
   Qed.
 
-  Global Instance is_congruence_ker : IsCongruence A cong_ker
+  #[export] Instance is_congruence_ker : IsCongruence A cong_ker
     := BuildIsCongruence A cong_ker.
 
 End cong_ker.
@@ -95,7 +95,7 @@ Section in_image_hom.
     intro u. eapply closed_under_op_in_image_hom, hom.
   Qed.
 
-  Global Instance is_subalgebra_predicate_in_image_hom
+  #[export] Instance is_subalgebra_predicate_in_image_hom
     : IsSubalgebraPredicate B in_image_hom
     := BuildIsSubalgebraPredicate is_closed_under_ops_in_image_hom.
 End in_image_hom.
@@ -149,7 +149,7 @@ Section first_isomorphism.
 (* Leave [is_homomorphism_first_isomorphism] opaque because
    [IsHomomorphism] is an hprop when [B] is a set algebra. *)
 
-  Global Instance is_homomorphism_first_isomorphism
+  #[export] Instance is_homomorphism_first_isomorphism
     : IsHomomorphism def_first_isomorphism.
   Proof.
     intro u. apply (oppreserving_first_isomorphism u.#A).
@@ -161,7 +161,7 @@ Section first_isomorphism.
     : Homomorphism (A / cong_ker f) (B && in_image_hom f)
     := BuildHomomorphism def_first_isomorphism.
 
-  Global Instance embedding_first_isomorphism (s : Sort σ)
+  #[export] Instance embedding_first_isomorphism (s : Sort σ)
     : IsEmbedding (hom_first_isomorphism s).
   Proof.
     apply isembedding_isinj_hset.
@@ -171,7 +171,7 @@ Section first_isomorphism.
     exact (p..1).
   Qed.
 
-  Global Instance surjection_first_isomorphism (s : Sort σ)
+  #[export] Instance surjection_first_isomorphism (s : Sort σ)
     : IsSurjection (hom_first_isomorphism s).
   Proof.
     apply BuildIsSurjection.
@@ -182,7 +182,7 @@ Section first_isomorphism.
     by apply path_sigma_hprop.
   Qed.
 
-  Global Instance is_isomorphism_first_isomorphism
+  #[export] Instance is_isomorphism_first_isomorphism
     : IsIsomorphism hom_first_isomorphism.
   Proof.
     intro s. apply isequiv_surj_emb; exact _.
@@ -211,7 +211,7 @@ Section first_isomorphism_surjection.
     `{Univalence} {σ} {A B : Algebra σ} `{IsHSetAlgebra B}
     (f : ∀ s, A s → B s) `{!IsHomomorphism f} {S : ∀ s, IsSurjection (f s)}.
 
-  Global Instance is_isomorphism_inc_first_isomorphism_surjection
+  #[export] Instance is_isomorphism_inc_first_isomorphism_surjection
     : IsIsomorphism (hom_inc_subalgebra B (in_image_hom f)).
   Proof.
     apply is_isomorphism_inc_improper_subalgebra.
@@ -249,7 +249,7 @@ Section first_isomorphism_inj.
     `{Univalence} {σ} {A B : Algebra σ} `{IsHSetAlgebra B}
     (f : ∀ s, A s → B s) `{!IsHomomorphism f} (inj : ∀ s, IsInjective (f s)).
 
-  Global Instance is_isomorphism_quotient_first_isomorphism_inj
+  #[export] Instance is_isomorphism_quotient_first_isomorphism_inj
     : IsIsomorphism (hom_quotient (cong_ker f)).
   Proof.
     apply is_isomorphism_quotient. intros s x y p. apply inj, p.

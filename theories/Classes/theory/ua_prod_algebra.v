@@ -31,7 +31,7 @@ Section prod_algebra.
   Definition ProdAlgebra : Algebra σ
     := BuildAlgebra carriers_prod_algebra ops_prod_algebra.
 
-  Global Instance trunc_prod_algebra {n : trunc_index}
+  #[export] Instance trunc_prod_algebra {n : trunc_index}
     `{!∀ i, IsTruncAlgebra n (A i)}
     : IsTruncAlgebra n ProdAlgebra.
   Proof.
@@ -59,7 +59,7 @@ Section hom_proj_prod_algebra.
     - intro p. apply (IHw (λ i, v i (p i)) (α (p i))). f_ap.
   Defined.
 
-  Global Instance is_homomorphism_proj_prod_algebra (i:I)
+  #[export] Instance is_homomorphism_proj_prod_algebra (i:I)
     : IsHomomorphism (def_proj_prod_algebra i).
   Proof.
     intro u.
@@ -103,7 +103,7 @@ Section ump_prod_algebra.
     - intro x. apply IHw. intro i. apply P.
   Defined.
 
-  Global Instance is_homomorphism_prod_algebra_mapin
+  #[export] Instance is_homomorphism_prod_algebra_mapin
     (f : ∀ (i:I), Homomorphism C (A i))
     : IsHomomorphism (def_prod_algebra_mapin f).
   Proof.
@@ -144,7 +144,7 @@ Section bin_prod_algebra.
   Definition bin_prod_algebras (b:Bool) : Algebra σ
     := if b then B else A.
 
-  Global Instance trunc_bin_prod_algebras {n : trunc_index}
+  #[export] Instance trunc_bin_prod_algebras {n : trunc_index}
     `{!IsTruncAlgebra n A} `{!IsTruncAlgebra n B}
     : ∀ (b:Bool), IsTruncAlgebra n (bin_prod_algebras b).
   Proof.

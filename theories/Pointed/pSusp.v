@@ -263,7 +263,7 @@ Proof.
   - apply path_pforall.
     unfold equiv_adjointify, equiv_fun.
     nrapply (pmap_prewhisker _ fmap_loops_pconst @* _).
-    rapply cat_zero_l.
+    exact (cat_zero_l (A:=pType) _).
 Defined.
 
 (** And its naturality is easy. *)
@@ -294,6 +294,9 @@ Global Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
 Proof.
   snrapply Build_Is1Natural.
   intros B B' g f.
+  match goal with 
+  | [|- _ = ?b ] => change b with  (fmap loops g $o (fmap loops f $o (loop_susp_unit A)))
+  end. 
   refine ( _ @ cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).
   apply path_pforall.

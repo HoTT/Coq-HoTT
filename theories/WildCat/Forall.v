@@ -3,7 +3,7 @@ Require Import WildCat.Core.
 
 (** ** Indexed product of categories *)
 
-Global Instance isgraph_forall (A : Type) (B : A -> Type)
+Instance isgraph_forall (A : Type) (B : A -> Type)
   `{forall a, IsGraph (B a)}
   : IsGraph (forall a, B a).
 Proof.
@@ -11,7 +11,7 @@ Proof.
   intros x y; exact (forall (a : A), x a $-> y a).
 Defined.
 
-Global Instance is01cat_forall (A : Type) (B : A -> Type)
+Instance is01cat_forall (A : Type) (B : A -> Type)
   `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)}
   : Is01Cat (forall a, B a).
 Proof.
@@ -20,7 +20,7 @@ Proof.
   + intros x y z f g a; exact (f a $o g a).
 Defined.
 
-Global Instance is0gpd_forall (A : Type) (B : A -> Type)
+Instance is0gpd_forall (A : Type) (B : A -> Type)
   (* Apparently when there's a [forall] there, Coq can't automatically add the [Is01Cat] instance from the [Is0Gpd] instance. *)
   `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)} `{forall a, Is0Gpd (B a)}
   : Is0Gpd (forall a, B a).
@@ -29,7 +29,7 @@ Proof.
   intros f g p a; exact ((p a)^$).
 Defined.
 
-Global Instance is2graph_forall (A : Type) (B : A -> Type)
+Instance is2graph_forall (A : Type) (B : A -> Type)
   `{forall a, IsGraph (B a)} `{forall a, Is2Graph (B a)}
   : Is2Graph (forall a, B a).
 Proof.
@@ -37,7 +37,7 @@ Proof.
   intros f g; exact (forall a, f a $-> g a).
 Defined.
 
-Global Instance is1cat_forall (A : Type) (B : A -> Type)
+Instance is1cat_forall (A : Type) (B : A -> Type)
   `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)}
   `{forall a, Is2Graph (B a)} `{forall a, Is1Cat (B a)}
   : Is1Cat (forall a, B a).

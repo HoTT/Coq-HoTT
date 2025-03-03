@@ -66,7 +66,7 @@ apply (antisymmetry (≤)).
   + apply le_0_2.
 Qed.
 
-Global Instance: Biinduction Z.
+#[export] Instance: Biinduction Z.
 Proof.
 intros P P0 Psuc. apply induction; trivial.
 - intros ??;apply Psuc.
@@ -75,7 +75,7 @@ intros P P0 Psuc. apply induction; trivial.
   trivial.
 Qed.
 
-Global Instance slow_int_le_dec : forall x y: Z, Decidable (x ≤ y) | 10.
+#[export] Instance slow_int_le_dec : forall x y: Z, Decidable (x ≤ y) | 10.
 Proof.
 intros x y.
 (* otherwise Z_le gets defined using peano.nat_ring

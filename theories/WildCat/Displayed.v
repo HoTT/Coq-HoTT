@@ -59,11 +59,11 @@ Definition DGpdHom_path {A : Type} {D : A -> Type} `{IsD0Gpd A D} {a b : A}
   : DGpdHom (GpdHom_path p) a' b'
   := DHom_path p p'.
 
-Global Instance reflexive_DHom {A} {D : A -> Type} `{IsD01Cat A D} {a : A}
+Instance reflexive_DHom {A} {D : A -> Type} `{IsD01Cat A D} {a : A}
   : Reflexive (DHom (Id a))
   := fun a' => DId a'.
 
-Global Instance reflexive_DGpdHom {A} {D : A -> Type} `{IsD0Gpd A D} {a : A}
+Instance reflexive_DGpdHom {A} {D : A -> Type} `{IsD0Gpd A D} {a : A}
   : Reflexive (DGpdHom (Id a))
   := fun a' => DId a'.
 
@@ -81,7 +81,7 @@ Class IsD2Graph {A : Type} `{Is2Graph A}
   := isdgraph_hom : forall {a b} {a'} {b'},
                       IsDGraph (fun (f:a $-> b) => DHom f a' b').
 
-Global Existing Instance isdgraph_hom.
+Existing Instance isdgraph_hom.
 #[global] Typeclasses Transparent IsD2Graph.
 
 Class IsD1Cat {A : Type} `{Is1Cat A}
@@ -117,10 +117,10 @@ Class IsD1Cat {A : Type} `{Is1Cat A}
              (f' : DHom f a' b'), DHom (cat_idr f) (f' $o' DId a') f';
 }.
 
-Global Existing Instance isd01cat_hom.
-Global Existing Instance isd0gpd_hom.
-Global Existing Instance isd0functor_postcomp.
-Global Existing Instance isd0functor_precomp.
+Existing Instance isd01cat_hom.
+Existing Instance isd0gpd_hom.
+Existing Instance isd0functor_postcomp.
+Existing Instance isd0functor_precomp.
 
 Definition dcat_postwhisker {A : Type} {D : A -> Type} `{IsD1Cat A D}
   {a b c : A} {f g : a $-> b} {h : b $-> c} {p : f $== g}
@@ -164,7 +164,7 @@ Definition DEpic {A} {D : A -> Type} `{IsD1Cat A D} {a b : A}
       (g' : DHom g b' c') (h' : DHom h b' c'),
       DGpdHom p (g' $o' f') (h' $o' f') -> DGpdHom (epi c g h p) g' h'.
 
-Global Instance isgraph_total {A : Type} (D : A -> Type) `{IsDGraph A D}
+Instance isgraph_total {A : Type} (D : A -> Type) `{IsDGraph A D}
   : IsGraph (sig D).
 Proof.
   srapply Build_IsGraph.
@@ -172,7 +172,7 @@ Proof.
   exact {f : a $-> b & DHom f a' b'}.
 Defined.
 
-Global Instance is01cat_total {A : Type} (D : A -> Type) `{IsD01Cat A D}
+Instance is01cat_total {A : Type} (D : A -> Type) `{IsD01Cat A D}
   : Is01Cat (sig D).
 Proof.
   srapply Build_Is01Cat.
@@ -182,7 +182,7 @@ Proof.
     exact (g $o f; g' $o' f').
 Defined.
 
-Global Instance is0gpd_total {A : Type} (D : A -> Type) `{IsD0Gpd A D}
+Instance is0gpd_total {A : Type} (D : A -> Type) `{IsD0Gpd A D}
   : Is0Gpd (sig D).
 Proof.
   srapply Build_Is0Gpd.
@@ -190,7 +190,7 @@ Proof.
   exact (f^$; dgpd_rev f').
 Defined.
 
-Global Instance is0functor_total_pr1 {A : Type} (D : A -> Type) `{IsDGraph A D}
+Instance is0functor_total_pr1 {A : Type} (D : A -> Type) `{IsDGraph A D}
   : Is0Functor (pr1 : sig D -> A).
 Proof.
   srapply Build_Is0Functor.
@@ -198,7 +198,7 @@ Proof.
   exact f.
 Defined.
 
-Global Instance is2graph_total {A : Type} (D : A -> Type) `{IsD2Graph A D}
+Instance is2graph_total {A : Type} (D : A -> Type) `{IsD2Graph A D}
   : Is2Graph (sig D).
 Proof.
   intros [a a'] [b b'].
@@ -207,7 +207,7 @@ Proof.
   exact ({p : f $-> g & DHom p f' g'}).
 Defined.
 
-Global Instance is0functor_total {A : Type} (DA : A -> Type) `{IsD01Cat A DA}
+Instance is0functor_total {A : Type} (DA : A -> Type) `{IsD01Cat A DA}
   {B : Type} (DB : B -> Type) `{IsD01Cat B DB} (F : A -> B) `{!Is0Functor F}
   (F' : forall (a : A), DA a -> DB (F a)) `{!IsD0Functor F F'}
   : Is0Functor (functor_sigma F F').
@@ -218,7 +218,7 @@ Proof.
   exact (fmap F f; dfmap F F' f').
 Defined.
 
-Global Instance is1cat_total {A : Type} (D : A -> Type) `{IsD1Cat A D}
+Instance is1cat_total {A : Type} (D : A -> Type) `{IsD1Cat A D}
   : Is1Cat (sig D).
 Proof.
   srapply Build_Is1Cat.
@@ -240,7 +240,7 @@ Proof.
     exact (cat_idr f; dcat_idr f').
 Defined.
 
-Global Instance is1functor_pr1 {A : Type} {D : A -> Type} `{IsD1Cat A D}
+Instance is1functor_pr1 {A : Type} {D : A -> Type} `{IsD1Cat A D}
   : Is1Functor (pr1 : sig D -> A).
 Proof.
   srapply Build_Is1Functor.
@@ -290,10 +290,10 @@ Class IsD1Cat_Strong {A : Type} `{Is1Cat_Strong A}
                     (f' $o' DId a')) = f';
 }.
 
-Global Existing Instance isd01cat_hom_strong.
-Global Existing Instance isd0gpd_hom_strong.
-Global Existing Instance isd0functor_postcomp_strong.
-Global Existing Instance isd0functor_precomp_strong.
+Existing Instance isd01cat_hom_strong.
+Existing Instance isd0gpd_hom_strong.
+Existing Instance isd0functor_postcomp_strong.
+Existing Instance isd0functor_precomp_strong.
 
 (* If in the future we make a [Build_Is1Cat_Strong'] that lets the user omit the second proof of associativity, this shows how it can be recovered from the original proof:
 Definition dcat_assoc_opp_strong {A : Type} {D : A -> Type} `{IsD1Cat_Strong A D}
@@ -308,7 +308,7 @@ Proof.
 Defined.
 *)
 
-Global Instance isd1cat_isd1catstrong {A : Type} (D : A -> Type)
+Instance isd1cat_isd1catstrong {A : Type} (D : A -> Type)
   `{IsD1Cat_Strong A D} : IsD1Cat D.
 Proof.
   srapply Build_IsD1Cat.
@@ -322,7 +322,7 @@ Proof.
     exact (DHom_path (cat_idr_strong f) (dcat_idr_strong f')).
 Defined.
 
-Global Instance is1catstrong_total {A : Type}
+Instance is1catstrong_total {A : Type}
   (D : A -> Type) `{IsD1Cat_Strong A D}
   : Is1Cat_Strong (sig D).
 Proof.
@@ -362,7 +362,7 @@ Arguments dfmap_id {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
 Arguments dfmap_comp {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
   F {_ _} F' {_ _ a b c f g a' b' c'} f' g'.
 
-Global Instance is1functor_total {A B : Type} (DA : A -> Type) (DB : B -> Type)
+Instance is1functor_total {A B : Type} (DA : A -> Type) (DB : B -> Type)
   (F : A -> B) (F' : forall (a : A), DA a -> DB (F a)) `{IsD1Functor A B DA DB F F'}
   : Is1Functor (functor_sigma F F').
 Proof.
@@ -377,7 +377,7 @@ Proof.
 Defined.
 
 Section IdentityFunctor.
-  Global Instance isd0functor_idmap {A : Type} `{Is01Cat A}
+  #[export] Instance isd0functor_idmap {A : Type} `{Is01Cat A}
     (DA : A -> Type) `{!IsDGraph DA, !IsD01Cat DA}
     : IsD0Functor (idmap) (fun a a' => a').
   Proof.
@@ -385,7 +385,7 @@ Section IdentityFunctor.
     assumption.
   Defined.
 
-  Global Instance isd1functor_idmap {A : Type} (DA : A -> Type)
+  #[export] Instance isd1functor_idmap {A : Type} (DA : A -> Type)
     `{IsD1Cat A DA}
     : IsD1Functor (idmap) (fun a a' => a').
   Proof.
@@ -400,7 +400,7 @@ Section IdentityFunctor.
 End IdentityFunctor.
 
 Section ConstantFunctor.
-  Global Instance isd0functor_const {A : Type} `{IsGraph A}
+  #[export] Instance isd0functor_const {A : Type} `{IsGraph A}
     {B : Type} `{Is01Cat B} (DA : A -> Type) `{!IsDGraph DA}
     (DB : B -> Type) `{!IsDGraph DB, !IsD01Cat DB} (x : B) (x' : DB x)
     : IsD0Functor (fun _ : A => x) (fun _ _ => x').
@@ -409,7 +409,7 @@ Section ConstantFunctor.
     apply DId.
   Defined.
 
-  Global Instance isd1functor_const {A : Type} {B : Type}
+  #[export] Instance isd1functor_const {A : Type} {B : Type}
     (DA : A -> Type)
     `{IsD1Cat A DA}
     (DB : B -> Type)
@@ -434,7 +434,7 @@ Section CompositeFunctor.
     (F' : forall (a : A), DA a -> DB (F a))
     (G' : forall (b : B), DB b -> DC (G b)).
 
-  Global Instance isd0functor_compose
+  #[export] Instance isd0functor_compose
     `{IsDGraph A DA} `{IsDGraph B DB} `{IsDGraph C DC}
     `{!Is0Functor F} `{!Is0Functor G}
     `{!IsD0Functor F F'} `{!IsD0Functor G G'}
@@ -444,7 +444,7 @@ Section CompositeFunctor.
     exact (dfmap G G' (dfmap F F' f')).
   Defined.
 
-  Global Instance isd1functor_compose
+  #[export] Instance isd1functor_compose
     `{IsD1Cat A DA} `{IsD1Cat B DB} `{IsD1Cat C DC}
     `{!Is0Functor F, !Is1Functor F} `{!Is0Functor G, !Is1Functor G}
     `{!IsD0Functor F F', !IsD1Functor F F'}
@@ -464,7 +464,7 @@ End CompositeFunctor.
 Local Definition pointwise_prod {A B : Type} (DA : A -> Type) (DB : B -> Type)
   (x : A * B) := DA (fst x) * DB (snd x).
 
-Global Instance isdgraph_prod {A B : Type} (DA : A -> Type) `{IsDGraph A DA}
+Instance isdgraph_prod {A B : Type} (DA : A -> Type) `{IsDGraph A DA}
   (DB : B -> Type) `{IsDGraph B DB}
   : IsDGraph (pointwise_prod DA DB).
 Proof.
@@ -472,7 +472,7 @@ Proof.
   exact (DHom f a1' a2' * DHom g b1' b2').
 Defined.
 
-Global Instance isd01cat_prod {A B : Type} (DA : A -> Type) `{IsD01Cat A DA}
+Instance isd01cat_prod {A B : Type} (DA : A -> Type) `{IsD01Cat A DA}
   (DB : B -> Type) `{IsD01Cat B DB}
   : IsD01Cat (pointwise_prod DA DB).
 Proof.
@@ -484,7 +484,7 @@ Proof.
     exact (f2' $o' f1', g2' $o' g1').
 Defined.
 
-Global Instance isd0gpd_prod {A B : Type} (DA : A -> Type) `{IsD0Gpd A DA}
+Instance isd0gpd_prod {A B : Type} (DA : A -> Type) `{IsD0Gpd A DA}
   (DB : B -> Type) `{IsD0Gpd B DB}
   : IsD0Gpd (pointwise_prod DA DB).
 Proof.
@@ -492,7 +492,7 @@ Proof.
   exact (f'^$', g'^$').
 Defined.
 
-Global Instance isd2graph_prod {A B : Type} (DA : A -> Type) `{IsD2Graph A DA}
+Instance isd2graph_prod {A B : Type} (DA : A -> Type) `{IsD2Graph A DA}
   (DB : B -> Type) `{IsD2Graph B DB}
   : IsD2Graph (pointwise_prod DA DB).
 Proof.
@@ -500,7 +500,7 @@ Proof.
   srapply isdgraph_prod.
 Defined.
 
-Global Instance isd1cat_prod {A B : Type} (DA : A -> Type) `{IsD1Cat A DA}
+Instance isd1cat_prod {A B : Type} (DA : A -> Type) `{IsD1Cat A DA}
   (DB : B -> Type) `{IsD1Cat B DB}
   : IsD1Cat (pointwise_prod DA DB).
 Proof.

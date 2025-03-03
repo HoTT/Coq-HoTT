@@ -25,7 +25,7 @@ Axiom setext : forall {A B : Type} (R : A -> B -> HProp)
 set (h o (spushl R)) = set (h o (spushr R)).
 
 Axiom ishset_V : IsHSet V.
-Global Existing Instance ishset_V.
+Existing Instance ishset_V.
 
 (** The induction principle.  Annotating the universes here greatly reduces the number of universe variables later in the file.  For example, [function] below went from 279 to 3.  If [V_ind] needs to be generalized in the future, check [function] to make sure things haven't exploded again. *)
 Fixpoint V_ind@{U' U u | U < U'} (P : V@{U' U} -> Type@{u})
@@ -280,7 +280,7 @@ Notation "u ~~ v" := (bisimulation u v) : set_scope.
 Global Instance reflexive_bisimulation : Reflexive bisimulation.
 Proof.
   refine (V_ind_hprop _ _ _).
-  intros A f H_f; simpl. split.
+  intros A f H_f. split.
   - intro a; apply tr; exists a; auto.
   - intro a; apply tr; exists a; auto.
 Defined.
@@ -293,7 +293,7 @@ Proof.
   - generalize u v.
     refine (V_ind_hprop _ _ _); intros A f H_f.
     refine (V_ind_hprop _ _ _); intros B g _.
-    simpl; intros [H1 H2].
+    intros [H1 H2].
     apply setext'. split.
     + intro a. generalize (H1 a). apply (Trunc_functor (-1)).
       intros [b h]. exists b; exact (H_f a (g b) h).

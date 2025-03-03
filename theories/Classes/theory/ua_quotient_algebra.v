@@ -135,7 +135,7 @@ Section quotient_algebra.
 
 (** The quotient algebra carriers are always sets. *)
 
-  Global Instance hset_quotient_algebra
+  #[export] Instance hset_quotient_algebra
     : IsHSetAlgebra QuotientAlgebra.
   Proof.
     intro s. exact _.
@@ -213,7 +213,7 @@ Section hom_quotient.
     - intro x. apply IHw. intro a. apply (G (x,a)).
   Defined.
 
-  Global Instance is_homomorphism_quotient `{Funext}
+  #[export] Instance is_homomorphism_quotient `{Funext}
     : IsHomomorphism def_hom_quotient.
   Proof.
     intro u. apply oppreserving_quotient, compute_op_quotient.
@@ -222,7 +222,7 @@ Section hom_quotient.
   Definition hom_quotient : Homomorphism A (A/Φ)
     := BuildHomomorphism def_hom_quotient.
 
-  Global Instance surjection_quotient
+  #[export] Instance surjection_quotient
     : ∀ s, IsSurjection (hom_quotient s).
   Proof.
     intro s. apply issurj_class_of.
@@ -232,7 +232,7 @@ End hom_quotient.
 (** If [Φ s x y] implies [x = y], then homomorphism [hom_quotient Φ]
     is an isomorphism. *)
 
-Global Instance is_isomorphism_quotient `{Univalence}
+#[export] Instance is_isomorphism_quotient `{Univalence}
   {σ : Signature} {A : Algebra σ} (Φ : ∀ s, Relation (A s))
   `{!IsCongruence A Φ} (P : ∀ s x y, Φ s x y → x = y)
   : IsIsomorphism (hom_quotient Φ).
@@ -280,7 +280,7 @@ Section ump_quotient_algebra.
         + apply P.
     Defined.
 
-    Global Instance is_homomorphism_quotient_algebra_mapout
+    #[export] Instance is_homomorphism_quotient_algebra_mapout
       : IsHomomorphism def_hom_quotient_algebra_mapout.
     Proof.
       intro u.

@@ -12,16 +12,16 @@ Section contents.
   Context `{BBottom : Bottom B}.
   Context `{BTop : Top B}.
 
-  Global Instance bot_fun : Bottom (A -> B)
+  #[export] Instance bot_fun : Bottom (A -> B)
     := fun _ => ⊥.
 
-  Global Instance top_fun : Top (A -> B)
+  #[export] Instance top_fun : Top (A -> B)
     := fun _ => ⊤.
 
-  Global Instance join_fun : Join (A -> B) :=
+  #[export] Instance join_fun : Join (A -> B) :=
     fun (f g : A -> B) (a : A) => (f a) ⊔ (g a).
 
-  Global Instance meet_fun : Meet (A -> B) :=
+  #[export] Instance meet_fun : Meet (A -> B) :=
     fun (f g : A -> B) (a : A) => (f a) ⊓ (g a).
 
   (** Try to solve some of the lattice obligations automatically *)
@@ -33,7 +33,7 @@ Section contents.
        commutativity | 1 : lattice_hints.
   Local Ltac reduce_fun := compute; intros; apply path_forall; intro.
 
-  Global Instance lattice_fun `{!IsLattice B} : IsLattice (A -> B).
+  #[export] Instance lattice_fun `{!IsLattice B} : IsLattice (A -> B).
   Proof.
     repeat split; try apply _; reduce_fun.
     1,4: apply associativity.
@@ -66,7 +66,7 @@ Section contents.
     * apply binary_idempotent.
   Defined.
 
-  Global Instance boundedlattice_fun
+  #[export] Instance boundedlattice_fun
    `{!IsBoundedLattice B} : IsBoundedLattice (A -> B).
   Proof.
     repeat split; try apply _; reduce_fun; apply absorption.

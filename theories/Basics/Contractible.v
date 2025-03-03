@@ -13,7 +13,7 @@ Definition path_contr `{Contr A} (x y : A) : x = y
   := (contr x)^ @ (contr y).
 
 (** Any space of paths in a contractible space is contractible. *)
-Global Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) | 10000.
+Instance contr_paths_contr `{Contr A} (x y : A) : Contr (x = y) | 10000.
 Proof.
   apply (Build_Contr _ (path_contr x y)).
   intro r; destruct r; apply concat_Vp.
@@ -33,14 +33,14 @@ Defined.
 
 Arguments path_basedpaths {X x y} p : simpl nomatch.
 
-Global Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y} | 100.
+Instance contr_basedpaths {X : Type} (x : X) : Contr {y : X & x = y} | 100.
 Proof.
   apply (Build_Contr _ (x;1)).
   intros [y p]; apply path_basedpaths.
 Defined.
 
 (* Sometimes we end up with a sigma of a one-sided path type that's not eta-expanded, which Coq doesn't seem able to match with the previous instance. *)
-Global Instance contr_basedpaths_etashort {X : Type} (x : X) : Contr (sig (@paths X x)) | 100
+Instance contr_basedpaths_etashort {X : Type} (x : X) : Contr (sig (@paths X x)) | 100
   := contr_basedpaths x.
 
 (** Based path types with the second variable fixed. *)
@@ -53,7 +53,7 @@ Defined.
 
 Arguments path_basedpaths' {X x y} p : simpl nomatch.
 
-Global Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x} | 100.
+Instance contr_basedpaths' {X : Type} (x : X) : Contr {y : X & y = x} | 100.
 Proof.
   refine (Build_Contr _ (x;1) _).
   intros [y p]; apply path_basedpaths'.

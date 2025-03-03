@@ -129,7 +129,7 @@ Defined.
 
 (** As any function, [abses_pullback f] acts on paths. By explicitly describing the analogous action on path data we get an action which computes, this turn out to be useful. *)
 
-Global Instance is0functor_abses_pullback {A B B' : AbGroup} (f : B' $-> B)
+Instance is0functor_abses_pullback {A B B' : AbGroup} (f : B' $-> B)
   : Is0Functor (abses_pullback (A:=A) f).
 Proof.
   srapply Build_Is0Functor;
@@ -148,7 +148,7 @@ Proof.
   - reflexivity.
 Defined.
 
-Global Instance is1functor_abses_pullback {A B B' : AbGroup} (f : B' $-> B)
+Instance is1functor_abses_pullback {A B B' : AbGroup} (f : B' $-> B)
   : Is1Functor (abses_pullback (A:=A) f).
 Proof.
   snrapply Build_Is1Functor.
@@ -467,14 +467,14 @@ Defined.
 
 (** *** [AbSES] and [AbSES'] become contravariant functors in the first variable by pulling back *)
 
-Global Instance is0functor_abses'10 {A : AbGroup}
+Instance is0functor_abses'10 {A : AbGroup}
   : Is0Functor (fun B : AbGroup^op => AbSES' B A).
 Proof.
   apply Build_Is0Functor.
   exact (fun _ _ f => abses_pullback f).
 Defined.
 
-Global Instance is1functor_abses'10 `{Univalence} {A : AbGroup}
+Instance is1functor_abses'10 `{Univalence} {A : AbGroup}
   : Is1Functor (fun B : AbGroup^op => AbSES' B A).
 Proof.
   apply Build_Is1Functor; intros; cbn.
@@ -484,14 +484,14 @@ Proof.
 Defined.
 
 
-Global Instance is0functor_abses10 `{Univalence} {A : AbGroup}
+Instance is0functor_abses10 `{Univalence} {A : AbGroup}
   : Is0Functor (fun B : AbGroup^op => AbSES B A).
 Proof.
   apply Build_Is0Functor.
   exact (fun _ _ f => abses_pullback_pmap f).
 Defined.
 
-Global Instance is1functor_abses10 `{Univalence} {A : AbGroup}
+Instance is1functor_abses10 `{Univalence} {A : AbGroup}
   : Is1Functor (fun B : AbGroup^op => AbSES B A).
 Proof.
   apply Build_Is1Functor; intros; cbn.

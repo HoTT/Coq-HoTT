@@ -19,9 +19,9 @@ Record CRing := {
 
 Definition issig_CRing : _ <~> CRing := ltac:(issig).
 
-Global Instance cring_plus {R : CRing} : Plus R := plus_abgroup R.
-Global Instance cring_zero {R : CRing} : Zero R := zero_abgroup R.
-Global Instance cring_negate {R : CRing} : Negate R := negate_abgroup R.
+Instance cring_plus {R : CRing} : Plus R := plus_abgroup R.
+Instance cring_zero {R : CRing} : Zero R := zero_abgroup R.
+Instance cring_negate {R : CRing} : Negate R := negate_abgroup R.
 
 Definition Build_CRing' (R : AbGroup) `(!One R, !Mult R)
   (comm : Commutative (.*.)) (assoc : Associative (.*.))
@@ -253,15 +253,15 @@ End IdealCRing.
 
 (** ** Category of commutative rings. *)
 
-Global Instance isgraph_CRing : IsGraph CRing := isgraph_induced cring_ring.
-Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
-Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
-Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.
-Global Instance hasequiv_CRing : HasEquivs CRing := hasequivs_induced cring_ring.
+Instance isgraph_CRing : IsGraph CRing := isgraph_induced cring_ring.
+Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
+Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
+Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.
+Instance hasequiv_CRing : HasEquivs CRing := hasequivs_induced cring_ring.
 
 (** ** Quotient rings *)
 
-Global Instance commutative_quotientring_mult (R : CRing) (I : Ideal R)
+Instance commutative_quotientring_mult (R : CRing) (I : Ideal R)
   : Commutative (A:=QuotientRing R I) (.*.).
 Proof.
   intros x; srapply QuotientRing_ind_hprop; intros y; revert x.

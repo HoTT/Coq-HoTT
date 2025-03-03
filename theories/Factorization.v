@@ -117,7 +117,7 @@ Record FactorizationSystem@{i j k} :=
                     PathFactorization@{i} fact fact'
   }.
 
-Global Existing Instances ishprop_class1 ishprop_class2.
+Existing Instances ishprop_class1 ishprop_class2.
 
 (** The type of factorizations is, as promised, contractible. *)
 Theorem contr_factor `{Univalence} (factsys : FactorizationSystem)

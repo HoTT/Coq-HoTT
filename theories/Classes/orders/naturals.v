@@ -59,13 +59,13 @@ etransitivity.
 - apply pos_ge_1.
 Qed.
 
-Global Instance: forall (z : N), PropHolds (z <> 0) -> OrderReflecting (z *.).
+#[export] Instance: forall (z : N), PropHolds (z <> 0) -> OrderReflecting (z *.).
 Proof.
 intros z ?. red. apply (order_reflecting_pos (.*.) z).
 apply nat_ne_0_pos. trivial.
 Qed.
 
-Global Instance slow_nat_le_dec: forall x y: N, Decidable (x ≤ y) | 10.
+#[export] Instance slow_nat_le_dec: forall x y: N, Decidable (x ≤ y) | 10.
 Proof.
 intros x y.
 destruct (nat_le_dec (naturals_to_semiring _ nat x) (naturals_to_semiring _ nat y))

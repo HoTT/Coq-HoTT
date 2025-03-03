@@ -78,7 +78,7 @@ Section extend_rel_term_algebra.
     (R : forall s, Relation (C s))
     `{!forall s, is_mere_relation (C s) (R s)}.
 
-  Global Instance hprop_extend_drel_term_algebra {s1 s2 : Sort σ}
+  #[export] Instance hprop_extend_drel_term_algebra {s1 s2 : Sort σ}
     (S : CarriersTermAlgebra C s1) (T : CarriersTermAlgebra C s2)
     : IsHProp (ExtendDRelTermAlgebra R S T).
   Proof.
@@ -86,7 +86,7 @@ Section extend_rel_term_algebra.
     induction S; intros s2 T; destruct T; exact _.
   Qed.
 
-  Global Instance reflexive_extend_rel_term_algebra
+  #[export] Instance reflexive_extend_rel_term_algebra
     `{!forall s, Reflexive (R s)} {s : Sort σ}
     : Reflexive (@ExtendRelTermAlgebra σ C R s).
   Proof.
@@ -111,7 +111,7 @@ Section extend_rel_term_algebra.
       induction p. exists idpath. intro i. apply h. apply f.
   Qed.
 
-  Global Instance symmetric_extend_rel_term_algebra
+  #[export] Instance symmetric_extend_rel_term_algebra
     `{!forall s, Symmetric (R s)} {s : Sort σ}
     : Symmetric (@ExtendRelTermAlgebra σ C R s).
   Proof.
@@ -144,14 +144,14 @@ Section extend_rel_term_algebra.
       + rewrite concat_1p. apply P3.
   Qed.
 
-  Global Instance transitive_extend_rel_term_algebra
+  #[export] Instance transitive_extend_rel_term_algebra
     `{!forall s, Transitive (R s)} {s : Sort σ}
     : Transitive (@ExtendRelTermAlgebra σ C R s).
   Proof.
     intros S T U. apply transitive_extend_drel_term_algebra.
   Defined.
 
-  Global Instance equivrel_extend_rel_term_algebra
+  #[export] Instance equivrel_extend_rel_term_algebra
     `{!forall s, EquivRel (R s)} (s : Sort σ)
     : EquivRel (@ExtendRelTermAlgebra σ C R s).
   Proof.
@@ -170,7 +170,7 @@ Section extend_path_term_algebra.
     : Type
     := ExtendRelTermAlgebra (fun s => paths) S T.
 
-  Global Instance reflexive_extend_path_term_algebra
+  #[export] Instance reflexive_extend_path_term_algebra
     : forall s : Sort σ, Reflexive (@ExtendPathTermAlgebra s).
   Proof.
     by apply reflexive_extend_rel_term_algebra.
@@ -183,25 +183,25 @@ Section extend_path_term_algebra.
     induction p. apply reflexive_extend_path_term_algebra.
   Defined.
 
-  Global Instance symmetric_extend_path_term_algebra
+  #[export] Instance symmetric_extend_path_term_algebra
     : forall s : Sort σ, Symmetric (@ExtendPathTermAlgebra s).
   Proof.
     apply symmetric_extend_rel_term_algebra. intros s x y. apply inverse.
   Defined.
 
-  Global Instance transitive_extend_path_term_algebra
+  #[export] Instance transitive_extend_path_term_algebra
     : forall s : Sort σ, Transitive (@ExtendPathTermAlgebra s).
   Proof.
     apply transitive_extend_rel_term_algebra. intros s x y z. apply concat.
   Defined.
 
-  Global Instance equivrel_extend_path_term_algebra
+  #[export] Instance equivrel_extend_path_term_algebra
     : forall s : Sort σ, EquivRel (@ExtendPathTermAlgebra s).
   Proof.
     constructor; exact _.
   Qed.
 
-  Global Instance hprop_extend_path_term_algebra (s : Sort σ)
+  #[export] Instance hprop_extend_path_term_algebra (s : Sort σ)
     : is_mere_relation (CarriersTermAlgebra C s) ExtendPathTermAlgebra.
   Proof.
     intros S T. exact _.
@@ -230,7 +230,7 @@ Section extend_path_term_algebra.
     by induction (hset_path2 idpath p).
   Defined.
 
-  Global Instance hset_carriers_term_algebra (s : Sort σ)
+  #[export] Instance hset_carriers_term_algebra (s : Sort σ)
     : IsHSet (CarriersTermAlgebra C s).
   Proof.
     apply (@ishset_hrel_subpaths _ ExtendPathTermAlgebra).
@@ -280,7 +280,7 @@ Qed.
 (** The extension [ExtendRelTermAlgebra R], of a family of mere
     equivalence relations [R], is a congruence. *)
 
-Global Instance is_congruence_extend_rel_term_algebra
+#[export] Instance is_congruence_extend_rel_term_algebra
   `{Funext} {σ} (C : Carriers σ) `{!forall s, IsHSet (C s)}
   (R : forall s, Relation (C s)) `{!forall s, EquivRel (R s)}
   `{!forall s, is_mere_relation (C s) (R s)}
@@ -304,7 +304,7 @@ Section hom_term_algebra.
     : A s
     := CarriersTermAlgebra_rec C A f (fun u _ r => u.#A r) s T.
 
-  Global Instance is_homomorphism_map_term_algebra
+  #[export] Instance is_homomorphism_map_term_algebra
     : @IsHomomorphism σ (TermAlgebra C) A (map_term_algebra A f).
   Proof.
     intros u a. by refine (ap u.#A _).
@@ -369,7 +369,7 @@ Section ump_term_algebra.
 
   (** Precomposition with [var_term_algebra] is an equivalence *)
 
-  Global Instance isequiv_precomp_var_term_algebra
+  #[export] Instance isequiv_precomp_var_term_algebra
     : IsEquiv precomp_var_term_algebra.
   Proof.
     srapply isequiv_adjointify.

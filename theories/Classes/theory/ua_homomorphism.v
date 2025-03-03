@@ -30,7 +30,7 @@ Section is_homomorphism.
        | s ::: y => λ α β, ∀ (x : A s), OpPreserving (α x) (β (f s x))
        end.
 
-  Global Instance trunc_oppreserving `{Funext} {n : trunc_index}
+  #[export] Instance trunc_oppreserving `{Funext} {n : trunc_index}
     `{!IsTruncAlgebra n.+1 B} {w : SymbolType σ}
     (α : Operation A w) (β : Operation B w)
     : IsTrunc n (OpPreserving α β).
@@ -46,7 +46,7 @@ Section is_homomorphism.
   Class IsHomomorphism : Type
     := oppreserving_hom : ∀ (u : Symbol σ), OpPreserving u.#A u.#B.
 
-  Global Instance trunc_is_homomorphism `{Funext} {n : trunc_index}
+  #[export] Instance trunc_is_homomorphism `{Funext} {n : trunc_index}
     `{!IsTruncAlgebra n.+1 B}
     : IsTrunc n IsHomomorphism.
   Proof.
@@ -67,7 +67,7 @@ Arguments BuildHomomorphism {σ A B} def_hom {is_homomorphism_hom}.
 
 Global Coercion def_hom : Homomorphism >-> Funclass.
 
-Global Existing Instance is_homomorphism_hom.
+Existing Instance is_homomorphism_hom.
 
 Lemma apD10_homomorphism {σ} {A B : Algebra σ} {f g : Homomorphism A B}
   : f = g → ∀ s, f s == g s.
@@ -84,7 +84,7 @@ Proof.
   issig.
 Defined.
 
-Global Instance trunc_homomorphism `{Funext} {σ} {A B : Algebra σ}
+Instance trunc_homomorphism `{Funext} {σ} {A B : Algebra σ}
   {n : trunc_index} `{!IsTruncAlgebra n B}
   : IsTrunc n (Homomorphism A B).
 Proof.
@@ -127,7 +127,7 @@ Class IsIsomorphism {σ : Signature} {A B : Algebra σ}
   (f : ∀ s, A s → B s) `{!IsHomomorphism f}
   := isequiv_isomorphism : ∀ (s : Sort σ), IsEquiv (f s).
 
-Global Existing Instance isequiv_isomorphism.
+Existing Instance isequiv_isomorphism.
 
 Definition equiv_isomorphism {σ : Signature} {A B : Algebra σ}
   (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}
@@ -136,7 +136,7 @@ Proof.
   intro s. rapply (Build_Equiv _ _ (f s)).
 Defined.
 
-Global Instance hprop_is_isomorphism `{Funext} {σ : Signature}
+Instance hprop_is_isomorphism `{Funext} {σ : Signature}
   {A B : Algebra σ} (f : ∀ s, A s → B s) `{!IsHomomorphism f}
   : IsHProp (IsIsomorphism f).
 Proof.
@@ -196,7 +196,7 @@ End homomorphism_ap_operation.
 Section hom_id.
   Context {σ} (A : Algebra σ).
 
-  Global Instance is_homomorphism_id
+  #[export] Instance is_homomorphism_id
     : IsHomomorphism (λ s (x : A s), x).
   Proof.
     intro u. generalize u.#A. intro w. induction (σ u).
@@ -204,7 +204,7 @@ Section hom_id.
     - by intro x.
   Defined.
 
-  Global Instance is_isomorphism_id
+  #[export] Instance is_isomorphism_id
     : IsIsomorphism (λ s (x : A s), x).
   Proof.
     intro s. exact _.
@@ -224,7 +224,7 @@ Section hom_inv.
     {σ} {A B : Algebra σ}
     (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}.
 
-  Global Instance is_homomorphism_inv : IsHomomorphism (λ s, (f s)^-1).
+  #[export] Instance is_homomorphism_inv : IsHomomorphism (λ s, (f s)^-1).
   Proof.
    intro u.
    generalize u.#A u.#B (oppreserving_hom f u).
@@ -236,7 +236,7 @@ Section hom_inv.
               (eisretr (f t) x) (P (_^-1 x))).
   Defined.
 
-  Global Instance is_isomorphism_inv : IsIsomorphism (λ s, (f s)^-1).
+  #[export] Instance is_isomorphism_inv : IsIsomorphism (λ s, (f s)^-1).
   Proof.
     intro s. exact _.
   Qed.
@@ -265,7 +265,7 @@ Section hom_compose.
     - intro x. by apply (IHw _ (β (f _ x))).
   Defined.
 
-  Global Instance is_homomorphism_compose
+  #[export] Instance is_homomorphism_compose
     (g : ∀ s, B s → C s) `{!IsHomomorphism g}
     (f : ∀ s, A s → B s) `{!IsHomomorphism f}
     : IsHomomorphism (λ s, g s o f s).
@@ -274,7 +274,7 @@ Section hom_compose.
     by apply (oppreserving_compose g f u.#A u.#B u.#C).
   Defined.
 
-  Global Instance is_isomorphism_compose
+  #[export] Instance is_isomorphism_compose
     (g : ∀ s, B s → C s) `{IsIsomorphism σ B C g}
     (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}
     : IsIsomorphism (λ s, g s o f s).

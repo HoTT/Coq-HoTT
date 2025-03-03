@@ -138,7 +138,7 @@ Scheme leq_rec := Induction for leq Sort Type.
 Notation "n <= m" := (leq n m) : nat_scope.
 
 Existing Class leq.
-Global Existing Instances leq_refl leq_succ_r.
+Existing Instances leq_refl leq_succ_r.
 
 (** *** Less than [<] *)
 
@@ -432,7 +432,7 @@ Definition leq_zero_l n : 0 <= n.
 Proof.
   simple_induction' n; exact _.
 Defined.
-Global Existing Instance leq_zero_l | 10.
+Existing Instance leq_zero_l | 10.
 
 Global Instance pred_leq {m} : nat_pred m <= m.
 Proof.
@@ -450,7 +450,7 @@ Definition leq_succ {n m} : n <= m -> n.+1 <= m.+1.
 Proof.
   induction 1; exact _.
 Defined.
-Global Existing Instance leq_succ | 100.
+Existing Instance leq_succ | 100.
 
 (** The converse to [leq_succ] also holds. *)
 Definition leq_pred' {n m} : n.+1 <= m.+1 -> n <= m := leq_pred.

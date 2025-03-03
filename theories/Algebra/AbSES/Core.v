@@ -30,7 +30,7 @@ Record AbSES' {B A : AbGroup@{u}} := Build_AbSES {
 (** Given a short exact sequence [A -> E -> B : AbSES B A], we coerce it to [E]. *)
 Coercion middle : AbSES' >-> AbGroup.
 
-Global Existing Instances isembedding_inclusion issurjection_projection isexact_inclusion_projection.
+Existing Instances isembedding_inclusion issurjection_projection isexact_inclusion_projection.
 
 Arguments AbSES' B A : clear implicits.
 Arguments Build_AbSES {B A}.
@@ -59,7 +59,7 @@ Definition iscomplex_abses {A B : AbGroup} (E : AbSES' B A)
   := cx_isexact.
 
 (** [AbSES' B A] is pointed by the split sequence [A -> A+B -> B]. *)
-Global Instance ispointed_abses {B A : AbGroup@{u}}
+Instance ispointed_abses {B A : AbGroup@{u}}
   : IsPointed (AbSES' B A).
 Proof.
   rapply (Build_AbSES (ab_biprod A B) ab_biprod_inl ab_biprod_pr2).
@@ -127,7 +127,7 @@ Proof.
 Defined.
 
 (** It follows that [AbSES B A] is 1-truncated. *)
-Global Instance istrunc_abses `{Univalence} {B A : AbGroup@{u}}
+Instance istrunc_abses `{Univalence} {B A : AbGroup@{u}}
   : IsTrunc 1 (AbSES B A).
 Proof.
   apply istrunc_S.
@@ -147,7 +147,7 @@ Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
 
 (** A special case of the "short 5-lemma" where the two outer maps are (definitionally) identities. *)
 Lemma short_five_lemma {B A : AbGroup@{u}}
-  {E F : AbSES B A} (phi : GroupHomomorphism E F)
+  {E F : AbSES B A} (phi : Hom (A:=AbGroup) E F)
   (p0 : phi $o inclusion E == inclusion F) (p1 : projection E == projection F $o phi)
   : IsEquiv phi.
 Proof.
@@ -185,7 +185,7 @@ Defined.
 
 (** Below we prove that homomorphisms respecting [projection] and [inclusion] correspond to paths in [AbSES B A]. We refer to such homomorphisms simply as path data in [AbSES B A]. *)
 Definition abses_path_data {B A : AbGroup@{u}} (E F : AbSES B A)
-  := {phi : GroupHomomorphism E F
+  := {phi : Hom (A:=AbGroup) E F
             & (phi $o inclusion _ == inclusion _)
               * (projection _ == projection _ $o phi)}.
 
@@ -220,19 +220,19 @@ Definition path_abses `{Univalence} {B A : AbGroup@{u}}
 
 (** *** The wildcat of short exact sequences *)
 
-Global Instance isgraph_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
+Instance isgraph_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
   : IsGraph (abses_path_data_iso E F)
   := isgraph_induced (grp_iso_homo _ _ o pr1).
 
-Global Instance is01cat_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
+Instance is01cat_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
   : Is01Cat (abses_path_data_iso E F)
   := is01cat_induced (grp_iso_homo _ _ o pr1).
 
-Global Instance is0gpd_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
+Instance is0gpd_abses_path_data {A B : AbGroup@{u}} (E F : AbSES B A)
   : Is0Gpd (abses_path_data_iso E F)
   := is0gpd_induced (grp_iso_homo _ _ o pr1).
 
-Global Instance isgraph_abses {A B : AbGroup@{u}} : IsGraph (AbSES B A)
+Instance isgraph_abses {A B : AbGroup@{u}} : IsGraph (AbSES B A)
   := Build_IsGraph _ abses_path_data_iso.
 
 (** The path data corresponding to [idpath]. *)
@@ -245,7 +245,7 @@ Definition abses_path_data_compose {B A : AbGroup@{u}} {E F G : AbSES B A}
   := (q.1 $oE p.1; ((fun x => ap q.1 (fst p.2 x) @ fst q.2 x),
                      (fun x => snd p.2 x @ snd q.2 (p.1 x)))).
 
-Global Instance is01cat_abses {A B : AbGroup@{u}}
+Instance is01cat_abses {A B : AbGroup@{u}}
   : Is01Cat (AbSES B A)
   := Build_Is01Cat _ _ abses_path_data_1
        (fun _ _ _ q p => abses_path_data_compose p q).
@@ -263,16 +263,16 @@ Proof.
     exact (ap (projection F) (eisretr _ _)^ @ (q _)^).
 Defined.
 
-Global Instance is0gpd_abses
+Instance is0gpd_abses
   {A B : AbGroup@{u}} : Is0Gpd (AbSES B A)
   := {| gpd_rev := fun _ _ => abses_path_data_inverse |}.
 
-Global Instance is2graph_abses
+Instance is2graph_abses
   {A B : AbGroup@{u}} : Is2Graph (AbSES B A)
   := fun E F => isgraph_abses_path_data E F.
 
 (** [AbSES B A] forms a 1Cat *)
-Global Instance is1cat_abses {A B : AbGroup@{u}}
+Instance is1cat_abses {A B : AbGroup@{u}}
   : Is1Cat (AbSES B A).
 Proof.
   snrapply Build_Is1Cat'.
@@ -286,7 +286,7 @@ Proof.
   - exact (h (f.1 e)).
 Defined.
 
-Global Instance is1gpd_abses {A B : AbGroup@{u}}
+Instance is1gpd_abses {A B : AbGroup@{u}}
   : Is1Gpd (AbSES B A).
 Proof.
   rapply Build_Is1Gpd;
@@ -295,7 +295,7 @@ Proof.
   - apply eisretr.
 Defined.
 
-Global Instance hasmorext_abses `{Funext} {A B : AbGroup@{u}}
+Instance hasmorext_abses `{Funext} {A B : AbGroup@{u}}
   : HasMorExt (AbSES B A).
 Proof.
   srapply Build_HasMorExt;

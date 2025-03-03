@@ -95,7 +95,7 @@ Section LeftModuleFacts.
 End LeftModuleFacts.
 
 (** Every ring [R] is a left [R]-module over itself. *)
-Global Instance isleftmodule_ring (R : Ring) : IsLeftModule R R.
+Instance isleftmodule_ring (R : Ring) : IsLeftModule R R.
 Proof.
   rapply Build_IsLeftModule.
 Defined.
@@ -117,7 +117,7 @@ Infix "*R" := ract.
 Definition RightModule (R : Ring) := LeftModule (rng_op R).
 
 (** Right modules are right modules. *)
-Global Instance rm_ract {R : Ring} {M : RightModule R} : IsRightModule R M
+Instance rm_ract {R : Ring} {M : RightModule R} : IsRightModule R M
   := lm_lact (rng_op R) M.
 
 Section RightModuleAxioms.
@@ -159,7 +159,7 @@ Section RightModuleFacts.
 End RightModuleFacts.
 
 (** Every ring [R] is a right [R]-module over itself. *)
-Global Instance isrightmodule_ring (R : Ring) : IsRightModule R R
+Instance isrightmodule_ring (R : Ring) : IsRightModule R R
   := isleftmodule_ring (rng_op R).
 
 (** ** Submodules *)
@@ -195,7 +195,7 @@ Definition subgroup_rightsubmodule {R : Ring} {M : RightModule R}
 Coercion subgroup_rightsubmodule : RightSubmodule >-> Subgroup.
 
 (** Left submodules inherit the left R-module structure of their parent. *)
-Global Instance isleftmodule_leftsubmodule {R : Ring}
+Instance isleftmodule_leftsubmodule {R : Ring}
   {M : LeftModule R} (N : LeftSubmodule M)
   : IsLeftModule R N.
 Proof.
@@ -214,7 +214,7 @@ Proof.
 Defined.
 
 (** Right submodules inherit the right R-module structure of their parent. *)
-Global Instance isrightmodule_rightsubmodule {R : Ring}
+Instance isrightmodule_rightsubmodule {R : Ring}
   {M : RightModule R} (N : RightSubmodule M)
   : IsRightModule R N
   := isleftmodule_leftsubmodule (R:=rng_op R) N.
@@ -415,16 +415,16 @@ Definition rm_iso_inverse {R : Ring} {M N : RightModule R}
 
 (** *** Category of left R-modules *)
 
-Global Instance isgraph_leftmodule {R : Ring} : IsGraph (LeftModule R)
+Instance isgraph_leftmodule {R : Ring} : IsGraph (LeftModule R)
   := Build_IsGraph _ LeftModuleHomomorphism.
 
-Global Instance is01cat_leftmodule {R : Ring} : Is01Cat (LeftModule R)
+Instance is01cat_leftmodule {R : Ring} : Is01Cat (LeftModule R)
   := Build_Is01Cat _ _ lm_homo_id (@lm_homo_compose R).
 
-Global Instance is2graph_leftmodule {R : Ring} : Is2Graph (LeftModule R)
+Instance is2graph_leftmodule {R : Ring} : Is2Graph (LeftModule R)
   := fun M N => isgraph_induced (@lm_homo_map R M N).
 
-Global Instance is1cat_leftmodule {R : Ring} : Is1Cat (LeftModule R).
+Instance is1cat_leftmodule {R : Ring} : Is1Cat (LeftModule R).
 Proof.
   snrapply Build_Is1Cat'.
   - intros M N; rapply is01cat_induced.
@@ -442,7 +442,7 @@ Proof.
   - simpl; reflexivity.
 Defined.
 
-Global Instance hasequivs_leftmodule {R : Ring} : HasEquivs (LeftModule R).
+Instance hasequivs_leftmodule {R : Ring} : HasEquivs (LeftModule R).
 Proof.
   snrapply Build_HasEquivs.
   - exact LeftModuleIsomorphism.
@@ -460,24 +460,24 @@ Defined.
 
 (** *** Category of right R-modules *)
 
-Global Instance isgraph_rightmodule {R : Ring} : IsGraph (RightModule R)
+Instance isgraph_rightmodule {R : Ring} : IsGraph (RightModule R)
   := isgraph_leftmodule (R:=rng_op R).
 
-Global Instance is01cat_rightmodule {R : Ring} : Is01Cat (RightModule R)
+Instance is01cat_rightmodule {R : Ring} : Is01Cat (RightModule R)
   := is01cat_leftmodule (R:=rng_op R).
 
-Global Instance is2graph_rightmodule {R : Ring} : Is2Graph (RightModule R)
+Instance is2graph_rightmodule {R : Ring} : Is2Graph (RightModule R)
   := is2graph_leftmodule (R:=rng_op R).
 
-Global Instance is1cat_rightmodule {R : Ring} : Is1Cat (RightModule R)
+Instance is1cat_rightmodule {R : Ring} : Is1Cat (RightModule R)
   := is1cat_leftmodule (R:=rng_op R).
 
-Global Instance hasequivs_rightmodule {R : Ring} : HasEquivs (RightModule R)
+Instance hasequivs_rightmodule {R : Ring} : HasEquivs (RightModule R)
   := hasequivs_leftmodule (R:=rng_op R).
 
 (** ** Kernel of module homomorphism *)
 
-Global Instance isleftsubmodule_grp_kernel {R : Ring}
+Instance isleftsubmodule_grp_kernel {R : Ring}
   {M N : LeftModule R} (f : M $-> N)
   : IsLeftSubmodule (grp_kernel f).
 Proof.
@@ -489,7 +489,7 @@ Proof.
   exact n.
 Defined.
 
-Global Instance isrightsubmodule_grp_kernel {R : Ring}
+Instance isrightsubmodule_grp_kernel {R : Ring}
   {M N : RightModule R} (f : M $-> N)
   : IsRightSubmodule (grp_kernel f)
   := isleftsubmodule_grp_kernel (R:=rng_op R) f.
@@ -504,7 +504,7 @@ Definition rm_kernel {R : Ring} {M N : RightModule R} (f : M $-> N)
 
 (** ** Image of module homomorphism *)
 
-Global Instance isleftsubmodule_grp_image {R : Ring}
+Instance isleftsubmodule_grp_image {R : Ring}
   {M N : LeftModule R} (f : M $-> N)
   : IsLeftSubmodule (grp_image f).
 Proof.
@@ -516,7 +516,7 @@ Proof.
   exact p.
 Defined.
 
-Global Instance isrightsubmodule_grp_image {R : Ring}
+Instance isrightsubmodule_grp_image {R : Ring}
   {M N : RightModule R} (f : M $-> N)
   : IsRightSubmodule (grp_image f)
   := isleftsubmodule_grp_image (R:=rng_op R) f.
@@ -532,7 +532,7 @@ Definition rm_image {R : Ring} {M N : RightModule R} (f : M $-> N)
 (** ** Quotient Modules *)
 
 (** The quotient abelian group of a module and a submodule has a natural ring action. *)
-Global Instance isleftmodule_quotientabgroup {R : Ring}
+Instance isleftmodule_quotientabgroup {R : Ring}
   (M : LeftModule R) (N : LeftSubmodule M)
   : IsLeftModule R (QuotientAbGroup M N).
 Proof.
@@ -567,7 +567,7 @@ Proof.
     apply lm_unit.
 Defined.
 
-Global Instance isrightmodule_quotientabgroup {R : Ring}
+Instance isrightmodule_quotientabgroup {R : Ring}
   (M : RightModule R) (N : RightSubmodule M)
   : IsRightModule R (QuotientAbGroup M N)
   := isleftmodule_quotientabgroup (R:=rng_op R) M N.
@@ -664,7 +664,7 @@ Definition rm_prod_corec {R : Ring} {M N : RightModule R} (R' : RightModule R)
   : R' $-> rm_prod M N
   := lm_prod_corec (R:=rng_op R) R' f g.
 
-Global Instance hasbinaryproducts_leftmodule {R : Ring}
+Instance hasbinaryproducts_leftmodule {R : Ring}
   : HasBinaryProducts (LeftModule R).
 Proof.
   intros M N.
@@ -679,7 +679,7 @@ Proof.
     exact (path_prod' (p a) (q a)).
 Defined.
 
-Global Instance hasbinaryproducts_rightmodule {R : Ring}
+Instance hasbinaryproducts_rightmodule {R : Ring}
   : HasBinaryProducts (RightModule R)
   := hasbinaryproducts_leftmodule (R:=rng_op R).
 

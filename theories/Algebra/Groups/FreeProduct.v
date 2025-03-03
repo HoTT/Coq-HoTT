@@ -273,7 +273,7 @@ Section FreeProduct.
   (** Now for the group structure *)
 
   (** The group operation is concatenation of the underlying list. Most of the work is spent showing that it respects the path constructors. *)
-  Global Instance sgop_amal_type : SgOp amal_type.
+  #[export] Instance sgop_amal_type : SgOp amal_type.
   Proof.
     intros x y; revert x.
     srapply amal_type_rec; intros x; revert y.
@@ -350,12 +350,12 @@ Section FreeProduct.
   Defined.
 
   (** The identity element is the empty list *)
-  Global Instance monunit_amal_type : MonUnit amal_type.
+  #[export] Instance monunit_amal_type : MonUnit amal_type.
   Proof.
     exact (amal_eta nil).
   Defined.
 
-  Global Instance inverse_amal_type : Inverse amal_type.
+  #[export] Instance inverse_amal_type : Inverse amal_type.
   Proof.
     srapply amal_type_rec.
     { intros w.
@@ -420,7 +420,7 @@ Section FreeProduct.
       apply amal_omega_K. }
   Defined.
 
-  Global Instance associative_sgop_m : Associative sg_op.
+  #[export] Instance associative_sgop_m : Associative sg_op.
   Proof.
     intros x y.
     rapply amal_type_ind_hprop; intro z; revert y.
@@ -430,13 +430,13 @@ Section FreeProduct.
     rapply app_assoc.
   Defined.
 
-  Global Instance leftidentity_sgop_amal_type : LeftIdentity sg_op mon_unit.
+  #[export] Instance leftidentity_sgop_amal_type : LeftIdentity sg_op mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     reflexivity.
   Defined.
 
-  Global Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
+  #[export] Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     nrapply (ap amal_eta).
@@ -505,13 +505,13 @@ Section FreeProduct.
       apply amal_omega_K.
   Defined.
 
-  Global Instance leftinverse_sgop_amal_type : LeftInverse (.*.) (^) mon_unit.
+  #[export] Instance leftinverse_sgop_amal_type : LeftInverse (.*.) (^) mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     apply amal_eta_word_concat_Vw.
   Defined.
 
-  Global Instance rightinverse_sgop_amal_type : RightInverse (.*.) (^) mon_unit.
+  #[export] Instance rightinverse_sgop_amal_type : RightInverse (.*.) (^) mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     apply amal_eta_word_concat_wV.
@@ -564,7 +564,7 @@ Section FreeProduct.
       rapply left_identity. }
   Defined.
 
-  Global Instance issemigrouppreserving_AmalgamatedFreeProduct_rec'
+  #[export] Instance issemigrouppreserving_AmalgamatedFreeProduct_rec'
     (X : Group) (h : GroupHomomorphism H X) (k : GroupHomomorphism K X)
     (p : h o f == k o g)
     : IsSemiGroupPreserving (AmalgamatedFreeProduct_rec' X h k p).
@@ -757,7 +757,7 @@ Proof.
 Defined.
 
 (** The freeproduct is the coproduct in the category of groups. *)
-Global Instance hasbinarycoproducts : HasBinaryCoproducts Group.
+Instance hasbinarycoproducts : HasBinaryCoproducts Group.
 Proof.
   intros G H.
   snrapply Build_BinaryCoproduct.
