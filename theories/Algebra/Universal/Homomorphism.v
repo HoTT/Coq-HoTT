@@ -69,7 +69,6 @@ Defined.
 Instance hset_homomorphism `{Funext} {σ} (A B : Algebra σ)
   : IsHSet (A $-> B).
 Proof.
-  Search (IsHSet (SigHomomorphism _ _)).
   apply (istrunc_equiv_istrunc _ (issig_homomorphism A B)).
 Qed.
 

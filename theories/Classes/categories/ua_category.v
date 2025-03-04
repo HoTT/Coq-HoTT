@@ -5,7 +5,6 @@ Require Import
   HoTT.Classes.theory.ua_isomorphic.
 
 
-
 Import Morphisms.CategoryMorphismsNotations isomorphic_notations.
 
 Local Open Scope category.
