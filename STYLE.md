@@ -438,11 +438,11 @@ module or file). The `Global` attribute makes the instance available in
 any file that "loads" this file via the `Require` command,
 which is a transitive relation including all direct and indirect dependencies of the current file.
 The `#[export]` locality uses the module system to manage the scope of the typeclass hint, 
-so that the hint is available wherever the module is opened using the `Import` keyword
-(analogous to "open" in ML languages).
+so that the hint is available wherever the module is opened using the `Import` keyword,
+but not transitively (analogous to "open" in ML languages).
 
 When declaring an `Instance` you should prefer the `export` locality attribute
-to the `global` locality attribute. Inside a section, you should
+to the `Global` locality attribute. Inside a section, you should
 explicitly annotate instance declarations as `Local` or `#[export]`
 to avoid ambiguity. Outside a section, you may omit the annotation,
 and in this case Coq defaults to the `export` attribute since 8.18.
