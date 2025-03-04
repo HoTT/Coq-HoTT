@@ -9,7 +9,7 @@ Class IsGraph (A : Type) :=
   Hom : A -> A -> Type
 }.
 
-(** This tells Coq to not perform typeclass search on a goal of the form `IsGraph A` when the head of `A` is an evar, avoiding what is often a search involving all possible graph structures on all types.  With this hint in place, we need to occasionally annotate our terms to explicitly give the underlying type. *) 
+(** This tells Coq to not perform typeclass search on a goal of the form [IsGraph A] when the head of [A] is an evar, avoiding what is often a search involving all possible graph structures on all types.  With this hint in place, we need to occasionally annotate our terms to explicitly give the underlying type. *) 
 Hint Mode IsGraph ! : typeclass_instances.
 
 Notation "a $-> b" := (Hom a b).
