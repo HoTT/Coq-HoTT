@@ -1314,7 +1314,36 @@ End Book_3_14.
 (* ================================================== ex:impred-brck *)
 (** Exercise 3.15 *)
 
+Section Book_3_15_ctx.
+  Universe i j.
+  Constraint i < j.
+  Context `{Funext} `{PropResizing} (A : Type@{j}).
 
+  Definition Book_3_15_merely : Type@{j}
+    := forall P : HProp@{i}, (A -> P) -> P.
+
+  Definition Book_3_15_tr (a : A) : Book_3_15_merely
+    := (fun P f => f a).
+
+  Definition Book_3_15_rec@{k} {B : HProp@{k}} (f : A -> B)
+    : Book_3_15_merely -> B.
+  Proof.
+    unfold Book_3_15_merely; intro a0.
+    apply (equiv_smalltype@{i k} B).
+    apply (a0 (smallhprop@{i k} B)).
+    intro a.
+    apply (equiv_smalltype@{i k} B).
+    exact (f a).
+  Defined.
+
+  (** Propositional resizing is not strong enough for a definitional beta rule *)
+  Definition Book_3_15_beta@{k} (a : A) {B : HProp@{k}} (f : A -> B)
+    : Book_3_15_rec f (Book_3_15_tr a) = f a.
+  Proof.
+    unfold Book_3_15_tr, Book_3_15_rec.
+    apply eisretr.
+  Defined.
+End Book_3_15_ctx.
 
 (* ================================================== ex:lem-impl-dn-commutes *)
 (** Exercise 3.16 *)
