@@ -1108,7 +1108,25 @@ Defined.
 (* ================================================== ex:lem-impred *)
 (** Exercise 3.10 *)
 
+Definition Book_3_10_LEM@{j} := forall A : HProp@{j}, A + ~ A.
 
+Definition Book_3_10_Lift@{i j | i < j} (A : HProp@{i}) : HProp@{j}
+  := Build_HProp A.
+
+Definition Book_3_10_impred@{i j k | i < j, j < k} `{Univalence}
+  (LEM : Book_3_10_LEM@{j})
+  : IsEquiv@{j k} Book_3_10_Lift@{i j}.
+Proof.
+  snrapply isequiv_adjointify. {
+    intro A. destruct (LEM A).
+    - exact (Build_HProp Unit).
+    - exact (Build_HProp Empty).
+  }
+  1-2: intro A; destruct (LEM _) as [a|na];
+    apply path_hprop, equiv_inverse; simpl.
+  1,3: exact (if_hprop_then_equiv_Unit A a).
+  1,2: exact (if_not_hprop_then_equiv_Empty A na).
+Defined.
 
 (* ================================================== ex:not-brck-A-impl-A *)
 (** Exercise 3.11 *)
