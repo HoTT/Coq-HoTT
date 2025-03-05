@@ -1348,7 +1348,23 @@ End Book_3_15_ctx.
 (* ================================================== ex:lem-impl-dn-commutes *)
 (** Exercise 3.16 *)
 
-
+Definition Book_3_16 `{Funext} (LEM : forall A : HProp, A + ~ A)
+  (X : HSet) (Y : X -> HProp)
+  : (forall x, ~~ Y x) <~> ~~ (forall x, Y x).
+Proof.
+  snrapply equiv_iff_hprop.
+  1-2: apply istrunc_forall.
+  - intros f g.
+    apply g.
+    intro x.
+    destruct (LEM (Y x)) as [y|ny].
+    + exact y.
+    + elim (f x ny).
+  - intros f x ny.
+    apply f.
+    intro g.
+    exact (ny (g x)).
+Defined.
 
 (* ================================================== ex:prop-trunc-ind *)
 (** Exercise 3.17 *)
