@@ -1414,12 +1414,27 @@ Definition Book_3_19 := @HoTT.Misc.BoundedSearch.minimal_n.
 (* ================================================== ex:omit-contr2 *)
 (** Exercise 3.20 *)
 
-
+Definition Book_3_20 := @HoTT.Types.Sigma.equiv_contr_sigma.
 
 (* ================================================== ex:isprop-equiv-equiv-bracket *)
 (** Exercise 3.21 *)
 
-
+Definition Book_3_21 `{Funext} (P : Type) : IsHProp P <~> (P <~> Trunc (-1) P).
+Proof.
+  snrapply equiv_iff_hprop.
+  1-2: exact _.
+  - intro h.
+    snrapply equiv_iff_hprop.
+    + exact h.
+    + exact _.
+    + exact tr.
+    + exact (Trunc_rec idmap).
+  - intro e.
+    snrapply istrunc_equiv_istrunc.
+    + exact (Trunc (-1) P).
+    + exact (equiv_inverse e).
+    + exact _.
+Defined.
 
 (* ================================================== ex:finite-choice *)
 (** Exercise 3.22 *)
