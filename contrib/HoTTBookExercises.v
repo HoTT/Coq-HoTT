@@ -1369,7 +1369,15 @@ Defined.
 (* ================================================== ex:prop-trunc-ind *)
 (** Exercise 3.17 *)
 
-
+Definition Book_3_17 {A : Type} {B : Trunc (-1) A -> HProp}
+  : (forall a, B (tr a)) -> (forall x, B x).
+Proof.
+  intros f x.
+  nrapply (Trunc_rec _ x).
+  - exact _.
+  - intro a.
+    exact (transport B (path_ishprop (tr a) x) (f a)).
+Defined.
 
 (* ================================================== ex:lem-ldn *)
 (** Exercise 3.18 *)
