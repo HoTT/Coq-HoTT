@@ -1209,7 +1209,17 @@ Defined.
 (* ================================================== ex:lem-impl-simple-ac *)
 (** Exercise 3.12 *)
 
-
+Definition Book_3_12 (LEM: forall A, IsHProp A -> A + ~ A)
+  : forall A, Trunc (-1) (Trunc (-1) A -> A).
+Proof.
+  intro A.
+  destruct (LEM (Trunc (-1) A) _) as [a|na].
+  - revert a; apply Trunc_rec; intro a.
+    apply tr, (fun a0 => a).
+  - apply tr.
+    intro a0.
+    elim (na a0).
+Defined.
 
 (* ================================================== ex:naive-lem-impl-ac *)
 (** Exercise 3.13 *)
