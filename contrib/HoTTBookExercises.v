@@ -1036,7 +1036,44 @@ Defined.
 (* ================================================== ex:brck-qinv *)
 (** Exercise 3.8 *)
 
+Definition Book_3_8_qinv {A B : Type} (f : A -> B) : Type
+  := {g : B -> A & (f o g == idmap) * (g o f == idmap)}.
 
+Section Book_3_8_ctx.
+  Context {isequiv : forall {A B : Type}, (A -> B) -> Type}
+    {cond_i : forall {A B : Type} (f : A -> B), isequiv f -> Book_3_8_qinv f}
+    {cond_ii : forall {A B : Type} (f : A -> B), Book_3_8_qinv f -> isequiv f}
+    {cond_iii : forall {A B : Type} (f : A -> B), IsHProp (isequiv f)}.
+  
+  Definition Book_3_8_cond_i {A B : Type} (f : A -> B)
+    : Trunc (-1) (Book_3_8_qinv f) -> Book_3_8_qinv f.
+  Proof.
+    intro x.
+    assert (y : isequiv _ _ f). {
+      revert x; apply Trunc_rec, cond_ii.
+    }
+    apply cond_i, y.
+  Defined.
+
+  Definition Book_3_8_cond_ii {A B : Type} (f : A -> B)
+    : Book_3_8_qinv f -> Trunc (-1) (Book_3_8_qinv f)
+    := tr.
+  
+  Definition Book_3_8_cond_iii {A B : Type} (f : A-> B)
+    : IsHProp (Trunc (-1) (Book_3_8_qinv f))
+    := _.
+
+  Definition Book_3_8_equiv {A B : Type} (f : A -> B)
+    : Trunc (-1) (Book_3_8_qinv f) <~> (isequiv _ _ f).
+  Proof.
+    snrapply equiv_iff_hprop.
+    - exact _.
+    - apply cond_iii.
+    - apply Trunc_rec, cond_ii.
+    - intro x.
+      apply tr, cond_i, x.
+  Defined.
+End Book_3_8_ctx.
 
 (* ================================================== ex:lem-impl-prop-equiv-bool *)
 (** Exercise 3.9 *)
