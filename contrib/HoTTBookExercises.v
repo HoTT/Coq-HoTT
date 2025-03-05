@@ -1249,7 +1249,36 @@ End Book_3_14.
 (* ================================================== ex:impred-brck *)
 (** Exercise 3.15 *)
 
+Section Book_3_15.
+  Definition Book_3_15_trunc@{u +} `{PropResizing} `{Funext} (A : Type@{u})
+    : Type@{u}.
+  Proof.
+    exact (resize_hprop@{_ u} (forall P : HProp@{u}, (A -> P) -> P)).
+  Defined.
 
+  Definition Book_3_15_ishprop `{PropResizing} `{Funext} (A : Type)
+    : IsHProp (Book_3_15_trunc A)
+    := _.
+
+  Definition Book_3_15_rec `{PropResizing} `{Funext} {A B} `{IsHProp B}
+    : (A -> B) -> (Book_3_15_trunc A) -> B.
+  Proof.
+    intros f trA.
+    set (B' := Build_HProp B).
+    apply equiv_resize_hprop in trA.
+    specialize (trA B').
+    apply trA.
+    assumption.
+  Defined.
+
+  Lemma Book_3_15_eq `{PropResizing} `{Funext} {A B} `{IsHProp B} (f : A -> B)
+    : forall a, f a = Book_3_15_rec f (equiv_resize_hprop _ (fun _ f' => f' a)).
+  Proof.
+    intro a.
+    (* Now judgemental computation rule does not hold in Coq, as in Coq, propositional resizing isn't definitional; judgemental equality doesn't hold. *)
+    apply path_ishprop.
+  Qed.
+End Book_3_15.
 
 (* ================================================== ex:lem-impl-dn-commutes *)
 (** Exercise 3.16 *)
@@ -1259,7 +1288,17 @@ End Book_3_14.
 (* ================================================== ex:prop-trunc-ind *)
 (** Exercise 3.17 *)
 
-
+Section Book_3_17.
+  Theorem prop_trunc_ind (A: Type) (B : merely A -> Type) `{forall x, IsHProp (B x)}
+  : (forall a, B (tr a)) -> forall x, B x.
+  Proof.
+    intros base x.
+    refine (Trunc_rec _ x).
+    intro a.
+    assert (H': tr a = x) by (apply path_ishprop).
+    destruct H'. exact (base a).
+  Defined.
+End Book_3_17.
 
 (* ================================================== ex:lem-ldn *)
 (** Exercise 3.18 *)
