@@ -1353,7 +1353,7 @@ Definition Book_3_16 `{Funext} (LEM : forall A : HProp, A + ~ A)
   : (forall x, ~~ Y x) <~> ~~ (forall x, Y x).
 Proof.
   snrapply equiv_iff_hprop.
-  1-2: apply istrunc_forall.
+  1-2: exact _.
   - intros f g.
     apply g.
     intro x.
@@ -1382,7 +1382,29 @@ Defined.
 (* ================================================== ex:lem-ldn *)
 (** Exercise 3.18 *)
 
+(* Already solved as LEM_to_DNE and DNE_to_LEM. Copied here for completeness *)
 
+Definition Book_3_18 `{Funext}
+  : (forall A : HProp, A + ~ A) <-> (forall A : HProp, ~~ A -> A).
+Proof.
+  split.
+  - intros LEM A nna.
+    destruct (LEM A) as [a|na].
+    + exact a.
+    + elim (nna na).
+  - intros DNE A.
+    assert (p : IsHProp (A + ~ A)). {
+      apply ishprop_sum.
+      1-2: exact _.
+      + intros a na.
+        exact (na a).
+    }
+    apply (DNE (@Build_HProp (A + ~ A) p)); simpl.
+    intro nsum.
+    apply nsum, inl, DNE.
+    intro na.
+    apply nsum, inr, na.
+Defined.
 
 (* ================================================== ex:decidable-choice *)
 (** Exercise 3.19 *)
