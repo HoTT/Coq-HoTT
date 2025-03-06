@@ -26,7 +26,8 @@
 From HoTT Require Import Basics Types HProp HSet Projective
      TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
      Misc.BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
-     Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties.
+     Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties
+     Spaces.Finite.Fin.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.
@@ -1439,12 +1440,37 @@ Defined.
 (* ================================================== ex:finite-choice *)
 (** Exercise 3.22 *)
 
-
+Definition Book_3_22 {n : nat} {A : Fin n -> HSet}
+  (P : forall (x : Fin n) (a : A x), HProp)
+  : (forall x, Trunc (-1) {a : A x & P x a})
+    -> Trunc (-1) {g : forall x, A x & forall x, P x (g x)}.
+Proof.
+  intro f.
+  induction n as [| m IH].
+  - apply tr.
+    snrefine (_ ; _).
+    1-2: intro bot; elim bot.
+  - assert (cl : Trunc (-1) {g : forall xl : Fin m, A (inl xl)
+      & forall xl : Fin m, P (inl xl) (g xl)}). {
+      apply (IH (A o inl) (fun xl a => P (inl xl) a)).
+      intro xl.
+      apply f.
+    }
+    revert cl; apply Trunc_rec; intro cl.
+    assert (cr : Trunc (-1) {ar : A (inr tt) & P (inr tt) ar}) by (apply f).
+    revert cr; apply Trunc_rec; intro cr.
+    apply tr.
+    snrefine (_ ; _); intros [xl|[]].
+    + apply cl.1.
+    + exact cr.1.
+    + apply cl.2.
+    + exact cr.2.
+Defined.
 
 (* ================================================== ex:decidable-choice-strong *)
 (** Exercise 3.23 *)
 
-
+Definition Book_3_23 := @HoTT.Misc.BoundedSearch.minimal_n.
 
 (* ================================================== ex:n-set *)
 (** Exercise 3.24 *)
