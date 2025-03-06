@@ -12,7 +12,7 @@ Many algebraic theories such as groups and rings may also be internalized, howev
 (** * Monoid objects *)
 
 Section MonoidObject.
-  Context {A : Type} {tensor : A -> A -> A} {unit : A}
+  Context {A : Type} (tensor : A -> A -> A) {unit : A}
     `{HasEquivs A, !Is0Bifunctor tensor, !Is1Bifunctor tensor}
     `{!Associator tensor, !LeftUnitor tensor unit, !RightUnitor tensor unit}.
 
@@ -89,11 +89,11 @@ Section ComonoidObject.
 
   (** Comultiplication *)
   Definition co_comult {x : A} `{!IsComonoidObject x} : x $-> tensor x x
-   := mo_mult (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x).
+   := mo_mult (A:=A^op) tensor (unit:=unit) (x:=x).
 
   (** Counit *)
   Definition co_counit {x : A} `{!IsComonoidObject x} : x $-> unit
-    := mo_unit (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x).
+    := mo_unit (A:=A^op) tensor (unit:=unit) (x:=x).
 
   (** Coassociativity *)
   Definition co_coassoc {x : A} `{!IsComonoidObject x}
@@ -103,7 +103,7 @@ Section ComonoidObject.
     refine (cat_assoc _ _ _ $@ _).
     apply cate_moveR_Me.
     symmetry.
-    exact (mo_assoc (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x)).
+    exact (mo_assoc (A:=A^op) tensor (unit:=unit) (x:=x)).
   Defined.
 
   (** Left counitality *)
@@ -113,7 +113,7 @@ Section ComonoidObject.
     refine (cat_assoc _ _ _ $@ _).
     apply cate_moveR_Me.
     refine (_ $@ (cat_idr _)^$).
-    exact (mo_left_unit (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x)).
+    exact (mo_left_unit (A:=A^op) tensor (unit:=unit) (x:=x)).
   Defined.
 
   (** Right counitality *)
@@ -123,7 +123,7 @@ Section ComonoidObject.
     refine (cat_assoc _ _ _ $@ _).
     apply cate_moveR_Me.
     refine (_ $@ (cat_idr _)^$).
-    exact (mo_right_unit (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x)).
+    exact (mo_right_unit (A:=A^op) tensor (unit:=unit) (x:=x)).
   Defined.
 
   Context `{!Braiding tensor}.
@@ -149,14 +149,14 @@ Section ComonoidObject.
   #[export] Instance co_cco {x : A} `{!IsCocommutativeComonoidObject x}
     : IsComonoidObject x.
   Proof.
-    apply cmo_mo.
+    srapply cmo_mo.
   Defined.
 
   (** Cocommutativity *)
   Definition cco_cocomm {x : A} `{!IsCocommutativeComonoidObject x}
     : braid x x $o co_comult $== co_comult.
   Proof.
-    exact (cmo_comm (A:=A^op) (tensor:=tensor) (unit:=unit) (x:=x)).
+    exact (cmo_comm (A:=A^op) tensor (unit:=unit) (x:=x)).
   Defined.
 
 End ComonoidObject.
@@ -204,16 +204,19 @@ Defined.
 
 Section MonoidEnriched.
   Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}
-    (unit : A) `{!IsTerminal unit} {x y : A}
+    (I : A) `{!IsTerminal I} {x y : A}
     `{!HasMorExt A} `{forall x y, IsHSet (x $-> y)}.
+  
+  Notation "*" := (fun x y : A => cat_binprod (A:=A) x y).
 
   Section Monoid.
-    Context `{!IsMonoidObject (fun a b : A => cat_binprod a b) unit y}.
+
+    Context `{!IsMonoidObject * I y}.
 
     Local Instance sgop_hom : SgOp (x $-> y)
-      := fun f g => mo_mult (tensor := fun a b : A => cat_binprod a b) $o cat_binprod_corec f g.
+      := fun f g => mo_mult * $o cat_binprod_corec f g.
 
-    Local Instance monunit_hom : MonUnit (x $-> y) := mo_unit (tensor := fun a b : A => cat_binprod a b) $o mor_terminal _ _.
+    Local Instance monunit_hom : MonUnit (x $-> y) := mo_unit * $o mor_terminal _ _.
 
     Local Instance associative_hom : Associative sgop_hom.
     Proof.
@@ -222,7 +225,7 @@ Section MonoidEnriched.
       rapply path_hom.
       refine ((_ $@L cat_binprod_fmap01_corec _ _ _)^$ $@ _).
       nrefine (cat_assoc_opp _ _ _ $@ _).
-      refine ((mo_assoc $@R _)^$ $@ _).
+      refine ((mo_assoc * $@R _)^$ $@ _).
       nrefine (_ $@ (_ $@L cat_binprod_fmap10_corec _ _ _)).
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_assoc _ _ _).
       nrapply cat_binprod_associator_corec.
@@ -234,7 +237,7 @@ Section MonoidEnriched.
       unfold sgop_hom, mon_unit.
       rapply path_hom.
       refine ((_ $@L (cat_binprod_fmap10_corec _ _ _)^$) $@ cat_assoc_opp _ _ _ $@ _).
-      nrefine (((mo_left_unit $@ _) $@R _) $@ _).
+      nrefine (((mo_left_unit * $@ _) $@R _) $@ _).
       1: nrapply cate_buildequiv_fun.
       unfold trans_nattrans.
       nrefine ((((_ $@R _) $@ _) $@R _) $@ _).
@@ -249,7 +252,7 @@ Section MonoidEnriched.
       unfold sgop_hom, mon_unit.
       rapply path_hom.
       refine ((_ $@L (cat_binprod_fmap01_corec _ _ _)^$) $@ cat_assoc_opp _ _ _ $@ _).
-      nrefine (((mo_right_unit $@ _) $@R _) $@ _).
+      nrefine (((mo_right_unit * $@ _) $@R _) $@ _).
       1: nrapply cate_buildequiv_fun.
       nrapply cat_binprod_beta_pr1.
     Defined.
@@ -259,8 +262,7 @@ Section MonoidEnriched.
 
   End Monoid.
 
-  Context `{!IsCommutativeMonoidObject 
-                        (fun a b :A => cat_binprod a b) unit y}.
+  Context `{!IsCommutativeMonoidObject * I y}.
   Local Existing Instances sgop_hom monunit_hom ismonoid_hom.
 
   Local Instance commutative_hom : Commutative sgop_hom.
@@ -268,7 +270,7 @@ Section MonoidEnriched.
     intros f g.
     unfold sgop_hom.
     rapply path_hom.
-    refine ((_ $@L _^$) $@ cat_assoc_opp _ _ _ $@ (cmo_comm $@R _)).
+    refine ((_ $@L _^$) $@ cat_assoc_opp _ _ _ $@ (cmo_comm * $@R _)).
     nrapply cat_binprod_swap_corec. 
   Defined.
 
@@ -278,7 +280,6 @@ End MonoidEnriched.
 
 (** ** Preservation of monoid objects by lax monoidal functors *)
 
-Local Set Typeclasses Depth 2.
 Definition mo_preserved {A B : Type}
   {tensorA : A -> A -> A} {tensorB : B -> B -> B} {IA : A} {IB : B} 
   (F : A -> B) `{IsMonoidalFunctor A B tensorA tensorB IA IB F} (x : A)
@@ -286,14 +287,14 @@ Definition mo_preserved {A B : Type}
 Proof.
   intros mo_x.
   snrapply Build_IsMonoidObject.
-  - exact (fmap F mo_mult $o fmap_tensor F (x, x)).
-  - exact (fmap F mo_unit $o fmap_unit).
+  - exact (fmap F (mo_mult tensorA) $o fmap_tensor F (x, x)).
+  - exact (fmap F (mo_unit tensorA) $o fmap_unit).
   - refine (((_ $@L (fmap10_comp tensorB _ _ _)) $@R _)
       $@ _ $@ (_ $@L (fmap01_comp tensorB _ _ _)^$)).
     refine (_ $@ (((_ $@L _^$) $@ cat_assoc_opp _ _ _) $@R _)
       $@ cat_assoc _ _ _).
     2: snrapply fmap_tensor_nat_r.
-    refine (_ $@ ((fmap2 _ mo_assoc $@ fmap_comp _ _ _) $@R _)
+    refine (_ $@ ((fmap2 _ (mo_assoc _) $@ fmap_comp _ _ _) $@R _)
       $@ cat_assoc_opp _ _ _ $@ (cat_assoc _ _ _ $@R _)).
     refine (_ $@ ((fmap_comp _ _ _ $@ (fmap_comp _ _ _ $@R _))^$ $@R _)).
     nrefine (cat_assoc _ _ _ $@ cat_assoc _ _ _ $@ (_ $@L _)
@@ -303,16 +304,16 @@ Proof.
     nrefine (cat_assoc_opp _ _ _ $@ (cat_assoc_opp _ _ _ $@R _)
       $@ (((_ $@R _) $@ cat_assoc _ _ _) $@R _) $@ cat_assoc _ _ _).
     snrapply fmap_tensor_nat_l.
-  - refine ((_ $@L fmap10_comp _ _ _ _) $@ cat_assoc _ _ _
+  - refine ((_ $@L fmap10_comp tensorB _ _ _) $@ cat_assoc _ _ _
       $@ (_ $@L (cat_assoc_opp _ _ _ $@ (_ $@R _))) $@ _).
     1: snrapply fmap_tensor_nat_l.
     refine (cat_assoc_opp _ _ _ $@ ((cat_assoc_opp _ _ _ $@
-      (((fmap_comp _ _ _)^$ $@ fmap2 _ mo_left_unit) $@R _)) $@R _) $@ _^$).
+      (((fmap_comp _ _ _)^$ $@ fmap2 _ (mo_left_unit _)) $@R _)) $@R _) $@ _^$).
     snrapply fmap_tensor_left_unitor.
   - refine ((_ $@L fmap01_comp _ _ _ _) $@ cat_assoc _ _ _
       $@ (_ $@L (cat_assoc_opp _ _ _ $@ (_ $@R _))) $@ _).
     1: snrapply fmap_tensor_nat_r.
     refine (cat_assoc_opp _ _ _ $@ ((cat_assoc_opp _ _ _ $@
-      (((fmap_comp _ _ _)^$ $@ fmap2 _ mo_right_unit) $@R _)) $@R _) $@ _^$).
+      (((fmap_comp _ _ _)^$ $@ fmap2 _ (mo_right_unit _)) $@R _)) $@R _) $@ _^$).
     snrapply fmap_tensor_right_unitor.
 Defined.

@@ -1,7 +1,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber Factorization Truncations.Core Truncations.Connectedness HProp.
-Require Import Pointed.Core Pointed.pEquiv.
 Require Import WildCat.
+Require Import Pointed.Core Pointed.pEquiv.
 Require Import Spaces.Nat.Core.
 
 Local Open Scope pointed_scope.
@@ -106,7 +106,7 @@ Defined.
 
 Lemma fmap_loops_pconst {A B : pType} : fmap loops (@pconst A B) ==* pconst.
 Proof.
-  exact (fmap_zero_morphism loops).
+  rapply fmap_zero_morphism.
 Defined.
 
 (** *** Iterated loops functor *)
