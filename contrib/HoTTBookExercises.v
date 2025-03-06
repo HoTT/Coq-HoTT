@@ -1475,7 +1475,7 @@ Definition Book_3_23 := @HoTT.Misc.BoundedSearch.minimal_n.
 (* ================================================== ex:n-set *)
 (** Exercise 3.24 *)
 
-
+Definition Book_3_24 := @HoTT.Spaces.Nat.Paths.equiv_path_nat.
 
 (* ================================================== ex:two-sided-adjoint-equivalences *)
 (** Exercise 4.1 *)
