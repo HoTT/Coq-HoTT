@@ -11,7 +11,7 @@ Local Open Scope mc_scope.
 Class IsIdempotent (R : Ring) (e : R)
   := rng_idem : e * e = e.
 
-Global Instance ishprop_isidempotent R e : IsHProp (IsIdempotent R e).
+Instance ishprop_isidempotent R e : IsHProp (IsIdempotent R e).
 Proof.
   unfold IsIdempotent; exact _.
 Defined.
@@ -19,15 +19,15 @@ Defined.
 (** *** Examples *)
 
 (** Zero is idempotent. *)
-Global Instance isidempotent_zero (R : Ring) : IsIdempotent R 0
+Instance isidempotent_zero (R : Ring) : IsIdempotent R 0
   := rng_mult_zero_r 0.
 
 (** One is idempotent. *)
-Global Instance isidempotent_one (R : Ring) : IsIdempotent R 1
+Instance isidempotent_one (R : Ring) : IsIdempotent R 1
   := rng_mult_one_r 1.
 
 (** If [e] is idempotent, then [1 - e] is idempotent. *)
-Global Instance isidempotent_complement (R : Ring) (e : R) `{IsIdempotent R e}
+Instance isidempotent_complement (R : Ring) (e : R) `{IsIdempotent R e}
   : IsIdempotent R (1 - e).
 Proof.
   unfold IsIdempotent.
@@ -42,7 +42,7 @@ Proof.
 Defined.
 
 (** If [e] is idempotent, then it is also an idempotent element of the opposite ring. *)
-Global Instance isidempotent_op (R : Ring) (e : R) `{i : IsIdempotent R e}
+Instance isidempotent_op (R : Ring) (e : R) `{i : IsIdempotent R e}
   : IsIdempotent (rng_op R) e
   := i.
 
@@ -57,7 +57,7 @@ Proof.
 Defined.
 
 (** Ring homomorphisms preserve idempotent elements. *)
-Global Instance isidempotent_rng_homo {R S : Ring} (f : R $-> S) (e : R)
+Instance isidempotent_rng_homo {R S : Ring} (f : R $-> S) (e : R)
   : IsIdempotent R e -> IsIdempotent S (f e).
 Proof.
   intros p.
@@ -79,7 +79,7 @@ Definition issig_IsOrthogonal {R : Ring} {e f : R}
   : _ <~> IsOrthogonal R e f
   := ltac:(issig).
 
-Global Instance ishprop_isorthogonal R e f
+Instance ishprop_isorthogonal R e f
   `{IsIdempotent R e, IsIdempotent R f}
   : IsHProp (IsOrthogonal R e f).
 Proof.
@@ -95,7 +95,7 @@ Definition isorthogonal_swap (R : Ring) (e f : R) `{IsOrthogonal R e f}
 Hint Immediate isorthogonal_swap : typeclass_instances.
 
 (** If [e] and [f] are orthogonal idempotents, then they are also orthogonal idempotents in the opposite ring. *)
-Global Instance isorthogonal_op {R : Ring} (e f : R) `{r : IsOrthogonal R e f}
+Instance isorthogonal_op {R : Ring} (e f : R) `{r : IsOrthogonal R e f}
   : IsOrthogonal (rng_op R) e f.
 Proof.
   snrapply Build_IsOrthogonal.
@@ -104,7 +104,7 @@ Proof.
 Defined.
 
 (** If [e] and [f] are orthogonal idempotents, then [e + f] is idempotent. *)
-Global Instance isidempotent_plus_orthogonal {R : Ring} (e f : R)
+Instance isidempotent_plus_orthogonal {R : Ring} (e f : R)
   `{IsOrthogonal R e f}
   : IsIdempotent R (e + f).
 Proof.
@@ -117,7 +117,7 @@ Proof.
 Defined.
 
 (** An idempotent element [e] is orthogonal to its complement [1 - e]. *)
-Global Instance isorthogonal_complement {R : Ring} (e : R) `{IsIdempotent R e}
+Instance isorthogonal_complement {R : Ring} (e : R) `{IsIdempotent R e}
   : IsOrthogonal R e (1 - e).
 Proof.
   snrapply Build_IsOrthogonal.

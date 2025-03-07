@@ -23,7 +23,7 @@ Local Set Universe Minimization ToSet.
 
 Class Closeness@{i} (A : Type@{i}) := close : Q+ -> Relation@{i i} A.
 
-Global Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
+Instance Q_close@{} : Closeness Q := fun e q r => - ' e < q - r < ' e.
 
 Class Separated A `{Closeness A}
   := separated : forall x y, (forall e, close e x y) -> x = y :> A.
@@ -52,7 +52,7 @@ Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
   premetric_triangular
   premetric_rounded.
 
-Global Instance premetric_hset@{i j} `{Funext}
+Instance premetric_hset@{i j} `{Funext}
   {A:Type@{i} } `{PreMetric@{i j} A} : IsHSet A.
 Proof.
 apply (@HSet.ishset_hrel_subpaths@{j i j} _ (fun x y => forall e, close e x y)).
@@ -116,10 +116,10 @@ Context (A:Type@{UA}) (B:Type@{UB}) `{Closeness A} `{Closeness B}
   `{forall e, is_mere_relation A (close e)}
   `{forall e, is_mere_relation B (close e)}.
 
-Global Instance close_prod@{} : Closeness@{i} (A /\ B)
+#[export] Instance close_prod@{} : Closeness@{i} (A /\ B)
   := fun e x y => close e (fst x) (fst y) /\ close e (snd x) (snd y).
 
-Global Instance close_prod_refl@{}
+#[export] Instance close_prod_refl@{}
   `{forall e, Reflexive (close (A:=A) e)}
   `{forall e, Reflexive (close (A:=B) e)}
   : forall e, Reflexive (close (A:=A /\ B) e).
@@ -127,7 +127,7 @@ Proof.
 intros e;split;reflexivity.
 Qed.
 
-Global Instance close_prod_symm@{}
+#[export] Instance close_prod_symm@{}
   `{forall e, Symmetric (close (A:=A) e)}
   `{forall e, Symmetric (close (A:=B) e)}
   : forall e, Symmetric (close (A:=A /\ B) e).
@@ -135,7 +135,7 @@ Proof.
 intros e u v xi;split;symmetry;apply xi.
 Qed.
 
-Global Instance close_prod_separated@{}
+#[export] Instance close_prod_separated@{}
   `{!Separated A}
   `{!Separated B}
   : Separated (A /\ B).
@@ -144,7 +144,7 @@ intros x y E.
 apply Prod.path_prod;apply separated;intros;apply E.
 Qed.
 
-Global Instance close_prod_triangular@{}
+#[export] Instance close_prod_triangular@{}
   `{!Triangular A}
   `{!Triangular B}
   : Triangular (A /\ B).
@@ -177,24 +177,24 @@ Definition close_prod_rounded@{j} := ltac:(first [exact @close_prod_rounded'@{j 
                                                   exact @close_prod_rounded'@{j j}|
                                                   exact @close_prod_rounded'@{j j j}]).
 Arguments close_prod_rounded {_ _} _ _ _.
-Global Existing Instance close_prod_rounded.
+#[export] Existing Instance close_prod_rounded.
 
 Lemma prod_premetric@{j} `{!PreMetric@{UA j} A} `{!PreMetric@{UB j} B}
   : PreMetric@{i j} (A /\ B).
 Proof.
 split;try apply _.
 Qed.
-Global Existing Instance prod_premetric.
+#[export] Existing Instance prod_premetric.
 
 Context {Alim : Lim A} {Blim : Lim B}.
 
-Global Instance prod_lim@{} : Lim (A /\ B).
+#[export] Instance prod_lim@{} : Lim (A /\ B).
 Proof.
 intros xy. split;apply lim;
 [exists (fun e => fst (xy e))|exists (fun e => snd (xy e))];intros;apply xy.
 Defined.
 
-Global Instance prod_cauchy_complete `{!CauchyComplete A} `{!CauchyComplete B}
+#[export] Instance prod_cauchy_complete `{!CauchyComplete A} `{!CauchyComplete B}
   : CauchyComplete (A /\ B).
 Proof.
 intros xy e d;split.
@@ -210,7 +210,7 @@ Section close_arrow.
 Context {A:Type} `{Bclose : Closeness B} `{!PreMetric B}.
 
 (* Using [forall x, close e (f x) (g x)] works for closed balls, not open ones. *)
-Global Instance close_arrow : Closeness (A -> B)
+#[export] Instance close_arrow : Closeness (A -> B)
   := fun e f g => merely (exists d d', e = d + d' /\ forall x, close d (f x) (g x)).
 
 Lemma close_arrow_apply : forall e (f g : A -> B), close e f g ->
@@ -220,7 +220,7 @@ intros e f g E x;revert E;apply (Trunc_ind _);intros [d [d' [E1 E2]]].
 rewrite E1;apply rounded_plus;trivial.
 Qed.
 
-Global Instance close_arrow_premetric : PreMetric (A -> B).
+#[export] Instance close_arrow_premetric : PreMetric (A -> B).
 Proof.
 split.
 - apply _.
@@ -253,7 +253,7 @@ Qed.
 
 Context {Blim : Lim B}.
 
-Global Instance arrow_lim : Lim (A -> B).
+#[export] Instance arrow_lim : Lim (A -> B).
 Proof.
 intros f x. apply lim. exists (fun e => f e x).
 intros. apply close_arrow_apply. apply approx_equiv.
@@ -261,7 +261,7 @@ Defined.
 Arguments arrow_lim _ / _.
 
 Context `{!CauchyComplete B}.
-Global Instance arrow_cauchy_complete : CauchyComplete (A -> B).
+#[export] Instance arrow_cauchy_complete : CauchyComplete (A -> B).
 Proof.
 intros f e d.
 unfold lim;simpl.
@@ -306,12 +306,12 @@ Section closeness.
 Universe UA.
 Context {A:Type@{UA} } `{Closeness A}.
 
-Global Instance id_nonexpanding : NonExpanding (@id A).
+#[export] Instance id_nonexpanding : NonExpanding (@id A).
 Proof.
 hnf;trivial.
 Qed.
 
-Global Instance BinaryDup_nonexpanding@{} : NonExpanding (@BinaryDup A).
+#[export] Instance BinaryDup_nonexpanding@{} : NonExpanding (@BinaryDup A).
 Proof.
 intros e x y E;split;exact E.
 Qed.
@@ -329,7 +329,7 @@ Definition nonexpanding_lipschitz@{} `{!NonExpanding f}
   : Lipschitz f 1
   := ltac:(first [exact nonexpanding_lipschitz'@{Ularge}|
                   exact nonexpanding_lipschitz'@{}]).
-Global Existing Instance nonexpanding_lipschitz.
+#[export] Existing Instance nonexpanding_lipschitz.
 
 
 Lemma lipschitz_nonexpanding@{} `{!Lipschitz f 1} : NonExpanding f.
@@ -337,20 +337,20 @@ Proof.
 red. intros e x y E;rewrite <-(left_identity e). apply (lipschitz f 1 E).
 Qed.
 
-Global Instance const_nonexpanding@{} `{forall e, Reflexive (close (A:=B) e)}
+#[export] Instance const_nonexpanding@{} `{forall e, Reflexive (close (A:=B) e)}
   (b : B) : NonExpanding (fun _ : A => b).
 Proof.
 hnf. intros;reflexivity.
 Qed.
 
-Global Instance lipschitz_const@{} `{forall e, Reflexive (close (A:=B) e)}
+#[export] Instance lipschitz_const@{} `{forall e, Reflexive (close (A:=B) e)}
   : forall (b:B) (L:Q+), Lipschitz (fun _ : A => b) L.
 Proof.
 intros;hnf.
 intros e _ _ _. reflexivity.
 Qed.
 
-Global Instance lipschitz_uniform@{} (L:Q+) `{!Lipschitz f L}
+#[export] Instance lipschitz_uniform@{} (L:Q+) `{!Lipschitz f L}
   : Uniform f (fun e => e / L) | 5.
 Proof.
 intros e u v xi.
@@ -364,7 +364,7 @@ hnf.
 intros u e;apply tr;exists (mu e).
 apply (uniform f mu).
 Qed.
-Global Existing Instance uniform_continuous | 5.
+Existing Instance uniform_continuous | 5.
 
 Definition lipschitz_continuous@{} (L:Q+) `{!Lipschitz f L} : Continuous f
   := _.
@@ -382,14 +382,14 @@ Context {B:Type@{UB} } `{Closeness B}.
 Universe UC.
 Context {C:Type@{UC} } `{Closeness C} (g : B -> C) (f : A -> B).
 
-Global Instance nonexpanding_compose@{}
+#[export] Instance nonexpanding_compose@{}
   {Eg : NonExpanding g} {Ef : NonExpanding f}
   : NonExpanding (Compose g f).
 Proof.
 hnf. intros e x y xi;exact (non_expanding g (non_expanding f xi)).
 Qed.
 
-Global Instance lipschitz_compose@{}
+#[export] Instance lipschitz_compose@{}
   Lg {Eg : Lipschitz g Lg} Lf {Ef : Lipschitz f Lf}
   : Lipschitz (Compose g f) (Lg * Lf).
 Proof.
@@ -407,7 +407,7 @@ Proof.
 rewrite <-(left_identity L),commutativity. apply _.
 Qed.
 
-Global Instance lipschitz_compose_nonexpanding_r@{}
+#[export] Instance lipschitz_compose_nonexpanding_r@{}
   L {Eg : Lipschitz g L} {Ef : NonExpanding f}
   : Lipschitz (Compose g f) L
   := ltac:(first [exact (lipschitz_compose_nonexpanding_r'@{Ularge} L)|
@@ -420,7 +420,7 @@ Proof.
 rewrite <-(left_identity L). apply _.
 Qed.
 
-Global Instance lipschitz_compose_nonexpanding_l@{}
+#[export] Instance lipschitz_compose_nonexpanding_l@{}
   L {Eg : NonExpanding g} {Ef : Lipschitz f L}
   : Lipschitz (Compose g f) L
   := ltac:(first [exact (lipschitz_compose_nonexpanding_l'@{Ularge} L)|
@@ -432,9 +432,9 @@ Proof.
 intros e u v xi. unfold Compose.
 apply (uniform g _),(uniform f _),xi.
 Qed.
-Global Existing Instance uniform_compose.
+Existing Instance uniform_compose.
 
-Global Instance continuous_compose@{} {Eg : Continuous g} {Ef : Continuous f}
+#[export] Instance continuous_compose@{} {Eg : Continuous g} {Ef : Continuous f}
   : Continuous (Compose g f).
 Proof.
 intros u e.
@@ -456,7 +456,7 @@ Context {B:Type@{UB} } `{Closeness B}.
 Universe UC.
 Context {C:Type@{UC} } `{Closeness C} `{!Triangular C}.
 
-Global Instance uncurry_lipschitz (f : A -> B -> C) L1 L2
+#[export] Instance uncurry_lipschitz (f : A -> B -> C) L1 L2
   `{!forall x, Lipschitz (f x) L1}
   `{!forall y, Lipschitz (fun x => f x y) L2}
   : Lipschitz (uncurry f) (L1 + L2).
@@ -499,14 +499,14 @@ Context {A:Type@{UA} } `{Closeness A} `{forall e, Reflexive (close (A:=A) e)}.
 Universe UB.
 Context {B:Type@{UB} } `{Closeness B} `{forall e, Reflexive (close (A:=B) e)}.
 
-Global Instance pair_nonexpanding_l : forall x, NonExpanding (@pair A B x).
+#[export] Instance pair_nonexpanding_l : forall x, NonExpanding (@pair A B x).
 Proof.
 intros x e u v xi;split;simpl.
 - reflexivity.
 - exact xi.
 Qed.
 
-Global Instance pair_nonexpanding_r : forall y,
+#[export] Instance pair_nonexpanding_r : forall y,
   NonExpanding (fun x => @pair A B x y).
 Proof.
 intros x e u v xi;split;simpl.
@@ -514,12 +514,12 @@ intros x e u v xi;split;simpl.
 - reflexivity.
 Qed.
 
-Global Instance fst_nonexpanding : NonExpanding (@fst A B).
+#[export] Instance fst_nonexpanding : NonExpanding (@fst A B).
 Proof.
 intros e u v xi;apply xi.
 Qed.
 
-Global Instance snd_nonexpanding : NonExpanding (@snd A B).
+#[export] Instance snd_nonexpanding : NonExpanding (@snd A B).
 Proof.
 intros e u v xi;apply xi.
 Qed.
@@ -532,13 +532,13 @@ Context {A:Type@{UA} } `{Closeness A}.
 Universe UB.
 Context {B:Type@{UB} } `{Closeness B}.
 
-Global Instance equiv_prod_symm_nonexpanding
+#[export] Instance equiv_prod_symm_nonexpanding
   : NonExpanding (@Prod.equiv_prod_symm A B).
 Proof.
 intros e u v xi;split;apply xi.
 Qed.
 
-Global Instance equiv_prod_symm_inv_nonexpanding
+#[export] Instance equiv_prod_symm_inv_nonexpanding
   : NonExpanding ((@Prod.equiv_prod_symm A B)^-1).
 Proof.
 intros e u v xi;split;apply xi.
@@ -547,13 +547,13 @@ Qed.
 Universe UC.
 Context {C:Type@{UC} } `{Closeness C}.
 
-Global Instance equiv_prod_assoc_nonexpanding
+#[export] Instance equiv_prod_assoc_nonexpanding
   : NonExpanding (@Prod.equiv_prod_assoc A B C).
 Proof.
 intros e u v xi;repeat split;apply xi.
 Qed.
 
-Global Instance equiv_prod_assoc_inc_nonexpanding
+#[export] Instance equiv_prod_assoc_inc_nonexpanding
   : NonExpanding ((@Prod.equiv_prod_assoc A B C)^-1).
 Proof.
 intros e u v xi;repeat split;apply xi.
@@ -581,7 +581,7 @@ Qed.
 
 Definition map2_nonexpanding@{i} := @map2_nonexpanding'@{i i}.
 Arguments map2_nonexpanding {_ _} e x y xi.
-Global Existing Instance map2_nonexpanding.
+Existing Instance map2_nonexpanding.
 
 Lemma map2_lipschitz' `{!Rounded C} `{!Rounded D} Lf Lg
   `{!Lipschitz f Lf} `{!Lipschitz g Lg}
@@ -601,7 +601,7 @@ Qed.
 (* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
 Definition map2_lipschitz@{i} := ltac:(first [exact @map2_lipschitz'@{i i i}|exact @map2_lipschitz'@{i i i i}]).
 Arguments map2_lipschitz {_ _} Lf Lg {_ _} e x y xi.
-Global Existing Instance map2_lipschitz.
+Existing Instance map2_lipschitz.
 
 Lemma map2_continuous' `{!Rounded A} `{!Rounded B}
   `{!Continuous f} `{!Continuous g}
@@ -623,7 +623,7 @@ Qed.
 (* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
 Definition map2_continuous@{i} := ltac:(first [exact @map2_continuous'@{i i i}|exact @map2_continuous'@{i i i i}]).
 Arguments map2_continuous {_ _ _ _} u e.
-Global Existing Instance map2_continuous.
+Existing Instance map2_continuous.
 
 End map2.
 
@@ -660,7 +660,7 @@ Qed.
 
 Context `{Closeness A}.
 
-Global Instance Interval_close (a b : A) : Closeness (Interval a b)
+#[export] Instance Interval_close (a b : A) : Closeness (Interval a b)
   := fun e x y => close e (interval_proj a b x) (interval_proj a b y).
 Arguments Interval_close _ _ _ _ _ /.
 
@@ -684,9 +684,9 @@ split.
   + intros E. unfold close,Interval_close in E. apply (snd (rounded _ _ _)) in E.
     exact E.
 Qed.
-Global Existing Instance Interval_premetric.
+Existing Instance Interval_premetric.
 
-Global Instance interval_proj_nonexpanding (a b : A)
+#[export] Instance interval_proj_nonexpanding (a b : A)
   : NonExpanding (interval_proj a b)
   := fun _ _ _ xi => xi.
 
@@ -799,7 +799,7 @@ intros e q r;split.
   apply nonneg_plus_le_compat_r. solve_propholds.
 Qed.
 
-Global Instance Q_premetric@{} : PreMetric Q.
+Instance Q_premetric@{} : PreMetric Q.
 Proof.
 split;try apply _.
 intros e u;apply Qclose_alt. rewrite plus_negate_r.
@@ -808,14 +808,14 @@ unfold abs. rewrite (fst (abs_sig 0).2).
 - reflexivity.
 Qed.
 
-Global Instance Qneg_nonexpanding@{} : NonExpanding ((-) : Negate Q).
+Instance Qneg_nonexpanding@{} : NonExpanding ((-) : Negate Q).
 Proof.
 intros e x y.
 apply Qclose_neg.
 Defined.
 
 
-Global Instance Qplus_nonexpanding_l@{} : forall s : Q, NonExpanding (+ s).
+Instance Qplus_nonexpanding_l@{} : forall s : Q, NonExpanding (+ s).
 Proof.
 red. unfold close,Q_close;simpl. intros s e q r E.
 assert (Hrw : q + s - (r + s) = q - r)
@@ -823,7 +823,7 @@ assert (Hrw : q + s - (r + s) = q - r)
 rewrite Hrw;trivial.
 Qed.
 
-Global Instance Qplus_nonexpanding_r@{} : forall s : Q, NonExpanding (s +).
+Instance Qplus_nonexpanding_r@{} : forall s : Q, NonExpanding (s +).
 Proof.
 red;unfold close,Q_close;simpl. intros s e q r E.
 assert (Hrw : s + q - (s + r) = q - r)
@@ -831,7 +831,7 @@ assert (Hrw : s + q - (s + r) = q - r)
 rewrite Hrw;trivial.
 Qed.
 
-Global Instance Qabs_nonexpanding : NonExpanding (abs (A:=Q)).
+Instance Qabs_nonexpanding : NonExpanding (abs (A:=Q)).
 Proof.
 intros e q r xi.
 apply Qclose_alt in xi;apply Qclose_alt.
@@ -839,7 +839,7 @@ apply le_lt_trans with (abs (q - r));trivial.
 apply Qabs_triangle_alt.
 Qed.
 
-Global Instance Qmeet_nonexpanding_l : forall s : Q, NonExpanding (⊓ s).
+Instance Qmeet_nonexpanding_l : forall s : Q, NonExpanding (⊓ s).
 Proof.
 intros s e q r xi.
 apply Qclose_alt;apply Qclose_alt in xi.
@@ -862,7 +862,7 @@ rewrite ?(meet_l _ _ E1), ?(meet_r _ _ E1), ?(meet_l _ _ E2), ?(meet_r _ _ E2).
   apply Qabs_nonneg.
 Qed.
 
-Global Instance Qmeet_nonexpanding_r : forall s : Q, NonExpanding (s ⊓).
+Instance Qmeet_nonexpanding_r : forall s : Q, NonExpanding (s ⊓).
 Proof.
 intros s e q r xi.
 pose proof meet_sl_order_meet_sl.
@@ -870,7 +870,7 @@ rewrite !(commutativity s).
 apply (non_expanding (fun x => meet x s)). trivial.
 Qed.
 
-Global Instance Qjoin_nonexpanding_l : forall s : Q, NonExpanding (⊔ s).
+Instance Qjoin_nonexpanding_l : forall s : Q, NonExpanding (⊔ s).
 Proof.
 intros s e q r xi.
 apply Qclose_alt;apply Qclose_alt in xi.
@@ -894,7 +894,7 @@ rewrite ?(join_l _ _ E1), ?(join_r _ _ E1), ?(join_l _ _ E2), ?(join_r _ _ E2).
 - reflexivity.
 Qed.
 
-Global Instance Qjoin_nonexpanding_r : forall s : Q, NonExpanding (s ⊔).
+Instance Qjoin_nonexpanding_r : forall s : Q, NonExpanding (s ⊔).
 Proof.
 intros s e q r xi.
 pose proof join_sl_order_join_sl.
@@ -902,7 +902,7 @@ rewrite !(commutativity s).
 apply (non_expanding (fun x => join x s)). trivial.
 Qed.
 
-Global Instance Qmult_lipschitz@{} : forall q : Q, Lipschitz (q *.) (pos_of_Q q).
+Instance Qmult_lipschitz@{} : forall q : Q, Lipschitz (q *.) (pos_of_Q q).
 Proof.
 intros q e x y xi.
 apply Qclose_alt.
@@ -917,11 +917,11 @@ apply pos_mult_le_lt_compat;try split.
 - apply Qclose_alt,xi.
 Qed.
 
-Global Instance Qpos_upper_close e : Closeness (Qpos_upper e)
+Instance Qpos_upper_close e : Closeness (Qpos_upper e)
   := fun n x y => close n x.1 y.1.
 Arguments Qpos_upper_close _ _ _ _ /.
 
-Global Instance Q_recip_lipschitz (e : Q+)
+Instance Q_recip_lipschitz (e : Q+)
   : Lipschitz ((/) ∘ pr1 ∘ (Qpos_upper_inject e)) (/ (e * e)).
 Proof.
 intros n q r xi.
@@ -1019,7 +1019,7 @@ Context {A:Type} {Aclose : Closeness A} `{!PreMetric A}
   `{Bclose : Closeness B} `{!PreMetric B} {Blim : Lim B}
    `{!CauchyComplete B}.
 
-Global Instance lipschitz_lim_lipschitz (s : Approximation (A -> B)) L
+#[export] Instance lipschitz_lim_lipschitz (s : Approximation (A -> B)) L
   `{!forall e, Lipschitz (s e) L} : Lipschitz (lim s) L.
 Proof.
 intros e x y xi.

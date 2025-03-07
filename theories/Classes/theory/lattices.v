@@ -4,27 +4,27 @@ Require Import
 
 Generalizable Variables A B C K L f.
 
-Global Instance bounded_sl_is_sl `{IsBoundedSemiLattice L} : IsSemiLattice L.
+Instance bounded_sl_is_sl `{IsBoundedSemiLattice L} : IsSemiLattice L.
 Proof.
 repeat (split; try apply _).
 Qed.
 
-Global Instance bounded_join_sl_is_join_sl `{IsBoundedJoinSemiLattice L} : IsJoinSemiLattice L.
+Instance bounded_join_sl_is_join_sl `{IsBoundedJoinSemiLattice L} : IsJoinSemiLattice L.
 Proof.
 repeat (split; try apply _).
 Qed.
 
-Global Instance bounded_meet_sl_is_meet_sl `{IsBoundedMeetSemiLattice L} : IsMeetSemiLattice L.
+Instance bounded_meet_sl_is_meet_sl `{IsBoundedMeetSemiLattice L} : IsMeetSemiLattice L.
 Proof.
 repeat (split; try apply _).
 Qed.
 
-Global Instance bounded_lattice_is_lattice `{IsBoundedLattice L} : IsLattice L.
+Instance bounded_lattice_is_lattice `{IsBoundedLattice L} : IsLattice L.
 Proof.
 repeat split; apply _.
 Qed.
 
-Global Instance bounded_sl_mor_is_sl_mor `{H : IsBoundedJoinPreserving A B f}
+Instance bounded_sl_mor_is_sl_mor `{H : IsBoundedJoinPreserving A B f}
   : IsJoinPreserving f.
 Proof.
 red;apply _.
@@ -62,13 +62,13 @@ Section distributive_lattice_props.
   Instance join_meet_distr_l: LeftDistribute (⊔) (⊓).
   Proof. exact (join_meet_distr_l _). Qed.
 
-  Global Instance join_meet_distr_r: RightDistribute (⊔) (⊓).
+  #[export] Instance join_meet_distr_r: RightDistribute (⊔) (⊓).
   Proof.
   intros x y z. rewrite !(commutativity _ z).
   apply distribute_l.
   Qed.
 
-  Global Instance meet_join_distr_l: LeftDistribute (⊓) (⊔).
+  #[export] Instance meet_join_distr_l: LeftDistribute (⊓) (⊔).
   Proof.
   intros x y z.
   rewrite (simple_distribute_l (f:=join)).
@@ -82,7 +82,7 @@ Section distributive_lattice_props.
     reflexivity.
   Qed.
 
-  Global Instance meet_join_distr_r: RightDistribute (⊓) (⊔).
+  #[export] Instance meet_join_distr_r: RightDistribute (⊓) (⊔).
   Proof.
   intros x y z. rewrite !(commutativity _ z).
   apply distribute_l.
@@ -109,13 +109,13 @@ End distributive_lattice_props.
 Section lower_bounded_lattice.
   Context `{IsLattice L} `{Bottom L} `{!IsBoundedJoinSemiLattice L}.
 
-  Global Instance meet_bottom_l: LeftAbsorb (⊓) ⊥.
+  #[export] Instance meet_bottom_l: LeftAbsorb (⊓) ⊥.
   Proof.
   intros x. rewrite <-(join_bottom_l x), absorption.
   trivial.
   Qed.
 
-  Global Instance meet_bottom_r: RightAbsorb (⊓) ⊥.
+  #[export] Instance meet_bottom_r: RightAbsorb (⊓) ⊥.
   Proof.
   intros x.
   rewrite (commutativity (f:=meet)), left_absorb.
@@ -155,17 +155,17 @@ Section from_another_bounded_sl.
   Qed.
 End from_another_bounded_sl.
 
-Global Instance id_join_sl_morphism `{IsJoinSemiLattice A} : IsJoinPreserving (@id A)
+Instance id_join_sl_morphism `{IsJoinSemiLattice A} : IsJoinPreserving (@id A)
   := {}.
 
-Global Instance id_meet_sl_morphism `{IsMeetSemiLattice A} : IsMeetPreserving (@id A)
+Instance id_meet_sl_morphism `{IsMeetSemiLattice A} : IsMeetPreserving (@id A)
   := {}.
 
-Global Instance id_bounded_join_sl_morphism `{IsBoundedJoinSemiLattice A}
+Instance id_bounded_join_sl_morphism `{IsBoundedJoinSemiLattice A}
   : IsBoundedJoinPreserving (@id A)
   := {}.
 
-Global Instance id_lattice_morphism `{IsLattice A} : IsLatticePreserving (@id A)
+Instance id_lattice_morphism `{IsLattice A} : IsLatticePreserving (@id A)
   := {}.
 
 Section morphism_composition.

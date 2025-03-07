@@ -35,4 +35,4 @@ Record Category :=
     iscategory_precategory_of_category :> IsCategory precategory_of_category
   }.
 
-Global Existing Instance iscategory_precategory_of_category.
+Existing Instance iscategory_precategory_of_category.

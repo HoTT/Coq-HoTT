@@ -37,8 +37,7 @@ Proof.
     apply isexact_inclusion_projection. }
   hnf. intros [f q]; rapply contr_inhabited_hprop.
   srefine (tr (_; _)).
-  { refine (grp_homo_compose _
-              (abses_cokernel_iso (inclusion E) (projection E))^-1$).
+  { refine (grp_homo_compose _ (abses_cokernel_iso (inclusion E) (projection E))^-1$).
     apply (quotient_abgroup_rec _ _ f).
     intros e; rapply Trunc_ind.
     intros [b r].
@@ -74,7 +73,7 @@ Proof.
   apply isexact_inclusion_projection.
 Defined.
 
-Global Instance isexact_ext_contra_sixterm_iii@{u v +} `{Univalence}
+Instance isexact_ext_contra_sixterm_iii@{u v +} `{Univalence}
   {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
   : IsExact (Tr (-1))
       (fmap10 (A:=Group^op) ab_hom (inclusion E) G)
@@ -131,7 +130,7 @@ Proof.
     exact (pr _)^.
 Defined.
 
-Global Instance isexact_ext_contra_sixterm_iv `{Univalence}
+Instance isexact_ext_contra_sixterm_iv `{Univalence}
   {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
   : IsExact (Tr (-1)) (abses_pushout_ext E)
       (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E))).
@@ -163,7 +162,7 @@ Defined.
 (** *** Exactness of [Ext B G -> Ext E G -> Ext A G] *)
 
 (** This is an immediate consequence of [isexact_abses_pullback]. *)
-Global Instance isexact_ext_contra_sixterm_v `{Univalence}
+Instance isexact_ext_contra_sixterm_v `{Univalence}
   {B A G : AbGroup} (E : AbSES B A)
   : IsExact (Tr (-1))
       (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E)))

@@ -376,7 +376,7 @@ End Paths.
 (** ** IW-types preserve truncation *)
 
 (** We can show that if the index map is an embedding then the IW-type is a hprop. *)
-Global Instance ishprop_iwtype `{Funext}
+Instance ishprop_iwtype `{Funext}
   (I : Type) (A : Type) (B : A -> Type)
   (i : A -> I) (j : forall x, B x -> I) {h : IsEmbedding i}
   : forall x, IsHProp (IW I A B i j x).
@@ -406,7 +406,7 @@ Proof.
 Defined.
 
 (** Now by induction on truncation indices we show that IW-types are n.+1 truncated if the index maps are also n.+1 truncated. *)
-Global Instance istrunc_iwtype `{Funext}
+Instance istrunc_iwtype `{Funext}
   (I : Type) (A : Type) (B : A -> Type) (i : A -> I)
   (j : forall x, B x -> I) (n : trunc_index) {h : IsTruncMap n.+1 i} (l : I)
   : IsTrunc n.+1 (IW I A B i j l).

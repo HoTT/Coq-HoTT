@@ -16,7 +16,7 @@ Set Universe Minimization ToSet.
 Definition Matrix@{i} (R : Type@{i}) (m n : nat) : Type@{i}
   := Vector (Vector R n) m.
 
-Global Instance istrunc_matrix (R : Type) k `{IsTrunc k.+2 R} m n
+Instance istrunc_matrix (R : Type) k `{IsTrunc k.+2 R} m n
   : IsTrunc k.+2 (Matrix R m n)
   := _.
 
@@ -106,7 +106,7 @@ Definition matrix_negate {A : AbGroup} {m n}
   : Matrix A m n -> Matrix A m n
   := @negate (abgroup_matrix A m n) _.
 
-Global Instance isleftmodule_isleftmodule_matrix (A : AbGroup) (m n : nat)
+Instance isleftmodule_isleftmodule_matrix (A : AbGroup) (m n : nat)
   {R : Ring} `{IsLeftModule R A}
   : IsLeftModule R (abgroup_matrix A m n).
 Proof.
@@ -116,7 +116,7 @@ Proof.
 Defined.
 
 (** As a special case, we get the left module of matrices over a ring. *)
-Global Instance isleftmodule_abgroup_matrix (R : Ring) (m n : nat)
+Instance isleftmodule_abgroup_matrix (R : Ring) (m n : nat)
   : IsLeftModule R (abgroup_matrix R m n)
   := _.
 
@@ -402,7 +402,7 @@ Proof.
 Defined.
 
 (** The diagonal matrix construction is injective. *)
-Global Instance isinj_matrix_diag {R : Ring@{i}} {n : nat}
+Instance isinj_matrix_diag {R : Ring@{i}} {n : nat}
   : IsInjective (@matrix_diag R n).
 Proof.
   intros v1 v2 p.
@@ -428,7 +428,7 @@ Definition issig_IsDiagonal {R : Ring@{i}} {n : nat} {M : Matrix R n n}
   := ltac:(issig).
 
 (** A matrix is diagonal in a unique way. *)
-Global Instance ishprop_isdiagonal {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+Instance ishprop_isdiagonal {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   : IsHProp (IsDiagonal M).
 Proof.
   snrapply hprop_allpath.
@@ -440,7 +440,7 @@ Proof.
 Defined.
 
 (** The zero matrix is diagonal. *)
-Global Instance isdiagonal_matrix_zero {R : Ring@{i}} {n : nat}
+Instance isdiagonal_matrix_zero {R : Ring@{i}} {n : nat}
   : IsDiagonal (matrix_zero R n n).
 Proof.
   exists (vector_zero R n).
@@ -451,7 +451,7 @@ Proof.
 Defined.
 
 (** The identity matrix is diagonal. *)
-Global Instance isdiagonal_identity_matrix {R : Ring@{i}} {n : nat}
+Instance isdiagonal_identity_matrix {R : Ring@{i}} {n : nat}
   : IsDiagonal (identity_matrix R n).
 Proof.
   exists (Build_Vector R n (fun _ _ => 1)).
@@ -462,7 +462,7 @@ Proof.
 Defined.
 
 (** The sum of two diagonal matrices is diagonal. *)
-Global Instance isdiagonal_matrix_plus {R : Ring@{i}} {n : nat}
+Instance isdiagonal_matrix_plus {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) `{IsDiagonal R n M} `{IsDiagonal R n N}
   : IsDiagonal (matrix_plus M N).
 Proof.
@@ -472,7 +472,7 @@ Proof.
 Defined.
 
 (** The negative of a diagonal matrix is diagonal. *)
-Global Instance isdiagonal_matrix_negate {R : Ring@{i}} {n : nat}
+Instance isdiagonal_matrix_negate {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{IsDiagonal R n M}
   : IsDiagonal (matrix_negate M).
 Proof.
@@ -485,7 +485,7 @@ Proof.
 Defined.
 
 (** The product of two diagonal matrices is diagonal. *)
-Global Instance isdiagonal_matrix_mult {R : Ring@{i}} {n : nat}
+Instance isdiagonal_matrix_mult {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) `{IsDiagonal R n M} `{IsDiagonal R n N}
   : IsDiagonal (matrix_mult M N).
 Proof.
@@ -495,7 +495,7 @@ Proof.
 Defined.
 
 (** The transpose of a diagonal matrix is diagonal. *)
-Global Instance isdiagonal_matrix_transpose {R : Ring@{i}} {n : nat}
+Instance isdiagonal_matrix_transpose {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{IsDiagonal R n M}
   : IsDiagonal (matrix_transpose M).
 Proof.
@@ -582,7 +582,7 @@ Defined.
 Definition skip (n : nat) : nat -> nat
   := fun i => if dec (i < n)%nat then i else i.+1%nat.
 
-Global Instance isinjective_skip n : IsInjective (skip n).
+Instance isinjective_skip n : IsInjective (skip n).
 Proof.
   hnf.
   intros x y p.
@@ -664,7 +664,7 @@ Class IsUpperTriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Ty
   := upper_triangular
   : merely@{i} (forall i j (Hi : (i < n)%nat) (Hj : (j < n)%nat), (i < j)%nat -> entry M i j = 0).
 
-Global Instance ishprop_isuppertriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+Instance ishprop_isuppertriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   : IsHProp (IsUpperTriangular M).
 Proof.
   apply istrunc_truncation@{i i}.
@@ -674,7 +674,7 @@ Defined.
 Class IsLowerTriangular {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
   := upper_triangular_transpose :: IsUpperTriangular (matrix_transpose M).
 
-Global Instance ishprop_islowertriangular@{i} {R : Ring@{i}} {n : nat}
+Instance ishprop_islowertriangular@{i} {R : Ring@{i}} {n : nat}
   (M : Matrix R n n)
   : IsHProp (IsLowerTriangular M).
 Proof.
@@ -682,7 +682,7 @@ Proof.
 Defined.
 
 (** The transpose of a matrix is lower triangular if and only if the matrix is upper triangular. *)
-Global Instance lower_triangular_transpose {R : Ring@{i}} {n : nat}
+Instance lower_triangular_transpose {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{!IsUpperTriangular M}
   : IsLowerTriangular (matrix_transpose M).
 Proof.
@@ -691,7 +691,7 @@ Proof.
 Defined.
 
 (** The sum of two upper triangular matrices is upper triangular. *)
-Global Instance upper_triangular_plus@{i} {R : Ring@{i}} {n : nat} (M N : Matrix R n n)
+Instance upper_triangular_plus@{i} {R : Ring@{i}} {n : nat} (M N : Matrix R n n)
   {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
   : IsUpperTriangular (matrix_plus M N).
 Proof.
@@ -708,7 +708,7 @@ Proof.
 Defined.
 
 (** The sum of two lower triangular matrices is lower triangular. *)
-Global Instance lower_triangular_plus {R : Ring@{i}} {n : nat}
+Instance lower_triangular_plus {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) `{!IsLowerTriangular M} `{!IsLowerTriangular N}
   : IsLowerTriangular (matrix_plus M N).
 Proof.
@@ -718,7 +718,7 @@ Proof.
 Defined.
 
 (** The negation of an upper triangular matrix is upper triangular. *)
-Global Instance upper_triangular_negate@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+Instance upper_triangular_negate@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   {H : IsUpperTriangular M}
   : IsUpperTriangular (matrix_negate M).
 Proof.
@@ -731,7 +731,7 @@ Proof.
 Defined.
 
 (** The negation of a lower triangular matrix is lower triangular. *)
-Global Instance lower_triangular_negate {R : Ring@{i}} {n : nat}
+Instance lower_triangular_negate {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{!IsLowerTriangular M}
   : IsLowerTriangular (matrix_negate M).
 Proof.
@@ -741,7 +741,7 @@ Proof.
 Defined.
 
 (** The product of two upper triangular matrices is upper triangular. *)
-Global Instance upper_triangular_mult@{i} {R : Ring@{i}} {n : nat}
+Instance upper_triangular_mult@{i} {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
   : IsUpperTriangular (matrix_mult M N).
 Proof.
@@ -762,7 +762,7 @@ Proof.
 Defined.
 
 (** The product of two lower triangular matrices is lower triangular. *)
-Global Instance lower_triangular_mult {R : Ring@{i}} {n : nat}
+Instance lower_triangular_mult {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) {H1 : IsLowerTriangular M} {H2 : IsLowerTriangular N}
   : IsLowerTriangular (matrix_mult M N).
 Proof.
@@ -772,7 +772,7 @@ Proof.
 Defined.
 
 (** The zero matrix is upper triangular. *)
-Global Instance upper_triangular_zero {R : Ring@{i}} {n : nat}
+Instance upper_triangular_zero {R : Ring@{i}} {n : nat}
   : IsUpperTriangular (matrix_zero R n n).
 Proof.
   apply tr.
@@ -780,7 +780,7 @@ Proof.
 Defined.
 
 (** The zero matrix is lower triangular. *)
-Global Instance lower_triangular_zero {R : Ring@{i}} {n : nat}
+Instance lower_triangular_zero {R : Ring@{i}} {n : nat}
   : IsLowerTriangular (matrix_zero R n n).
 Proof.
   unfold IsLowerTriangular.
@@ -789,7 +789,7 @@ Proof.
 Defined.
 
 (** The identity matrix is upper triangular. *)
-Global Instance upper_triangular_identity@{i} {R : Ring@{i}} {n : nat}
+Instance upper_triangular_identity@{i} {R : Ring@{i}} {n : nat}
   : IsUpperTriangular (identity_matrix R n).
 Proof.
   unfold IsUpperTriangular.
@@ -800,7 +800,7 @@ Proof.
 Defined.
 
 (** The identity matrix is lower triangular. *)
-Global Instance lower_triangular_identity@{i} {R : Ring@{i}} {n : nat}
+Instance lower_triangular_identity@{i} {R : Ring@{i}} {n : nat}
   : IsLowerTriangular (identity_matrix R n).
 Proof.
   unfold IsLowerTriangular.
@@ -809,7 +809,7 @@ Proof.
 Defined.
 
 (** A diagonal matrix is upper triangular. *)
-Global Instance upper_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
+Instance upper_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : IsUpperTriangular (matrix_diag v).
 Proof.
   unfold IsUpperTriangular.
@@ -822,7 +822,7 @@ Proof.
 Defined.
 
 (** A diagonal matrix is lower triangular. *)
-Global Instance lower_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
+Instance lower_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : IsLowerTriangular (matrix_diag v).
 Proof.
   unfold IsLowerTriangular.
@@ -863,17 +863,17 @@ Class IsSymmetric {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
 Arguments matrix_transpose_issymmetric {R n} M {_}.
 
 (** The zero matrix is symmetric. *)
-Global Instance issymmetric_matrix_zero {R : Ring@{i}} {n : nat}
+Instance issymmetric_matrix_zero {R : Ring@{i}} {n : nat}
   : IsSymmetric (matrix_zero R n n)
   := matrix_transpose_zero.
 
 (** The identity matrix is symmetric. *)
-Global Instance issymmetric_matrix_identity {R : Ring@{i}} {n : nat}
+Instance issymmetric_matrix_identity {R : Ring@{i}} {n : nat}
   : IsSymmetric (identity_matrix R n)
   := matrix_transpose_identity.
 
 (** The sum of two symmetric matrices is symmetric. *)
-Global Instance issymmetric_matrix_plus {R : Ring@{i}} {n : nat}
+Instance issymmetric_matrix_plus {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) `{!IsSymmetric M} `{!IsSymmetric N}
   : IsSymmetric (matrix_plus M N).
 Proof.
@@ -883,7 +883,7 @@ Proof.
 Defined.
 
 (** The negation of a symmetric matrix is symmetric. *)
-Global Instance issymmetric_matrix_negate {R : Ring@{i}} {n : nat}
+Instance issymmetric_matrix_negate {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{!IsSymmetric M}
   : IsSymmetric (matrix_negate M).
 Proof.
@@ -893,7 +893,7 @@ Proof.
 Defined.
 
 (** A scalar multiple of a symmetric matrix is symmetric. *)
-Global Instance issymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+Instance issymmetric_matrix_scale {R : Ring@{i}} {n : nat}
   (r : R) (M : Matrix R n n) `{!IsSymmetric M}
   : IsSymmetric (matrix_lact r M).
 Proof.
@@ -903,7 +903,7 @@ Proof.
 Defined.
 
 (** The transpose of a symmetric matrix is symmetric. *)
-Global Instance issymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
+Instance issymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{!IsSymmetric M}
   : IsSymmetric (matrix_transpose M).
 Proof.
@@ -913,7 +913,7 @@ Proof.
 Defined.
 
 (** A symmetric upper triangular matrix is diagonal. *)
-Global Instance isdiagonal_upper_triangular_issymmetric {R : Ring@{i}} {n : nat}
+Instance isdiagonal_upper_triangular_issymmetric {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{!IsSymmetric M} {H : IsUpperTriangular M}
   : IsDiagonal M.
 Proof.
@@ -940,7 +940,7 @@ Proof.
 Defined.
 
 (** A symmetric lower triangular matrix is diagonal. *)
-Global Instance isdiagonal_lower_triangular_issymmetric {R : Ring@{i}} {n : nat}
+Instance isdiagonal_lower_triangular_issymmetric {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{!IsSymmetric M} `{!IsLowerTriangular M}
   : IsDiagonal M.
 Proof.
@@ -959,7 +959,7 @@ Class IsSkewSymmetric {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
 Arguments matrix_transpose_isskewsymmetric {R n} M {_}.
 
 (** The zero matrix is skew-symmetric. *)
-Global Instance isskewsymmetric_matrix_zero {R : Ring@{i}} {n : nat}
+Instance isskewsymmetric_matrix_zero {R : Ring@{i}} {n : nat}
   : IsSkewSymmetric (matrix_zero R n n).
 Proof.
   unfold IsSkewSymmetric.
@@ -969,7 +969,7 @@ Proof.
 Defined.
 
 (** The negation of a skew-symmetric matrix is skew-symmetric. *)
-Global Instance isskewsymmetric_matrix_negate {R : Ring@{i}} {n : nat}
+Instance isskewsymmetric_matrix_negate {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{!IsSkewSymmetric M}
   : IsSkewSymmetric (matrix_negate M).
 Proof.
@@ -979,7 +979,7 @@ Proof.
 Defined.
 
 (** A scalar multiple of a skew-symmetric matrix is skew-symmetric. *)
-Global Instance isskewsymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+Instance isskewsymmetric_matrix_scale {R : Ring@{i}} {n : nat}
   (r : R) (M : Matrix R n n) `{!IsSkewSymmetric M}
   : IsSkewSymmetric (matrix_lact r M).
 Proof.
@@ -990,7 +990,7 @@ Proof.
 Defined.
 
 (** The transpose of a skew-symmetric matrix is skew-symmetric. *)
-Global Instance isskewsymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
+Instance isskewsymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
   (M : Matrix R n n) `{!IsSkewSymmetric M}
   : IsSkewSymmetric (matrix_transpose M).
 Proof.
@@ -1000,7 +1000,7 @@ Proof.
 Defined.
 
 (** The sum of two skew-symmetric matrices is skew-symmetric. *)
-Global Instance isskewsymmetric_matrix_plus {R : Ring@{i}} {n : nat}
+Instance isskewsymmetric_matrix_plus {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) `{!IsSkewSymmetric M} `{!IsSkewSymmetric N}
   : IsSkewSymmetric (matrix_plus M N).
 Proof.
@@ -1018,10 +1018,10 @@ Section MatrixCat.
   (** The wild category [MatrixCat R] of [R]-valued matrices. This category has natural numbers as objects and m x n matrices as the arrows between [m] and [n]. *)
   Definition MatrixCat (R : Ring) := nat.
 
-  Global Instance isgraph_matrixcat {R : Ring} : IsGraph (MatrixCat R)
+  #[export] Instance isgraph_matrixcat {R : Ring} : IsGraph (MatrixCat R)
     := {| Hom := Matrix R |}.
 
-  Global Instance is01cat_matrixcat {R : Ring} : Is01Cat (MatrixCat R).
+  #[export] Instance is01cat_matrixcat {R : Ring} : Is01Cat (MatrixCat R).
   Proof.
     snrapply Build_Is01Cat.
     - exact (identity_matrix R).
@@ -1029,11 +1029,11 @@ Section MatrixCat.
       exact (matrix_mult N M).
   Defined.
 
-  Global Instance is2graph_matrixcat {R : Ring} : Is2Graph (MatrixCat R)
+  #[export] Instance is2graph_matrixcat {R : Ring} : Is2Graph (MatrixCat R)
     := is2graph_paths _.
 
   (** MatrixCat R forms a strong 1-category. *)
-  Global Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
+  #[export] Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
   Proof.
     snrapply Build_Is1Cat_Strong.
     (* Most of the structure comes from typeclasses in WildCat.Paths. *)

@@ -46,7 +46,7 @@ Defined.
 
 (** Category isomorphic and algebra isomorphic is equivalent. *)
 
-Global Instance isequiv_catiso_to_uaiso `{Funext} {σ : Signature}
+Instance isequiv_catiso_to_uaiso `{Funext} {σ : Signature}
   (A B : object (precategory_algebra σ))
   : IsEquiv (@catiso_to_uaiso _ σ A B).
 Proof.

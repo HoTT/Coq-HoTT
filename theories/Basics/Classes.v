@@ -16,7 +16,7 @@ Proof.
   exact q.
 Defined.
 
-Global Instance isinj_idmap A : @IsInjective A A idmap
+Instance isinj_idmap A : @IsInjective A A idmap
   := fun x y => idmap.
 
 #[export] Hint Unfold IsInjective : typeclass_instances.

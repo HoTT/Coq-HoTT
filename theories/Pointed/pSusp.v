@@ -1,5 +1,6 @@
 Require Import Basics.
 Require Import Types.
+Require Import WildCat.
 Require Import Pointed.Core.
 Require Import Pointed.Loops.
 Require Import Pointed.pTrunc.
@@ -7,7 +8,6 @@ Require Import Pointed.pEquiv.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.BlakersMassey.
 Require Import Truncations.
-Require Import WildCat.
 
 Generalizable Variables X A B f g n.
 

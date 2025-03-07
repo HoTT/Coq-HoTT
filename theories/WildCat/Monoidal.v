@@ -205,7 +205,7 @@ Section Associator.
     - exact (fmap21 _ (fmap11_id _ _ _) _ $@ fmap01_is_fmap11 F _ _).
   Defined.
 
-  Global Instance associator_op : Associator (A:=A^op) F
+  #[export] Instance associator_op : Associator (A:=A^op) F
     := natequiv_inverse (natequiv_op assoc).
 
 End Associator.
@@ -221,17 +221,17 @@ Section LeftUnitor.
   Context {A : Type} `{HasEquivs A} {F : A -> A -> A} (unit : A)
     `{!Is0Bifunctor F, !Is1Bifunctor F, !LeftUnitor F unit, !RightUnitor F unit}.
 
-  Global Instance left_unitor_op : LeftUnitor (A:=A^op) F unit
+  #[export] Instance left_unitor_op : LeftUnitor (A:=A^op) F unit
     := natequiv_inverse (natequiv_op left_unitor).
   
-  Global Instance right_unitor_op : RightUnitor (A:=A^op) F unit
+  #[export] Instance right_unitor_op : RightUnitor (A:=A^op) F unit
     := natequiv_inverse (natequiv_op right_unitor).
 
 End LeftUnitor.
 
 (** ** Theory about [Braiding] *)
 
-Global Instance braiding_op {A : Type} `{HasEquivs A} {F : A -> A -> A}
+Instance braiding_op {A : Type} `{HasEquivs A} {F : A -> A -> A}
   `{!Is0Bifunctor F, !Is1Bifunctor F, braid : !Braiding F}
   : Braiding (A:=A^op) F
   := nattrans_op (nattrans_flip braid).
@@ -424,7 +424,7 @@ Section SymmetricBraid.
     exact (isnat braid_uncurried (a := (a, b)) (a' := (a, c)) (Id _ , g)).
   Defined.
   
-  Global Instance symmetricbraiding_op : SymmetricBraiding (A:=A^op) F.
+  #[export] Instance symmetricbraiding_op : SymmetricBraiding (A:=A^op) F.
   Proof.
     snrapply Build_SymmetricBraiding.
     - exact _.
@@ -442,7 +442,7 @@ Definition symmetricbraiding_op' {A : Type} {F : A -> A -> A}
 
 (** ** Opposite Monoidal Categories *)
 
-Global Instance ismonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
+Instance ismonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
   `{IsMonoidal A tensor unit}
   : IsMonoidal A^op tensor unit.
 Proof.
@@ -471,7 +471,7 @@ Definition ismonoidal_op' {A : Type} (tensor : A -> A -> A) (unit : A)
   : IsMonoidal A tensor unit
   := ismonoidal_op (A:=A^op) tensor unit.
 
-Global Instance issymmetricmonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
+Instance issymmetricmonoidal_op {A : Type} (tensor : A -> A -> A) (unit : A)
   `{IsSymmetricMonoidal A tensor unit}
   : IsSymmetricMonoidal A^op tensor unit.
 Proof.

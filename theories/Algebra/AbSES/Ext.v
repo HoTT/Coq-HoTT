@@ -11,11 +11,11 @@ Local Open Scope mc_add_scope.
 
 Definition Ext (B A : AbGroup@{u}) := pTr 0 (AbSES B A).
 
-Global Instance is0bifunctor_ext `{Univalence}
+Instance is0bifunctor_ext `{Univalence}
   : Is0Bifunctor (Ext : AbGroup^op -> AbGroup -> pType)
   := is0bifunctor_postcompose _ _ (bf:=is0bifunctor_abses).
 
-Global Instance is1bifunctor_ext `{Univalence}
+Instance is1bifunctor_ext `{Univalence}
   : Is1Bifunctor (Ext : AbGroup^op -> AbGroup -> pType)
   := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses).
 
@@ -32,11 +32,11 @@ Defined.
 
 Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES' B A).
 
-Global Instance is0bifunctor_ext' `{Univalence}
+Instance is0bifunctor_ext' `{Univalence}
   : Is0Bifunctor (Ext' : AbGroup^op -> AbGroup -> Type)
   := is0bifunctor_postcompose _ _ (bf:=is0bifunctor_abses').
 
-Global Instance is1bifunctor_ext' `{Univalence}
+Instance is1bifunctor_ext' `{Univalence}
   : Is1Bifunctor (Ext' : AbGroup^op -> AbGroup -> Type)
   := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses').
 
@@ -72,7 +72,7 @@ Proof.
   apply baer_sum_commutative.
 Defined.
 
-Global Instance is0functor_abext01 `{Univalence} (B : AbGroup^op)
+Instance is0functor_abext01 `{Univalence} (B : AbGroup^op)
   : Is0Functor (ab_ext B).
 Proof.
   srapply Build_Is0Functor; intros ? ? f.
@@ -84,7 +84,7 @@ Proof.
   apply baer_sum_pushout.
 Defined.
 
-Global Instance is0functor_abext10 `{Univalence} (A : AbGroup)
+Instance is0functor_abext10 `{Univalence} (A : AbGroup)
   : Is0Functor (fun B : AbGroup^op => ab_ext B A).
 Proof.
   srapply Build_Is0Functor; intros ? ? f; cbn.
@@ -96,7 +96,7 @@ Proof.
   apply baer_sum_pullback.
 Defined.
 
-Global Instance is1functor_abext01 `{Univalence} (B : AbGroup^op)
+Instance is1functor_abext01 `{Univalence} (B : AbGroup^op)
   : Is1Functor (ab_ext B).
 Proof.
   snrapply Build_Is1Functor.
@@ -107,7 +107,7 @@ Proof.
     exact (fmap_comp (Ext B)).
 Defined.
 
-Global Instance is1functor_abext10 `{Univalence} (A : AbGroup)
+Instance is1functor_abext10 `{Univalence} (A : AbGroup)
   : Is1Functor (fun B : AbGroup^op => ab_ext B A).
 Proof.
   snrapply Build_Is1Functor.
@@ -118,13 +118,13 @@ Proof.
     exact (fmap_comp (fun B : AbGroup^op => Ext B A)).
 Defined.
 
-Global Instance is0bifunctor_abext `{Univalence}
+Instance is0bifunctor_abext `{Univalence}
   : Is0Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
   rapply Build_Is0Bifunctor''.
 Defined.
 
-Global Instance is1bifunctor_abext `{Univalence}
+Instance is1bifunctor_abext `{Univalence}
   : Is1Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
   snrapply Build_Is1Bifunctor''.
@@ -157,7 +157,7 @@ Proof.
 Defined.
 
 (** It follows that when [P] is projective, [Ext P A] is contractible. *)
-Global Instance contr_abext_projective `{Univalence}
+Instance contr_abext_projective `{Univalence}
   (P : AbGroup) `{IsAbProjective P} {A : AbGroup}
   : Contr (Ext P A).
 Proof.

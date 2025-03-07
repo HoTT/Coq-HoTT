@@ -317,7 +317,7 @@ Definition issig_IsBiadditive {A B C : Type} `{SgOp A, SgOp B, SgOp C}
   := ltac:(issig).
 
 (** The truncation level of the [IsBiadditive f] predicate is determined by the truncation level of the codomain. This will almost always be a hset. *)
-Global Instance istrunc_isbiadditive `{Funext}
+Instance istrunc_isbiadditive `{Funext}
   {A B C : Type} `{SgOp A, SgOp B, SgOp C}
   (f : A -> B -> C) n `{IsTrunc n.+1 C}
   : IsTrunc n (IsBiadditive f).
@@ -329,7 +329,7 @@ Proof.
 Defined.
 
 (** The simple tensor map is biadditive. *)
-Global Instance isbiadditive_tensor (A B : AbGroup)
+Instance isbiadditive_tensor (A B : AbGroup)
   : IsBiadditive (@tensor A B) := {|
   isbiadditive_l := fun b a a' => tensor_dist_r a a' b;
   isbiadditive_r := tensor_dist_l;
@@ -428,7 +428,7 @@ Proof.
 Defined.
 
 (** The tensor product functor is a 0-bifunctor. *)
-Global Instance is0bifunctor_ab_tensor_prod : Is0Bifunctor ab_tensor_prod.
+Instance is0bifunctor_ab_tensor_prod : Is0Bifunctor ab_tensor_prod.
 Proof.
   rapply Build_Is0Bifunctor'.
   snrapply Build_Is0Functor.
@@ -437,7 +437,7 @@ Proof.
 Defined.
 
 (** The tensor product functor is a bifunctor. *)
-Global Instance is1bifunctor_ab_tensor_prod : Is1Bifunctor ab_tensor_prod.
+Instance is1bifunctor_ab_tensor_prod : Is1Bifunctor ab_tensor_prod.
 Proof.
   rapply Build_Is1Bifunctor'.
   snrapply Build_Is1Functor.
@@ -483,7 +483,7 @@ Proof.
 Defined.
 
 (** The swap map gives us a symmetric braiding on the category of abelian groups. We will later show it is a full symmetric monoidal category. *)
-Global Instance symmetricbraiding_ab_tensor_prod : SymmetricBraiding ab_tensor_prod.
+Instance symmetricbraiding_ab_tensor_prod : SymmetricBraiding ab_tensor_prod.
 Proof.
   snrapply Build_SymmetricBraiding.
   - snrapply Build_NatTrans.
@@ -607,7 +607,7 @@ Proof.
 Defined.
 
 (** We have a right unitor for the tensor product given by unit [abgroup_Z]. Naturality of [ab_tensor_prod_Z_r] is straightforward to prove. *)
-Global Instance rightunitor_ab_tensor_prod
+Instance rightunitor_ab_tensor_prod
   : RightUnitor ab_tensor_prod abgroup_Z.
 Proof.
   snrapply Build_NatEquiv.
@@ -621,7 +621,7 @@ Proof.
 Defined.
 
 (** Since we have symmetry of the tensor product, we get left unitality for free. *)
-Global Instance left_unitor_ab_tensor_prod
+Instance left_unitor_ab_tensor_prod
   : LeftUnitor ab_tensor_prod abgroup_Z.
 Proof.
   rapply left_unitor_twist.
@@ -630,7 +630,7 @@ Defined.
 (** ** Symmetric Monoidal Structure of Tensor Product *)
 
 (** Using the twist construction we can derive an associator for the tensor product. In other words, we have associativity of the tensor product of abelian groups natural in each factor. *)
-Global Instance associator_ab_tensor_prod : Associator ab_tensor_prod.
+Instance associator_ab_tensor_prod : Associator ab_tensor_prod.
 Proof.
   srapply associator_twist.
   - exact @ab_tensor_prod_twist.
@@ -639,7 +639,7 @@ Proof.
 Defined.
 
 (** The triangle identity is straightforward to prove using the custom induction principles we proved earlier. *)
-Global Instance triangle_ab_tensor_prod
+Instance triangle_ab_tensor_prod
   : TriangleIdentity ab_tensor_prod abgroup_Z.
 Proof.
   snrapply triangle_twist.
@@ -650,7 +650,7 @@ Proof.
 Defined.
 
 (** The hexagon identity is also straighforward to prove. We simply have to reduce all the involved functions on the simple tensors using our custom triple tensor induction principle. *)
-Global Instance hexagon_ab_tensor_prod : HexagonIdentity ab_tensor_prod.
+Instance hexagon_ab_tensor_prod : HexagonIdentity ab_tensor_prod.
 Proof.
   snrapply hexagon_twist.
   intros A B C.
@@ -661,7 +661,7 @@ Proof.
 Defined.
 
 (** Finally, we can prove the pentagon identity using the quadruple tensor induction principle. As we did before, the work only involves reducing the involved functions on the simple tensor redexes. *)
-Global Instance pentagon_ab_tensor_prod : PentagonIdentity ab_tensor_prod.
+Instance pentagon_ab_tensor_prod : PentagonIdentity ab_tensor_prod.
 Proof.
   snrapply pentagon_twist.
   intros A B C D.
@@ -672,12 +672,12 @@ Proof.
 Defined.
 
 (** We therefore have all the data of a monoidal category. *)
-Global Instance ismonoidal_ab_tensor_prod
+Instance ismonoidal_ab_tensor_prod
   : IsMonoidal AbGroup ab_tensor_prod abgroup_Z
   := {}.
 
 (** And furthermore, all the data of a symmetric monoidal category. *)
-Global Instance issymmmetricmonoidal_ab_tensor_prod
+Instance issymmmetricmonoidal_ab_tensor_prod
   : IsSymmetricMonoidal AbGroup ab_tensor_prod abgroup_Z
   := {}.
 

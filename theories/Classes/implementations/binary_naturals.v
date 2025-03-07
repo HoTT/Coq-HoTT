@@ -101,7 +101,7 @@ Section binary_equiv.
     - rewrite double2binary. apply ap. exact IHn.
   Qed.
 
-  Global Instance isequiv_binary : IsEquiv binary :=
+  #[export] Instance isequiv_binary : IsEquiv binary :=
     isequiv_adjointify binary unary' binaryunary unarybinary.
 
   Definition equiv_binary : nat <~> binnat :=
@@ -114,8 +114,8 @@ Notation unary := equiv_unary.
 
 Section semiring_struct.
 
-  Global Instance binnat_0 : Zero binnat := bzero.
-  Global Instance binnat_1 : One binnat := double1 bzero.
+  #[export] Instance binnat_0 : Zero binnat := bzero.
+  #[export] Instance binnat_1 : One binnat := double1 bzero.
 
   Local Fixpoint binnat_plus' (m n : binnat) : binnat :=
     match m, n with
@@ -131,7 +131,7 @@ Section semiring_struct.
     (* compute m + n as 2m'+2 + 2n'+2 = 2(m'+n')+2 + 2 = 2(m' + n' + 1) + 2*)
     | double2 m' , double2 n' => double2 (Succ (binnat_plus' m' n'))
     end.
-  Global Instance binnat_plus : Plus binnat := binnat_plus'.
+  #[export] Instance binnat_plus : Plus binnat := binnat_plus'.
 
   Local Fixpoint binnat_mult' (m n : binnat) : binnat :=
     match m with
@@ -140,7 +140,7 @@ Section semiring_struct.
     | double1 m' => (binnat_mult' m' n) + (binnat_mult' m' n) + n
     | double2 m' => (binnat_mult' m' n) + (binnat_mult' m' n) + n + n
     end.
-  Global Instance binnat_mult : Mult binnat := binnat_mult'.
+  #[export] Instance binnat_mult : Mult binnat := binnat_mult'.
 
 End semiring_struct.
 
@@ -270,12 +270,12 @@ Section semiring_laws.
     apply plus_mult_distr_r.
   Qed.
 
-  Global Instance binnat_set : IsHSet binnat.
+  #[export] Instance binnat_set : IsHSet binnat.
   Proof.
     apply (istrunc_isequiv_istrunc nat binary).
   Qed.
 
-  Global Instance binnat_semiring : IsSemiCRing binnat.
+  #[export] Instance binnat_semiring : IsSemiCRing binnat.
   Proof.
     split; try split; try split; try split; hnf; intros.
     1, 5: apply istrunc_S; intros x y; exact (binnat_set x y).
@@ -300,9 +300,9 @@ Section naturals.
     all: reflexivity.
   Qed.
 
-  Global Instance binnat_le : Le binnat := fun m n => unary m <= unary n.
-  Global Instance binnat_lt : Lt binnat := fun m n => unary m < unary n.
-  Global Instance binnat_apart : Apart binnat := fun m n => unary m ≶ unary n.
+  #[export] Instance binnat_le : Le binnat := fun m n => unary m <= unary n.
+  #[export] Instance binnat_lt : Lt binnat := fun m n => unary m < unary n.
+  #[export] Instance binnat_apart : Apart binnat := fun m n => unary m ≶ unary n.
   Local Instance binnart_apart_symmetric : IsApart binnat.
   Proof.
     split.
@@ -347,7 +347,7 @@ Section naturals.
     - intros m n. apply nat_full.
   Qed.
 
-  Global Instance binnat_naturals_to_semiring : NaturalsToSemiRing binnat:=
+  #[export] Instance binnat_naturals_to_semiring : NaturalsToSemiRing binnat:=
     fun _ _ _ _ _ _ => fix f (n: binnat) :=
       match n with
       | bzero => 0
@@ -437,7 +437,7 @@ Section naturals.
       apply nat_to_sr_morphism.
     Qed.
 
-    Global Instance binnat_to_sr_morphism
+    #[export] Instance binnat_to_sr_morphism
       : IsSemiRingPreserving toR.
     Proof.
       split; split.
@@ -458,7 +458,7 @@ Section naturals.
     Qed.
   End for_another_semiring.
 
-  Global Instance binnat_naturals : Naturals binnat.
+  #[export] Instance binnat_naturals : Naturals binnat.
   Proof.
     split.
     - exact binnat_semiring.
@@ -511,7 +511,7 @@ Section decidable.
   Local Instance double2_inj : IsInjective double2
   := { injective := fun a b E => ap undouble E }.
 
-  Global Instance binnat_dec : DecidablePaths binnat.
+  #[export] Instance binnat_dec : DecidablePaths binnat.
   Proof.
     intros m; induction m as [|m IHm|m IHm]; intros n; induction n as [|n IHn|n IHn].
     all:
@@ -656,7 +656,7 @@ Section minus.
     | double2 m' , double2 n' => double (binnat_cut_minus' m' n')
     end.
 
-  Global Instance binnat_cut_minus: CutMinus binnat := binnat_cut_minus'.
+  #[export] Instance binnat_cut_minus: CutMinus binnat := binnat_cut_minus'.
 
   Local Definition binnat_minus_zero (m : binnat) : m ∸ bzero = m.
   Proof.
@@ -733,7 +733,7 @@ Section minus.
       reflexivity.
   Qed.
 
-  Global Instance binnat_cut_minus_spec : CutMinusSpec binnat binnat_cut_minus.
+  #[export] Instance binnat_cut_minus_spec : CutMinusSpec binnat binnat_cut_minus.
   Proof.
     split.
     - intros m n E. apply (equiv_inj unary).

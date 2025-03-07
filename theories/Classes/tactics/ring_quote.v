@@ -281,9 +281,9 @@ Qed.
 End contents.
 
 Module Export Instances.
-  Global Existing Instances lookup_l lookup_r lookup_single quote_zero quote_one quote_plus quote_mult quote_neg eq_quote.
-  Global Existing Instance quote_old_var | 8.
-  Global Existing Instance quote_new_var | 9.
+  Existing Instances lookup_l lookup_r lookup_single quote_zero quote_one quote_plus quote_mult quote_neg eq_quote.
+  Existing Instance quote_old_var | 8.
+  Existing Instance quote_new_var | 9.
 End Instances.
 
 End Quoting.

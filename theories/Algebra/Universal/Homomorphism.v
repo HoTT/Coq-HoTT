@@ -19,7 +19,7 @@ Section is_homomorphism.
     := forall a : DomOperation A w,
         f (sort_cod w) (α a) = β (fun i => f (sorts_dom w i) (a i)).
 
-  Global Instance hprop_oppreserving `{Funext} {w : SymbolType σ}
+  #[export] Instance hprop_oppreserving `{Funext} {w : SymbolType σ}
     (α : Operation A w) (β : Operation B w)
     : IsHProp (OpPreserving α β).
   Proof.
@@ -29,7 +29,7 @@ Section is_homomorphism.
   Class IsHomomorphism : Type
     := oppreserving_hom : forall (u : Symbol σ), OpPreserving u.#A u.#B.
 
-  Global Instance hprop_is_homomorphism `{Funext}
+  #[export] Instance hprop_is_homomorphism `{Funext}
     : IsHProp IsHomomorphism.
   Proof.
     apply istrunc_forall.
@@ -46,9 +46,9 @@ Arguments Build_Homomorphism {σ A B} def_homomorphism {is_homomorphism}.
 
 Global Coercion def_homomorphism : Homomorphism >-> Funclass.
 
-Global Existing Instance is_homomorphism.
+Existing Instance is_homomorphism.
 
-Global Instance isgraph_algebra (σ : Signature) : IsGraph (Algebra σ)
+Instance isgraph_algebra (σ : Signature) : IsGraph (Algebra σ)
   := Build_IsGraph (Algebra σ) Homomorphism.
 
 Lemma apD10_homomorphism {σ} {A B : Algebra σ} {f g : A $-> B}
@@ -66,7 +66,7 @@ Proof.
   issig.
 Defined.
 
-Global Instance hset_homomorphism `{Funext} {σ} (A B : Algebra σ)
+Instance hset_homomorphism `{Funext} {σ} (A B : Algebra σ)
   : IsHSet (A $-> B).
 Proof.
   apply (istrunc_equiv_istrunc _ (issig_homomorphism A B)).
@@ -87,7 +87,7 @@ Defined.
 Section homomorphism_id.
   Context {σ} (A : Algebra σ).
 
-  Global Instance is_homomorphism_id
+  #[export] Instance is_homomorphism_id
     : IsHomomorphism (fun s (x : A s) => x).
   Proof.
     intros u a. reflexivity.
@@ -105,7 +105,7 @@ Arguments homomorphism_id {σ} A%_Algebra_scope , {σ} {A}.
 Section homomorphism_compose.
   Context {σ} {A B C : Algebra σ}.
 
-  Global Instance is_homomorphism_compose
+  #[export] Instance is_homomorphism_compose
     (g : forall s, B s -> C s) `{!IsHomomorphism g}
     (f : forall s, A s -> B s) `{!IsHomomorphism f}
     : IsHomomorphism (fun s => g s o f s).
@@ -119,7 +119,7 @@ Section homomorphism_compose.
 
 End homomorphism_compose.
 
-Global Instance is01cat_algebra (σ : Signature) : Is01Cat (Algebra σ)
+Instance is01cat_algebra (σ : Signature) : Is01Cat (Algebra σ)
   := Build_Is01Cat (Algebra σ) _
       (fun _ => homomorphism_id) (fun _ _ _ => homomorphism_compose).
 
@@ -144,11 +144,11 @@ Proof.
   by apply path_homomorphism.
 Defined.
 
-Global Instance is2graph_algebra {σ} : Is2Graph (Algebra σ)
+Instance is2graph_algebra {σ} : Is2Graph (Algebra σ)
   := fun A B
     => Build_IsGraph _ (fun (f g : A $-> B) => forall s, f s == g s).
 
-Global Instance is01cat_homomorphism {σ} (A B : Algebra σ)
+Instance is01cat_homomorphism {σ} (A B : Algebra σ)
   : Is01Cat (A $-> B).
 Proof.
   apply Build_Is01Cat.
@@ -156,13 +156,13 @@ Proof.
   - exact (fun f g h P Q s x => Q s x @ P s x).
 Defined.
 
-Global Instance is0gpd_homomorphism {σ} {A B : Algebra σ}
+Instance is0gpd_homomorphism {σ} {A B : Algebra σ}
   : Is0Gpd (A $-> B).
 Proof.
   apply Build_Is0Gpd. intros f g P s x. exact (P s x)^.
 Defined.
 
-Global Instance is0functor_postcomp_homomorphism {σ}
+Instance is0functor_postcomp_homomorphism {σ}
   (A : Algebra σ) {B C : Algebra σ} (h : B $-> C)
   : Is0Functor (@cat_postcomp (Algebra σ) _ _ A B C h).
 Proof.
@@ -171,7 +171,7 @@ Proof.
   exact (ap (h s) (p s x)).
 Defined.
 
-Global Instance is0functor_precomp_homomorphism {σ}
+Instance is0functor_precomp_homomorphism {σ}
   {A B : Algebra σ} (h : A $-> B) (C : Algebra σ)
   : Is0Functor (@cat_precomp (Algebra σ) _ _ A B C h).
 Proof.
@@ -180,12 +180,12 @@ Proof.
   exact (p s (h s x)).
 Defined.
 
-Global Instance is1cat_algebra (σ : Signature) : Is1Cat (Algebra σ).
+Instance is1cat_algebra (σ : Signature) : Is1Cat (Algebra σ).
 Proof.
   by rapply Build_Is1Cat.
 Defined.
 
-Global Instance is1cat_strong_algebra `{Funext} (σ : Signature)
+Instance is1cat_strong_algebra `{Funext} (σ : Signature)
   : Is1Cat_Strong (Algebra σ).
 Proof.
   rapply Build_Is1Cat_Strong.

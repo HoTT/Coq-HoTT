@@ -35,7 +35,7 @@ Definition issig_IsIdeal {R : Ring} (I : Subgroup R) : _ <~> IsIdeal I := ltac:(
 Hint Immediate Build_IsIdeal : typeclass_instances.
 
 (** Any two-sided ideal is also a two-sided ideal of the opposite ring. *)
-Global Instance isideal_op {R : Ring} (I : Subgroup R)
+Instance isideal_op {R : Ring} (I : Subgroup R)
   : IsIdeal I -> IsIdeal (R := rng_op R) I.
 Proof.
   intros [? ?]; exact _.
@@ -51,7 +51,7 @@ Definition issig_LeftIdeal (R : Ring) : _ <~> LeftIdeal R := ltac:(issig).
 (** A right ideal of a ring [R] is a subgroup [I] of [R] which is closed under right multiplication. *)
 Definition RightIdeal (R : Ring) := LeftIdeal (rng_op R).
 
-Global Instance isrightdeal_rightideal {R} (I : RightIdeal R)
+Instance isrightdeal_rightideal {R} (I : RightIdeal R)
   : IsRightIdeal (R:=R) I
   := leftideal_isleftideal _ I.
 
@@ -81,15 +81,15 @@ Section IdealTrunc.
   Context `{Funext}.
 
   (** Being a left ideal is a proposition. *)
-  Global Instance ishprop_isleftideal {R : Ring} (I : Subgroup R)
+  #[export] Instance ishprop_isleftideal {R : Ring} (I : Subgroup R)
     : IsHProp (IsLeftIdeal I) := ltac:(unfold IsLeftIdeal; exact _).
 
   (** Being a right ideal is a proposition. *)
-  Global Instance ishprop_isrightideal `{Funext} {R : Ring} (I : Subgroup R)
+  #[export] Instance ishprop_isrightideal `{Funext} {R : Ring} (I : Subgroup R)
     : IsHProp (IsRightIdeal I) :=  ishprop_isleftideal _.
 
   (** Being a two-sided ideal is a proposition. *)
-  Global Instance ishprop_isideal {R : Ring} (I : Subgroup R)
+  #[export] Instance ishprop_isideal {R : Ring} (I : Subgroup R)
     : IsHProp (IsIdeal I)
     := istrunc_equiv_istrunc _ (issig_IsIdeal I).
 
@@ -97,15 +97,15 @@ Section IdealTrunc.
   Context `{Univalence}.
 
   (** The type of left ideals is a set. *)
-  Global Instance ishset_leftideal {R : Ring} : IsHSet (LeftIdeal R)
+  #[export] Instance ishset_leftideal {R : Ring} : IsHSet (LeftIdeal R)
     := istrunc_equiv_istrunc _ (issig_LeftIdeal R).
   
   (** The type of right ideals is a set. *)
-  Global Instance ishset_rightideal {R : Ring} : IsHSet (RightIdeal R)
+  #[export] Instance ishset_rightideal {R : Ring} : IsHSet (RightIdeal R)
     := _.
 
   (** The type of ideals is a set. *)
-  Global Instance ishset_ideal {R : Ring} : IsHSet (Ideal R)
+  #[export] Instance ishset_ideal {R : Ring} : IsHSet (Ideal R)
     := istrunc_equiv_istrunc _ (issig_Ideal R).
 
 End IdealTrunc.
@@ -142,7 +142,7 @@ End IdealElements.
 (** *** Zero Ideal *)
 
 (** The trivial subgroup is a left ideal. *)
-Global Instance isleftideal_trivial_subgroup (R : Ring)
+Instance isleftideal_trivial_subgroup (R : Ring)
   : IsLeftIdeal (trivial_subgroup R).
 Proof.
   intros r x p.
@@ -151,12 +151,12 @@ Proof.
 Defined.
 
 (** The trivial subgroup is a right ideal. *)
-Global Instance isrightideal_trivial_subgroup (R : Ring)
+Instance isrightideal_trivial_subgroup (R : Ring)
   : IsRightIdeal (trivial_subgroup R)
   := isleftideal_trivial_subgroup _.
 
 (** The trivial subgroup is an ideal. *)
-Global Instance isideal_trivial_subgroup (R : Ring)
+Instance isideal_trivial_subgroup (R : Ring)
   : IsIdeal (trivial_subgroup R)
   := {}.
 
@@ -166,17 +166,17 @@ Definition ideal_zero (R : Ring) : Ideal R := Build_Ideal R _ _.
 (** *** The unit ideal *)
 
 (** The maximal subgroup is a left ideal. *)
-Global Instance isleftideal_maximal_subgroup (R : Ring)
+Instance isleftideal_maximal_subgroup (R : Ring)
   : IsLeftIdeal (maximal_subgroup R)
   := ltac:(done).
 
 (** The maximal subgroup is a right ideal. *)
-Global Instance isrightideal_maximal_subgroup (R : Ring)
+Instance isrightideal_maximal_subgroup (R : Ring)
   : IsRightIdeal (maximal_subgroup R)
   := isleftideal_maximal_subgroup _.
 
 (** The maximal subgroup is an ideal.  *)
-Global Instance isideal_maximal_subgroup (R : Ring)
+Instance isideal_maximal_subgroup (R : Ring)
   : IsIdeal (maximal_subgroup R)
   := {}.
 
@@ -187,7 +187,7 @@ Definition ideal_unit (R : Ring) : Ideal R
 (** *** Intersection of ideals *)
 
 (** Intersections of underlying subgroups of left ideals are again left ideals. *)
-Global Instance isleftideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
+Instance isleftideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
   `{IsLeftIdeal R I, IsLeftIdeal R J}
   : IsLeftIdeal (subgroup_intersection I J).
 Proof.
@@ -195,13 +195,13 @@ Proof.
 Defined.
 
 (** Intersections of underlying subgroups of right ideals are again right ideals. *)
-Global Instance isrightideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
+Instance isrightideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
   `{IsRightIdeal R I, IsRightIdeal R J}
   : IsRightIdeal (subgroup_intersection I J)
   := isleftideal_subgroup_intersection _ _ _.
 
 (** Intersections of underlying subgroups of ideals are again ideals. *)
-Global Instance isideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
+Instance isideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
   `{IsIdeal R I, IsIdeal R J}
   : IsIdeal (subgroup_intersection I J)
   := {}.
@@ -224,7 +224,7 @@ Definition ideal_intersection {R : Ring}
 (** *** Sum of ideals *)
 
 (** The subgroup product of left ideals is again an ideal. *)
-Global Instance isleftideal_subgroup_product (R : Ring) (I J : Subgroup R)
+Instance isleftideal_subgroup_product (R : Ring) (I J : Subgroup R)
   `{IsLeftIdeal R I, IsLeftIdeal R J}
   : IsLeftIdeal (subgroup_product I J).
 Proof.
@@ -247,13 +247,13 @@ Proof.
 Defined.
 
 (** The subgroup product of right ideals is again an ideal. *)
-Global Instance isrightideal_subgroup_product (R : Ring) (I J : Subgroup R)
+Instance isrightideal_subgroup_product (R : Ring) (I J : Subgroup R)
   `{IsRightIdeal R I, IsRightIdeal R J}
   : IsRightIdeal (subgroup_product I J)
   := isleftideal_subgroup_product _ _ _.
 
 (** The subgroup product of ideals is again an ideal. *)
-Global Instance isideal_subgroup_product (R : Ring) (I J : Subgroup R)
+Instance isideal_subgroup_product (R : Ring) (I J : Subgroup R)
   `{IsIdeal R I, IsIdeal R J}
   : IsIdeal (subgroup_product I J)
   := {}.
@@ -294,7 +294,7 @@ Definition ideal_product_type {R : Ring} (I J : Subgroup R) : Subgroup R
   := subgroup_generated (G := R) (ideal_product_naive_type I J). 
 
 (** The product of left ideals is a left ideal. *)
-Global Instance isleftideal_ideal_product_type {R : Ring} (I J : Subgroup R)
+Instance isleftideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsLeftIdeal R I, IsLeftIdeal R J}
   : IsLeftIdeal (ideal_product_type I J).
 Proof.
@@ -307,7 +307,7 @@ Proof.
 Defined.
 
 (** The product of right ideals is a right ideal. *)
-Global Instance isrightideal_ideal_product_type {R : Ring} (I J : Subgroup R)
+Instance isrightideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsRightIdeal R I, IsRightIdeal R J}
   : IsRightIdeal (ideal_product_type I J).
 Proof.
@@ -320,7 +320,7 @@ Proof.
 Defined.
 
 (** The product of ideals is an ideal. *)
-Global Instance isideal_ideal_product_type {R : Ring} (I J : Subgroup R)
+Instance isideal_ideal_product_type {R : Ring} (I J : Subgroup R)
   `{IsIdeal R I, IsIdeal R J}
   : IsIdeal (ideal_product_type I J)
   := {}. 
@@ -343,7 +343,7 @@ Definition ideal_product {R : Ring}
 (** *** The kernel of a ring homomorphism *)
 
 (** The kernel of the underlying group homomorphism of a ring homomorphism is a left ideal. *)
-Global Instance isleftideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
+Instance isleftideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
   : IsLeftIdeal (grp_kernel f).
 Proof.
   intros r x p.
@@ -353,12 +353,12 @@ Proof.
 Defined.
 
 (** The kernel of the underlying group homomorphism of a ring homomorphism is a right ideal. *)
-Global Instance isrightideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
+Instance isrightideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
   : IsRightIdeal (grp_kernel f)
   := isleftideal_grp_kernel (fmap rng_op f).
 
 (** The kernel of the underlying group homomorphism of a ring homomorphism is an ideal. *)
-Global Instance isideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
+Instance isideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
   : IsIdeal (grp_kernel f)
   := {}.
 
@@ -483,23 +483,23 @@ Proof.
 Defined.
 
 (** Under funext, ideal equiality is a proposition. *)
-Global Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
+Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
   : IsHProp (ideal_eq I J) := _.
 
 (** Ideal equality is reflexive. *)
-Global Instance reflexive_ideal_eq {R : Ring} : Reflexive (@ideal_eq R).
+Instance reflexive_ideal_eq {R : Ring} : Reflexive (@ideal_eq R).
 Proof.
   intros I x; by split.
 Defined.
 
 (** Ideal equality is symmetric. *)
-Global Instance symmetric_ideal_eq {R : Ring} : Symmetric (@ideal_eq R).
+Instance symmetric_ideal_eq {R : Ring} : Symmetric (@ideal_eq R).
 Proof.
   intros I J p x; specialize (p x); by symmetry.
 Defined.
 
 (** Ideal equality is transitive. *)
-Global Instance transitive_ideal_eq {R : Ring} : Transitive (@ideal_eq R).
+Instance transitive_ideal_eq {R : Ring} : Transitive (@ideal_eq R).
 Proof.
   intros I J K p q x; specialize (p x); specialize (q x); by transitivity (J x).
 Defined.
@@ -510,11 +510,11 @@ Defined.
 Definition ideal_subset {R : Ring} (I J : Subgroup R) := (forall x, I x -> J x).
 
 (** The subset relation is reflexive. *)
-Global Instance reflexive_ideal_subset {R : Ring} : Reflexive (@ideal_subset R)
+Instance reflexive_ideal_subset {R : Ring} : Reflexive (@ideal_subset R)
   := fun _ _ => idmap.
 
 (** The subset relation is transitive. *)
-Global Instance transitive_ideal_subset {R : Ring} : Transitive (@ideal_subset R).
+Instance transitive_ideal_subset {R : Ring} : Transitive (@ideal_subset R).
 Proof.
   intros x y z p q a.
   exact (q a o p a).
@@ -552,7 +552,7 @@ Proof.
 Defined.
 
 (** The left ideal quotient of a left ideal is a left ideal. *)
-Global Instance isleftideal_subgroup_leftideal_quotient {R : Ring}
+Instance isleftideal_subgroup_leftideal_quotient {R : Ring}
   (I J : Subgroup R) `{IsLeftIdeal R I}
   : IsLeftIdeal (subgroup_leftideal_quotient I J).
 Proof.
@@ -565,7 +565,7 @@ Proof.
 Defined.
 
 (** The left ideal quotient of a right ideal by a left ideal is a right ideal. *)
-Global Instance isrightideal_subgroup_leftideal_quotient {R : Ring}
+Instance isrightideal_subgroup_leftideal_quotient {R : Ring}
   (I J : Subgroup R) `{IsRightIdeal R I, IsLeftIdeal R J}
   : IsRightIdeal (subgroup_leftideal_quotient (R:=R) I J).
 Proof.
@@ -586,12 +586,12 @@ Definition leftideal_quotient {R : Ring}
 Definition subgroup_rightideal_quotient {R : Ring} (I J : Subgroup R) : Subgroup R
   := subgroup_leftideal_quotient (R:=rng_op R) I J. 
 
-Global Instance isrightideal_subgroup_rightideal_quotient {R : Ring}
+Instance isrightideal_subgroup_rightideal_quotient {R : Ring}
   (I J : Subgroup R) `{IsRightIdeal R I}
   : IsRightIdeal (subgroup_rightideal_quotient I J)
   := isleftideal_subgroup_leftideal_quotient (R:=rng_op R) I J.
 
-Global Instance isleftideal_subgroup_rightideal_quotient {R : Ring}
+Instance isleftideal_subgroup_rightideal_quotient {R : Ring}
   (I J : Subgroup R) `{H : IsLeftIdeal R I, IsRightIdeal R J}
   : IsLeftIdeal (subgroup_rightideal_quotient I J).
 Proof.
@@ -641,7 +641,7 @@ Proof.
 Defined.
 
 (** The left annihilator of a subgroup of a ring is a left ideal of the ring. *)
-Global Instance isleftideal_ideal_left_annihilator {R : Ring} (I : R -> Type)
+Instance isleftideal_ideal_left_annihilator {R : Ring} (I : R -> Type)
   : IsLeftIdeal (subgroup_ideal_left_annihilator I).
 Proof.
   intros r x p.
@@ -652,7 +652,7 @@ Proof.
 Defined.
 
 (** The left annihilator of a left ideal also happens to be a right ideal. In fact, left ideal could be weakened to subset closed under multplication, however we don't need this generality currently. *)
-Global Instance isrightideal_ideal_left_annihilator {R : Ring} (I : Subgroup R)
+Instance isrightideal_ideal_left_annihilator {R : Ring} (I : Subgroup R)
   `{IsLeftIdeal R I}
   : IsRightIdeal (subgroup_ideal_left_annihilator I).
 Proof.
@@ -664,7 +664,7 @@ Proof.
 Defined.
 
 (** Therefore the annihilator of a left ideal is an ideal. *)
-Global Instance isideal_ideal_left_annihilator {R : Ring} (I : Subgroup R)
+Instance isideal_ideal_left_annihilator {R : Ring} (I : Subgroup R)
   `{IsLeftIdeal R I}
   : IsIdeal (subgroup_ideal_left_annihilator I)
   := {}.
@@ -679,18 +679,18 @@ Definition subgroup_ideal_right_annihilator {R : Ring} (I : R -> Type)
   := subgroup_ideal_left_annihilator (R:=rng_op R) I.
 
 (** When the subset is a right ideal the right annihilator is a left ideal of the ring. This can be strengthened. See the comment in the left ideal version of this lemma above. *)
-Global Instance isleftideal_ideal_right_annihilator {R : Ring} (I : Subgroup R)
+Instance isleftideal_ideal_right_annihilator {R : Ring} (I : Subgroup R)
   `{IsRightIdeal R I}
   : IsLeftIdeal (subgroup_ideal_right_annihilator I)
   := isrightideal_ideal_left_annihilator (R:=rng_op R) I.
 
 (** The right annihilator is a right ideal of the ring. *)
-Global Instance isrightideal_ideal_right_annihilator {R : Ring} (I : R -> Type)
+Instance isrightideal_ideal_right_annihilator {R : Ring} (I : R -> Type)
   : IsRightIdeal (subgroup_ideal_right_annihilator (R:=R) I)
   := isleftideal_ideal_left_annihilator (R:=rng_op R) I.
 
 (** Therefore the annihilator of a right ideal is an ideal. *)
-Global Instance isideal_ideal_right_annihilator {R : Ring} (I : Subgroup R)
+Instance isideal_ideal_right_annihilator {R : Ring} (I : Subgroup R)
   `{IsRightIdeal R I}
   : IsIdeal (subgroup_ideal_right_annihilator (R:=R) I)
   := {}.
@@ -713,7 +713,7 @@ Definition Coprime {R : Ring} (I J : Ideal R) : Type
   := ideal_eq (ideal_sum I J) (ideal_unit R).
 Existing Class Coprime.
 
-Global Instance ishprop_coprime `{Funext} {R : Ring}
+Instance ishprop_coprime `{Funext} {R : Ring}
   (I J : Ideal R) : IsHProp (Coprime I J).
 Proof.
     unfold Coprime.
@@ -1221,7 +1221,7 @@ End IdealLemmas.
 
 (** The preimage of an ideal under a ring homomorphism is also itself an ideal. This is also known as the contraction of an ideal. *)
 
-Global Instance isleftideal_preimage {R S : Ring} (f : R $-> S)
+Instance isleftideal_preimage {R S : Ring} (f : R $-> S)
   (I : Subgroup S) `{IsLeftIdeal S I}
   : IsLeftIdeal (subgroup_preimage f I).
 Proof.
@@ -1231,13 +1231,13 @@ Proof.
   exact Ifx.
 Defined.
 
-Global Instance isrightideal_preimage {R S : Ring} (f : R $-> S)
+Instance isrightideal_preimage {R S : Ring} (f : R $-> S)
   (I : Subgroup S) `{IsRightIdeal S I}
   : IsRightIdeal (subgroup_preimage f I)
   := isleftideal_preimage (R:=rng_op R) (S:=rng_op S)
       (fmap rng_op f) I.
 
-Global Instance isideal_preimage {R S : Ring} (f : R $-> S)
+Instance isideal_preimage {R S : Ring} (f : R $-> S)
   (I : Subgroup S) `{IsIdeal S I}
   : IsIdeal (subgroup_preimage f I)
   := {}.

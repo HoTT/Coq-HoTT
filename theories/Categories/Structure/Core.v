@@ -102,7 +102,7 @@ Record NotionOfStructure (X : PreCategory) :=
 
     When we move to polyproj, it won't anymore. *)
 
-Global Existing Instance istrunc_is_structure_homomorphism.
+Existing Instance istrunc_is_structure_homomorphism.
 
 Create HintDb structure_homomorphisms discriminated.
 

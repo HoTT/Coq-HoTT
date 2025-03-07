@@ -1,7 +1,7 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber Factorization Truncations.Core Truncations.Connectedness HProp.
-Require Import Pointed.Core Pointed.pEquiv.
 Require Import WildCat.
+Require Import Pointed.Core Pointed.pEquiv.
 Require Import Spaces.Nat.Core.
 
 Local Open Scope pointed_scope.
