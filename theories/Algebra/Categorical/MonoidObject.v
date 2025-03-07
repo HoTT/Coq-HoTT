@@ -207,16 +207,14 @@ Section MonoidEnriched.
     (I : A) `{!IsTerminal I} {x y : A}
     `{!HasMorExt A} `{forall x y, IsHSet (x $-> y)}.
   
-  Notation "*" := (fun x y : A => cat_binprod (A:=A) x y).
-
   Section Monoid.
 
-    Context `{!IsMonoidObject * I y}.
+    Context `{!IsMonoidObject cat_binprod I y}.
 
     Local Instance sgop_hom : SgOp (x $-> y)
-      := fun f g => mo_mult * $o cat_binprod_corec f g.
+      := fun f g => mo_mult cat_binprod $o cat_binprod_corec f g.
 
-    Local Instance monunit_hom : MonUnit (x $-> y) := mo_unit * $o mor_terminal _ _.
+    Local Instance monunit_hom : MonUnit (x $-> y) := mo_unit cat_binprod $o mor_terminal _ _.
 
     Local Instance associative_hom : Associative sgop_hom.
     Proof.
@@ -225,7 +223,7 @@ Section MonoidEnriched.
       rapply path_hom.
       refine ((_ $@L cat_binprod_fmap01_corec _ _ _)^$ $@ _).
       nrefine (cat_assoc_opp _ _ _ $@ _).
-      refine ((mo_assoc * $@R _)^$ $@ _).
+      refine ((mo_assoc cat_binprod $@R _)^$ $@ _).
       nrefine (_ $@ (_ $@L cat_binprod_fmap10_corec _ _ _)).
       refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_assoc _ _ _).
       nrapply cat_binprod_associator_corec.
@@ -237,7 +235,7 @@ Section MonoidEnriched.
       unfold sgop_hom, mon_unit.
       rapply path_hom.
       refine ((_ $@L (cat_binprod_fmap10_corec _ _ _)^$) $@ cat_assoc_opp _ _ _ $@ _).
-      nrefine (((mo_left_unit * $@ _) $@R _) $@ _).
+      nrefine (((mo_left_unit cat_binprod $@ _) $@R _) $@ _).
       1: nrapply cate_buildequiv_fun.
       unfold trans_nattrans.
       nrefine ((((_ $@R _) $@ _) $@R _) $@ _).
@@ -252,7 +250,7 @@ Section MonoidEnriched.
       unfold sgop_hom, mon_unit.
       rapply path_hom.
       refine ((_ $@L (cat_binprod_fmap01_corec _ _ _)^$) $@ cat_assoc_opp _ _ _ $@ _).
-      nrefine (((mo_right_unit * $@ _) $@R _) $@ _).
+      nrefine (((mo_right_unit cat_binprod $@ _) $@R _) $@ _).
       1: nrapply cate_buildequiv_fun.
       nrapply cat_binprod_beta_pr1.
     Defined.
@@ -262,7 +260,7 @@ Section MonoidEnriched.
 
   End Monoid.
 
-  Context `{!IsCommutativeMonoidObject * I y}.
+  Context `{!IsCommutativeMonoidObject cat_binprod I y}.
   Local Existing Instances sgop_hom monunit_hom ismonoid_hom.
 
   Local Instance commutative_hom : Commutative sgop_hom.
@@ -270,7 +268,7 @@ Section MonoidEnriched.
     intros f g.
     unfold sgop_hom.
     rapply path_hom.
-    refine ((_ $@L _^$) $@ cat_assoc_opp _ _ _ $@ (cmo_comm * $@R _)).
+    refine ((_ $@L _^$) $@ cat_assoc_opp _ _ _ $@ (cmo_comm cat_binprod $@R _)).
     nrapply cat_binprod_swap_corec. 
   Defined.
 

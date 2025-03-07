@@ -143,15 +143,15 @@ Defined.
 Class BinaryCoproduct {A : Type} `{Is1Cat A} (x y : A)
   := prod_co_bincoprod :: BinaryProduct (A:=A^op) x y.
 
-Definition cat_bincoprod {A : Type}  `{Is1Cat A} (x y : A) `{!BinaryCoproduct x y} : A
-  := cat_binprod (x : A^op) y.
+Definition cat_bincoprod' {A : Type}  `{Is1Cat A} (x y : A) `{!BinaryCoproduct x y} : A
+  := cat_binprod' (x : A^op) y.
 
 Definition cat_inl {A : Type} `{Is1Cat A} {x y : A} `{!BinaryCoproduct x y}
-  : x $-> cat_bincoprod x y
+  : x $-> cat_bincoprod' x y
   := cat_pr1 (A:=A^op) (x:=x) (y:=y).
 
 Definition cat_inr {A : Type} `{Is1Cat A} {x y : A} `{!BinaryCoproduct x y}
-  : y $-> cat_bincoprod x y
+  : y $-> cat_bincoprod' x y
   := cat_pr2 (A:=A^op) (x:=x) (y:=y).
 
 (** A category with binary coproducts is a category with a binary coproduct for each pair of objects. *)
@@ -187,7 +187,7 @@ Section Lemmata.
   Context {A : Type} {x y z : A} `{BinaryCoproduct _ x y}.
 
   Definition cat_bincoprod_rec (f : x $-> z) (g : y $-> z)
-    : cat_bincoprod x y $-> z
+    : cat_bincoprod' x y $-> z
     := @cat_binprod_corec A^op _ _ _ _ x y _ _ f g.
 
   Definition cat_bincoprod_beta_inl (f : x $-> z) (g : y $-> z)
@@ -198,11 +198,11 @@ Section Lemmata.
     : cat_bincoprod_rec f g $o cat_inr $== g
     := @cat_binprod_beta_pr2 A^op _ _ _ _ x y _ _ f g.
 
-  Definition cat_bincoprod_eta (f : cat_bincoprod x y $-> z)
+  Definition cat_bincoprod_eta (f : cat_bincoprod' x y $-> z)
     : cat_bincoprod_rec (f $o cat_inl) (f $o cat_inr) $== f
     := @cat_binprod_eta A^op _ _ _ _ x y _ _ f.
 
-  Definition cat_bincoprod_eta_in {f g : cat_bincoprod x y $-> z}
+  Definition cat_bincoprod_eta_in {f g : cat_bincoprod' x y $-> z}
     : f $o cat_inl $== g $o cat_inl -> f $o cat_inr $== g $o cat_inr -> f $== g
     := @cat_binprod_eta_pr A^op _ _ _ _ x y _ _ f g.
 
@@ -210,6 +210,8 @@ Section Lemmata.
     : f $== f' -> g $== g' -> cat_bincoprod_rec f g $== cat_bincoprod_rec f' g'
     := @cat_binprod_corec_eta A^op _ _ _ _ x y _ _ f f' g g'.
 End Lemmata.
+
+Definition cat_bincoprod {A: Type} `{HasBinaryCoproducts A} (x y : A) := cat_bincoprod' x y.
 
 (** *** Binary coproduct functor *)
 
@@ -233,7 +235,7 @@ Defined.
 
 Instance is0functor_cat_bincoprod_r {A : Type}
   `{hbc : HasBinaryCoproducts A} x
-  : Is0Functor (fun y => cat_bincoprod x y).
+  : Is0Functor (cat_bincoprod x).
 Proof.
   rapply is0functor_op'.
   exact (is0functor_cat_binprod_r (A:=A^op) (H0:=hbc) x).
@@ -241,7 +243,7 @@ Defined.
 
 Instance is1functor_cat_bincoprod_r {A : Type}
   `{hbc : HasBinaryCoproducts A} x
-  : Is1Functor (fun y => cat_bincoprod x y).
+  : Is1Functor (cat_bincoprod x).
 Proof.
   rapply is1functor_op'.
   exact (is1functor_cat_binprod_r (A:=A^op) (H0:=hbc) x).
@@ -249,7 +251,7 @@ Defined.
 
 Instance is0bifunctor_cat_bincoprod {A : Type}
   `{hbc : HasBinaryCoproducts A}
-  : Is0Bifunctor (fun x y => cat_bincoprod x y).
+  : Is0Bifunctor cat_bincoprod.
 Proof.
   nrapply is0bifunctor_op'.
   exact (is0bifunctor_cat_binprod (A:=A^op) (H0:=hbc)).
@@ -257,7 +259,7 @@ Defined.
 
 Instance is1bifunctor_cat_bincoprod {A : Type}
   `{hbc : HasBinaryCoproducts A}
-  : Is1Bifunctor (fun x y => cat_bincoprod x y).
+  : Is1Bifunctor cat_bincoprod.
 Proof.
   nrapply is1bifunctor_op'.
   exact (is1bifunctor_cat_binprod (A:=A^op) (H0:=hbc)).
@@ -329,7 +331,7 @@ Defined.
 
 Definition cat_bincoprod_codiag {A : Type}
   `{Is1Cat A} (x : A) `{!BinaryCoproduct x x}
-  : cat_bincoprod x x $-> x
+  : cat_bincoprod' x x $-> x
   := cat_binprod_diag (A:=A^op) x.
 
 (** *** Lemmas about [cat_bincoprod_rec] *)
@@ -353,7 +355,7 @@ Definition cat_bincoprod_fmap10_rec {A : Type}
 Definition cat_bincoprod_fmap11_rec {A : Type}
   `{Is1Cat A, !HasBinaryCoproducts A} {v w x y z : A}
   (f : y $-> w) (g : z $-> x) (h : w $-> v) (i : x $-> v)
-  : cat_bincoprod_rec h i $o fmap11 (fun x y => cat_binprod x y) f g
+  : cat_bincoprod_rec h i $o fmap11 cat_bincoprod f g
     $== cat_bincoprod_rec (h $o f) (i $o g)
   := @cat_binprod_fmap11_corec A^op _ _ _ _
       hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ _ f g h i.
@@ -381,7 +383,7 @@ Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
 
 Instance ismonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
-  : IsMonoidal A (fun x y => cat_bincoprod x y) zero | 10.
+  : IsMonoidal A cat_bincoprod zero | 10.
 Proof.
   nrapply ismonoidal_op'.
   nrapply (ismonoidal_cat_binprod (A:=A^op) zero).
@@ -390,7 +392,7 @@ Defined.
 
 Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
-  : IsSymmetricMonoidal A (fun x y => cat_bincoprod x y) zero | 10.
+  : IsSymmetricMonoidal A cat_bincoprod zero | 10.
 Proof.
   nrapply issymmetricmonoidal_op'.
   nrapply (issymmetricmonoidal_cat_binprod (A:=A^op) zero).
@@ -437,7 +439,7 @@ Defined.
 
 Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}
   (x y : A) `{!BinaryCoproduct x y, !BinaryProduct x y}
-  : cat_bincoprod x y $-> cat_binprod x y.
+  : cat_bincoprod' x y $-> cat_binprod' x y.
 Proof.
   nrapply cat_coprod_prod; exact _.
 Defined.

@@ -245,15 +245,15 @@ Section BinaryProducts.
 
   Context {A : Type} `{Is1Cat A} {x y : A} `{!BinaryProduct x y}.
 
-  Definition cat_binprod : A
+  Definition cat_binprod' : A
     := cat_prod Bool (fun b : Bool => if b then x else y).
 
-  Definition cat_pr1 : cat_binprod $-> x := cat_pr true.
+  Definition cat_pr1 : cat_binprod' $-> x := cat_pr true.
 
-  Definition cat_pr2 : cat_binprod $-> y := cat_pr false.
+  Definition cat_pr2 : cat_binprod' $-> y := cat_pr false.
 
   Definition cat_binprod_corec {z : A} (f : z $-> x) (g : z $-> y)
-    : z $-> cat_binprod.
+    : z $-> cat_binprod'.
   Proof.
     nrapply (cat_prod_corec Bool).
     intros [|].
@@ -269,7 +269,7 @@ Section BinaryProducts.
     : cat_pr2 $o cat_binprod_corec f g $== g
     := cat_prod_beta _ _ false.
 
-  Definition cat_binprod_eta {z : A} (f : z $-> cat_binprod)
+  Definition cat_binprod_eta {z : A} (f : z $-> cat_binprod')
     : cat_binprod_corec (cat_pr1 $o f) (cat_pr2 $o f) $== f.
   Proof.
     unfold cat_binprod_corec.
@@ -279,7 +279,7 @@ Section BinaryProducts.
     - exact (cat_binprod_beta_pr2 _ _).
   Defined.
 
-  Definition cat_binprod_eta_pr {z : A} (f g : z $-> cat_binprod)
+  Definition cat_binprod_eta_pr {z : A} (f g : z $-> cat_binprod')
     : cat_pr1 $o f $== cat_pr1 $o g -> cat_pr2 $o f $== cat_pr2 $o g -> f $== g.
   Proof.
     intros p q.
@@ -301,21 +301,21 @@ Section BinaryProducts.
 
 End BinaryProducts.
 
-Arguments cat_binprod {A _ _ _ _} x y {_}.
+Arguments cat_binprod' {A _ _ _ _} x y {_}.
 
 (** A convenience wrapper for building binary products *)
 Definition Build_BinaryProduct {A : Type} `{Is1Cat A} {x y : A}
-  (cat_binprod : A) (cat_pr1 : cat_binprod $-> x) (cat_pr2 : cat_binprod $-> y)
-  (cat_binprod_corec : forall z : A, z $-> x -> z $-> y -> z $-> cat_binprod)
+  (cat_binprod' : A) (cat_pr1 : cat_binprod' $-> x) (cat_pr2 : cat_binprod' $-> y)
+  (cat_binprod_corec : forall z : A, z $-> x -> z $-> y -> z $-> cat_binprod')
   (cat_binprod_beta_pr1 : forall (z : A) (f : z $-> x) (g : z $-> y),
     cat_pr1 $o cat_binprod_corec z f g $== f)
   (cat_binprod_beta_pr2 : forall (z : A) (f : z $-> x) (g : z $-> y),
     cat_pr2 $o cat_binprod_corec z f g $== g)
-  (cat_binprod_eta_pr : forall (z : A) (f g : z $-> cat_binprod),
+  (cat_binprod_eta_pr : forall (z : A) (f g : z $-> cat_binprod'),
     cat_pr1 $o f $== cat_pr1 $o g -> cat_pr2 $o f $== cat_pr2 $o g -> f $== g)
   : Product Bool (fun b => if b then x else y).
 Proof.
-  snrapply (Build_Product _ cat_binprod).
+  snrapply (Build_Product _ cat_binprod').
   - intros [|].
     + exact cat_pr1.
     + exact cat_pr2.
@@ -331,6 +331,8 @@ Proof.
     + exact (p true).
     + exact (p false).
 Defined.
+
+Definition cat_binprod {A: Type} `{HasBinaryProducts A} x y := cat_binprod' x y.
 
 Definition cat_binprod_eta_pr_x_xx {A : Type} `{HasBinaryProducts A} {w x y z : A}
   (f g : w $-> cat_binprod x (cat_binprod y z))
@@ -562,7 +564,7 @@ Definition cat_pr2_fmap11_binprod {A : Type} `{HasBinaryProducts A}
 (** Annoyingly this doesn't follow directly from the general diagonal since [fun b => if b then x else x] is not definitionally equal to [fun _ => x]. *)
 Definition cat_binprod_diag {A : Type}
   `{Is1Cat A} (x : A) `{!BinaryProduct x x}
-  : x $-> cat_binprod x x.
+  : x $-> cat_binprod' x x.
 Proof.
   snrapply cat_binprod_corec; exact (Id _).
 Defined.
@@ -687,7 +689,7 @@ Section Associativity.
   Proof.
     nrapply cat_binprod_corec.
     - exact (cat_pr1 $o cat_pr2).
-    - exact (fmap01 (fun x y => cat_binprod x y) x cat_pr2).
+    - exact (fmap01 cat_binprod x cat_pr2).
   Defined.
 
   Definition cat_binprod_pr1_twist (x y z : A)
@@ -752,8 +754,8 @@ Section Associativity.
   Definition cat_binprod_twist_nat {a a' b b' c c' : A}
     (f : a $-> a') (g : b $-> b') (h : c $-> c')
     : cat_binprod_twist a' b' c'
-        $o fmap11 (fun x y => cat_binprod x y) f (fmap11 (fun x y => cat_binprod x y) g h)
-      $== fmap11 (fun x y => cat_binprod x y) g (fmap11 (fun x y => cat_binprod x y) f h)
+        $o fmap11 cat_binprod f (fmap11 cat_binprod g h)
+      $== fmap11 cat_binprod g (fmap11 cat_binprod f h)
         $o cat_binprod_twist a b c.
   Proof.
     nrapply cat_binprod_eta_pr.
@@ -777,15 +779,16 @@ Section Associativity.
       refine (_ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
       2: nrapply cat_binprod_beta_pr2.
       refine (_^$ $@ _ $@ _).
-      1,3: rapply fmap11_comp.
-      rapply fmap22.
+      3: rapply fmap11_comp.
+      2: rapply fmap22.
+      1: rapply fmap11_comp.
       1: exact (cat_idl _ $@ (cat_idr _)^$).
       nrapply cat_binprod_beta_pr2.
   Defined.
 
   Local Existing Instance symmetricbraiding_binprod.
 
-  Local Instance associator_cat_binprod : Associator (fun x y => cat_binprod x y).
+  Local Instance associator_cat_binprod : Associator (cat_binprod).
   Proof.
     snrapply associator_twist.
     - exact _.
