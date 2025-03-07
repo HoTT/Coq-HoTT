@@ -431,15 +431,17 @@ Hint Immediate foo : typeclass_instances.
 ### 3.4. Local and Global Instances ###
 
 Each `Instance` declaration has an associated "locality attribute".
-The `Local` attribute makes the instance local to the current section, module,
-or file (although its *definition* will still be visible globally, it won't be
-in the instance database for typeclass resolution outside its containing section,
-module or file). The `Global` attribute makes the instance available in
-any file that "loads" this file via the `Require` command,
-which is a transitive relation including all direct and indirect dependencies of the current file.
-The `#[export]` locality uses the module system to manage the scope of the typeclass hint, 
-so that the hint is available wherever the module is opened using the `Import` keyword,
-but not transitively (analogous to "open" in ML languages).
+The `Local` attribute makes the instance local to the current section,
+module, or file (although its *definition* will still be visible
+globally, it won't be in the instance database for typeclass
+resolution outside its containing section, module or file). The
+`Global` attribute makes the instance available in any file that
+"loads" this file via the `Require` command, which is a transitive
+relation including all direct and indirect dependencies of the current
+file. The `#[export]` locality uses the module system to manage the
+scope of the typeclass hint, so that the hint is available wherever
+the module is opened using the `Import` keyword, but not transitively
+(analogous to "open" in ML languages).
 
 When declaring an `Instance` you should prefer the `export` locality attribute
 to the `Global` locality attribute. Inside a section, you should
