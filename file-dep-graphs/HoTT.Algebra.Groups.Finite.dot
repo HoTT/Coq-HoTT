@@ -1,0 +1,13 @@
+digraph HoTT_Algebra_Groups_Finite {
+  graph [ratio=0.5]
+  node [style=filled]
+Finite_fcard_grp_quotient [label="fcard_grp_quotient", URL=<Finite.html#fcard_grp_quotient>, peripheries=3, fillcolor="#F070D1"] ;
+Finite_subgroup_index_fcard_div [label="subgroup_index_fcard_div", URL=<Finite.html#subgroup_index_fcard_div>, fillcolor="#F070D1"] ;
+Finite_divides_fcard_subgroup [label="divides_fcard_subgroup", URL=<Finite.html#divides_fcard_subgroup>, fillcolor="#F070D1"] ;
+Finite_lt_zero_fcard_grp [label="lt_zero_fcard_grp", URL=<Finite.html#lt_zero_fcard_grp>, fillcolor="#F070D1"] ;
+  Finite_fcard_grp_quotient -> Finite_subgroup_index_fcard_div [] ;
+  Finite_subgroup_index_fcard_div -> Finite_divides_fcard_subgroup [] ;
+  Finite_subgroup_index_fcard_div -> Finite_lt_zero_fcard_grp [] ;
+subgraph cluster_Finite { label="Finite"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Finite_lt_zero_fcard_grp; Finite_divides_fcard_subgroup; Finite_subgroup_index_fcard_div; Finite_fcard_grp_quotient; };
+} /* END */
