@@ -27,7 +27,7 @@ From HoTT Require Import Basics Types HProp HSet Projective
      TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
      Misc.BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
      Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties
-     Spaces.Finite.Fin.
+     Metatheory.ImpredicativeTruncation Spaces.Finite.Fin ExcludedMiddle.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.
@@ -1049,11 +1049,8 @@ Section Book_3_8_ctx.
   Definition Book_3_8_cond_i {A B : Type} (f : A -> B)
     : Trunc (-1) (Book_3_8_qinv f) -> Book_3_8_qinv f.
   Proof.
-    intro x.
-    assert (y : isequiv _ _ f). {
-      revert x; apply Trunc_rec, cond_ii.
-    }
-    apply cond_i, y.
+    refine (cond_i _ _ f o _).  
+    apply Trunc_rec, cond_ii.
   Defined.
 
   Definition Book_3_8_cond_ii {A B : Type} (f : A -> B)
@@ -1118,8 +1115,8 @@ Definition Book_3_10_impred@{i j k | i < j, j < k} `{Univalence}
   (LEM : Book_3_10_LEM@{j})
   : IsEquiv@{j k} Book_3_10_Lift@{i j}.
 Proof.
-  snrapply isequiv_adjointify. {
-    intro A. destruct (LEM A).
+  snrapply isequiv_adjointify.
+  { intro A. destruct (LEM A).
     - exact (Build_HProp Unit).
     - exact (Build_HProp Empty).
   }
@@ -1315,46 +1312,17 @@ End Book_3_14.
 (* ================================================== ex:impred-brck *)
 (** Exercise 3.15 *)
 
-Section Book_3_15_ctx.
-  Universe i j.
-  Constraint i < j.
-  Context `{Funext} `{PropResizing} (A : Type@{j}).
-
-  Definition Book_3_15_merely : Type@{j}
-    := forall P : HProp@{i}, (A -> P) -> P.
-
-  Definition Book_3_15_tr (a : A) : Book_3_15_merely
-    := (fun P f => f a).
-
-  Definition Book_3_15_rec@{k} {B : HProp@{k}} (f : A -> B)
-    : Book_3_15_merely -> B.
-  Proof.
-    unfold Book_3_15_merely; intro a0.
-    apply (equiv_smalltype@{i k} B).
-    apply (a0 (smallhprop@{i k} B)).
-    intro a.
-    apply (equiv_smalltype@{i k} B).
-    exact (f a).
-  Defined.
-
-  (** Propositional resizing is not strong enough for a definitional beta rule *)
-  Definition Book_3_15_beta@{k} (a : A) {B : HProp@{k}} (f : A -> B)
-    : Book_3_15_rec f (Book_3_15_tr a) = f a.
-  Proof.
-    unfold Book_3_15_tr, Book_3_15_rec.
-    apply eisretr.
-  Defined.
-End Book_3_15_ctx.
+Definition Book_3_15 := @HoTT.Metatheory.ImpredicativeTruncation.resized_Trm_rec_beta.
 
 (* ================================================== ex:lem-impl-dn-commutes *)
 (** Exercise 3.16 *)
 
+(** This result holds in general when [Y x] is stable for each [x : X] *)
 Definition Book_3_16 `{Funext} (LEM : forall A : HProp, A + ~ A)
   (X : HSet) (Y : X -> HProp)
   : (forall x, ~~ Y x) <~> ~~ (forall x, Y x).
 Proof.
-  snrapply equiv_iff_hprop.
-  1-2: exact _.
+  rapply equiv_iff_hprop.
   - intros f g.
     apply g.
     intro x.
@@ -1371,7 +1339,7 @@ Defined.
 (** Exercise 3.17 *)
 
 Definition Book_3_17 {A : Type} {B : Trunc (-1) A -> HProp}
-  : (forall a, B (tr a)) -> (forall x, B x).
+  : (forall a : A, B (tr a)) -> (forall x : Trunc (-1) A, B x).
 Proof.
   intros f x.
   nrapply (Trunc_rec _ x).
@@ -1383,29 +1351,8 @@ Defined.
 (* ================================================== ex:lem-ldn *)
 (** Exercise 3.18 *)
 
-(* Already solved as LEM_to_DNE and DNE_to_LEM. Copied here for completeness *)
-
-Definition Book_3_18 `{Funext}
-  : (forall A : HProp, A + ~ A) <-> (forall A : HProp, ~~ A -> A).
-Proof.
-  split.
-  - intros LEM A nna.
-    destruct (LEM A) as [a|na].
-    + exact a.
-    + elim (nna na).
-  - intros DNE A.
-    assert (p : IsHProp (A + ~ A)). {
-      apply ishprop_sum.
-      1-2: exact _.
-      + intros a na.
-        exact (na a).
-    }
-    apply (DNE (@Build_HProp (A + ~ A) p)); simpl.
-    intro nsum.
-    apply nsum, inl, DNE.
-    intro na.
-    apply nsum, inr, na.
-Defined.
+Definition Book_3_18_i := @HoTT.ExcludedMiddle.LEM_to_DNE.  
+Definition Book_3_18_ii := @HoTT.ExcludedMiddle.DNE_to_LEM.
 
 (* ================================================== ex:decidable-choice *)
 (** Exercise 3.19 *)
@@ -1422,24 +1369,20 @@ Definition Book_3_20 := @HoTT.Types.Sigma.equiv_contr_sigma.
 
 Definition Book_3_21 `{Funext} (P : Type) : IsHProp P <~> (P <~> Trunc (-1) P).
 Proof.
-  snrapply equiv_iff_hprop.
-  1-2: exact _.
+  rapply equiv_iff_hprop.
   - intro h.
-    snrapply equiv_iff_hprop.
-    + exact h.
-    + exact _.
+    (* See also [equiv_to_O]. *)
+    rapply equiv_iff_hprop.
     + exact tr.
     + exact (Trunc_rec idmap).
   - intro e.
-    snrapply istrunc_equiv_istrunc.
-    + exact (Trunc (-1) P).
-    + exact (equiv_inverse e).
-    + exact _.
+    exact (istrunc_equiv_istrunc _ e^-1%equiv).
 Defined.
 
 (* ================================================== ex:finite-choice *)
 (** Exercise 3.22 *)
 
+(** Another form of this statement is proven in the library as [finite_choice] *)
 Definition Book_3_22 {n : nat} {A : Fin n -> HSet}
   (P : forall (x : Fin n) (a : A x), HProp)
   : (forall x, Trunc (-1) {a : A x & P x a})
@@ -1451,14 +1394,13 @@ Proof.
     snrefine (_ ; _).
     1-2: intro bot; elim bot.
   - assert (cl : Trunc (-1) {g : forall xl : Fin m, A (inl xl)
-      & forall xl : Fin m, P (inl xl) (g xl)}). {
-      apply (IH (A o inl) (fun xl a => P (inl xl) a)).
+      & forall xl : Fin m, P (inl xl) (g xl)}).
+    { apply (IH (A o inl) (fun xl a => P (inl xl) a)).
       intro xl.
       apply f.
     }
-    revert cl; apply Trunc_rec; intro cl.
-    assert (cr : Trunc (-1) {ar : A (inr tt) & P (inr tt) ar}) by (apply f).
-    revert cr; apply Trunc_rec; intro cr.
+    pose proof (cr := f (inr tt)).
+    strip_truncations.
     apply tr.
     snrefine (_ ; _); intros [xl|[]].
     + apply cl.1.
