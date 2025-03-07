@@ -788,7 +788,7 @@ Section Associativity.
 
   Local Existing Instance symmetricbraiding_binprod.
 
-  Local Instance associator_cat_binprod : Associator (cat_binprod).
+  Local Instance associator_cat_binprod : Associator cat_binprod.
   Proof.
     snrapply associator_twist.
     - exact _.
