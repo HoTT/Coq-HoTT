@@ -122,8 +122,8 @@ Proof.
   apply Build_Is0Functor.
   intros X Y f.
   snrapply Build_GroupHomomorphism.
-  { rapply (fmap (Tr 0)).
-    rapply (fmap loops).
+  { tapply (fmap (Tr 0)).
+    tapply (fmap loops).
     assumption. }
   (** Note: we don't have to be careful about which paths we choose here since we are trying to inhabit a proposition. *)
   intros x y.
@@ -197,7 +197,7 @@ Definition pi_loops n X : Pi n.+1 X <~>* Pi n (loops X).
 Proof.
   destruct n.
   1: reflexivity.
-  rapply (emap (pTr 0 o loops)).
+  tapply (emap (pTr 0 o loops)).
   apply unfold_iterated_loops'.
 Defined.
 
@@ -289,7 +289,7 @@ Instance isequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
   : IsEquiv (fmap (pPi n) f).
 Proof.
   (* For [n = 0] and [n] a successor, [fmap (pPi n) f] is definitionally equal to the map in the previous result as a map of types. *)
-  destruct n; rapply isequiv_pi_connmap'.
+  destruct n; tapply isequiv_pi_connmap'.
 Defined.
 
 Definition pequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
@@ -340,7 +340,7 @@ Proposition isembedding_pi_psect {n : nat} {X Y : pType}
   : IsEmbedding (fmap (pPi n) s).
 Proof.
   apply isembedding_isinj_hset.
-  rapply (isinj_section (r:=fmap (pPi n) r)).
+  tapply (isinj_section (r:=fmap (pPi n) r)).
   intro x.
   lhs_V exact (fmap_comp (pPi n) s r x).
   lhs exact (fmap2 (pPi n) k x).

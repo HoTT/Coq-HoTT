@@ -263,7 +263,7 @@ Proof.
   - apply path_pforall.
     unfold equiv_adjointify, equiv_fun.
     nrapply (pmap_prewhisker _ fmap_loops_pconst @* _).
-    rapply cat_zero_l.
+    tapply cat_zero_l.
 Defined.
 
 (** And its naturality is easy. *)
@@ -297,7 +297,7 @@ Proof.
   refine ( _ @ cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).
   apply path_pforall.
-  rapply (fmap_comp loops).
+  tapply (fmap_comp loops).
 Defined.
 
 Lemma natequiv_loop_susp_adjoint_r `{Funext} (A : pType)

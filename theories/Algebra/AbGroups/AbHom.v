@@ -151,10 +151,10 @@ Proof.
   - exact (functor_ab_coeq a^-1$ b^-1$ (hinverse _ _ p) (hinverse _ _ q)).
   - nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
       $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).
-    rapply cate_isretr.
+    tapply cate_isretr.
   - nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
       $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).
-    rapply cate_issect.
+    tapply cate_issect.
 Defined.
 
 (** ** The bifunctor [ab_hom] *)

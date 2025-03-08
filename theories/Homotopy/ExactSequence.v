@@ -48,7 +48,7 @@ Definition iscomplex_ptr (n : trunc_index) {F X Y : pType}
 Proof.
   refine ((fmap_comp (pTr n) i f)^* @* _).
   refine (_ @* ptr_functor_pconst n).
-  rapply (fmap2 (pTr _)); assumption.
+  tapply (fmap2 (pTr _)); assumption.
 Defined.
 
 (** Loop spaces preserve complexes. *)
@@ -57,7 +57,7 @@ Definition iscomplex_loops {F X Y : pType}
   : IsComplex (fmap loops i) (fmap loops f).
 Proof.
   refine ((fmap_comp loops i f)^$ $@ _ $@ fmap_zero_morphism _).
-  rapply (fmap2 loops); assumption.
+  tapply (fmap2 loops); assumption.
 Defined.
 
 Definition iscomplex_iterated_loops {F X Y : pType}
@@ -387,7 +387,7 @@ Proof.
     (isexact_purely_fiberseq (fiberseq_loops (fiberseq_isexact_purely i f)))).
   transitivity (fmap loops (pfib f) o* fmap loops (cxfib cx_isexact)).
   - refine (_ @* fmap_comp loops _ _).
-    rapply (fmap2 loops).
+    tapply (fmap2 loops).
     symmetry; apply pfib_cxfib.
   - refine (_ @* pmap_compose_assoc _ _ _).
     refine (pmap_prewhisker (fmap loops (cxfib cx_isexact)) _).

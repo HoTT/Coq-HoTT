@@ -780,9 +780,8 @@ Section Associativity.
       refine (_ $@ (_ $@L _^$) $@ (cat_assoc _ _ _)^$).
       2: nrapply cat_binprod_beta_pr2.
       refine (_^$ $@ _ $@ _).
-      3: rapply fmap11_comp.
-      2: rapply fmap22.
-      1: rapply fmap11_comp.
+      1,3: tapply fmap11_comp.
+      rapply fmap22.
       1: exact (cat_idl _ $@ (cat_idr _)^$).
       nrapply cat_binprod_beta_pr2.
   Defined.

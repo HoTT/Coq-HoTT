@@ -119,7 +119,7 @@ Proof.
           intros x; unfold composeD; cbn.
           apply equiv_path_arrow. }
         refine ((isconnected_elim (Nul D) (A := D (inl a)) _ _).1).
-        { rapply isconnected_acc_ngen. }
+        { tapply isconnected_acc_ngen. }
         intros b; cbn in b. strip_truncations.
         assert (bc : IsConnMap (Nul D) (unit_name b)).
         { intros x; unfold hfiber.

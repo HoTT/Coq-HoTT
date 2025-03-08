@@ -695,7 +695,7 @@ Proof.
     + rapply (fmap01 ab_tensor_prod A).
       nrapply ab_coeq_in.
     + refine (_^$ $@ fmap02 ab_tensor_prod _ _ $@ _).
-      1,3: rapply fmap01_comp.
+      1,3: tapply fmap01_comp.
       nrapply ab_coeq_glue.
   - snrapply ab_tensor_prod_rec'.
     + intros a.
@@ -811,7 +811,7 @@ Definition ab_tensor_prod_dist_l {A B C : AbGroup}
   : ab_tensor_prod A (ab_biprod B C)
     $<~> ab_biprod (ab_tensor_prod A B) (ab_tensor_prod A C).
 Proof.
-  srapply (let f := _ in let g := _ in cate_adjointify f g _ _).
+  stapply (let f := _ in let g := _ in cate_adjointify f g _ _).
   - snrapply ab_tensor_prod_rec.
     + intros a bc.
       exact (tensor a (fst bc), tensor a (snd bc)).
