@@ -994,7 +994,7 @@ Defined.
 (** pType has equivalences *)
 Instance hasequivs_ptype : HasEquivs pType.
 Proof.
-  srapply (
+  stapply (
     Build_HasEquivs _ _ _ _ _ pEquiv (fun A B f => IsEquiv f));
   intros A B f; cbn; intros.
   - exact f.

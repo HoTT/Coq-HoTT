@@ -279,8 +279,8 @@ Section TwistConstruction.
         2: exact (isnat right_unitor f).
         rapply braid_nat_r.
     - intros a.
-      rapply compose_catie'.
-      rapply catie_braid.
+      tapply compose_catie'.
+      tapply catie_braid.
   Defined.
 
   (** *** Triangle *)

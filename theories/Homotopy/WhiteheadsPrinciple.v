@@ -104,7 +104,7 @@ Proof.
     intros y q. destruct q.
     snrefine (isequiv_homotopic _ _).
     1: exact (fmap (Pi k.+1) (fmap loops (pmap_from_point f x))).
-    2:{ rapply (fmap2 (Pi k.+1)); srefine (Build_pHomotopy _ _).
+    2:{ tapply (fmap2 (Pi k.+1)); srefine (Build_pHomotopy _ _).
         - intros p; cbn.
           exact (concat_1p _ @ concat_p1 _).
         - reflexivity. }

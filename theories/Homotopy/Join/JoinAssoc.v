@@ -80,7 +80,7 @@ Definition trijoinrecdata_fun_twist (A B C : Type)
 Definition equiv_trijoin_twist' (A B C : Type)
   : TriJoin A B C <~> TriJoin B A C.
 Proof.
-  rapply (opyon_equiv_0gpd (A:=Type)).
+  tapply (opyon_equiv_0gpd (A:=Type)).
   apply trijoinrecdata_fun_twist.
 Defined.
 
@@ -122,7 +122,7 @@ Definition trijoin_twist_homotopic (A B C : Type)
 Proof.
   symmetry.
   (** Both sides are [trijoin_rec] applied to [TriJoinRecData]: *)
-  rapply (fmap trijoin_rec).
+  tapply (fmap trijoin_rec).
   bundle_trijoinrecpath; intros; cbn.
   1: refine (ap inverse _).
   1, 2, 3: apply ap_idmap.
@@ -375,7 +375,7 @@ Definition hexagon_join_twist_sym A B C
     == trijoin_twist B C A o trijoin_id_sym B A C o trijoin_twist A B C.
 Proof.
   (* It's enough to show that both sides induces the same natural transformation under the covariant Yoneda embedding, i.e., after postcomposing with a general function [f]. *)
-  rapply (opyon_faithful_0gpd (A:=Type)).
+  tapply (opyon_faithful_0gpd (A:=Type)).
   intros P f.
   (* We replace [f] by [trijoin_rec t] for generic [t].  This will allow induction later. *)
   pose proof (p := issect_trijoin_rec_inv f).

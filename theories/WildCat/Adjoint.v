@@ -378,7 +378,7 @@ Proof.
   intros x.
   rapply is1natural_comp.
   + exact (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).
-  + rapply is1natural_equiv_adjunction_r.
+  + nrapply is1natural_equiv_adjunction_r.
 Defined.
 
 (** Replace the left functor in an adjunction by a naturally equivalent one. *)

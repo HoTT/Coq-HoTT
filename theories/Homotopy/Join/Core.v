@@ -691,7 +691,7 @@ Section JoinSym.
   Definition equiv_join_sym' (A B : Type)
     : Join A B <~> Join B A.
   Proof.
-    rapply (opyon_equiv_0gpd (A:=Type)).
+    tapply (opyon_equiv_0gpd (A:=Type)).
     apply joinrecdata_fun_sym.
   Defined.
 
@@ -725,7 +725,7 @@ Section JoinSym.
   Proof.
     symmetry.
     (** Both sides are [join_rec] applied to [JoinRecData]: *)
-    rapply (fmap join_rec).
+    tapply (fmap join_rec).
     bundle_joinrecpath; intros; cbn.
     refine (ap inverse _).
     apply ap_idmap.

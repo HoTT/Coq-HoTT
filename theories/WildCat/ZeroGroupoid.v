@@ -119,7 +119,7 @@ Proof.
   econstructor.
   - intro y.
     exists (equiv_fun_0gpd f^-1$ y).
-    rapply cat_eisretr.
+    tapply cat_eisretr.
   - apply isinj_equiv_0gpd.
 Defined.
 
@@ -129,7 +129,7 @@ Definition isequiv_0gpd_issurjinj {G H : ZeroGpd} (F : G $-> H)
   : Cat_IsBiInv F.
 Proof.
   destruct e as [e0 e1]; unfold SplEssSurj in e0.
-  srapply catie_adjointify.
+  stapply catie_adjointify.
   - snrapply Build_Morphism_0Gpd.
     1: exact (fun y => (e0 y).1).
     snrapply Build_Is0Functor; cbn beta.

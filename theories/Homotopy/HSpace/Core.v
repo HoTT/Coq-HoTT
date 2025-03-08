@@ -151,8 +151,8 @@ Proof.
     exact (fmap loops (pmap_hspace_left_op a o* (pequiv_hspace_left_op pt)^-1*)).
   - lazy beta.
     transitivity (fmap (b:=A) loops pmap_idmap).
-    2: rapply (fmap_id loops).
-    rapply (fmap2 loops).
+    2: tapply (fmap_id loops).
+    tapply (fmap2 loops).
     nrapply peisretr.
 Defined.
 
