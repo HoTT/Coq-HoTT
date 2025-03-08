@@ -127,6 +127,12 @@ def coqc(quiet=False, timeout=60):
     else:
         return cp.returncode, elapsed
 
+# If set to a file name, add successfully completed files to the end of
+# the file, and use the file to avoid processing files that have already
+# been processed once.  Useful when some changes cause later files to
+# break and need to be reverted, e.g. changes to tactics.
+save_progress = None
+
 # Files to not process, e.g. summary files, files defining tactics used elsewhere, etc.
 # Example:  'theories/Basics/Tactics.v',
 file_excludes=[
@@ -141,11 +147,20 @@ def replace(vfile):
     changes = 0
     attempts = 0
     timeouts = 0
+    excludes = file_excludes
 
     # Ensure that the file builds with no changes:
     ret, duration1 = coqc(False)
+
+    if save_progress:
+        try:
+            with open(save_progress) as fd:
+                excludes += [ex.strip() for ex in fd]
+        except:
+            pass
+
     # Exit immediately if it fails, or if the file is excluded from further treatment.
-    if ret != 0 or vfile in file_excludes:
+    if ret != 0 or vfile in excludes:
         return ret, changes, attempts, timeouts
 
     # Do a second run to get a more stable duration value:
@@ -203,6 +218,11 @@ def replace(vfile):
             with open(vfile, 'w', encoding="utf-8") as f:
                 f.write(''.join(lines))
             ret, _ = coqc()
+
+    if save_progress:
+        # We should perform some kind of locking...
+        with open(save_progress, 'a') as fd:
+            fd.write(vfile + '\n')
 
     return ret, changes, attempts, timeouts
 
