@@ -13,7 +13,7 @@ Class IsRigid (A : Type) :=
 
 (** Assuming funext, rigidity is equivalent to contractibility of [A <~> A]. *)
 
-Global Instance contr_aut_rigid `{Funext} (A : Type) `{IsRigid A}
+Instance contr_aut_rigid `{Funext} (A : Type) `{IsRigid A}
   : Contr (A <~> A).
 Proof.
   apply (Build_Contr _ equiv_idmap).
@@ -22,7 +22,7 @@ Defined.
 
 (** Assuming univalence, rigidity is equivalent to contractibility of [BAut A]. *)
 
-Global Instance contr_baut_rigid `{Univalence} {A : Type} `{IsRigid A}
+Instance contr_baut_rigid `{Univalence} {A : Type} `{IsRigid A}
   : Contr (BAut A).
 Proof.
   refine (contr_change_center (point (BAut A))).
@@ -44,7 +44,7 @@ Defined.
 
 (** ** HProps are rigid *)
 
-Global Instance rigid_ishprop
+Instance rigid_ishprop
        (A : Type) `{IsHProp A} : IsRigid A.
 Proof.
   intros f g x; apply path_ishprop.

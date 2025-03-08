@@ -23,7 +23,7 @@ Definition pfammap_homotopy {A : Type} {a0 : A} {R S : A -> Type} {r0 : R a0} {s
   (f g : pfamMap R S r0 s0)
   := { p : forall a : A, pr1 f a == pr1 g a & p a0 r0 = pr2 f @ (pr2 g)^}.
 
-Global Instance reflexive_pfammap_homotopy {A : Type} {a0 : A}
+Instance reflexive_pfammap_homotopy {A : Type} {a0 : A}
   {R S : A -> Type} {r0 : R a0} {s0 : S a0}
   : Reflexive (pfammap_homotopy (r0:=r0) (s0:=s0)).
 Proof.
@@ -129,7 +129,7 @@ Proof.
 Defined.
 
 (** The fundamental theorem of identity systems is now proven. It is useful to write down some of the composite implications. Given an identity system [(R; r0)], transporting the point [r0] induces a fiberwise equivalence between the based path type [a0 = x] and [R x]. This is Theorem 5.8.2 (i) implies (iii). *)
-Global Instance isequiv_transport_identitysystem {A : Type} {a0 : A}
+Instance isequiv_transport_identitysystem {A : Type} {a0 : A}
   (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem _ r0} (a : A)
   : IsEquiv (fun p : a0 = a => transport R p r0).
 Proof.

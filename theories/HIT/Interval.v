@@ -42,7 +42,7 @@ Defined.
 
 (** ** The interval is contractible. *)
 
-Global Instance contr_interval : Contr interval | 0.
+Instance contr_interval : Contr interval | 0.
 Proof.
   apply (Build_Contr _ zero).
   refine (interval_ind _ 1 seg _).

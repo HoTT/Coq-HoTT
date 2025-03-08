@@ -523,10 +523,10 @@ Ltac prism_ind_two g h a b c :=
 (** ** Use the WildCat library to organize things *)
 
 (** We begin by showing that [TriJoinRecData A B C P] is a 0-groupoid, one piece at a time. *)
-Global Instance isgraph_trijoinrecdata (A B C P : Type) : IsGraph (TriJoinRecData A B C P)
+Instance isgraph_trijoinrecdata (A B C P : Type) : IsGraph (TriJoinRecData A B C P)
   := {| Hom := TriJoinRecPath |}.
 
-Global Instance is01cat_trijoinrecdata (A B C P : Type) : Is01Cat (TriJoinRecData A B C P).
+Instance is01cat_trijoinrecdata (A B C P : Type) : Is01Cat (TriJoinRecData A B C P).
 Proof.
   apply Build_Is01Cat.
   - intro f.
@@ -557,7 +557,7 @@ Proof.
       by triangle_ind f1 a b c.
 Defined.
 
-Global Instance is0gpd_trijoinrecdata (A B C P : Type) : Is0Gpd (TriJoinRecData A B C P).
+Instance is0gpd_trijoinrecdata (A B C P : Type) : Is0Gpd (TriJoinRecData A B C P).
 Proof.
   apply Build_Is0Gpd.
   intros f g h.
@@ -584,7 +584,7 @@ Definition trijoinrecdata_0gpd (A B C P : Type) : ZeroGpd
   It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
 
 (** First we need to show that the induced map is a morphism in [ZeroGpd], i.e. that it is a 0-functor. *)
-Global Instance is0functor_trijoinrecdata_fun {A B C P Q : Type} (g : P -> Q)
+Instance is0functor_trijoinrecdata_fun {A B C P Q : Type} (g : P -> Q)
   : Is0Functor (@trijoinrecdata_fun A B C P Q g).
 Proof.
   apply Build_Is0Functor.
@@ -604,7 +604,7 @@ Proof.
 Defined.
 
 (** [trijoinrecdata_0gpd A B C] is a 0-functor from [Type] to [ZeroGpd] (one level up). *)
-Global Instance is0functor_trijoinrecdata_0gpd (A B C : Type) : Is0Functor (trijoinrecdata_0gpd A B C).
+Instance is0functor_trijoinrecdata_0gpd (A B C : Type) : Is0Functor (trijoinrecdata_0gpd A B C).
 Proof.
   apply Build_Is0Functor.
   intros P Q g.
@@ -614,7 +614,7 @@ Proof.
 Defined.
 
 (** [trijoinrecdata_0gpd A B C] is a 1-functor from [Type] to [ZeroGpd]. *)
-Global Instance is1functor_trijoinrecdata_0gpd (A B C : Type) : Is1Functor (trijoinrecdata_0gpd A B C).
+Instance is1functor_trijoinrecdata_0gpd (A B C : Type) : Is1Functor (trijoinrecdata_0gpd A B C).
 Proof.
   apply Build_Is1Functor.
   (* If [g1 g2 : P -> Q] are homotopic, then the induced maps are homotopic: *)
@@ -678,7 +678,7 @@ Local Definition trijoin_rec_natequiv_check (A B C P : Type)
   := idpath.
 
 (** It follows that [trijoin_rec A B C P] is a 0-functor. *)
-Global Instance is0functor_trijoin_rec (A B C P : Type) : Is0Functor (@trijoin_rec A B C P).
+Instance is0functor_trijoin_rec (A B C P : Type) : Is0Functor (@trijoin_rec A B C P).
 Proof.
   change (Is0Functor (equiv_fun_0gpd (trijoin_rec_natequiv A B C P))).
   exact _.
@@ -797,7 +797,7 @@ Proof.
   apply (trijoinrecdata_tricomp2 _ p q r).
 Defined.
 
-Global Instance isequiv_functor_trijoin {A B C A' B' C'}
+Instance isequiv_functor_trijoin {A B C A' B' C'}
   (f : A -> A') `{!IsEquiv f}
   (g : B -> B') `{!IsEquiv g}
   (h : C -> C') `{!IsEquiv h}

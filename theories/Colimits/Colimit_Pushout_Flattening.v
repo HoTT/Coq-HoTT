@@ -38,7 +38,7 @@ Section POCase.
       + exact (fun y => p # (g0 x y)).
   Defined.
 
-  Global Instance POCase_HE : Equifibered POCase_E.
+  #[export] Instance POCase_HE : Equifibered POCase_E.
   Proof.
     apply Build_Equifibered.
     intros [[]|[]] [[]|[]] [] x; compute.

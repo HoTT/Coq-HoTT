@@ -11,10 +11,10 @@ Class HasNegation (S : OptionSort)
   := symmetric_options : forall L R, InSort S L R -> InSort S R L.
 Existing Instance symmetric_options.
 
-Global Instance hasnegation_maxsort : HasNegation MaxSort
+Instance hasnegation_maxsort : HasNegation MaxSort
   := fun _ _ _ => tt.
 
-Global Instance hasnegation_decsort : HasNegation DecSort.
+Instance hasnegation_decsort : HasNegation DecSort.
 Proof.
   intros L R [? ?]; split; assumption.
 Qed.

@@ -16,14 +16,14 @@ Local Open Scope pointed_scope.
 
 (** The torus is 1-truncated *)
 
-Global Instance is1type_torus `{Univalence} : IsTrunc 1 Torus.
+Instance is1type_torus `{Univalence} : IsTrunc 1 Torus.
 Proof.
   refine (istrunc_equiv_istrunc _ equiv_torus_prod_Circle^-1).
 Qed.
 
 (** The torus is 0-connected *)
 
-Global Instance isconnected_torus `{Univalence} : IsConnected 0 Torus.
+Instance isconnected_torus `{Univalence} : IsConnected 0 Torus.
 Proof.
   srapply (isconnected_equiv' _ _ equiv_torus_prod_Circle^-1).
   srapply (isconnected_equiv' _ _ (equiv_sigma_prod0 _ _)).

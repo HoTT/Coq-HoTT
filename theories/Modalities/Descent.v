@@ -110,7 +110,7 @@ Proof.
   exact (Q ((O_functor O' f)^-1 (to O' B b))).
 Defined.
 
-Global Instance OO_descend_O_inverts_inO
+#[export] Instance OO_descend_O_inverts_inO
        {A B : Type} (f : A -> B) `{O_inverts O' f}
        (P : A -> Type) {P_inO : forall x, In O (P x)} (b : B)
   : In O (OO_descend_O_inverts f P b)
@@ -141,12 +141,12 @@ Proof.
 Defined.
 
 (** We can also state it in terms of belonging to a subuniverse if we lift [O'] accessibly (an analogue of Theorem 3.11(iii) of RSS). *)
-Global Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}
+#[export] Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}
   : In (lift_accrsu O') (Type_ O)
   := fun i => ooextendable_TypeO_lex_leq (acc_lgen O' i).
 
 (** If [f] is an [O']-equivalence, then [ap f] is an [O]-equivalence. *)
-Global Instance OO_inverts_ap@{}
+#[export] Instance OO_inverts_ap@{}
        {A B : Type@{i}} (f : A -> B) `{O_inverts O' f} (x y : A)
   : O_inverts O (@ap _ _ f x y).
 Proof.
@@ -203,7 +203,7 @@ Proof.
   - exact _.
 Defined.
 
-Global Instance isequiv_path_OO `{O' <= Sep O}
+#[export] Instance isequiv_path_OO `{O' <= Sep O}
        {X : Type@{i}} (x y : X)
   : IsEquiv (path_OO x y).
 Proof.
@@ -218,7 +218,7 @@ Definition equiv_path_OO `{O' <= Sep O}
   := Build_Equiv _ _ (path_OO x y) _.
 
 (** [functor_hfiber] on a pair of [O']-equivalences is an [O]-equivalence. *)
-Global Instance OO_inverts_functor_hfiber
+#[export] Instance OO_inverts_functor_hfiber
        {A B C D : Type} {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
        (p : k o f == g o h) (b : B)
        `{O_inverts O' h, O_inverts O' k}
@@ -233,7 +233,7 @@ Proof.
 Defined.
 
 (** Corollary 2.29 of CORS: [O'] preserves fibers up to [O]-equivalence. *)
-Global Instance OO_inverts_functor_hfiber_to_O
+#[export] Instance OO_inverts_functor_hfiber_to_O
        {Y X : Type} (f : Y -> X) (x : X)
   : O_inverts O (functor_hfiber (fun a => (to_O_natural O' f a)^) x).
 Proof.
@@ -282,7 +282,7 @@ Proof.
 Defined.
 
 (** An enhancement of Corollary 2.29 of CORS, corresponding to Theorem 3.1(viii) of RSS: when [O'] is a modality, the map between fibers is not just an O-equivalence but is O-connected. *)
-Global Instance OO_conn_map_functor_hfiber_to_O `{IsModality O'}
+#[export] Instance OO_conn_map_functor_hfiber_to_O `{IsModality O'}
        {Y X : Type} (f : Y -> X) (x : X)
   : IsConnMap O (functor_hfiber (fun y => (to_O_natural O' f y)^) x).
 Proof.
@@ -302,7 +302,7 @@ Proof.
 Defined.
 
 (** [functor_pullback] on a triple of [O']-equivalences is an [O]-equivalence. *)
-Global Instance OO_inverts_functor_pullback
+#[export] Instance OO_inverts_functor_pullback
        {A1 B1 C1 A2 B2 C2 : Type}
        (f1 : B1 -> A1) (g1 : C1 -> A1)
        (f2 : B2 -> A2) (g2 : C2 -> A2)
@@ -327,7 +327,7 @@ Proof.
 Defined.
 
 (** Proposition 2.28 of CORS, and Theorem 3.1(x) of RSS: the functor [O'] preserves pullbacks up to [O]-equivalence. *)
-Global Instance OO_inverts_functor_pullback_to_O
+#[export] Instance OO_inverts_functor_pullback_to_O
        {A B C : Type} (f : B -> A) (g : C -> A)
   : O_inverts O (functor_pullback f g (O_functor O' f) (O_functor O' g)
                                   (to O' A) (to O' B) (to O' C)

@@ -48,7 +48,7 @@ Section faithfull_precomposition_essential_surjective.
     reflexivity.
   Qed.
 
-  Global Instance isfaithful_precomposition_essentially_surjective
+  #[export] Instance isfaithful_precomposition_essentially_surjective
   : @IsFaithful _ (B -> C) (A -> C) (compose_functor _ _ _ H).
   Proof.
     repeat match goal with

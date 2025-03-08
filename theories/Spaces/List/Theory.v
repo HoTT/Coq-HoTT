@@ -1140,7 +1140,7 @@ Proof.
     exact _.
 Defined.
 
-Global Instance istrunc_for_all' {A : Type} {n : trunc_index}
+Instance istrunc_for_all' {A : Type} {n : trunc_index}
   (P : A -> Type) (l : list A)
   `{forall x, IsTrunc n (P x)}
   : IsTrunc n (for_all P l).
@@ -1181,7 +1181,7 @@ Proof.
 Defined.
 
 (** If a predicate [P] is decidable then so is [for_all P]. *)
-Global Instance decidable_for_all {A : Type} (P : A -> Type)
+Instance decidable_for_all {A : Type} (P : A -> Type)
   `{forall x, Decidable (P x)} (l : list A)
   : Decidable (for_all P l).
 Proof.
@@ -1189,7 +1189,7 @@ Proof.
 Defined.
 
 (** If a predicate [P] is decidable then so is [list_exists P]. *)
-Global Instance decidable_list_exists {A : Type} (P : A -> Type)
+Instance decidable_list_exists {A : Type} (P : A -> Type)
   `{forall x, Decidable (P x)} (l : list A)
   : Decidable (list_exists P l).
 Proof.

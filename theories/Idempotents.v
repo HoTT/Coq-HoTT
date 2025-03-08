@@ -172,12 +172,12 @@ Definition PreIdempotent (X : Type) := { f : X -> X & IsPreIdempotent f }.
 Definition preidempotent_pr1 {X : Type} : PreIdempotent X -> X -> X := pr1.
 Coercion preidempotent_pr1 : PreIdempotent >-> Funclass.
 
-Global Instance ispreidem_preidem {X : Type} (f : PreIdempotent X)
+Instance ispreidem_preidem {X : Type} (f : PreIdempotent X)
 : IsPreIdempotent f
   := f.2.
 
 (** The identity function has a canonical structure of a pre-idempotent. *)
-Global Instance ispreidem_idmap (X : Type) : @IsPreIdempotent X idmap
+Instance ispreidem_idmap (X : Type) : @IsPreIdempotent X idmap
   := fun _ => 1.
 
 Definition preidem_idmap (X : Type) : PreIdempotent X.
@@ -281,12 +281,12 @@ Definition QuasiIdempotent (X : Type) := { f : PreIdempotent X & IsQuasiIdempote
 Definition quasiidempotent_pr1 {X : Type} : QuasiIdempotent X -> X -> X := pr1.
 Coercion quasiidempotent_pr1 : QuasiIdempotent >-> Funclass.
 
-Global Instance isqidem_qidem {X : Type} (f : QuasiIdempotent X)
+Instance isqidem_qidem {X : Type} (f : QuasiIdempotent X)
 : IsQuasiIdempotent f
   := f.2.
 
 (** The identity function has a canonical structure of a quasi-idempotent. *)
-Global Instance isqidem_idmap (X : Type) : @IsQuasiIdempotent X idmap _
+Instance isqidem_idmap (X : Type) : @IsQuasiIdempotent X idmap _
   := fun _ => 1.
 
 Definition qidem_idmap (X : Type) : QuasiIdempotent X.
@@ -300,7 +300,7 @@ Defined.
 
 (** First we show that given a retract, the composite [s o r] is quasi-idempotent. *)
 
-Global Instance ispreidem_retract {X : Type} (R : RetractOf X)
+Instance ispreidem_retract {X : Type} (R : RetractOf X)
 : IsPreIdempotent (retract_idem R).
 Proof.
   exact (fun x => ap (retract_sect R) (retract_issect R (retract_retr R x))).
@@ -313,7 +313,7 @@ Definition preidem_retract {X : Type} (R : RetractOf X)
 Arguments ispreidem_retract / .
 Arguments preidem_retract / .
 
-Global Instance isqidem_retract {X : Type} (R : RetractOf X)
+Instance isqidem_retract {X : Type} (R : RetractOf X)
 : IsQuasiIdempotent (retract_idem R).
 Proof.
   destruct R as [A r s H]; intros x; unfold isidem; simpl.
@@ -330,7 +330,7 @@ Definition qidem_retract {X : Type} (R : RetractOf X)
 
 (** In particular, it follows that any split function is quasi-idempotent. *)
 
-Global Instance ispreidem_split {X : Type} (f : X -> X) (S : Splitting f)
+Instance ispreidem_split {X : Type} (f : X -> X) (S : Splitting f)
 : IsPreIdempotent f.
 Proof.
   destruct S as [R p].
@@ -339,7 +339,7 @@ Defined.
 
 Arguments ispreidem_split / .
 
-Global Instance isqidem_split {X : Type} (f : X -> X) (S : Splitting f)
+Instance isqidem_split {X : Type} (f : X -> X) (S : Splitting f)
 : @IsQuasiIdempotent X f (ispreidem_split f S).
 Proof.
   destruct S as [R p].
@@ -768,14 +768,14 @@ Section CoherentIdempotents.
   : IsIdempotent f
     := Build_IsIdempotent f (split_idem_split f).
 
-  Global Instance ispreidem_isidem {X : Type} (f : X -> X)
+  #[export] Instance ispreidem_isidem {X : Type} (f : X -> X)
          `{IsIdempotent _ f} : IsPreIdempotent f.
   Proof.
     refine (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).1.
     assumption.
   Defined.
 
-  Global Instance isqidem_isidem {X : Type} (f : X -> X)
+  #[export] Instance isqidem_isidem {X : Type} (f : X -> X)
          `{IsIdempotent _ f} : @IsQuasiIdempotent X f (ispreidem_isidem f).
   Proof.
     refine (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).2.
@@ -786,7 +786,7 @@ Section CoherentIdempotents.
   Definition idempotent_pr1 {X : Type} : Idempotent X -> (X -> X) := pr1.
   Coercion idempotent_pr1 : Idempotent >-> Funclass.
 
-  Global Instance isidem_idem (X : Type) (f : Idempotent X) : IsIdempotent f
+  #[export] Instance isidem_idem (X : Type) (f : Idempotent X) : IsIdempotent f
     := f.2.
 
   (** The above definitions depend on [Univalence].  Technically this is the case by their construction, since they are a splitting of a map that we only know to be idempotent in the presence of univalence.  This map could be defined, and hence "split", without univalence; but also only with univalence do we know that they have the right homotopy type.  Thus univalence is used in two places: concluding (meta-theoretically) from HTT 4.4.5.14 that [RetractOf X] has the right homotopy type, and showing (in the next lemma) that it is equivalent to [Idempotent X].  In the absence of univalence, we don't currently have *any* provably-correct definition of the type of coherent idempotents; it ought to involve an infinite tower of coherences as defined in HTT section 4.4.5.   However, there may be some Yoneda-like meta-theoretic argument which would imply that the above-defined types do have the correct homotopy type without univalence (though almost certainly not without funext). *)
@@ -805,7 +805,7 @@ Section CoherentIdempotents.
   Defined.
 
   (** For instance, here is the standard coherent idempotent structure on the identity map. *)
-  Global Instance isidem_idmap (X : Type@{i})
+  #[export] Instance isidem_idmap (X : Type@{i})
   : @IsIdempotent@{i i j} X idmap
     := Build_IsIdempotent idmap (splitting_idmap X).
 

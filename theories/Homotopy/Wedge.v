@@ -119,7 +119,7 @@ Proof.
     apply concat_p1.
 Defined.
 
-Global Instance hasbinarycoproducts : HasBinaryCoproducts pType.
+Instance hasbinarycoproducts : HasBinaryCoproducts pType.
 Proof.
   intros X Y.
   snrapply Build_BinaryCoproduct.
@@ -218,7 +218,7 @@ Proof.
 Defined.
 
 (** We specify a universe variable here to prevent minimization to [Set]. *)
-Global Instance hasallcoproducts_ptype : HasAllCoproducts pType@{u}.
+Instance hasallcoproducts_ptype : HasAllCoproducts pType@{u}.
 Proof.
   intros I X.
   snrapply Build_Coproduct.

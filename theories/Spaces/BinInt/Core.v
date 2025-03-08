@@ -25,7 +25,7 @@ Local Open Scope binint_scope.
 Delimit Scope binint_scope with binint.
 
 (** The integers are a pointed type *)
-Global Instance ispointed_BinInt : IsPointed BinInt := zero.
+Instance ispointed_BinInt : IsPointed BinInt := zero.
 
 (** Properties of constructors *)
 
@@ -228,7 +228,7 @@ Definition binint_sgn z :=
 
 (* ** Decidable paths and truncation. *)
 
-Global Instance decpaths_binint : DecidablePaths BinInt.
+Instance decpaths_binint : DecidablePaths BinInt.
 Proof.
   intros [n | | n] [m | | m].
   + destruct (dec (n = m)) as [p | q].
@@ -247,4 +247,4 @@ Proof.
 Defined.
 
 (** Since integers have decidable paths they are a hset *)
-Global Instance hset_binint : IsHSet BinInt | 0 := _.
+Instance hset_binint : IsHSet BinInt | 0 := _.

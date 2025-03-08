@@ -36,7 +36,7 @@ Section path_adjunction.
   Defined.
 
   (** ** Adjunctions are an hSet *)
-  Global Instance trunc_adjunction : IsHSet (F -| G).
+  #[export] Instance trunc_adjunction : IsHSet (F -| G).
   Proof.
     eapply istrunc_equiv_istrunc; [ exact equiv_sig_adjunction | ].
     typeclasses eauto.

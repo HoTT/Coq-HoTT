@@ -26,18 +26,18 @@ Definition HomotopyGroup_type_ptype (n : nat) : HomotopyGroup_type n -> pType
 Coercion HomotopyGroup_type_ptype : HomotopyGroup_type >-> pType.
 
 (** We construct the wildcat structure on HomotopyGroup_type in the obvious way. *)
-Global Instance isgraph_homotopygroup_type (n : nat)
+Instance isgraph_homotopygroup_type (n : nat)
   : IsGraph (HomotopyGroup_type n) := ltac:(destruct n; exact _).
-Global Instance is2graph_homotopygroup_type (n : nat)
+Instance is2graph_homotopygroup_type (n : nat)
   : Is2Graph (HomotopyGroup_type n) := ltac:(destruct n; exact _).
-Global Instance is01cat_homotopygroup_type (n : nat)
+Instance is01cat_homotopygroup_type (n : nat)
   : Is01Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
-Global Instance is1cat_homotopygroup_type (n : nat)
+Instance is1cat_homotopygroup_type (n : nat)
   : Is1Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
-Global Instance is0functor_homotopygroup_type_ptype (n : nat)
+Instance is0functor_homotopygroup_type_ptype (n : nat)
   : Is0Functor (HomotopyGroup_type_ptype n)
   := ltac:(destruct n; exact _).
-Global Instance is1functor_homotopygroup_type_ptype (n : nat)
+Instance is1functor_homotopygroup_type_ptype (n : nat)
   : Is1Functor (HomotopyGroup_type_ptype n)
   := ltac:(destruct n; exact _).
 
@@ -102,12 +102,12 @@ Module PiUtf8.
   Notation "'π'" := Pi.
 End PiUtf8.
 
-Global Instance ishset_pi {n : nat} {X : pType}
+Instance ishset_pi {n : nat} {X : pType}
   : IsHSet (Pi n X)
   := ltac:(destruct n; exact _).
 
 (** When n >= 2 we have that the nth homotopy group is an abelian group. Note that we don't actually define it as an abelian group but merely show that it is one. This would cause lots of complications with the typechecker. *)
-Global Instance commutative_pi (n : nat) (X : pType)
+Instance commutative_pi (n : nat) (X : pType)
   : Commutative (A:=Pi n.+2 X) sg_op.
 Proof.
   intros x y.
@@ -117,7 +117,7 @@ Proof.
 Defined.
 
 (** For the same reason as above, we make [Pi1] a functor before making [Pi] a functor. *)
-Global Instance is0functor_pi1 : Is0Functor Pi1.
+Instance is0functor_pi1 : Is0Functor Pi1.
 Proof.
   apply Build_Is0Functor.
   intros X Y f.
@@ -139,7 +139,7 @@ Proof.
   apply ap_pp.
 Defined.
 
-Global Instance is0functor_pi (n : nat) : Is0Functor (Pi n)
+Instance is0functor_pi (n : nat) : Is0Functor (Pi n)
   := ltac:(destruct n; exact _).
 
 Definition fmap_pi_succ {X Y : pType} (f : X $-> Y) (n : nat)
@@ -148,7 +148,7 @@ Proof.
   reflexivity.
 Defined.
 
-Global Instance is1functor_pi1 : Is1Functor Pi1.
+Instance is1functor_pi1 : Is1Functor Pi1.
 Proof.
   (** The conditions for [Pi1] to be a 1-functor only involve equalities of maps between groups, which reduce to equalities of maps between types.  Type inference shows that [Tr 0 o loops] is a 1-functor, and so it follows that [Pi1] is a 1-functor. *)
   assert (is1f : Is1Functor (Tr 0 o loops)) by exact _.
@@ -158,13 +158,13 @@ Proof.
     | by rapply (fmap_comp _ (is1functor_F := is1f)) ].
 Defined.
 
-Global Instance is1functor_pi (n : nat) : Is1Functor (Pi n)
+Instance is1functor_pi (n : nat) : Is1Functor (Pi n)
   := ltac:(destruct n; exact _).
 
 (** Sometimes it is convenient to regard [Pi n] as landing in pointed types.  On objects, this is handled by the coercion [HomotopyGroup_type_ptype], but on morphisms it doesn't seem possible to define a coercion.  So we explicitly name the composite functor. *)
 Definition pPi (n : nat) : pType -> pType := HomotopyGroup_type_ptype n o Pi n.
-Global Instance is0functor_ppi (n : nat) : Is0Functor (pPi n) := _.
-Global Instance is1functor_ppi (n : nat) : Is1Functor (pPi n) := _.
+Instance is0functor_ppi (n : nat) : Is0Functor (pPi n) := _.
+Instance is1functor_ppi (n : nat) : Is1Functor (pPi n) := _.
 
 (** [pPi] is equal to a more explicit map.  These are definitional for [n = 0] and [n] a successor; it would be nice to make them definitional for generic [n]. *)
 Definition ppi_ptr_iterated_loops (n : nat)
@@ -284,7 +284,7 @@ Proof.
 Defined.
 
 (** The same holds for [pPi n]. *)
-Global Instance isequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
+Instance isequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
   `{!IsConnMap n f}
   : IsEquiv (fmap (pPi n) f).
 Proof.

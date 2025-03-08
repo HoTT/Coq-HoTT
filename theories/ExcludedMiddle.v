@@ -6,7 +6,7 @@ Monomorphic Axiom ExcludedMiddle : Type0.
 Existing Class ExcludedMiddle.
 
 (** Mark this axiom as a "global axiom", which some of our tactics will automatically handle. *)
-Global Instance is_global_axiom_excludedmiddle : IsGlobalAxiom ExcludedMiddle := {}.
+Instance is_global_axiom_excludedmiddle : IsGlobalAxiom ExcludedMiddle := {}.
 
 Axiom LEM : forall `{ExcludedMiddle} (P : Type), IsHProp P -> P + ~P.
 
@@ -14,7 +14,7 @@ Definition ExcludedMiddle_type := forall (P : Type), IsHProp P -> P + ~P.
 
 (** ** LEM means that all propositions are decidable *)
 
-Global Instance decidable_lem `{ExcludedMiddle} (P : Type) `{IsHProp P} : Decidable P
+Instance decidable_lem `{ExcludedMiddle} (P : Type) `{IsHProp P} : Decidable P
   := LEM P _.
 
 (** ** Double-negation elimination *)

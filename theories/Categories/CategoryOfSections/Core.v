@@ -57,7 +57,7 @@ Section FunctorSectionCategory.
   Defined.
 End FunctorSectionCategory.
 
-Global Instance isstrict_category_of_sections `{Funext}
+Instance isstrict_category_of_sections `{Funext}
       `{IsStrictCategory C, IsStrictCategory D}
       (F : Functor C D)
 : IsStrictCategory (category_of_sections F) | 20.

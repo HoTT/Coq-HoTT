@@ -526,7 +526,7 @@ End GBM.
 
 (** ** The classical Blakers-Massey Theorem *)
 
-Global Instance blakers_massey `{Univalence} (m n : trunc_index)
+Instance blakers_massey `{Univalence} (m n : trunc_index)
   {X Y : Type} (Q : X -> Y -> Type)
   `{forall y, IsConnected m.+1 { x : X & Q x y } }
   `{forall x, IsConnected n.+1 { y : Y & Q x y } }
@@ -582,7 +582,7 @@ Defined.
 (** ** The Freudenthal Suspension Theorem *)
 
 (** The Freudenthal suspension theorem is a fairly trivial corollary of the Blakers-Massey theorem.  It says that [merid : X -> North = South] is highly connected. *)
-Global Instance freudenthal `{Univalence} (n : trunc_index)
+Instance freudenthal `{Univalence} (n : trunc_index)
            (X : Type@{u}) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (@merid X).
 Proof.

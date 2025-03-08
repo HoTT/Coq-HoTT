@@ -312,7 +312,7 @@ Section IsEquivFunctorCoeq.
     Close Scope long_path_scope.
   Qed.
 
-  Global Instance isequiv_functor_coeq
+  #[export] Instance isequiv_functor_coeq
   : IsEquiv (functor_coeq h k p q)
     := isequiv_adjointify _ functor_coeq_inverse
                           functor_coeq_eissect functor_coeq_eisretr.

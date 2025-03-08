@@ -40,7 +40,7 @@ Proof.
   exact ((inv_V p' @@ 1) @ concat_p1 _).
 Defined.
 
-Global Instance contr_pathsplit_isequiv
+#[export] Instance contr_pathsplit_isequiv
            (n : nat) `(f : A -> B) `{IsEquiv _ _ f}
 : Contr (PathSplit n f).
 Proof.
@@ -50,7 +50,7 @@ Proof.
   - apply contr_prod.
 Defined.
 
-Global Instance ishprop_pathsplit (n : nat) `(f : A -> B)
+#[export] Instance ishprop_pathsplit (n : nat) `(f : A -> B)
 : IsHProp (PathSplit n.+2 f).
 Proof.
   apply hprop_inhabited_contr; intros ps.
@@ -98,14 +98,14 @@ Definition isequiv_oopathsplit `{f : A -> B}
 : ooPathSplit f -> IsEquiv f
   := fun ps => isequiv_pathsplit 0 (ps 2).
 
-Global Instance contr_oopathsplit_isequiv
+#[export]  Instance contr_oopathsplit_isequiv
            `(f : A -> B) `{IsEquiv _ _ f}
 : Contr (ooPathSplit f).
 Proof.
   apply contr_forall.
 Defined.
 
-Global Instance ishprop_oopathsplit `(f : A -> B)
+#[export]  Instance ishprop_oopathsplit `(f : A -> B)
 : IsHProp (ooPathSplit f).
 Proof.
   apply hprop_inhabited_contr; intros ps.
