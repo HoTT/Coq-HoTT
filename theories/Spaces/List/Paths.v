@@ -52,7 +52,7 @@ Section PathList.
     : decode (encode p) = p.
   Proof.
     destruct p.
-    apply decode_refl.
+    exact decode_refl.
   Defined.
 
   (** By case analysis on both lists, it's easy to show that [ListEq] is [n.+1]-truncated if [A] is [n.+2]-truncated. *)
@@ -64,7 +64,7 @@ Section PathList.
       1,2: exact _.
     - destruct l2.
       1: exact _.
-      rapply istrunc_prod.
+      exact istrunc_prod.
   Defined.
 
   (** The path space of lists is a retract of [ListEq], therefore it is [n.+1]-truncated if [ListEq] is [n.+1]-truncated. By the previous result, this holds when [A] is [n.+2]-truncated. *) 
@@ -72,7 +72,7 @@ Section PathList.
   Proof.
     apply istrunc_S.
     intros x y.
-    rapply (inO_retract_inO n.+1 _ _ encode decode decode_encode).
+    exact (inO_retract_inO n.+1 _ _ encode decode decode_encode).
   Defined.
 
   (** With a little more work, we can show that [ListEq] is also a retract of the path space. *)

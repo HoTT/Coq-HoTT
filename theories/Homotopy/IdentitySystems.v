@@ -153,7 +153,7 @@ Definition equiv_path_from_contr {A : Type} (a : A) (P : A -> Type)
 Proof.
   apply equiv_inverse.
   srefine (Build_Equiv _ _ _ _).
-  { intros []; apply Prefl. }
+  { intros []; exact Prefl. }
   revert b; apply isequiv_from_functor_sigma.
   rapply isequiv_contr_contr.
 Defined.

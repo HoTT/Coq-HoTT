@@ -276,7 +276,7 @@ Section TwistConstruction.
         intros a b f.
         change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
         nrapply vconcat.
-        2: rapply (isnat right_unitor f).
+        2: exact (isnat right_unitor f).
         rapply braid_nat_r.
     - intros a.
       rapply compose_catie'.
@@ -308,8 +308,8 @@ Section TwistConstruction.
     intros a b c d.
     refine ((_ $@@ _) $@ _ $@ ((fmap02 _ _ _ $@ _)^$ $@@ (_ $@@ (fmap20 _ _ _ $@ _))^$)).
     1,2,4,6,7: apply associator_twist'_unfold.
-    2: refine (fmap01_comp _ _ _ _ $@ (_ $@L (fmap01_comp _ _ _ _))).
-    2: refine (fmap10_comp _ _ _ _ $@ (_ $@L (fmap10_comp _ _ _ _))).
+    2: exact (fmap01_comp _ _ _ _ $@ (_ $@L (fmap01_comp _ _ _ _))).
+    2: exact (fmap10_comp _ _ _ _ $@ (_ $@L (fmap10_comp _ _ _ _))).
     (** We use a notation defined above that shows the base type of the groupoid hom and formats the equation in a way that is easier to read. *)
     (** Normalize brackets on LHS *)
     refine (cat_assoc _ _ _ $@ _).

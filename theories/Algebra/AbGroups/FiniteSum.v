@@ -38,7 +38,7 @@ Definition ab_sum_zero {A : AbGroup} (n : nat)
   (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = 0)
   : ab_sum n f = 0.
 Proof.
-  lhs nrapply (ab_sum_const _ 0 f p).
+  lhs exact (ab_sum_const _ 0 f p).
   apply grp_pow_unit.
 Defined.
 

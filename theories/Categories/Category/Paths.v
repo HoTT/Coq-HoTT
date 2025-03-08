@@ -138,7 +138,7 @@ Section path_category.
     split.
     - refine (_ @ apD (@compose) H'); cbn.
       refine (transport_pp _ _ _ _ @ _).
-      refine ((ap _ (transportD_compose
+      exact ((ap _ (transportD_compose
                        (fun obj => obj -> obj -> Type)
                        (fun obj mor =>
                           forall s d d' : obj, mor d d' -> mor s d -> mor s d') object H'
@@ -150,7 +150,7 @@ Section path_category.
                      (@compose C))).
     - refine (_ @ apD (@identity) H'); cbn.
       refine (transport_pp _ _ _ _ @ _).
-      refine ((ap _ (transportD_compose
+      exact ((ap _ (transportD_compose
                        (fun obj => obj -> obj -> Type)
                        (fun obj mor =>
                           forall x : obj, mor x x) object H'

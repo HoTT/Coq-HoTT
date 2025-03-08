@@ -47,7 +47,7 @@ Definition cone_limit `(D : Diagram G) : Cone (Limit D) D.
 Proof.
   srapply Build_Cone.
   + intros i x.
-    apply (lim x i).
+    exact (lim x i).
   + intros i j g x.
     apply limp.
 Defined.
@@ -60,7 +60,7 @@ Proof.
   { intros c y.
     srapply Build_Limit.
     { intro i.
-      apply (legs c i y). }
+      exact (legs c i y). }
     intros i j g.
     apply legs_comm. }
   all: intro; reflexivity.

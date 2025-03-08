@@ -187,7 +187,7 @@ Defined.
 Global Instance isequiv_int_neg@{} : IsEquiv int_neg.
 Proof.
   snrapply (isequiv_adjointify int_neg int_neg).
-  1,2: nrapply int_neg_neg.
+  1,2: exact int_neg_neg.
 Defined.
 
 (** Negation is injective. *)
@@ -567,7 +567,7 @@ Proof.
     1: symmetry; apply eissect.
     rewrite int_pred_succ.
     apply (ap f^-1).
-    rhs_V nrapply IHn.
+    rhs_V exact IHn.
     by destruct n.
 Defined.
 

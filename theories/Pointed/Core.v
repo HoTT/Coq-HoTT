@@ -756,7 +756,7 @@ Proof.
     cbn; apply moveR_equiv_V.
     funext i.
     rhs nrapply ap_pp.
-    lhs nrapply (dpoint_eq (p i)).
+    lhs exact (dpoint_eq (p i)).
     cbn; f_ap.
     + apply concat_p1.
     + rhs nrapply (ap_V _ (dpoint_eq g)).
@@ -908,11 +908,11 @@ Definition peissect {A B : pType} (f : A <~>* B)
   : (pequiv_inverse f) o* f ==* pmap_idmap.
 Proof.
   srefine (Build_pHomotopy _ _).
-  1: apply (eissect f).
+  1: exact (eissect f).
   simpl. unfold moveR_equiv_V.
   pointed_reduce.
   symmetry.
-  refine (concat_p1 _ @ concat_1p _ @ concat_1p _).
+  exact (concat_p1 _ @ concat_1p _ @ concat_1p _).
 Defined.
 
 (* A pointed equivalence is a retraction of its inverse *)
@@ -920,7 +920,7 @@ Definition peisretr {A B : pType} (f : A <~>* B)
   : f o* (pequiv_inverse f) ==* pmap_idmap.
 Proof.
   srefine (Build_pHomotopy _ _).
-  1: apply (eisretr f).
+  1: exact (eisretr f).
   pointed_reduce.
   unfold moveR_equiv_V.
   refine (eisadj f _ @ _).
@@ -1003,7 +1003,7 @@ Proof.
   - reflexivity.
   - exact (pequiv_inverse f).
   - apply peissect.
-  - cbn. refine (peisretr f).
+  - cbn. exact (peisretr f).
   - rapply (isequiv_adjointify f g).
     + intros x; exact (r x).
     + intros x; exact (s x).

@@ -145,7 +145,7 @@ Section path_functor.
   Proof.
     refine ((ap (@path_functor_uncurried F G)^-1)^-1 o _).
     refine ((path_sigma_uncurried _ _ _) o _); simpl.
-    refine (pr1^-1).
+    exact (pr1^-1).
   Defined.
 
   Global Instance isequiv_path_path_functor_uncurried F G p q

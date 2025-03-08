@@ -45,7 +45,7 @@ Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
 
 Definition ab_coeq_in {A B : AbGroup} {f g : A $-> B} : B $-> ab_coeq f g.
 Proof.
-  snrapply grp_quotient_map.
+  exact grp_quotient_map.
 Defined.
 
 Definition ab_coeq_glue {A B : AbGroup} {f g : A $-> B}
@@ -106,7 +106,7 @@ Proof.
   refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
   refine ((_ $@L p^$) $@ _ $@ (_ $@L q)).
   refine (cat_assoc_opp _ _ _ $@ (_ $@R a) $@ cat_assoc _ _ _).
-  nrapply ab_coeq_glue.
+  exact ab_coeq_glue.
 Defined.
 
 Definition functor2_ab_coeq {A B : AbGroup} {f g : A $-> B} {A' B' : AbGroup} {f' g' : A' $-> B'}

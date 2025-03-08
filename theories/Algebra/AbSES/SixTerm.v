@@ -148,7 +148,7 @@ Proof.
     revert dependent F; nrapply (Trunc_ind (n:=0) (A:=AbSES B G)).
     (* [exact _.] works here, but is slow. *)
     { intro x; nrapply istrunc_forall.
-      intro y; rapply (istrunc_leq (trunc_index_leq_succ _)). }
+      intro y; exact (istrunc_leq (trunc_index_leq_succ _)). }
     intro F.
     equiv_intros (equiv_path_Tr (n:=-1) (abses_pullback (projection E) F) pt) p.
     strip_truncations.

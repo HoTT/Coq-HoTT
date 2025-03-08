@@ -42,7 +42,7 @@ Proof.
         apply path_ishprop.
       + apply eta_path_arrow.
     * intros p.
-      refine (eta_path_arrow _ _ _).
+      exact (eta_path_arrow _ _ _).
 Defined.
 
 (** ** The open modality is lex *)
@@ -73,11 +73,11 @@ Proof.
     + intros X_inO u.
       apply (equiv_inverse (equiv_ooextendable_isequiv _ _)).
       refine (cancelR_isequiv (fun x (u:Unit) => x)).
-      apply X_inO.
+      exact X_inO.
     + intros ext; specialize (ext tt).
       refine (isequiv_compose (f := (fun x => unit_name x))
                               (g := (fun h => h o const_tt U))).
-      refine (isequiv_ooextendable (fun _ => X) (const_tt U) ext).
+      exact (isequiv_ooextendable (fun _ => X) (const_tt U) ext).
 Defined.
 
 (** Thus, arguably a better definition of [Op] would be as a nullification modality, as it would not require [Funext] and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We name the other version [Op']. *)

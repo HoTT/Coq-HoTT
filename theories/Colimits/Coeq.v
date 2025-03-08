@@ -581,7 +581,7 @@ Section Descent.
       rhs nrefine (ap (cdd_fam _ _) _).
       + exact (path_universe (cdd_e _ _ _)).
       + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (cglue _))).
-        nrapply (transport_fam_cdescent_cglue _ _ _).
+        exact (transport_fam_cdescent_cglue _ _ _).
   Defined.
 
   (** A section of dependent descent data [Qe : cDepDescent Pe] is a fiberwise section [cdds_sect], together with coherences [cdds_e]. *)
@@ -604,7 +604,7 @@ Section Descent.
       apply dpath_forall.
       intro pf.
       apply (equiv_inj (transport (Q (coeq (g b))) (transport_fam_cdescent_cglue Pe b pf))).
-      rhs nrapply (apD (cdds_sect s (g b)) (transport_fam_cdescent_cglue Pe b pf)).
+      rhs exact (apD (cdds_sect s (g b)) (transport_fam_cdescent_cglue Pe b pf)).
       exact (cdds_e s b pf).
     Defined.
 
@@ -654,7 +654,7 @@ Section Descent.
       lhs nrapply concat_V_pp.
       lhs nrapply (1 @@ concat_pp_p _ _ _).
       rewrite concat_p1.
-      nrapply (1 @@ (1 @@ concat_pV_p _ _)). }
+      exact (1 @@ (1 @@ concat_pV_p _ _)). }
     nrapply concat_V_pp.
     Close Scope long_path_scope.
   Defined.
@@ -697,12 +697,12 @@ Section Flattening.
       + exact (fun a x => coeq (a; x)).
       + intros b pf.
       cbn.
-      apply (@cglue _ _
+      exact (@cglue _ _
         (functor_sigma f (fun _ => idmap)) (functor_sigma g (cd_e Pe)) (b; pf)).
     - snrapply Coeq_rec.
       + exact (fun '(a; x) => (coeq a; x)).
       + intros [b pf]; cbn.
-        apply (flatten_cd_glue b 1).
+        exact (flatten_cd_glue b 1).
     - snrapply Coeq_ind.
       1: reflexivity.
       intros [b pf]; cbn.
@@ -720,7 +720,7 @@ Section Flattening.
         rewrite <- (concat_p1 (transport_fam_cdescent_cglue _ _ _)).
         rewrite cdepdescent_rec_beta_cglue. (* This needs to be in the form [transport_fam_cdescent_cglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).
-        nrapply (Coeq_rec_beta_cglue _ _ _ (b; pf)).
+        exact (Coeq_rec_beta_cglue _ _ _ (b; pf)).
   Defined.
 
 End Flattening.

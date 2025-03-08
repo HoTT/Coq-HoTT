@@ -24,7 +24,7 @@ Qed.
 
 #[export] Instance decfield_integral_domain : IsIntegralDomain F.
 Proof.
-split; try apply _.
+split; try exact _.
 Qed.
 
 Lemma dec_recip_1: / 1 = 1.
@@ -39,7 +39,7 @@ Proof.
 destruct (dec (x = 0)) as [Ex|Ex].
 - rewrite Ex, left_absorb, dec_recip_0. apply symmetry,mult_0_l.
 - destruct (dec (y = 0)) as [Ey|Ey].
-  + rewrite Ey, dec_recip_0, !mult_0_r. apply dec_recip_0.
+  + rewrite Ey, dec_recip_0, !mult_0_r. exact dec_recip_0.
   + assert (x * y <> 0) as Exy by (apply mult_ne_0;trivial).
     apply (left_cancellation_ne_0 (.*.) (x * y)); trivial.
     transitivity (x / x * (y / y)).
@@ -58,7 +58,7 @@ split; intros E.
   destruct (is_ne_0 1).
   rewrite <-(dec_recip_inverse x), E by assumption.
   apply mult_0_r.
-- rewrite E. apply dec_recip_0.
+- rewrite E. exact dec_recip_0.
 Qed.
 
 Lemma dec_recip_ne_0_iff x : / x <> 0 <-> x <> 0.
@@ -87,7 +87,7 @@ Qed.
 
 #[export] Instance dec_recip_inj: IsInjective (/).
 Proof.
-repeat (split; try apply _).
+repeat (split; try exact _).
 intros x y E.
 destruct (dec (y = 0)) as [Ey|Ey].
 - rewrite Ey in *. rewrite dec_recip_0 in E.
@@ -192,9 +192,9 @@ Section is_field.
 
   #[export] Instance decfield_field : IsField F.
   Proof.
-  split; try apply _.
-  - apply (dec_strong_binary_morphism (+)).
-  - apply (dec_strong_binary_morphism (.*.)).
+  split; try exact _.
+  - exact (dec_strong_binary_morphism (+)).
+  - exact (dec_strong_binary_morphism (.*.)).
   - intros [x Px]. rapply (dec_recip_inverse x).
     apply trivial_apart. trivial.
   Qed.
@@ -272,7 +272,7 @@ Section morphisms.
     apply (left_cancellation_ne_0 (.*.) (f x)).
     + apply isinjective_ne_0. trivial.
     + rewrite <-preserves_mult, 2!dec_recip_inverse.
-      * apply preserves_1.
+      * exact preserves_1.
       * apply isinjective_ne_0. trivial.
       * trivial.
   Qed.
@@ -287,6 +287,6 @@ Section morphisms.
   - apply (left_cancellation_ne_0 (.*.) (f x)).
     + apply isinjective_ne_0. trivial.
     + rewrite <-preserves_mult, dec_recip_inverse, reciperse_alt by assumption.
-      apply preserves_1.
+      exact preserves_1.
   Qed.
 End morphisms.

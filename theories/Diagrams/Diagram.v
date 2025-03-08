@@ -174,7 +174,7 @@ Section Diagram.
     simpl.
     intros i j f x.
     rhs nrapply concat_p1.
-    apply (comm_square_inverse_is_retr (we i) (we j) _ x).
+    exact (comm_square_inverse_is_retr (we i) (we j) _ x).
   Defined.
 
   Lemma diagram_inv_is_retraction {D1 D2 : Diagram G}
@@ -188,7 +188,7 @@ Section Diagram.
     simpl.
     intros i j f x.
     rhs nrapply concat_p1.
-    apply (comm_square_inverse_is_sect (we i) (we j) _ x).
+    exact (comm_square_inverse_is_sect (we i) (we j) _ x).
   Defined.
 
   (** The equivalence of diagram is an equivalence relation. *)

@@ -91,7 +91,7 @@ Section universal.
       Proof.
         path_functor.
         exists (path_forall _ _ unique_helper).
-        apply unique_helper2.
+        exact unique_helper2.
       Defined.
     End unique.
 

@@ -182,7 +182,7 @@ Definition fmap_ppi_ptr_iterated_loops (n : nat) {X Y : pType} (f : X ->* Y)
      ==* fmap (pTr 0) (fmap (iterated_loops n) f) o* pequiv_ppi_ptr_iterated_loops n X.
 Proof.
   destruct n; unfold pequiv_ppi_ptr_iterated_loops.
-  1: refine (pmap_postcompose_idmap _ @* (pmap_precompose_idmap _)^*).
+  1: exact (pmap_postcompose_idmap _ @* (pmap_precompose_idmap _)^*).
   refine (pmap_postcompose_idmap _ @* _ @* (pmap_precompose_idmap _)^*).
   srapply phomotopy_homotopy_hset; reflexivity.
 Defined.
@@ -232,7 +232,7 @@ Proof.
   refine (_ o*E pequiv_ptr_functor 0 _).
   1: nrapply iterated_loops_prod.
   snrapply Build_pEquiv'; cbn.
-  - refine (equiv_O_prod_cmp 0 _ _).
+  - exact (equiv_O_prod_cmp 0 _ _).
   - reflexivity.
 Defined.
 
@@ -342,8 +342,8 @@ Proof.
   apply isembedding_isinj_hset.
   rapply (isinj_section (r:=fmap (pPi n) r)).
   intro x.
-  lhs_V rapply (fmap_comp (pPi n) s r x).
-  lhs rapply (fmap2 (pPi n) k x).
+  lhs_V exact (fmap_comp (pPi n) s r x).
+  lhs exact (fmap2 (pPi n) k x).
   exact (fmap_id (pPi n) X x).
 Defined.
 

@@ -186,13 +186,13 @@ Section extend_path_term_algebra.
   #[export] Instance symmetric_extend_path_term_algebra
     : forall s : Sort σ, Symmetric (@ExtendPathTermAlgebra s).
   Proof.
-    apply symmetric_extend_rel_term_algebra. intros s x y. apply inverse.
+    apply symmetric_extend_rel_term_algebra. intros s x y. exact inverse.
   Defined.
 
   #[export] Instance transitive_extend_path_term_algebra
     : forall s : Sort σ, Transitive (@ExtendPathTermAlgebra s).
   Proof.
-    apply transitive_extend_rel_term_algebra. intros s x y z. apply concat.
+    apply transitive_extend_rel_term_algebra. intros s x y z. exact concat.
   Defined.
 
   #[export] Instance equivrel_extend_path_term_algebra
@@ -236,7 +236,7 @@ Section extend_path_term_algebra.
     apply (@ishset_hrel_subpaths _ ExtendPathTermAlgebra).
     - apply reflexive_extend_path_term_algebra.
     - apply hprop_extend_path_term_algebra; exact _.
-    - apply path_extend_path_term_algebra.
+    - exact path_extend_path_term_algebra.
   Defined.
 
   Definition equiv_path_extend_path_term_algebra {s : Sort σ}

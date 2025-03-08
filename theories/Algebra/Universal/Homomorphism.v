@@ -23,7 +23,7 @@ Section is_homomorphism.
     (α : Operation A w) (β : Operation B w)
     : IsHProp (OpPreserving α β).
   Proof.
-    apply istrunc_forall.
+    exact istrunc_forall.
   Qed.
 
   Class IsHomomorphism : Type
@@ -32,7 +32,7 @@ Section is_homomorphism.
   #[export] Instance hprop_is_homomorphism `{Funext}
     : IsHProp IsHomomorphism.
   Proof.
-    apply istrunc_forall.
+    exact istrunc_forall.
   Qed.
 End is_homomorphism.
 
@@ -69,7 +69,7 @@ Defined.
 Instance hset_homomorphism `{Funext} {σ} (A B : Algebra σ)
   : IsHSet (A $-> B).
 Proof.
-  apply (istrunc_equiv_istrunc _ (issig_homomorphism A B)).
+  exact (istrunc_equiv_istrunc _ (issig_homomorphism A B)).
 Qed.
 
 Lemma path_homomorphism `{Funext} {σ} {A B : Algebra σ}

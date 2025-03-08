@@ -116,7 +116,7 @@ Proof.
   (** Now we peel away a bunch of contractible types. *)
   refine (equiv_sig_coind _ _ oE _).
   srapply equiv_functor_sigma'.
-  1:apply (equiv_paths_ind_r X (fun x _ => P x)).
+  1:exact (equiv_paths_ind_r X (fun x _ => P x)).
   intros p; cbn.
   refine (equiv_paths_ind_r X _ oE _).
   srapply equiv_functor_forall'.
@@ -191,8 +191,8 @@ Section Center2BAut.
     simple refine (equiv_functor_sigma' _ _).
     { refine (_ oE equiv_path2_universe 1 1).
       apply equiv_concat_lr.
-      - symmetry; apply path_universe_1.
-      - apply path_universe_1. }
+      - symmetry; exact path_universe_1.
+      - exact path_universe_1. }
     intros f.
     apply equiv_functor_forall_id; intros g.
     refine (_ oE equiv_path3_universe _ _).
@@ -283,7 +283,7 @@ Section ClassifyingMaps.
     : (Y ->* pBAut F) <~> (Y ->* [Type@{u}, F]).
   Proof.
     refine (_ oE pequiv_pequiv_postcompose pequiv_pbaut_typeOp).
-    rapply equiv_pmap_typeO_type_connected.
+    exact equiv_pmap_typeO_type_connected.
   Defined.
 
   (** When [Y] is connected, [pBAut F] classifies fiber sequences over [Y] with fiber [F]. *)

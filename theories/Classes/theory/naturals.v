@@ -31,7 +31,7 @@ Lemma to_semiring_involutive N `{Naturals N} N2 `{Naturals N2} x :
   naturals_to_semiring N2 N (naturals_to_semiring N N2 x) = x.
 Proof.
 change (Compose (naturals_to_semiring N2 N) (naturals_to_semiring N N2) x = id x).
-apply to_semiring_unique_alt;apply _.
+apply to_semiring_unique_alt;exact _.
 Qed.
 
 Lemma morphisms_involutive `{Naturals N} `{IsSemiCRing R} (f : R -> N) (g : N -> R)
@@ -91,9 +91,9 @@ Section retract_is_nat.
   (* If we make this an instance, instance resolution will loop *)
   Lemma retract_is_nat : Naturals SR (U:=retract_is_nat_to_sr).
   Proof.
-  split;try apply _.
-  - unfold naturals_to_semiring, retract_is_nat_to_sr. apply _.
-  - intros;apply same_morphism;apply _.
+  split;try exact _.
+  - unfold naturals_to_semiring, retract_is_nat_to_sr. exact _.
+  - intros;apply same_morphism;exact _.
   Qed.
 End retract_is_nat.
 
@@ -104,7 +104,7 @@ Context `{Naturals N1} `{Naturals N2}.
 #[export] Instance nat_to_nat_equiv : IsEquiv (naturals_to_semiring N1 N2).
 Proof.
 apply Equivalences.isequiv_adjointify with (naturals_to_semiring N2 N1);
-red;apply (to_semiring_involutive _ _).
+red;exact (to_semiring_involutive _ _).
 Defined.
 
 End nat_to_nat_iso.
@@ -119,7 +119,7 @@ Lemma from_nat_stmt  (N':Type@{U}) `{Naturals@{U U U U U U U U} N'}
   : forall (P : SemiRings.Operations -> Type),
   P (SemiRings.BuildOperations N') -> P (SemiRings.BuildOperations N).
 Proof.
-apply SemiRings.iso_leibnitz with (naturals_to_semiring N' N);apply _.
+apply SemiRings.iso_leibnitz with (naturals_to_semiring N' N);exact _.
 Qed.
 
 Section borrowed_from_nat.
@@ -159,22 +159,22 @@ Section borrowed_from_nat.
   Qed.
 
   #[export] Instance: forall z : N, RightCancellation (+) z.
-  Proof. intro. apply (right_cancel_from_left (+)). Qed.
+  Proof. intro. exact (right_cancel_from_left (+)). Qed.
 
   #[export] Instance: forall z : N, PropHolds (z <> 0) -> LeftCancellation (.*.) z.
   Proof.
   refine (from_nat_stmt nat (fun s =>
     forall z : s, PropHolds (z <> 0) -> LeftCancellation mult z) _).
-  simpl. apply nat_mult_cancel_l.
+  simpl. exact nat_mult_cancel_l.
   Qed.
 
   #[export] Instance: forall z : N, PropHolds (z <> 0) -> RightCancellation (.*.) z.
-  Proof. intros ? ?. apply (right_cancel_from_left (.*.)). Qed.
+  Proof. intros ? ?. exact (right_cancel_from_left (.*.)). Qed.
 
   Instance nat_nontrivial: PropHolds ((1:N) <> 0).
   Proof.
   refine (from_nat_stmt nat (fun s => PropHolds ((1:s) <> 0)) _).
-  apply _.
+  exact _.
   Qed.
 
   Instance nat_nontrivial_apart `{Apart N} `{!TrivialApart N} :
@@ -185,7 +185,7 @@ Section borrowed_from_nat.
   Proof.
   refine (from_nat_stmt nat
     (fun s => forall x y : s, x + y = 0 -> x = 0 /\ y = 0) _).
-  simpl. apply plus_eq_zero.
+  simpl. exact plus_eq_zero.
   Qed.
 
   Lemma one_sum : forall (x y : N), x + y = 1 -> (x = 1 /\ y = 0) |_| (x = 0 /\ y = 1).
@@ -205,7 +205,7 @@ Section borrowed_from_nat.
   #[export] Instance: ZeroProduct N.
   Proof.
   refine (from_nat_stmt nat (fun s => ZeroProduct s) _).
-  simpl. red. apply mult_eq_zero.
+  simpl. red. exact mult_eq_zero.
   Qed.
 End borrowed_from_nat.
 
@@ -216,7 +216,7 @@ Qed.
 
 #[export] Instance slow_naturals_dec : DecidablePaths N.
 Proof.
-apply decidablepaths_equiv with nat (naturals_to_semiring nat N);apply _.
+apply decidablepaths_equiv with nat (naturals_to_semiring nat N);exact _.
 Qed.
 
 Section with_a_ring.

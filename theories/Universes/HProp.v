@@ -80,19 +80,19 @@ Proof.
     + exact (@center _ P).
     + apply @istrunc_succ. exact P.
   - assert (g : A * IsHProp A -> Contr A).
-    + intros [a P]. apply (@contr_inhabited_hprop _ P a).
+    + intros [a P]. exact (@contr_inhabited_hprop _ P a).
     + refine (@equiv_iff_hprop _ _ _ _ f g).
       apply hprop_inhabited_contr; intro p.
       apply @contr_prod.
       * exact (g p).
-      * apply (@contr_inhabited_hprop _ _ (snd p)).
+      * exact (@contr_inhabited_hprop _ _ (snd p)).
 Defined.
 
 Theorem equiv_contr_inhabited_allpath `{Funext} {A}
   : Contr A <~> A * forall (x y : A), x = y.
 Proof.
   transitivity (A * IsHProp A).
-  - apply equiv_contr_inhabited_hprop.
+  - exact equiv_contr_inhabited_hprop.
   - exact (1 *E equiv_hprop_allpath _).
 Defined.
 
@@ -184,7 +184,7 @@ Proof.
     exact (stable_equiv eq _, istrunc_equiv_istrunc _ eq).
   - intros [stable ishprop].
     rapply isequiv_iff_hprop.
-    apply stable.
+    exact stable.
 Defined.
 
 (** We can upgrade the previous "iff" result to an equivalence. *)

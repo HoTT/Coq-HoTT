@@ -124,7 +124,7 @@ Definition Colimit_rec_beta_colimp {G : Graph} {D : Diagram G}
 Proof.
   rapply (cancelL (transport_const (colimp i j g x) _)).
   srapply ((apD_const (Colimit_ind (fun _ => P) C _) (colimp i j g x))^ @ _).
-  srapply (Colimit_ind_beta_colimp (fun _ => P) C _ i j g x).
+  exact (Colimit_ind_beta_colimp (fun _ => P) C _ i j g x).
 Defined.
 
 Arguments colim : simpl never.
@@ -158,7 +158,7 @@ Definition Colimit_rec_homotopy' {G : Graph} {D : Diagram G} (P : Type) (C1 C2 :
   : Colimit_rec P C1 == Colimit_rec P C2.
 Proof.
   snrapply Colimit_rec_homotopy.
-  - apply h_obj.
+  - exact h_obj.
   - intros i j g x.
     rhs nrapply (1 @@ Colimit_rec_beta_colimp _ _ _ _ _ _).
     apply h_comm.
@@ -210,7 +210,7 @@ Definition functor_Colimit_half {G : Graph} {D1 D2 : Diagram G} (m : DiagramMap 
   : Colimit D1 -> Q.
 Proof.
   apply Colimit_rec.
-  refine (cocone_precompose m HQ).
+  exact (cocone_precompose m HQ).
 Defined.
 
 Definition functor_Colimit_half_beta_colimp {G : Graph} {D1 D2 : Diagram G} (m : DiagramMap D1 D2) {Q} (HQ : Cocone D2 Q) (i j : G) (g : G i j) (x : D1 i)

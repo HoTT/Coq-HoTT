@@ -116,12 +116,12 @@ Section semiring_props.
 
   Lemma plus_mult_distr_l : LeftDistribute (.*.) (+).
   Proof.
-  apply _.
+  exact _.
   Qed.
 
   #[export] Instance: forall r : R, @IsMonoidPreserving R R (+) (+) 0 0 (r *.).
   Proof.
-  repeat (constructor; try apply _).
+  repeat (constructor; try exact _).
   - red. apply distribute_l.
   - apply right_absorb.
   Qed.
@@ -135,9 +135,9 @@ Section semiringmor_props.
   Context `{IsSemiRingPreserving A B f}.
 
   Lemma preserves_0: f 0 = 0.
-  Proof. apply preserves_mon_unit. Qed.
+  Proof. exact preserves_mon_unit. Qed.
   Lemma preserves_1: f 1 = 1.
-  Proof. apply preserves_mon_unit. Qed.
+  Proof. exact preserves_mon_unit. Qed.
   Lemma preserves_mult: forall x y, f (x * y) = f x * f y.
   Proof.
   intros. apply preserves_sg_op.
@@ -205,7 +205,7 @@ Section cring_props.
 
   #[export] Instance CRing_Semi: IsSemiCRing R.
   Proof.
-  repeat (constructor; try apply _).
+  repeat (constructor; try exact _).
   Qed.
 
 End cring_props.
@@ -279,7 +279,7 @@ Section ring_props.
   - path_via (1 * x + (- 1) * x).
     + rhs_V rapply distribute_r.
       symmetry.
-      rhs_V rapply (left_absorb x).
+      rhs_V exact (left_absorb x).
       f_ap.
       rapply inverse_r.
     + apply ap011;try reflexivity.
@@ -292,7 +292,7 @@ Section ring_props.
     transitivity (x * -1 + x * 1).
     - lhs apply left_inverse.
       rhs_V rapply simple_distribute_l.
-      lhs_V rapply (right_absorb x).
+      lhs_V exact (right_absorb x).
       apply (ap (x *.)).
       symmetry.
       rapply inverse_l.
@@ -303,7 +303,7 @@ Section ring_props.
   Lemma negate_mult_distr_l x y : -(x * y) = -x * y.
   Proof.
     lhs nrapply negate_mult_l.
-    lhs rapply (simple_associativity (f := (.*.)) (-1) x y).
+    lhs exact (simple_associativity (f := (.*.)) (-1) x y).
     apply (ap (.* y)).
     symmetry.
     apply negate_mult_l.
@@ -496,7 +496,7 @@ Section from_another_ring.
   Proof.
   split.
   - apply (groups.projected_ab_group f);assumption.
-  - apply (groups.projected_com_monoid f mult_correct one_correct);assumption.
+  - exact (groups.projected_com_monoid f mult_correct one_correct);assumption.
   - repeat intro; apply (injective f).
     rewrite plus_correct, !mult_correct, plus_correct.
     apply distribute_l.
@@ -549,13 +549,13 @@ Section morphism_composition.
   Instance compose_sr_morphism:
     IsSemiRingPreserving f -> IsSemiRingPreserving g -> IsSemiRingPreserving (g ∘ f).
   Proof.
-  split; apply _.
+  split; exact _.
   Qed.
 
   Instance invert_sr_morphism:
     forall `{!IsEquiv f}, IsSemiRingPreserving f -> IsSemiRingPreserving (f^-1).
   Proof.
-  split; apply _.
+  split; exact _.
   Qed.
 End morphism_composition.
 

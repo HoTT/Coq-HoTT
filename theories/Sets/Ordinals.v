@@ -228,15 +228,15 @@ Qed.
 Lemma ordinal_has_minimal_hsolutions {lem : ExcludedMiddle} (A : Ordinal) (P : A -> HProp)
   : merely (exists a, P a) -> merely (exists a, P a /\ forall b, P b -> a < b \/ a = b).
 Proof.
-  intros H'. eapply merely_destruct; try apply H'.
+  intros H'. eapply merely_destruct; try exact H'.
   intros [a Ha]. induction (well_foundedness a) as [a _ IH].
   destruct (LEM (merely (exists b, P b /\ b < a)) _) as [H|H].
   - eapply merely_destruct; try apply H. intros [b Hb]. apply (IH b); apply Hb.
-  - apply tr. exists a. split; try apply Ha. intros b Hb.
+  - apply tr. exists a. split; try exact Ha. intros b Hb.
     specialize (trichotomy_ordinal a b). intros H1.
-    eapply merely_destruct; try apply H1.
+    eapply merely_destruct; try exact H1.
     intros [H2|H2]. { apply tr. by left. }
-    eapply merely_destruct; try apply H2.
+    eapply merely_destruct; try exact H2.
     intros [H3|H3]. { apply tr. by right. }
     apply Empty_rec, H, tr. exists b. by split.
 Qed.
@@ -548,7 +548,7 @@ Proof.
       rewrite eisretr.
       exact (snd (simulation_is_minimal f (simulation_is_hom f x_a)).2).
   - cbn. intros [x x_a] [y y_a]; cbn. split.
-    + apply (simulation_is_hom f).
+    + exact (simulation_is_hom f).
     + intros fx_fy.
       destruct (simulation_is_minimal f fx_fy) as (a' & a'_y & p).
       apply injective in p; try exact _. subst a'. exact a'_y.
@@ -675,8 +675,8 @@ Lemma ordinal_initial `{PropResizing} `{Univalence} (O : Ordinal) (a : O)
   : Isomorphism O ↓a -> Empty.
 Proof.
   intros p % equiv_path_Ordinal.
-  enough (HO : O < O) by apply (irreflexive_ordinal_relation _ _ _ _ HO).
-  exists a. apply p.
+  enough (HO : O < O) by exact (irreflexive_ordinal_relation _ _ _ _ HO).
+  exists a. exact p.
 Qed.
 
 (** * Ordinal successor *)
@@ -833,7 +833,7 @@ Definition resize_ordinal@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@
 Proof.
   exists C (fun c1 c2 : C => smalltype (g c1 < g c2)).
   snrapply (isordinal_simulation g). 2, 3, 4, 5: exact _.
-  - apply (istrunc_equiv_istrunc B (equiv_inverse g)).
+  - exact (istrunc_equiv_istrunc B (equiv_inverse g)).
   - constructor.
     + intros a a' a_a'. apply (equiv_smalltype _). exact a_a'.
     + intros a b b_fa. apply tr. exists (g^-1 b). split.

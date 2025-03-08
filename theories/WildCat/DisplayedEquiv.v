@@ -265,8 +265,8 @@ Definition dcompose_cate_assoc {A} {D : A -> Type} `{DHasEquivs A D}
 Proof.
   refine (dcompose_cate_fun _ f' $@' _ $@' dcat_assoc (dcate_fun f') g' h'
           $@' _ $@' dcompose_cate_funinv h' _).
-  - apply (dcompose_cate_fun h' g' $@R' _).
-  - apply (_ $@L' dcompose_cate_funinv g' f').
+  - exact (dcompose_cate_fun h' g' $@R' _).
+  - exact (_ $@L' dcompose_cate_funinv g' f').
 Defined.
 
 Definition dcompose_cate_idl {A} {D : A -> Type} `{DHasEquivs A D}
@@ -275,7 +275,7 @@ Definition dcompose_cate_idl {A} {D : A -> Type} `{DHasEquivs A D}
     (dcate_fun f').
 Proof.
   refine (dcompose_cate_fun _ f' $@' _ $@' dcat_idl (dcate_fun f')).
-  apply (dcate_buildequiv_fun _ $@R' _).
+  exact (dcate_buildequiv_fun _ $@R' _).
 Defined.
 
 Definition dcompose_cate_idr {A} {D : A -> Type} `{DHasEquivs A D}
@@ -284,7 +284,7 @@ Definition dcompose_cate_idr {A} {D : A -> Type} `{DHasEquivs A D}
     (dcate_fun f').
 Proof.
   refine (dcompose_cate_fun f' _ $@' _ $@' dcat_idr (dcate_fun f')).
-  rapply (_ $@L' dcate_buildequiv_fun _).
+  exact (_ $@L' dcate_buildequiv_fun _).
 Defined.
 
 (** Some more convenient equalities for equivalences. The naming scheme is similar to [PathGroupoids.v].*)

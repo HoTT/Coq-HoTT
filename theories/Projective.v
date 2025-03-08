@@ -124,7 +124,7 @@ Proposition equiv_isoprojective_hasochoice
   : IsOProjective O X <~> HasOChoice O X.
 Proof.
   refine (equiv_iff_hprop_uncurried (iff_isoprojective_hasochoice O X)).
-  apply istrunc_forall.
+  exact istrunc_forall.
 Defined.
 
 Proposition isprojective_unit : IsProjective Unit.

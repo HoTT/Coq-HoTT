@@ -46,7 +46,7 @@ Lemma nat_int_to_semiring : forall x : R, exists z,
 Proof.
 apply biinduction.
 - exists 0.
-  left. symmetry. apply preserves_0.
+  left. symmetry. exact preserves_0.
 - intros. split;intros E.
   + destruct E as [z [E|E]].
     * exists (1+z).
@@ -67,7 +67,7 @@ apply biinduction.
     * destruct (naturals.case z) as [Ez|[z' Ez]];rewrite Ez in *;clear z Ez.
       ** exists 1;right.
          rewrite (preserves_1 (A:=N)),plus_comm,E.
-         apply preserves_0.
+         exact preserves_0.
       ** exists z';left.
          rewrite (preserves_plus (A:=N)),(preserves_1 (A:=N)) in E.
          apply (left_cancellation plus 1). trivial.
@@ -149,7 +149,7 @@ Section another_semiring.
 
   Instance: OrderPreserving f.
   Proof.
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   intros x y E. apply nat_int_le_plus in E. destruct E as [z E].
   rewrite E, (preserves_plus (f:=f)), (naturals.to_semiring_twice f _ _).
   apply nonneg_plus_le_compat_r. apply to_semiring_nonneg.
@@ -157,7 +157,7 @@ Section another_semiring.
 
   #[export] Instance: StrictlyOrderPreserving f | 50.
   Proof.
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   intros x y E. apply nat_int_lt_plus in E. destruct E as [z E].
   rewrite E, !(preserves_plus (f:=f)), preserves_1,
   (naturals.to_semiring_twice f _ _).
@@ -167,7 +167,7 @@ Section another_semiring.
   Qed.
 
   #[export] Instance nat_morphism_order_embedding : OrderEmbedding f | 50.
-  Proof. split; try apply _. apply full_pseudo_order_reflecting. Qed.
+  Proof. split; try exact _. exact full_pseudo_order_reflecting. Qed.
 End another_semiring.
 End nat_int_order.
 End Univ.

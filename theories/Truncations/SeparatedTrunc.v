@@ -36,7 +36,7 @@ Local Instance O_lex_leq_Tr `{Univalence} (n : trunc_index)
 Proof.
   intros A; unshelve econstructor; intros P' P_inO;
     pose (P := fun x => Build_TruncType n (P' x)).
-  - refine (Trunc_rec P).
+  - exact (Trunc_rec P).
   - intros; simpl; exact _.
   - intros; cbn. reflexivity.
 Defined.

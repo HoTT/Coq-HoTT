@@ -56,7 +56,7 @@ Proof.
       refine (ooextendable_postcompose@{a a i i i i i i i i}
                 (fun (_:Unit) => B (c tt)) _ _
                 (fun u => transport B (ap@{Set _} c (path_unit tt u))) _).
-      refine (ooextendable_islocal _ i).
+      exact (ooextendable_islocal _ i).
     + reflexivity.
     + apply inO_paths@{i i}.
 Defined.

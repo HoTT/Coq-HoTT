@@ -74,7 +74,7 @@ Section Equiv.
 
   Lemma quotient_path2 : forall {x y : quotient R} (p q : x=y), p=q.
   Proof.
-    apply @hset_path2. apply _.
+    apply @hset_path2. exact _.
   Defined.
 
   Definition in_class : quotient R -> A -> HProp.
@@ -196,7 +196,7 @@ Section Equiv.
   Definition quotient_ump'' (B:HSet): (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
                                       -> quotient R -> B.
     intros [f H'].
-    apply (quotient_rec _ H').
+    exact (quotient_rec _ H').
   Defined.
 
   Theorem quotient_ump (B:HSet): (quotient R -> B) <~>
@@ -207,7 +207,7 @@ Section Equiv.
       by apply equiv_path_sigma_hprop.
     - intros f.
       apply path_forall.
-      red. apply quotient_ind_prop';[apply _|reflexivity].
+      red. apply quotient_ind_prop';[exact _|reflexivity].
   Defined.
 
   (** Missing
@@ -250,7 +250,7 @@ Section Functoriality.
                                _ _).
     - intros u v s.
       apply (snd (fresp _ _)).
-      abstract (do 2 rewrite eisretr; apply s).
+      abstract (do 2 rewrite eisretr; exact s).
     - intros x; revert x; simple refine (quotient_ind S _ _ _).
       + intros b; simpl. apply ap, eisretr.
       + intros; apply path_ishprop.
@@ -292,7 +292,7 @@ Section Kernel.
   Proof.
     pose (C := quotient R).
     (* We put this explicitly in the context so that typeclass resolution will pick it up. *)
-    assert (IsHSet C) by (unfold C; apply _).
+    assert (IsHSet C) by (unfold C; exact _).
     exists C.
     pose (e := class_of R).
     exists e.

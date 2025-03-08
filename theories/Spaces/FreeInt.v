@@ -30,7 +30,7 @@ Lemma equiv_Z1_hom@{u v | u < v} `{Funext} (A : AbGroup@{u})
 Proof.
   snrapply Build_GroupIsomorphism'.
   - refine (_ oE (equiv_freegroup_rec@{u u u v} A Unit)^-1).
-    symmetry. refine (Build_Equiv _ _ (fun a => unit_name a) _).
+    symmetry. exact (Build_Equiv _ _ (fun a => unit_name a) _).
   - intros f g. cbn. reflexivity.
 Defined.
 

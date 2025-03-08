@@ -57,7 +57,7 @@ Definition equiv_total_iff_equiv_fiberwise {A} (P Q : A -> Type)
 Proof.
   split.
   - apply isequiv_from_functor_sigma.
-  - intro K. apply isequiv_functor_sigma.
+  - intro K. exact isequiv_functor_sigma.
 Defined.
 
 (** ** Assuming [Funext], [IsEquiv f] is an hprop, which has further consequences *)
@@ -115,7 +115,7 @@ Section AssumeFunext.
     : (e1 = e2 :> (A -> B)) <~> (e1 = e2 :> (A <~> B)).
   Proof.
     equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
-    2: symmetry; apply equiv_ap; refine _.
+    2: symmetry; rapply equiv_ap.
     exact (equiv_path_sigma_hprop ((issig_equiv A B)^-1 e1) ((issig_equiv A B)^-1 e2)).
   Defined.
 
@@ -146,7 +146,7 @@ Section AssumeFunext.
   Proof.
     apply istrunc_S.
     intros e1 e2.
-    apply (istrunc_equiv_istrunc _ (equiv_path_equiv e1 e2)).
+    exact (istrunc_equiv_istrunc _ (equiv_path_equiv e1 e2)).
   Defined.
 
   (** In the contractible case, we have to assume that *both* types are contractible to get a contractible type of equivalences. *)

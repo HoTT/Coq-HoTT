@@ -71,7 +71,7 @@ Proof.
   intros g x.
   unfold rng_homo_int, rng_int_mult; cbn.
   induction x as [|x|x].
-  - by rhs nrapply (grp_homo_unit g).
+  - by rhs exact (grp_homo_unit g).
   - rewrite grp_pow_succ.
     change (x.+1%int) with (1 + x)%int.
     rewrite (rng_homo_plus g 1 x).

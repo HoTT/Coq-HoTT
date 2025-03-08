@@ -147,7 +147,7 @@ Section IdealCRing.
       symmetry.
       apply ideal_product_unit_r. }
     etransitivity.
-    1: rapply (ideal_product_subset_pres_r _ _ _ p).
+    1: exact (ideal_product_subset_pres_r _ _ _ p).
     rapply ideal_product_intersection_sum_subset'.
   Defined.
 
@@ -160,7 +160,7 @@ Section IdealCRing.
     - apply ideal_intersection_subset_product.
       unfold Coprime in p.
       apply symmetry in p.
-      rapply p.
+      exact p.
     - apply ideal_product_subset_intersection.
   Defined.
 

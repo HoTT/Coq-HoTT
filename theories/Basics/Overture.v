@@ -413,7 +413,7 @@ Instance transitive_pointwise_paths A P
   : Transitive (pointwise_paths A P).
 Proof.
   intros f g h.
-  apply pointwise_paths_concat.
+  exact pointwise_paths_concat.
 Defined.
 
 Instance symmetric_pointwise_paths A P

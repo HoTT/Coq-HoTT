@@ -68,7 +68,7 @@ Definition dpath_forall'
     <~> (forall p, transportD P (fun x => fun p => Q ( x ; p)) h p (f p) = g (transport P h p)).
 Proof.
   destruct h.
-  apply 1%equiv.
+  exact 1%equiv.
 Defined.
 
 (** This version produces only paths between pairs, as opposed to paths between arbitrary inhabitants of dependent sum types.  But it has the advantage that the components of those pairs can more often be inferred, so we make them implicit arguments. *)
@@ -445,7 +445,7 @@ Proof.
                              (fun a => (a ; center (P a))) _ _).
   - intros a; reflexivity.
   - intros [a p].
-    refine (path_sigma' P 1 (contr _)).
+    exact (path_sigma' P 1 (contr _)).
 Defined.
 
 Definition equiv_sigma_contr {A : Type} (P : A -> Type)
@@ -593,10 +593,10 @@ Proof.
   simple_induction' n; simpl; intros A P ac Pc.
   { apply (Build_Contr _ (center A; center (P (center A)))).
     intros [a ?].
-    refine (path_sigma' P (contr a) (path_contr _ _)). }
+    exact (path_sigma' P (contr a) (path_contr _ _)). }
   apply istrunc_S.
   intros u v.
-  refine (istrunc_isequiv_istrunc _ (path_sigma_uncurried P u v)).
+  exact (istrunc_isequiv_istrunc _ (path_sigma_uncurried P u v)).
 Defined.
 
 (** The sigma of an arbitrary family of *disjoint* hprops is an hprop. *)
@@ -652,7 +652,7 @@ Proof.
   unfold path_sigma_hprop.
   unfold isequiv_pr1_contr; simpl.
   (** Ugh *)
-  refine (ap (fun p => match p in (_ = v2) return (u = (u.1; v2)) with 1 => 1 end)
+  exact (ap (fun p => match p in (_ = v2) return (u = (u.1; v2)) with 1 => 1 end)
              (contr (idpath u.2))).
 Defined.
 
@@ -663,7 +663,7 @@ Definition path_sigma_hprop_V {A : Type} {P : A -> Type}
 Proof.
   destruct p; simpl.
   rewrite (path_ishprop x y).
-  refine (path_sigma_hprop_1 _ @ (ap inverse (path_sigma_hprop_1 _))^).
+  exact (path_sigma_hprop_1 _ @ (ap inverse (path_sigma_hprop_1 _))^).
 Qed.
 
 Definition path_sigma_hprop_pp {A : Type} {P : A -> Type}
@@ -678,7 +678,7 @@ Proof.
   rewrite (path_ishprop y x).
   rewrite (path_ishprop z x).
   refine (_ @ (ap (fun z => z @ _) (path_sigma_hprop_1 _))^).
-  apply (concat_1p _)^.
+  exact (concat_1p _)^.
 Qed.
 
 (** The inverse of [path_sigma_hprop] has its own name, so we give special names to the section and retraction homotopies to help [rewrite] out. *)

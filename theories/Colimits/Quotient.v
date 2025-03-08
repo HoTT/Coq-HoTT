@@ -179,8 +179,8 @@ Section Equiv.
     intros a c p; cbn beta.
     apply path_hprop.
     srapply equiv_iff_hprop; cbn.
-    1: apply (transitivity (symmetry _ _ p)).
-    apply (transitivity p).
+    1: exact (transitivity (symmetry _ _ p)).
+    exact (transitivity p).
   Defined.
 
   (** Being in a class is decidable if the relation is decidable. *)
@@ -215,7 +215,7 @@ Section Equiv.
     : R a b <~> (class_of R a = class_of R b).
   Proof.
     apply equiv_iff_hprop.
-    - apply qglue.
+    - exact qglue.
     - apply related_quotient_paths.
   Defined.
 
@@ -239,7 +239,7 @@ Section Equiv.
       intros; f_ap.
       by apply qglue.
     + intros [f H'].
-      apply (Quotient_rec _ _ _ H').
+      exact (Quotient_rec _ _ _ H').
     + intros [f Hf].
       by apply equiv_path_sigma_hprop.
     + intros f.
@@ -305,7 +305,7 @@ Section Functoriality.
     srapply (isequiv_adjointify _ (Quotient_functor S R f^-1 _)).
     { intros a b s.
       apply (snd (fresp _ _)).
-      abstract (do 2 rewrite eisretr; apply s). }
+      abstract (do 2 rewrite eisretr; exact s). }
     all: srapply Quotient_ind.
     + intros b; simpl.
       apply ap, eisretr.

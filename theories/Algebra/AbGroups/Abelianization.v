@@ -32,7 +32,7 @@ Definition isequiv_group_precomp_isabelianization `{Funext}
 Proof.
   snrapply isequiv_adjointify.
   - intros g.
-    rapply (surjinj_inv (group_precomp A eta) g).
+    exact (surjinj_inv (group_precomp A eta) g).
   - intros f.
     snrapply equiv_path_grouphomomorphism.
     exact (eisretr0gpd_inv (group_precomp A eta) f).
@@ -98,7 +98,7 @@ Section Abel.
   Proof.
     srapply Trunc_ind.
     snrapply Coeq_ind.
-    1: apply a.
+    1: exact a.
     intros [[x y] z].
     nrefine (transport_compose _ _ _ _ @ _).
     apply c.
@@ -180,13 +180,13 @@ Section AbelGroup.
       refine (abel_in_comm _ _ _ @ _).
       refine (ap _ (associativity _ _ _)^ @ _).
       refine (abel_in_comm _ _ _ @ _).
-      refine (ap _ (associativity _ _ _)). }
+      exact (ap _ (associativity _ _ _)). }
     intros b c d.
     revert a.
     Abel_ind_hprop a; simpl.
     refine (ap _ (associativity _ _ _) @ _).
     refine (abel_in_comm _ _ _ @ _).
-    refine (ap _ (associativity _ _ _)^).
+    exact (ap _ (associativity _ _ _)^).
   Defined.
 
   (** We can now easily show that this operation is associative by [associativity] in [G] and the fact that being associative is a proposition. *)
@@ -330,7 +330,7 @@ Definition abel_ind_homotopy {G H : Group} {f g : Hom (A:=Group) (abel G) H}
   : f $== g.
 Proof.
   rapply Abel_ind_hprop.
-  rapply p.
+  exact p.
 Defined.
 
 (** Finally we can prove that our construction abel is an abelianization. *)
@@ -403,7 +403,7 @@ Instance isequiv_abgroup_abelianization
   : IsEquiv eta.
 Proof.
   srapply isequiv_homotopic.
-  - srapply (groupiso_isabelianization A B grp_homo_id eta).
+  - exact (groupiso_isabelianization A B grp_homo_id eta).
   - exact _.
   - symmetry; apply homotopic_isabelianization.
 Defined.

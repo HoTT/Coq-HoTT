@@ -70,10 +70,10 @@ Lemma pos_add_no_neutral p q : q + p <> p.
 Proof.
   revert q.
   induction p as [ |p IHp|p IHp]; intros [ |q|q].
-  1,3: apply x0_neq_xH.
-  1: apply x1_neq_xH.
-  1,3: apply x1_neq_x0.
-  2,4: apply x0_neq_x1.
+  1,3: exact x0_neq_xH.
+  1: exact x1_neq_xH.
+  1,3: exact x1_neq_x0.
+  2,4: exact x0_neq_x1.
   1,2: intro H; apply (IHp q).
   1: apply x0_inj, H.
   apply x1_inj, H.

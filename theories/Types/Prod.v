@@ -246,7 +246,7 @@ Proof.
   - intros [a b]; simpl.
     lhs nrapply (ap (fun p => path_prod' p _) (eisadj f _)).
     rhs nrapply ap_functor_prod.
-    nrapply (ap _ (eisadj g _)).
+    exact (ap _ (eisadj g _)).
 Defined.
 
 Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}

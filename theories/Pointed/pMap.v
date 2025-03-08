@@ -125,7 +125,7 @@ Definition functor2_pforall_right {A : pType} {B C : pFam A}
   : functor_pforall_right g g₀ f ==* functor_pforall_right g' g₀' f'.
 Proof.
   srapply Build_pHomotopy.
-  1: { intro a. refine (p a (f a) @ ap (g' a) (q a)). }
+  1: { intro a. exact (p a (f a) @ ap (g' a) (q a)). }
   pointed_reduce_rewrite. symmetry. apply concat_Ap.
 Defined.
 
@@ -204,7 +204,7 @@ Definition pmap_compose_ppforall_pid_left {A : pType} {P : A -> pType}
 Proof.
   srapply Build_pHomotopy.
   + reflexivity.
-  + symmetry. refine (whiskerR (concat_p1 _ @ ap_idmap _) _ @ concat_pV _).
+  + symmetry. exact (whiskerR (concat_p1 _ @ ap_idmap _) _ @ concat_pV _).
 Defined.
 
 Definition pmap_compose_ppforall_path_pforall `{Funext} {A : pType} {P Q : A -> pType}

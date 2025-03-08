@@ -151,7 +151,7 @@ Section Reduction.
     set (a' := a^').
     rewrite <- (change_sign_inv a).
     lhs nrapply freegroup_tau.
-    apply IHx.
+    exact IHx.
   Defined.
 
   (** And since changing the sign is involutive we get right inverses from left inverses *)
@@ -181,7 +181,7 @@ Section Reduction.
       nrapply (ap (fun x => x ++ _)). 
       lhs nrapply word_change_sign_ww.
       nrapply (ap (fun x => _ ++ x)).
-      nrapply (word_change_sign_inv [a]). }
+      exact (word_change_sign_inv [a]). }
     lhs_V nrapply ap.
     1: rhs_V nrapply app_assoc.
     1: nrapply app_assoc.
@@ -452,7 +452,7 @@ Instance ishprop_isfreegroupon `{Funext} (F : Group) (A : Type) (i : A -> F)
   : IsHProp (IsFreeGroupOn A F i).
 Proof.
   unfold IsFreeGroupOn.
-  apply istrunc_forall.
+  exact istrunc_forall.
 Defined.
 
 (** Both ways of stating the universal property are equivalent. *)
@@ -513,7 +513,7 @@ Section FreeGroupGenerated.
     : isgeneratedby F_S (hfiber i).
   Proof.
     snrapply issurj_retr.
-    - apply to_subgroup_generated.
+    - exact to_subgroup_generated.
     - apply ap10; cbn.
       exact (ap grp_homo_map is_retraction).
   Defined.
@@ -523,7 +523,7 @@ Section FreeGroupGenerated.
     : IsEquiv (subgroup_incl (subgroup_generated (hfiber i))).
   Proof.
     apply isequiv_surj_emb.
-    - apply isgenerated_isfreegroupon.
+    - exact isgenerated_isfreegroupon.
     - exact _.
   Defined.
 
@@ -532,7 +532,7 @@ Section FreeGroupGenerated.
     : GroupIsomorphism (subgroup_generated (hfiber i)) F_S.
   Proof.
     nrapply Build_GroupIsomorphism.
-    apply isequiv_subgroup_incl_freegroupon.
+    exact isequiv_subgroup_incl_freegroupon.
   Defined.
 
 End FreeGroupGenerated.
@@ -575,7 +575,7 @@ Proof.
     snrapply FreeGroup_ind_homotopy.
     intros x.
     exact (ap freegroup_in (p x)).
-  - intro; nrapply freegroup_rec_in.
+  - intro; exact freegroup_rec_in.
   - intros X Y Z f g.
     by snrapply FreeGroup_ind_homotopy.
 Defined.

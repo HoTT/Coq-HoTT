@@ -17,7 +17,7 @@ Lemma merely_destruct {A} {P : Type} {sP : IsHProp P}
 Proof.
 intros E;revert x.
 apply Trunc_ind.
-- apply _.
+- exact _.
 - exact E.
 Qed.
 
@@ -261,7 +261,7 @@ Proof.
 change (f (f x)) with (Compose f f x).
 apply (ap (fun g => g x)).
 change (Compose f f = f).
-apply idempotency. apply _.
+apply idempotency. exact _.
 Qed.
 
 Class BinaryIdempotent `(op: A -> A -> A) : Type
@@ -368,8 +368,8 @@ Instance trunc_sig_equiv_rel `{Funext} {A : Type}
   :  IsTrunc n (SigEquivRel R).
 Proof.
   apply @istrunc_sigma.
-  - apply istrunc_forall.
-  - intros. apply @istrunc_sigma; intros; apply istrunc_forall.
+  - exact istrunc_forall.
+  - intros. apply @istrunc_sigma; intros; exact istrunc_forall.
 Defined.
 
 Lemma issig_equiv_rel {A:Type} (R : Relation A)

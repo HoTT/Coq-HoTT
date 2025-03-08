@@ -48,14 +48,14 @@ Section strictly_order_preserving_dec.
     StrictlyOrderPreserving f | 19.
   Proof.
   pose proof (dec_strong_injective f).
-  apply _.
+  exact _.
   Qed.
 
   #[export] Instance dec_strictly_order_reflecting_mor
     `{!OrderReflecting (f : A -> B)}
     : StrictlyOrderReflecting f | 19.
   Proof.
-  pose proof (dec_strong_morphism f). apply _.
+  pose proof (dec_strong_morphism f). exact _.
   Qed.
 End strictly_order_preserving_dec.
 
@@ -75,7 +75,7 @@ Section pseudo_injective.
   Lemma pseudo_order_embedding_inj `{!StrictOrderEmbedding (f : A -> B)} :
     IsStrongInjective f.
   Proof.
-  split;try apply _.
+  split;try exact _.
   intros x y E.
   apply apart_iff_total_lt;apply apart_iff_total_lt in E.
   destruct E; [left | right]; apply (strictly_order_preserving f);trivial.
@@ -208,8 +208,8 @@ Lemma projected_partial_order `{IsHSet A} {Ale : Le A}
   : (forall x y, x ≤ y <-> f x ≤ f y) -> PartialOrder Ale.
 Proof.
 intros P. repeat split.
-- apply _.
-- apply _.
+- exact _.
+- exact _.
 - intros x. apply P. apply reflexivity.
 - intros x y z E1 E2. apply P.
   transitivity (f y); apply P;trivial.
@@ -230,7 +230,7 @@ Lemma projected_strict_order `{Alt : Lt A} `{is_mere_relation A lt} `{Blt : Lt B
   : (forall x y, x < y <-> f x < f y) -> StrictOrder Alt.
 Proof.
 intros P. split.
-- apply _.
+- exact _.
 - intros x E. destruct (irreflexivity (<) (f x)). apply P. trivial.
 - intros x y z E1 E2. apply P. transitivity (f y); apply P;trivial.
 Qed.
@@ -241,7 +241,7 @@ Lemma projected_pseudo_order `{IsApart A} `{Alt : Lt A} `{is_mere_relation A lt}
   : (forall x y, x < y <-> f x < f y) -> PseudoOrder Alt.
 Proof.
 pose proof (strong_injective_mor f).
-intros P. split; try apply _.
+intros P. split; try exact _.
 - intros x y E. apply (pseudo_order_antisym (f x) (f y)).
   split; apply P,E.
 - intros x y E z. apply P in E.
@@ -264,7 +264,7 @@ Lemma projected_full_pseudo_order `{IsApart A} `{Ale : Le A} `{Alt : Lt A}
     FullPseudoOrder Ale Alt.
 Proof.
 intros P1 P2. split.
-- apply _.
+- exact _.
 - apply (projected_pseudo_order f);assumption.
 - intros x y; split; intros E.
   + intros F. destruct (le_not_lt_flip (f y) (f x));[apply P1|apply P2];trivial.

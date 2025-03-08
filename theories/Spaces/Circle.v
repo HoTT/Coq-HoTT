@@ -71,7 +71,7 @@ Proof.
   unfold Circle_rec.
   refine (cancelL (transport_const loop b) _ _ _).
   refine ((apD_const (Circle_ind (fun _ => P) b _) loop)^ @ _).
-  refine (Circle_ind_beta_loop (fun _ => P) _ _).
+  exact (Circle_ind_beta_loop (fun _ => P) _ _).
 Defined.
 
 (** The [Circle] is pointed by [base]. *)
@@ -188,7 +188,7 @@ Proof.
   assert (q := merely_path_is0connected Circle base y).
   strip_truncations.
   destruct p, q.
-  refine (istrunc_equiv_istrunc (n := 0) Int equiv_loopCircle_int^-1).
+  exact (istrunc_equiv_istrunc (n := 0) Int equiv_loopCircle_int^-1).
 Defined.
 
 (** ** Iteration of equivalences *)

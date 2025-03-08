@@ -37,7 +37,7 @@ Section Pi1S1.
   Theorem pi1_s1 : Pi 1 (psphere 1) ≅ abgroup_Z.
   Proof.
     etransitivity.
-    2: apply pi1_circle.
+    2: exact pi1_circle.
     apply groupiso_pi_functor.
     apply pequiv_S1_Circle.
   Defined.

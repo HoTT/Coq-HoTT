@@ -50,5 +50,5 @@ Proof.
   rapply istrunc_sigma.
   cbn; intro p.
   destruct p.
-  apply (istrunc_equiv_istrunc _ (equiv_path_forall _ _)).
+  exact (istrunc_equiv_istrunc _ (equiv_path_forall _ _)).
 Defined.

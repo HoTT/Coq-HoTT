@@ -70,14 +70,14 @@ Arguments negate_almostneg _ _ _ /.
 
 Instance semiring_almostring `{IsSemiCRing A} : AlmostRing A | 10.
 Proof.
-split;try apply _.
+split;try exact _.
 intros. unfold almost_negate;simpl.
 symmetry;apply mult_0_l.
 Qed.
 
 Instance ring_almostring `{IsCRing A} : AlmostRing A.
 Proof.
-split;try apply _.
+split;try exact _.
 intros. unfold almost_negate;simpl.
 apply negate_mult_l.
 Qed.
@@ -85,8 +85,8 @@ Qed.
 Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}
   : AlmostRingPreserving f | 10.
 Proof.
-split;try apply _.
-unfold almost_negate;simpl. intros _. apply preserves_0.
+split;try exact _.
+unfold almost_negate;simpl. intros _. exact preserves_0.
 Qed.
 
 Section VarSec.
@@ -94,8 +94,8 @@ Context `{IsCRing A} `{IsCRing B} {f : A -> B} `{!IsSemiRingPreserving f}.
 
 #[export] Instance ring_mor_almostring_mor : AlmostRingPreserving f.
 Proof.
-split;try apply _.
-unfold almost_negate;simpl. apply preserves_negate.
+split;try exact _.
+unfold almost_negate;simpl. exact preserves_negate.
 Qed.
 
 End VarSec.

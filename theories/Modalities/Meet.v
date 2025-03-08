@@ -20,7 +20,7 @@ Section RSUMeet.
     unshelve econstructor.
     - intros X; exact (In L X * In O X).
     - intros ? X; exact _.
-    - intros T U [? ?] f feq; split; apply (inO_equiv_inO _ f).
+    - intros T U [? ?] f feq; split; exact (inO_equiv_inO _ f).
   Defined.
 
   Global Instance inO_inmeet_l (X : Type) `{im : In Meet X} : In L X := fst im.
@@ -95,13 +95,13 @@ Section RSUMeet.
   Proof.
     apply (@isequiv_compose _ _ (to O X) _ _ (to L (O X))).
     apply isequiv_to_O_inO.
-    apply (inO_equiv_inO X (to O X)).
+    exact (inO_equiv_inO X (to O X)).
   Defined.
 
   Definition inmeet_isequiv_plus (X : Type) `{IsEquiv _ _ (to_plus X)} : In Meet X.
   Proof.
     split.
-    - apply (inO_equiv_inO (Plus X) (to_plus X)^-1).
+    - exact (inO_equiv_inO (Plus X) (to_plus X)^-1).
     - srapply inO_to_O_retract.
       + exact ((to_plus X)^-1 o (to L (O X))).
       + intros x; apply (eissect (to_plus X)).
@@ -121,7 +121,7 @@ Section RSUMeet.
   Global Instance reflects_plus_inO (X : Type) `{In O (Plus X)}
     : Reflects Meet X.
   Proof.
-    constructor; intros; apply ooextendable_plus.
+    constructor; intros; exact ooextendable_plus.
   Defined.
 
   (** Recalling that a type is connected for a reflective subuniverse if and only if its reflector is nullhomotopic, we define a type to be "plus-connected" if its map to plus is nullhomotopic.  If the meet is reflective, this coincides with connectedness for that reflective subuniverse. *)
@@ -268,7 +268,7 @@ Section LexMeet.
     - apply istruncmap_from_ap; intros x y.
       apply istruncmap_mapinO_tr.
       pose (i := fst (IHn _) (H x y)).
-      apply (mapinO_homotopic _ _ (plus_path_to_plus x y)).
+      exact (mapinO_homotopic _ _ (plus_path_to_plus x y)).
     - intros x y.
       apply (snd (IHn (x = y))).
       pose (i := istruncmap_ap n (to_plus L O X) x y).

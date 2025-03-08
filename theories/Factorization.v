@@ -158,7 +158,7 @@ Section FactSys.
     refine (transport (class1 factsys) (path_arrow _ _ gf) _).
     refine (class1_compose factsys g1 g2 c1g1 _).
     apply class1_isequiv.
-    apply (isequiv_homotopic _ (fun i => (q2 i)^)).
+    exact (isequiv_homotopic _ (fun i => (q2 i)^)).
   Defined.
 
   Definition cancelL_class2 `{Funext} {X Y Z} (f : X -> Y) (g : Y -> Z)
@@ -176,7 +176,7 @@ Section FactSys.
     refine (transport (class2 factsys) (path_arrow _ _ ff) _).
     refine (class2_compose factsys f1 f2 _ c2f2).
     apply class2_isequiv.
-    apply (isequiv_homotopic _ q1).
+    exact (isequiv_homotopic _ q1).
   Defined.
 
   (** The two classes of maps are automatically orthogonal, i.e. any commutative square from a [class1] map to a [class2] map has a unique diagonal filler.  For now, we only bother to define the lift; in principle we ought to show that the type of lifts is contractible. *)

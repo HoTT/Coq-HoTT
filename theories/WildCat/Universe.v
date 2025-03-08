@@ -69,7 +69,7 @@ Proof.
   - intros; exact (f^-1).
   - cbn. intros ?; apply eissect.
   - cbn. intros ?; apply eisretr.
-  - intros g r s; refine (isequiv_adjointify f g r s).
+  - intros g r s; exact (isequiv_adjointify f g r s).
 Defined.
 
 Instance hasmorext_core_type `{Funext} : HasMorExt (core Type) := _.

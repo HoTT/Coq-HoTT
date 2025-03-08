@@ -95,7 +95,7 @@ Global Instance isequiv_functor_hfiber2 {A B C D}
   : IsEquiv (functor_hfiber2 p q).
 Proof.
   refine (isequiv_functor_sigma (f := h)); intros a.
-  refine (isequiv_compose (f := fun e => (p a)^ @ ap k e) (g := fun e' => e' @ q)).
+  exact (isequiv_compose (f := fun e => (p a)^ @ ap k e) (g := fun e' => e' @ q)).
 Defined.
 
 Definition equiv_functor_hfiber2 {A B C D}

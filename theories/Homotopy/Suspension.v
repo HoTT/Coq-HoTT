@@ -133,7 +133,7 @@ Proof.
     _ _ @ _); simpl.
   apply moveR_pM.
   apply equiv_p1_1q.
-  apply ap, inverse. refine (Susp_ind_beta_merid _ _ _ _ _).
+  apply ap, inverse. exact (Susp_ind_beta_merid _ _ _ _ _).
 Defined.
 
 Definition Susp_rec_eta_homotopic {X Y : Type} (f : Susp X -> Y)
@@ -340,7 +340,7 @@ Section UnivPropNat.
     - nrapply (equiv_transport (fun p => DPath P p (fst NS) (snd NS))).
       symmetry; apply functor_susp_beta_merid.
     - symmetry. 
-      apply (dp_compose (functor_susp f) P (merid x)).
+      exact (dp_compose (functor_susp f) P (merid x)).
   Defined.
 
   Definition functor_Susp_ind_data' (NS : P North * P South)
@@ -385,7 +385,7 @@ Section UnivPropNat.
   Local Instance is0functor_functor_Susp_ind_data
     : Is0Functor functor_Susp_ind_data.
   Proof.
-    refine (is0functor_sigma _ _
+    exact (is0functor_sigma _ _
            (fun NS => functor_Susp_ind_data' NS o functor_Susp_ind_data'' NS)).
   Defined.
 
@@ -428,7 +428,7 @@ Section UnivPropNat.
     { refine (isesssurj_iff_commsq Susp_ind_inv_nat); try exact _.
       all:apply issurjinj_Susp_ind_inv. }
     etransitivity.
-    { refine (isesssurj_iff_sigma _ _ 
+    { exact (isesssurj_iff_sigma _ _ 
                 (fun NS => functor_Susp_ind_data' NS o functor_Susp_ind_data'' NS)). }
     apply iff_functor_forall; intros [N S]; cbn.
     etransitivity.

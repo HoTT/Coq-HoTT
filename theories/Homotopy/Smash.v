@@ -82,10 +82,10 @@ Section Smash.
     srapply Pushout_ind.
     + intros [a b].
       apply Psm.
-    + apply (Bool_ind _ Pr Pl).
+    + exact (Bool_ind _ Pr Pl).
     + srapply sum_ind.
-      - apply Pgl.
-      - apply Pgr.
+      - exact Pgl.
+      - exact Pgr.
   Defined.
 
   Definition Smash_ind_beta_gluel {P : Smash X Y -> Type}
@@ -347,7 +347,7 @@ Proof.
       simpl; induction (q y); simpl.
       rhs_V nrapply concat_pp_p.
       apply whiskerR.
-      nrapply (ap011_pp _ _ _ 1 1). }
+      exact (ap011_pp _ _ _ 1 1). }
   exact (ap022 _ (concat_p1 (p pt))^ (concat_p1 (q pt))^ @ (concat_p1 _)^).
 Defined.
 

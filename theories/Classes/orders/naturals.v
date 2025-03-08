@@ -73,7 +73,7 @@ as [E | E].
 - left.
   apply (order_reflecting (naturals_to_semiring N nat)). exact E.
 - right. intros E'. apply E.
-  apply order_preserving;trivial. apply _.
+  apply order_preserving;trivial. exact _.
 Qed.
 
 Section another_ring.

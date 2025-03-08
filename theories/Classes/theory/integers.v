@@ -33,7 +33,7 @@ Lemma to_ring_involutive Z `{Integers Z} Z2 `{Integers Z2} x :
   integers_to_ring Z2 Z (integers_to_ring Z Z2 x) = x.
 Proof.
 change (Compose (integers_to_ring Z2 Z) (integers_to_ring Z Z2) x = id x).
-apply to_ring_unique_alt;apply _.
+apply to_ring_unique_alt;exact _.
 Qed.
 
 Lemma morphisms_involutive `{Integers Z} `{IsCRing R} (f: R -> Z) (g: Z -> R)
@@ -107,9 +107,9 @@ Section retract_is_int.
   (* If we make this an instance, then instance resolution will often loop *)
   Lemma retract_is_int: Integers Z2 (U:=retract_is_int_to_ring).
   Proof.
-  split;try apply _.
-  - unfold integers_to_ring, retract_is_int_to_ring. apply _.
-  - intros;apply same_morphism;apply _.
+  split;try exact _.
+  - unfold integers_to_ring, retract_is_int_to_ring. exact _.
+  - intros;apply same_morphism;exact _.
   Qed.
 End retract_is_int.
 
@@ -120,7 +120,7 @@ Context `{Integers Z1} `{Integers Z2}.
 #[export] Instance int_to_int_equiv : IsEquiv (integers_to_ring Z1 Z2).
 Proof.
 apply Equivalences.isequiv_adjointify with (integers_to_ring Z2 Z1);
-red;apply (to_ring_involutive _ _).
+red;exact (to_ring_involutive _ _).
 Defined.
 
 End int_to_int_iso.
@@ -136,13 +136,13 @@ Lemma from_int_stmt  (Z':Type@{U}) `{Integers@{U U U U U U U U} Z'}
   : forall (P : Rings.Operations -> Type),
   P (Rings.BuildOperations Z') -> P (Rings.BuildOperations Z).
 Proof.
-apply Rings.iso_leibnitz with (integers_to_ring Z' Z);apply _.
+apply Rings.iso_leibnitz with (integers_to_ring Z' Z);exact _.
 Qed.
 
 #[export] Instance int_dec : DecidablePaths Z | 10.
 Proof.
 apply decidablepaths_equiv with (NatPair.Z nat)
-  (integers_to_ring (NatPair.Z nat) Z);apply _.
+  (integers_to_ring (NatPair.Z nat) Z);exact _.
 Qed.
 
 #[export] Instance slow_int_abs `{Naturals N} : IntAbs Z N | 10.

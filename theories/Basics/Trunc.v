@@ -38,7 +38,7 @@ Definition trunc_index_inc'_succ@{} (n : nat) (k : trunc_index)
 Proof.
   revert k; simple_induction n n IHn; intro k.
   - reflexivity.
-  - apply (IHn k.+1).
+  - exact (IHn k.+1).
 Defined.
 
 Definition trunc_index_inc_agree@{} (k : trunc_index) (n : nat)
@@ -180,7 +180,7 @@ Proof.
   simple_induction n n IHn.
   1: reflexivity.
   unfold nat_to_trunc_index in *; cbn in *.
-  refine (ap trunc_S IHn).
+  exact (ap trunc_S IHn).
 Defined.
 
 Definition trunc_index_leq_minus_two@{} {n}
@@ -323,7 +323,7 @@ Instance istrunc_succ {n : trunc_index} {A : Type} `{IsTrunc n A}
   : IsTrunc n.+1 A | 1000.
 Proof.
   apply istrunc_S.
-  apply istrunc_paths'.
+  exact istrunc_paths'.
 Defined.
 
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
@@ -368,7 +368,7 @@ Proof.
   - exact (contr_equiv _ f).
   - apply istrunc_S.
     intros x y.
-    refine (IH _ _ _ (ap (f^-1))^-1 _).
+    exact (IH _ _ _ (ap (f^-1))^-1 _).
 Defined.
 
 Definition istrunc_equiv_istrunc A {B} (f : A <~> B) `{IsTrunc n A}
@@ -501,10 +501,10 @@ Proof.
   generalize dependent P.
   simple_induction n n IH; simpl; intros P ?.
   (* case [n = -2], i.e. contractibility *)
-  - apply contr_forall.
+  - exact contr_forall.
   (* case n = n'.+1 *)
   - apply istrunc_S.
-    intros f g; apply (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
+    intros f g; exact (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
 Defined.
 
 (** Truncatedness is an hprop. *)
@@ -519,7 +519,7 @@ Proof.
     apply (ap (exist _ a1)).
     funext x.
     pose (Build_Contr _ a1 c1); apply path2_contr.
-  - rapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold n.+1 A)^-1%equiv).
+  - exact (istrunc_equiv_istrunc _ (equiv_istrunc_unfold n.+1 A)^-1%equiv).
     (* This case follows from [istrunc_forall]. *)
 Defined.
 

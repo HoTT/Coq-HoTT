@@ -20,7 +20,7 @@ Infix "=N=" := natpaths.
 
 Definition natpaths_symm : Symmetric@{N N} natpaths.
 Proof.
-  unfold natpaths; apply _.
+  unfold natpaths; exact _.
 Defined.
 
 #[export] Instance nat_0: Zero@{N} nat := 0%nat.
@@ -329,7 +329,7 @@ Proof.
 intros a E. apply le_exists in E.
 destruct E as [k E].
 apply natpaths_symm,plus_eq_zero in E.
-apply (S_neq_0 _ (snd E)).
+exact (S_neq_0 _ (snd E)).
 Qed.
 
 Lemma lt_le : forall a b, a < b -> a <= b.
@@ -394,8 +394,8 @@ Qed.
 Local Instance nat_le_po : PartialOrder nat_le.
 Proof.
 repeat split.
-- apply _.
-- apply _.
+- exact _.
+- exact _.
 - hnf;intros; constructor.
 - hnf. intros a b c E1 E2.
   apply le_exists in E1;apply le_exists in E2.
@@ -420,7 +420,7 @@ Local Instance nat_strict : StrictOrder (_:Lt nat).
 Proof.
 split.
 - cbv; exact _.
-- apply _.
+- exact _.
 - hnf. intros a b c E1 E2.
   apply le_exists;apply le_exists in E1;apply le_exists in E2.
   destruct E1 as [k1 E1], E2 as [k2 E2].
@@ -443,7 +443,7 @@ Qed.
 
 Instance nat_apart_mere : is_mere_relation nat nat_apart.
 Proof.
-intros;apply ishprop_sum;try apply _.
+intros;apply ishprop_sum;try exact _.
 intros E1 E2. apply (irreflexivity nat_lt x).
 transitivity y;trivial.
 Qed.
@@ -456,7 +456,7 @@ Defined.
 #[export] Instance nat_trivial_apart : TrivialApart nat.
 Proof.
 split.
-- apply _.
+- exact _.
 - intros a b;split;intros E.
   + destruct E as [E|E];apply irrefl_neq in E;trivial.
     apply symmetric_neq;trivial.
@@ -523,8 +523,8 @@ Defined.
 
 Lemma nat_full' : FullPseudoSemiRingOrder nat_le nat_lt.
 Proof.
-split;[apply _|split|].
-- split;try apply _.
+split;[exact _|split|].
+- split;try exact _.
   + intros a b [E1 E2].
     destruct (irreflexivity lt a).
     transitivity b;trivial.
@@ -595,7 +595,7 @@ Qed.
 
 #[export] Instance S_strict_embedding : StrictOrderEmbedding S.
 Proof.
-split;apply _.
+split;exact _.
 Qed.
 
 #[export] Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
@@ -643,9 +643,9 @@ Section for_another_semiring.
     : IsSemiRingPreserving (naturals_to_semiring nat R).
   Proof.
     split; split.
-    - rapply f_preserves_plus.
+    - exact f_preserves_plus.
     - reflexivity.
-    - rapply f_preserves_mult.
+    - exact f_preserves_mult.
     - reflexivity.
   Defined.
 
@@ -663,7 +663,7 @@ End for_another_semiring.
 
 Lemma nat_naturals : Naturals@{N N N N N N N i} nat.
 Proof.
-split;try apply _.
+split;try exact _.
 intros;apply toR_unique, _.
 Qed.
 #[export] Existing Instance nat_naturals.
@@ -705,8 +705,8 @@ Proof.
 split.
 - intros x y E. rewrite add_comm.
   symmetry.
-  apply (le_plus_minus _ _ E).
-- apply minus_ge.
+  exact (le_plus_minus _ _ E).
+- exact minus_ge.
 Qed.
 
 End nat_lift.

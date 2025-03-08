@@ -414,7 +414,7 @@ Proof.
   (** We need a general induction hypothesis *)
   revert n I A B i j h l.
   induction n as [|n IHn].
-  1: apply ishprop_iwtype.
+  1: exact ishprop_iwtype.
   intros I A B i j h l.
   apply istrunc_S.
   intros x y.
@@ -423,7 +423,7 @@ Proof.
   apply IHn.
   intros [k [a b]].
   (** The crucial step is to characterize the fiber of [i'] which was done previously. *)
-  apply (istrunc_equiv_istrunc _
+  exact (istrunc_equiv_istrunc _
     (equiv_path_hfiber_index I A B i j k a b)).
 Defined.
 

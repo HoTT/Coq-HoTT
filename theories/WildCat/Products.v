@@ -113,7 +113,7 @@ Section Lemmata.
       (fun z : A^op => prod_0gpd I (fun i => yon_0gpd (x i) z)).
   Proof.
     snrapply Build_NatEquiv.
-    1: intro; nrapply cate_cat_prod_corec_inv.
+    1: intro; exact cate_cat_prod_corec_inv.
     exact (is1natural_yoneda_0gpd
       (cat_prod I x)
       (fun z => prod_0gpd I (fun i => yon_0gpd (x i) z))

@@ -97,7 +97,7 @@ Proof.
   refine (cu_ccGGGG (eisretr _ _)^ (eisretr _ _)^
     (eisretr _ _)^ (eisretr _ _)^ _).
   (* Now we finish the proof with the following composition of cubes *)
-  nrefine ((sq_ap_compose t2c c2t surf)
+  exact ((sq_ap_compose t2c c2t surf)
     @lr (cu_ap c2t (Torus_rec_beta_surf _ _ _ _ _ ))
     @lr (sq_ap_uncurry _ _ _)
     @lr (pr2 (pr2 c2t'_beta))
@@ -155,12 +155,12 @@ Proof.
   1: apply sq_tr^-1; shelve.
   apply dp_cu.
   nrefine (cu_ccGGcc _ _ _).
-  1,2: nrefine (ap sq_dp (Circle_ind_beta_loop _ _ _)
+  1,2: exact (ap sq_dp (Circle_ind_beta_loop _ _ _)
     @ eisretr _ _)^.
   apply cu_rot_tb_fb.
   nrefine (cu_ccGGGG _ _ _ _ _).
   1,2,3,4: exact (eisretr _ _)^.
-  nrefine ((sq_ap011_compose c2t' t2c loop loop)
+  exact ((sq_ap011_compose c2t' t2c loop loop)
     @lr (cu_ap t2c (c2t'_beta.2.2))
     @lr (Torus_rec_beta_surf _ _ _ _ _)
     @lr (cu_flip_lr (sq_ap_idmap _))

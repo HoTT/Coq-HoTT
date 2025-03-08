@@ -14,7 +14,7 @@ Definition recip' (x : F) (apx : x ≶ 0) : F := //(x;apx).
 (* Add Ring F : (stdlib_ring_theory F). *)
 Lemma recip_inverse' (x : F) (Px : x ≶ 0) : x // (x; Px) = 1.
 Proof.
-  apply (recip_inverse (x;Px)).
+  exact (recip_inverse (x;Px)).
 Qed.
 
 Lemma reciperse_alt (x : F) Px : x // (x;Px) = 1.
@@ -54,7 +54,7 @@ Qed.
 
 #[export] Instance: IsStrongInjective (-).
 Proof.
-repeat (split; try apply _); intros x y E.
+repeat (split; try exact _); intros x y E.
 - apply (strong_extensionality (+ x + y)).
   rewrite simple_associativity, left_inverse, plus_0_l.
   rewrite (commutativity (f:=plus) x y), simple_associativity,
@@ -69,7 +69,7 @@ Qed.
 
 #[export] Instance: IsStrongInjective (//).
 Proof.
-repeat (split; try apply _); intros x y E.
+repeat (split; try exact _); intros x y E.
 - apply (strong_extensionality (x.1 *.)).
   rewrite recip_inverse, (commutativity (f:=mult)).
   apply (strong_extensionality (y.1 *.)).
@@ -92,7 +92,7 @@ Qed.
 
 #[export] Instance: forall z, StrongRightCancellation (+) z.
 Proof.
-intros. apply (strong_right_cancel_from_left (+)).
+intros. exact (strong_right_cancel_from_left (+)).
 Qed.
 
 #[export] Instance: forall z, PropHolds (z ≶ 0) -> StrongLeftCancellation (.*.) z.
@@ -106,7 +106,7 @@ Qed.
 
 #[export] Instance: forall z, PropHolds (z ≶ 0) -> StrongRightCancellation (.*.) z.
 Proof.
-intros. apply (strong_right_cancel_from_left (.*.)).
+intros. exact (strong_right_cancel_from_left (.*.)).
 Qed.
 
 Lemma mult_apart_zero_l x y : x * y ≶ 0 -> x ≶ 0.
@@ -285,7 +285,7 @@ Section morphisms.
 
   Lemma strong_injective_preserves_0 : (forall x, x ≶ 0 -> f x ≶ 0) -> IsStrongInjective f.
   Proof.
-  intros E1. split; try apply _. intros x y E2.
+  intros E1. split; try exact _. intros x y E2.
   apply (strong_extensionality (+ -f y)).
   rewrite plus_negate_r, <-preserves_minus.
   apply E1.
@@ -313,6 +313,6 @@ Section morphisms.
   - apply apart_ne;trivial.
   - rewrite <-rings.preserves_mult.
     rewrite !reciperse_alt.
-    apply preserves_1.
+    exact preserves_1.
   Qed.
 End morphisms.

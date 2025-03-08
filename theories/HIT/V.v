@@ -351,18 +351,18 @@ Defined.
 Let path : Au' = Au.
 Proof.
   apply path_universe_uncurried.
-  apply (equiv_adjointify inv_e e hom2 hom1).
+  exact (equiv_adjointify inv_e e hom2 hom1).
 Defined.
 
 Lemma mu_eq_mu' : transport (fun A : Type => A -> V) path^ mu = mu'.
 Proof.
   apply path_forall. intro a'.
   transitivity (transport (fun X => V) path^ (mu (transport (fun X : Type => X) path^^ a'))).
-  - apply (@transport_arrow Type (fun X : Type => X) (fun X => V) Au Au' path^ mu a').
+  - exact (@transport_arrow Type (fun X : Type => X) (fun X => V) Au Au' path^ mu a').
   - transitivity (mu (transport idmap path^^ a')).
     + apply transport_const.
     + transitivity (mu (inv_e a')).
-      2: apply (pr2 (snd eq_img_untrunc a')).
+      2: exact (pr2 (snd eq_img_untrunc a')).
       refine (ap mu _).
       transitivity (transport idmap path a').
       * exact (ap (fun x => transport idmap x a') (inv_V path)).
@@ -374,7 +374,7 @@ Proof.
   apply path_sigma_uncurried; simpl.
   exists path^.
   transitivity (path^ # mu; transportD (fun A => A -> V) (fun A m => IsHSet A * IsEmbedding m * (u = set m)) path^ mu (h, mono, p)).
-  - apply (@transport_sigma Type (fun A => A -> V) (fun A m => IsHSet A * IsEmbedding m * (u = set m)) Au Au' path^ (mu; (h, mono, p))).
+  - exact (@transport_sigma Type (fun A => A -> V) (fun A m => IsHSet A * IsEmbedding m * (u = set m)) Au Au' path^ (mu; (h, mono, p))).
   - apply path_sigma_hprop; simpl.
     exact mu_eq_mu'.
 Defined.
@@ -400,7 +400,7 @@ Proof.
   - intro v. apply hprop_allpath.
     intros [Au [mu ((hset, mono), p)]].
     intros [Au' [mu' ((hset', mono'), p')]].
-    apply monic_set_present_uniqueness.
+    exact monic_set_present_uniqueness.
 Defined.
 
 Definition type_of_members (u : V) : Type := pr1 (monic_set_present u).
@@ -427,8 +427,8 @@ Proof.
       intros [b p]. apply tr. exists b. exact p^.
     + intro. apply (H2 (g b)). apply tr; exists b; reflexivity.
   - intro p; split.
-    + intros z Hz. apply (transport (fun x => z ∈ x) p Hz).
-    + intros z Hz. apply (transport (fun x => z ∈ x) p^ Hz).
+    + intros z Hz. exact (transport (fun x => z ∈ x) p Hz).
+    + intros z Hz. exact (transport (fun x => z ∈ x) p^ Hz).
 Qed.
 
 Lemma mem_induction (C : V -> HProp)
@@ -525,7 +525,7 @@ Proof.
       { apply (snd extensionality p). simpl.
         apply tr; exists true; reflexivity. }
       refine (Trunc_rec _ H). intros [t p']; destruct t.
-      * apply ((ap V_singleton)^-1 p'^).
+      * exact ((ap V_singleton)^-1 p'^).
       * symmetry; apply (fst pair_eq_singleton p').
     + split.
       * exact p1.
@@ -665,7 +665,7 @@ Proof.
       destruct (fst path_pair_ord p) as (px, py). destruct (fst path_pair_ord p') as (px', py').
       transitivity (func_of_members (h a)); auto with path_hints. transitivity (func_of_members (h a'));auto with path_hints.
       refine (ap func_of_members _). refine (ap h _).
-      apply (isinj_embedding func_of_members IsEmbedding_funcofmembers a a' (px @ px'^)).
+      exact (isinj_embedding func_of_members IsEmbedding_funcofmembers a a' (px @ px'^)).
   - intros ((H1, H2), H3). simpl.
     assert (h : forall a : [u], {b : [v] & [func_of_members a, func_of_members b] ∈ phi}).
     { intro a. pose (x := func_of_members a).

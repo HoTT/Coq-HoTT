@@ -115,7 +115,7 @@ Section ChineseRemainderTheorem.
   Proof.
     (** We use the first isomorphism theorem. Coq can already infer which map we wish to use, so for clarity we tell it not to do so. *)
     snrapply rng_first_iso'.
-    1: rapply rng_homo_crt.
+    1: exact rng_homo_crt.
     1: exact _.
     (** Finally we must show the ideal of this map is the intersection. *)
     apply ideal_subset_antisymm.

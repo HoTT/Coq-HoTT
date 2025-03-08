@@ -52,8 +52,8 @@ rewrite transport_path_universe, ?transport_path_universe_V.
   apply ap011;apply eisretr.
 - rewrite (preserves_mult (f:=f)).
   apply ap011;apply eisretr.
-- apply preserves_0.
-- apply preserves_1.
+- exact preserves_0.
+- exact preserves_1.
 Qed.
 
 Lemma iso_leibnitz : forall P : Operations -> Type, P A -> P B.
@@ -119,8 +119,8 @@ rewrite transport_path_universe, ?transport_path_universe_V.
   apply ap011;apply eisretr.
 - rewrite (preserves_mult (f:=f)).
   apply ap011;apply eisretr.
-- apply preserves_0.
-- apply preserves_1.
+- exact preserves_0.
+- exact preserves_1.
 - rewrite (preserves_negate (f:=f)).
   apply ap,eisretr.
 Qed.

@@ -71,10 +71,10 @@ Definition functor_pfiber {A B C D}
   : pfiber f ->* pfiber g.
 Proof.
   srapply Build_pMap.
-  + cbn. refine (functor_hfiber2 p (point_eq k)).
+  + cbn. exact (functor_hfiber2 p (point_eq k)).
   + srapply path_hfiber. 
     - apply point_eq.
-    - refine (concat_pp_p _ _ _ @ _). apply moveR_Vp. apply (point_htpy p)^.
+    - refine (concat_pp_p _ _ _ @ _). apply moveR_Vp. exact (point_htpy p)^.
 Defined.
 
 Definition pequiv_pfiber {A B C D}
