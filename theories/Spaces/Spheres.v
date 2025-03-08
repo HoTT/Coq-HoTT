@@ -114,7 +114,7 @@ Definition equiv_S1_Circle : Sphere 1 <~> Circle
 Definition pequiv_S1_Circle : psphere 1 <~>* [Circle, _].
 Proof.
   srapply Build_pEquiv'.
-  1: apply equiv_S1_Circle.
+  1: exact equiv_S1_Circle.
   reflexivity.
 Defined.
 
@@ -124,7 +124,7 @@ Proof.
   apply (Susp_rec base base).
   apply (Susp_rec (idpath base) (idpath base)).
   apply (Susp_rec surf (idpath (idpath base))).
-  apply Empty_rec.
+  exact Empty_rec.
 Defined.
 
 Definition TwoSphere_to_S2 : TwoSphere -> (Sphere 2).
@@ -215,7 +215,7 @@ Proof.
   refine (_ @ (ap (fun w => w @ _) (ap_idmap _)^)).
   refine ((Susp_rec_beta_merid _) @ _).
   path_via (ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x))).
-  { apply (ap_compose S2_to_TwoSphere TwoSphere_to_S2 (merid x)). }
+  { exact (ap_compose S2_to_TwoSphere TwoSphere_to_S2 (merid x)). }
   path_via (ap TwoSphere_to_S2 
                (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x)). 
   { repeat f_ap. apply Susp_rec_beta_merid. }
@@ -223,7 +223,7 @@ Proof.
 
   simple refine (Susp_ind _ (concat_pV (merid North)) _ _).
   - refine (_ @ (concat_pV (merid North))). 
-    apply (ap (fun w => merid w @ (merid North)^) (merid South)^).
+    exact (ap (fun w => merid w @ (merid North)^) (merid South)^).
   - intro x.
     refine ((transport_paths_FlFr (merid x) (concat_pV (merid North))) @ _).
     rewrite_moveR_Vp_p. symmetry. refine ((dpath_path_lr _ _ _)^-1 _).
@@ -248,8 +248,8 @@ Defined.
 Global Instance isequiv_S2_to_TwoSphere : IsEquiv (S2_to_TwoSphere) | 0.
 Proof.
   apply isequiv_adjointify with TwoSphere_to_S2.
-  - apply issect_TwoSphere_to_S2.
-  - apply issect_S2_to_TwoSphere.
+  - exact issect_TwoSphere_to_S2.
+  - exact issect_S2_to_TwoSphere.
 Defined.
 
 Definition equiv_S2_TwoSphere : Sphere 2 <~> TwoSphere
@@ -274,7 +274,7 @@ Proof.
   induction n.
   { srapply contr_inhabited_hprop.
     apply tr, North. }
-  apply isconnected_susp.
+  exact isconnected_susp.
 Defined.
 
 (** ** Truncatedness via spheres  *)

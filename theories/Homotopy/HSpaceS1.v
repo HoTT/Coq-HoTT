@@ -21,7 +21,7 @@ Section HSpace_S1.
     srapply Susp_ind; hnf.
     { apply moveL_transport_p.
       refine ((transport_pp _ _ _ _)^ @ _).
-      apply p. }
+      exact p. }
     1: reflexivity.
     apply Empty_ind.
   Defined.
@@ -35,7 +35,7 @@ Section HSpace_S1.
     srapply Susp_rec.
     1: exact p.
     1: reflexivity.
-    apply Empty_rec.
+    exact Empty_rec.
   Defined.
 
   Definition Sph1_rec_beta_loop (P : Type) (b : P) (p : b = b)

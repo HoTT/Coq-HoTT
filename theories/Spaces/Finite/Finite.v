@@ -300,7 +300,7 @@ Proof.
     simpl.
     refine (_ @ nat_add_comm _ _).
     refine (ap011 nat_add _ _).
-    + apply IH.
+    + exact IH.
     + apply fcard_equiv', prod_unit_l.
   Defined.
 
@@ -524,7 +524,7 @@ Proof.
   nrefine (decidable_equiv' _ (hfiber_fibration x P)^-1%equiv _).
   nrefine (detachable_image_finite pr1 x).
   1,2: exact _.
-  apply (mapinO_pr1 (Tr (-1))).  (** Why doesn't Coq find this? *)
+  exact (mapinO_pr1 (Tr (-1))).  (** Why doesn't Coq find this? *)
 Defined.
 
 (** ** Quotients *)
@@ -545,7 +545,7 @@ Section DecidableQuotients.
     assert (is_mere_relation _ R') by exact _.
     assert (Reflexive R') by (intros ?; unfold R'; apply reflexivity).
     assert (Symmetric R') by (intros ? ?; unfold R'; apply symmetry).
-    assert (Transitive R') by (intros ? ? ?; unfold R'; apply transitivity).
+    assert (Transitive R') by (intros ? ? ?; unfold R'; exact transitivity).
     assert (R'd : forall x y, Decidable (R' x y))
       by (intros ? ?; unfold R'; apply Rd).
     srefine (finite_equiv' _ (equiv_quotient_functor R' R e^-1 _) _).
@@ -559,7 +559,7 @@ Section DecidableQuotients.
       assert (is_mere_relation _ R'') by exact _.
       assert (Reflexive R'') by (intros ?; unfold R''; apply reflexivity).
       assert (Symmetric R'') by (intros ? ?; unfold R''; apply symmetry).
-      assert (Transitive R'') by (intros ? ? ?; unfold R''; apply transitivity).
+      assert (Transitive R'') by (intros ? ? ?; unfold R''; exact transitivity).
       assert (forall x y, Decidable (R'' x y)) by (intros ? ?; unfold R''; apply R'd).
       assert (inlresp := (fun x y => idmap)
                          : forall x y, R'' x y -> R' (inl x) (inl y)).

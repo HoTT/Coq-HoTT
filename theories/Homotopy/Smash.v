@@ -82,10 +82,10 @@ Section Smash.
     srapply Pushout_ind.
     + intros [a b].
       apply Psm.
-    + apply (Bool_ind _ Pr Pl).
+    + exact (Bool_ind _ Pr Pl).
     + srapply sum_ind.
-      - apply Pgl.
-      - apply Pgr.
+      - exact Pgl.
+      - exact Pgr.
   Defined.
 
   Definition Smash_ind_beta_gluel {P : Smash X Y -> Type}

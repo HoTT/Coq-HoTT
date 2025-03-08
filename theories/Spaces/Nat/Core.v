@@ -541,7 +541,7 @@ Proof.
     cbn. apply ap.
     destruct q.
     1:  apply leq_refl_inj.
-    apply (leq_succ_r_inj_gen n m _ p q idpath).
+    exact (leq_succ_r_inj_gen n m _ p q idpath).
 Defined.
 
 Definition leq_succ_r_inj n m (p : n <= m.+1) (q : n <= m) : p = leq_succ_r q

@@ -68,7 +68,7 @@ Definition dpath_forall'
     <~> (forall p, transportD P (fun x => fun p => Q ( x ; p)) h p (f p) = g (transport P h p)).
 Proof.
   destruct h.
-  apply 1%equiv.
+  exact 1%equiv.
 Defined.
 
 (** This version produces only paths between pairs, as opposed to paths between arbitrary inhabitants of dependent sum types.  But it has the advantage that the components of those pairs can more often be inferred, so we make them implicit arguments. *)
@@ -678,7 +678,7 @@ Proof.
   rewrite (path_ishprop y x).
   rewrite (path_ishprop z x).
   refine (_ @ (ap (fun z => z @ _) (path_sigma_hprop_1 _))^).
-  apply (concat_1p _)^.
+  exact (concat_1p _)^.
 Qed.
 
 (** The inverse of [path_sigma_hprop] has its own name, so we give special names to the section and retraction homotopies to help [rewrite] out. *)

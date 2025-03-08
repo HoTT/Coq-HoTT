@@ -191,7 +191,7 @@ Definition pbloop {G : Group} : G ->* loops (B G).
 Proof.
   srapply Build_pMap.
   1: exact bloop.
-  apply bloop_id.
+  exact bloop_id.
 Defined.
 
 (* This says that [B] is left adjoint to the loop space functor from pointed 1-types to groups. *)
@@ -265,7 +265,7 @@ Section EncodeDecode.
   Proof.
     intros b p.
     destruct p.
-    apply bloop_id.
+    exact bloop_id.
   Defined.
 
   Global Instance isequiv_bloop : IsEquiv (@bloop G).

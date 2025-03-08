@@ -147,7 +147,7 @@ Section Cosets.
     : Finite RightCoset.
   Proof.
     nrapply finite_equiv'.
-    1: apply equiv_leftcoset_rightcoset.
+    1: exact equiv_leftcoset_rightcoset.
     exact _.
   Defined.
 
@@ -342,7 +342,7 @@ Proof.
     + exact (issubgroup_in_inv _ x.2).
     + exact issubgroup_in_unit.
   - apply isequiv_surj_emb.
-    2: apply (cancelL_isembedding (g:=pr1)).
+    2: exact (cancelL_isembedding (g:=pr1)).
     intros [g p].
     rapply contr_inhabited_hprop.
     srefine (tr ((g; _); _)).
@@ -360,7 +360,7 @@ Instance catie_grp_quotient_map_trivial {G : Group} (N : NormalSubgroup G)
 Proof.
   snrapply catie_adjointify.
   - srapply (grp_quotient_rec _ _ (Id _)).
-    apply triv.
+    exact triv.
   - by srapply grp_quotient_ind_hprop.
   - reflexivity.
 Defined.

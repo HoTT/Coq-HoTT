@@ -134,7 +134,7 @@ Proof.
   intros E F.
   refine (istrunc_equiv_istrunc _ equiv_path_abses_iso (n:=0)).
   rapply istrunc_sigma.
-  apply ishset_groupisomorphism.
+  exact ishset_groupisomorphism.
 Defined.
 
 Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
@@ -389,7 +389,7 @@ Proof.
   1: reflexivity.
   apply moveL_pV.
   refine (concat_1p _ @ _).
-  apply equiv_path_abses_1.
+  exact equiv_path_abses_1.
 Defined.
 
 Lemma abses_ap_fmap `{Univalence} {B0 B1 A0 A1 : AbGroup@{u}}

@@ -298,7 +298,7 @@ Section Flattening.
     - snrapply GraphQuotient_rec.
       + exact (fun '(a; x) => (gq a; x)).
       + intros [a x] [b y] [r pr]; cbn in r, pr; cbn.
-        apply (flatten_gqd_glue r pr).
+        exact (flatten_gqd_glue r pr).
     - snrapply GraphQuotient_ind.
       1: reflexivity.
       intros [a x] [b y] [r pr]; cbn in r, pr; cbn.

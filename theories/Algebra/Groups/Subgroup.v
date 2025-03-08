@@ -329,14 +329,14 @@ Section Cosets.
   Proof.
     intro x; hnf.
     rewrite left_inverse.
-    apply issubgroup_in_unit.
+    exact issubgroup_in_unit.
   Defined.
 
   #[export] Instance reflexive_in_cosetR : Reflexive in_cosetR.
   Proof.
     intro x; hnf.
     rewrite right_inverse.
-    apply issubgroup_in_unit.
+    exact issubgroup_in_unit.
   Defined.
 
   #[export] Instance symmetric_in_cosetL : Symmetric in_cosetL.
@@ -456,7 +456,7 @@ Definition equiv_symmetric_in_normalsubgroup {G : Group}
 Proof.
   intros x y.
   rapply equiv_iff_hprop.
-  all: apply isnormal.
+  all: exact isnormal.
 Defined.
 
 (** Our definiiton of normal subgroup implies the usual definition of invariance under conjugation. *)
@@ -580,7 +580,7 @@ Definition trivial_subgroup_rec {G : Group} (H : Subgroup G)
   : forall x, trivial_subgroup G x -> H x.
 Proof.
   snrapply paths_ind_r; cbn beta.
-  apply issubgroup_in_unit.
+  exact issubgroup_in_unit.
 Defined.
 
 (** The trivial subgroup is a normal subgroup. *)
@@ -696,7 +696,7 @@ Proof.
   intros H1.
   snrapply Build_IsSubgroup'.
   - exact _.
-  - cbn; apply issubgroup_in_unit.
+  - cbn; exact issubgroup_in_unit.
   - intros x y Hx Hy; cbn.
     by apply issubgroup_in_inv_op.
 Defined.
@@ -710,7 +710,7 @@ Instance isnormal_subgroup_grp_op {G : Group} (H : Subgroup G)
   : IsNormalSubgroup H -> IsNormalSubgroup (subgroup_grp_op H).
 Proof.
   intros n x y; cbn.
-  apply isnormal.
+  exact isnormal.
 Defined.
 
 Definition normalsubgroup_grp_op {G : Group}
@@ -727,7 +727,7 @@ Proof.
   snrapply Build_IsSubgroup'.
   - hnf; exact _.
   - nrefine (transport S (grp_homo_unit f)^ _).
-    apply issubgroup_in_unit.
+    exact issubgroup_in_unit.
   - hnf; intros x y Sfx Sfy.
     nrefine (transport S (grp_homo_op f _ _)^ _).
     rapply issubgroup_in_op; only 1: assumption.
@@ -1043,7 +1043,7 @@ Proof.
   - snrapply (subgroup_corec f).
     exact (fun x => (x; idpath)).
   - apply isequiv_surj_emb.
-    2: apply (cancelL_isembedding (g:=pr1)).
+    2: exact (cancelL_isembedding (g:=pr1)).
     intros [b [a p]]; cbn.
     rapply contr_inhabited_hprop.
     refine (tr (a; _)).

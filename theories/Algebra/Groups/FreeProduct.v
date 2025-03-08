@@ -454,14 +454,14 @@ Section FreeProduct.
       refine (amal_mu_H _ _ _ _ @ _).
       rewrite left_inverse.
       rewrite amal_omega_H.
-      apply IHxs.
+      exact IHxs.
     + change (amal_eta (word_inverse ([inr k] ++ xs) ++ [inr k] ++ xs) = mon_unit).
       rewrite word_inverse_ww.
       rewrite <- app_assoc.
       refine (amal_mu_K _ _ _ _ @ _).
       rewrite left_inverse.
       rewrite amal_omega_K.
-      apply IHxs.
+      exact IHxs.
   Defined.
 
   Lemma amal_eta_word_concat_wV (x : Words) : amal_eta (x ++ word_inverse x) = mon_unit.
@@ -637,13 +637,13 @@ Section FreeProduct.
       simpl.
       rewrite <- (app_nil [inl (f x)]).
       rewrite <- (app_nil [inr (g x)]).
-      apply (amal_tau nil nil x). }
+      exact (amal_tau nil nil x). }
     { intros r.
       apply equiv_path_grouphomomorphism.
       srapply amal_type_ind_hprop.
       intro x.
       induction x as [|a x].
-      1: symmetry; apply (grp_homo_unit r).
+      1: symmetry; exact (grp_homo_unit r).
       simpl in *.
       rewrite IHx.
       destruct a; symmetry;

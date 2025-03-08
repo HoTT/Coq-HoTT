@@ -1016,7 +1016,7 @@ Section RaiseSort.
     simple refine (No_rec No le lt _ _ _ _ _).
     - intros L R ? xL xR xcut fxL fxR fxcut.
       exact {{ fxL | fxR // fxcut }}.
-    - apply path_No.
+    - exact path_No.
     - intros; apply le_lr; assumption.
     - intros; apply lt_l with l; assumption.
     - intros; apply lt_r with r; assumption.

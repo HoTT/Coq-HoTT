@@ -496,7 +496,7 @@ Proof.
   intros H0 V.
   apply (equiv_ind (equiv_path V U)).
   (* We manually apply [paths_ind_r] to reduce universe levels. *)
-  revert V; rapply paths_ind_r; apply H0.
+  revert V; rapply paths_ind_r; exact H0.
 Defined.
 
 Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)

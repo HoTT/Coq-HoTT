@@ -51,7 +51,7 @@ Section join_semilattice_order.
   Instance join_sl_order_join_sl: IsJoinSemiLattice L.
   Proof.
   repeat split.
-  - apply _.
+  - exact _.
   - intros x y z. apply (antisymmetry (≤)).
     + apply join_lub.
       * apply join_ub_3_l.
@@ -115,7 +115,7 @@ Section join_semilattice_order.
 
   #[export] Instance join_le_preserving_r : forall z, OrderPreserving (⊔ z).
   Proof.
-  intros. apply maps.order_preserving_flip.
+  intros. exact maps.order_preserving_flip.
   Qed.
 
   Lemma join_le_compat x₁ x₂ y₁ y₂ : x₁ ≤ x₂ -> y₁ ≤ y₂ -> x₁ ⊔ y₁ ≤ x₂ ⊔ y₂.
@@ -226,7 +226,7 @@ Section meet_semilattice_order.
   Instance meet_sl_order_meet_sl: IsMeetSemiLattice L.
   Proof.
   repeat split.
-  - apply _.
+  - exact _.
   - intros x y z. apply (antisymmetry (≤)).
     + apply meet_glb.
       * apply meet_glb.
@@ -289,7 +289,7 @@ Section meet_semilattice_order.
 
   #[export] Instance: forall z, OrderPreserving (⊓ z).
   Proof.
-  intros. apply maps.order_preserving_flip.
+  intros. exact maps.order_preserving_flip.
   Qed.
 
   Lemma meet_le_compat x₁ x₂ y₁ y₂ : x₁ ≤ x₂ -> y₁ ≤ y₂ -> x₁ ⊓ y₁ ≤ x₂ ⊓ y₂.
@@ -407,8 +407,8 @@ Section join_sl_order_alt.
   Lemma alt_Build_JoinSemiLatticeOrder : JoinSemiLatticeOrder (≤).
   Proof.
   repeat split.
-  - apply _.
-  - apply _.
+  - exact _.
+  - exact _.
   - intros x.
     apply le_correct. apply binary_idempotent.
   - intros x y z E1 E2.
@@ -441,9 +441,9 @@ Section meet_sl_order_alt.
   Lemma alt_Build_MeetSemiLatticeOrder : MeetSemiLatticeOrder (≤).
   Proof.
   repeat split.
-  - apply _.
-  - apply _.
-  - intros ?. apply le_correct. apply (idempotency _ _).
+  - exact _.
+  - exact _.
+  - intros ?. apply le_correct. exact (idempotency _ _).
   - intros ? ? ? E1 E2.
     apply le_correct in E1;apply le_correct in E2;apply le_correct.
     rewrite <-E1, <-simple_associativity, E2.

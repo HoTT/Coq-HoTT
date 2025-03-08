@@ -73,7 +73,7 @@ Definition extendable_over_postcompose' (n : nat)
   -> ExtendableAlong_Over n f C E ext.
 Proof.
   revert C ext D E g; simple_induction n n IHn; intros C ext D E g; simpl.
-  1:by apply idmap.
+  1: exact idmap.
   intros ext'.
   split.
   - intros h k.
@@ -417,7 +417,7 @@ Global Instance accrsu_loc@{a i} (f : LocalGenerators@{a}) : IsAccRSU@{a i} (Loc
 Proof.
   unshelve econstructor.
   - exact f.
-  - intros; split; apply idmap.
+  - intros; split; exact idmap.
 Defined.
 
 (** Conversely, if a subuniverse is accessible, then the corresponding localization subuniverse is equivalent to it, and moreover exists at every universe level and satisfies its computation rules judgmentally.  This is called [lift_accrsu] but in fact it works equally well to *lower* the universe level, as long as both levels are no smaller than the size [a] of the generators. *)

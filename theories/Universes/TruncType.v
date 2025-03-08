@@ -100,8 +100,8 @@ Section TruncType.
     intros A B.
     refine (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i j} A B)).
     case n as [ | n'].
-    - apply contr_equiv_contr_contr. (* The reason is different in this case. *)
-    - apply istrunc_equiv.
+    - exact contr_equiv_contr_contr. (* The reason is different in this case. *)
+    - exact istrunc_equiv.
   Defined.
 
   Global Instance isset_HProp : IsHSet HProp := _.
@@ -109,7 +109,7 @@ Section TruncType.
   Global Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type & IsTrunc n A } | 0.
   Proof.
     intro n.
-    apply (istrunc_equiv_istrunc _ issig_trunctype^-1).
+    exact (istrunc_equiv_istrunc _ issig_trunctype^-1).
   Defined.
 
   (** ** Some standard inhabitants *)

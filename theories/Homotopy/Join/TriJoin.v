@@ -803,7 +803,7 @@ Definition functor2_trijoin {A B C A' B' C'}
 Proof.
   unfold functor_trijoin.
   rapply (fmap trijoin_rec).
-  apply (trijoinrecdata_tricomp2 _ p q r).
+  exact (trijoinrecdata_tricomp2 _ p q r).
 Defined.
 
 Global Instance isequiv_functor_trijoin {A B C A' B' C'}
@@ -814,7 +814,7 @@ Global Instance isequiv_functor_trijoin {A B C A' B' C'}
 Proof.
   (* This proof is almost identical to the proof of [isequiv_functor_join]. *)
   snrapply isequiv_adjointify.
-  - apply (functor_trijoin f^-1 g^-1 h^-1).
+  - exact (functor_trijoin f^-1 g^-1 h^-1).
   - etransitivity.
     1: symmetry; apply functor_trijoin_compose.
     etransitivity.
@@ -824,7 +824,7 @@ Proof.
     1: symmetry; apply functor_trijoin_compose.
     etransitivity.
     1: exact (functor2_trijoin (eissect f) (eissect g) (eissect h)).
-    apply functor_trijoin_idmap.
+    exact functor_trijoin_idmap.
 Defined.
 
 Definition equiv_functor_trijoin {A B C A' B' C'}

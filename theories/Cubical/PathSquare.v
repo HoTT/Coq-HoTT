@@ -140,7 +140,7 @@ Proof.
   destruct p0x, p1x.
   refine (sq_G1 oE _).
   refine (equiv_path_inverse _ _ oE _).
-  apply sq_G1^-1.
+  exact sq_G1^-1.
 Defined.
 
 Notation sq_flip_h := equiv_sq_flip_h.
@@ -153,7 +153,7 @@ Proof.
   destruct px0, px1.
   refine (sq_1G oE _).
   refine (equiv_path_inverse _ _ oE _).
-  apply sq_1G^-1.
+  exact sq_1G^-1.
 Defined.
 
 Notation sq_flip_v := equiv_sq_flip_v.
@@ -549,12 +549,12 @@ Proof.
   refine (_ oE (equiv_functor_prod' sq_path sq_path)^-1%equiv).
   refine (_ oE equiv_path_prod (_,_) (_,_)).
   srefine (_ oE equiv_ap' _ _ _).
-  3: apply (equiv_path_prod (_,_) (_,_)).
+  3: exact (equiv_path_prod (_,_) (_,_)).
   refine (_ oE equiv_concat_l _^ _).
   2: apply (path_prod_pp (_,_) (_,_) (_,_)).
   refine (_ oE equiv_concat_r _ _).
   2: apply (path_prod_pp (_,_) (_,_) (_,_)).
-  apply sq_path.
+  exact sq_path.
 Defined.
 
 Notation sq_prod := equiv_sq_prod.

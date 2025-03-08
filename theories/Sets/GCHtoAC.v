@@ -83,7 +83,7 @@ Qed.
 Lemma path_bool_subsingleton :
   (Unit -> HProp) = Bool.
 Proof.
-  rewrite <- path_unit_fun. apply path_bool_prop.
+  rewrite <- path_unit_fun. exact path_bool_prop.
 Qed.
 
 Lemma path_pred_sum X (p : X -> HProp) :
@@ -110,7 +110,7 @@ Proof.
   - intros x. exists (f x). apply tr. exists x. reflexivity.
   - cbn. intros x. destruct iota as [x' H]. by apply Hf.
   - cbn. intros [y x]. apply path_sigma_hprop. cbn.
-    destruct iota as [x' Hx]. apply Hx.
+    destruct iota as [x' Hx]. exact Hx.
 Qed.
 
 
@@ -191,35 +191,35 @@ Proof.
   { apply Hpc; apply Hpc; intros H'; by apply Hpc. }
   - intros Hx. apply equiv_smalltype in Hx. by apply Hx.
   - intros Hx. apply equiv_smalltype. intros p Hp.
-    eapply merely_destruct; try apply (HR _ _ _ Hp H). by intros ->.
+    eapply merely_destruct; try exact (HR _ _ _ Hp H). by intros ->.
 Qed.
 
 Lemma InjectsInto_power_morph X Y :
   InjectsInto X Y -> InjectsInto (X -> HProp) (Y -> HProp).
 Proof.
-  intros HF. eapply merely_destruct; try apply HF. intros [f Hf].
+  intros HF. eapply merely_destruct; try exact HF. intros [f Hf].
   apply tr. exists (fun p => fun y => hexists (fun x => p x /\ y = f x)).
   intros p q H. apply path_forall. intros x. apply equiv_path_iff_hprop. split; intros Hx.
   - assert (Hp : (fun y : Y => hexists (fun x : X => p x * (y = f x))) (f x)). { apply tr. exists x. split; trivial. }
-    pattern (f x) in Hp. rewrite H in Hp. eapply merely_destruct; try apply Hp. by intros [x'[Hq <- % Hf]].
+    pattern (f x) in Hp. rewrite H in Hp. eapply merely_destruct; try exact Hp. by intros [x'[Hq <- % Hf]].
   - assert (Hq : (fun y : Y => hexists (fun x : X => q x * (y = f x))) (f x)). { apply tr. exists x. split; trivial. }
-    pattern (f x) in Hq. rewrite <- H in Hq. eapply merely_destruct; try apply Hq. by intros [x'[Hp <- % Hf]].
+    pattern (f x) in Hq. rewrite <- H in Hq. eapply merely_destruct; try exact Hq. by intros [x'[Hp <- % Hf]].
 Qed.
 
 Fact Cantor_injects_injects {X Y : HSet} :
   InjectsInto (X -> HProp) (X + Y) -> InjectsInto (X + X) X -> InjectsInto (X -> HProp) Y.
 Proof.
   intros H1 H2. assert (HF : InjectsInto ((X -> HProp) * (X -> HProp)) (X + Y)).
-  - eapply InjectsInto_trans; try apply H1.
+  - eapply InjectsInto_trans; try exact H1.
     eapply InjectsInto_trans; try apply InjectsInto_power_morph, H2.
     rewrite path_sum_prod. apply tr. reflexivity.
-  - eapply merely_destruct; try apply HF. intros [f Hf].
+  - eapply merely_destruct; try exact HF. intros [f Hf].
     pose (R x p := hexists (fun q => f (p, q) = inl x)). destruct (@Cantor_rel _ R) as [p Hp].
-    { intros x p p' H3 H4. eapply merely_destruct; try apply H3. intros [q Hq].
+    { intros x p p' H3 H4. eapply merely_destruct; try exact H3. intros [q Hq].
       eapply merely_destruct; try apply H4. intros [q' Hq']. apply tr.
       change p with (fst (p, q)). rewrite (Hf (p, q) (p', q')); trivial. by rewrite Hq, Hq'. }
     pose (f' q := f (p, q)). assert (H' : forall q x, f' q <> inl x).
-    + intros q x H. apply (Hp x). apply tr. exists q. apply H.
+    + intros q x H. apply (Hp x). apply tr. exists q. exact H.
     + apply tr. exists (fun x => proj1 (clean_sum _ H' x)). intros q q' H. assert (Hqq' : f' q = f' q').
       * destruct clean_sum as [z <-]. destruct clean_sum as [z' <-]. cbn in H. by rewrite H.
       * apply Hf in Hqq'. change q with (snd (p, q)). by rewrite Hqq'.
@@ -252,14 +252,14 @@ Lemma InjectsInto_sum X Y X' Y' :
   InjectsInto X X' -> InjectsInto Y Y' -> InjectsInto (X + Y) (X' + Y').
 Proof.
   intros H1 H2.
-  eapply merely_destruct; try apply H1. intros [f Hf].
-  eapply merely_destruct; try apply H2. intros [g Hg].
+  eapply merely_destruct; try exact H1. intros [f Hf].
+  eapply merely_destruct; try exact H2. intros [g Hg].
   apply tr. exists (fun z => match z with inl x => inl (f x) | inr y => inr (g y) end).
   intros [x|y] [x'|y'] H.
-  - apply ap. apply Hf. apply path_sum_inl with Y'. apply H.
+  - apply ap. apply Hf. apply path_sum_inl with Y'. exact H.
   - by apply inl_ne_inr in H.
   - by apply inr_ne_inl in H.
-  - apply ap. apply Hg. apply path_sum_inr with X'. apply H.
+  - apply ap. apply Hg. apply path_sum_inr with X'. exact H.
 Qed.
 
 (* The main proof is by induction on the cardinality bound for HN.  As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)

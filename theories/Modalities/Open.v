@@ -73,7 +73,7 @@ Proof.
     + intros X_inO u.
       apply (equiv_inverse (equiv_ooextendable_isequiv _ _)).
       refine (cancelR_isequiv (fun x (u:Unit) => x)).
-      apply X_inO.
+      exact X_inO.
     + intros ext; specialize (ext tt).
       refine (isequiv_compose (f := (fun x => unit_name x))
                               (g := (fun h => h o const_tt U))).

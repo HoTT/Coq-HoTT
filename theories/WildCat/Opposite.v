@@ -72,7 +72,7 @@ Instance is0gpd_op A `{Is0Gpd A} : Is0Gpd (A^op).
 Proof.
   srapply Build_Is0Gpd; unfold op in *; cbn in *.
   intros a b.
-  apply gpd_rev.
+  exact gpd_rev.
 Defined.
 
 Instance op0gpd_fun A `{Is0Gpd A} :

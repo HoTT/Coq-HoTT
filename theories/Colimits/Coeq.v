@@ -697,12 +697,12 @@ Section Flattening.
       + exact (fun a x => coeq (a; x)).
       + intros b pf.
       cbn.
-      apply (@cglue _ _
+      exact (@cglue _ _
         (functor_sigma f (fun _ => idmap)) (functor_sigma g (cd_e Pe)) (b; pf)).
     - snrapply Coeq_rec.
       + exact (fun '(a; x) => (coeq a; x)).
       + intros [b pf]; cbn.
-        apply (flatten_cd_glue b 1).
+        exact (flatten_cd_glue b 1).
     - snrapply Coeq_ind.
       1: reflexivity.
       intros [b pf]; cbn.

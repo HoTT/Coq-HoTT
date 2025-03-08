@@ -86,7 +86,7 @@ Definition equiv_swap_rigid `{Univalence} `{ExcludedMiddle}
   : Type <~> Type.
 Proof.
   refine (equiv_swap_types A B ne _).
-  apply equiv_contr_contr.
+  exact equiv_contr_contr.
 Defined.
 
 (** Such as [Empty] and [Unit]. *)

@@ -229,7 +229,7 @@ Section ImpliesLex.
   Definition lex_from_inO_typeO `{IsAccRSU O} `{In (lift_accrsu O) (Type_ O)}
     : Lex O.
   Proof.
-    apply (O_lex_leq_inO_TypeO O O).
+    exact (O_lex_leq_inO_TypeO O O).
   Defined.
 
   (** RSS Theorem 3.1 (xi) implies lex-ness *)
@@ -308,7 +308,7 @@ Section ImpliesLex.
     apply conn_map_isequiv.
     apply H; [ | exact _ | exact _ ].
     apply isconnected_conn_map_to_unit.
-    apply (cancelR_conn_map O (factor1 (image O f)) (const_tt _)).
+    exact (cancelR_conn_map O (factor1 (image O f)) (const_tt _)).
   Defined.
 
   (** RSS Theorem 3.1 (vii) implies lex-ness *)
@@ -332,7 +332,7 @@ Section ImpliesLex.
                              _ _ pr2 _).
     refine (@isequiv_compose _ _ (equiv_sigma_prod0 Unit B)
                              _ _ snd _).
-    apply (equiv_isequiv (prod_unit_l B)).
+    exact (equiv_isequiv (prod_unit_l B)).
   Defined.
 
 End ImpliesLex.
@@ -430,7 +430,7 @@ Definition nsep_iff_trunc_to_O (n : trunc_index) (O : Modality) `{Lex O} (A : Ty
 Proof.
   revert A; induction n as [|n IHn]; intros A; split; intros ?.
   - apply contr_map_isequiv; rapply isequiv_to_O_inO.
-  - apply (inO_equiv_inO (O A) (to O A)^-1).
+  - exact (inO_equiv_inO (O A) (to O A)^-1).
   - apply istruncmap_from_ap; intros x y.
     pose (i := fst (IHn (x = y)) _).
     apply istruncmap_mapinO_tr, (mapinO_homotopic _ _ (equiv_path_O_to_O O x y)).

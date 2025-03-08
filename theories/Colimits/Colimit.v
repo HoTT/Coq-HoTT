@@ -158,7 +158,7 @@ Definition Colimit_rec_homotopy' {G : Graph} {D : Diagram G} (P : Type) (C1 C2 :
   : Colimit_rec P C1 == Colimit_rec P C2.
 Proof.
   snrapply Colimit_rec_homotopy.
-  - apply h_obj.
+  - exact h_obj.
   - intros i j g x.
     rhs nrapply (1 @@ Colimit_rec_beta_colimp _ _ _ _ _ _).
     apply h_comm.

@@ -420,7 +420,7 @@ Proof.
   intros lk nm km.
   apply gt_iff_not_leq.
   intro mknk.
-  apply (@gt_iff_not_leq m n); only 1: apply nm.
+  apply (@gt_iff_not_leq m n); only 1: exact nm.
   rewrite <- (nat_mul_div_cancel_l k m km).
   nrapply (leq_trans (y:=k * (n / k))).
   - rapply nat_mul_l_monotone.
@@ -966,7 +966,7 @@ Global Instance decidable_isprime@{} n : Decidable (IsPrime n).
 Proof.
   (** First we begin by discarding the [n = 0] case as we can easily prove that [0] is not prime. *)
   destruct n.
-  1: right; apply not_isprime_zero.
+  1: right; exact not_isprime_zero.
   (** Next, we rewrite [IsPrime n.+1] as the equivalent sigma type. *)
   nrapply decidable_equiv'.
   1: nrapply issig_IsPrime.

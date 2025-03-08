@@ -31,7 +31,7 @@ Definition encode_decode_trunc n
   : Tr n (a0 = a1) <~> code a1.
 Proof.
   srapply equiv_adjointify.
-  - apply (Trunc_rec (fun p => p # c0)).
+  - exact (Trunc_rec (fun p => p # c0)).
   - apply decode.
   - intro p.
     pose (decode _ p) as p'.

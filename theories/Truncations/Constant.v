@@ -39,7 +39,7 @@ Definition splitsupp_collapsible {X} `{Collapsible X}
   : merely X -> X.
 Proof.
   refine (_ o (equiv_fix_merely collapse)^-1).
-  apply pr1.
+  exact pr1.
 Defined.
 
 Definition collapsible_splitsupp {X} (s : merely X -> X)
@@ -88,7 +88,7 @@ Definition cconst_factors_contr `{Funext}  {X Y : Type} (f : X -> Y)
 Proof.
   assert (merely X -> IsHProp P).
   { apply Trunc_rec.            (** Uses funext *)
-    intros x; pose (Pc x); apply istrunc_succ. }
+    intros x; pose (Pc x); exact istrunc_succ. }
   pose (g' := Trunc_ind (fun _ => P) g : merely X -> P).
   exists (h o g'); intros x.
   apply p.

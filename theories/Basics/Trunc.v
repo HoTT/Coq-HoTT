@@ -38,7 +38,7 @@ Definition trunc_index_inc'_succ@{} (n : nat) (k : trunc_index)
 Proof.
   revert k; simple_induction n n IHn; intro k.
   - reflexivity.
-  - apply (IHn k.+1).
+  - exact (IHn k.+1).
 Defined.
 
 Definition trunc_index_inc_agree@{} (k : trunc_index) (n : nat)
@@ -323,7 +323,7 @@ Instance istrunc_succ {n : trunc_index} {A : Type} `{IsTrunc n A}
   : IsTrunc n.+1 A | 1000.
 Proof.
   apply istrunc_S.
-  apply istrunc_paths'.
+  exact istrunc_paths'.
 Defined.
 
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
@@ -501,10 +501,10 @@ Proof.
   generalize dependent P.
   simple_induction n n IH; simpl; intros P ?.
   (* case [n = -2], i.e. contractibility *)
-  - apply contr_forall.
+  - exact contr_forall.
   (* case n = n'.+1 *)
   - apply istrunc_S.
-    intros f g; apply (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
+    intros f g; exact (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
 Defined.
 
 (** Truncatedness is an hprop. *)

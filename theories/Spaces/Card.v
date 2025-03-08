@@ -87,7 +87,7 @@ Section contents.
 
   Global Instance issemiring_card : IsSemiCRing Card.
   Proof.
-    repeat split; try apply _.
+    repeat split; try exact _.
     - repeat intro. simpl_ops.
       rewrite (commutativity zero_card _).
       apply rightid_sum.
@@ -136,11 +136,11 @@ Section contents.
     destruct Hbc as [ibc Hbc].
     apply tr. exists (ibc ∘ iab).
     intros x y Hxy.
-    apply Hab. apply Hbc. apply Hxy.
+    apply Hab. apply Hbc. exact Hxy.
   Defined.
 
   Global Instance preorder_card : PreOrder le_card.
-  Proof. split; apply _. Defined.
+  Proof. split; exact _. Defined.
 
 End contents.
 
@@ -178,8 +178,8 @@ Lemma InjectsInto_trans X Y Z :
   InjectsInto X Y -> InjectsInto Y Z -> InjectsInto X Z.
 Proof.
   intros H1 H2.
-  eapply merely_destruct; try apply H1. intros [f Hf].
-  eapply merely_destruct; try apply H2. intros [g Hg].
+  eapply merely_destruct; try exact H1. intros [f Hf].
+  eapply merely_destruct; try exact H2. intros [g Hg].
   apply tr. exists (fun x => g (f x)).
   intros x x' H. by apply Hf, Hg.
 Qed.

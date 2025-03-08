@@ -300,7 +300,7 @@ Proof.
       apply unfunctor_sum_l_beta.
     * simpl.
       rewrite fin_transpose_last_with_last.
-      symmetry; apply p.
+      symmetry; exact p.
 Qed.
 
 Definition fin_equiv_inv (n m : nat) (e : Fin n.+1 <~> Fin m.+1)

@@ -71,7 +71,7 @@ Section AssumeUnivalence.
   : (negb_center_baut_bool pt)..1 = path_universe negb.
   Proof.
     apply moveL_equiv_V.
-    apply negb_baut_bool_bool_negb.
+    exact negb_baut_bool_bool_negb.
   Defined.
 
   (** Moreover, we can show that every automorphism of a [Z : BAut Bool] must be either the flip or the identity. *)
@@ -140,8 +140,8 @@ First we define the function that will be the equivalence. *)
     refine (transport IsEquiv (ap10 (inhab_baut_bool_from_bool_bool t)^ z) _).
     simpl in z; destruct z, t; simpl.
     - refine (isequiv_homotopic idmap _); intros []; reflexivity.
-    - apply isequiv_negb.
-    - apply isequiv_negb.
+    - exact isequiv_negb.
+    - exact isequiv_negb.
     - refine (isequiv_homotopic idmap _); intros []; reflexivity.
   Defined.
 
@@ -244,7 +244,7 @@ First we define the function that will be the equivalence. *)
   Definition baut_bool_pairing_ZZ Z : Z ** Z = pt.
   Proof.
     apply symmetry, path_baut_bool_inhab.
-    apply equiv_idmap.            (** A choice!  Could be the flip. *)
+    exact equiv_idmap.            (** A choice!  Could be the flip. *)
   Defined.
 
   (** Associativity is easiest to think about in terms of "curried 2-variable equivalences".  We start with some auxiliary lemmas. *)
@@ -428,7 +428,7 @@ First we define the function that will be the equivalence. *)
   Proof.
     refine (center2_baut (BAut Bool) _).
     exists negb_center_baut_bool.
-    apply center_baut_bool_central.
+    exact center_baut_bool_central.
   Defined.
 
   Definition nontrivial_negb_center_baut_baut_bool

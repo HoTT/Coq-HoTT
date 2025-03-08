@@ -92,14 +92,14 @@ Section GrpPullback.
   Definition grp_pullback_pr1 : grp_pullback $-> B.
   Proof.
     snrapply Build_GroupHomomorphism.
-    - apply pullback_pr1.
+    - exact pullback_pr1.
     - intros x y. reflexivity.
   Defined.
 
   Definition grp_pullback_pr2 : grp_pullback $-> C.
   Proof.
     snrapply Build_GroupHomomorphism.
-    - apply pullback_pr2.
+    - exact pullback_pr2.
     - intros x y. reflexivity.
   Defined.
 

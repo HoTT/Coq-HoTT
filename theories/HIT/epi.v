@@ -150,7 +150,7 @@ Section isepi_issurj.
     (** Prove that the truncated sigma is equivalent to Unit *)
     pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
     apply path_hprop. simpl. simpl in i.
-    apply (equiv_contr_unit).
+    exact (equiv_contr_unit).
   Defined.
 
   Lemma isepi_issurj : IsSurjection f.
@@ -159,7 +159,7 @@ Section isepi_issurj.
     pose (i := isepi'_contr_cone _ epif).
 
     assert (X0 : forall x : setcone f, fam x = fam (setcone_point f)).
-    { intros. apply contr_dom_equiv. apply i. }
+    { intros. apply contr_dom_equiv. exact i. }
     specialize (X0 (tr (push (inl y)))). simpl in X0.
     unfold IsConnected.
     refine (transport (fun A => Contr A) (ap trunctype_type X0)^ _); exact _.

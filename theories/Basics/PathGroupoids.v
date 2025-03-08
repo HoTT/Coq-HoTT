@@ -1237,7 +1237,7 @@ Proof.
   intro r. induction g, p, q.
   refine ((whiskerL_1p h)^ @ _). refine (_ @ (whiskerL_1p k)).
   refine (whiskerR _ _). refine (whiskerL _ _).
-  apply r.
+  exact r.
 Defined.
 
 Definition cancel2R {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z}
@@ -1247,7 +1247,7 @@ Proof.
   intro r. induction k, p, q.
   refine ((whiskerR_p1 g)^ @ _). refine (_ @ (whiskerR_p1 h)).
   refine (whiskerR _ _). refine (whiskerL _ _).
-  apply r.
+  exact r.
 Defined.
 
 

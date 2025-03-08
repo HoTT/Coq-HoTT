@@ -26,24 +26,24 @@ Lemma WO_AC {LEM : ExcludedMiddle} :
   (forall (X : HSet), hexists (fun (A : Ordinal) => InjectsInto X A)) -> Choice_type.
 Proof.
   intros H X Y R HR. specialize (H Y).
-  eapply merely_destruct; try apply H.
-  intros [A HA]. eapply merely_destruct; try apply HA.
+  eapply merely_destruct; try exact H.
+  intros [A HA]. eapply merely_destruct; try exact HA.
   intros [f Hf]. apply tr. unshelve eexists.
   - intros x. assert (HR' : hexists (fun y => merely (R x y * forall y', R x y' -> f y < f y' \/ f y = f y'))).
     + pose proof (HAR := ordinal_has_minimal_hsolutions A (fun a => Build_HProp (merely (exists y, f y = a /\ R x y)))).
       eapply merely_destruct; try apply HAR.
-      * eapply merely_destruct; try apply (HR x). intros [y Hy].
+      * eapply merely_destruct; try exact (HR x). intros [y Hy].
         apply tr. exists (f y). apply tr. exists y. by split.
-      * intros [a [H1 H2]]. eapply merely_destruct; try apply H1.
+      * intros [a [H1 H2]]. eapply merely_destruct; try exact H1.
         intros [y [<- Hy]]. apply tr. exists y. apply tr. split; trivial.
         intros y' Hy'. apply H2. apply tr. exists y'. split; trivial.
-    + edestruct (@iota Y) as [y Hy]; try exact y. 2: split; try apply HR'. 1: exact _.
+    + edestruct (@iota Y) as [y Hy]; try exact y. 2: split; try exact HR'. 1: exact _.
       intros y y' Hy Hy'.
-      eapply merely_destruct; try apply Hy. intros [H1 H2].
+      eapply merely_destruct; try exact Hy. intros [H1 H2].
       eapply merely_destruct; try apply Hy'. intros [H3 H4]. apply Hf.
       eapply merely_destruct; try apply (H2 y'); trivial. intros [H5|H5]; trivial.
       eapply merely_destruct; try apply (H4 y); trivial. intros [H6| -> ]; trivial.
       apply Empty_rec. apply (irreflexive_ordinal_relation _ _ _ (f y)).
       apply (ordinal_transitivity _ (f y')); trivial.
-  - intros x. cbn. destruct iota as [y Hy]. eapply merely_destruct; try apply Hy. by intros [].
+  - intros x. cbn. destruct iota as [y Hy]. eapply merely_destruct; try exact Hy. by intros [].
 Qed.

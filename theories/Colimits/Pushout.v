@@ -237,7 +237,7 @@ Proof.
   rhs_V nrapply functor_coeq_compose.
   snrapply functor_coeq_homotopy.
   1: reflexivity.
-  1: apply functor_sum_compose.
+  1: exact functor_sum_compose.
   1,2: intros x; simpl.
   1,2: apply equiv_1p_q1.
   1,2: lhs_V nrapply whiskerR.
@@ -835,13 +835,13 @@ Section Flattening.
       + exact (fun c pc => pushr (c; pc)).
       + intros a pf.
       cbn.
-      apply (@pglue _ _ _
+      exact (@pglue _ _ _
         (functor_sigma f (fun _ => idmap)) (functor_sigma g (pod_e Pe)) (a; pf)).
     - snrapply Pushout_rec.
       + exact (fun '(b; pb) => (pushl b; pb)).
       + exact (fun '(c; pc) => (pushr c; pc)).
       + intros [a pf]; cbn.
-        apply (flatten_pod_glue a 1).
+        exact (flatten_pod_glue a 1).
     - snrapply Pushout_ind.
       1, 2: reflexivity.
       intros [a pf]; cbn.

@@ -148,7 +148,7 @@ Defined.
 Global Instance istrunc_fmap_loops {n} (A B : pType) (f : A ->* B)
   `{IsTruncMap n.+1 _ _ f} : IsTruncMap n (fmap loops f).
 Proof.
-  intro p. apply (istrunc_equiv_istrunc _ (hfiber_fmap_loops f p)).
+  intro p. exact (istrunc_equiv_istrunc _ (hfiber_fmap_loops f p)).
 Defined.
 
 (** And likewise the connectedness.  *)
@@ -235,7 +235,7 @@ Proof.
   - refine ((fmap_comp loops _ _)^* @* _).
     refine (_ @* (fmap_comp loops _ _)).
     rapply (fmap2 loops).
-    apply IHn.
+    exact IHn.
 Defined.
 
 (** Iterated loops preserves equivalences *)

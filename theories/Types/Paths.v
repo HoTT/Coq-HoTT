@@ -350,7 +350,7 @@ Instance isequiv_moveR_Mp
 : IsEquiv (moveR_Mp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_Mp
@@ -363,7 +363,7 @@ Instance isequiv_moveR_pM
 : IsEquiv (moveR_pM p q r).
 Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_pM
@@ -376,7 +376,7 @@ Instance isequiv_moveR_Vp
 : IsEquiv (moveR_Vp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_Vp
@@ -389,7 +389,7 @@ Instance isequiv_moveR_pV
 : IsEquiv (moveR_pV p q r).
 Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_pV
@@ -402,7 +402,7 @@ Instance isequiv_moveL_Mp
 : IsEquiv (moveL_Mp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_Mp
@@ -415,7 +415,7 @@ Definition isequiv_moveL_pM
 : IsEquiv (moveL_pM p q r).
 Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_pM
@@ -428,7 +428,7 @@ Instance isequiv_moveL_Vp
 : IsEquiv (moveL_Vp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_Vp
@@ -441,7 +441,7 @@ Instance isequiv_moveL_pV
 : IsEquiv (moveL_pV p q r).
 Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_pV

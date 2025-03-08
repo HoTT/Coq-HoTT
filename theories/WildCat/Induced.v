@@ -26,13 +26,13 @@ Section Induced_category.
   Proof.
     nrapply Build_Is01Cat; intros_of_type A; cbn.
     + apply Id.
-    + apply cat_comp.
+    + exact cat_comp.
   Defined.
 
   Local Instance is0gpd_induced `{Is0Gpd B} : Is0Gpd A.
   Proof.
     nrapply Build_Is0Gpd; intros_of_type A; cbn.
-    apply gpd_rev.
+    exact gpd_rev.
   Defined.
 
   (** The structure map along which we induce the category structure becomes a functor with respect to the induced structure. *)
@@ -78,7 +78,7 @@ Section Induced_category.
     srapply Build_HasEquivs; intros a b; cbn.
     + exact (f a $<~> f b).
     + apply CatIsEquiv'.
-    + apply cate_fun.
+    + exact cate_fun.
     + apply cate_isequiv'.
     + apply cate_buildequiv'.
     + nrapply cate_buildequiv_fun'.

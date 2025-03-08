@@ -385,9 +385,9 @@ Section compose_mor.
     IsMonoidPreserving (g ∘ f).
   Proof.
     intros;split.
-    - apply _.
+    - exact _.
     - red;unfold Compose.
-      etransitivity;[|apply (preserves_mon_unit (f:=g))].
+      etransitivity;[|exact (preserves_mon_unit (f:=g))].
       apply ap,preserves_mon_unit.
   Defined.
 
@@ -416,11 +416,11 @@ Section invert_mor.
     forall `{!IsEquiv f}, IsMonoidPreserving f -> IsMonoidPreserving (f^-1).
   Proof.
     intros;split.
-    - apply _.
+    - exact _.
     - apply (equiv_inj f).
       refine (_ @ _).
       + apply eisretr.
-      + symmetry; apply preserves_mon_unit.
+      + symmetry; exact preserves_mon_unit.
   Defined.
 
 End invert_mor.

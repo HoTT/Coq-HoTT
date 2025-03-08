@@ -36,7 +36,7 @@ Section Assumptions.
     apply path_baut.
     unfold f; simpl.
     refine (_ oE equiv_sum_assoc Z Cantor Cantor).
-    apply (1 +E equiv_cantor_fold).
+    exact (1 +E equiv_cantor_fold).
   Defined.
 
   (** We record how the action of [f] and [f o f] on paths corresponds to an action on equivalences. *)

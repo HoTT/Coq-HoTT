@@ -49,7 +49,7 @@ Proof.
       * intro f; cbn.
       (* [reflexivity] works here, but then the underlying map won't agree definitionally with precomposition by [pto P], since pointed composition inserts a reflexivity path here. *)
       apply (equiv_concat_l 1).
-    + apply (equiv_isequiv e).
+    + exact (equiv_isequiv e).
 Defined.
 
 (** ** Pointed functoriality *)

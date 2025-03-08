@@ -170,7 +170,7 @@ Section isequiv.
       apply contr.
     - match goal with
         | [ |- context[?x.1] ]
-          => apply x.2
+          => exact x.2
       end.
   Defined.
 End isequiv.

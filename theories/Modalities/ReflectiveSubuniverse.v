@@ -94,7 +94,7 @@ Section Subuniverse.
   Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (MapIn O f).
   Proof.
-    apply istrunc_forall.
+    exact istrunc_forall.
   Defined.
 
   (** Anything homotopic to a local map is local. *)
@@ -1430,7 +1430,7 @@ Section ConnectedTypes.
   Definition contr_trunc_conn {A : Type} `{In O A} `{IsConnected O A}
   : Contr A.
   Proof.
-    apply (contr_equiv _ (to O A)^-1).
+    exact (contr_equiv _ (to O A)^-1).
   Defined.
 
   (** Any map between connected types is inverted by O. *)
@@ -1455,7 +1455,7 @@ Section ConnectedTypes.
       symmetry; apply ((isconnected_elim C f).2).
     - intros h k.
       refine (extendable_postcompose' n _ _ _ _ (IHn (h tt = k tt) (inO_paths _ _ _ _))).
-      intros []; apply equiv_idmap.
+      intros []; exact equiv_idmap.
   Defined.
 
   Definition ooextendable_const_isconnected_inO
@@ -1658,7 +1658,7 @@ Section ConnectedMaps.
   Global Instance ishprop_isconnmap `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (IsConnMap O f).
   Proof.
-    apply istrunc_forall.
+    exact istrunc_forall.
   Defined.
 
   (** Connected maps are orthogonal to modal maps (i.e. familes of modal types). *)
@@ -1694,7 +1694,7 @@ Section ConnectedMaps.
   : IsEquiv f.
   Proof.
     apply isequiv_contr_map. intros b.
-    apply (contr_trunc_conn O).
+    exact (contr_trunc_conn O).
   Defined.
 
   (** We can re-express this in terms of extensions. *)
@@ -2111,7 +2111,7 @@ Definition reflects_O_eq
 Proof.
   constructor; intros B B_inO2.
   pose proof (inO_leq O2 O1 _ B_inO2).
-  apply (extendable_to_O O1).
+  exact (extendable_to_O O1).
 Defined.
 
 

@@ -38,7 +38,7 @@ Local Notation S1 := ([Circle, _]).
 Lemma pequiv_torus_prod_circles `{Funext} : T  <~>* S1 * S1.
 Proof.
   srapply Build_pEquiv'.
-  1: apply equiv_torus_prod_Circle.
+  1: exact equiv_torus_prod_Circle.
   reflexivity.
 Defined.
 
@@ -51,7 +51,7 @@ Proof.
   etransitivity.
   1: apply grp_iso_pi_prod.
   apply grp_iso_prod.
-  1,2: apply pi1_circle.
+  1,2: exact pi1_circle.
 Defined.
 
 (** Loop space of torus *)

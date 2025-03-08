@@ -303,7 +303,7 @@ Definition dcat_assoc_opp_strong {A : Type} {D : A -> Type} `{IsD1Cat_Strong A D
   : (transport (fun k => DHom k a' d') (cat_assoc_opp_strong f g h)
     (h' $o' (g' $o' f'))) = (h' $o' g') $o' f'.
 Proof.
-  apply (moveR_transport_V (fun k => DHom k a' d') (cat_assoc_strong f g h) _ _).
+  exact (moveR_transport_V (fun k => DHom k a' d') (cat_assoc_strong f g h) _ _).
   exact ((dcat_assoc_strong f' g' h')^).
 Defined.
 *)
@@ -453,11 +453,11 @@ Section CompositeFunctor.
   Proof.
     snrapply Build_IsD1Functor.
     - intros a b f g p a' b' f' g' p'.
-      apply (dfmap2 _ _ (dfmap2 F F' p')).
+      exact (dfmap2 _ _ (dfmap2 F F' p')).
     - intros a a'.
-      apply (dfmap2 _ _ (dfmap_id F F' a') $@' dfmap_id G G' _).
+      exact (dfmap2 _ _ (dfmap_id F F' a') $@' dfmap_id G G' _).
     - intros a b c f g a' b' c' f' g'.
-      apply (dfmap2 _ _ (dfmap_comp F F' f' g') $@' dfmap_comp G G' _ _).
+      exact (dfmap2 _ _ (dfmap_comp F F' f' g') $@' dfmap_comp G G' _ _).
   Defined.
 End CompositeFunctor.
 

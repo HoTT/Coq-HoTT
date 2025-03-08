@@ -701,7 +701,7 @@ Section RetractOfRetracts.
       unfold hfiber.
       refine (equiv_functor_sigma' (equiv_sigma_assoc _ _)^-1 (fun a => _)); simpl.
       destruct a as [[g I] J]; unfold quasiidempotent_pr1; simpl.
-      apply equiv_idmap.
+      exact equiv_idmap.
     - simpl.  unfold hfiber, Splitting.
       refine (equiv_functor_sigma_id _);
         intros R; simpl.

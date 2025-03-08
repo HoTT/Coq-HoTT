@@ -340,7 +340,7 @@ Section UnivPropNat.
     - nrapply (equiv_transport (fun p => DPath P p (fst NS) (snd NS))).
       symmetry; apply functor_susp_beta_merid.
     - symmetry. 
-      apply (dp_compose (functor_susp f) P (merid x)).
+      exact (dp_compose (functor_susp f) P (merid x)).
   Defined.
 
   Definition functor_Susp_ind_data' (NS : P North * P South)

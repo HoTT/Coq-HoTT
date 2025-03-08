@@ -67,7 +67,7 @@ Section unique.
     refine (Build_Contr _ (initial_category_ind _) _).
     intro y.
     apply path_forall; intro x.
-    apply (initial_category_ind _ x).
+    exact (initial_category_ind _ x).
   Defined.
 
   Variable C : PreCategory.
@@ -81,7 +81,7 @@ Section unique.
         intros; apply path_functor_uncurried;
         (exists (center _));
         apply path_forall; intro x;
-        apply (initial_category_ind _ x)
+        exact (initial_category_ind _ x)
       ).
   Defined.
 

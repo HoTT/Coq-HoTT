@@ -222,7 +222,7 @@ Proof.
   snrapply Build_Adjunction.
   1: exact (fun x => e x).
   1: exact is1nat_e.
-  intros x; apply (is1natural_natequiv (e x)).
+  intros x; exact (is1natural_natequiv (e x)).
 Defined.
 
 (** A natural equivalence between functors [C^op -> Type] which is also natural in the left. *)
@@ -236,7 +236,7 @@ Definition Build_Adjunction_natequiv_nat_right
 Proof.
   snrapply Build_Adjunction.
   1: exact (fun x y => e y x).
-  1: intros y; apply (is1natural_natequiv (e y)).
+  1: intros y; exact (is1natural_natequiv (e y)).
   exact is1nat_e.
 Defined.
 
@@ -311,8 +311,8 @@ Section UnitCounitAdjunction.
   Proof.
     snrapply Build_Adjunction.
     - exact γ.
-    - apply is1natural_γ_l.
-    - apply is1natural_γ_r.
+    - exact is1natural_γ_l.
+    - exact is1natural_γ_r.
   Defined.
 
 End UnitCounitAdjunction.

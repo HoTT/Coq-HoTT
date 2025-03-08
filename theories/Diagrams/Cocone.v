@@ -197,7 +197,7 @@ Section FunctorialityCocone.
     (m : D1 ~d~ D2) (X : Type) : IsEquiv (cocone_precompose (X:=X) m).
   Proof.
     srapply isequiv_adjointify.
-    1: apply (cocone_precompose (diagram_equiv_inv m)).
+    1: exact (cocone_precompose (diagram_equiv_inv m)).
     + intros C.
       etransitivity.
       - apply cocone_precompose_comp.

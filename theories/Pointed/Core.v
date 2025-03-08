@@ -908,7 +908,7 @@ Definition peissect {A B : pType} (f : A <~>* B)
   : (pequiv_inverse f) o* f ==* pmap_idmap.
 Proof.
   srefine (Build_pHomotopy _ _).
-  1: apply (eissect f).
+  1: exact (eissect f).
   simpl. unfold moveR_equiv_V.
   pointed_reduce.
   symmetry.
@@ -920,7 +920,7 @@ Definition peisretr {A B : pType} (f : A <~>* B)
   : f o* (pequiv_inverse f) ==* pmap_idmap.
 Proof.
   srefine (Build_pHomotopy _ _).
-  1: apply (eisretr f).
+  1: exact (eisretr f).
   pointed_reduce.
   unfold moveR_equiv_V.
   refine (eisadj f _ @ _).

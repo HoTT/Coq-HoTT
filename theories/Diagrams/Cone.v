@@ -186,7 +186,7 @@ Section FunctorialityCone.
     (m : D1 ~d~ D2) (X : Type) : IsEquiv (cone_postcompose (X:=X) m).
   Proof.
     srapply isequiv_adjointify.
-    1: apply (cone_postcompose (diagram_equiv_inv m)).
+    1: exact (cone_postcompose (diagram_equiv_inv m)).
     + intros C.
       etransitivity.
       - apply cone_postcompose_comp.

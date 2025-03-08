@@ -98,7 +98,7 @@ Section groupmor_props.
     apply (left_cancellation (.*.) (f x)).
     rewrite <-preserves_sg_op.
     rewrite 2!right_inverse.
-    apply preserves_mon_unit.
+    exact preserves_mon_unit.
   Qed.
 
 End groupmor_props.
@@ -113,7 +113,7 @@ Section from_another_sg.
   Lemma projected_sg: IsSemiGroup B.
   Proof.
   split.
-  - apply _.
+  - exact _.
   - repeat intro; apply (injective f).
     rewrite !op_correct. apply associativity.
   Qed.

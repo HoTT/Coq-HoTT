@@ -242,7 +242,7 @@ Proof.
   1,2: exact _.
   intros ? ? f ? ? g.
   rapply hspace_phomotopy_from_homotopy.
-  1: apply ishspace_abses.
+  1: exact ishspace_abses.
   intro E; cbn.
   apply abses_pushout_pullback_reorder.
 Defined.

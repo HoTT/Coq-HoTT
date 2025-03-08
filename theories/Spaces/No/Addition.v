@@ -26,7 +26,7 @@ Global Instance hasaddition_ordsort : HasAddition OrdSort
 Global Instance hasaddition_decsort : HasAddition DecSort.
 Proof.
   constructor.
-  - apply insort_decsort.
+  - exact insort_decsort.
   - intros L R L' R' [? ?] [? ?]; split; exact _.
 Qed.
 
@@ -117,13 +117,13 @@ Section Addition.
                L'' R'' ? zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
                l y_le_zL x_plus_y_le_zL; cbn;
         apply lt_l with (inr l);
-        apply x_plus_y_le_zL ).
+        exact x_plus_y_le_zL ).
       - abstract (
         intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
                L'' R'' ? zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
                r yR_le_z x_plus_yR_le_z; cbn;
         apply lt_r with (inr r);
-        apply x_plus_yR_le_z).
+        exact x_plus_yR_le_z).
     Defined.
 
     (** We now prove a computation law for [plus_inner].  It holds definitionally, so we would like to prove it with just [:= 1] and then rewrite along it later, as we did above.  However, there is a subtlety in that the output should be a surreal defined by a cut, which in particular includes a proof of cut-ness, and that proof is rather long, so we would not like to see it in the type of this lemma.  Thus, instead we assert only that there *exists* some proof of cut-ness and an equality. *)

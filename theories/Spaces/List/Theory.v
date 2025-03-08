@@ -520,7 +520,7 @@ Proof.
   1: reflexivity.
   destruct l as [|b l].
   1: reflexivity.
-  cbn; apply IHl.
+  cbn; exact IHl.
 Defined.
 
 (** The last element of a list with an element appended is the appended element. *)
@@ -778,12 +778,12 @@ Proof.
       snrapply iff_compose.
       1: exact (sum (a = x) (prod (InList@{u} x l) (P x))).
       1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.
-      split; apply functor_sum@{k k k k}; only 2,4: apply idmap.
+      split; apply functor_sum@{k k k k}; only 2,4: exact idmap.
       * intros [].
         exact (idpath, p).
       * exact fst.
     + nrapply iff_compose.
-      1: apply IHl.
+      1: exact IHl.
       apply iff_inverse.
       apply iff_equiv.
       nrefine (equiv_compose'@{k k k} (sum_empty_l@{k} _) _).
@@ -880,7 +880,7 @@ Proof.
   1: reflexivity.
   simpl; f_ap.
   lhs_V nrapply list_map_compose.
-  apply IHn.
+  exact IHn.
 Defined.
 
 (** The [list_map] of first projections on [seq' n] is [seq n]. *)

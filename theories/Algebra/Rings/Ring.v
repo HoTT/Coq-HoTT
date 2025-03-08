@@ -396,7 +396,7 @@ Proof.
   - intros [r ?] [s ?]; exists (r * s).
     by apply issubring_mult.
   - exists 1.
-    apply issubring_one.
+    exact issubring_one.
   - snrapply rng_mult_assoc.
   - snrapply rng_dist_l.
   - snrapply rng_dist_r.
@@ -444,7 +444,7 @@ Definition ring_product_corec (R S T : Ring)
 Proof.
   intros f g.
   srapply Build_RingHomomorphism'.
-  1: apply (ab_biprod_corec f g).
+  1: exact (ab_biprod_corec f g).
   repeat split.
   1: cbn; intros x y; apply path_prod; apply rng_homo_mult.
   cbn; apply path_prod; apply rng_homo_one.

@@ -47,7 +47,7 @@ Proof.
   generalize dependent B; revert A.
   simple_induction n n IHn; intros A B f ?.
   - exact _.
-  - apply contr_prod.
+  - exact contr_prod.
 Defined.
 
 Global Instance ishprop_pathsplit (n : nat) `(f : A -> B)
@@ -73,7 +73,7 @@ Lemma equiv_functor_pathsplit (n : nat) {A B C D}
 : PathSplit n f <~> PathSplit n g.
 Proof.
   destruct n as [|n].
-  1:apply equiv_idmap.
+  1:exact equiv_idmap.
   destruct n as [|n].
   - simpl.
     refine (_ *E equiv_contr_contr).
@@ -102,7 +102,7 @@ Global Instance contr_oopathsplit_isequiv
            `(f : A -> B) `{IsEquiv _ _ f}
 : Contr (ooPathSplit f).
 Proof.
-  apply contr_forall.
+  exact contr_forall.
 Defined.
 
 Global Instance ishprop_oopathsplit `(f : A -> B)
@@ -117,7 +117,7 @@ Definition equiv_oopathsplit_isequiv `(f : A -> B)
 : ooPathSplit f <~> IsEquiv f.
 Proof.
   refine (equiv_iff_hprop _ _).
-  - apply isequiv_oopathsplit.
+  - exact isequiv_oopathsplit.
   - intros ?; exact (center _).
 Defined.
 

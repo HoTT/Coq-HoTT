@@ -110,7 +110,7 @@ Proof.
   intros A; constructor; intros B B_inO.
   apply (extendable_to_OO (O := O2)).
   intros x.
-  srapply inO_leq; apply B_inO.
+  srapply inO_leq; exact B_inO.
 Defined.
 
 
@@ -459,7 +459,7 @@ Section EasyModalities.
              (O_ind_easy A (fun _ => O_reflector B) _ (fun a => to B (f a))) _).
     - intros; apply O_inO_easy.
     - intros a; exact (O_ind_easy_beta A (fun _ => O_reflector B) _ _ a).
-    - apply A_inO.
+    - exact A_inO.
     - simple refine (isequiv_adjointify _
                (O_ind_easy B (fun _ => O_reflector A) _ (fun b => to A (f^-1 b))) _ _);
         intros x.

@@ -68,7 +68,7 @@ Section AssumeUnivalence.
     : S -> Pi 1 (Bouquet S).
   Proof.
     rapply equiv_pi1bouquet_rec.
-    apply grp_homo_id.
+    exact grp_homo_id.
   Defined.
 
   (** The fundemental group of an S-bouquet is the free group on S. *)

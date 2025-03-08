@@ -66,14 +66,14 @@ Section EilenbergMacLane.
     nrapply O_inverts_conn_map.
     nrapply (isconnmap_pred_add n.-2).
     rewrite 2 trunc_index_add_succ.
-    apply (conn_map_loop_susp_unit n X).
+    exact (conn_map_loop_susp_unit n X).
   Defined.
 
   Lemma pequiv_loops_em_em (G : AbGroup) (n : nat)
     : K(G, n) <~>* loops K(G, n.+1).
   Proof.
     destruct n.
-    1: apply pequiv_g_loops_bg.
+    1: exact pequiv_g_loops_bg.
     change (K(G, n.+1) <~>* loops (pTr n.+2 (psusp (K(G, n.+1))))).
     refine (ptr_loops _ _ o*E _).
     destruct n.
@@ -96,10 +96,10 @@ Section EilenbergMacLane.
     : GroupIsomorphism G (Pi n.+1 K(G, n.+1)).
   Proof.
     induction n.
-    - apply grp_iso_g_pi1_bg.
+    - exact grp_iso_g_pi1_bg.
     - nrefine (grp_iso_compose _ IHn).
       nrefine (grp_iso_compose _ (groupiso_pi_functor _ (pequiv_loops_em_em _ _))).
-      symmetry; apply (groupiso_pi_loops _ _).
+      symmetry; exact (groupiso_pi_loops _ _).
   Defined.
 
   Definition iscohhspace_em {G : AbGroup} (n : nat)
@@ -107,7 +107,7 @@ Section EilenbergMacLane.
   Proof.
     nrapply iscohhspace_equiv_cohhspace.
     2: apply pequiv_loops_em_em.
-    apply iscohhspace_loops.
+    exact iscohhspace_loops.
   Defined.
 
   (** If [G] and [G'] are isomorphic, then [K(G,n)] and [K(G',n)] are equivalent.  TODO:  We should show that [K(-,n)] is a functor, which implies this. *)

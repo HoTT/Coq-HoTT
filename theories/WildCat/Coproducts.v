@@ -434,7 +434,7 @@ Proof.
   destruct (dec_paths i a) as [p|].
   - destruct p.
     exact (Id _).
-  - apply zero_morphism. 
+  - exact zero_morphism.
 Defined.
 
 Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}

@@ -89,7 +89,7 @@ Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
 Proof.
   snrapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
   - exact (b $<~> a).
-  - apply CatIsEquiv.
+  - exact CatIsEquiv.
   - apply cate_fun'.
   - apply cate_isequiv'.
   - apply cate_buildequiv'.
@@ -521,7 +521,7 @@ Instance is01cat_core {A : Type} `{HasEquivs A}
 Proof.
   srapply Build_Is01Cat ; cbv.
   - intros; apply id_cate.
-  - intros a b c ; apply compose_cate.
+  - intros a b c ; exact compose_cate.
 Defined.
 
 Instance is2graph_core {A : Type} `{HasEquivs A}
@@ -537,7 +537,7 @@ Instance is01cat_core_hom {A : Type} `{HasEquivs A} (a b : core A)
 Proof.
   srapply Build_Is01Cat.
   - intro f; cbn; apply Id.
-  - intros f g h; cbn; apply cat_comp.
+  - intros f g h; cbn; exact cat_comp.
 Defined.
 
 Instance is0gpd_core_hom {A : Type} `{HasEquivs A} (a b : core A)
@@ -545,7 +545,7 @@ Instance is0gpd_core_hom {A : Type} `{HasEquivs A} (a b : core A)
 Proof.
   apply Build_Is0Gpd.
   intros f g ; cbv.
-  apply gpd_rev.
+  exact gpd_rev.
 Defined.
 
 Instance is0functor_core_postcomp {A : Type} `{HasEquivs A}

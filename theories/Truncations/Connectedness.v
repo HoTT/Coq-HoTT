@@ -71,7 +71,7 @@ Global Instance conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
   : IsConnected n.+1 A | 1000.
 Proof.
   apply isconnected_conn_map_to_unit.
-  apply (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
+  exact (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
 Defined.
 
 Definition conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
@@ -265,10 +265,10 @@ Proof.
       (fun a => ExtensionAlong (unit_name b0) (P a) (unit_name (f_b0 a)))
       (unit_name (f_a0 ; (unit_name f_a0b0)))).
   - apply (extension_conn_map_elim m).
-    + apply (conn_point_incl a0).
+    + exact (conn_point_incl a0).
     + intros a.
       apply (istrunc_extension_along_conn (n := n)).
-      * apply (conn_point_incl b0).
+      * exact (conn_point_incl b0).
       * apply HP.
   - destruct goal_as_extension as [f_eb name_ea_eab].
     assert (ea_eab := name_ea_eab tt); clear name_ea_eab.

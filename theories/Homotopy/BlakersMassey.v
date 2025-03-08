@@ -215,7 +215,7 @@ Section GBM.
                              ((codeleft2_y0 yqqu ; codeleft2_q10 yqqu) = (y1; q11)))))) oE _).
           refine ((equiv_O_sigma_O O _)^-1 oE _).
           apply equiv_O_functor.
-          apply equiv_Ocodeleft2plus.
+          exact equiv_Ocodeleft2plus.
         Defined.
 
         (** The next step is to reassociate the resulting double-pushout and "contract" both of them, one after the other, because they are pushouts along equivalences.  In order to do this, we need first of all to know that the resulting map from [codeleft0] to the above pushout factors through [Ocodeleft2b] via an equivalence.  Here's the equivalence: *)

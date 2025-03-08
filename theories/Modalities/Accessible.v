@@ -60,7 +60,7 @@ Arguments inO_iff_islocal O {_} X.
     - apply O_indpaths; intros x; simpl.
       rewrite (to_O_natural O (acc_lgen O i) x).
       rewrite O_rec_beta.
-      apply ((fst (ext_dom i 1%nat) (to O _)).2 x).
+      exact ((fst (ext_dom i 1%nat) (to O _)).2 x).
   Qed.
 
 (** The construction of the localization reflective subuniverse for any family of maps will be in [Localization]. *)

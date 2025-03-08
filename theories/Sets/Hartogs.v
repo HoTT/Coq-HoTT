@@ -21,9 +21,9 @@ Lemma injective_power_inj `{PropResizing} {ua : Univalence} (C : Type@{i})
 Proof.
   intros p p'. unfold power_inj. intros q. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
   - eapply equiv_smalltype. change ((fun a => Build_HProp (smalltype (p' a))) a).
-    rewrite <- q. apply equiv_smalltype. apply Ha.
+    rewrite <- q. apply equiv_smalltype. exact Ha.
   - eapply equiv_smalltype. change ((fun a => Build_HProp (smalltype (p a))) a).
-    rewrite q. apply equiv_smalltype. apply Ha.
+    rewrite q. apply equiv_smalltype. exact Ha.
 Qed.
 
 (* TODO: Could factor this as something keeping the [HProp] universe the same, followed by [power_inj]. *)
@@ -39,10 +39,10 @@ Proof.
   intros Hf p p' q. apply path_forall. intros a. apply path_iff_hprop; intros Ha.
   - enough (Hp : power_morph f p (f a)).
     + rewrite q in Hp. apply equiv_smalltype in Hp. apply Hp. reflexivity.
-    + apply equiv_smalltype. intros a' -> % Hf. apply Ha.
+    + apply equiv_smalltype. intros a' -> % Hf. exact Ha.
   - enough (Hp : power_morph f p' (f a)).
     + rewrite <- q in Hp. apply equiv_smalltype in Hp. apply Hp. reflexivity.
-    + apply equiv_smalltype. intros a' -> % Hf. apply Ha.
+    + apply equiv_smalltype. intros a' -> % Hf. exact Ha.
 Qed.
 
 (** We'll also need this result. *)
@@ -248,7 +248,7 @@ Section Hartogs_Number.
   Proof.
     cbn. intros [f Hf]. cbn in f.
     assert (HN : card hartogs_number <= card A). { apply tr. by exists f. }
-    transparent assert (HNO : hartogs_number'). { exists hartogs_number. apply HN. }
+    transparent assert (HNO : hartogs_number'). { exists hartogs_number. exact HN. }
     apply (ordinal_initial hartogs_number' HNO).
     eapply (transitive_Isomorphism hartogs_number' hartogs_number).
     - apply isomorphism_inverse.
@@ -260,11 +260,11 @@ Section Hartogs_Number.
       + srapply equiv_adjointify.
         * intros [a Ha % equiv_smalltype]. unshelve eexists.
           -- exists a. transitivity (card hartogs_number).
-             ++ nrapply le_Cardinal_lt_Ordinal; apply Ha.
-             ++ apply HN.
+             ++ nrapply le_Cardinal_lt_Ordinal; exact Ha.
+             ++ exact HN.
           -- apply equiv_smalltype. cbn. exact Ha.
         * intros [[a Ha] H % equiv_smalltype]. exists a.
-          apply equiv_smalltype. apply H.
+          apply equiv_smalltype. exact H.
         * intro a. apply path_sigma_hprop. apply path_sigma_hprop. reflexivity.
         * intro a. apply path_sigma_hprop. reflexivity.
       + reflexivity.

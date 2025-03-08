@@ -175,7 +175,7 @@ Definition rng_first_iso' `{Funext} {A B : Ring} (f : A $-> B)
   : A / I ≅ B.
 Proof.
   etransitivity.
-  1: apply (rng_quotient_invar p).
+  1: exact (rng_quotient_invar p).
   etransitivity.
   2: exact (rng_image_issurj f).
   apply rng_first_iso.

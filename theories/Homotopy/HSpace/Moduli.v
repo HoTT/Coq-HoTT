@@ -120,7 +120,7 @@ Proof.
   refine (concat_1p _ @ _^).
   refine (concat_p1 _ @ concat_p1 _ @ _).
   refine (ap10_path_forall _ _ _ _ @ _).
-  apply iscoherent.
+  exact iscoherent.
 Defined.
 
 (** ** The equivalence [IsCohHSpace A <~> (A ->* (A ->** A))] *)
@@ -163,7 +163,7 @@ Definition iscohhspace_homogeneous `{Funext} {A : pType} `{IsHomogeneous A}
 Proof.
   apply (equiv_iscohhspace_ptd_action A)^-1.
   exists homogeneous_pt_id.
-  apply homogeneous_pt_id_beta.
+  exact homogeneous_pt_id_beta.
 Defined.
 
 (** One can also show directly that the H-space structure defined by [ishspace_homogeneous] is coherent. This also avoids [Funext]. *)
@@ -188,8 +188,8 @@ Definition iscohhspace_hspace' (A : pType)
 Proof.
   snrapply Build_IsCohHSpace.
   { nrapply ishspace_homogeneous.
-    apply ishomogeneous_hspace. }
-  apply iscoherent_homogeneous.
+    exact ishomogeneous_hspace. }
+  exact iscoherent_homogeneous.
 Defined.
 
 (** The new multiplication is homotopic to the original one.  Relative to this, we expect that one of the identity laws also agrees, but that the other does not. *)

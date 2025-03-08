@@ -66,13 +66,13 @@ Qed.
 Proof.
 apply (@HSet.ishset_hrel_subpaths _ (fun e d => ' e = ' d)).
 - intros e; reflexivity.
-- apply _.
+- exact _.
 - exact pos_eq.
 Qed.
 
 #[export] Instance Qpos_one@{} : One Q+.
 Proof.
-exists 1. apply lt_0_1.
+exists 1. exact lt_0_1.
 Defined.
 
 #[export] Instance Qpos_mult@{} : Mult Q+.
@@ -103,14 +103,14 @@ Defined.
 #[export] Instance pos_of_nat@{} : Cast nat Q+.
 Proof.
 intros n. destruct n as [|k].
-- exists 1;apply lt_0_1.
+- exists 1;exact lt_0_1.
 - exists (naturals_to_semiring nat Q (S k)).
   induction k as [|k Ik].
-  + change (0 < 1). apply lt_0_1.
+  + change (0 < 1). exact lt_0_1.
   + change (0 < 1 + naturals_to_semiring nat Q (S k)).
     set (K := naturals_to_semiring nat Q (S k)) in *;clearbody K.
     apply pos_plus_compat.
-    * apply lt_0_1.
+    * exact lt_0_1.
     * trivial.
 Defined.
 
@@ -269,7 +269,7 @@ Qed.
 Definition Qpos_diff : forall q r : Q, q < r -> Q+.
 Proof.
 intros q r E;exists (r-q).
-apply (snd (flip_pos_minus _ _) E).
+exact (snd (flip_pos_minus _ _) E).
 Defined.
 
 Lemma Qpos_diff_pr@{} : forall q r E, r = q + ' (Qpos_diff q r E).
@@ -386,7 +386,7 @@ split.
     }
     ring_tac.ring_with_integers (NatPair.Z nat).
   }
-  apply pos_mult_compat;[|apply _].
+  apply pos_mult_compat;[|exact _].
   red. apply (snd (flip_pos_minus _ _)). trivial.
 - apply flip_pos_minus.
   assert (Hrw : r - (q + r) / 2 = (r - q) / 2);[|rewrite Hrw;clear Hrw].
@@ -396,7 +396,7 @@ split.
     }
     ring_tac.ring_with_integers (NatPair.Z nat).
   }
-  apply pos_mult_compat;[|apply _].
+  apply pos_mult_compat;[|exact _].
   red. apply (snd (flip_pos_minus _ _)). trivial.
 Qed.
 

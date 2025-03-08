@@ -89,7 +89,7 @@ Proof.
 induction P;simpl;intros E vs.
 - change eqb with Peqb in E;simpl in E.
   apply decide_eqb_ok in E. rewrite E.
-  apply preserves_0.
+  exact preserves_0.
 - change eqb with Peqb in E;simpl in E.
   destruct (false_ne_true E).
 Qed.
@@ -325,8 +325,8 @@ Proof.
 induction e as [v| | |a IHa b IHb|a IHa b IHb|a IHa];simpl.
 - rewrite (preserves_1 (f:=phi)),(preserves_0 (f:=phi)),plus_0_r,mult_1_l.
   reflexivity.
-- apply preserves_0.
-- apply preserves_1.
+- exact preserves_0.
+- exact preserves_1.
 - rewrite eval_add,IHa,IHb. reflexivity.
 - rewrite eval_mul,IHa,IHb. reflexivity.
 - rewrite eval_mulC. rewrite (almostring_mor_neg (f:=phi)),preserves_1.

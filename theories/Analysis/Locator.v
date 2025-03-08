@@ -69,7 +69,7 @@ Section locator.
     Proof.
       intros q r ltqr.
       case (LEM (' q < x)).
-      - apply _.
+      - exact _.
       - exact inl.
       - intros notlt.
         apply inr.
@@ -250,7 +250,7 @@ Section locator.
       destruct qP_lower as [q Pq].
       exists (q - 1).
       unfold P_lower in Pq. simpl in *.
-      apply (un_inl _ Pq).
+      exact (un_inl _ Pq).
     Qed.
 
     Local Definition lt1N (r : Q) : r < r + 1 := ltQposQ r 1.
@@ -312,7 +312,7 @@ Section locator.
       assert (lt0' : 0 < 3 / ' epsilon).
       {
         apply pos_mult.
-        - apply lt_0_3.
+        - exact lt_0_3.
         - apply pos_dec_recip_compat, epsilon.
       }
       assert (ap30 : (3 : Q) <> 0)
@@ -363,8 +363,8 @@ Section locator.
           by apply pos_plus_lt_compat_r, lt_0_1.
         assert (lt2 : (' (' k) - 1) * (' epsilon / 3) < (' (' k) - 1 + 1) * (' epsilon / 3)).
         {
-          nrefine (pos_mult_lt_r ('epsilon/3) _ (' (' k) - 1) (' (' k) - 1 + 1) _); try apply _.
-          apply lt1.
+          nrefine (pos_mult_lt_r ('epsilon/3) _ (' (' k) - 1) (' (' k) - 1 + 1) _); try exact _.
+          exact lt1.
         }
         apply pseudo_srorder_plus.
         exact lt2.
@@ -403,7 +403,7 @@ Section locator.
       exists (grid (fin_incl (fin_incl u))).
       unfold P in Pltux, Pltxueps.
       split.
-      - apply (locates_right_true l (lt_grid (fin_incl u)) Pltux).
+      - exact (locates_right_true l (lt_grid (fin_incl u)) Pltux).
       - clear - Pltxueps Qtriv Qdec_paths ap30 cast_pres_ordering.
         set (ltxbla := locates_right_false l (lt_grid (fsucc u)) Pltxueps).
         unfold grid in *.
@@ -432,7 +432,7 @@ Section locator.
         rewrite <- (associativity ('epsilon) 2 (/3)).
         apply pos_mult_lt_l.
         + apply epsilon.
-        + nrefine (pos_mult_reflect_r (3 : Q) lt_0_3 _ _ _); try apply _.
+        + nrefine (pos_mult_reflect_r (3 : Q) lt_0_3 _ _ _); try exact _.
           rewrite <- (associativity 2 (/3) 3).
           rewrite (commutativity (/3) 3).
           rewrite (dec_recip_inverse (3 : Q) ap30).
@@ -461,14 +461,14 @@ Section locator.
     Local Definition P_isHProp qeps' : IsHProp (P qeps').
     Proof.
       destruct qeps' as [q eps'].
-      apply istrunc_prod.
+      exact istrunc_prod.
     Qed.
 
     Local Definition P_dec qeps' : Decidable (P qeps').
     Proof.
       destruct qeps' as [q eps'].
       unfold P.
-      apply _.
+      exact _.
     Qed.
 
     Local Definition P_inhab : hexists P.
@@ -516,9 +516,9 @@ Section locator.
       assert (R : sig P).
       {
         apply minimal_n_alt_type.
-        - apply QQpos_eq.
-        - apply P_dec.
-        - apply P_inhab.
+        - exact QQpos_eq.
+        - exact P_dec.
+        - exact P_inhab.
       }
       unfold P in R.
       destruct R as [[q eps] [lleft mright]].
@@ -558,11 +558,11 @@ Section locator.
           * rewrite preserves_0; assumption.
         + apply inl. rewrite qzero, preserves_0; assumption.
         + assert (qap0 : q ≶ 0)
-            by apply (pseudo_order_lt_apart_flip _ _ qpos).
+            by exact (pseudo_order_lt_apart_flip _ _ qpos).
           assert (rap0 : r ≶ 0).
           {
             refine (pseudo_order_lt_apart_flip _ _ _).
-            apply (transitivity qpos ltqr).
+            exact (transitivity qpos ltqr).
           }
           assert (ltrrrq : / r < / q)
             by (apply flip_lt_dec_recip; assumption).
@@ -573,7 +573,7 @@ Section locator.
             assert (rpos' : 0 < ' r).
             {
               rewrite <- (@preserves_0 Q F _ _ _ _ _ _ _ _ _ _).
-              apply strictly_order_preserving; try apply _; assumption.
+              apply strictly_order_preserving; try exact _; assumption.
             }
             rewrite (dec_recip_to_recip r (positive_apart_zero ('r) rpos')) in ltrrx.
             assert (ltxrr := flip_lt_recip_l x ('r) rpos' ltrrx).
@@ -589,7 +589,7 @@ Section locator.
             assert (qpos' : 0 < ' q).
             {
               rewrite <- (@preserves_0 Q F _ _ _ _ _ _ _ _ _ _).
-              apply strictly_order_preserving; try apply _; assumption.
+              apply strictly_order_preserving; try exact _; assumption.
             }
             rewrite (dec_recip_to_recip q (positive_apart_zero ('q) qpos')) in ltxrq.
             assert (ltrqx := flip_lt_recip_r ('q) x qpos' xpos ltxrq).

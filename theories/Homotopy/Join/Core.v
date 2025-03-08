@@ -591,12 +591,12 @@ Section FunctorJoin.
     : IsEquiv (functor_join f g).
   Proof.
     snrapply isequiv_adjointify.
-    - apply (functor_join f^-1 g^-1).
+    - exact (functor_join f^-1 g^-1).
     - etransitivity.
       1: symmetry; apply functor_join_compose.
       etransitivity.
       1: exact (functor2_join (eisretr f) (eisretr g)).
-      apply functor_join_idmap.
+      exact functor_join_idmap.
     - etransitivity.
       1: symmetry; apply functor_join_compose.
       etransitivity.
@@ -881,7 +881,7 @@ Section JoinEmpty.
   Global Instance join_right_unitor : RightUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
-    - apply equiv_join_empty_right.
+    - exact equiv_join_empty_right.
     - snrapply Build_Is1Natural.
       intros A B f.
       cbn -[equiv_join_empty_right].
@@ -895,7 +895,7 @@ Section JoinEmpty.
   Global Instance join_left_unitor : LeftUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
-    - apply equiv_join_empty_left.
+    - exact equiv_join_empty_left.
     - snrapply Build_Is1Natural.
       intros A B f x.
       cbn -[equiv_join_empty_right].

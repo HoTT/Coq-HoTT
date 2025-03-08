@@ -20,7 +20,7 @@ Proof.
   srapply Build_Is01Cat.
   - intros [a | b]; cbn; apply Id.
   - intros [a | b] [a1 | b1] [a2 | b2];
-    try contradiction; cbn; apply cat_comp.
+    try contradiction; cbn; exact cat_comp.
 Defined.
 
 Instance is2graph_sum A B `{Is2Graph A, Is2Graph B}
@@ -28,7 +28,7 @@ Instance is2graph_sum A B `{Is2Graph A, Is2Graph B}
 Proof.
   intros x y; apply Build_IsGraph.
   destruct x as [a1 | b1], y as [a2 | b2];
-  try contradiction; cbn; apply Hom.
+  try contradiction; cbn; exact Hom.
 Defined.
 
 (* Note: [try contradiction] deals with empty cases. *)
@@ -41,11 +41,11 @@ Proof.
     2,3,6,7: contradiction.
     all: cbn.
     1,2: exact Id.
-    1,2: intros a b c; apply cat_comp.
+    1,2: intros a b c; exact cat_comp.
   - intros x y; srapply Build_Is0Gpd.
     destruct x as [a1 | b1], y as [a2 | b2].
     2,3: contradiction.
-    all: cbn; intros f g; apply gpd_rev.
+    all: cbn; intros f g; exact gpd_rev.
   - intros x y z h; srapply Build_Is0Functor.
     intros f g p.
     destruct x as [a1 | b1], y as [a2 | b2].

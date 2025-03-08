@@ -98,7 +98,7 @@ Section Abel.
   Proof.
     srapply Trunc_ind.
     snrapply Coeq_ind.
-    1: apply a.
+    1: exact a.
     intros [[x y] z].
     nrefine (transport_compose _ _ _ _ @ _).
     apply c.

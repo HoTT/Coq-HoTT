@@ -99,7 +99,7 @@ Definition path_fin_to_finnat_fin_zero@{} (n : nat)
   : fin_to_finnat (@fin_zero n) = zero_finnat n.
 Proof.
   apply path_sigma_hprop.
-  apply path_nat_fin_zero.
+  exact path_nat_fin_zero.
 Defined.
 
 Definition path_finnat_to_fin_succ@{} {n : nat} (u : FinNat n)

@@ -52,7 +52,7 @@ Section PathList.
     : decode (encode p) = p.
   Proof.
     destruct p.
-    apply decode_refl.
+    exact decode_refl.
   Defined.
 
   (** By case analysis on both lists, it's easy to show that [ListEq] is [n.+1]-truncated if [A] is [n.+2]-truncated. *)

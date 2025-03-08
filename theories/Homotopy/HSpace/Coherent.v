@@ -36,13 +36,13 @@ Proof.
     refine (ap (ap f^-1) _).
     pelim f.
     refine (1 @@ _).
-    apply iscoherent.
+    exact iscoherent.
 Defined.
 
 (** Every loop space is a coherent H-space. *)
 Definition iscohhspace_loops {X : pType} : IsCohHSpace (loops X).
 Proof.
   snrapply Build_IsCohHSpace.
-  - apply ishspace_loops.
+  - exact ishspace_loops.
   - reflexivity.
 Defined.

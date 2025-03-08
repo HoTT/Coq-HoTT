@@ -48,9 +48,9 @@ Definition O_lex_leq_eq {O1 O2 O3 : ReflectiveSubuniverse}
 Proof.
   intros A; unshelve econstructor; intros P P_inO1.
   all:pose (P_inO2 := fun x => inO_leq O1 O2 _ (P_inO1 x)).
-  - apply (OO_descend O3 O2 P).
+  - exact (OO_descend O3 O2 P).
   - intros x; apply (inO_leq O2 O1), (OO_descend_inO O3 O2 P).
-  - apply (OO_descend_beta O3 O2 P).
+  - exact (OO_descend_beta O3 O2 P).
 Defined.
 
 (** ** Left exactness properties *)
@@ -379,7 +379,7 @@ Definition OO_isconnected_from_conn_map
   : IsConnected O' X.
 Proof.
   apply isconnected_conn_map_to_unit.
-  apply (OO_cancelR_conn_map O' O f (const_tt _)).
+  exact (OO_cancelR_conn_map O' O f (const_tt _)).
 Defined.
 
 (** An interesting scholium to Proposition 2.31. *)
@@ -391,7 +391,7 @@ Definition OO_inverts_conn_map_factor_conn_map
 Proof.
   nrapply (cancelL_isequiv (O_functor O' g)).
   - apply O_inverts_conn_map.
-    apply (OO_cancelR_conn_map O' O f g).
+    exact (OO_cancelR_conn_map O' O f g).
   - exact (isequiv_homotopic _ (O_functor_compose O' f g)).
 Defined.
 
@@ -401,7 +401,7 @@ Definition OO_inverts_conn_map_isconnected_domain
        `{IsConnected O' Y} `{IsConnMap O _ _ f}
   : O_inverts O' f.
 Proof.
-  apply (OO_inverts_conn_map_factor_conn_map O' O f (const_tt _)).
+  exact (OO_inverts_conn_map_factor_conn_map O' O f (const_tt _)).
 Defined.
 
 (** Here is the converse of [ooextendable_TypeO_lex_leq]. *)
