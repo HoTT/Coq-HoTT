@@ -93,7 +93,7 @@ Infix "<<" := O_strong_leq : subuniverse_scope.
 Open Scope subuniverse_scope.
 
 (** The strong order implies the weak order. *)
-Global Instance O_leq_strong_leq {O1 O2 : ReflectiveSubuniverse} `{O1 << O2}
+Instance O_leq_strong_leq {O1 O2 : ReflectiveSubuniverse} `{O1 << O2}
   : O1 <= O2.
 Proof.
   intros A A_inO1.
@@ -149,7 +149,7 @@ Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse
 Hint Extern 0 (In (modality_subuniv _) _) => progress change modality_subuniv with (rsu_subuniv o modality_to_reflective_subuniverse) in * : typeclass_instances.
 
 (** Modalities are precisely the reflective subuniverses that are [<<] themselves.  *)
-Global Instance ismodality_modality (O : Modality) : IsModality O.
+Instance ismodality_modality (O : Modality) : IsModality O.
 Proof.
   intros A; exact _.
 Defined.
@@ -224,7 +224,7 @@ Ltac strip_modalities :=
 (** ** Dependent sums *)
 
 (** A dependent elimination of a reflective subuniverse [O'] into [O] implies that the sum of a family of [O]-modal types over an [O']-modal type is [O']-modal.  More specifically, for a particular such sum it suffices for the [O']-reflection of that sum to dependently eliminate into [O]. *)
-Global Instance inO_sigma_reflectsD
+Instance inO_sigma_reflectsD
        {O' : ReflectiveSubuniverse} {O : Subuniverse}
        {A : Type} (B : A -> Type) `{!ReflectsD O' O (sig B)}
        `{In O' A} `{forall a, In O (B a)}
@@ -245,13 +245,13 @@ Proof.
 Defined.
 
 (** Specialized to a modality, this yields the implication (ii) => (i) from Theorem 7.7.4 of the book, and also Corollary 7.7.8, part 2. *)
-Global Instance inO_sigma (O : Modality)
+Instance inO_sigma (O : Modality)
            {A:Type} (B : A -> Type) `{In O A} `{forall a, In O (B a)}
   : In O {x:A & B x}
   := _.
 
 (** This implies that the composite of modal maps is modal. *)
-Global Instance mapinO_compose {O : Modality} {A B C : Type} (f : A -> B) (g : B -> C)
+Instance mapinO_compose {O : Modality} {A B C : Type} (f : A -> B) (g : B -> C)
        `{MapIn O _ _ f} `{MapIn O _ _ g}
   : MapIn O (g o f).
 Proof.
@@ -345,7 +345,7 @@ Defined.
 (** ** Connectedness of the units *)
 
 (** Dependent reflection can also be characterized by connectedness of the unit maps. *)
-Global Instance conn_map_to_O_reflectsD {O' : Subuniverse} (O : ReflectiveSubuniverse)
+Instance conn_map_to_O_reflectsD {O' : Subuniverse} (O : ReflectiveSubuniverse)
        {A : Type} `{ReflectsD O' O A}
   : IsConnMap O (to O' A).
 Proof.       
@@ -362,13 +362,13 @@ Proof.
 Defined.
 
 (** In particular, if [O1 << O2] then every [O2]-unit is [O1]-connected. *)
-Global Instance conn_map_to_O_strong_leq
+Instance conn_map_to_O_strong_leq
        {O1 O2 : ReflectiveSubuniverse} `{O1 << O2} (A : Type)
   : IsConnMap O1 (to O2 A)
   := _.
 
 (** Thus, if [O] is a modality, then every [O]-unit is [O]-connected.  This is Corollary 7.5.8 in the book. *)
-Global Instance conn_map_to_O {O : Modality} (A : Type)
+Instance conn_map_to_O {O : Modality} (A : Type)
   : IsConnMap O (to O A)
   := _.
 
@@ -509,11 +509,11 @@ Section ModalFact.
               (functor_sigma idmap (fun b => to O (hfiber f b)))).
   Defined.
 
-  Global Instance conn_map_factor1_image {A B : Type} (f : A -> B)
+  #[export] Instance conn_map_factor1_image {A B : Type} (f : A -> B)
   : IsConnMap O (factor1 (image f))
     := inclass1 (image f).
 
-  Global Instance inO_map_factor2_image {A B : Type} (f : A -> B)
+  #[export] Instance inO_map_factor2_image {A B : Type} (f : A -> B)
   : MapIn O (factor2 (image f))
     := inclass2 (image f).
 

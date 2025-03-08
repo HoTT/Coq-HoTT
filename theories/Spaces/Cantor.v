@@ -26,7 +26,7 @@ Proof.
   - exact (inr (fun n => c n.+1)).
 Defined.
 
-Global Instance isequiv_cantor_fold `{Funext} : IsEquiv cantor_fold.
+Instance isequiv_cantor_fold `{Funext} : IsEquiv cantor_fold.
 Proof.
   refine (isequiv_adjointify _ cantor_unfold _ _).
   - intros c; apply path_arrow; intros n.

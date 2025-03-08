@@ -40,7 +40,7 @@ Class IsAccRSU@{a i} (O : Subuniverse@{i}) :=
 Arguments acc_lgen O {_}.
 Arguments inO_iff_islocal O {_} X.
 
-  Global Instance O_inverts_generators {O : ReflectiveSubuniverse} `{IsAccRSU O}
+  Instance O_inverts_generators {O : ReflectiveSubuniverse} `{IsAccRSU O}
              (i : lgen_indices (acc_lgen O))
   : O_inverts O (acc_lgen O i).
   Proof.
@@ -127,7 +127,7 @@ Section AccessibleModalities.
   Context (O : Modality) {acco : IsAccModality O}.
 
   (** Unsurprisingly, the generators are connected. *)
-  Global Instance isconnected_acc_ngen i : IsConnected O (acc_ngen O i).
+  #[export] Instance isconnected_acc_ngen i : IsConnected O (acc_ngen O i).
   Proof.
     apply isconnected_from_elim_to_O.
     pose (H := fst (fst (inO_iff_isnull O (O (acc_ngen O i))) _ i 1%nat)
@@ -175,7 +175,7 @@ End AccessibleModalities.
 (** We will now show that a modality is accessible in this sense if and only if its underlying reflective subuniverse is accessible in the sense previously defined.  We (almost?) never need to actually use this, though; in practice accessible modalities usually seem to be given to us with the appropriate sort of generators. *)
 
 (** One direction of this implication is trivial. *)
-Global Instance acc_rsu_modality (O : Modality) `{IsAccModality O}
+Instance acc_rsu_modality (O : Modality) `{IsAccModality O}
   : IsAccRSU O
   := Build_IsAccRSU O (null_to_local_generators (acc_ngen O)) (fun X => inO_iff_isnull O X).
 

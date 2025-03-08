@@ -262,7 +262,7 @@ Section EmbedProofLeft.
     rapply isequiv_counit_leftkanfam_leftkanfam.
   Defined.
 
-  Global Instance isequiv_leftkanfam_counit_equiv
+  #[export] Instance isequiv_leftkanfam_counit_equiv
     : IsEquiv leftkanfam_counit_equiv.
   Proof.
     snrapply isequiv_adjointify.
@@ -305,7 +305,7 @@ Section EmbedProofRight.
     rapply isequiv_unit_rightkanfam_rightkanfam.
   Defined.
       
-  Global Instance isequiv_rightkanfam_unit_equiv
+  #[export] Instance isequiv_rightkanfam_unit_equiv
     : IsEquiv rightkanfam_unit_equiv.
   Proof.
     snrapply isequiv_adjointify.

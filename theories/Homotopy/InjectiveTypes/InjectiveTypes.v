@@ -36,7 +36,7 @@ Section UniverseStructure.
   }.
 
   (** Contractible types are algebraically injective. *)
-  Global Instance alg_inj_contr@{} (D : Type@{w}) (cD : Contr D)
+  #[export] Instance alg_inj_contr@{} (D : Type@{w}) (cD : Contr D)
     : IsAlgebraicInjectiveType@{} D.
   Proof.
     snrapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
@@ -67,7 +67,7 @@ Proof.
     rapply isext_leftkanfam.
 Defined.
 
-Global Instance alg_inj_Type_forall@{u v uv suv | u <= uv, v <= uv, uv < suv} `{Univalence}
+Instance alg_inj_Type_forall@{u v uv suv | u <= uv, v <= uv, uv < suv} `{Univalence}
   : IsAlgebraicInjectiveType@{u v suv uv suv suv} Type@{uv}.
 Proof.
   snrapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
@@ -98,7 +98,7 @@ Section UniverseStructure.
     uw <= utw, vw <= vtw, tw <= utw, tw <= vtw.
   
   (** Dependent products are algebraically injective when all their factors are. *)
-  Global Instance alg_inj_forall@{}
+  #[export] Instance alg_inj_forall@{}
     `{Funext} {A : Type@{t}} (D : A -> Type@{w})
     (Dai : forall a, IsAlgebraicInjectiveType@{u v w uv uw vw} (D a))
     : IsAlgebraicInjectiveType@{u v tw uv utw vtw} (forall a, D a).
@@ -228,7 +228,7 @@ Proof.
     exact (@equiv_contr_sigma _ _ (contr_inhabited_hprop _ _)).
 Defined.
 
-Global Instance alg_flab_Type_forall@{u su | u < su} `{Univalence}
+Instance alg_flab_Type_forall@{u su | u < su} `{Univalence}
   : IsAlgebraicFlabbyType@{u su} Type@{u}.
 Proof.
   snrapply Build_IsAlgebraicFlabbyType; intros P A.

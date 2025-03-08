@@ -210,7 +210,7 @@ Section Flattening.
         apply transport_VpV.
   Defined. (* TODO: a little slow, 0.40s *)
 
-  Global Instance unicocone_cocone_E' : UniversalCocone cocone_E'.
+  #[export] Instance unicocone_cocone_E' : UniversalCocone cocone_E'.
   Proof.
     srapply Build_UniversalCocone.
     intro Z; srapply isequiv_adjointify.

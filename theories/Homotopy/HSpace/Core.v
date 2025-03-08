@@ -22,21 +22,21 @@ Class IsHSpace (X : pType) := {
 }.
 #[export] Existing Instances hspace_left_identity hspace_right_identity hspace_op.
 
-Global Instance hspace_mon_unit {X : pType} `{IsHSpace X} : MonUnit X := pt.
+#[export] Instance hspace_mon_unit {X : pType} `{IsHSpace X} : MonUnit X := pt.
 
 Definition issig_ishspace {X : pType}
   : { mu : X -> X -> X & prod (forall x, mu pt x = x) (forall x, mu x pt = x) }
       <~> IsHSpace X := ltac:(make_equiv).
 
 (** Left and right multiplication by the base point is always an equivalence. *)
-Global Instance isequiv_hspace_left_op_pt {X : pType} `{IsHSpace X}
+Instance isequiv_hspace_left_op_pt {X : pType} `{IsHSpace X}
   : IsEquiv (pt *.).
 Proof.
   apply (isequiv_homotopic idmap); intro x.
   exact (left_identity x)^.
 Defined.
 
-Global Instance isequiv_hspace_right_op_pt {X : pType} `{IsHSpace X}
+Instance isequiv_hspace_right_op_pt {X : pType} `{IsHSpace X}
   : IsEquiv (.* pt).
 Proof.
   apply (isequiv_homotopic idmap); intro x.
@@ -64,14 +64,14 @@ Definition pequiv_hspace_left_op {X : pType} `{IsHSpace X}
 
 (** For connected H-spaces, left and right multiplication by an element is an equivalence. This is because left and right multiplication by the base point is one, and being an equivalence is a proposition. *)
 
-Global Instance isequiv_hspace_left_op `{Univalence} {A : pType}
+Instance isequiv_hspace_left_op `{Univalence} {A : pType}
   `{IsHSpace A} `{IsConnected 0 A}
   : forall (a : A), IsEquiv (a *.).
 Proof.
   nrapply conn_point_elim; exact _.
 Defined.
 
-Global Instance isequiv_hspace_right_op `{Univalence} {A : pType}
+Instance isequiv_hspace_right_op `{Univalence} {A : pType}
   `{IsHSpace A} `{IsConnected 0 A}
   : forall (a : A), IsEquiv (.* a).
 Proof.
@@ -110,7 +110,7 @@ Proof.
 Defined.
 
 (** Left-invertible H-spaces are homogeneous, giving a logical equivalence between left-invertible H-spaces and homogeneous types. (In fact, the type of homogeneous types with the base point sent to the pointed identity map is equivalent to the type of left-invertible coherent H-spaces, but we don't prove that here.) See [equiv_iscohhspace_ptd_action] for a closely related result. *)
-Global Instance ishomogeneous_hspace {A : pType} `{IsHSpace A}
+Instance ishomogeneous_hspace {A : pType} `{IsHSpace A}
   `{forall a, IsEquiv (a *.)}
   : IsHomogeneous A
   := (fun a => pequiv_hspace_left_op a).

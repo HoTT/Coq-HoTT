@@ -68,7 +68,7 @@ Notation HasChoice := (HasOChoice purely).
 
 Notation HasTrChoice n := (HasOChoice (Tr n)).
 
-Global Instance hasochoice_sigma
+Instance hasochoice_sigma
   `{Funext} {A : Type} {B : A -> Type} (O : Modality)
   (chA : HasOChoice O A)
   (chB : forall a : A, HasOChoice O (B a))

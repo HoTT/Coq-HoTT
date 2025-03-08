@@ -165,7 +165,7 @@ Proof.
 Defined.
 
 (** [Colimit_rec] is an equivalence. *)
-Global Instance isequiv_colimit_rec `{Funext} {G : Graph}
+Instance isequiv_colimit_rec `{Funext} {G : Graph}
   {D : Diagram G} (P : Type)
   : IsEquiv (Colimit_rec (D:=D) P).
 Proof.
@@ -189,7 +189,7 @@ Definition equiv_colimit_rec `{Funext} {G : Graph} {D : Diagram G} (P : Type)
   : Cocone D P <~> (Colimit D -> P) := Build_Equiv _ _ _ (isequiv_colimit_rec P).
 
 (** It follows that the HIT Colimit is an abstract colimit. *)
-Global Instance unicocone_colimit `{Funext} {G : Graph} (D : Diagram G)
+Instance unicocone_colimit `{Funext} {G : Graph} (D : Diagram G)
   : UniversalCocone (cocone_colimit D).
 Proof.
   srapply Build_UniversalCocone; intro Y.
@@ -197,7 +197,7 @@ Proof.
   exact (isequiv_inverse (equiv_colimit_rec Y)).
 Defined.
 
-Global Instance iscolimit_colimit `{Funext} {G : Graph} (D : Diagram G)
+Instance iscolimit_colimit `{Funext} {G : Graph} (D : Diagram G)
   : IsColimit D (Colimit D)
   := Build_IsColimit _ (unicocone_colimit D).
 
@@ -396,7 +396,7 @@ Section FunctorialityColimit.
     apply cocone_precompose_identity.
   Defined.
 
-  Global Instance isequiv_functor_colimit
+  #[export] Instance isequiv_functor_colimit
     : IsEquiv (functor_colimit m HQ1 HQ2)
     := isequiv_adjointify _ _
       functor_colimit_eissect functor_colimit_eisretr.

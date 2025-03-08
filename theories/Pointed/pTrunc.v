@@ -50,14 +50,14 @@ Definition pequiv_ptr_rec `{Funext} {n} {X Y : pType} `{IsTrunc n Y}
 
 (** ** Functoriality of [pTr] *)
 
-Global Instance is0functor_ptr n : Is0Functor (pTr n).
+Instance is0functor_ptr n : Is0Functor (pTr n).
 Proof.
   apply Build_Is0Functor.
   intros X Y f.
   exact (pTr_rec _ (ptr o* f)).
 Defined.
 
-Global Instance is1functor_ptr n : Is1Functor (pTr n).
+Instance is1functor_ptr n : Is1Functor (pTr n).
 Proof.
   apply Build_Is1Functor.
   - intros X Y f g p.
@@ -185,6 +185,6 @@ Proof.
 Defined.
 
 (** Every pointed type is (-1)-connected. *)
-Global Instance is_minus_one_connected_pointed (X : pType)
+Instance is_minus_one_connected_pointed (X : pType)
   : IsConnected (Tr (-1)) X
   := contr_inhabited_hprop _ (tr pt).

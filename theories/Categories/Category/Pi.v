@@ -37,7 +37,7 @@ Local Notation "'forall'  x .. y , P" := (forall x, .. (forall y, P) ..) : type_
 Local Notation "'forall'  x .. y , P" := (pi (fun x => .. (pi (fun y => P)) .. )) : category_scope.
 
 (** ** The product of strict categories is strict *)
-Global Instance isstrict_category_pi
+Instance isstrict_category_pi
        `{Funext}
        `{forall a : A, IsStrictCategory (P a)}
 : IsStrictCategory (forall a, P a).

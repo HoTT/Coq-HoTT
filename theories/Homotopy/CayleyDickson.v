@@ -59,7 +59,7 @@ Section CayleyDicksonSpheroid_Properties.
   Local Instance isequiv_cds_conjug : IsEquiv cds_conjug
     := isequiv_adjointify cds_conjug cds_conjug cds_conjug_inv cds_conjug_inv.
 
-  Global Instance cds_factorneg_l : FactorNegLeft (-) (.*.).
+  #[export] Instance cds_factorneg_l : FactorNegLeft (-) (.*.).
   Proof.
     intros x y.
     rapply (equiv_inj conj).
@@ -71,7 +71,7 @@ Section CayleyDicksonSpheroid_Properties.
     apply swapop.
   Defined.
 
-  Global Instance cds_conjug_right_inv : RightInverse (.*.) cds_conjug mon_unit.
+  #[export] Instance cds_conjug_right_inv : RightInverse (.*.) cds_conjug mon_unit.
   Proof.
     intro x.
     lhs_V rapply (ap (.* conj x) (involutive x)).
@@ -82,14 +82,14 @@ End CayleyDicksonSpheroid_Properties.
 
 (** ** Negation and conjugation on suspensions *)
 
-Global Instance conjugate_susp (A : Type) `(Negate A) : Conjugate (Susp A)
+Instance conjugate_susp (A : Type) `(Negate A) : Conjugate (Susp A)
   := functor_susp (-).
 
-Global Instance negate_susp (A : Type) `(Negate A) : Negate (Susp A)
+Instance negate_susp (A : Type) `(Negate A) : Negate (Susp A)
   := susp_neg _ o conjugate_susp A (-).
 
 (** [conjugate_susp A] and [negate_susp A] commute. *)
-Global Instance swapop_conjugate_susp {A} `(Negate A)
+Instance swapop_conjugate_susp {A} `(Negate A)
   : SwapOp (negate_susp A (-)) (conjugate_susp A (-)).
 Proof.
   intros x.
@@ -98,7 +98,7 @@ Proof.
 Defined.
 
 (** [conjugate_susp A] is involutive, since any functor applied to an involution gives an involution. *)
-Global Instance involutive_conjugate_susp {A} `(Negate A, !Involutive (-))
+Instance involutive_conjugate_susp {A} `(Negate A, !Involutive (-))
   : Involutive (conjugate_susp A (-)).
 Proof.
   intros x.
@@ -109,7 +109,7 @@ Proof.
 Defined.
 
 (** [conjugate_susp A] is involutive as any composite of commuting involutions is an involution. *)
-Global Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
+Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
   : Involutive (negate_susp A (-)).
 Proof.
   intros x.
@@ -138,35 +138,35 @@ Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_susp_conjug_left_inv
   cdi_susp_conjug_distr.
 
-Global Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
+Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
   : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate)
   := idpath.
 
 (** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spheroid. *)
-Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
+Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
   : CayleyDicksonSpheroid (psusp A) := {}.
 
-Global Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
+Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
   : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
 Proof.
   srapply cds_conjug_left_inv.
 Defined.
 
-Global Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)
+Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)
   : RightInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
 Proof.
   srapply cds_conjug_right_inv.
 Defined.
 
-Global Instance cdi_susp_left_identity {A} `(CayleyDicksonImaginaroid A)
+Instance cdi_susp_left_identity {A} `(CayleyDicksonImaginaroid A)
   : LeftIdentity hspace_op mon_unit
   := _.
 
-Global Instance cdi_susp_right_identity {A} `(CayleyDicksonImaginaroid A)
+Instance cdi_susp_right_identity {A} `(CayleyDicksonImaginaroid A)
   : RightIdentity hspace_op mon_unit
   := _.
 
-Global Instance cdi_negate_susp_factornegleft {A} `(CayleyDicksonImaginaroid A)
+Instance cdi_negate_susp_factornegleft {A} `(CayleyDicksonImaginaroid A)
   : FactorNegLeft (negate_susp A cdi_negate) hspace_op.
 Proof.
   srapply cds_factorneg_l.
@@ -233,7 +233,7 @@ Section ImaginaroidHSpace.
   Arguments g {_ _}.
 
   (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)].  The following is the spherical form. *)
-  Global Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).
+  #[export] Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).
   Proof.
     snrapply Join_rec2.
     - exact (fun a b => joinl (a * b)).
@@ -274,7 +274,7 @@ Section ImaginaroidHSpace.
       apply diamond_twist.
   Defined.
 
-  Global Instance cd_op_left_identity
+  #[export] Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
     snrapply Join_ind_Flr.
@@ -286,7 +286,7 @@ Section ImaginaroidHSpace.
     apply join_natsq.
   Defined.
 
-  Global Instance cd_op_right_identity
+  #[export] Instance cd_op_right_identity
     : RightIdentity cd_op pt.
   Proof.
     snrapply Join_ind_Flr.
@@ -299,7 +299,7 @@ Section ImaginaroidHSpace.
     apply join_natsq.
   Defined.
 
-  Global Instance hspace_cdi_susp_assoc
+  #[export] Instance hspace_cdi_susp_assoc
     : IsHSpace (pjoin (psusp A) (psusp A))
     := {}.
 

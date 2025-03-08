@@ -15,18 +15,18 @@ Class NatDivides (n m : nat) : Type0 := nat_divides : {k : nat & k * n = m}.
 Notation "( n | m )" := (NatDivides n m) : nat_scope.
 
 (** Any number divides [0]. *)
-Global Instance nat_divides_zero_r n : (n | 0)
+Instance nat_divides_zero_r n : (n | 0)
   := (0; idpath).
 
 (** [1] divides any number. *)
-Global Instance nat_divides_one_l n : (1 | n)
+Instance nat_divides_one_l n : (1 | n)
   := (n; nat_mul_one_r _).
 
 (** Any number divides itself. Divisibility is a reflexive relation. *)
-Global Instance nat_divides_refl n : (n | n)
+Instance nat_divides_refl n : (n | n)
   := (1; nat_mul_one_l _).
 
-Global Instance reflexive_nat_divides : Reflexive NatDivides := nat_divides_refl.
+Instance reflexive_nat_divides : Reflexive NatDivides := nat_divides_refl.
 
 (** Divisibility is transitive. *)
 Definition nat_divides_trans {n m l} : (n | m) -> (m | l) -> (n | l).
@@ -39,26 +39,26 @@ Proof.
 Defined.
 Hint Immediate nat_divides_trans : typeclass_instances.
 
-Global Instance transitive_nat_divides : Transitive NatDivides := @nat_divides_trans.
+Instance transitive_nat_divides : Transitive NatDivides := @nat_divides_trans.
 
 (** A left factor divides a product. *)
-Global Instance nat_divides_mul_l' n m : (n | n * m)
+Instance nat_divides_mul_l' n m : (n | n * m)
   := (m; nat_mul_comm _ _).
 
 (** A right factor divides a product. *)
-Global Instance nat_divides_mul_r' n m : (m | n * m)
+Instance nat_divides_mul_r' n m : (m | n * m)
   := (n; idpath).
 
 (** Divisibility of the product is implied by divisibility of the left factor. *)
-Global Instance nat_divides_mul_l {n m} l : (n | m) -> (n | m * l)
+Instance nat_divides_mul_l {n m} l : (n | m) -> (n | m * l)
   := fun H => nat_divides_trans _ _.
 
 (** Divisibility of the product is implied by divisibility of the right factor. *)
-Global Instance nat_divides_mul_r {n m} l : (n | m) -> (n | l * m)
+Instance nat_divides_mul_r {n m} l : (n | m) -> (n | l * m)
   := fun H => nat_divides_trans _ _.
 
 (** Multiplication is monotone with respect to divisibility. *)
-Global Instance nat_divides_mul_monotone n m l p
+Instance nat_divides_mul_monotone n m l p
   : (n | m) -> (l | p) -> (n * l | m * p).
 Proof.
   intros [x r] [y q].
@@ -74,7 +74,7 @@ Proof.
 Defined.
 
 (** Divisibility of the sum is implied by divisibility of the summands. *)
-Global Instance nat_divides_add n m l : (n | m) -> (n | l) -> (n | m + l).
+Instance nat_divides_add n m l : (n | m) -> (n | l) -> (n | m + l).
 Proof.
   intros [x p] [y q].
   exists (x + y).
@@ -101,7 +101,7 @@ Proof.
 Defined.
 
 (** Divisibility of the difference is implied by divisibility of the minuend and subtrahend. *)
-Global Instance nat_divides_sub n m l : (n | m) -> (n | l) -> (n | m - l).
+Instance nat_divides_sub n m l : (n | m) -> (n | l) -> (n | m - l).
 Proof.
   intros [x p] [y q].
   exists (x - y).
@@ -152,11 +152,11 @@ Proof.
   snrapply leq_antisym; nrapply leq_divides; exact _.
 Defined.
 
-Global Instance antisymmetric_divides : AntiSymmetric NatDivides
+Instance antisymmetric_divides : AntiSymmetric NatDivides
   := nat_divides_antisym.
 
 (** If [n] divides [m], then the other factor also divides [m]. *)
-Global Instance divides_divisor n m (H : (n | m)) : (H.1 | m).
+Instance divides_divisor n m (H : (n | m)) : (H.1 | m).
 Proof.
   exists n.
   lhs nrapply nat_mul_comm.
@@ -197,7 +197,7 @@ Proof.
 Defined.
 
 (** Divisibility by a positive natural number is a hprop. *)
-Global Instance ishprop_nat_divides n m : 0 < n -> IsHProp (n | m).
+Instance ishprop_nat_divides n m : 0 < n -> IsHProp (n | m).
 Proof.
   intros H.
   apply hprop_allpath.
@@ -263,11 +263,11 @@ Defined.
 Hint Immediate nat_mod_lt_r' : typeclass_instances.
 
 (** [n] modulo [m] is less than [m]. *)
-Global Instance nat_mod_lt_r n m : 0 < m -> n mod m < m
+Instance nat_mod_lt_r n m : 0 < m -> n mod m < m
   := nat_mod_lt_r' n m 0.
 
 (** [n] modulo [m] is less than or equal to [m]. *)
-Global Instance nat_mod_leq_l n m : n mod m <= n.
+Instance nat_mod_leq_l n m : n mod m <= n.
 Proof.
   rewrite <- nat_div_mod_spec'.
   rapply leq_moveR_nV.
@@ -480,7 +480,7 @@ Proof.
 Defined.
 
 (** Divisibility is therefore decidable. *)
-Global Instance decidable_nat_divides n m : Decidable (n | m).
+Instance decidable_nat_divides n m : Decidable (n | m).
 Proof.
   nrapply decidable_iff.
   1: apply nat_mod_iff_divides.
@@ -497,7 +497,7 @@ Proof.
 Defined.
 
 (** A number can be corrected so that it is divisible by subtracting the modulo. *)
-Global Instance nat_divides_sub_mod n m : (n | m - m mod n).
+Instance nat_divides_sub_mod n m : (n | m - m mod n).
 Proof.
   rewrite nat_div_mod_spec''.
   exact _.
@@ -689,15 +689,15 @@ Proof.
 Defined.
 
 (** The greatest common divisor of [n] and [m] divides [n]. *)
-Global Instance nat_divides_l_gcd_l n m : (nat_gcd n m | n)
+Instance nat_divides_l_gcd_l n m : (nat_gcd n m | n)
   := fst (nat_divides_l_gcd n m).
 
 (** The greatest common divisor of [n] and [m] divides [m]. *)
-Global Instance divides_l_nat_gcd_r n m : (nat_gcd n m | m)
+Instance divides_l_nat_gcd_r n m : (nat_gcd n m | m)
   := snd (nat_divides_l_gcd n m).
 
 (** We can prove that any common divisor of [n] and [m] divides the greatest common divisor of [n] and [m]. It is in that sense the greatest. *)
-Global Instance nat_divides_r_gcd n m p : (p | n) -> (p | m) -> (p | nat_gcd n m).
+Instance nat_divides_r_gcd n m p : (p | n) -> (p | m) -> (p | nat_gcd n m).
 Proof.
   revert n m p; snrapply nat_ind_strong; intros n IHn m p H1 H2.
   destruct n; only 1: exact _.
@@ -767,7 +767,7 @@ Proof.
 Defined.
 
 (** [nat_gcd] is positive for positive inputs. *)
-Global Instance nat_gcd_pos n m : 0 < n -> 0 < m -> 0 < nat_gcd n m.
+Instance nat_gcd_pos n m : 0 < n -> 0 < m -> 0 < nat_gcd n m.
 Proof.
   intros H1 H2.
   apply lt_iff_not_geq.
@@ -830,7 +830,7 @@ Definition NatBezout n m d : Type0
   := exists a b, a * n = d + b * m.
 Existing Class NatBezout.
 
-Global Instance nat_bezout_refl_l n k : NatBezout n k n.
+Instance nat_bezout_refl_l n k : NatBezout n k n.
 Proof.
   by exists 1, 0.
 Defined.
@@ -878,7 +878,7 @@ Proof.
 Defined.
 Hint Immediate nat_bezout_comm : typeclass_instances.
 
-Global Instance nat_bezout_pos_l n m : 0 < n -> NatBezout n m (nat_gcd n m).
+Instance nat_bezout_pos_l n m : 0 < n -> NatBezout n m (nat_gcd n m).
 Proof.
   pose (k := n + m); assert (p : n + m = k) by reflexivity; clearbody k.
   revert k n m p; snrapply nat_ind_strong; hnf; intros k IHk n m q H.
@@ -931,7 +931,7 @@ Class IsPrime (n : nat) : Type0 := {
 
 Definition issig_IsPrime n : _ <~> IsPrime n := ltac:(issig).
 
-Global Instance ishprop_isprime `{Funext} n : IsHProp (IsPrime n).
+Instance ishprop_isprime `{Funext} n : IsHProp (IsPrime n).
 Proof.
   nrapply istrunc_equiv_istrunc.
   1: apply issig_IsPrime.
@@ -962,7 +962,7 @@ Proof.
 Defined.
 
 (** Being prime is a decidable property. We give an inefficient procedure for determining primality. More efficient procedures can be given, but for proofs this suffices. *)
-Global Instance decidable_isprime@{} n : Decidable (IsPrime n).
+Instance decidable_isprime@{} n : Decidable (IsPrime n).
 Proof.
   (** First we begin by discarding the [n = 0] case as we can easily prove that [0] is not prime. *)
   destruct n.
@@ -998,14 +998,14 @@ Proof.
 Defined.
 
 (** We can show that the first 8 primes are prime as expected. *)
-Global Instance isprime_2 : IsPrime 2 := ltac:(decide).
-Global Instance isprime_3 : IsPrime 3 := ltac:(decide).
-Global Instance isprime_5 : IsPrime 5 := ltac:(decide).
-Global Instance isprime_7 : IsPrime 7 := ltac:(decide).
-Global Instance isprime_11 : IsPrime 11 := ltac:(decide).
-Global Instance isprime_13 : IsPrime 13 := ltac:(decide).
-Global Instance isprime_17 : IsPrime 17 := ltac:(decide).
-Global Instance isprime_19 : IsPrime 19 := ltac:(decide).
+Instance isprime_2 : IsPrime 2 := ltac:(decide).
+Instance isprime_3 : IsPrime 3 := ltac:(decide).
+Instance isprime_5 : IsPrime 5 := ltac:(decide).
+Instance isprime_7 : IsPrime 7 := ltac:(decide).
+Instance isprime_11 : IsPrime 11 := ltac:(decide).
+Instance isprime_13 : IsPrime 13 := ltac:(decide).
+Instance isprime_17 : IsPrime 17 := ltac:(decide).
+Instance isprime_19 : IsPrime 19 := ltac:(decide).
 
 (** Similarly, we can see that other natural numbers are not prime. *)
 Definition not_isprime_0 : not (IsPrime 0) := ltac:(decide).
@@ -1016,9 +1016,9 @@ Definition not_isprime_4 : not (IsPrime 4) := ltac:(decide).
 Definition Prime : Type0 := {n : nat & IsPrime n}.
 
 Coercion nat_of_prime (p : Prime) : nat := p.1.
-Global Instance isprime_prime (p : Prime) : IsPrime p := p.2.
+Instance isprime_prime (p : Prime) : IsPrime p := p.2.
 
-Global Instance lt_zero_prime (p : Prime) : 0 < p
+Instance lt_zero_prime (p : Prime) : 0 < p
   := lt_trans _ gt_one_isprime.
 
 (** A prime [p] is coprime to a natural number [n] iff [p] does not divide [n]. *)
@@ -1081,7 +1081,7 @@ Defined.
 Hint Immediate gt_1_iscomposite : typeclass_instances.
 
 (** Being composite is a decidable property. *)
-Global Instance decidable_iscomposite@{} n : Decidable (IsComposite n).
+Instance decidable_iscomposite@{} n : Decidable (IsComposite n).
 Proof.
   unfold IsComposite.
   rapply (decidable_exists_nat n).

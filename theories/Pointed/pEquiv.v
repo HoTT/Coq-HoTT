@@ -6,7 +6,7 @@ Require Import Pointed.Core.
 Local Open Scope pointed_scope.
 
 (* Pointed equivalence is a reflexive relation. *)
-Global Instance pequiv_reflexive : Reflexive pEquiv.
+Instance pequiv_reflexive : Reflexive pEquiv.
 Proof.
   intro; apply pequiv_pmap_idmap.
 Defined.
@@ -15,7 +15,7 @@ Defined.
 Notation "f ^-1*" := (@cate_inv pType _ _ _ _ hasequivs_ptype _ _ f) : pointed_scope.
 
 (* Pointed equivalence is a symmetric relation. *)
-Global Instance pequiv_symmetric : Symmetric pEquiv.
+Instance pequiv_symmetric : Symmetric pEquiv.
 Proof.
   intros ? ?; apply pequiv_inverse.
 Defined.
@@ -26,7 +26,7 @@ Definition pequiv_compose {A B C : pType} (f : A <~>* B) (g : B <~>* C)
   := g $oE f.
 
 (* Pointed equivalence is a transitive relation. *)
-Global Instance pequiv_transitive : Transitive pEquiv.
+Instance pequiv_transitive : Transitive pEquiv.
 Proof.
   intros ? ? ?; apply pequiv_compose.
 Defined.

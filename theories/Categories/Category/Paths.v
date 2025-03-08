@@ -93,7 +93,7 @@ Section path_category.
     repeat f_ap; apply path_ishprop.
   Defined.
 
-  Global Instance isequiv__path_precategory''_T__of__path_precategory'_T `{fs : Funext} C D
+  #[export] Instance isequiv__path_precategory''_T__of__path_precategory'_T `{fs : Funext} C D
   : IsEquiv (@path_precategory''_T__of__path_precategory'_T fs C D)
     := isequiv_adjointify
          (@path_precategory''_T__of__path_precategory'_T fs C D)

@@ -430,7 +430,7 @@ Defined.
 
 (** ** Equivalence of graph quotients *)
 
-Global Instance isequiv_functor_gq {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
+Instance isequiv_functor_gq {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
   {R : A -> A -> Type} {S : B -> B -> Type} (e : forall a b, R a b -> S (f a) (f b))
   `{forall a b, IsEquiv (e a b)}
   : IsEquiv (functor_gq f e).

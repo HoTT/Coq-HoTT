@@ -43,7 +43,7 @@ Proof.
   exact (fun b => if b then North else South).
 Defined.
 
-Global Instance isequiv_S0_to_Bool : IsEquiv (S0_to_Bool) | 0.
+Instance isequiv_S0_to_Bool : IsEquiv (S0_to_Bool) | 0.
 Proof.
   apply isequiv_adjointify with Bool_to_S0.
   - intros [ | ]; exact 1.
@@ -84,7 +84,7 @@ Proof.
   exact (merid North @ (merid South)^).
 Defined.
 
-Global Instance isequiv_S1_to_Circle : IsEquiv (S1_to_Circle) | 0.
+Instance isequiv_S1_to_Circle : IsEquiv (S1_to_Circle) | 0.
 Proof.
   apply isequiv_adjointify with Circle_to_S1.
   - refine (Circle_ind _ 1 _).
@@ -245,7 +245,7 @@ Proof.
     + apply Empty_ind.
 Defined.
 
-Global Instance isequiv_S2_to_TwoSphere : IsEquiv (S2_to_TwoSphere) | 0.
+Instance isequiv_S2_to_TwoSphere : IsEquiv (S2_to_TwoSphere) | 0.
 Proof.
   apply isequiv_adjointify with TwoSphere_to_S2.
   - apply issect_TwoSphere_to_S2.
@@ -258,18 +258,18 @@ Definition equiv_S2_TwoSphere : Sphere 2 <~> TwoSphere
 (** ** Truncation and connectedness of spheres. *)
 
 (** S0 is 0-truncated. *)
-Global Instance istrunc_s0 : IsHSet (Sphere 0).
+Instance istrunc_s0 : IsHSet (Sphere 0).
 Proof.
   srapply (istrunc_isequiv_istrunc _ S0_to_Bool^-1).
 Defined.
 
 (** S1 is 1-truncated. *)
-Global Instance istrunc_s1 `{Univalence} : IsTrunc 1 (Sphere 1).
+Instance istrunc_s1 `{Univalence} : IsTrunc 1 (Sphere 1).
 Proof.
   srapply (istrunc_isequiv_istrunc _ S1_to_Circle^-1).
 Defined.
 
-Global Instance isconnected_sn n : IsConnected n.+1 (Sphere n.+2).
+Instance isconnected_sn n : IsConnected n.+1 (Sphere n.+2).
 Proof.
   induction n.
   { srapply contr_inhabited_hprop.

@@ -153,7 +153,7 @@ Proof.
     apply h.
 Qed.
 
-Global Instance isequiv_has_tr0_choice_to_has_quotient_choice
+Instance isequiv_has_tr0_choice_to_has_quotient_choice
   `{Funext} (A : Type)
   : IsEquiv (has_quotient_choice_tr0choice A).
 Proof.

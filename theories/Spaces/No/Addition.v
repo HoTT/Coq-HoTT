@@ -15,15 +15,15 @@ Class HasAddition (S : OptionSort) :=
 Existing Instance empty_options.
 Existing Instance sum_options.
 
-Global Instance hasaddition_maxsort : HasAddition MaxSort
+Instance hasaddition_maxsort : HasAddition MaxSort
   := { empty_options := tt ;
        sum_options := fun _ _ _ _ _ _ => tt }.
 
-Global Instance hasaddition_ordsort : HasAddition OrdSort
+Instance hasaddition_ordsort : HasAddition OrdSort
   := { empty_options := idmap ;
        sum_options := fun _ _ _ _ f g => sum_ind _ f g }.
 
-Global Instance hasaddition_decsort : HasAddition DecSort.
+Instance hasaddition_decsort : HasAddition DecSort.
 Proof.
   constructor.
   - apply insort_decsort.

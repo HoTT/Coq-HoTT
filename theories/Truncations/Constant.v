@@ -11,7 +11,7 @@ Local Open Scope trunc_scope.
 
 Definition FixedBy {X : Type} (f : X -> X) := {x : X & f x = x}.
 
-Global Instance ishprop_fix_wconst {X : Type} (f : X -> X)
+Instance ishprop_fix_wconst {X : Type} (f : X -> X)
   {wc : WeaklyConstant f}
   : IsHProp (FixedBy f).
 Proof.

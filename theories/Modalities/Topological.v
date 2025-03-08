@@ -15,7 +15,7 @@ Notation Topological O := (forall i, IsHProp (acc_ngen O i)).
 
 (** We prove left-exactness by proving that the universe of modal types is modal, using univalence.  It's unclear whether univalence is necessary or not in general; in one special case (open modalities) funext suffices.  But it's plausible that it would be necessary in general, because lex-ness of nullification is a statement about the path-spaces of a HIT, and characterizing those in any way usually requires some amount of univalence. *)
 
-Global Instance lex_topological `{Univalence}
+Instance lex_topological `{Univalence}
        (O : Modality) `{IsAccModality O} `{Topological O}
   : Lex O.
 Proof.
@@ -48,7 +48,7 @@ Proof.
 Defined.
 
 
-Global Instance lex_nullification `{Univalence}
+Instance lex_nullification `{Univalence}
       (S : NullGenerators) `{forall i, IsHProp (S i)}
 : Lex (Nul S).
 Proof.

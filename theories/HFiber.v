@@ -88,7 +88,7 @@ Proof.
   - intros a e. exact ((p a)^ @ ap k e @ q).
 Defined.
 
-Global Instance isequiv_functor_hfiber2 {A B C D}
+Instance isequiv_functor_hfiber2 {A B C D}
        {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
        `{IsEquiv A C h} `{IsEquiv B D k}
        (p : k o f == g o h) {b : B} {b' : D} (q : k b = b')
@@ -183,7 +183,7 @@ Section UnstableOctahedral.
     make_equiv_contr_basedpaths.
   Defined.
 
-  Global Instance istruncmap_compose `{!IsTruncMap n g} `{!IsTruncMap n f}
+  #[export] Instance istruncmap_compose `{!IsTruncMap n g} `{!IsTruncMap n f}
     : IsTruncMap n (g o f).
   Proof.
     intros c.
@@ -208,13 +208,13 @@ Definition hfiber_const A {B} (y y' : B)
   : hfiber (fun _ : A => y) y' <~> A * (y = y')
   := equiv_sigma_prod0 A (y = y').
 
-Global Instance istruncmap_const n {A B} `{!IsTrunc n A}
+Instance istruncmap_const n {A B} `{!IsTrunc n A}
        (y : B) `{!forall y', IsTrunc n (y = y')}
   : IsTruncMap n (fun _ : A => y)
   := fun y' => _.
 
 (** ** [IsTruncMap n.+1 f <-> IsTruncMap n (ap f)] *)
-Global Instance istruncmap_ap {A B} n (f:A -> B) `{!IsTruncMap n.+1 f}
+Instance istruncmap_ap {A B} n (f:A -> B) `{!IsTruncMap n.+1 f}
   : forall x y, IsTruncMap n (@ap _ _ f x y)
   := fun x x' y =>
        istrunc_equiv_istrunc _ (hfiber_ap y)^-1.
@@ -232,7 +232,7 @@ Definition equiv_istruncmap_ap `{Funext} {A B} n (f:A -> B)
   : IsTruncMap n.+1 f <~> (forall x y, IsTruncMap n (@ap _ _ f x y))
   := equiv_iff_hprop (@istruncmap_ap _ _ n f) (@istruncmap_from_ap _ _ n f).
 
-Global Instance isequiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f}
+Instance isequiv_ap_isembedding {A B} (f : A -> B) `{!IsEmbedding f}
   : forall x y, IsEquiv (@ap _ _ f x y).
 Proof.
   intros x y. apply isequiv_contr_map,_.
@@ -255,7 +255,7 @@ Proof.
 Defined.
 
 (** It follows from [isembedding_isequiv_ap] and [isequiv_ap_equiv_fun] that [equiv_fun] is an embedding. *)
-Global Instance isembedding_equiv_fun `{Funext} {A B : Type}
+Instance isembedding_equiv_fun `{Funext} {A B : Type}
   : IsEmbedding (@equiv_fun A B).
 Proof.
   rapply isembedding_isequiv_ap.

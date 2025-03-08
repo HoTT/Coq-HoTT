@@ -53,7 +53,7 @@ Defined.
 
 (** ** Connectedness of path spaces *)
 
-Global Instance isconnected_paths `{Univalence} {n A}
+Instance isconnected_paths `{Univalence} {n A}
        `{IsConnected n.+1 A} (x y : A)
   : IsConnected n (x = y).
 Proof.
@@ -66,7 +66,7 @@ Defined.
 
 (** We can't make both of these [Instance]s, as that would result in infinite loops. *)
 
-Global Instance conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
+Instance conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
   `{IsConnMap n _ _ (unit_name a0)}
   : IsConnected n.+1 A | 1000.
 Proof.
@@ -170,7 +170,7 @@ Proof.
 Defined.
 
 (** The path component of a point [x : X] is connected. *)
-Global Instance is0connected_component {X : Type} (x : X)
+Instance is0connected_component {X : Type} (x : X)
   : IsConnected 0 { z : X & merely (z = x) }.
 Proof.
   apply (Build_Contr _ (tr (x; tr idpath))).
@@ -205,7 +205,7 @@ Proof.
 Defined.
 
 (** 0-connected types are indecomposable *)
-Global Instance indecomposable_0connected `{Univalence}
+Instance indecomposable_0connected `{Univalence}
        (X : Type) `{IsConnected 0 X}
   : Indecomposable X.
 Proof.
@@ -230,7 +230,7 @@ Proof.
 Defined.
 
 (* Truncation preserves connectedness. Note that this is for different levels. *)
-Global Instance isconnected_trunc {X : Type} (n m : trunc_index) `{IsConnected n X}
+Instance isconnected_trunc {X : Type} (n m : trunc_index) `{IsConnected n X}
   : IsConnected n (Tr m X).
 Proof.
   unfold IsConnected.

@@ -368,10 +368,10 @@ Section LocalTypes.
   : ooExtendableAlong@{a a i k} (f i) (fun _ => X)
     := (lift_ooextendablealong _ _ (Xloc i)).
 
-  Global Instance islocal_loc (X : Type) : IsLocal f (Localize f X)
+  #[export] Instance islocal_loc (X : Type) : IsLocal f (Localize f X)
     := islocal_localize f X.
 
-  Global Instance isequiv_precomp_islocal `{Funext}
+  #[export] Instance isequiv_precomp_islocal `{Funext}
          {X : Type} `{IsLocal f X} i
   : IsEquiv (fun g => g o f i)
   := isequiv_ooextendable (fun _ => X) (f i) (ooextendable_islocal i).
@@ -413,7 +413,7 @@ Arguments local_indpaths_beta : simpl never.
 (** ** Localization and accessibility *)
 
 (** Localization subuniverses are accessible, essentially by definition.  Without the universe annotations, [a] and [i] get collapsed. *)
-Global Instance accrsu_loc@{a i} (f : LocalGenerators@{a}) : IsAccRSU@{a i} (Loc@{a i} f).
+Instance accrsu_loc@{a i} (f : LocalGenerators@{a}) : IsAccRSU@{a i} (Loc@{a i} f).
 Proof.
   unshelve econstructor.
   - exact f.
@@ -426,7 +426,7 @@ Definition lift_accrsu@{a i j} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
   := Loc@{a j} (acc_lgen O).
 
 (** The lifted universe agrees with the original one, on any universe contained in both [i] and [j] *)
-Global Instance O_eq_lift_accrsu@{a i j k} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
+Instance O_eq_lift_accrsu@{a i j k} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
   : O_eq@{i j k} O (lift_accrsu@{a i j} O).
 Proof.
   (** Anyone stepping through this proof should do [Set Printing Universes]. *)

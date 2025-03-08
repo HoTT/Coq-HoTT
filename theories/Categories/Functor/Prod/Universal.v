@@ -98,7 +98,7 @@ Section universal.
     Local Open Scope core_scope.
 
     (** ** Universal property characterizing unique product of functors *)
-    Global Instance contr_prod_type
+    #[export] Instance contr_prod_type
            `{IsHSet (Functor C A), IsHSet (Functor C B)}
     : Contr { F : Functor C (A * B)
             | fst o F = a

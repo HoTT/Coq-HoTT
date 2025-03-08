@@ -52,7 +52,7 @@ Proof.
     apply limp.
 Defined.
 
-Global Instance unicone_limit `(D : Diagram G)
+Instance unicone_limit `(D : Diagram G)
   : UniversalCone (cone_limit D).
 Proof.
   srapply Build_UniversalCone; intro Y.
@@ -66,7 +66,7 @@ Proof.
   all: intro; reflexivity.
 Defined.
 
-Global Instance islimit_limit `(D : Diagram G) : IsLimit D (Limit D)
+Instance islimit_limit `(D : Diagram G) : IsLimit D (Limit D)
   := Build_IsLimit (cone_limit _) _.
 
 (** * Functoriality of limits *)
@@ -147,7 +147,7 @@ Section FunctorialityLimit.
     apply cone_postcompose_identity.
   Defined.
 
-  Global Instance isequiv_functor_limit
+  #[export] Instance isequiv_functor_limit
     : IsEquiv (functor_limit m HQ1 HQ2)
     := isequiv_adjointify _ _
       functor_limit_eissect functor_limit_eisretr.

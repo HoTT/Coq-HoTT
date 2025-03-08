@@ -76,7 +76,7 @@ Section Extensions.
     -> ext = ext'
   := equiv_path_extension ext ext'.
 
-  Global Instance isequiv_path_extension `{Funext} {A B : Type} {f : A -> B}
+  #[export] Instance isequiv_path_extension `{Funext} {A B : Type} {f : A -> B}
          {P : B -> Type} {d : forall x:A, P (f x)}
          (ext ext' : ExtensionAlong f P d)
     : IsEquiv (path_extension ext ext') | 0
@@ -144,7 +144,7 @@ Section Extensions.
     -> IsEquiv (fun g => g oD f)
     := isequiv_pathsplit n o (equiv_extendable_pathsplit n.+2 C f).
 
-  Global Instance ishprop_extendable `{Funext} (n : nat)
+  #[export] Instance ishprop_extendable `{Funext} (n : nat)
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ExtendableAlong n.+2 f C).
   Proof.
@@ -346,7 +346,7 @@ Section Extensions.
     apply equiv_extendable_pathsplit.
   Defined.
 
-  Global Instance ishprop_ooextendable `{Funext}
+  #[export] Instance ishprop_ooextendable `{Funext}
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ooExtendableAlong f C).
   Proof.

@@ -28,7 +28,7 @@ Proof.
 Defined.
 
 (** Note that the sigma over cardinalities is not truncated.  Nevertheless, because canonical finite sets of different cardinalities are not isomorphic, being finite is still an hprop.  (Thus, we could have truncated the sigma and gotten an equivalent definition, but it would be less convenient to reason about.) *)
-Global Instance ishprop_finite X
+Instance ishprop_finite X
 : IsHProp (Finite X).
 Proof.
   refine (istrunc_equiv_istrunc _ (issig_finite X)).
@@ -77,22 +77,22 @@ Definition fcard_equiv' {X Y} (e : X <~> Y)
 (** ** Simple examples of finite sets *)
 
 (** Canonical finite sets are finite *)
-Global Instance finite_fin n : Finite (Fin n)
+Instance finite_fin n : Finite (Fin n)
   := Build_Finite _ n (tr (equiv_idmap _)).
 
 (** This includes the empty set. *)
-Global Instance finite_empty : Finite Empty
+Instance finite_empty : Finite Empty
   := finite_fin 0.
 
 (** The unit type is finite, since it's equivalent to [Fin 1]. *)
-Global Instance finite_unit : Finite Unit.
+Instance finite_unit : Finite Unit.
 Proof.
   refine (finite_equiv' (Fin 1) _ _); simpl.
   apply sum_empty_l.
 Defined.
 
 (** Thus, any contractible type is finite. *)
-Global Instance finite_contr X `{Contr X} : Finite X
+Instance finite_contr X `{Contr X} : Finite X
   := finite_equiv Unit equiv_contr_unit^-1 _.
 
 (** Any decidable hprop is finite, since it must be equivalent to [Empty] or [Unit]. *)
@@ -109,7 +109,7 @@ Defined.
 Hint Immediate finite_decidable_hprop : typeclass_instances.
 
 (** It follows that the propositional truncation of any finite set is finite. *)
-Global Instance finite_merely X {fX : Finite X}
+Instance finite_merely X {fX : Finite X}
 : Finite (merely X).
 Proof.
   (** As in decidable_finite_hprop, we case on cardinality first to avoid needing funext. *)
@@ -121,7 +121,7 @@ Proof.
 Defined.
 
 (** Finite sets are closed under path-spaces. *)
-Global Instance finite_paths {X} `{Finite X} (x y : X)
+Instance finite_paths {X} `{Finite X} (x y : X)
 : Finite (x = y).
 Proof.
   (** If we assume [Funext], then typeclass inference produces this automatically, since [X] has decidable equality and (hence) is a set, so [x=y] is a decidable hprop.  But we can also deduce it without funext, since [Finite] is an hprop even without funext. *)
@@ -133,7 +133,7 @@ Defined.
 
 (** Finite sets are also closed under successors. *)
 
-Global Instance finite_succ X `{Finite X} : Finite (X + Unit).
+Instance finite_succ X `{Finite X} : Finite (X + Unit).
 Proof.
   refine (Build_Finite _ (fcard X).+1 _).
   pose proof (merely_equiv_fin X).
@@ -148,7 +148,7 @@ Definition fcard_succ X `{Finite X}
 (** ** Decidability *)		
 
 (** Like canonical finite sets, finite sets have decidable equality. *)
-Global Instance decidablepaths_finite `{Funext} X `{Finite X}
+Instance decidablepaths_finite `{Funext} X `{Finite X}
 : DecidablePaths X.
 Proof.
   assert (e := merely_equiv_fin X).
@@ -159,7 +159,7 @@ Defined.
 (** However, contrary to what you might expect, we cannot assert that "every finite set is decidable"!  That would be claiming a *uniform* way to select an element from every nonempty finite set, which contradicts univalence. *)
 
 (** One thing we can prove is that any finite hprop is decidable. *)
-Global Instance decidable_finite_hprop X `{IsHProp X} {fX : Finite X}
+Instance decidable_finite_hprop X `{IsHProp X} {fX : Finite X}
 : Decidable X.
 Proof.
   (** To avoid having to use [Funext], we case on the cardinality of [X] before stripping the truncation from its equivalence to [Fin n]; if we did things in the other order then we'd have to know that [Decidable X] is an hprop, which requires funext. *)
@@ -171,7 +171,7 @@ Proof.
 Defined.
 
 (** It follows that if [X] is finite, then its propositional truncation is decidable. *)
-Global Instance decidable_merely_finite X {fX : Finite X}
+Instance decidable_merely_finite X {fX : Finite X}
 : Decidable (merely X).
 Proof.
   exact _.
@@ -238,7 +238,7 @@ Defined.
 
 (** *** Binary sums *)
 
-Global Instance finite_sum X Y `{Finite X} `{Finite Y}
+Instance finite_sum X Y `{Finite X} `{Finite Y}
 : Finite (X + Y).
 Proof.
   assert (e := merely_equiv_fin Y).
@@ -272,7 +272,7 @@ Defined.
 
 (** *** Binary products *)
 
-Global Instance finite_prod X Y `{Finite X} `{Finite Y}
+Instance finite_prod X Y `{Finite X} `{Finite Y}
 : Finite (X * Y).
 Proof.
   assert (e := merely_equiv_fin Y).
@@ -308,7 +308,7 @@ Proof.
 
 (** Finite sets are closed under function types, and even dependent function types. *)
 
-Global Instance finite_forall `{Funext} {X} (Y : X -> Type)
+Instance finite_forall `{Funext} {X} (Y : X -> Type)
        `{Finite X} `{forall x, Finite (Y x)}
 : Finite (forall x:X, Y x).
 Proof.
@@ -356,7 +356,7 @@ Abort.
 
 (** *** Automorphism types (i.e. symmetric groups) *)
 
-Global Instance finite_aut `{Funext} X `{Finite X}
+Instance finite_aut `{Funext} X `{Finite X}
 : Finite (X <~> X).
 Proof.
   assert (e := merely_equiv_fin X).
@@ -395,7 +395,7 @@ Abort.
 
 (** Perhaps slightly less obviously, finite sets are also closed under sigmas. *)
 
-Global Instance finite_sigma {X} (Y : X -> Type)
+Instance finite_sigma {X} (Y : X -> Type)
        `{Finite X} `{forall x, Finite (Y x)}
 : Finite { x:X & Y x }.
 Proof.
@@ -496,7 +496,7 @@ Defined.
 (** ** Finite subsets *)
 
 (** Closure under sigmas implies that a detachable subset of a finite set is finite. *)
-Global Instance finite_detachable_subset {X} `{Finite X} (P : X -> Type)
+Instance finite_detachable_subset {X} `{Finite X} (P : X -> Type)
        `{forall x, IsHProp (P x)} `{forall x, Decidable (P x)}
 : Finite { x:X & P x }.
 Proof.
@@ -537,7 +537,7 @@ Section DecidableQuotients.
           `{Reflexive _ R} `{Transitive _ R} `{Symmetric _ R}
           {Rd : forall x y, Decidable (R x y)}.
 
-  Global Instance finite_quotient : Finite (Quotient R).
+  #[export] Instance finite_quotient : Finite (Quotient R).
   Proof.
     assert (e := merely_equiv_fin X).
     strip_truncations.

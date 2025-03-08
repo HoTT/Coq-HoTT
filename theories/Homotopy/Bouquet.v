@@ -19,7 +19,7 @@ Section AssumeUnivalence.
   (** An S-indexed wedge of circles a.k.a a bouquet can be defined as the suspension of the pointification of S. *) 
   Definition Bouquet (S : Type) : pType := psusp (pointify S).
 
-  Global Instance isconnected_bouquet (S : Type)
+  #[export] Instance isconnected_bouquet (S : Type)
     : IsConnected 0 (Bouquet S).
   Proof.
     rapply isconnected_susp.
@@ -54,7 +54,7 @@ Section AssumeUnivalence.
     apply natequiv_pi1bouquet_rec.
   Defined.
 
-  Global Instance is1natural_equiv_pi1bouquet_rec (S : Type)
+  #[export] Instance is1natural_equiv_pi1bouquet_rec (S : Type)
     : Is1Natural
         (opyon (Pi 1 (Bouquet S)))
         (opyon S o group_type)
@@ -72,7 +72,7 @@ Section AssumeUnivalence.
   Defined.
 
   (** The fundemental group of an S-bouquet is the free group on S. *)
-  Global Instance isfreegroupon_pi1bouquet (S : Type)
+  #[export] Instance isfreegroupon_pi1bouquet (S : Type)
     : IsFreeGroupOn S (Pi 1 (Bouquet S)) (pi1bouquet_incl S).
   Proof.
     apply equiv_isfreegroupon_isequiv_precomp.

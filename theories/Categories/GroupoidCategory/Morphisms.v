@@ -19,7 +19,7 @@ Section groupoid_category.
     := fun f => f : morphism _ _ _.
 
   (** ** All groupoids are categories *)
-  Global Instance iscategory_groupoid_category
+  #[export] Instance iscategory_groupoid_category
   : IsCategory (groupoid_category X).
   Proof.
     repeat intro.

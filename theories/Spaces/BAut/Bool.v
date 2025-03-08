@@ -90,7 +90,7 @@ Section AssumeUnivalence.
 
   (** ** Connectedness *)
 
-  Global Instance isminusoneconnected_baut_bool `{Funext} (Z : BAut Bool)
+  #[export] Instance isminusoneconnected_baut_bool `{Funext} (Z : BAut Bool)
   : IsConnected (-1) Z.
   Proof.
     baut_reduce.
@@ -132,7 +132,7 @@ First we define the function that will be the equivalence. *)
   Defined.
 
   (** Now we show that it is an equivalence. *)
-  Global Instance isequiv_inhab_baut_bool_from_bool (t : Bool)
+  #[export] Instance isequiv_inhab_baut_bool_from_bool (t : Bool)
          (Z : BAut Bool) (z : Z)
   : IsEquiv (inhab_baut_bool_from_bool t Z z).
   Proof.
@@ -177,7 +177,7 @@ First we define the function that will be the equivalence. *)
       destruct t; reflexivity.
   Defined.
 
-  Global Instance isequiv_equiv_inhab_baut_bool_bool
+  #[export] Instance isequiv_equiv_inhab_baut_bool_bool
          (t : Bool) (Z : BAut Bool)
   : IsEquiv (equiv_inhab_baut_bool_bool t Z).
   Proof.

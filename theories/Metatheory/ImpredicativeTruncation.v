@@ -14,7 +14,7 @@ Definition trm@{i j | } {A : Type@{i}} : A -> Trm@{i j} A
   := fun a P HP f => f a.
 
 (** Here [k] plays the role of [max(i,j+1)]. *)
-Global Instance ishprop_Trm@{i j k | i <= k, j < k} `{Funext} (A : Type@{i})
+Instance ishprop_Trm@{i j k | i <= k, j < k} `{Funext} (A : Type@{i})
   : IsHProp (Trm@{i j} A).
 Proof.
   nrapply istrunc_forall@{k k k}; intro B.

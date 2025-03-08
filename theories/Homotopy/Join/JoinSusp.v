@@ -24,7 +24,7 @@ Proof.
   exact (jglue _ a @ (jglue _ a)^).
 Defined.
 
-Global Instance isequiv_join_to_susp (A : Type) : IsEquiv (join_to_susp A).
+Instance isequiv_join_to_susp (A : Type) : IsEquiv (join_to_susp A).
 Proof.
   snrapply (isequiv_adjointify _ (susp_to_join A)).
   - snrapply Susp_ind.

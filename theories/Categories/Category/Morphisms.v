@@ -83,7 +83,7 @@ Section iso_contr.
     Defined.
 
     (** *** Being an isomorphism is a mere proposition *)
-    Global Instance istrunc_isisomorphism : IsHProp (IsIsomorphism m).
+    #[export] Instance istrunc_isisomorphism : IsHProp (IsIsomorphism m).
     Proof.
       eapply istrunc_equiv_istrunc; [ exact issig_isisomorphism | ].
       apply hprop_allpath.
@@ -121,7 +121,7 @@ Section iso_contr.
     := (issig_isomorphic oE equiv_functor_sigma_id issig_isisomorphism).
 
   (** *** Isomorphisms form an hSet *)
-  Global Instance trunc_Isomorphic : IsHSet (Isomorphic s d).
+  #[export] Instance trunc_Isomorphic : IsHSet (Isomorphic s d).
   Proof.
     eapply istrunc_equiv_istrunc; [ exact issig_isomorphic | ].
     typeclasses eauto.
@@ -154,7 +154,7 @@ Section iso_contr.
   Qed.
 
   (** *** Equality between isomorphisms is equivalent to by equality between their forward components *)
-  Global Instance isequiv_path_isomorphic {i j}
+  #[export] Instance isequiv_path_isomorphic {i j}
   : IsEquiv (path_isomorphic i j).
   Proof.
     intros.
@@ -170,7 +170,7 @@ Section iso_equiv_relation.
   Variable C : PreCategory.
 
   (** *** The identity is an isomorphism *)
-  Global Instance isisomorphism_identity (x : C) : IsIsomorphism (identity x)
+  #[export] Instance isisomorphism_identity (x : C) : IsIsomorphism (identity x)
     := {| morphism_inverse := identity x;
           left_inverse := left_identity C x x (identity x);
           right_inverse := right_identity C x x (identity x) |}.
@@ -190,7 +190,7 @@ Section iso_equiv_relation.
     auto with morphism.
 
   (** *** Composition of isomorphisms gives an isomorphism *)
-  Global Instance isisomorphism_compose `(@IsIsomorphism C y z m0) `(@IsIsomorphism C x y m1)
+  #[export] Instance isisomorphism_compose `(@IsIsomorphism C y z m0) `(@IsIsomorphism C x y m1)
   : IsIsomorphism (m0 o m1).
   Proof.
     exists (m1^-1 o m0^-1);
@@ -202,15 +202,15 @@ Section iso_equiv_relation.
   Hint Immediate isisomorphism_inverse : typeclass_instances.
 
   (** *** Being isomorphic is a reflexive relation *)
-  Global Instance isomorphic_refl : Reflexive (@Isomorphic C)
+  #[export] Instance isomorphic_refl : Reflexive (@Isomorphic C)
     := fun x : C => {| morphism_isomorphic := identity x |}.
 
   (** *** Being isomorphic is a symmetric relation *)
-  Global Instance isomorphic_sym : Symmetric (@Isomorphic C)
+  #[export] Instance isomorphic_sym : Symmetric (@Isomorphic C)
     := fun x y X => {| morphism_isomorphic := X^-1 |}.
 
   (** *** Being isomorphic is a transitive relation *)
-  Global Instance isomorphic_trans : Transitive (@Isomorphic C)
+  #[export] Instance isomorphic_trans : Transitive (@Isomorphic C)
     := fun x y z X Y => {| morphism_isomorphic := @morphism_isomorphic _ _ _ Y o @morphism_isomorphic _ _ _ X |}.
 
   (** *** Equality gives rise to isomorphism *)
@@ -277,21 +277,21 @@ Section EpiMono.
 
   Section properties.
     (** *** The identity is an epimorphism *)
-    Global Instance isepimorphism_identity (x : C)
+    #[export] Instance isepimorphism_identity (x : C)
     : IsEpimorphism (identity x).
     Proof.
       repeat intro; autorewrite with morphism in *; trivial.
     Qed.
 
     (** *** The identity is a monomorphism *)
-    Global Instance ismonomorphism_identity (x : C)
+    #[export] Instance ismonomorphism_identity (x : C)
     : IsMonomorphism (identity x).
     Proof.
       repeat intro; autorewrite with morphism in *; trivial.
     Qed.
 
     (** *** Composition of epimorphisms gives an epimorphism *)
-    Global Instance isepimorphism_compose s d d' m0 m1
+    #[export] Instance isepimorphism_compose s d d' m0 m1
     : IsEpimorphism m0
       -> IsEpimorphism m1
       -> IsEpimorphism (@compose C s d d' m0 m1).
@@ -302,7 +302,7 @@ Section EpiMono.
     Qed.
 
     (** *** Composition of monomorphisms gives a monomorphism *)
-    Global Instance ismonomorphism_compose s d d' m0 m1
+    #[export] Instance ismonomorphism_compose s d d' m0 m1
     : IsMonomorphism m0
       -> IsMonomorphism m1
       -> IsMonomorphism (@compose C s d d' m0 m1).
@@ -315,16 +315,16 @@ Section EpiMono.
 
   (** *** Existence of {epi,mono}morphisms are a preorder *)
   Section equiv.
-    Global Instance reflexive_epimorphism : Reflexive (@Epimorphism C)
+    #[export] Instance reflexive_epimorphism : Reflexive (@Epimorphism C)
       := fun x => Build_Epimorphism (isepimorphism_identity x).
 
-    Global Instance reflexive_monomorphism : Reflexive (@Monomorphism C)
+    #[export] Instance reflexive_monomorphism : Reflexive (@Monomorphism C)
       := fun x => Build_Monomorphism (ismonomorphism_identity x).
 
-    Global Instance transitive_epimorphism : Transitive (@Epimorphism C)
+    #[export] Instance transitive_epimorphism : Transitive (@Epimorphism C)
       := fun _ _ _ m0 m1 => Build_Epimorphism (isepimorphism_compose m1 m0).
 
-    Global Instance transitive_monomorphism : Transitive (@Monomorphism C)
+    #[export] Instance transitive_monomorphism : Transitive (@Monomorphism C)
       := fun _ _ _ m0 m1 => Build_Monomorphism (ismonomorphism_compose m1 m0).
   End equiv.
 
@@ -340,7 +340,7 @@ Section EpiMono.
             | rewrite <- ?associativity; t].
 
     (** *** Retractions are epimorphisms *)
-    Global Instance isepimorphism_retr `(@IsSectionOf C x y s r)
+    #[export] Instance isepimorphism_retr `(@IsSectionOf C x y s r)
     : IsEpimorphism r | 1000.
     Proof.
       (intros ? m1 m2 ?).
@@ -351,7 +351,7 @@ Section EpiMono.
     Qed.
 
     (** *** Sections are monomorphisms *)
-    Global Instance ismonomorphism_sect `(@IsSectionOf C x y s r)
+    #[export] Instance ismonomorphism_sect `(@IsSectionOf C x y s r)
     : IsMonomorphism s | 1000.
     Proof.
       (intros ? m1 m2 ?).
@@ -361,21 +361,21 @@ Section EpiMono.
     Qed.
 
     (** *** Isomorphisms are both sections and retractions *)
-    Global Instance issect_isisomorphism `(@IsIsomorphism C x y m)
+    #[export] Instance issect_isisomorphism `(@IsIsomorphism C x y m)
     : IsSectionOf m m^-1 | 1000
       := left_inverse.
 
-    Global Instance isretr_isisomorphism `(@IsIsomorphism C x y m)
+    #[export] Instance isretr_isisomorphism `(@IsIsomorphism C x y m)
     : IsSectionOf m^-1 m | 1000
       := right_inverse.
   End sect.
 
   (** *** Isomorphisms are therefore epimorphisms and monomorphisms *)
   Section iso.
-    Global Instance isepimorphism_isisomorphism `(@IsIsomorphism C s d m)
+    #[export] Instance isepimorphism_isisomorphism `(@IsIsomorphism C s d m)
     : IsEpimorphism m | 1000
       := _.
-    Global Instance ismonomorphism_isisomorphism `(@IsIsomorphism C s d m)
+    #[export] Instance ismonomorphism_isisomorphism `(@IsIsomorphism C s d m)
     : IsMonomorphism m | 1000
       := _.
   End iso.
@@ -459,7 +459,7 @@ Section iso_lemmas.
   Defined.
 
   (** *** Functors preserve isomorphisms *)
-  Global Instance iso_functor C D (F : Functor C D) `(@IsIsomorphism C s d m)
+  #[export] Instance iso_functor C D (F : Functor C D) `(@IsIsomorphism C s d m)
   : IsIsomorphism (F _1 m).
   Proof.
     refine ({| morphism_inverse := F _1 m^-1 |}).

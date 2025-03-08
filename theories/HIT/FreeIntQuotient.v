@@ -22,7 +22,7 @@ Section FreeIntAction.
   Let RmodZ := Coeq f idmap.
 
   (** Together, [R] and [f] define a fibration over [Circle].  By the flattening lemma, its total space is equivalent to the quotient. *)
-  Global Instance isset_RmodZ : IsHSet RmodZ.
+  #[export] Instance isset_RmodZ : IsHSet RmodZ.
   Proof.
     nrefine (istrunc_equiv_istrunc
               { z : Circle & Circle_rec Type R (path_universe f) z}

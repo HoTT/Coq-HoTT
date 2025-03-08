@@ -29,19 +29,19 @@ Notation "'K(' G , n )" := (EilenbergMacLane G n).
 Section EilenbergMacLane.
   Context `{Univalence}.
 
-  Global Instance istrunc_em {G : Group} {n : nat} : IsTrunc n K(G, n).
+  Instance istrunc_em {G : Group} {n : nat} : IsTrunc n K(G, n).
   Proof.
     destruct n as [|[]]; exact _.
   Defined.
 
   (** This is subsumed by the next result, but Coq doesn't always find the next result when it should. *)
-  Global Instance isconnected_em {G : Group} (n : nat)
+  Instance isconnected_em {G : Group} (n : nat)
     : IsConnected n K(G, n.+1).
   Proof.
     induction n; exact _.
   Defined.
 
-  Global Instance isconnected_em' {G : Group} (n : nat)
+  Instance isconnected_em' {G : Group} (n : nat)
     : IsConnected n.-1 K(G, n).
   Proof.
     destruct n.
@@ -49,7 +49,7 @@ Section EilenbergMacLane.
     apply isconnected_em.
   Defined.
 
-  Global Instance is0connected_em {G : Group} (n : nat)
+  Instance is0connected_em {G : Group} (n : nat)
     : IsConnected 0 K(G, n.+1).
   Proof.
     rapply (is0connected_isconnected n.-2).

@@ -101,7 +101,7 @@ Section Equiv.
     intros. apply path_ishprop.
   Defined.
 
-  Global Instance decidable_in_class `{forall x y, Decidable (R x y)}
+  #[export] Instance decidable_in_class `{forall x y, Decidable (R x y)}
   : forall x a, Decidable (in_class x a).
   Proof.
     refine (quotient_ind_prop _ _).
@@ -241,7 +241,7 @@ Section Functoriality.
   Context {A : Type} (R : Relation A) {sR: is_mere_relation _ R}
           {B : Type} (S : Relation B) {sS: is_mere_relation _ S}.
 
-  Global Instance quotient_functor_isequiv
+  #[export] Instance quotient_functor_isequiv
              (f : A -> B) (fresp : forall x y, R x y <-> S (f x) (f y))
              `{IsEquiv _ _ f}
   : IsEquiv (quotient_functor R S f (fun x y => fst (fresp x y))).

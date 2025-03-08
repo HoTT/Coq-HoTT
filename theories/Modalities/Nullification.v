@@ -67,7 +67,7 @@ Notation IsNull f := (In (Nul f)).
 (** ** Nullification and Accessibility *)
 
 (** Nullification modalities are accessible, essentially by definition. *)
-Global Instance accmodality_nul (S : NullGenerators) : IsAccModality (Nul S).
+Instance accmodality_nul (S : NullGenerators) : IsAccModality (Nul S).
 Proof.
   unshelve econstructor.
   - exact S.
@@ -80,7 +80,7 @@ Definition lift_accmodality@{a i j} (O : Subuniverse@{i}) `{IsAccModality@{a i} 
   : Modality@{j}
   := Nul@{a j} (acc_ngen O).
 
-Global Instance O_eq_lift_accmodality (O : Subuniverse@{i}) `{IsAccModality@{a i} O}
+Instance O_eq_lift_accmodality (O : Subuniverse@{i}) `{IsAccModality@{a i} O}
   : O <=> lift_accmodality O.
 Proof.
   split; intros A; apply inO_iff_isnull.

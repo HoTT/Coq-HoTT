@@ -202,7 +202,7 @@ Section coyoneda_lemma.
       ).
   Defined.
 
-  Global Instance coyoneda_lemma `{Funext} A
+  #[export] Instance coyoneda_lemma `{Funext} A
   : IsIsomorphism (coyoneda_natural_transformation A).
   Proof.
     eapply isisomorphism_natural_transformation.
@@ -283,7 +283,7 @@ Section yoneda_lemma.
              (yoneda_functor A)
     := @morphism_inverse _ _ _ _ (coyoneda_lemma A^op).
 
-  Global Instance yoneda_lemma
+  #[export] Instance yoneda_lemma
   : IsIsomorphism yoneda_natural_transformation
     := @isisomorphism_inverse _ _ _ _ (coyoneda_lemma A^op).
 End yoneda_lemma.

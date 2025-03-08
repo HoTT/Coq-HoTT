@@ -73,7 +73,7 @@ Module Import LaxCommaCategoryParts.
       issig.
     Defined.
 
-    Global Instance trunc_object `{IsTrunc n A, IsTrunc n B}
+    #[export] Instance trunc_object `{IsTrunc n A, IsTrunc n B}
            `{forall s d, IsTrunc n (Functor (S s) (T d))}
     : IsTrunc n object.
     Proof.
@@ -141,7 +141,7 @@ Module Import LaxCommaCategoryParts.
       issig.
     Defined.
 
-    Global Instance trunc_morphism abf a'b'f'
+    #[export] Instance trunc_morphism abf a'b'f'
            `{IsTrunc n (Category.Core.morphism A (abf.(a)) (a'b'f'.(a)))}
            `{IsTrunc n (Category.Core.morphism B (abf.(b)) (a'b'f'.(b)))}
            `{forall m1 m2,

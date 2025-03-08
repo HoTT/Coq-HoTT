@@ -35,7 +35,7 @@ Record Subuniverse@{i} :=
 Class In (O : Subuniverse) (T : Type) := in_internal : In_internal O T.
 
 (** Being in the subuniverse is a mere predicate (by hypothesis).  We include funext in the hypotheses of hprop_inO so that it doesn't have to be assumed in all definitions of (reflective) subuniverses, since in most examples it is required for this and this only.  Here we redefine it using the replaced [In]. *)
-Global Instance hprop_inO `{Funext} (O : Subuniverse) (T : Type)
+Instance hprop_inO `{Funext} (O : Subuniverse) (T : Type)
   : IsHProp (In O T)
   := @hprop_inO_internal _ _ T.
 
@@ -76,7 +76,7 @@ Definition equiv_path_TypeO@{i j} {fs : Funext} O (T T' : Type_@{i j} O)
   := equiv_path_sigma_hprop@{j i j} T T'.
 
 (** Types in [TypeO] are always in [O]. *)
-Global Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
+Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
   := A.2.
 
 (** ** Properties of Subuniverses *)
@@ -91,7 +91,7 @@ Section Subuniverse.
   Context (O : Subuniverse).
 
   (** Being a local map is an hprop *)
-  Global Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
+  #[export] Instance ishprop_mapinO `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (MapIn O f).
   Proof.
     apply istrunc_forall.
@@ -108,7 +108,7 @@ Section Subuniverse.
   Defined.
 
   (** The projection from a family of local types is local. *)
-  Global Instance mapinO_pr1 {A : Type} {B : A -> Type}
+  #[export] Instance mapinO_pr1 {A : Type} {B : A -> Type}
          `{forall a, In O (B a)}
   : MapIn O (@pr1 A B).
   Proof.
@@ -261,7 +261,7 @@ Ltac strip_reflections :=
   end.
 
 (** Given [Funext], we prove the definition of reflective subuniverse in the book. *)
-Global Instance isequiv_o_to_O `{Funext}
+Instance isequiv_o_to_O `{Funext}
        (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
 : IsEquiv (fun g : O P -> Q => g o to O P)
 := isequiv_ooextendable _ _ (extendable_to_O O).
@@ -272,7 +272,7 @@ Definition equiv_o_to_O `{Funext}
 := Build_Equiv _ _ (fun g : O P -> Q => g o to O P) _.
 
 (** [isequiv_ooextendable] is defined in a way that makes [O_rec] definitionally equal to the inverse of [equiv_o_to_O]. *)
-Global Instance isequiv_O_rec_to_O `{Funext}
+Instance isequiv_O_rec_to_O `{Funext}
        (O : ReflectiveSubuniverse) (P Q : Type) `{In O Q}
   : IsEquiv (fun g : P -> Q => O_rec g)
   := (equiv_isequiv (equiv_o_to_O O P Q)^-1).
@@ -296,7 +296,7 @@ Section Reflective_Subuniverse.
   Defined.
 
   (** If [T] is in the subuniverse, then [to O T] is an equivalence. *)
-  Global Instance isequiv_to_O_inO (T : Type) `{In O T} : IsEquiv (to O T).
+  #[export] Instance isequiv_to_O_inO (T : Type) `{In O T} : IsEquiv (to O T).
   Proof.
     pose (g := O_rec idmap : O T -> T).
     refine (isequiv_adjointify (to O T) g _ _).
@@ -450,7 +450,7 @@ Section Reflective_Subuniverse.
     Qed.
 
     (** Preservation of equivalences *)
-    Global Instance isequiv_O_functor {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
+    #[export] Instance isequiv_O_functor {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
     : IsEquiv (O_functor f).
     Proof.
       refine (isequiv_adjointify (O_functor f) (O_functor f^-1) _ _).
@@ -561,7 +561,7 @@ Section Reflective_Subuniverse.
 
   Section OInverts.
 
-    Global Instance O_inverts_O_unit (A : Type)
+    #[export] Instance O_inverts_O_unit (A : Type)
     : O_inverts (to O A).
     Proof.
       refine (isequiv_homotopic (to O (O A)) _).
@@ -720,7 +720,7 @@ Section Reflective_Subuniverse.
     Definition typeof_to_O (A : Type)
       := { OA : Type & { Ou : A -> OA & ((In O OA) * (O_inverts Ou)) }}.
 
-    Global Instance contr_typeof_O_unit `{Univalence} (A : Type)
+    #[export] Instance contr_typeof_O_unit `{Univalence} (A : Type)
     : Contr (typeof_to_O A).
     Proof.
       apply (Build_Contr _ (O A ; (to O A ; (_ , _)))).
@@ -762,27 +762,27 @@ Section Reflective_Subuniverse.
   Section Types.
 
     (** ** The [Unit] type *)
-    Global Instance inO_unit : In O Unit.
+    #[export] Instance inO_unit : In O Unit.
     Proof.
       apply inO_to_O_retract@{Set} with (mu := fun x => tt).
       exact (@contr@{Set} Unit _).
     Defined.
 
     (** It follows that any contractible type is in [O]. *)
-    Global Instance inO_contr {A : Type} `{Contr A} : In O A.
+    #[export] Instance inO_contr {A : Type} `{Contr A} : In O A | 2.
     Proof.
       exact (inO_equiv_inO@{Set _ _} Unit equiv_contr_unit^-1).
     Defined.
 
     (** And that the reflection of a contractible type is still contractible. *)
-    Global Instance contr_O_contr {A : Type} `{Contr A} : Contr (O A).
+    #[global] Instance contr_O_contr {A : Type} `{Contr A} : Contr (O A).
     Proof.
       exact (contr_equiv A (to O A)).
     Defined.
 
     (** ** Dependent product and arrows *)
     (** Theorem 7.7.2 *)
-    Global Instance inO_forall {fs : Funext} (A:Type) (B:A -> Type)
+    #[export] Instance inO_forall {fs : Funext} (A:Type) (B:A -> Type)
     : (forall x, (In O (B x)))
       -> (In O (forall x:A, (B x))).
     Proof.
@@ -796,7 +796,7 @@ Section Reflective_Subuniverse.
       exact (O_rec_beta (fun f : forall x0, (B x0) => f x) phi).
     Defined.
 
-    Global Instance inO_arrow {fs : Funext} (A B : Type) `{In O B}
+    #[export] Instance inO_arrow {fs : Funext} (A B : Type) `{In O B}
     : In O (A -> B).
     Proof.
       apply inO_forall.
@@ -804,7 +804,7 @@ Section Reflective_Subuniverse.
     Defined.
 
     (** ** Product *)
-    Global Instance inO_prod (A B : Type) `{In O A} `{In O B}
+    #[export] Instance inO_prod (A B : Type) `{In O A} `{In O B}
     : In O (A*B).
     Proof.
       apply inO_to_O_retract with
@@ -855,7 +855,7 @@ Section Reflective_Subuniverse.
       := Build_Equiv _ _ _ (isequiv_O_prod_unit_precompose A B C).
 
     (** The (funext-free) universal property implies that [O_prod_unit] is an [O]-equivalence, hence induces an equivalence between [O (A*B)] and [O A * O B]. *)
-    Global Instance O_inverts_O_prod_unit (A B : Type)
+    #[export] Instance O_inverts_O_prod_unit (A B : Type)
       : O_inverts (O_prod_unit A B).
     Proof.
       rapply O_inverts_from_extendable.
@@ -865,7 +865,7 @@ Section Reflective_Subuniverse.
     Definition O_prod_cmp (A B : Type) : O (A * B) -> O A * O B
       := O_rec (O_prod_unit A B).
 
-    Global Instance isequiv_O_prod_cmp (A B : Type)
+    #[export] Instance isequiv_O_prod_cmp (A B : Type)
       : IsEquiv (O_prod_cmp A B).
     Proof.
       rapply isequiv_O_rec_O_inverts.
@@ -892,7 +892,7 @@ Section Reflective_Subuniverse.
 
     (** ** Pullbacks *)
 
-    Global Instance inO_pullback {A B C} (f : B -> A) (g : C -> A)
+    #[export] Instance inO_pullback {A B C} (f : B -> A) (g : C -> A)
            `{In O A} `{In O B} `{In O C}
       : In O (Pullback f g).
     Proof.
@@ -920,7 +920,7 @@ Section Reflective_Subuniverse.
 
     (** ** Fibers *)
 
-    Global Instance inO_hfiber {A B : Type} `{In O A} `{In O B}
+    #[export] Instance inO_hfiber {A B : Type} `{In O A} `{In O B}
            (f : A -> B) (b : B)
     : In O (hfiber f b).
     Proof.
@@ -995,7 +995,7 @@ Section Reflective_Subuniverse.
     (** ** Equivalences *)
 
     (** Naively it might seem that we need closure under Sigmas (hence a modality) to deduce closure under [Equiv], but in fact the above closure under fibers is sufficient.  This appears as part of the proof of Proposition 2.18 of CORS.  For later use, we try to reduce the number of universe parameters (but we don't completely control them all). *)
-    Global Instance inO_equiv `{Funext} (A : Type@{i}) (B : Type@{j})
+    #[export] Instance inO_equiv `{Funext} (A : Type@{i}) (B : Type@{j})
            `{In O A} `{In O B}
       : In O (A <~> B).
     Proof.
@@ -1053,7 +1053,7 @@ Section Reflective_Subuniverse.
     (** ** Truncations  *)
 
     (** The reflector preserves hprops (and, as we have already seen, contractible types), although it doesn't generally preserve [n]-types for other [n]. *)
-    Global Instance ishprop_O_ishprop {A} `{IsHProp A} : IsHProp (O A).
+    #[export] Instance ishprop_O_ishprop {A} `{IsHProp A} : IsHProp (O A).
     Proof.
       refine ishprop_isequiv_diag.
       refine (isequiv_homotopic (O_prod_cmp A A
@@ -1064,7 +1064,7 @@ Section Reflective_Subuniverse.
     Defined.
 
     (** If [A] is [In O], then so is [IsTrunc n A]. *)
-    Global Instance inO_istrunc `{Funext} {n} {A} `{In O A}
+    #[export] Instance inO_istrunc `{Funext} {n} {A} `{In O A}
     : In O (IsTrunc n A).
     Proof.
       generalize dependent A; simple_induction n n IH; intros A ?.
@@ -1123,7 +1123,7 @@ Section Reflective_Subuniverse.
                        (fun y => (to_O_natural f y)^)
                        (fun y => (to_O_natural g y)^).
 
-      Global Instance isequiv_O_coeq_cmp : O_inverts coeq_cmp.
+      #[export] Instance isequiv_O_coeq_cmp : O_inverts coeq_cmp.
       Proof.
         rapply O_inverts_functor_coeq.
       Defined.
@@ -1206,7 +1206,7 @@ Section Reflective_Subuniverse.
   Section Decidable.
 
     (** If [Empty] belongs to [O], then [O] preserves decidability. *)
-    Global Instance decidable_O `{In O Empty} (A : Type) `{Decidable A}
+    #[export] Instance decidable_O `{In O Empty} (A : Type) `{Decidable A}
     : Decidable (O A).
     Proof.
       destruct (dec A) as [y|n].
@@ -1352,7 +1352,7 @@ Section ConnectedTypes.
   Context (O : ReflectiveSubuniverse).
 
   (** Being connected is an hprop *)
-  Global Instance ishprop_isconnected `{Funext} A
+  #[export] Instance ishprop_isconnected `{Funext} A
   : IsHProp (IsConnected O A).
   Proof.
     unfold IsConnected; exact _.
@@ -1408,7 +1408,7 @@ Section ConnectedTypes.
   Defined.
 
   (** Connected types are closed under sigmas. *)
-  Global Instance isconnected_sigma {A : Type} {B : A -> Type}
+  #[export] Instance isconnected_sigma {A : Type} {B : A -> Type}
              `{IsConnected O A} `{forall a, IsConnected O (B a)}
   : IsConnected O {a:A & B a}.
   Proof.
@@ -1420,7 +1420,7 @@ Section ConnectedTypes.
   Defined.
 
   (** Contractible types are connected. *)
-  Global Instance isconnected_contr {A : Type} `{Contr A}
+  #[export] Instance isconnected_contr {A : Type} `{Contr A}
     : IsConnected O A.
   Proof.
     rapply contr_O_contr.
@@ -1434,7 +1434,7 @@ Section ConnectedTypes.
   Defined.
 
   (** Any map between connected types is inverted by O. *)
-  Global Instance O_inverts_isconnected {A B : Type} (f : A -> B)
+  #[export] Instance O_inverts_isconnected {A B : Type} (f : A -> B)
              `{IsConnected O A} `{IsConnected O B}
     : O_inverts O f.
   Proof.
@@ -1485,14 +1485,14 @@ Section ModalMaps.
   Context (O : ReflectiveSubuniverse).
 
   (** Any equivalence is modal *)
-  Global Instance mapinO_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
+  #[export] Instance mapinO_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : MapIn O f.
   Proof.
     intros b; exact _.
   Defined.
 
   (** A slightly specialized result: if [Empty] is modal, then a map with decidable hprop fibers (such as [inl] or [inr]) is modal. *)
-  Global Instance mapinO_hfiber_decidable_hprop {A B : Type} (f : A -> B)
+  #[export] Instance mapinO_hfiber_decidable_hprop {A B : Type} (f : A -> B)
          `{In O Empty}
          `{forall b, IsHProp (hfiber f b)}
          `{forall b, Decidable (hfiber f b)}
@@ -1505,7 +1505,7 @@ Section ModalMaps.
   Defined.
 
   (** Any map between modal types is modal. *)
-  Global Instance mapinO_between_inO {A B : Type} (f : A -> B)
+  #[export] Instance mapinO_between_inO {A B : Type} (f : A -> B)
              `{In O A} `{In O B}
   : MapIn O f.
   Proof.
@@ -1536,7 +1536,7 @@ Section ModalMaps.
   := cancelR_isequiv_mapinO f g.
 
   (** The pullback of a modal map is modal. *)
-  Global Instance mapinO_pullback {A B C}
+  #[export] Instance mapinO_pullback {A B C}
          (f : B -> A) (g : C -> A) `{MapIn O _ _ g}
   : MapIn O (f^* g).
   Proof.
@@ -1544,7 +1544,7 @@ Section ModalMaps.
     refine (inO_equiv_inO _ (hfiber_pullback_along f g b)^-1).
   Defined.
 
-  Global Instance mapinO_pullback' {A B C}
+  #[export] Instance mapinO_pullback' {A B C}
          (g : C -> A) (f : B -> A) `{MapIn O _ _ f}
   : MapIn O (g^*' f).
   Proof.
@@ -1553,7 +1553,7 @@ Section ModalMaps.
   Defined.
 
   (** [functor_sum] preserves modal maps. *)
-  Global Instance mapinO_functor_sum {A A' B B'}
+  #[export] Instance mapinO_functor_sum {A A' B B'}
          (f : A -> A') (g : B -> B') `{MapIn O _ _ f} `{MapIn O _ _ g}
   : MapIn O (functor_sum f g).
   Proof.
@@ -1613,7 +1613,7 @@ Section ConnectedMaps.
   Context (O : ReflectiveSubuniverse@{i}).
 
   (** Any equivalence is connected *)
-  Global Instance conn_map_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
+  #[export] Instance conn_map_isequiv {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : IsConnMap O f.
   Proof.
     intros b; exact _.
@@ -1629,7 +1629,7 @@ Section ConnectedMaps.
   Defined.
 
   (** The pullback of a connected map is connected *)
-  Global Instance conn_map_pullback {A B C}
+  #[export] Instance conn_map_pullback {A B C}
          (f : B -> A) (g : C -> A) `{IsConnMap O _ _ g}
   : IsConnMap O (f^* g).
   Proof.
@@ -1637,7 +1637,7 @@ Section ConnectedMaps.
     refine (isconnected_equiv _ _ (hfiber_pullback_along f g b)^-1 _).
   Defined.
 
-  Global Instance conn_map_pullback' {A B C}
+  #[export] Instance conn_map_pullback' {A B C}
          (g : C -> A) (f : B -> A) `{IsConnMap O _ _ f}
   : IsConnMap O (g^*' f).
   Proof.
@@ -1646,7 +1646,7 @@ Section ConnectedMaps.
   Defined.
 
   (** The projection from a family of connected types is connected. *)
-  Global Instance conn_map_pr1 {A : Type} {B : A -> Type}
+  #[export] Instance conn_map_pr1 {A : Type} {B : A -> Type}
          `{forall a, IsConnected O (B a)}
   : IsConnMap O (@pr1 A B).
   Proof.
@@ -1655,7 +1655,7 @@ Section ConnectedMaps.
   Defined.
 
   (** Being connected is an hprop *)
-  Global Instance ishprop_isconnmap `{Funext} {A B : Type} (f : A -> B)
+  #[export] Instance ishprop_isconnmap `{Funext} {A B : Type} (f : A -> B)
   : IsHProp (IsConnMap O f).
   Proof.
     apply istrunc_forall.
@@ -1792,7 +1792,7 @@ Section ConnectedMaps.
   Defined.
 
   (** Lemma 7.5.6: Connected maps compose and cancel on the right. *)
-  Global Instance conn_map_compose {A B C : Type} (f : A -> B) (g : B -> C)
+  #[export] Instance conn_map_compose {A B C : Type} (f : A -> B) (g : B -> C)
          `{IsConnMap O _ _ f} `{IsConnMap O _ _ g}
   : IsConnMap O (g o f).
   Proof.
@@ -1838,7 +1838,7 @@ Section ConnectedMaps.
   #[local]
   Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.
 
-  Global Instance conn_map_to_unit_isconnected {A : Type}
+  #[export] Instance conn_map_to_unit_isconnected {A : Type}
          `{IsConnected O A}
   : IsConnMap O (const_tt A).
   Proof.
@@ -1881,7 +1881,7 @@ Section ConnectedMaps.
       apply equiv_sigma_contr; intros [a p]; simpl; exact _.
     Defined.
 
-    Global Instance conn_map_functor_sigma `{IsConnMap O _ _ f}
+    #[export] Instance conn_map_functor_sigma `{IsConnMap O _ _ f}
     : IsConnMap O (functor_sigma f g).
     Proof.
       intros [b v].
@@ -1910,7 +1910,7 @@ Section ConnectedMaps.
   Defined.
 
   (** Lemma 7.5.14: Connected maps are inverted by [O]. *)
-  Global Instance O_inverts_conn_map {A B : Type} (f : A -> B)
+  #[export] Instance O_inverts_conn_map {A B : Type} (f : A -> B)
          `{IsConnMap O _ _ f}
     : O_inverts O f.
   Proof.
@@ -1925,7 +1925,7 @@ Section ConnectedMaps.
     := isequiv_commsq' f (O_functor O f) (to O A) (to O B) (to_O_natural O f).
 
   (** Connectedness is preserved by [O_functor]. *)
-  Global Instance conn_map_O_functor {A B} (f : A -> B) `{IsConnMap O _ _ f}
+  #[export] Instance conn_map_O_functor {A B} (f : A -> B) `{IsConnMap O _ _ f}
     : IsConnMap O (O_functor O f).
   Proof.
     unfold O_functor.
@@ -1983,12 +1983,12 @@ Declare Scope subuniverse_scope.
 Notation "O1 <= O2" := (O_leq O1 O2) : subuniverse_scope.
 Open Scope subuniverse_scope.
 
-Global Instance reflexive_O_leq : Reflexive O_leq | 10.
+Instance reflexive_O_leq : Reflexive O_leq | 10.
 Proof.
   intros O A ?; assumption.
 Defined.
 
-Global Instance transitive_O_leq : Transitive O_leq | 10.
+Instance transitive_O_leq : Transitive O_leq | 10.
 Proof.
   intros O1 O2 O3 O12 O23 A ?.
   rapply (@inO_leq O2 O3).
@@ -2054,17 +2054,17 @@ Infix "<=>" := O_eq : subuniverse_scope.
 
 Definition issig_O_eq O1 O2 : _ <~> O_eq O1 O2 := ltac:(issig).
 
-Global Instance reflexive_O_eq : Reflexive O_eq | 10.
+Instance reflexive_O_eq : Reflexive O_eq | 10.
 Proof.
   intros; split; reflexivity.
 Defined.
 
-Global Instance transitive_O_eq : Transitive O_eq | 10.
+Instance transitive_O_eq : Transitive O_eq | 10.
 Proof.
   intros O1 O2 O3; split; refine (transitivity (y := O2) _ _).
 Defined.
 
-Global Instance symmetric_O_eq : Symmetric O_eq | 10.
+Instance symmetric_O_eq : Symmetric O_eq | 10.
 Proof.
   intros O1 O2 [? ?]; split; assumption.
 Defined.
@@ -2127,7 +2127,7 @@ Proof.
     refine (inO_equiv_inO' _ (equiv_ap f^-1 x y)^-1).
 Defined.
 
-Global Instance inO_paths_SepO (O : Subuniverse)
+Instance inO_paths_SepO (O : Subuniverse)
        {A : Type} {A_inO : In (Sep O) A} (x y : A)
   : In O (x = y)
   := A_inO x y.

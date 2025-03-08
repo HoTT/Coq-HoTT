@@ -32,7 +32,7 @@ Proof.
 Defined.
 
 (** If a sequential colimit has maps homotopic to a constant map then the colimit is contractible. *)
-Global Instance contr_colim_seq_into_prop {funext : Funext} (A : Sequence)
+Instance contr_colim_seq_into_prop {funext : Funext} (A : Sequence)
   (a : forall n, A n) (H : forall n, const (a n.+1) == A _f idpath)
   : Contr (Colimit A).
 Proof.
@@ -149,7 +149,7 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Global Instance isequiv_colim_succ_seq_to_colim_seq A
+Instance isequiv_colim_succ_seq_to_colim_seq A
   : IsEquiv (colim_succ_seq_to_colim_seq A).
 Proof.
   srapply isequiv_adjointify.
@@ -212,7 +212,7 @@ Proof.
   symmetry; apply concat_1p.
 Defined.
 
-Global Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
+Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
   : IsEquiv (colim_shift_seq_to_colim_seq A n).
 Proof.
   induction n as [ | n e]; srapply isequiv_homotopic'.
@@ -544,7 +544,7 @@ Proof.
 Defined.
 
 (** The canonical map from the sequential colimit of Sigmas to the Sigma of sequential colimits is an equivalence; Theorem 5.1. *)
-Global Instance isequiv_seq_colim_sum_to_sum_seq_colim `{Univalence} {A} (B : FibSequence A)
+Instance isequiv_seq_colim_sum_to_sum_seq_colim `{Univalence} {A} (B : FibSequence A)
   : IsEquiv (seq_colim_sum_to_sum_seq_colim B).
 Proof.
   assert (L : {G : _ & G o seq_colim_sum_to_sum_seq_colim B == idmap}).
@@ -608,7 +608,7 @@ Defined.
 Open Scope trunc_scope.
 
 (** Corollary 7.7.1, second part. *)
-Global Instance trunc_seq_colim `{Univalence} {A : Sequence} k :
+Instance trunc_seq_colim `{Univalence} {A : Sequence} k :
   (forall n, IsTrunc k (A n)) -> IsTrunc k (Colimit A) | 100.
 Proof.
   revert A; induction k as [ | k IHk].

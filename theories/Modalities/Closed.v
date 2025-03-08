@@ -70,7 +70,7 @@ Proof.
 Defined.
 
 (** The closed modality is accessible. *)
-Global Instance accmodality_closed (U : HProp)
+Instance accmodality_closed (U : HProp)
   : IsAccModality (Cl U).
 Proof.
   unshelve econstructor.
@@ -92,7 +92,7 @@ Local Instance topological_closed (U : HProp)
   : Topological (Cl U)
   := _.
 
-Global Instance lex_closed `{Univalence} (U : HProp)
+Instance lex_closed `{Univalence} (U : HProp)
   : Lex (Cl U).
 Proof.
   rapply lex_topological.
