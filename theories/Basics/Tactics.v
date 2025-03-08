@@ -319,15 +319,18 @@ Tactic Notation "nrefine" uconstr(term) := notypeclasses refine term; global_axi
 Tactic Notation "snrefine" uconstr(term) := simple notypeclasses refine term; global_axiom.
 
 (** Note that the Coq standard library has a [rapply], but it is like our [rapply'] with many-holes first.  We prefer fewer-holes first, for instance so that a theorem producing an equivalence will by preference be used to produce an equivalence rather than to apply the coercion of that equivalence to a function. *)
+(** This tactic is weaker than [tapply], and equivalent in strength to [nrapply], i.e., it should succeed iff [nrapply] succeeds, but it solves all possible typeclasses afterward. The implementation is: try [nrefine t, t _, t _ _], ... until success; upon success, revert the last (successful) application of [nrefine] and call [refine (t _ _ _)]. *)
+(** TODO: Find a nicer implementation of this tactic. *)
 Tactic Notation "rapply" uconstr(term)
-  := do_with_holes ltac:(fun x => refine x) term.
+  := do_with_holes ltac:(fun x => assert_succeeds (nrefine x); refine x) term.
 Tactic Notation "rapply'" uconstr(term)
-  := do_with_holes' ltac:(fun x => refine x) term.
+  := do_with_holes' ltac:(fun x => assert_succeeds (nrefine x); refine x) term.
 
+(** See comment for [rapply]. This cannot be simplified to [snrefine x] because we don't want the [global_axiom] tactic to run here. *)
 Tactic Notation "srapply" uconstr(term)
-  := do_with_holes ltac:(fun x => srefine x) term.
+  := do_with_holes ltac:(fun x => assert_succeeds (simple notypeclasses refine x); srefine x) term.
 Tactic Notation "srapply'" uconstr(term)
-  := do_with_holes' ltac:(fun x => srefine x) term.
+:= do_with_holes' ltac:(fun x => assert_succeeds (simple notypeclasses refine x); srefine x) term.
 
 Tactic Notation "nrapply" uconstr(term)
   := do_with_holes ltac:(fun x => nrefine x) term.
@@ -338,6 +341,17 @@ Tactic Notation "snrapply" uconstr(term)
   := do_with_holes ltac:(fun x => snrefine x) term.
 Tactic Notation "snrapply'" uconstr(term)
   := do_with_holes' ltac:(fun x => snrefine x) term.
+
+(** This tactic is strictly stronger than [rapply], because if the type of the argument term [t] (with holes) cannot be unified with the goal type, it calls typeclass search on all typeclass holes within [t] (independently of the goal) and then tries to unify with the goal again. Our implementation of [rapply] requires that the type (with holes) of the argument term unifies with the goal directly, without any help from typeclass search to fill in the holes in the type. The typeclass search after unification is more robust than the typeclass search before unification, because there is more information available to guide the typeclass search. *)
+Tactic Notation "tapply" uconstr(term)
+  := do_with_holes ltac:(fun x => refine x) term.
+Tactic Notation "tapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x => refine x) term.
+
+Tactic Notation "stapply" uconstr(term)
+  := do_with_holes ltac:(fun x => srefine x) term.
+Tactic Notation "stapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x => srefine x) term.
 
 (** Apply a tactic to one side of an equation.  For example, [lhs rapply lemma].  [tac] should produce a path. *)
 

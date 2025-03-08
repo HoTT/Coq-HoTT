@@ -149,13 +149,13 @@ Global Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
 Global Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
   : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
 Proof.
-  srapply cds_conjug_left_inv.
+  exact cds_conjug_left_inv.
 Defined.
 
 Global Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)
   : RightInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
 Proof.
-  srapply cds_conjug_right_inv.
+  stapply cds_conjug_right_inv.
 Defined.
 
 Global Instance cdi_susp_left_identity {A} `(CayleyDicksonImaginaroid A)
@@ -169,7 +169,7 @@ Global Instance cdi_susp_right_identity {A} `(CayleyDicksonImaginaroid A)
 Global Instance cdi_negate_susp_factornegleft {A} `(CayleyDicksonImaginaroid A)
   : FactorNegLeft (negate_susp A cdi_negate) hspace_op.
 Proof.
-  srapply cds_factorneg_l.
+  stapply cds_factorneg_l.
 Defined.
 
 (** A Cayley-Dickson imaginaroid [A] whose multiplciation on the suspension is associative gives rise to an H-space structure on the join of the suspension of [A] with itself. *)

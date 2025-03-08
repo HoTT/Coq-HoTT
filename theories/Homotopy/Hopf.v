@@ -42,7 +42,7 @@ Proof.
       snrapply equiv_functor_sigma_id.
       intros x.
       exact (Build_Equiv _ _ (.* x) _). }
-    1,2: rapply (equiv_contr_sigma (Unit_ind (pointed_type X))).
+    1,2: exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
     1,2: reflexivity. }
   reflexivity.
 Defined.
@@ -183,9 +183,9 @@ Definition pequiv_ptr_psusp_loops `{Univalence} (X : pType) (n : nat) `{IsConnec
   : pTr n.+2 (psusp (loops X)) <~>* pTr n.+2 X.
 Proof.
   snrapply Build_pEquiv.
-  1: rapply (fmap (pTr _) (loop_susp_counit _)).
+  1: exact (fmap (pTr _) (loop_susp_counit _)).
   nrapply O_inverts_conn_map.
   nrapply (isconnmap_pred_add n.-2).
   rewrite 2 trunc_index_add_succ.
-  rapply (conn_map_loop_susp_counit X).
+  exact (conn_map_loop_susp_counit X).
 Defined.
