@@ -446,7 +446,7 @@ Section SeqColimitSumInd.
     srapply Colimit_ind.
     - exact (fun k b => idpath).
     - intros k l p b; destruct p.
-      snrapply (Phi (glue A n a) (colim_succ_seq_to_colim_seq_beta_glue _ _ _)).
+      snapply (Phi (glue A n a) (colim_succ_seq_to_colim_seq_beta_glue _ _ _)).
       rewrite (Colimit_ind_beta_colimp _ (fun k => Q k n a) _ _ _ idpath).
       rewrite (Colimit_ind_beta_colimp _ (fun k => Q k n.+1 a^+) _ _ _ idpath).
       rewrite concat_p1, concat_1p; reflexivity.
@@ -623,9 +623,9 @@ Proof.
             srefine (istrunc_equiv_istrunc _ (equiv_inverse (equiv_concat_l (glue A _ a) _))).
             srapply (@istrunc_equiv_istrunc _ _ _ k (IHm (succ_seq A) _ (@arr _ A 0%nat _ 1%path a) b)).
             srapply (equiv_ap (colim_succ_seq_to_colim_seq A)). }}
-        { intros n m p b; snrapply path_ishprop; snrapply ishprop_istrunc; exact _. }
+        { intros n m p b; snapply path_ishprop; snapply ishprop_istrunc; exact _. }
       * intros A trH a; srapply (functor_forall_equiv_pb (colim_succ_seq_to_colim_seq A)).
         intro x; srapply (@istrunc_equiv_istrunc _ _ _ k (IHn (succ_seq A) _ a x)); srapply equiv_ap.
-    + intros n m p a; snrapply path_ishprop; snrapply istrunc_forall.
+    + intros n m p a; snapply path_ishprop; snapply istrunc_forall.
       intro x; srapply ishprop_istrunc.
 Defined.

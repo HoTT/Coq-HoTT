@@ -14,7 +14,7 @@ Definition abses_pullback {A B B' : AbGroup} (f : B' $-> B)
   : AbSES B A -> AbSES B' A.
 Proof.
   intro E.
-  snrapply (Build_AbSES (ab_pullback (projection E) f)
+  snapply (Build_AbSES (ab_pullback (projection E) f)
                         (grp_pullback_corec _ _ (inclusion _) grp_homo_const _)
                         (grp_pullback_pr2 (projection _) f)).
   - intro x.
@@ -22,8 +22,8 @@ Proof.
     apply isexact_inclusion_projection.
   - exact (cancelL_isembedding (g:= grp_pullback_pr1 _ _)).
   - rapply conn_map_pullback'.
-  - snrapply Build_IsExact.
-    + snrapply phomotopy_homotopy_hset.
+  - snapply Build_IsExact.
+    + snapply phomotopy_homotopy_hset.
       * exact _.
       * reflexivity.
     + nrefine (cancelL_equiv_conn_map
@@ -40,7 +40,7 @@ Definition abses_pullback_morphism {A B B' : AbGroup@{u}}
   (E : AbSES B A) (f : B' $-> B)
   : AbSESMorphism (abses_pullback f E) E.
 Proof.
-  snrapply (Build_AbSESMorphism grp_homo_id _ f).
+  snapply (Build_AbSESMorphism grp_homo_id _ f).
   - apply grp_pullback_pr1.
   - reflexivity.
   - apply pullback_commsq.
@@ -51,7 +51,7 @@ Definition abses_pullback_morphism_corec {A B X Y : AbGroup@{u}}
   {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism E F)
   : AbSESMorphism E (abses_pullback (component3 f) F).
 Proof.
-  snrapply (Build_AbSESMorphism (component1 f) _ grp_homo_id).
+  snapply (Build_AbSESMorphism (component1 f) _ grp_homo_id).
   - apply (grp_pullback_corec (projection F) (component3 f)
                               (component2 f) (projection E)).
     apply right_square.
@@ -82,7 +82,7 @@ Definition abses_pullback_component1_id'
   : E $== abses_pullback (component3 f) F.
 Proof.
   pose (g := abses_pullback_morphism_corec f).
-  nrapply abses_path_data_to_iso.
+  napply abses_path_data_to_iso.
   exists (component2 g); split.
   - exact (fun a => (left_square g a)^ @ ap _ (h a)).
   - reflexivity.
@@ -121,7 +121,7 @@ Definition abses_path_pullback_projection_commsq
 Proof.
   induction p.
   exists (grp_pullback_pr1 _ _); intro x.
-  nrapply pullback_commsq.
+  napply pullback_commsq.
 Defined.
 
 
@@ -151,7 +151,7 @@ Defined.
 Instance is1functor_abses_pullback {A B B' : AbGroup} (f : B' $-> B)
   : Is1Functor (abses_pullback (A:=A) f).
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros E F p q h x.
     srapply equiv_path_pullback_hset; split; cbn.
     2: reflexivity.
@@ -187,13 +187,13 @@ Definition abses_pullback_point' {A B B' : AbGroup} (f : B' $-> B)
   : (abses_pullback f pt) $== (point (AbSES B' A)).
 Proof.
   snrefine (_; (_, _)).
-  - snrapply Build_GroupIsomorphism.
+  - snapply Build_GroupIsomorphism.
     + srapply ab_biprod_corec.
       * refine (ab_biprod_pr1 $o _).
         apply grp_pullback_pr1.
       * apply projection.
     + srapply isequiv_adjointify.
-      * snrapply grp_pullback_corec.
+      * snapply grp_pullback_corec.
         -- exact (functor_ab_biprod grp_homo_id f).
         -- exact ab_biprod_pr2.
         -- reflexivity.
@@ -241,7 +241,7 @@ Proof.
   srapply Build_pHomotopy.
   1: exact abses_pullback_id.
   refine (_ @ (concat_p1 _)^).
-  nrapply (ap equiv_path_abses_iso).
+  napply (ap equiv_path_abses_iso).
   apply path_sigma_hprop.
   apply equiv_path_groupisomorphism.
   intros [[a b] [b' p]]; cbn; cbn in p.
@@ -294,7 +294,7 @@ Lemma abses_pullback_const' {A B B' : AbGroup}
 Proof.
   intro E.
   simpl.
-  nrapply abses_path_data_to_iso.
+  napply abses_path_data_to_iso.
   srefine (_;(_,_)); cbn.
   - srapply grp_pullback_corec.
     + exact (inclusion _ $o ab_biprod_pr1).

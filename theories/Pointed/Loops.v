@@ -33,7 +33,7 @@ Definition isconnected_loops `{Univalence} {n} (A : pType)
 
 Lemma pequiv_loops_punit : loops pUnit <~>* pUnit.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   { srapply (equiv_adjointify (fun _ => tt) (fun _ => idpath)).
     1: by intros [].
     rapply path_contr. }
@@ -99,7 +99,7 @@ Defined.
 (** Loops is a pointed functor *)
 Instance ispointedfunctor_loops : IsPointedFunctor loops.
 Proof.
-  snrapply Build_IsPointedFunctor'.
+  snapply Build_IsPointedFunctor'.
   1-4: exact _.
   exact pequiv_loops_punit.
 Defined.
@@ -116,14 +116,14 @@ Instance is0functor_iterated_loops n : Is0Functor (iterated_loops n).
 Proof.
   induction n.
   1: exact _.
-  nrapply is0functor_compose; exact _.
+  napply is0functor_compose; exact _.
 Defined.
 
 Instance is1functor_iterated_loops n : Is1Functor (iterated_loops n).
 Proof.
   induction n.
   1: exact _.
-  nrapply is1functor_compose; exact _.
+  napply is1functor_compose; exact _.
 Defined.
 
 Lemma fmap_iterated_loops_pp {X Y : pType} (f : X ->* Y) n
@@ -246,7 +246,7 @@ Definition pequiv_fmap_iterated_loops {A B} n
 (** Loops preserves products. *)
 Lemma loops_prod (X Y : pType) : loops (X * Y) <~>* loops X * loops Y.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   1: exact (equiv_path_prod (point (X * Y)) (point (X * Y)))^-1%equiv.
   reflexivity.
 Defined.
@@ -255,9 +255,9 @@ Defined.
 Definition pfst_loops_prod (X Y : pType)
   : pfst o* loops_prod X Y ==* fmap loops pfst.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   - intro p; simpl.
-    rhs nrapply concat_1p.
+    rhs napply concat_1p.
     symmetry; apply concat_p1.
   - reflexivity.
 Defined.
@@ -265,9 +265,9 @@ Defined.
 Definition psnd_loops_prod (X Y : pType)
   : psnd o* loops_prod X Y ==* fmap loops psnd.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   - intro p; simpl.
-    rhs nrapply concat_1p.
+    rhs napply concat_1p.
     symmetry; apply concat_p1.
   - reflexivity.
 Defined.
@@ -325,7 +325,7 @@ Defined.
 Lemma loops_psigma_commute (A : pType) (P : pFam A)
   : loops (psigma P) <~>* psigma (loopsD P).
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   1: exact (equiv_path_sigma _ _ _)^-1%equiv.
   reflexivity.
 Defined.
@@ -334,7 +334,7 @@ Defined.
 Lemma loops_pproduct_commute `{Funext} (A : Type) (F : A -> pType)
   : loops (pproduct F) <~>* pproduct (loops o F).
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   1: apply equiv_apD10.
   reflexivity.
 Defined.
@@ -356,7 +356,7 @@ Lemma loops_psigma_trunc (n : nat) (Aa : pType)
   : iterated_loops n (psigma Pp) <~>* iterated_loops n Aa.
 Proof.
   induction n in Aa, Pp, istrunc_Pp |- *.
-  { snrapply Build_pEquiv'.
+  { snapply Build_pEquiv'.
     1: exact (@equiv_sigma_contr _ _ istrunc_Pp).
     reflexivity. }
   refine (pequiv_inverse (unfold_iterated_loops' _ _) o*E _
@@ -398,7 +398,7 @@ Proof.
   apply istrunc_S; intros x y.
   apply istrunc_S; intros p.
   destruct p.
-  nrapply tr_loops.
+  napply tr_loops.
 Defined.
 
 (* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)
@@ -426,7 +426,7 @@ Defined.
 (** [loops_inv] is a natural transformation. *)
 Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros A B f.
   srapply Build_pHomotopy.
   + intros p. refine (inv_Vp _ _ @ whiskerR _ (point_eq f) @ concat_pp_p _ _ _).

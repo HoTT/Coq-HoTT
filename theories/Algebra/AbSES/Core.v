@@ -63,7 +63,7 @@ Instance ispointed_abses {B A : AbGroup@{u}}
   : IsPointed (AbSES' B A).
 Proof.
   rapply (Build_AbSES (ab_biprod A B) ab_biprod_inl ab_biprod_pr2).
-  snrapply Build_IsExact.
+  snapply Build_IsExact.
   - srapply phomotopy_homotopy_hset; reflexivity.
   - intros [[a b] p]; cbn; cbn in p.
     rapply contr_inhabited_hprop.
@@ -275,7 +275,7 @@ Instance is2graph_abses
 Instance is1cat_abses {A B : AbGroup@{u}}
   : Is1Cat (AbSES B A).
 Proof.
-  snrapply Build_Is1Cat'.
+  snapply Build_Is1Cat'.
   1: intros ? ?; apply is01cat_abses_path_data.
   1: intros ? ?; apply is0gpd_abses_path_data.
   3-5: cbn; reflexivity.
@@ -419,13 +419,13 @@ Proof.
   srapply Build_pHomotopy.
   1: reflexivity.
   lazy beta.
-  nrapply moveL_pV.
+  napply moveL_pV.
   nrefine (concat_1p _ @ _).
   unfold pmap_compose, Build_pMap, pointed_fun, point_eq, dpoint_eq.
   refine (_ @ ap (fun x => x @ _) _^).
   2: apply (abses_ap_fmap g).
   nrefine (_ @ (abses_path_data_compose_beta _ _)^).
-  nrapply (ap equiv_path_abses_iso).
+  napply (ap equiv_path_abses_iso).
   tapply path_hom.
   reflexivity.
 Defined.
@@ -530,7 +530,7 @@ Definition issig_AbSESMorphism {A X B Y : AbGroup@{u}}
 Lemma abses_morphism_id {A B : AbGroup@{u}} (E : AbSES B A)
   : AbSESMorphism E E.
 Proof.
-  snrapply (Build_AbSESMorphism grp_homo_id grp_homo_id grp_homo_id).
+  snapply (Build_AbSESMorphism grp_homo_id grp_homo_id grp_homo_id).
   1,2: reflexivity.
 Defined.
 
@@ -557,7 +557,7 @@ Definition projection_split_to_kernel {B A : AbGroup} (E : AbSES B A)
            {s : B $-> E} (h : projection _ $o s == idmap)
   : (middle E) $-> (@ab_kernel E B (projection _)).
 Proof.
-  snrapply (grp_kernel_corec (G:=E) (A:=E)).
+  snapply (grp_kernel_corec (G:=E) (A:=E)).
   - refine (grp_homo_id - (s $o projection _)).
   - intro x; simpl.
     refine (grp_homo_op (projection _) x _ @ _).
@@ -625,16 +625,16 @@ Proposition projection_split_beta {B A : AbGroup} (E : AbSES B A)
 Proof.
   intro a.
   (* The next two lines might help the reader, but both are definitional equalities:
-  lhs nrapply (ap _ (grp_prod_corec_natural _ _ _ _)).
-  lhs nrapply ab_biprod_functor_beta.
+  lhs napply (ap _ (grp_prod_corec_natural _ _ _ _)).
+  lhs napply ab_biprod_functor_beta.
   *)
-  nrapply path_prod'.
+  napply path_prod'.
   2: tapply cx_isexact.
   (* The LHS of the remaining goal is definitionally equal to
        (grp_iso_inverse (grp_iso_cxfib (isexact_inclusion_projection E)) $o
          (projection_split_to_kernel E h $o inclusion E)) a
      allowing us to do: *)
-  lhs nrapply (ap _ (projection_split_to_kernel_beta E h a)).
+  lhs napply (ap _ (projection_split_to_kernel_beta E h a)).
   apply eissect.
 Defined.
 
@@ -648,7 +648,7 @@ Proof.
   - intros [s h].
     exists (projection_split_iso E h).
     split.
-    + nrapply projection_split_beta.
+    + napply projection_split_beta.
     + reflexivity.
   - intros [phi [g h]].
     exists (grp_homo_compose (grp_iso_inverse phi) ab_biprod_inr).
@@ -672,7 +672,7 @@ Proof.
     apply qglue; cbn.
     exists (-x).
     exact (grp_homo_inv _ _ @ (grp_unit_r _)^).
-  - snrapply (conn_map_homotopic (Tr (-1)) (B:=grp_kernel (@grp_quotient_map E _))).
+  - snapply (conn_map_homotopic (Tr (-1)) (B:=grp_kernel (@grp_quotient_map E _))).
     + exact (grp_kernel_quotient_iso _ o ab_image_in_embedding i).
     + intro a.
       by rapply (isinj_embedding (subgroup_incl _)).
@@ -684,7 +684,7 @@ Lemma abses_kernel_iso `{Funext} {A E B : AbGroup} (i : A $-> E) (p : E $-> B)
   `{IsEmbedding i, IsExact (Tr (-1)) _ _ _ i p}
   : GroupIsomorphism A (ab_kernel p).
 Proof.
-  snrapply Build_GroupIsomorphism.
+  snapply Build_GroupIsomorphism.
   - apply (grp_kernel_corec i).
     exact cx_isexact.
   - apply isequiv_surj_emb.
@@ -715,7 +715,7 @@ Proof.
   srapply (Build_AbSES E _ p).
   1: exact (subgroup_incl _).
   1: exact _.
-  snrapply Build_IsExact.
+  snapply Build_IsExact.
   - apply phomotopy_homotopy_hset.
     intros [e q]; cbn.
     exact q.
@@ -728,8 +728,8 @@ Lemma abses_cokernel_iso `{Funext}
   `{IsSurjection g, IsExact (Tr (-1)) _ _ _ f g}
   : GroupIsomorphism (ab_cokernel f) B.
 Proof.
-  snrapply Build_GroupIsomorphism.
-  - snrapply (quotient_abgroup_rec _ _ g).
+  snapply Build_GroupIsomorphism.
+  - snapply (quotient_abgroup_rec _ _ g).
     intros e; rapply Trunc_rec; intros [a p].
     refine (ap _ p^ @ _).
     tapply cx_isexact.

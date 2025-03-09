@@ -283,14 +283,14 @@ Definition group_to_oogroup : Group -> ooGroup
 
 Instance is0functor_group_to_oogroup : Is0Functor group_to_oogroup.
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros G H f.
   by tapply (fmap pClassifyingSpace).
 Defined.
 
 Instance is1functor_group_to_oogroup : Is1Functor group_to_oogroup.
 Proof.
-  snrapply Build_Is1Functor; hnf; intros.
+  snapply Build_Is1Functor; hnf; intros.
   1: by tapply (fmap2 pClassifyingSpace).
   1: by tapply (fmap_id pClassifyingSpace).
   by tapply (fmap_comp pClassifyingSpace).

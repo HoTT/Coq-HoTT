@@ -50,7 +50,7 @@ Definition finnat_ind_beta_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})
   (n : nat)
   : finnat_ind P z s (zero_finnat n) = z n.
 Proof.
-  snrapply (transport2 _ (q:=idpath@{Set})).
+  snapply (transport2 _ (q:=idpath@{Set})).
   rapply path_ishprop.
 Defined.
 
@@ -112,7 +112,7 @@ Definition path_finnat_to_fin_incl@{} {n : nat} (u : FinNat n)
   : finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u).
 Proof.
   revert n u.
-  snrapply finnat_ind.
+  snapply finnat_ind.
   1: reflexivity.
   intros n u; cbn beta; intros p.
   lhs exact (path_finnat_to_fin_succ (incl_finnat u)).

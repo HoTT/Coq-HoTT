@@ -61,10 +61,10 @@ Section EilenbergMacLane.
   Local Lemma pequiv_ptr_loop_psusp' (X : pType) (n : nat) `{IsConnected n.+1 X}
     : pTr n.+2 X <~>* pTr n.+2 (loops (psusp X)).
   Proof.
-    snrapply Build_pEquiv.
+    snapply Build_pEquiv.
     1: exact (fmap (pTr _) (loop_susp_unit _)).
-    nrapply O_inverts_conn_map.
-    nrapply (isconnmap_pred_add n.-2).
+    napply O_inverts_conn_map.
+    napply (isconnmap_pred_add n.-2).
     rewrite 2 trunc_index_add_succ.
     exact (conn_map_loop_susp_unit n X).
   Defined.
@@ -105,7 +105,7 @@ Section EilenbergMacLane.
   Definition iscohhspace_em {G : AbGroup} (n : nat)
     : IsCohHSpace K(G, n).
   Proof.
-    nrapply iscohhspace_equiv_cohhspace.
+    napply iscohhspace_equiv_cohhspace.
     2: apply pequiv_loops_em_em.
     exact iscohhspace_loops.
   Defined.

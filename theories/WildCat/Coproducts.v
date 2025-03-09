@@ -253,7 +253,7 @@ Instance is0bifunctor_cat_bincoprod {A : Type}
   `{hbc : HasBinaryCoproducts A}
   : Is0Bifunctor cat_bincoprod.
 Proof.
-  nrapply is0bifunctor_op'.
+  napply is0bifunctor_op'.
   exact (is0bifunctor_cat_binprod (A:=A^op) (H0:=hbc)).
 Defined.
 
@@ -261,7 +261,7 @@ Instance is1bifunctor_cat_bincoprod {A : Type}
   `{hbc : HasBinaryCoproducts A}
   : Is1Bifunctor cat_bincoprod.
 Proof.
-  nrapply is1bifunctor_op'.
+  napply is1bifunctor_op'.
   exact (is1bifunctor_cat_binprod (A:=A^op) (H0:=hbc)).
 Defined.
 
@@ -322,7 +322,7 @@ Definition associator_cat_bincoprod {A : Type} `{HasEquivs A}
   : Associator (fun x y => cat_bincoprod x y).
 Proof.
   unfold Associator.
-  snrapply associator_op'.
+  snapply associator_op'.
   1: exact _.
   exact associator_cat_binprod.
 Defined.
@@ -366,7 +366,7 @@ Definition cat_bincoprod_rec_associator {A : Type} `{HasEquivs A}
   : cat_bincoprod_rec (cat_bincoprod_rec f g) h $o associator_cat_bincoprod w x y
     $== cat_bincoprod_rec f (cat_bincoprod_rec g h).
 Proof.
-  nrapply cate_moveR_eV.
+  napply cate_moveR_eV.
   symmetry.
   exact (cat_binprod_associator_corec
            (HasBinaryProducts0:=hasbinaryproducts_op_hasbinarycoproducts (hbc:=hbc))
@@ -385,18 +385,18 @@ Instance ismonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
   : IsMonoidal A cat_bincoprod zero | 10.
 Proof.
-  nrapply ismonoidal_op'.
-  nrapply (ismonoidal_cat_binprod (A:=A^op) zero).
-  by nrapply isterminal_op_isinitial.
+  napply ismonoidal_op'.
+  napply (ismonoidal_cat_binprod (A:=A^op) zero).
+  by napply isterminal_op_isinitial.
 Defined.
 
 Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
   : IsSymmetricMonoidal A cat_bincoprod zero | 10.
 Proof.
-  nrapply issymmetricmonoidal_op'.
-  nrapply (issymmetricmonoidal_cat_binprod (A:=A^op) zero).
-  by nrapply isterminal_op_isinitial.
+  napply issymmetricmonoidal_op'.
+  napply (issymmetricmonoidal_cat_binprod (A:=A^op) zero).
+  by napply isterminal_op_isinitial.
 Defined.
 
 (** *** Coproducts in Type *)
@@ -405,7 +405,7 @@ Defined.
 Instance hasallcoproducts_type : HasAllCoproducts Type.
 Proof.
   intros I x.
-  snrapply Build_Coproduct.
+  snapply Build_Coproduct.
   - exact (sig (fun i : I => x i)).
   - exact (exist x).
   - intros A f [i xi].
@@ -441,7 +441,7 @@ Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}
   (x y : A) `{!BinaryCoproduct x y, !BinaryProduct x y}
   : cat_bincoprod' x y $-> cat_binprod' x y.
 Proof.
-  nrapply cat_coprod_prod; exact _.
+  napply cat_coprod_prod; exact _.
 Defined.
 
 (** *** Coproducts in the opposite category *)

@@ -31,7 +31,7 @@ Defined.
 
 Instance is1cat_op {A : Type} `{Is1Cat A} : Is1Cat A^op.
 Proof.
-  snrapply Build_Is1Cat; unfold op in *; cbv in *.
+  snapply Build_Is1Cat; unfold op in *; cbv in *.
   - intros a b.
     apply is01cat_hom.
   - intros a b.
@@ -55,7 +55,7 @@ Defined.
 Instance is1cat_strong_op A `{Is1Cat_Strong A}
   : Is1Cat_Strong (A ^op).
 Proof.
-  snrapply Build_Is1Cat_Strong.
+  snapply Build_Is1Cat_Strong.
   1-4: exact _.
   all: cbn.
   - intros a b c d f g h; exact (cat_assoc_opp_strong h g f).
@@ -120,7 +120,7 @@ Instance is1functor_op' A B (F : A^op -> B^op)
 Instance hasmorext_op {A : Type} `{H0 : HasMorExt A}
   : HasMorExt A^op.
 Proof.
-  snrapply Build_HasMorExt.
+  snapply Build_HasMorExt.
   intros a b f g.
   exact (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
 Defined.

@@ -343,7 +343,7 @@ Proof.
   - reflexivity.
   - refine (fcard_equiv (equiv_sum_ind (fun (_:Fin n.+1) => Y))^-1 @ _).
     refine (fcard_prod _ _ @ _).
-    lhs nrapply nat_mul_comm.
+    lhs napply nat_mul_comm.
     apply (ap011 nat_mul).
     + refine (fcard_equiv (@Unit_ind (fun (_:Unit) => Y))^-1).
     + assumption.

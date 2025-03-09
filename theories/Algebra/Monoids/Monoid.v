@@ -105,7 +105,7 @@ Definition Build_MonoidIsomorphism' {M N : Monoid}
   (f : M <~> N) (h : IsMonoidPreserving f)
   : MonoidHomomorphism M N.
 Proof.
-  snrapply Build_MonoidIsomorphism.
+  snapply Build_MonoidIsomorphism.
   1: srapply Build_MonoidHomomorphism.
   exact _.
 Defined.
@@ -188,7 +188,7 @@ Defined.
 
 Instance hasequivs_monoid : HasEquivs Monoid.
 Proof.
-  snrapply Build_HasEquivs.
+  snapply Build_HasEquivs.
   - exact MonoidIsomorphism.
   - exact (fun M N f => IsEquiv f).
   - intros M N f; exact f.
@@ -214,21 +214,21 @@ Defined.
 Definition mnd_prod : Monoid -> Monoid -> Monoid.
 Proof.
   intros M N.
-  snrapply (Build_Monoid (M * N)).
+  snapply (Build_Monoid (M * N)).
   3: repeat split.
   - intros [m1 n1] [m2 n2].
     exact (m1 * m2, n1 * n2).
   - exact (mon_unit, mon_unit).
   - exact _.
-  - intros x y z; snrapply path_prod; nrapply mnd_assoc.
-  - intros x; snrapply path_prod; nrapply mnd_unit_l.
-  - intros x; snrapply path_prod; nrapply mnd_unit_r.
+  - intros x y z; snapply path_prod; napply mnd_assoc.
+  - intros x; snapply path_prod; napply mnd_unit_l.
+  - intros x; snapply path_prod; napply mnd_unit_r.
 Defined.
 
 Definition mnd_prod_pr1 {M N : Monoid}
   : MonoidHomomorphism (mnd_prod M N) M.
 Proof.
-  snrapply Build_MonoidHomomorphism.
+  snapply Build_MonoidHomomorphism.
   1: exact fst.
   split; hnf; reflexivity.
 Defined.
@@ -236,7 +236,7 @@ Defined.
 Definition mnd_prod_pr2 {M N : Monoid}
   : MonoidHomomorphism (mnd_prod M N) N.
 Proof.
-  snrapply Build_MonoidHomomorphism.
+  snapply Build_MonoidHomomorphism.
   1: exact snd.
   split; hnf; reflexivity.
 Defined.
@@ -246,17 +246,17 @@ Definition mnd_prod_corec {M N P : Monoid}
   (g : MonoidHomomorphism P N)
   : MonoidHomomorphism P (mnd_prod M N).
 Proof.
-  snrapply Build_MonoidHomomorphism.
+  snapply Build_MonoidHomomorphism.
   2: split.
   - exact (fun x => (f x, g x)).
-  - intros x y; snrapply path_prod; nrapply mnd_homo_op.
-  - snrapply path_prod; nrapply mnd_homo_unit.
+  - intros x y; snapply path_prod; napply mnd_homo_op.
+  - snapply path_prod; napply mnd_homo_unit.
 Defined.
 
 Instance hasbinaryproducts_monoid : HasBinaryProducts Monoid.
 Proof.
   intros M N.
-  snrapply Build_BinaryProduct.
+  snapply Build_BinaryProduct.
   - exact (mnd_prod M N).
   - exact mnd_prod_pr1.
   - exact mnd_prod_pr2.

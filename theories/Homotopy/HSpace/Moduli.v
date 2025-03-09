@@ -81,7 +81,7 @@ Lemma equiv_pmap_hspace `{Funext} {A : pType}
   (a : A) `{IsHSpace A} `{!IsEquiv (hspace_op a)}
   : (A ->* A) <~> (A ->* [A,a]).
 Proof.
-  nrapply pequiv_pequiv_postcompose.
+  napply pequiv_pequiv_postcompose.
   rapply pequiv_hspace_left_op.
 Defined.
 
@@ -102,7 +102,7 @@ Proposition pequiv_map_pmap_hspace `{Funext} {A : pType}
   `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}
   : [(A ->* A) * A, (pmap_idmap, pt)] <~>* selfmaps A.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   1: exact equiv_map_pmap_hspace.
   cbn.
   apply path_forall, hspace_left_identity.
@@ -113,7 +113,7 @@ Proposition hspace_ev_trivialization `{Funext} {A : pType}
   `{IsCoherent A} `{forall a:A, IsEquiv (a *.)}
   : ev A o* pequiv_map_pmap_hspace ==* psnd (A:=[A ->* A, pmap_idmap]).
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   { intros [f x]; cbn.
     exact (ap _ (dpoint_eq f) @ hspace_right_identity _). }
   cbn.
@@ -146,10 +146,10 @@ Proof.
   equiv_via {s : {act : A -> (A -> A) & forall a, act a pt = a} & {h : s.1 pt == idmap & h pt = s.2 pt}}.
   1: make_equiv.
   (* Then we break up [->*] and [==*] on the RHS using issig lemmas, and handle a trailing [@ 1]. *)
-  snrapply equiv_functor_sigma'.
+  snapply equiv_functor_sigma'.
   - refine (equiv_functor_forall_id (fun a => issig_pmap A [A,a]) oE _).
     unfold IsPointed.
-    nrapply equiv_sig_coind.
+    napply equiv_sig_coind.
   - cbn.
     intros [act p]; simpl.
     refine (issig_phomotopy _ _ oE _); cbn.
@@ -175,8 +175,8 @@ Proof.
   change (eisretr f pt = ap f (moveR_equiv_V pt pt (point_eq f)^) @ point_eq f).
   rewrite <- (point_eq f).
   unfold moveR_equiv_V; simpl.
-  rhs nrapply concat_p1.
-  lhs nrapply (eisadj f).
+  rhs napply concat_p1.
+  lhs napply (eisadj f).
   apply ap.
   symmetry; apply concat_1p.
 Defined.
@@ -186,8 +186,8 @@ Definition iscohhspace_hspace' (A : pType)
   `{IsHSpace A} `{forall a, IsEquiv (a *.)}
   : IsCohHSpace A.
 Proof.
-  snrapply Build_IsCohHSpace.
-  { nrapply ishspace_homogeneous.
+  snapply Build_IsCohHSpace.
+  { napply ishspace_homogeneous.
     exact ishomogeneous_hspace. }
   exact iscoherent_homogeneous.
 Defined.
@@ -209,8 +209,8 @@ Definition iscohhspace_hspace (A : pType)
   {m : IsHSpace A} `{forall a, IsEquiv (a *.)}
   : IsCohHSpace A.
 Proof.
-  snrapply Build_IsCohHSpace.
-  1: snrapply Build_IsHSpace.
+  snapply Build_IsCohHSpace.
+  1: snapply Build_IsHSpace.
   - exact (@hspace_op A m).
   - exact (@hspace_left_identity A m).
   - intro a.
@@ -219,7 +219,7 @@ Proof.
     exact (hspace_right_identity a).
   - unfold IsCoherent; cbn.
     apply moveL_Vp.
-    lhs nrapply concat_A1p.
+    lhs napply concat_A1p.
     refine (_ @@ 1).
     apply (cancelR _ _ (hspace_left_identity pt)).
     symmetry; apply concat_A1p.

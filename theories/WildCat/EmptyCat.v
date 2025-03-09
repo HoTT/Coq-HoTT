@@ -26,5 +26,5 @@ Defined.
 
 Instance is1cat_empty : Is1Cat Empty.
 Proof.
-  snrapply Build_Is1Cat; intros [].
+  snapply Build_Is1Cat; intros [].
 Defined.

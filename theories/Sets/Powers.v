@@ -40,7 +40,7 @@ Qed.
 Instance hset_power_iterated {UA : Univalence} (X : HSet) n
   : IsHSet (power_iterated X n).
 Proof.
-  nrapply (nat_iter_invariant n power_type (fun A => IsHSet A)).
+  napply (nat_iter_invariant n power_type (fun A => IsHSet A)).
   - intros Y HS. rapply hset_power.
   - exact _.
 Defined.

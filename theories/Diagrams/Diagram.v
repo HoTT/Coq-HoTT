@@ -87,7 +87,7 @@ Section Diagram.
   #[export] Instance reflexive_DiagramMap_homotopy {D1 D2 : Diagram G} : Reflexive (@DiagramMap_homotopy D1 D2).
   Proof.
     intros m.
-    snrapply exist.
+    snapply exist.
     - intro i; reflexivity.
     - intros i j g x; cbn.
       apply concat_p1_1p.
@@ -173,7 +173,7 @@ Section Diagram.
     exists (fun i => eisretr (we i)).
     simpl.
     intros i j f x.
-    rhs nrapply concat_p1.
+    rhs napply concat_p1.
     exact (comm_square_inverse_is_retr (we i) (we j) _ x).
   Defined.
 
@@ -187,7 +187,7 @@ Section Diagram.
     exists (fun i => eissect (we i)).
     simpl.
     intros i j f x.
-    rhs nrapply concat_p1.
+    rhs napply concat_p1.
     exact (comm_square_inverse_is_sect (we i) (we j) _ x).
   Defined.
 
@@ -202,7 +202,7 @@ Section Diagram.
   #[export] Instance transitive_diagram_equiv : Transitive diagram_equiv | 1.
   Proof.
     intros D1 D2 D3 m1 m2.
-    nrapply (Build_diagram_equiv (diagram_comp m2 m1)).
+    napply (Build_diagram_equiv (diagram_comp m2 m1)).
     intros i.
     simpl.
     apply isequiv_compose'; [apply m1 | apply m2].

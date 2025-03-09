@@ -156,7 +156,7 @@ Definition pproduct_corec `{Funext} {A : Type} (F : A -> pType)
   (X : pType) (f : forall a, X ->* F a)
   : X ->* pproduct F.
 Proof.
-  snrapply Build_pMap.
+  snapply Build_pMap.
   - intros x a.
     exact (f a x).
   - cbn.
@@ -167,7 +167,7 @@ Defined.
 Definition pproduct_proj {A : Type} {F : A -> pType} (a : A)
   : pproduct F ->* F a.
 Proof.
-  snrapply Build_pMap.
+  snapply Build_pMap.
   - intros x.
     exact (x a).
   - reflexivity.
@@ -188,7 +188,7 @@ Definition pprod_corec {X Y} (Z : pType) (f : Z ->* X) (g : Z ->* Y)
 Definition pprod_corec_beta_fst {X Y} (Z : pType) (f : Z ->* X) (g : Z ->* Y)
   : pfst o* pprod_corec Z f g ==* f.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: reflexivity.
   apply moveL_pV.
   refine (concat_1p _ @ _^ @ (concat_p1 _)^).
@@ -198,7 +198,7 @@ Defined.
 Definition pprod_corec_beta_snd {X Y} (Z : pType) (f : Z ->* X) (g : Z ->* Y)
   : psnd o* pprod_corec Z f g ==* g.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: reflexivity.
   apply moveL_pV.
   refine (concat_1p _ @ _^ @ (concat_p1 _)^).
@@ -244,7 +244,7 @@ Ltac pelim f :=
   destruct f as [f ?ptd];
   cbn in f, ptd |- *;
   match type of ptd with ?fpt = _ => generalize dependent fpt end;
-  nrapply paths_ind_r;
+  napply paths_ind_r;
   try clear f.
 
 Tactic Notation "pelim" constr(x0) := pelim x0.
@@ -314,7 +314,7 @@ Defined.
 Definition functor_pprod {A A' B B' : pType} (f : A ->* A') (g : B ->* B')
   : A * B ->* A' * B'.
 Proof.
-  snrapply Build_pMap.
+  snapply Build_pMap.
   - exact (functor_prod f g).
   - apply path_prod; apply point_eq.
 Defined.
@@ -358,7 +358,7 @@ Definition phomotopy_transitive {A P} {f g h : pForall A P} (p : f ==* g) (q : g
 Proof.
   snrefine (Build_pHomotopy (fun x => p x @ q x) _).
   nrefine (dpoint_eq p @@ dpoint_eq q @ concat_pp_p _ _ _ @ _).
-  nrapply whiskerL; nrapply concat_V_pp.
+  napply whiskerL; napply concat_V_pp.
 Defined.
 
 Instance phomotopy_transitive' {A P} : Transitive (@pHomotopy A P)
@@ -393,7 +393,7 @@ Definition pmap_compose_assoc {A B C D : pType} (h : C ->* D)
   (g : B ->* C) (f : A ->* B)
   : (h o* g) o* f ==* h o* (g o* f).
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: reflexivity.
   by pelim f g h.
 Defined.
@@ -402,7 +402,7 @@ Defined.
 Definition pmap_precompose_idmap {A B : pType} (f : A ->* B)
 : f o* pmap_idmap ==* f.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: reflexivity.
   by pelim f.
 Defined.
@@ -411,7 +411,7 @@ Defined.
 Definition pmap_postcompose_idmap {A B : pType} (f : A ->* B)
 : pmap_idmap o* f ==* f.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: reflexivity.
   by pelim f.
 Defined.
@@ -422,7 +422,7 @@ Definition phomotopy_postwhisker {A : pType} {P : pFam A}
   {f g h : pForall A P} {p p' : f ==* g} (r : p ==* p') (q : g ==* h)
   : p @* q ==* p' @* q.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: exact (fun x => whiskerR (r x) (q x)).
   by pelim q r p p' f g h.
 Defined.
@@ -431,7 +431,7 @@ Definition phomotopy_prewhisker {A : pType} {P : pFam A}
   {f g h : pForall A P} (p : f ==* g) {q q' : g ==* h} (s : q ==* q')
   : p @* q ==* p @* q'.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: exact (fun x => whiskerL (p x) (s x)).
   by pelim s q q' p f g h.
 Defined.
@@ -440,7 +440,7 @@ Definition phomotopy_compose_assoc {A : pType} {P : pFam A}
   {f g h k : pForall A P} (p : f ==* g) (q : g ==* h) (r : h ==* k)
   : p @* (q @* r) ==* (p @* q) @* r.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: exact (fun x => concat_p_pp (p x) (q x) (r x)).
   by pelim r q p f g h k.
 Defined.
@@ -569,7 +569,7 @@ Defined.
 (** pType is a 1-coherent 1-category *)
 Instance is1cat_ptype : Is1Cat pType.
 Proof.
-  snrapply Build_Is1Cat'.
+  snapply Build_Is1Cat'.
   1, 2: exact _.
   - intros A B C h; rapply Build_Is0Functor.
     intros f g p; cbn.
@@ -585,7 +585,7 @@ Defined.
 (** pType is a pointed category *)
 Instance ispointedcat_ptype : IsPointedCat pType.
 Proof.
-  snrapply Build_IsPointedCat.
+  snapply Build_IsPointedCat.
   + exact pUnit.
   + intro A.
     exists pconst.
@@ -602,7 +602,7 @@ Definition path_zero_morphism_pconst (A B : pType)
 (** pForall is a 1-category *)
 Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.
 Proof.
-  snrapply Build_Is1Cat'.
+  snapply Build_Is1Cat'.
   1, 2: exact _.
   - intros f g h p; rapply Build_Is0Functor.
     intros q r s. exact (phomotopy_postwhisker s p).
@@ -628,7 +628,7 @@ Instance is21cat_ptype : Is21Cat pType.
 Proof.
   unshelve econstructor.
   - exact _.
-  - intros A B C f; nrapply Build_Is1Functor.
+  - intros A B C f; napply Build_Is1Functor.
     + intros g h p q r.
       srapply Build_pHomotopy.
       1: exact (fun _ => ap _ (r _)).
@@ -641,7 +641,7 @@ Proof.
       srapply Build_pHomotopy.
       1: cbn; exact (fun _ => ap_pp _ _ _).
       by pelim p q g h i f.
-  - intros A B C f; nrapply Build_Is1Functor.
+  - intros A B C f; napply Build_Is1Functor.
     + intros g h p q r.
       srapply Build_pHomotopy.
       1: intro; exact (r _).
@@ -655,36 +655,36 @@ Proof.
       1: reflexivity.
       by pelim f p q i g h.
   - intros A B C f g h k p q.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     + intros x.
       exact (concat_Ap q _)^.
     + by pelim p f g q h k.
   - intros A B C D f g.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
     by pelim f g s1 r1 r2.
   - intros A B C D f g.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
     by pelim f s1 r1 r2 g.
   - intros A B C D f g.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: cbn; exact (fun _ => concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
     by pelim s1 r1 r2 f g.
   - intros A B.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
     by pelim s1 r1 r2.
   - intros A B.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros r1 r2 s1.
     srapply Build_pHomotopy.
     1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
@@ -718,7 +718,7 @@ Defined.
 Instance hasbinaryproducts_ptype : HasBinaryProducts pType.
 Proof.
   intros X Y.
-  snrapply Build_BinaryProduct.
+  snapply Build_BinaryProduct.
   - exact (X * Y).
   - exact pfst.
   - exact psnd.
@@ -727,7 +727,7 @@ Proof.
   - exact pprod_corec_beta_snd.
   - intros Z f g p q.
     simpl.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     { intros a.
       apply path_prod'; cbn.
       - exact (p a).
@@ -740,26 +740,26 @@ Defined.
 Instance hasallproducts_ptype `{Funext} : HasAllProducts pType.
 Proof.
   intros I x.
-  snrapply Build_Product.
+  snapply Build_Product.
   - exact (pproduct x).
   - exact pproduct_proj. 
   - exact (pproduct_corec x).
   - intros Z f i.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     1: reflexivity.
     apply moveL_pV.
     apply equiv_1p_q1.
     exact (apD10_path_forall _ _ (fun a => point_eq (f a)) i)^.
   - intros Z f g p.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     1: intros z; funext i; apply p.
     cbn; apply moveR_equiv_V.
     funext i.
-    rhs nrapply ap_pp.
+    rhs napply ap_pp.
     lhs exact (dpoint_eq (p i)).
     cbn; f_ap.
     + apply concat_p1.
-    + rhs nrapply (ap_V _ (dpoint_eq g)).
+    + rhs napply (ap_V _ (dpoint_eq g)).
       apply inverse2.
       apply concat_p1.
 Defined.
@@ -897,7 +897,7 @@ Instance ishprop_phomotopy_hset `{Funext} {X Y : pType} `{IsHSet Y} (f g : X ->*
 (** The inverse equivalence of a pointed equivalence is again a pointed equivalence *)
 Definition pequiv_inverse {A B} (f : A <~>* B) : B <~>* A.
 Proof.
-  snrapply Build_pEquiv.
+  snapply Build_pEquiv.
   1: apply (Build_pMap _ _ f^-1).
   1: apply moveR_equiv_V; symmetry; apply point_eq.
   exact _.
@@ -932,10 +932,10 @@ Defined.
 Definition equiv_path_ptype `{Univalence} (A B : pType@{u}) : A <~>* B <~> A = B.
 Proof.
   refine (equiv_path_from_contr A (fun C => A <~>* C) pequiv_pmap_idmap _ B).
-  nrapply (contr_equiv' { X : Type@{u} & { f : A <~> X & {x : X & f pt = x} }}).
+  napply (contr_equiv' { X : Type@{u} & { f : A <~> X & {x : X & f pt = x} }}).
   1: make_equiv.
   rapply (contr_equiv' { X : Type@{u} &  A <~> X }).
-  nrapply equiv_functor_sigma_id; intro X; symmetry.
+  napply equiv_functor_sigma_id; intro X; symmetry.
   rapply equiv_sigma_contr.
   (** If you replace the type in the second line with { Xf : {X : Type & A <~> X} & {x : Xf.1 & Xf.2 pt = x} }, then the third line completes the proof, but that results in an extra universe variable. *)
 Defined.
@@ -1013,7 +1013,7 @@ Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
 Proof.
   rapply hasmorext_core.
   intros A B f g.
-  snrapply isequiv_homotopic'.
+  snapply isequiv_homotopic'.
   1: exact (equiv_path_pequiv' f g)^-1%equiv.
   by intros [].
 Defined.
@@ -1045,10 +1045,10 @@ Defined.
 Theorem equiv_pointify_map `{Funext} (A : Type) (X : pType)
   : (pointify A ->* X) <~> (A -> X).
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   1: exact (fun f => f o inl).
   { intros f.
-    snrapply Build_pMap.
+    snapply Build_pMap.
     { intros [a|].
       1: exact (f a).
       exact pt. }
@@ -1058,7 +1058,7 @@ Proof.
   cbv.
   pointed_reduce.
   rapply equiv_path_pforall.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: by intros [a|[]].
   reflexivity.
 Defined.
@@ -1066,9 +1066,9 @@ Defined.
 Lemma natequiv_pointify_r `{Funext} (A : Type)
   : NatEquiv (opyon (pointify A)) (opyon A o pointed_type).
 Proof.
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   1: rapply equiv_pointify_map.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   cbv; reflexivity.
 Defined.
 
@@ -1085,8 +1085,8 @@ Definition pfmap {A B : Type} (F : A -> B)
   {a1 a2 : A}
   : pHom a1 a2 ->* pHom (F a1) (F a2).
 Proof.
-  snrapply Build_pMap.
+  snapply Build_pMap.
   - exact (fmap F).
   - apply path_hom.
-    snrapply fmap_zero_morphism; assumption.
+    snapply fmap_zero_morphism; assumption.
 Defined.

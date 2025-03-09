@@ -48,7 +48,7 @@ Proof.
   strip_truncations.
   destruct p.
   cbn in ii.
-  snrapply (isequiv_homotopic _ (H:=ii x)).
+  snapply (isequiv_homotopic _ (H:=ii x)).
   exact (fun _ => concat_1p _ @ concat_p1 _).
 Defined.
 

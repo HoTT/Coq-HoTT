@@ -60,7 +60,7 @@ Defined.
 Instance is1bifunctor_abses' `{Univalence}
   : Is1Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
-  snrapply Build_Is1Bifunctor''.
+  snapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros ? ? g ? ? f E; cbn.
   exact (abses_pushout_pullback_reorder E f g).
@@ -223,7 +223,7 @@ Defined.
 Instance ishspace_abses `{Univalence} {B A : AbGroup}
   : IsHSpace (AbSES B A).
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact abses_baer_sum.
   - intro; apply baer_sum_unit_l.
   - intro; apply baer_sum_unit_r.
@@ -238,7 +238,7 @@ Defined.
 Instance is1bifunctor_abses `{Univalence}
   : Is1Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
 Proof.
-  snrapply Build_Is1Bifunctor''.
+  snapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros ? ? f ? ? g.
   rapply hspace_phomotopy_from_homotopy.

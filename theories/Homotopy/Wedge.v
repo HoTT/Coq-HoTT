@@ -17,14 +17,14 @@ Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 
 Definition wedge_inl {X Y} : X $-> X \/ Y.
 Proof.
-  snrapply Build_pMap.
+  snapply Build_pMap.
   - exact (fun x => pushl x).
   - reflexivity.
 Defined.
 
 Definition wedge_inr {X Y} : Y $-> X \/ Y.
 Proof.
-  snrapply Build_pMap.
+  snapply Build_pMap.
   - exact (fun x => pushr x).
   - symmetry.
     by rapply pglue.
@@ -38,7 +38,7 @@ Definition wedge_rec' {X Y : pType} {Z : Type}
   (f : X -> Z) (g : Y -> Z) (w : f pt = g pt)
   : Wedge X Y -> Z.
 Proof.
-  snrapply Pushout_rec.
+  snapply Pushout_rec.
   - exact f.
   - exact g.
   - intro.
@@ -48,8 +48,8 @@ Defined.
 Definition wedge_rec {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
   : X \/ Y $-> Z.
 Proof.
-  snrapply Build_pMap.
-  - snrapply (wedge_rec' f g).
+  snapply Build_pMap.
+  - snapply (wedge_rec' f g).
     exact (point_eq f @ (point_eq g)^).
   - exact (point_eq f).
 Defined.
@@ -70,12 +70,12 @@ Definition wedge_incl (X Y : pType) : X \/ Y $-> X * Y
 Definition wedge_incl_beta_wglue {X Y : pType}
   : ap (@wedge_incl X Y) wglue = 1.
 Proof.
-  lhs_V nrapply eta_path_prod.
-  lhs nrapply ap011.
-  - lhs_V nrapply ap_compose.
-    nrapply wedge_rec_beta_wglue.
-  - lhs_V nrapply ap_compose.
-    nrapply wedge_rec_beta_wglue.
+  lhs_V napply eta_path_prod.
+  lhs napply ap011.
+  - lhs_V napply ap_compose.
+    napply wedge_rec_beta_wglue.
+  - lhs_V napply ap_compose.
+    napply wedge_rec_beta_wglue.
   - reflexivity.
 Defined.
 
@@ -86,54 +86,54 @@ Lemma wedge_up X Y Z (f g : X \/ Y $-> Z)
   -> f $== g.
 Proof.
   intros p q.
-  snrapply Build_pHomotopy.
-  - snrapply (Pushout_ind _ p q).
+  snapply Build_pHomotopy.
+  - snapply (Pushout_ind _ p q).
     intros [].
     transport_paths FlFr.
-    lhs nrapply (whiskerL _ (dpoint_eq q)).
-    rhs nrapply (whiskerR (dpoint_eq p)).
+    lhs napply (whiskerL _ (dpoint_eq q)).
+    rhs napply (whiskerR (dpoint_eq p)).
     clear p q.
-    lhs nrapply concat_p_pp.
+    lhs napply concat_p_pp.
     simpl.
     apply moveR_pV.
-    lhs nrapply whiskerL.
-    { nrapply whiskerR.
+    lhs napply whiskerL.
+    { napply whiskerR.
       apply ap_V. }
-    lhs nrapply concat_p_pp.
-    lhs nrapply whiskerR.
+    lhs napply concat_p_pp.
+    lhs napply whiskerR.
     1: apply concat_pV.
-    rhs nrapply concat_p_pp.
+    rhs napply concat_p_pp.
     apply moveL_pM.
-    lhs_V nrapply concat_p1.
-    lhs nrapply concat_pp_p.
-    lhs_V nrapply whiskerL.
+    lhs_V napply concat_p1.
+    lhs napply concat_pp_p.
+    lhs_V napply whiskerL.
     1: apply (inv_pp 1).
-    rhs nrapply whiskerL.
+    rhs napply whiskerL.
     2: apply ap_V.
     apply moveL_pV.
     reflexivity.
   - simpl; pelim p q.
     f_ap.
     1: apply concat_1p.
-    lhs nrapply inv_pp.
+    lhs napply inv_pp.
     apply concat_p1.
 Defined.
 
 Instance hasbinarycoproducts : HasBinaryCoproducts pType.
 Proof.
   intros X Y.
-  snrapply Build_BinaryCoproduct.
+  snapply Build_BinaryCoproduct.
   - exact (X \/ Y).
   - exact wedge_inl.
   - exact wedge_inr.
   - intros Z f g.
     by apply wedge_rec.
   - intros Z f g.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     1: reflexivity.
     by simpl; pelim f.
   - intros Z f g.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     1: reflexivity.
     simpl.
     apply moveL_pV.
@@ -158,11 +158,11 @@ Defined.
 
 Lemma wedge_pr1_inr {X Y} : wedge_pr1 $o (@wedge_inr X Y) $== pconst.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: reflexivity.
-  rhs nrapply concat_p1.
-  rhs nrapply concat_p1.
-  rhs nrapply (ap_V _ wglue).
+  rhs napply concat_p1.
+  rhs napply concat_p1.
+  rhs napply (ap_V _ wglue).
   exact (inverse2 (wedge_rec_beta_wglue pmap_idmap pconst)^).
 Defined.
 
@@ -173,11 +173,11 @@ Defined.
 
 Lemma wedge_pr2_inr {X Y} : wedge_pr2 $o (@wedge_inr X Y) $== pmap_idmap.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: reflexivity.
-  rhs nrapply concat_p1.
-  rhs nrapply concat_p1.
-  rhs nrapply (ap_V _ wglue).
+  rhs napply concat_p1.
+  rhs napply concat_p1.
+  rhs napply (ap_V _ wglue).
   exact (inverse2 (wedge_rec_beta_wglue pconst pmap_idmap)^).
 Defined.
 
@@ -186,7 +186,7 @@ Defined.
 (** Note that the index type is not necessarily pointed. An empty wedge is the unit type which is the zero object in the category of pointed types. *)
 Definition FamilyWedge (I : Type) (X : I -> pType) : pType.
 Proof.
-  snrapply Build_pType.
+  snapply Build_pType.
   - srefine (Pushout (A := I) (B := sig X) (C := pUnit) _ _).
     + exact (fun i => (i; pt)).
     + exact (fun _ => pt).
@@ -208,8 +208,8 @@ Definition fwedge_rec (I : Type) (X : I -> pType) (Z : pType)
   (f : forall i, X i $-> Z)
   : FamilyWedge I X $-> Z.
 Proof.
-  snrapply Build_pMap.
-  - snrapply Pushout_rec.
+  snapply Build_pMap.
+  - snapply Pushout_rec.
     + exact (sig_rec f).
     + exact pconst.
     + intros i.
@@ -221,12 +221,12 @@ Defined.
 Instance hasallcoproducts_ptype : HasAllCoproducts pType@{u}.
 Proof.
   intros I X.
-  snrapply Build_Coproduct.
+  snapply Build_Coproduct.
   - exact (FamilyWedge I X).
   - exact (fwedge_in' I X).
   - exact (fwedge_rec I X).
   - intros Z f i.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     1: reflexivity.
     simpl.
     apply moveL_pV.
@@ -234,17 +234,17 @@ Proof.
     symmetry.
     exact (Pushout_rec_beta_pglue Z _ (unit_name pt) (fun i => point_eq (f i)) _).
   - intros Z f g h.
-    snrapply Build_pHomotopy.
-    + snrapply Pushout_ind.
+    snapply Build_pHomotopy.
+    + snapply Pushout_ind.
       * intros [i x].
-        nrapply h.
+        napply h.
       * intros [].
         exact (point_eq _ @ (point_eq _)^).
       * intros i; cbn.
         transport_paths FlFr.
-        lhs nrapply concat_p_pp.
+        lhs napply concat_p_pp.
         apply moveR_pV.
-        rhs nrapply concat_pp_p.
+        rhs napply concat_pp_p.
         apply moveL_pM.
         symmetry.
         exact (dpoint_eq (h i)).
@@ -309,30 +309,30 @@ Defined.
 Definition wedge_pr1_psusp_pinch {X}
   : wedge_pr1 $o psusp_pinch X $== Id (psusp X).
 Proof.
-  snrapply Build_pHomotopy.
-  - snrapply Susp_ind_FlFr.
+  snapply Build_pHomotopy.
+  - snapply Susp_ind_FlFr.
     + reflexivity.
     + exact (merid pt).
     + intros x.
-      rhs nrapply concat_1p.
-      rhs nrapply ap_idmap.
+      rhs napply concat_1p.
+      rhs napply ap_idmap.
       apply moveR_pM.
       change (?t = _) with (t = loop_susp_unit X x).
-      lhs nrapply (ap_compose (psusp_pinch X)).
-      lhs nrapply (ap _ (psusp_pinch_beta_merid x)).
-      lhs nrapply ap_pp.
-      lhs nrapply (ap (fun x => _ @ x) (ap_V _ _)).
+      lhs napply (ap_compose (psusp_pinch X)).
+      lhs napply (ap _ (psusp_pinch_beta_merid x)).
+      lhs napply ap_pp.
+      lhs napply (ap (fun x => _ @ x) (ap_V _ _)).
       apply moveR_pV.
-      rhs nrapply (whiskerL _ (wedge_rec_beta_wglue _ _)).
-      lhs nrapply ap_pp.
-      lhs nrapply (ap (fun x => _ @ x)).
-      { lhs_V nrapply ap_compose.
+      rhs napply (whiskerL _ (wedge_rec_beta_wglue _ _)).
+      lhs napply ap_pp.
+      lhs napply (ap (fun x => _ @ x)).
+      { lhs_V napply ap_compose.
         apply ap_const. }
-      lhs nrapply concat_p1.
-      lhs nrapply ap_pp.
-      lhs nrapply (ap (fun x => _ @ x) (wedge_rec_beta_wglue _ _)).
+      lhs napply concat_p1.
+      lhs napply ap_pp.
+      lhs napply (ap (fun x => _ @ x) (wedge_rec_beta_wglue _ _)).
       f_ap.
-      lhs_V nrapply (ap_compose wedge_inl).
+      lhs_V napply (ap_compose wedge_inl).
       apply ap_idmap.
   - reflexivity.
 Defined.
@@ -340,32 +340,32 @@ Defined.
 Definition wedge_pr2_psusp_pinch {X}
   : wedge_pr2 $o psusp_pinch X $== Id (psusp X).
 Proof.
-  snrapply Build_pHomotopy.
-  - snrapply Susp_ind_FlFr.
+  snapply Build_pHomotopy.
+  - snapply Susp_ind_FlFr.
     + reflexivity.
     + exact (merid pt).
     + intros x.
-      rhs nrapply concat_1p.
-      rhs nrapply ap_idmap.
+      rhs napply concat_1p.
+      rhs napply ap_idmap.
       apply moveR_pM.
       change (?t = _) with (t = loop_susp_unit X x).
-      lhs nrapply (ap_compose (psusp_pinch X)).
-      lhs nrapply (ap _ (psusp_pinch_beta_merid x)).
-      lhs nrapply ap_pp.
-      lhs nrapply (ap (fun x => _ @ x) (ap_V _ _)).
+      lhs napply (ap_compose (psusp_pinch X)).
+      lhs napply (ap _ (psusp_pinch_beta_merid x)).
+      lhs napply ap_pp.
+      lhs napply (ap (fun x => _ @ x) (ap_V _ _)).
       apply moveR_pV.
-      rhs nrapply (whiskerL _ (wedge_rec_beta_wglue _ _)).
-      lhs nrapply ap_pp.
-      lhs nrapply (ap (fun x => _ @ x) _).
-      { lhs_V nrapply ap_compose.
+      rhs napply (whiskerL _ (wedge_rec_beta_wglue _ _)).
+      lhs napply ap_pp.
+      lhs napply (ap (fun x => _ @ x) _).
+      { lhs_V napply ap_compose.
         apply ap_idmap. }
-      rhs nrapply concat_p1.
+      rhs napply concat_p1.
       apply moveR_pM.
-      lhs nrapply ap_pp.
-      rhs nrapply concat_pV.
-      lhs nrapply (ap _ (wedge_rec_beta_wglue _ _)).
+      lhs napply ap_pp.
+      rhs napply concat_pV.
+      lhs napply (ap _ (wedge_rec_beta_wglue _ _)).
       apply moveR_pM.
-      lhs_V nrapply (ap_compose wedge_inl).
+      lhs_V napply (ap_compose wedge_inl).
       rapply ap_const.
   - reflexivity.
 Defined.

@@ -27,7 +27,7 @@ Local Instance abses_pullback_inclusion_lemma {A B E : AbGroup}
       (F : AbSES E A) (p : abses_pullback i F $== pt)
   : IsEmbedding (grp_pullback_pr1 _ _ $o p^$.1).
 Proof.
-  nrapply (istruncmap_compose (-1) p^$.1 (grp_pullback_pr1 (projection F) i)).
+  napply (istruncmap_compose (-1) p^$.1 (grp_pullback_pr1 (projection F) i)).
   all: rapply istruncmap_mapinO_tr.
 Defined.
 
@@ -64,7 +64,7 @@ Definition abses_pullback_trivial_preimage `{Univalence} {A B C : AbGroup} (E : 
            (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
   : AbSES C A.
 Proof.
-  snrapply Build_AbSES.
+  snapply Build_AbSES.
   - exact (abses_pullback_inclusion_transpose_endpoint' (inclusion E) F p).
   - exact (grp_quotient_map $o inclusion F).
   - srapply (ab_cokernel_embedding_rec _ (projection E $o projection F)).
@@ -91,7 +91,7 @@ Proof.
     1: exact _.
     simpl.
     exact _.
-  - snrapply Build_IsExact.
+  - snapply Build_IsExact.
     + srapply phomotopy_homotopy_hset.
       intro a; simpl.
       refine (ap (projection E) _ @ _).
@@ -344,7 +344,7 @@ Proof.
   destruct Y as [Y Q].
   apply abses_path_data_to_iso;
     srefine (_; (_,_)).
-  - snrapply (ab_cokernel_embedding_rec _ (grp_pullback_pr1 _ _$o (Q.1^$).1)).
+  - snapply (ab_cokernel_embedding_rec _ (grp_pullback_pr1 _ _$o (Q.1^$).1)).
     1-3: exact _.
     intro f.
     nrefine (ap _ (induced_map_eq E F p (Y;Q) _) @ _); cbn.
@@ -352,7 +352,7 @@ Proof.
   - intro a.
     refine (_ @ ap (grp_pullback_pr1 _ _) (fst (Q.1^$).2 a)).
     exact (grp_quotient_rec_beta' _ F _ _ (inclusion F a)).
-  - nrapply (conn_map_elim _ grp_quotient_map).
+  - napply (conn_map_elim _ grp_quotient_map).
     1: apply issurj_class_of.
     1: intros ?; apply istrunc_paths; apply group_isgroup.
     intro f.

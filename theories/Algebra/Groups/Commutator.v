@@ -174,7 +174,7 @@ Instance issubgroup_precomp_commutator_l {G : Group} (H : Subgroup G)
   `{!IsNormalSubgroup H} (y : G)
   : IsSubgroup (fun x => H [x, y]).
 Proof.
-  snrapply Build_IsSubgroup; cbn beta.
+  snapply Build_IsSubgroup; cbn beta.
   - exact _.
   - rewrite grp_commutator_unit_l.
     apply subgroup_in_unit.
@@ -241,7 +241,7 @@ Definition subgroup_commutator_2_rec {G : Group} {H J K : Subgroup G}
   (i : forall x y z, H x -> J y -> K z -> N (grp_commutator (grp_commutator x y) z))
   : forall x, [[H, J], K] x -> N x.
 Proof.
-  snrapply subgroup_commutator_rec.
+  snapply subgroup_commutator_rec.
   intros x z HJx Kz; revert x HJx.
   change (N (grp_commutator ?x z)) with (subgroup_precomp_commutator_l N z x).
   rapply subgroup_commutator_rec.
@@ -262,7 +262,7 @@ Definition functor_subgroup_commutator {G : Group} {H J K L : Subgroup G}
   (f : forall x, H x -> K x) (g : forall x, J x -> L x)
   : forall x, [H, J] x -> [K, L] x.
 Proof.
-  snrapply subgroup_commutator_rec.
+  snapply subgroup_commutator_rec.
   intros x y Hx Jx.
   apply subgroup_commutator_in.
   - by apply f.
@@ -281,9 +281,9 @@ Defined.
 Definition subgroup_incl_commutator_symm {G : Group} (H J : Subgroup G)
   : forall x, [H, J] x -> [J, H] x.
 Proof.
-  snrapply subgroup_commutator_rec.
+  snapply subgroup_commutator_rec.
   intros x y Hx Jy.
-  nrapply subgroup_in_inv'.
+  napply subgroup_in_inv'.
   rewrite grp_commutator_inv.
   by apply subgroup_commutator_in.
 Defined.
@@ -292,7 +292,7 @@ Defined.
 Definition subgroup_commutator_symm {G : Group} (H J : Subgroup G)
   : forall x, [H, J] x <-> [J, H] x.
 Proof.
-  intros x; split; snrapply subgroup_incl_commutator_symm.
+  intros x; split; snapply subgroup_incl_commutator_symm.
 Defined.
 
 (** The opposite subgroup of a commutator subgroup is the commutator subgroup of the opposite subgroups. *)
@@ -300,15 +300,15 @@ Definition subgroup_eq_commutator_grp_op {G : Group} (H J : Subgroup G)
   : forall (x : grp_op G), [H, J] x
     <-> [subgroup_grp_op J, subgroup_grp_op H] x.
 Proof.
-  nrapply (subgroup_eq_subgroup_generated_op (G:=G)).
+  napply (subgroup_eq_subgroup_generated_op (G:=G)).
   intro x.
   refine (iff_compose _ (equiv_sigma_symm _)).
-  do 2 (snrapply (equiv_functor_sigma'
+  do 2 (snapply (equiv_functor_sigma'
     (grp_iso_subgroup_group (grp_op_iso_inv G)
       (equiv_subgroup_inv (G:=grp_op G) (subgroup_grp_op _)))); intro).
   simpl.
   apply equiv_concat_l; symmetry.
-  lhs_V nrapply grp_commutator_inv.
+  lhs_V napply grp_commutator_inv.
   exact (grp_homo_commutator (grp_op_iso_inv _) a0.1 a.1).
 Defined.
 
@@ -325,13 +325,13 @@ Instance isnormal_subgroup_commutator {G : Group} (H J : Subgroup G)
   `{!IsNormalSubgroup H, !IsNormalSubgroup J}
   : IsNormalSubgroup [H, J].
 Proof.
-  snrapply Build_IsNormalSubgroup'.
+  snapply Build_IsNormalSubgroup'.
   intros x y; revert x.
   apply (functor_subgroup_generated _ _ (grp_conj y)).
   intros x.
   do 2 (rapply (functor_sigma (grp_iso_normal_conj _ y)); intro).
   intros p.
-  lhs_V nrapply (grp_homo_commutator (grp_conj y)).
+  lhs_V napply (grp_homo_commutator (grp_conj y)).
   exact (ap (grp_conj y) p).
 Defined.
 
@@ -341,17 +341,17 @@ Definition subgroup_commutator_normal_prod_l {G : Group}
   : forall x, [subgroup_product H K, L] x <-> subgroup_product [H, L] [K, L] x.
 Proof.
   intros x; split.
-  - revert x; snrapply subgroup_commutator_rec.
+  - revert x; snapply subgroup_commutator_rec.
     intros x y HKx Ly; revert x HKx.
     change (subgroup_product ?H ?J (grp_commutator ?x y))
       with (subgroup_precomp_commutator_l (subgroup_product H J) y x).
-    snrapply subgroup_generated_rec.
+    snapply subgroup_generated_rec.
     intros x [Hx | Kx].
     + apply subgroup_product_incl_l.
       by apply subgroup_commutator_in.
     + apply subgroup_product_incl_r.
       by apply subgroup_commutator_in.
-  - revert x; snrapply subgroup_generated_rec.
+  - revert x; snapply subgroup_generated_rec.
     intros x [HLx | KLx].
     + revert x HLx.
       apply functor_subgroup_commutator; trivial.
@@ -370,7 +370,7 @@ Proof.
   etransitivity.
   1: symmetry; apply subgroup_commutator_symm.
   etransitivity.
-  2: nrapply (subgroup_eq_functor_subgroup_product grp_iso_id
+  2: napply (subgroup_eq_functor_subgroup_product grp_iso_id
     (subgroup_commutator_symm _ _) (subgroup_commutator_symm _ _)).
   exact (subgroup_commutator_normal_prod_l K L H x).
 Defined.
@@ -381,9 +381,9 @@ Definition subgroup_image_commutator_incl {G H : Group}
   : forall x, subgroup_image f [J, K] x
     -> [subgroup_image f J, subgroup_image f K] x.
 Proof.
-  snrapply subgroup_image_rec.
+  snapply subgroup_image_rec.
   change ([?G, ?H] (f ?x)) with (subgroup_preimage f [G, H] x).
-  snrapply subgroup_commutator_rec.
+  snapply subgroup_commutator_rec.
   intros x y Jx Ky.
   change (subgroup_preimage f [?G, ?H] ?x) with ([G, H] (f x)).
   rewrite grp_homo_commutator.
@@ -421,11 +421,11 @@ Definition abgroup_derived_quotient (G : Group) : AbGroup
 Definition abgroup_derived_quotient_rec {G : Group} {A : AbGroup} (f : G $-> A)
   : abgroup_derived_quotient G $-> A.
 Proof.
-  snrapply (grp_quotient_rec _ _ f).
+  snapply (grp_quotient_rec _ _ f).
   change (f ?n = 1) with (subgroup_preimage f (trivial_subgroup A) n).
-  snrapply subgroup_commutator_rec.
+  snapply subgroup_commutator_rec.
   intros x y _ _.
-  lhs nrapply grp_homo_commutator.
+  lhs napply grp_homo_commutator.
   apply ab_commutator.
 Defined.
 
@@ -434,7 +434,7 @@ Definition isabelianization_derived_quotient (G : Group)
   : IsAbelianization (abgroup_derived_quotient G) grp_quotient_map.
 Proof.
   intros A.
-  snrapply Build_IsSurjInj.
+  snapply Build_IsSurjInj.
   - intros f.
     nrefine (abgroup_derived_quotient_rec f; _).
     hnf; reflexivity.

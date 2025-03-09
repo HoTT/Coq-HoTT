@@ -44,7 +44,7 @@ Defined.
 Instance is0bifunctor_hom {A} `{Is01Cat A}
   : Is0Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _).
 Proof.
-  nrapply Build_Is0Bifunctor'.
+  napply Build_Is0Bifunctor'.
   1-2: exact _.
   exact is0functor_hom.
 Defined.
@@ -53,7 +53,7 @@ Defined.
 Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
   : Is1Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _).
 Proof.
-  nrapply Build_Is1Bifunctor'.
+  napply Build_Is1Bifunctor'.
   exact is1functor_hom.
 Defined.
 
@@ -141,7 +141,7 @@ Instance is1natural_opyoneda {A : Type} `{Is1Cat A}
   (a : A) (F : A -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (opyon a) F (opyoneda a F x).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   unfold opyon, opyoneda; intros b c f g; cbn in *.
   exact (fmap_comp F g f x).
 Defined.
@@ -223,7 +223,7 @@ Definition natequiv_opyon_equiv {A : Type} `{HasEquivs A}
   : (b $<~> a) -> (opyon1 a $<~> opyon1 b).
 Proof.
   intro e.
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   - intros c.
     exact (equiv_precompose_cat_equiv e).
   - rapply is1natural_opyoneda.
@@ -239,7 +239,7 @@ Definition opyon_0gpd {A : Type} `{Is1Cat A} (a : A) : A -> ZeroGpd
 Instance is0functor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is0Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
 Proof.
-  nrapply Build_Is0Functor.
+  napply Build_Is0Functor.
   intros [a1 a2] [b1 b2] [f1 f2]; unfold op in *; cbn in *.
   rapply (Build_Fun01 (opyon_0gpd a1 a2) (opyon_0gpd b1 b2)
           (cat_postcomp b1 f2 o cat_precomp a2 f1)).
@@ -248,7 +248,7 @@ Defined.
 Instance is1functor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is1Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
 Proof.
-  nrapply Build_Is1Functor.
+  napply Build_Is1Functor.
   - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p q] h.
     exact (h $@L p $@@ q).
   - intros [a1 a2] h.
@@ -263,7 +263,7 @@ Defined.
 Instance is0bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is0Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A)).
 Proof.
-  snrapply Build_Is0Bifunctor'.
+  snapply Build_Is0Bifunctor'.
   1,2: exact _.
   exact is0functor_hom_0gpd.
 Defined.
@@ -271,7 +271,7 @@ Defined.
 Instance is1bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is1Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A)).
 Proof.
-  snrapply Build_Is1Bifunctor'.
+  snapply Build_Is1Bifunctor'.
   exact is1functor_hom_0gpd.
 Defined.
 
@@ -315,7 +315,7 @@ Instance is1natural_opyoneda_0gpd {A : Type} `{Is1Cat A}
   (a : A) (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (opyon_0gpd a) F (opyoneda_0gpd a F x).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   unfold opyon_0gpd, opyoneda_0gpd; intros b c f g; cbn in *.
   exact (fmap_comp F g f x).
 Defined.
@@ -398,7 +398,7 @@ Definition natequiv_opyon_equiv_0gpd {A : Type} `{HasEquivs A}
   {a b : A} (e : b $<~> a)
   : opyon1_0gpd a $<~> opyon1_0gpd b.
 Proof.
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   - intro c; exact (equiv_precompose_cat_equiv_0gpd e).
   - tapply is1natural_opyoneda_0gpd.
 Defined.

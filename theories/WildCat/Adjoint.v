@@ -68,7 +68,7 @@ Lemma fun01_profunctor {A B C D : Type} (F : A -> B) (G : C -> D)
   `{Is0Functor A B F, Is0Functor C D G}
   : Fun01 (A^op * C) (B^op * D).
 Proof.
-  snrapply Build_Fun01.
+  snapply Build_Fun01.
   1: exact (functor_prod F G).
   rapply is0functor_prod_functor.
 Defined.
@@ -92,14 +92,14 @@ Section AdjunctionData.
         (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
         (yon (G y)).
   Proof.
-    nrapply Build_NatEquiv.
+    napply Build_NatEquiv.
     apply (is1natural_equiv_adjunction_l adj).
   Defined.
 
   Definition natequiv_adjunction_r (x : C)
     : NatEquiv (opyon (F x)) (opyon x o G).
   Proof.
-    nrapply Build_NatEquiv.
+    napply Build_NatEquiv.
     apply (is1natural_equiv_adjunction_r adj).
   Defined.
 
@@ -110,9 +110,9 @@ Section AdjunctionData.
         (fun01_compose fun01_hom (fun01_profunctor F idmap))
         (fun01_compose fun01_hom (fun01_profunctor idmap G)).
   Proof.
-    snrapply Build_NatEquiv.
+    snapply Build_NatEquiv.
     1: intros [x y]; exact (equiv_adjunction adj x y).
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros [a b] [a' b'] [f g] K.
     refine (_ @ ap (fun x : a $-> G b' => x $o f)
       (is1natural_equiv_adjunction_r adj a b b' g K)).
@@ -122,10 +122,10 @@ Section AdjunctionData.
   (** The counit of an adjunction *)
   Definition adjunction_counit : NatTrans idmap (G o F).
   Proof.
-    snrapply Build_NatTrans.
+    snapply Build_NatTrans.
     { hnf. intros x.
       exact (equiv_adjunction adj x (F x) (Id _)). }
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros x x' f.
     apply GpdHom_path.
     refine (_^ @ _ @ _).
@@ -140,10 +140,10 @@ Section AdjunctionData.
   (** The unit of an adjunction *)
   Definition adjunction_unit : NatTrans (F o G) idmap.
   Proof.
-    snrapply Build_NatTrans.
+    snapply Build_NatTrans.
     { hnf. intros y.
       exact ((equiv_adjunction adj (G y) y)^-1 (Id _)). }
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros y y' f.
     apply GpdHom_path.
     refine (_^ @ _ @ _).
@@ -219,7 +219,7 @@ Definition Build_Adjunction_natequiv_nat_left
       (yon (G y)) (fun x => e _ y))
   : Adjunction F G.
 Proof.
-  snrapply Build_Adjunction.
+  snapply Build_Adjunction.
   1: exact (fun x => e x).
   1: exact is1nat_e.
   intros x; exact (is1natural_natequiv (e x)).
@@ -234,7 +234,7 @@ Definition Build_Adjunction_natequiv_nat_right
   (is1nat_e : forall x, Is1Natural (opyon (F x)) (opyon x o G) (fun y => e y x))
   : Adjunction F G.
 Proof.
-  snrapply Build_Adjunction.
+  snapply Build_Adjunction.
   1: exact (fun x y => e y x).
   1: intros y; exact (is1natural_natequiv (e y)).
   exact is1nat_e.
@@ -289,12 +289,12 @@ Section UnitCounitAdjunction.
       (is0functor_G := is0functor_yon (G y))
       (fun x : C^op => γ x y).
   Proof.
-    nrapply (is1natural_natequiv (natequiv_inverse
+    napply (is1natural_natequiv (natequiv_inverse
       (Build_NatEquiv (yon (G y)) (yon y o F) (fun x => (γ x y)^-1$) _))).
-    nrapply is1natural_yoneda.
-    nrapply is1functor_compose.
-    1: nrapply is1functor_op; exact _.
-    nrapply is1functor_opyon.
+    napply is1natural_yoneda.
+    napply is1functor_compose.
+    1: napply is1functor_op; exact _.
+    napply is1functor_opyon.
     exact hasmorext_op.
   Defined.
 
@@ -302,14 +302,14 @@ Section UnitCounitAdjunction.
   Lemma is1natural_γ_r x
     : Is1Natural (opyon (F x)) (fun x0 : D => opyon x (G x0)) (γ x).
   Proof.
-    nrapply is1natural_opyoneda.
+    napply is1natural_opyoneda.
     exact _.
   Defined.
 
   (** Together this constructs an adjunction. *)
   Definition Build_Adjunction_unit_counit : Adjunction F G.
   Proof.
-    snrapply Build_Adjunction.
+    snapply Build_Adjunction.
     - exact γ.
     - exact is1natural_γ_l.
     - exact is1natural_γ_r.
@@ -332,10 +332,10 @@ Lemma adjunction_postcomp (C D J : Type)
 Proof.
   intros adj.
   srapply Build_Adjunction_unit_counit.
-  - snrapply Build_NatTrans.
+  - snapply Build_NatTrans.
     + intros K.
       exact (nattrans_prewhisker (adjunction_unit adj) K).
-    + snrapply Build_Is1Natural.
+    + snapply Build_Is1Natural.
       intros K K' θ j.
       apply GpdHom_path.
       refine (_ @ is1natural_natequiv (natequiv_inverse
@@ -345,10 +345,10 @@ Proof.
       cbn; rapply ap.
       refine(cat_idl_strong _ @ _^).
       apply cat_idr_strong.
-  - snrapply Build_NatTrans.
+  - snapply Build_NatTrans.
     + intros K.
       exact (nattrans_prewhisker (adjunction_counit adj) K).
-    + snrapply Build_Is1Natural.
+    + snapply Build_Is1Natural.
       intros K K' θ j.
       apply GpdHom_path.
       refine (_ @ is1natural_natequiv
@@ -370,7 +370,7 @@ Lemma adjunction_compose (A B C : Type)
   : F ⊣ G -> F' ⊣ G' -> F' o F ⊣ G o G'.
 Proof.
   intros adj1 adj2.
-  snrapply Build_Adjunction_natequiv_nat_right.
+  snapply Build_Adjunction_natequiv_nat_right.
   { intros y.
     nrefine (natequiv_compose (natequiv_adjunction_l adj1 _) _).
     exact (natequiv_prewhisker (A:=A^op) (B:=B^op)
@@ -378,7 +378,7 @@ Proof.
   intros x.
   rapply is1natural_comp.
   + exact (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).
-  + nrapply is1natural_equiv_adjunction_r.
+  + napply is1natural_equiv_adjunction_r.
 Defined.
 
 (** Replace the left functor in an adjunction by a naturally equivalent one. *)
@@ -388,7 +388,7 @@ Lemma adjunction_natequiv_left {C D : Type} (F F' : C -> D) (G : D -> C)
   : NatEquiv F F' -> F ⊣ G -> F' ⊣ G.
 Proof.
   intros e adj.
-  snrapply Build_Adjunction_natequiv_nat_right.
+  snapply Build_Adjunction_natequiv_nat_right.
   { intros y.
     refine (natequiv_compose (natequiv_adjunction_l adj _) _).
     exact (natequiv_postwhisker _ (natequiv_op e)). }
@@ -403,7 +403,7 @@ Lemma adjunction_natequiv_right {C D : Type} (F : C -> D) (G G' : D -> C)
   : NatEquiv G G' -> F ⊣ G -> F ⊣ G'.
 Proof.
   intros e adj.
-  snrapply Build_Adjunction_natequiv_nat_left.
+  snapply Build_Adjunction_natequiv_nat_left.
   { intros x.
     refine (natequiv_compose _ (natequiv_adjunction_r adj _)).
     exact (natequiv_postwhisker _ e). }

@@ -723,8 +723,8 @@ Section Book_2_17_prod.
     : Book_2_17_ii_prod = Book_2_17_i_prod.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply Book_2_17_eq_prod'.
-    snrapply ap011.
+    lhs napply Book_2_17_eq_prod'.
+    snapply ap011.
     - apply transport_idmap_path_universe_uncurried.
     - apply transport_idmap_path_universe_uncurried.
   Qed.
@@ -748,7 +748,7 @@ Section Book_2_17_sigma.
     : {a : A & B a} <~> {a' : A' & B' a'}.
   Proof.
     apply equiv_path.
-    snrapply ap011D.
+    snapply ap011D.
     - exact (path_universe_uncurried f).
     - apply Book_2_17_path_fibr_1.
       apply path_arrow; intro a.
@@ -773,12 +773,12 @@ Section Book_2_17_sigma.
     : Book_2_17_ii_sigma = Book_2_17_i_sigma.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply Book_2_17_eq_sigma'.
-    snrapply ap011D.
+    lhs napply Book_2_17_eq_sigma'.
+    snapply ap011D.
     - apply transport_idmap_path_universe_uncurried.
     - destruct (transport_idmap_path_universe_uncurried f); simpl.
       apply path_forall; intro a.
-      lhs nrapply (ap (fun h => _ (h _)) (eisretr _ _)).
+      lhs napply (ap (fun h => _ (h _)) (eisretr _ _)).
       apply transport_idmap_path_universe_uncurried.
   Defined.
 End Book_2_17_sigma.
@@ -808,8 +808,8 @@ Section Book_2_17_arrow.
     : Book_2_17_ii_arrow = Book_2_17_i_arrow.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply Book_2_17_eq_arrow'.
-    snrapply ap011.
+    lhs napply Book_2_17_eq_arrow'.
+    snapply ap011.
     - apply transport_idmap_path_universe_uncurried.
     - exact (ap (fun g0 _ => g0)
         (transport_idmap_path_universe_uncurried g)).
@@ -833,12 +833,12 @@ Section Book_2_17_forall.
     : (forall a, B a) <~> (forall a', B' a').
   Proof.
     apply equiv_path.
-    snrapply (ap011D (fun A0 B0 => forall a0, B0 a0)).
+    snapply (ap011D (fun A0 B0 => forall a0, B0 a0)).
     - exact (path_universe_uncurried f)^.
     - apply Book_2_17_path_fibr_2.
       apply path_arrow; intro a.
       apply path_universe_uncurried.
-      nrapply (transport (fun f0 => B (f0 _) <~> _)
+      napply (transport (fun f0 => B (f0 _) <~> _)
         (transport_idmap_path_universe_uncurried f)^).
       apply g.
   Defined.
@@ -859,12 +859,12 @@ Section Book_2_17_forall.
     : Book_2_17_ii_forall = Book_2_17_i_forall.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply Book_2_17_eq_forall'.
-    snrapply ap011D.
+    lhs napply Book_2_17_eq_forall'.
+    snapply ap011D.
     - apply transport_idmap_path_universe_uncurried.
     - destruct (transport_idmap_path_universe_uncurried f); simpl.
       apply path_forall; intro a.
-      lhs nrapply (ap (fun h => _ (h _)) (eisretr _ _)).
+      lhs napply (ap (fun h => _ (h _)) (eisretr _ _)).
       apply transport_idmap_path_universe_uncurried.
   Defined.
 End Book_2_17_forall.
@@ -894,8 +894,8 @@ Section Book_2_17_sum.
     : Book_2_17_ii_sum = Book_2_17_i_sum.
   Proof.
     apply path_equiv; simpl.
-    lhs nrapply Book_2_17_eq_sum'.
-    snrapply ap011.
+    lhs napply Book_2_17_eq_sum'.
+    snapply ap011.
     - apply transport_idmap_path_universe_uncurried.
     - apply transport_idmap_path_universe_uncurried.
   Qed.
@@ -1064,7 +1064,7 @@ Section Book_3_8_ctx.
   Definition Book_3_8_equiv {A B : Type} (f : A -> B)
     : Trunc (-1) (Book_3_8_qinv f) <~> (isequiv _ _ f).
   Proof.
-    snrapply equiv_iff_hprop.
+    snapply equiv_iff_hprop.
     - exact _.
     - apply cond_iii.
     - apply Trunc_rec, cond_ii.
@@ -1115,7 +1115,7 @@ Definition Book_3_10_impred@{i j k | i < j, j < k} `{Univalence}
   (LEM : Book_3_10_LEM@{j})
   : IsEquiv@{j k} Book_3_10_Lift@{i j}.
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   { intro A. destruct (LEM A).
     - exact (Build_HProp Unit).
     - exact (Build_HProp Empty).
@@ -1342,7 +1342,7 @@ Definition Book_3_17 {A : Type} {B : Trunc (-1) A -> HProp}
   : (forall a : A, B (tr a)) -> (forall x : Trunc (-1) A, B x).
 Proof.
   intros f x.
-  nrapply (Trunc_rec _ x).
+  napply (Trunc_rec _ x).
   - exact _.
   - intro a.
     exact (transport B (path_ishprop (tr a) x) (f a)).
@@ -1693,7 +1693,7 @@ Defined.
 Definition Book_4_6_iii (qua1 qua2 : QInv_Univalence_type) : Empty.
 Proof.
   apply (Book_4_6_ii qua1 qua2).
-  nrapply istrunc_succ.
+  napply istrunc_succ.
   apply (Build_Contr _ (fun A => 1)); intros u.
   exact (allqinv_coherent qua2 _ _ (idmap; (idmap; (fun A => 1, u)))).
 Defined.

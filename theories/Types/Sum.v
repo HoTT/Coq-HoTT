@@ -592,11 +592,11 @@ Defined.
 Instance isequiv_functor_sum `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_sum f g) | 1000.
 Proof.
-  snrapply Build_IsEquiv.
+  snapply Build_IsEquiv.
   - exact (functor_sum f^-1 g^-1).
   - intros [?|?]; simpl; apply ap; apply eisretr.
   - intros [?|?]; simpl; apply ap; apply eissect.
-  - intros [?|?]; simpl; lhs nrapply (ap _ (eisadj _ _)); symmetry.
+  - intros [?|?]; simpl; lhs napply (ap _ (eisadj _ _)); symmetry.
     + exact ((ap_compose inl _ _)^ @ ap_compose f inl _).
     + exact ((ap_compose inr _ _)^ @ ap_compose g inr _).
 Defined.
@@ -728,7 +728,7 @@ Defined.
 
 Definition sum_empty_l@{u|} (A : Type@{u}) : Equiv@{u u} (Empty + A) A.
 Proof.
-  snrapply equiv_adjointify@{u u}.
+  snapply equiv_adjointify@{u u}.
   - intros [e|a]; [ exact (Empty_rec@{u} e) | exact a ].
   - intros a; exact (inr@{Set u} a).
   - intro x; exact idpath@{u}.
@@ -743,8 +743,8 @@ Definition sum_empty_r@{u} (A : Type@{u}) : Equiv@{u u} (A + Empty) A
 Definition sum_distrib_l A B C
 : A * (B + C) <~> (A * B) + (A * C).
 Proof.
-  snrapply Build_Equiv.
-  2: snrapply Build_IsEquiv.
+  snapply Build_Equiv.
+  2: snapply Build_IsEquiv.
   - intros [a [b|c]].
     + exact (inl@{u u} (a, b)).
     + exact (inr@{u u} (a, c)).
