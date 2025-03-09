@@ -323,7 +323,7 @@ Global Instance is0functor_joinrecdata_0gpd (A B : Type) : Is0Functor (joinrecda
 Proof.
   apply Build_Is0Functor.
   intros P Q g.
-  snrapply Build_Morphism_0Gpd.
+  snrapply Build_Fun01.
   - exact (joinrecdata_fun g).
   - apply is0functor_joinrecdata_fun.
 Defined.
@@ -638,7 +638,7 @@ Section JoinSym.
   Definition joinrecdata_sym (A B P : Type)
     : joinrecdata_0gpd A B P $-> joinrecdata_0gpd B A P.
   Proof.
-    snrapply Build_Morphism_0Gpd.
+    snrapply Build_Fun01.
     (* The map of types [JoinRecData A B P -> JoinRecData B A P]: *)
     - intros [fl fr fg].
       snrapply (Build_JoinRecData fr fl).

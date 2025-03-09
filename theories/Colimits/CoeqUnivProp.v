@@ -107,7 +107,7 @@ Section UnivProp.
       $<~> Build_ZeroGpd (sig Coeq_ind_data) _ _ _.
   Proof.
     snrapply Build_CatEquiv.
-    1: rapply Build_Morphism_0Gpd.
+    1: rapply FunctorCat.Build_Fun01.
     rapply isequiv_0gpd_issurjinj.
   Defined.
 

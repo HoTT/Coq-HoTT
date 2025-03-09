@@ -12,7 +12,7 @@ Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
 Definition trijoinrecdata_twist (A B C P : Type)
   : trijoinrecdata_0gpd A B C P $-> trijoinrecdata_0gpd B A C P.
 Proof.
-  snrapply Build_Morphism_0Gpd.
+  snrapply Build_Fun01.
   (* The map of types [TriJoinRecData A B C P -> TriJoinRecData B A C P]: *)
   - cbn.
     intros [f1 f2 f3 f12 f13 f23 f123].

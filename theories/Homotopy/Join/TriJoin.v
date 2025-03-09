@@ -617,7 +617,7 @@ Global Instance is0functor_trijoinrecdata_0gpd (A B C : Type) : Is0Functor (trij
 Proof.
   apply Build_Is0Functor.
   intros P Q g.
-  snrapply Build_Morphism_0Gpd.
+  snrapply Build_Fun01.
   - exact (trijoinrecdata_fun g).
   - apply is0functor_trijoinrecdata_fun.
 Defined.
