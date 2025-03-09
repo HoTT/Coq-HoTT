@@ -26,7 +26,7 @@ Definition Build_Is0Bifunctor' {A B C : Type}
   `{!Is0Functor (uncurry F)}
   : Is0Bifunctor F.
 Proof.
-  snrapply Build_Is0Bifunctor.
+  snapply Build_Is0Bifunctor.
   - exact _.
   - exact (is0functor_functor_uncurried01 (uncurry F)).
   - exact (is0functor_functor_uncurried10 (uncurry F)).
@@ -38,7 +38,7 @@ Definition Build_Is0Bifunctor'' {A B C : Type}
   : Is0Bifunctor F.
 Proof.
   (* The first condition follows from [is0functor_prod_is0functor]. *)
-  nrapply Build_Is0Bifunctor; exact _.
+  napply Build_Is0Bifunctor; exact _.
 Defined.
 
 (** *** 1-functorial action *)
@@ -92,7 +92,7 @@ Definition Build_Is1Bifunctor' {A B C : Type}
   `{!Is0Functor (uncurry F), !Is1Functor (uncurry F)}
   : Is1Bifunctor (Is0Bifunctor := Build_Is0Bifunctor' F) F.
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snapply Build_Is1Bifunctor.
   - exact _.
   - exact (is1functor_functor_uncurried01 (uncurry F)).
   - exact (is1functor_functor_uncurried10 (uncurry F)).
@@ -113,7 +113,7 @@ Definition Build_Is1Bifunctor'' {A B C : Type}
     fmap01 F a1 g $o fmap10 F f b0 $== fmap10 F f b1 $o fmap01 F a0 g)
   : Is1Bifunctor F.
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snapply Build_Is1Bifunctor.
   - exact _. (* [is1functor_prod_is1functor]. *)
   - exact _.
   - exact _.
@@ -261,7 +261,7 @@ Definition is0bifunctor_flip {A B C : Type}
   (F : A -> B -> C) `{Is01Cat A, Is01Cat B, Is01Cat C, !Is0Bifunctor F}
   : Is0Bifunctor (flip F).
 Proof.
-  snrapply Build_Is0Bifunctor.
+  snapply Build_Is0Bifunctor.
   - change (Is0Functor (uncurry F o equiv_prod_symm _ _)).
     exact _.
   - exact _.
@@ -273,7 +273,7 @@ Definition is1bifunctor_flip {A B C : Type}
 (F : A -> B -> C) `{H : Is1Bifunctor A B C F}
   : Is1Bifunctor (flip F).
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snapply Build_Is1Bifunctor.
   - change (Is1Functor (uncurry F o equiv_prod_symm _ _)).
     exact _.
   - exact _.
@@ -303,7 +303,7 @@ Instance is1bifunctor_postcompose {A B C D : Type}
   `{!Is0Bifunctor F} {bf : Is1Bifunctor F}
   : Is1Bifunctor (fun a b => G (F a b)) | 10.
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snapply Build_Is1Bifunctor.
   1-3: exact _.
   - intros a0 a1 f b0 b1 g.
     exact (fmap2 G (fmap11_is_fmap01_fmap10 F f g) $@ fmap_comp G _ _).
@@ -317,7 +317,7 @@ Instance is0bifunctor_precompose {A B C D E : Type}
   `{!Is0Functor G, !Is0Bifunctor F, !Is0Functor K}
   : Is0Bifunctor (fun a b => F (G a) (K b)) | 10.
 Proof.
-  snrapply Build_Is0Bifunctor.
+  snapply Build_Is0Bifunctor.
   - change (Is0Functor (uncurry F o functor_prod G K)).
     exact _.
   - exact _.
@@ -333,7 +333,7 @@ Instance is1bifunctor_precompose {A B C D E : Type}
     !Is0Functor K, !Is1Functor K}
   : Is1Bifunctor (fun a b => F (G a) (K b)) | 10.
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snapply Build_Is1Bifunctor.
   - change (Is1Functor (uncurry F o functor_prod G K)).
     exact _.
   - exact _.
@@ -370,7 +370,7 @@ Instance is0functor_uncurry_uncurry_right {A B C D E}
     !Is0Bifunctor F, !Is0Bifunctor G}
   : Is0Functor (uncurry (uncurry (fun x y z => G x (F y z)))).
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros cab cab' [[h f] g].
   exact (fmap11 G h (fmap11 F f g)).
 Defined.
@@ -381,7 +381,7 @@ Instance is1functor_uncurry_uncurry_right {A B C D E}
     !Is0Bifunctor F, !Is1Bifunctor F, !Is0Bifunctor G, !Is1Bifunctor G}
   : Is1Functor (uncurry (uncurry (fun x y z => G x (F y z)))).
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros cab cab' [[h f] g] [[h' f'] g'] [[q p] r].
     exact (fmap22 G q (fmap22 F p r)).
   - intros cab.
@@ -412,12 +412,12 @@ Instance is1natural_uncurry {A B C : Type}
   (nat_r : forall a, Is1Natural (F a) (G a) (fun y : B => alpha (a, y)))
   : Is1Natural (uncurry F) (uncurry G) alpha.
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros [a b] [a' b'] [f f']; cbn in *.
   change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
-  nrapply vconcatL.
+  napply vconcatL.
   1: rapply (fmap11_is_fmap01_fmap10 F).
-  nrapply vconcatR.
+  napply vconcatR.
   2: rapply (fmap11_is_fmap01_fmap10 G).
   exact (hconcat (nat_l _ _ _ f) (nat_r _ _ _ f')).
 Defined.
@@ -431,9 +431,9 @@ Definition nattrans_flip {A B C : Type}
     -> NatTrans (uncurry (flip F)) (uncurry (flip G)).
 Proof.
   intros alpha.
-  snrapply Build_NatTrans.
+  snapply Build_NatTrans.
   - exact (alpha o equiv_prod_symm _ _).
-  - snrapply Build_Is1Natural'.
+  - snapply Build_Is1Natural'.
     + intros [b a] [b' a'] [g f].
       exact (isnat (a:=(a, b)) (a':=(a', b')) alpha (f, g)).
     + intros [b a] [b' a'] [g f].
@@ -447,26 +447,26 @@ Defined.
 Instance is0bifunctor_op A B C (F : A -> B -> C) `{Is0Bifunctor A B C F}
   : Is0Bifunctor (F : A^op -> B^op -> C^op).
 Proof.
-  snrapply Build_Is0Bifunctor.
+  snapply Build_Is0Bifunctor.
   - exact (is0functor_op _ _ (uncurry F)).
   - intros a.
-    nrapply is0functor_op.
+    napply is0functor_op.
     exact (is0functor01_bifunctor F a).
   - intros b.
-    nrapply is0functor_op.
+    napply is0functor_op.
     exact (is0functor10_bifunctor F b).
 Defined.
 
 Instance is1bifunctor_op A B C (F : A -> B -> C) `{Is1Bifunctor A B C F}
   : Is1Bifunctor (F : A^op -> B^op -> C^op).
 Proof.
-  snrapply Build_Is1Bifunctor.
+  snapply Build_Is1Bifunctor.
   - exact (is1functor_op _ _ (uncurry F)).
   - intros a.
-    nrapply is1functor_op.
+    napply is1functor_op.
     exact (is1functor01_bifunctor F a).
   - intros b.
-    nrapply is1functor_op.
+    napply is1functor_op.
     exact (is1functor10_bifunctor F b).
   - intros a0 a1 f b0 b1 g; cbn in f, g.
     exact (fmap11_is_fmap10_fmap01 F f g).

@@ -35,7 +35,7 @@ Defined.
 Instance is1cat_sum A B `{ Is1Cat A } `{ Is1Cat B}
   : Is1Cat (A + B).
 Proof.
-  snrapply Build_Is1Cat.
+  snapply Build_Is1Cat.
   - intros x y.
     srapply Build_Is01Cat; destruct x as [a1 | b1], y as [a2 | b2].
     2,3,6,7: contradiction.

@@ -220,7 +220,7 @@ Definition functor_forall_equiv `{P : A -> Type} `{Q : B -> Type}
     (f0 : A -> B) `{!IsEquiv f0} (f1 : forall a:A, P a -> Q (f0 a))
   : (forall a:A, P a) -> (forall b:B, Q b).
 Proof.
-  nrapply (functor_forall f0^-1).
+  napply (functor_forall f0^-1).
   intros b u.
   refine ((eisretr f0 b) # _).
   exact (f1 _ u).
@@ -247,19 +247,19 @@ Defined.
   `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : IsEquiv (functor_forall f g) | 1000.
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   - exact (functor_forall (f^-1)
       (fun (x : A) (y : Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y)).
   - intro h.
     apply path_forall; intros b; unfold functor_forall.
-    lhs nrapply (ap (fun p => g b (transport P p _)) (eisadj f b)).
-    lhs_V nrapply (ap _ (transport_compose _ _ _ _)).
-    lhs nrapply ap_transport.
-    lhs nrapply (ap _ (eisretr (g _) _)).
+    lhs napply (ap (fun p => g b (transport P p _)) (eisadj f b)).
+    lhs_V napply (ap _ (transport_compose _ _ _ _)).
+    lhs napply ap_transport.
+    lhs napply (ap _ (eisretr (g _) _)).
     apply apD.
   - intro h.
     apply path_forall; intros a; unfold functor_forall.
-    lhs nrapply (ap _ (eissect (g _) _)).
+    lhs napply (ap _ (eissect (g _) _)).
     apply apD.
 Defined.
 

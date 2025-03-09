@@ -133,7 +133,7 @@ Defined.
 Instance is0functor_equiv_prod_symm {A B : Type} `{IsGraph A, IsGraph B}
   : Is0Functor (equiv_prod_symm A B).
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros a b.
   apply equiv_prod_symm.
 Defined.
@@ -141,7 +141,7 @@ Defined.
 Instance is1functor_equiv_prod_symm {A B : Type} `{Is1Cat A, Is1Cat B}
   : Is1Functor (equiv_prod_symm A B).
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros a b f g.
     apply equiv_prod_symm.
   - intros a.
@@ -155,7 +155,7 @@ Instance is0functor_prod_include10 {A B : Type} `{IsGraph A, Is01Cat B}
   (b : B)
   : Is0Functor (fun a : A => (a, b)).
 Proof.
-  nrapply Build_Is0Functor.
+  napply Build_Is0Functor.
   intros a c f.
   exact (f, Id b).
 Defined.
@@ -164,7 +164,7 @@ Instance is1functor_prod_include10 {A B : Type} `{Is1Cat A, Is1Cat B}
   (b : B)
   : Is1Functor (fun a : A => (a, b)).
 Proof.
-  nrapply Build_Is1Functor.
+  napply Build_Is1Functor.
   - intros a c f g p.
     exact (p, Id _).
   - intros a; reflexivity.
@@ -176,7 +176,7 @@ Instance is0functor_prod_include01 {A B : Type} `{Is01Cat A, IsGraph B}
   (a : A)
   : Is0Functor (fun b : B => (a, b)).
 Proof.
-  nrapply Build_Is0Functor.
+  napply Build_Is0Functor.
   intros b c f.
   exact (Id a, f).
 Defined.
@@ -185,7 +185,7 @@ Instance is1functor_prod_include01 {A B : Type} `{Is1Cat A, Is1Cat B}
   (a : A)
   : Is1Functor (fun b : B => (a, b)).
 Proof.
-  nrapply Build_Is1Functor.
+  napply Build_Is1Functor.
   - intros b c f g p.
     exact (Id _, p).
   - intros b; reflexivity.
@@ -225,7 +225,7 @@ Definition is0functor_prod_is0functor {A B C : Type}
   `{!forall a, Is0Functor (fun b => F (a,b)), !forall b, Is0Functor (fun a => F (a,b))}
   : Is0Functor F.
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros [a b] [a' b'] [f g].
   exact (fmap (fun a0 => F (a0,b')) f $o fmap (fun b0 => F (a,b0)) g).
 Defined.
@@ -242,7 +242,7 @@ Definition is1functor_prod_is1functor {A B C : Type}
       $== fmap (fun a => F(a,b1)) f $o fmap (fun b => F (a0,b)) g)
   : Is1Functor F.
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros [a b] [a' b'] [f g] [f' g'] [p p']; unfold fst, snd in * |- .
     exact (fmap2 (fun b0 => F (a,b0)) p' $@@ fmap2 (fun a0 => F (a0,b')) p).
   - intros [a b].
@@ -251,7 +251,7 @@ Proof.
     refine ((fmap_comp (fun b0 => F (a,b0)) g g' $@@ fmap_comp (fun a0 => F (a0,b'')) f f') $@ _).
     nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
     refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).
-    nrapply bifunctor_coh.
+    napply bifunctor_coh.
 Defined.
 Hint Immediate is1functor_prod_is1functor : typeclass_instances.
 

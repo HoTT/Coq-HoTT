@@ -19,7 +19,7 @@ Global Instance lex_topological `{Univalence}
        (O : Modality) `{IsAccModality O} `{Topological O}
   : Lex O.
 Proof.
-    snrapply lex_from_inO_typeO; [ exact _ | intros i ].
+    snapply lex_from_inO_typeO; [ exact _ | intros i ].
     apply ((equiv_ooextendable_isequiv _ _)^-1%equiv).
     srapply isequiv_adjointify; cbn.
     - intros B _.

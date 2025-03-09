@@ -406,9 +406,9 @@ Section invert_mor.
   Proof.
     red; intros E fp x y.
     apply (equiv_inj f).
-    lhs nrapply eisretr.
+    lhs napply eisretr.
     symmetry.
-    lhs nrapply fp.
+    lhs napply fp.
     f_ap; apply eisretr.
   Defined.
 

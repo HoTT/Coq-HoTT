@@ -48,9 +48,9 @@ Definition FreeAbGroup_ind_homotopy {X : Type} {A : AbGroup}
   (p : forall x, f (freeabgroup_in x) = f' (freeabgroup_in x))
   : f $== f'.
 Proof.
-  snrapply abel_ind_homotopy.
-  snrapply FreeGroup_ind_homotopy.
-  snrapply p.
+  snapply abel_ind_homotopy.
+  snapply FreeGroup_ind_homotopy.
+  snapply p.
 Defined.
 
 (** The abelianization of a free group on a set is a free abelian group on that set. *)
@@ -64,7 +64,7 @@ Proof.
   specialize (H2 B h).
   revert H2.
   unfold FactorsThroughFreeGroup, FactorsThroughFreeAbGroup.
-  snrapply contr_equiv'.
+  snapply contr_equiv'.
   symmetry.
   exact (equiv_functor_sigma_pb (equiv_group_precomp_isabelianization g B)).
 Defined.

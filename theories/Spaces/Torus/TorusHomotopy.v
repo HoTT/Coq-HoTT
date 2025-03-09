@@ -59,5 +59,5 @@ Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
 Proof.
   (* Since [T] is 1-truncated, [loops T] is 0-truncated, and is therefore equivalent to its 0-truncation. *)
   refine (_ o*E pequiv_ptr (n:=0)).
-  nrapply pi1_torus.
+  napply pi1_torus.
 Defined.

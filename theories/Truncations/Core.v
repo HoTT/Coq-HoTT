@@ -324,10 +324,10 @@ Defined.
 Definition isembedding_paths `{Univalence} {X : Type@{u}} : IsEmbedding (@paths X).
 Proof.
   (* To show that [paths] is an embedding, it suffices to show that [ap paths : x1 = x2 -> (paths x1) = (paths x2)] is an equivalence. *)
-  snrapply isembedding_isequiv_ap.
+  snapply isembedding_isequiv_ap.
   intros x1 x2.
   (* And for that, it suffices to show that [i o (ap paths)] is an equivalence for a well-chosen embedding [i]. *)
-  snrapply (isequiv_isequiv_compose_embedding (ap_paths_inverse x1 x2)).
+  snapply (isequiv_isequiv_compose_embedding (ap_paths_inverse x1 x2)).
   - (* [ap_paths_inverse x1 x2] is an embedding since it is a composite of four equivalences and one embedding.  We can group these into three parts. *)
     unfold ap_paths_inverse.
     nrefine (mapinO_compose (O:=Tr (-1)) _ (equiv_path_inverse x2 x1 oE _)).
@@ -374,8 +374,8 @@ Proof.
   destruct (trunc_index_min_path n m) as [p|q].
   + assert (l := trunc_index_min_leq_right n m).
     destruct p^; clear p.
-    snrapply (Build_Equiv _ _ (Trunc_functor _ tr)).
-    nrapply O_inverts_conn_map.
+    snapply (Build_Equiv _ _ (Trunc_functor _ tr)).
+    napply O_inverts_conn_map.
     rapply (conn_map_O_leq _ (Tr m)).
     rapply O_leq_Tr_leq.
   + assert (l := trunc_index_min_leq_left n m).

@@ -104,12 +104,12 @@ Proof.
     rewrite <- rng_plus_zero_r.
     apply ap11.
     { apply (ap (fun h => plus (f i h))), path_ishprop. }
-    nrapply ab_sum_zero.
+    napply ab_sum_zero.
     intros k Hk.
     rewrite (kronecker_delta_gt Hk).
     apply rng_mult_zero_l.
-  - simpl; lhs nrapply ap.
-    + nrapply IHn.
+  - simpl; lhs napply ap.
+    + napply IHn.
       apply neq_iff_lt_or_gt in p.
       destruct p; [assumption|].
       apply gt_iff_not_leq in Hi.
@@ -125,8 +125,8 @@ Definition rng_sum_kronecker_delta_l' {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   (f : forall k, (k < n)%nat -> R)
   : ab_sum n (fun j Hj => kronecker_delta j i * f j Hj) = f i Hi.
 Proof.
-  lhs nrapply path_ab_sum.
-  2: nrapply rng_sum_kronecker_delta_l.
+  lhs napply path_ab_sum.
+  2: napply rng_sum_kronecker_delta_l.
   intros k Hk.
   cbn; f_ap; apply kronecker_delta_symm.
 Defined.
@@ -136,8 +136,8 @@ Definition rng_sum_kronecker_delta_r {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   (f : forall k, (k < n)%nat -> R)
   : ab_sum n (fun j Hj => f j Hj * kronecker_delta i j) = f i Hi.
 Proof.
-  lhs nrapply path_ab_sum.
-  2: nrapply rng_sum_kronecker_delta_l.
+  lhs napply path_ab_sum.
+  2: napply rng_sum_kronecker_delta_l.
   intros k Hk.
   apply kronecker_delta_comm.
 Defined.
@@ -147,8 +147,8 @@ Definition rng_sum_kronecker_delta_r' {R : Ring} (n i : nat) (Hi : (i < n)%nat)
   (f : forall k, (k < n)%nat -> R)
   : ab_sum n (fun j Hj => f j Hj * kronecker_delta j i) = f i Hi.
 Proof.
-  lhs nrapply path_ab_sum.
-  2: nrapply rng_sum_kronecker_delta_l'.
+  lhs napply path_ab_sum.
+  2: napply rng_sum_kronecker_delta_l'.
   intros k Hk.
   apply kronecker_delta_comm.
 Defined.

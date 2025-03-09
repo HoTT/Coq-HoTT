@@ -67,7 +67,7 @@ Section CayleyDicksonSpheroid_Properties.
     rhs rapply swapop.
     rhs rapply (ap _ (distropp _ _)).
     rhs_V rapply factorneg_r.
-    nrapply ap.
+    napply ap.
     apply swapop.
   Defined.
 
@@ -94,7 +94,7 @@ Global Instance swapop_conjugate_susp {A} `(Negate A)
 Proof.
   intros x.
   symmetry.
-  nrapply susp_neg_natural.
+  napply susp_neg_natural.
 Defined.
 
 (** [conjugate_susp A] is involutive, since any functor applied to an involution gives an involution. *)
@@ -102,9 +102,9 @@ Global Instance involutive_conjugate_susp {A} `(Negate A, !Involutive (-))
   : Involutive (conjugate_susp A (-)).
 Proof.
   intros x.
-  lhs_V nrapply functor_susp_compose.
-  rhs_V nrapply functor_susp_idmap.
-  nrapply functor2_susp.
+  lhs_V napply functor_susp_compose.
+  rhs_V napply functor_susp_idmap.
+  napply functor2_susp.
   rapply involutive.
 Defined.
 
@@ -114,8 +114,8 @@ Global Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))
 Proof.
   intros x.
   unfold negate_susp.
-  lhs nrapply ap.
-  1: nrapply swapop_conjugate_susp.
+  lhs napply ap.
+  1: napply swapop_conjugate_susp.
   lhs rapply susp_neg_inv.
   rapply involutive.
 Defined.
@@ -235,7 +235,7 @@ Section ImaginaroidHSpace.
   (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)].  The following is the spherical form. *)
   Global Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).
   Proof.
-    snrapply Join_rec2.
+    snapply Join_rec2.
     - exact (fun a b => joinl (a * b)).
     - exact (fun a b => joinr (conj a * b)).
     - exact (fun a b => joinr (b * a)).
@@ -277,11 +277,11 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
-    snrapply Join_ind_Flr.
+    snapply Join_ind_Flr.
     1,2: exact (fun _ => ap _ (hspace_left_identity _)).
     intros a b.
-    lhs nrapply whiskerR.
-    1: nrapply (Join_rec_beta_jglue _ _ _ a b).
+    lhs napply whiskerR.
+    1: napply (Join_rec_beta_jglue _ _ _ a b).
     symmetry.
     apply join_natsq.
   Defined.
@@ -289,12 +289,12 @@ Section ImaginaroidHSpace.
   Global Instance cd_op_right_identity
     : RightIdentity cd_op pt.
   Proof.
-    snrapply Join_ind_Flr.
+    snapply Join_ind_Flr.
     1: exact (fun _ => ap joinl (hspace_right_identity _)).
     1: exact (fun _ => ap joinr (hspace_left_identity _)).
     intros a b.
-    lhs nrapply whiskerR.
-    1: nrapply (Join_rec_beta_jglue _ _ _ a b).
+    lhs napply whiskerR.
+    1: napply (Join_rec_beta_jglue _ _ _ a b).
     simpl; symmetry.
     apply join_natsq.
   Defined.

@@ -932,7 +932,7 @@ Here are some acceptable tactics to use in transparent definitions
 - `case`, `elim`, `destruct`, `induction`
 - `apply`, `eapply`, `assumption`, `eassumption`, `exact`
 - `refine`, `nrefine`, `srefine`, `snrefine` (see below for the last three)
-- `rapply`, `nrapply`, `srapply`, `snrapply` (see below)
+- `rapply`, `napply`, `srapply`, `snapply` (see below)
 - `lhs`, `lhs_V`, `rhs`, `rhs_V`
 - `reflexivity`, `symmetry`, `transitivity`, `etransitivity`
 - `by`, `done`
@@ -1201,18 +1201,18 @@ where they are defined.
   `notypeclasses refine`, `simple refine`, and `simple notypeclasses refine`.
   It's good to avoid typeclass search if it isn't needed.
 
-- `nrapply`, `rapply`, `tapply`:
+- `napply`, `rapply`, `tapply`:
   Defined in `Basics/Tactics`, each of these is similar to `apply`,
   except that they use the unification engine of `refine`, which
   is different and often stronger than that of `apply`.
-  `nrapply t` computes the type of `t`
+  `napply t` computes the type of `t`
   (possibly with holes, if `t` has holes) and tries to unify the type
   of `t` with the goal; if this succeeds, it generates goals for each
   hole in `t` not solved by unification; otherwise, it repeats this
   process with `t _`, `t _ _ `, and so on until it has the correct
   number of arguments to unify with the goal.
-  `rapply` is like `nrapply`, (`rapply` succeeds iff
-  `nrapply` does) except that after it succeeds in unifying with the
+  `rapply` is like `napply`, (`rapply` succeeds iff
+  `napply` does) except that after it succeeds in unifying with the
   goal, it solves all typeclass goals it can. `tapply` is stronger
   than `rapply`: if Coq cannot compute a type for `t` or successfully
   unify the type of `t` with the goal, it will elaborate all typeclass
@@ -1222,17 +1222,17 @@ where they are defined.
   goal as well: if `rapply` succeeds, so does `tapply` and their
   outcomes are equivalent.) 
   
-- `snrapply`, `srapply`, `stapply`: Sibling tactics to `nrapply`,
+- `snapply`, `srapply`, `stapply`: Sibling tactics to `napply`,
   `rapply` and `tapply`, except that they use `simple refine` instead
   of `refine` (beta reduction is not attempted when unifying with the
   goal, and no new goals are shelved)
  
   Here are some tips:
   - If `apply` fails with a unification error you think it shouldn't
-    have, try `nrapply`, and then `rapply` if `nrapply` generates
+    have, try `napply`, and then `rapply` if `napply` generates
 	typeclass goals.
   - If you want to use type class resolution as well, try `tapply`.
-    But it's better to use `nrapply` if it works.
+    But it's better to use `napply` if it works.
   - You could add a prime to the tactic, to try with many arguments
     first, decreasing the number on each try.
   - If you are trying to construct an element of a sum type `sig (A :
@@ -1248,7 +1248,7 @@ where they are defined.
 
 - `lhs`, `lhs_V`, `rhs`, `rhs_V`:  Defined in `Basics/Tactics`.
   These are tacticals that apply a specified tactic to one side
-  of an equality.  E.g. `lhs nrapply concat_1p.`
+  of an equality.  E.g. `lhs napply concat_1p.`
 
 - `transparent assert`: Defined in `Basics/Overture`, this tactic is
   like `assert` but produces a transparent subterm rather than an
