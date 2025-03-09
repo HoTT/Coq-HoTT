@@ -236,7 +236,7 @@ Definition equiv_Circle_rec `{Funext} (P : Type)
 Definition pmap_from_circle_loops `{Funext} (X : pType)
   : (pCircle ->** X) <~>* loops X.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   - refine (_ oE (issig_pmap _ _)^-1%equiv).
     equiv_via { xp : { x : X & x = x } & xp.1 = pt }.
     2: make_equiv_contr_basedpaths.

@@ -51,7 +51,7 @@ Definition Build_AbGroup' (G : Type)
   (inv_l : LeftInverse (A:=G) (+) (-) 0)
   : AbGroup.
 Proof.
-  snrapply Build_AbGroup.
+  snapply Build_AbGroup.
   - rapply (Build_Group' G).
   - exact comm.
 Defined.
@@ -60,7 +60,7 @@ Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
 
 Definition ab_neg_op {A : AbGroup} (x y : A) : - (x + y) = -x - y.
 Proof.
-  lhs nrapply grp_inv_op.
+  lhs napply grp_inv_op.
   apply commutativity.
 Defined.
 
@@ -86,7 +86,7 @@ Local Hint Immediate canonical_names.inverse_is_negate : typeclass_instances.
 Instance isabgroup_subgroup (G : AbGroup) (H : Subgroup G)
   : IsAbGroup H.
 Proof.
-  nrapply Build_IsAbGroup.
+  napply Build_IsAbGroup.
   1: exact _.
   intros x y.
   apply path_sigma_hprop.
@@ -111,7 +111,7 @@ Defined.
 Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
   : IsAbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)).
 Proof.
-  nrapply Build_IsAbGroup.
+  napply Build_IsAbGroup.
   1: exact _.
   srapply Quotient_ind2_hprop; intros x y.
   apply (ap (class_of _)).
@@ -247,8 +247,8 @@ Defined.
 (** The negation automorphism of an abelian group *)
 Definition ab_homo_negation {A : AbGroup} : GroupIsomorphism A A.
 Proof.
-  snrapply Build_GroupIsomorphism.
-  - snrapply Build_GroupHomomorphism.
+  snapply Build_GroupIsomorphism.
+  - snapply Build_GroupHomomorphism.
     + exact (fun a => -a).
     + intros x y.
       refine (grp_inv_op x y @ _).
@@ -261,7 +261,7 @@ Defined.
 (** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)
 Definition ab_mul {A : AbGroup} (n : Int) : GroupHomomorphism A A.
 Proof.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   1: exact (fun a => grp_pow a n).
   intros a b.
   apply grp_pow_mul, commutativity.
@@ -292,7 +292,7 @@ Definition ab_cokernel_embedding_rec {G: Group} {A B : AbGroup} (f : G $-> A) `{
   (h : A $-> B) (p : grp_homo_compose h f $== grp_homo_const)
   : ab_cokernel_embedding f $-> B.
 Proof.
-  snrapply (grp_quotient_rec _ _ h).
+  snapply (grp_quotient_rec _ _ h).
   intros a [g q].
   induction q.
   exact (p g).

@@ -14,7 +14,7 @@ Local Open Scope type_scope.
 (** Every type of the form [nat -> X] carries a uniform structure defined by the [seq_agree_lt n] relation for every [n : nat]. *)
 Instance sequence_type_us' {X : Type} : UStructure (nat -> X) | 10.
 Proof.
-  snrapply Build_UStructure.
+  snapply Build_UStructure.
   - exact seq_agree_lt.
   - exact (fun _ _ _ _ => idpath).
   - exact (fun _ _ _ h _ _ => (h _ _)^).
@@ -45,8 +45,8 @@ Proof.
     apply (path_list_nth' _ _
             (length_list_restrict s n @ (length_list_restrict t n)^)).
     intros i Hi.
-    lhs snrapply nth'_list_restrict.
-    rhs snrapply nth'_list_restrict.
+    lhs snapply nth'_list_restrict.
+    rhs snapply nth'_list_restrict.
     exact (h i ((length_list_restrict s n) # Hi)).
 Defined.
 

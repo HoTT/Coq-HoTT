@@ -123,9 +123,9 @@ Proof.
   destruct x as [x | | x], y as [y |  | y].
   2-4,6-8: right; intros; discriminate.
   2: by left.
-  1,2: nrapply decidable_iff.
+  1,2: napply decidable_iff.
   1,3: split.
-  1,3: nrapply ap.
+  1,3: napply ap.
   1,2: intros H; by injection H.
   1,2: exact _.
 Defined.
@@ -186,7 +186,7 @@ Defined.
 (** Negation is an equivalence. *)
 Instance isequiv_int_neg@{} : IsEquiv int_neg.
 Proof.
-  snrapply (isequiv_adjointify int_neg int_neg).
+  snapply (isequiv_adjointify int_neg int_neg).
   1,2: exact int_neg_neg.
 Defined.
 
@@ -622,7 +622,7 @@ Proof.
     rewrite IHn.
     f_ap.
     apply moveL_equiv_V.
-    lhs_V nrapply p.
+    lhs_V napply p.
     f_ap.
     apply eisretr.
 Defined.
@@ -670,15 +670,15 @@ Definition loopexp_pred_r {A : Type} {x : A} (p : x = x) (z : Int)
 Definition loopexp_succ_l {A : Type} {x : A} (p : x = x) (z : Int)
   : loopexp p z.+1 = p @ loopexp p z.
 Proof.
-  lhs nrapply loopexp_succ_r.
+  lhs napply loopexp_succ_r.
   induction z as [|z|z].
-  - nrapply concat_1p_p1.
+  - napply concat_1p_p1.
   - rewrite loopexp_succ_r.
-    rhs nrapply concat_p_pp.
+    rhs napply concat_p_pp.
     f_ap.
   - rewrite loopexp_pred_r.
-    lhs nrapply concat_pV_p.
-    rhs nrapply concat_p_pp.
+    lhs napply concat_pV_p.
+    rhs napply concat_p_pp.
     by apply moveL_pV.
 Defined.
 
@@ -689,18 +689,18 @@ Proof.
   induction z as [|z|z].
   - exact (concat_1p _ @ (concat_p1 _)^).
   - rewrite loopexp_succ_r.
-    lhs nrapply concat_pp_V.
-    rhs nrapply concat_p_pp.
+    lhs napply concat_pp_V.
+    rhs napply concat_p_pp.
     by apply moveL_pM.
   - rewrite loopexp_pred_r.
-    rhs nrapply concat_p_pp.
+    rhs napply concat_p_pp.
     f_ap.
 Defined.
 
 Definition ap_loopexp {A B} (f : A -> B) {x : A} (p : x = x) (z : Int)
   : ap f (loopexp p z) = loopexp (ap f p) z.
 Proof.
-  nrapply int_iter_commute_map.
+  napply int_iter_commute_map.
   intro q; apply ap_pp.
 Defined.
 
@@ -724,7 +724,7 @@ Definition equiv_path_loopexp {A : Type} (p : A = A) (z : Int) (a : A)
 Proof.
   refine (int_iter_commute_map _ _ (fun p => equiv_path A A p a) _ _ _).
   intro q; cbn.
-  nrapply transport_pp.
+  napply transport_pp.
 Defined.
 
 Definition loopexp_path_universe `{Univalence} {A : Type} (f : A <~> A)
@@ -763,7 +763,7 @@ Definition int_nat_sub (n m : nat)
 Proof.
   intros H.
   induction H as [|n H IHn].
-  - lhs nrapply int_add_neg_r.
+  - lhs napply int_add_neg_r.
     by rewrite nat_sub_cancel.
   - rewrite nat_sub_succ_l; only 2: exact _.
     rewrite <- 2 int_nat_succ.
@@ -780,6 +780,6 @@ Proof.
   - rewrite <- int_nat_succ.
     rewrite int_mul_succ_l.
     rewrite nat_mul_succ_l.
-    rhs_V nrapply int_nat_add.
+    rhs_V napply int_nat_add.
     exact (ap _ IHn).
 Defined.

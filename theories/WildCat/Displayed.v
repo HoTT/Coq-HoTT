@@ -417,7 +417,7 @@ Section ConstantFunctor.
     (x : B) (x' : DB x)
     : IsD1Functor (fun _ => x) (fun _ _ => x').
   Proof.
-    snrapply Build_IsD1Functor.
+    snapply Build_IsD1Functor.
     - intros a b f g p a' b' f' g' p'.
       apply DId.
     - intros a a'.
@@ -451,7 +451,7 @@ Section CompositeFunctor.
     `{!IsD0Functor G G', !IsD1Functor G G'}
     : IsD1Functor (G o F) (fun a a' => (G' (F a) o (F' a)) a').
   Proof.
-    snrapply Build_IsD1Functor.
+    snapply Build_IsD1Functor.
     - intros a b f g p a' b' f' g' p'.
       exact (dfmap2 _ _ (dfmap2 F F' p')).
     - intros a a'.
@@ -504,7 +504,7 @@ Instance isd1cat_prod {A B : Type} (DA : A -> Type) `{IsD1Cat A DA}
   (DB : B -> Type) `{IsD1Cat B DB}
   : IsD1Cat (pointwise_prod DA DB).
 Proof.
-  snrapply Build_IsD1Cat.
+  snapply Build_IsD1Cat.
   - intros ab1 ab2 ab1' ab2'.
     srapply isd01cat_prod.
   - intros ab1 ab2 ab1' ab2'.

@@ -202,7 +202,7 @@ Proof.
   (* Define [C] to be the component of [A] containing [x]. Since [x = y] is decidable, it is stable, so we can use [~~(x = y)] as an elementary form of propositional truncation. It also works to use [merely] here, but that brings in further dependencies and requires HITs. *)
   pose (C := {y : A & ~~(x = y)}).
   assert (cC : Contr C).
-  { snrapply (Build_Contr C (x; not_not_unit idpath)).
+  { snapply (Build_Contr C (x; not_not_unit idpath)).
     intros [y p].
     srapply path_sigma_hprop; cbn.
     (* [d y] either solves the goal or contradicts [p]. *)

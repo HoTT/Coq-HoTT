@@ -77,7 +77,7 @@ Section AssumeUnivalence.
   Proof.
     apply equiv_isfreegroupon_isequiv_precomp.
     intro G.
-    snrapply isequiv_homotopic'.
+    snapply isequiv_homotopic'.
     1: apply equiv_pi1bouquet_rec.
     intros f.
     refine (_ @ @is1natural_equiv_pi1bouquet_rec S _ _ f grp_homo_id).

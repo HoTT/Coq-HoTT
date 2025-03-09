@@ -98,7 +98,7 @@ Section Descent.
   Definition fam_gqdescent (Pe : gqDescent R)
     : GraphQuotient R -> Type.
   Proof.
-    snrapply (GraphQuotient_rec (gqd_fam Pe)).
+    snapply (GraphQuotient_rec (gqd_fam Pe)).
     intros a b r.
     exact (path_universe_uncurried (gqd_e Pe r)).
   Defined.
@@ -106,7 +106,7 @@ Section Descent.
   (** A type family over [GraphQuotient R] induces descent data. *)
   Definition gqdescent_fam (P : GraphQuotient R -> Type) : gqDescent R.
   Proof.
-    snrapply Build_gqDescent.
+    snapply Build_gqDescent.
     - exact (P o gq).
     - intros a b r.
       exact (equiv_transport P (gqglue r)).
@@ -117,8 +117,8 @@ Section Descent.
     (Pe : gqDescent R) {a b : A} (r : R a b) (pa : gqd_fam Pe a)
     : transport (fam_gqdescent Pe) (gqglue r) pa = gqd_e Pe r pa.
   Proof.
-    nrapply transport_path_universe'.
-    nrapply GraphQuotient_rec_beta_gqglue.
+    napply transport_path_universe'.
+    napply GraphQuotient_rec_beta_gqglue.
   Defined.
 
   (** A section on the descent data is a fiberwise section that respects the equivalences. *)
@@ -135,7 +135,7 @@ Section Descent.
     (f : gqDescentSection Pe)
     : forall (x : GraphQuotient R), fam_gqdescent Pe x.
   Proof.
-    snrapply (GraphQuotient_ind _ (gqds_sect f)).
+    snapply (GraphQuotient_ind _ (gqds_sect f)).
     intros a b r.
     exact (transport_fam_gqdescent_gqglue Pe r _ @ gqds_e f r).
   Defined.
@@ -160,7 +160,7 @@ Section Descent.
     (Q : forall (x : GraphQuotient R), (fam_gqdescent Pe) x -> Type)
     : gqDepDescent Pe.
   Proof.
-    snrapply Build_gqDepDescent.
+    snapply Build_gqDepDescent.
     - intro a; cbn.
       exact (Q (gq a)).
     - intros a b r pa.
@@ -172,15 +172,15 @@ Section Descent.
   Definition fam_gqdepdescent {Pe : gqDescent R} (Qe : gqDepDescent Pe)
     : forall (x : GraphQuotient R), (fam_gqdescent Pe x) -> Type.
   Proof.
-    snrapply GraphQuotient_ind.
+    snapply GraphQuotient_ind.
     - exact (gqdd_fam Qe).
     - intros a b r.
-      nrapply (moveR_transport_p _ (gqglue r)).
+      napply (moveR_transport_p _ (gqglue r)).
       funext pa.
-      rhs nrapply transport_arrow_toconst.
+      rhs napply transport_arrow_toconst.
       rhs nrefine (ap (gqdd_fam Qe b) _).
       + exact (path_universe (gqdd_e Qe r pa)).
-      + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (gqglue r))).
+      + lhs napply (ap (fun x => (transport _ x _)) (inv_V (gqglue r))).
         exact (transport_fam_gqdescent_gqglue _ _ _).
   Defined.
 
@@ -199,7 +199,7 @@ Section Descent.
     (f : gqDepDescentSection (gqdepdescent_fam Q))
     : forall (x : GraphQuotient R) (px : fam_gqdescent Pe x), Q x px.
     Proof.
-      nrapply (GraphQuotient_ind _ (gqdds_sect f) _).
+      napply (GraphQuotient_ind _ (gqdds_sect f) _).
       intros a b r.
       apply dpath_forall.
       intro pa.
@@ -222,12 +222,12 @@ Section Descent.
     (f : gqDepDescentConstSection Pe Q)
     : forall (x : GraphQuotient R), fam_gqdescent Pe x -> Q.
   Proof.
-    snrapply (GraphQuotient_ind _ (gqddcs_sect f)).
+    snapply (GraphQuotient_ind _ (gqddcs_sect f)).
     intros a b r.
-    nrapply dpath_arrow.
+    napply dpath_arrow.
     intro pa.
-    lhs nrapply transport_const.
-    rhs nrapply (ap _ (transport_fam_gqdescent_gqglue Pe r pa)).
+    lhs napply transport_const.
+    rhs napply (ap _ (transport_fam_gqdescent_gqglue Pe r pa)).
     exact (gqddcs_e f r pa).
   Defined.
 
@@ -240,22 +240,22 @@ Section Descent.
   Proof.
     Open Scope long_path_scope.
     destruct pr.
-    rhs nrapply concat_p1.
-    lhs nrapply ap_sig_rec_path_sigma.
-    lhs nrapply (ap (fun x => _ (ap10 x _) @ _)).
-    1: nrapply GraphQuotient_ind_beta_gqglue.
-    do 3 lhs nrapply concat_pp_p.
+    rhs napply concat_p1.
+    lhs napply ap_sig_rec_path_sigma.
+    lhs napply (ap (fun x => _ (ap10 x _) @ _)).
+    1: napply GraphQuotient_ind_beta_gqglue.
+    do 3 lhs napply concat_pp_p.
     apply moveR_Vp.
     lhs nrefine (1 @@ (1 @@ (_ @@ 1))).
-    1: nrapply (ap10_dpath_arrow (fam_gqdescent Pe) (fun _ => Q) (gqglue r)).
+    1: napply (ap10_dpath_arrow (fam_gqdescent Pe) (fun _ => Q) (gqglue r)).
     lhs nrefine (1 @@ _).
-    { lhs nrapply (1 @@ concat_pp_p _ _ _).
-      lhs nrapply (1 @@ concat_pp_p _ _ _).
-      lhs nrapply concat_V_pp.
-      lhs nrapply (1 @@ concat_pp_p _ _ _).
+    { lhs napply (1 @@ concat_pp_p _ _ _).
+      lhs napply (1 @@ concat_pp_p _ _ _).
+      lhs napply concat_V_pp.
+      lhs napply (1 @@ concat_pp_p _ _ _).
       rewrite concat_p1.
       exact (1 @@ (1 @@ concat_pV_p _ _)). }
-    nrapply concat_V_pp.
+    napply concat_V_pp.
     Close Scope long_path_scope.
   Defined.
 
@@ -278,9 +278,9 @@ Section Flattening.
     {pa : gqd_fam Pe a} {pb : gqd_fam Pe b} (pr : gqd_e Pe r pa = pb)
     : flatten_gqd pa = flatten_gqd pb.
   Proof.
-    snrapply path_sigma.
+    snapply path_sigma.
     - by apply gqglue.
-    - lhs nrapply transport_fam_gqdescent_gqglue.
+    - lhs napply transport_fam_gqdescent_gqglue.
       exact pr.
   Defined.
 
@@ -288,35 +288,35 @@ Section Flattening.
   Lemma equiv_gqd_flatten : sig (fam_gqdescent Pe) <~>
     GraphQuotient (fun a b => {r : R a.1 b.1 & gqd_e Pe r a.2 = b.2}).
   Proof.
-    snrapply equiv_adjointify.
-    - snrapply sig_rec.
-      snrapply gqdepdescent_rec.
-      snrapply Build_gqDepDescentConstSection.
+    snapply equiv_adjointify.
+    - snapply sig_rec.
+      snapply gqdepdescent_rec.
+      snapply Build_gqDepDescentConstSection.
       + exact (fun a x => gq (a; x)).
       + intros a b r pa.
       apply gqglue; exact (r; 1).
-    - snrapply GraphQuotient_rec.
+    - snapply GraphQuotient_rec.
       + exact (fun '(a; x) => (gq a; x)).
       + intros [a x] [b y] [r pr]; cbn in r, pr; cbn.
         exact (flatten_gqd_glue r pr).
-    - snrapply GraphQuotient_ind.
+    - snapply GraphQuotient_ind.
       1: reflexivity.
       intros [a x] [b y] [r pr]; cbn in r, pr; cbn.
       destruct pr.
       transport_paths FFlr; apply equiv_p1_1q.
       rewrite GraphQuotient_rec_beta_gqglue.
-      lhs nrapply gqdepdescent_rec_beta_gqglue.
-      nrapply concat_p1.
+      lhs napply gqdepdescent_rec_beta_gqglue.
+      napply concat_p1.
     - intros [x px]; revert x px.
-      snrapply gqdepdescent_ind.
-      snrapply Build_gqDepDescentSection.
+      snapply gqdepdescent_ind.
+      snapply Build_gqDepDescentSection.
       + by intros a pa.
       + intros a b r pa; cbn.
-        lhs nrapply transportDD_is_transport.
+        lhs napply transportDD_is_transport.
         transport_paths FFlr; apply equiv_p1_1q.
         rewrite <- (concat_p1 (transport_fam_gqdescent_gqglue _ _ _)).
         rewrite gqdepdescent_rec_beta_gqglue. (* This needs to be in the form [transport_fam_gqdescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
-        lhs nrapply (ap _ (concat_p1 _)).
+        lhs napply (ap _ (concat_p1 _)).
         exact (GraphQuotient_rec_beta_gqglue _ _ (a; pa) (b; _) (r; 1)).
   Defined.
 
@@ -340,12 +340,12 @@ Section Paths.
   Local Instance idsys_flatten_gqdescent
     : @IsIdentitySystem _ (gq a0) (fam_gqdescent Pe) p0.
   Proof.
-    snrapply Build_IsIdentitySystem.
+    snapply Build_IsIdentitySystem.
     - intros Q q0 x p.
-      snrapply gqdepdescent_ind.
+      snapply gqdepdescent_ind.
       by apply based_gqdepdescent_ind.
     - intros Q q0; cbn.
-      nrapply (based_gqdepdescent_ind_beta (gqdepdescent_fam Q)).
+      napply (based_gqdepdescent_ind_beta (gqdepdescent_fam Q)).
   Defined.
 
   (** It follows that the fibers [fam_gqdescent Pe x] are equivalent to path spaces [(gq a0) = x]. *)
@@ -361,7 +361,7 @@ Lemma functor_gq {A B : Type} (f : A -> B)
   {R : A -> A -> Type} {S : B -> B -> Type} (e : forall a b, R a b -> S (f a) (f b))
   : GraphQuotient R -> GraphQuotient S.
 Proof.
-  snrapply GraphQuotient_rec.
+  snapply GraphQuotient_rec.
   1: exact (fun x => gq (f x)).
   intros a b r.
   apply gqglue.
@@ -379,12 +379,12 @@ Definition functor_gq_beta_gqglue {A B : Type} (f : A -> B)
 Lemma functor_gq_idmap {A : Type} {R : A -> A -> Type}
   : functor_gq (A:=A) (B:=A) (S:=R) idmap (fun a b r => r) == idmap.
 Proof.
-  snrapply GraphQuotient_ind.
+  snapply GraphQuotient_ind.
   1: reflexivity.
   intros a b r.
   transport_paths Flr.
   apply equiv_p1_1q.
-  nrapply GraphQuotient_rec_beta_gqglue.
+  napply GraphQuotient_rec_beta_gqglue.
 Defined.
 
 Lemma functor_gq_compose {A B C : Type} (f : A -> B) (g : B -> C)
@@ -392,15 +392,15 @@ Lemma functor_gq_compose {A B C : Type} (f : A -> B) (g : B -> C)
   (e : forall a b, R a b -> S (f a) (f b)) (e' : forall a b, S a b -> T (g a) (g b))
   : functor_gq g e' o (functor_gq f e) == functor_gq (g o f) (fun a b r => e' _ _ (e _ _ r)).
 Proof.
-  snrapply GraphQuotient_ind.
+  snapply GraphQuotient_ind.
   1: reflexivity.
   intros a b s; cbn beta.
   transport_paths FFlFr.
   apply equiv_p1_1q.
-  lhs nrapply ap.
+  lhs napply ap.
   1: apply functor_gq_beta_gqglue.
-  rhs nrapply (functor_gq_beta_gqglue (g o f)).
-  nrapply (functor_gq_beta_gqglue g).
+  rhs napply (functor_gq_beta_gqglue (g o f)).
+  napply (functor_gq_beta_gqglue g).
 Defined.
 
 Lemma functor2_gq {A B : Type} (f f' : A -> B)
@@ -410,22 +410,22 @@ Lemma functor2_gq {A B : Type} (f f' : A -> B)
   (q : forall a b r, transport011 S (p a) (p b) (e a b r) = e' a b r)
   : functor_gq f e == functor_gq f' e'.
 Proof.
-  snrapply GraphQuotient_ind.
+  snapply GraphQuotient_ind.
   - simpl; intro.
     apply ap.
     apply p.
   - intros a b s; simpl.
     transport_paths (transport_paths_FlFr (gqglue s)).
-    rhs nrapply whiskerL.
-    2: nrapply functor_gq_beta_gqglue.
-    lhs nrapply whiskerR.
-    1: nrapply functor_gq_beta_gqglue.
+    rhs napply whiskerL.
+    2: napply functor_gq_beta_gqglue.
+    lhs napply whiskerR.
+    1: napply functor_gq_beta_gqglue.
     apply moveL_Mp.
     symmetry.
     destruct (q a b s).
-    lhs nrapply (ap_transport011 _ _ (fun s _ => gqglue)).
-    rhs nrapply concat_p_pp.
-    nrapply transport011_paths.
+    lhs napply (ap_transport011 _ _ (fun s _ => gqglue)).
+    rhs napply concat_p_pp.
+    napply transport011_paths.
 Defined.
 
 (** ** Equivalence of graph quotients *)
@@ -436,23 +436,23 @@ Instance isequiv_functor_gq {A B : Type} (f : A -> B) `{IsEquiv _ _ f}
   : IsEquiv (functor_gq f e).
 Proof.
   srapply isequiv_adjointify.
-  - nrapply (functor_gq f^-1).
+  - napply (functor_gq f^-1).
     intros a b s.
     apply (e _ _)^-1.
     exact (transport011 S (eisretr f a)^ (eisretr f b)^ s).
   - intros x.
-    lhs nrapply functor_gq_compose.
-    rhs_V nrapply functor_gq_idmap.
-    snrapply functor2_gq; cbn beta.
+    lhs napply functor_gq_compose.
+    rhs_V napply functor_gq_idmap.
+    snapply functor2_gq; cbn beta.
     1: apply eisretr.
     intros a b s.
     rewrite (eisretr (e (f^-1 a) (f^-1 b))).
-    lhs_V nrapply transport011_pp.
+    lhs_V napply transport011_pp.
     by rewrite 2 concat_Vp.
   - intros x.
-    lhs nrapply functor_gq_compose.
-    rhs_V nrapply functor_gq_idmap.
-    snrapply functor2_gq; cbn beta.
+    lhs napply functor_gq_compose.
+    rhs_V napply functor_gq_idmap.
+    snapply functor2_gq; cbn beta.
     1: apply eissect.
     intros a b r.
     rewrite 2 eisadj.
@@ -460,7 +460,7 @@ Proof.
     rewrite <- (transport011_compose S).
     rewrite <- (ap_transport011 (Q := fun x y => S (f x) (f y)) (eissect f a)^ (eissect f b)^ e).
     rewrite (eissect (e (f^-1 (f a)) (f^-1 (f b)))).
-    lhs_V nrapply transport011_pp.
+    lhs_V napply transport011_pp.
     by rewrite 2 concat_Vp.
 Defined.
 

@@ -347,7 +347,7 @@ Definition OO_cancelL_conn_map
   : IsConnMap O f.
 Proof.
   apply conn_map_OO_inverts.
-  nrapply (cancelL_isequiv (O_functor O' g)).
+  napply (cancelL_isequiv (O_functor O' g)).
   1:exact _.
   exact (isequiv_homotopic _ (O_functor_compose O' f g)).
 Defined.
@@ -389,7 +389,7 @@ Definition OO_inverts_conn_map_factor_conn_map
        `{IsConnMap O' _ _ (g o f)} `{IsConnMap O _ _ f}
   : O_inverts O' f.
 Proof.
-  nrapply (cancelL_isequiv (O_functor O' g)).
+  napply (cancelL_isequiv (O_functor O' g)).
   - apply O_inverts_conn_map.
     exact (OO_cancelR_conn_map O' O f g).
   - exact (isequiv_homotopic _ (O_functor_compose O' f g)).

@@ -24,7 +24,7 @@ Proof.
   refine (equiv_sigma_symm _ oE _).
   apply equiv_functor_sigma_id.
   intros h.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   { intros p.
     exists (grp_homo_compose h f).
     hnf; intro x.
@@ -38,7 +38,7 @@ Proof.
     simpl.
     destruct a as [a|a].
     1,2: refine (ap _ (grp_homo_op _ _ _) @ _).
-    1,2: nrapply grp_homo_op_agree; trivial.
+    1,2: napply grp_homo_op_agree; trivial.
     symmetry.
     apply p. }
   { intros [k p] x.

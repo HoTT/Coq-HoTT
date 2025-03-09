@@ -84,7 +84,7 @@ Definition Build_pHomotopy_pForall `{Funext} {A B : pType} {C : B -> pType}
   (q : p (point A) ==* phomotopy_path (point_eq f) @* (phomotopy_path (point_eq g))^*)
   : f ==* g.
 Proof.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   1: intro a; exact (path_pforall (p a)).
   hnf; rapply moveR_equiv_M'.
   refine (_^ @ ap10 _ _).

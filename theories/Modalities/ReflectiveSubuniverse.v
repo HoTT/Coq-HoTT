@@ -547,7 +547,7 @@ Section Reflective_Subuniverse.
       (K : r o s == idmap)
       : In O A.
     Proof.
-      nrapply (inO_to_O_retract A (r o (to O B)^-1 o (O_functor s))).
+      napply (inO_to_O_retract A (r o (to O B)^-1 o (O_functor s))).
       intro a.
       lhs exact (ap (r o (to O B)^-1) (to_O_natural s a)).
       lhs nrefine (ap r (eissect _ (s a))).
@@ -822,8 +822,8 @@ Section Reflective_Subuniverse.
     Proof.
       apply O_indpaths; intro ab.
       unfold functor_prod, prod_coind, prod_coind_uncurried; simpl.
-      lhs (nrapply O_rec_beta).
-      apply path_prod; cbn; symmetry; nrapply O_rec_beta.
+      lhs (napply O_rec_beta).
+      apply path_prod; cbn; symmetry; napply O_rec_beta.
     Defined.
 
     (** We show that [OA*OB] has the same universal property as [O(A*B)] *)
@@ -970,7 +970,7 @@ Section Reflective_Subuniverse.
     Proof.
       apply O_inverts_from_extendable; intros Z Z_inO.
       apply ooextendable_functor_sigma_id; intros a.
-      nrapply ooextendable_O_inverts; exact _.
+      napply ooextendable_O_inverts; exact _.
     Defined.
 
     (** Theorem 7.3.9: The reflector [O] can be discarded inside a reflected sum.  This can be obtained from [O_inverts_functor_sigma_id] applied to the family of units [to O (P x)], but unfortunately the definitional behavior of the inverse obtained thereby (which here we take as the "forwards" direction) is poor.  So instead we give an explicit proof, but note that the "backwards" direction here is precisely [functor_sigma]. *)
@@ -1107,7 +1107,7 @@ Section Reflective_Subuniverse.
         apply O_inverts_from_extendable.
         intros Z Z_inO.
         apply extendable_functor_coeq'.
-        all:nrapply ooextendable_O_inverts; assumption.
+        all:napply ooextendable_O_inverts; assumption.
       Defined.
 
       Definition equiv_O_functor_coeq
@@ -1292,7 +1292,7 @@ Section Reflective_Subuniverse.
       intros [[] a]. strip_reflections.
       unfold O_monad_strength, O_functor. simpl.
       rewrite O_rec_beta.
-      nrapply O_rec_beta.
+      napply O_rec_beta.
     Qed.
 
     Definition O_monad_strength_unitlaw2 (A B : Type)
@@ -1301,7 +1301,7 @@ Section Reflective_Subuniverse.
       intros [a b].
       unfold O_monad_strength, functor_prod. simpl.
       revert a; apply ap10.
-      nrapply O_rec_beta.
+      napply O_rec_beta.
     Qed.
 
     Definition O_monad_strength_assoc1 (A B C : Type)
@@ -2145,7 +2145,7 @@ Proof.
   apply O_inverts_from_extendable.
   intros Z Z_inO.
   apply extendable_functor_coeq.
-  - nrapply (ooextendable_O_inverts O'); assumption.
+  - napply (ooextendable_O_inverts O'); assumption.
   - pose (inO_leq O' (Sep O)).
     intros u v; rapply (extendable_conn_map_inO O).
 Defined.
@@ -2160,7 +2160,7 @@ Definition OO_inverts_functor_pushout
            `{IsConnMap O _ _ h} `{O_inverts O' k} `{O_inverts O' l}
   : O_inverts O' (functor_pushout h k l p q).
 Proof.
-  nrapply (OO_inverts_functor_coeq O O').
+  napply (OO_inverts_functor_coeq O O').
   1,3:exact _.
   rapply O_inverts_functor_sum.
 Defined.

@@ -291,7 +291,7 @@ Definition nat_add_comm@{} n m : n + m = m + n.
 Proof.
   induction n.
   - exact (nat_add_zero_r m)^.
-  - rhs nrapply nat_add_succ_r.
+  - rhs napply nat_add_succ_r.
     apply (ap nat_succ).
     exact IHn.
 Defined.
@@ -301,7 +301,7 @@ Definition nat_add_assoc@{} n m k : n + (m + k) = (n + m) + k.
 Proof.
   induction n as [|n IHn].
   - reflexivity.
-  - nrapply (ap nat_succ).
+  - napply (ap nat_succ).
     exact IHn.
 Defined.
 
@@ -315,10 +315,10 @@ Defined.
 Definition isinj_nat_add_r@{} k : IsInjective (fun x => nat_add x k).
 Proof.
   intros x y H.
-  nrapply (isinj_nat_add_l k).
-  lhs nrapply nat_add_comm.
+  napply (isinj_nat_add_l k).
+  lhs napply nat_add_comm.
   lhs exact H.
-  nrapply nat_add_comm.
+  napply nat_add_comm.
 Defined.
 
 (** A sum being zero is equivalent to both summands being zero. *)
@@ -351,10 +351,10 @@ Definition nat_mul_succ_r@{} n m : n * m.+1 = n * m + n.
 Proof.
   induction n as [|n IHn].
   - reflexivity.
-  - rhs nrapply nat_add_succ_r.
-    nrapply (ap nat_succ).
-    rhs_V nrapply nat_add_assoc.
-    nrapply (ap (nat_add m)).
+  - rhs napply nat_add_succ_r.
+    napply (ap nat_succ).
+    rhs_V napply nat_add_assoc.
+    napply (ap (nat_add m)).
     exact IHn.
 Defined.
 
@@ -362,10 +362,10 @@ Defined.
 Definition nat_mul_comm@{} n m : n * m = m * n.
 Proof.
   induction m as [|m IHm]; simpl.
-  - nrapply nat_mul_zero_r.
-  - lhs nrapply nat_mul_succ_r.
-    lhs nrapply nat_add_comm.
-    snrapply (ap (nat_add n)).
+  - napply nat_mul_zero_r.
+  - lhs napply nat_mul_succ_r.
+    lhs napply nat_add_comm.
+    snapply (ap (nat_add n)).
     exact IHm.
 Defined.
 
@@ -374,22 +374,22 @@ Definition nat_dist_l@{} n m k : n * (m + k) = n * m + n * k.
 Proof.
   induction n as [|n IHn]; simpl.
   - reflexivity.
-  - lhs_V nrapply nat_add_assoc.
-    rhs_V nrapply nat_add_assoc.
-    nrapply (ap (nat_add m)).
-    lhs nrapply nat_add_comm.
+  - lhs_V napply nat_add_assoc.
+    rhs_V napply nat_add_assoc.
+    napply (ap (nat_add m)).
+    lhs napply nat_add_comm.
     rewrite IHn.
-    lhs_V nrapply nat_add_assoc.
-    nrapply (ap (nat_add (n * m))).
-    nrapply nat_add_comm.
+    lhs_V napply nat_add_assoc.
+    napply (ap (nat_add (n * m))).
+    napply nat_add_comm.
 Defined.
 
 (** Multiplication of natural numbers distributes over addition on the right. *)
 Definition nat_dist_r@{} n m k : (n + m) * k = n * k + m * k.
 Proof.
-  lhs nrapply nat_mul_comm.
-  lhs nrapply nat_dist_l.
-  nrapply ap011; nrapply nat_mul_comm.
+  lhs napply nat_mul_comm.
+  lhs napply nat_dist_l.
+  napply ap011; napply nat_mul_comm.
 Defined.
 
 (** Multiplication of natural numbers is associative. *)
@@ -397,8 +397,8 @@ Definition nat_mul_assoc@{} n m k : n * (m * k) = n * m * k.
 Proof.
   induction n as [|n IHn]; simpl.
   - reflexivity.
-  - rhs nrapply nat_dist_r.
-    nrapply (ap (nat_add (m * k))).
+  - rhs napply nat_dist_r.
+    napply (ap (nat_add (m * k))).
     exact IHn.
 Defined.
 
@@ -651,15 +651,15 @@ Proof.
   - reflexivity.
   - destruct m.
     + reflexivity.
-    + nrapply IHn.
+    + napply IHn.
 Defined.
 
 (** The order in which two numbers are subtracted does not matter. *)
 Definition nat_sub_comm_r@{} n m k : n - m - k = n - k - m.
 Proof.
-  lhs_V nrapply nat_sub_r_add.
+  lhs_V napply nat_sub_r_add.
   rewrite nat_add_comm.
-  nrapply nat_sub_r_add.
+  napply nat_sub_r_add.
 Defined.
 
 (** Subtracting a larger number from a smaller number is [0]. *)
@@ -669,8 +669,8 @@ Proof.
   - intro l; induction l.
     + exact (nat_sub_cancel n).
     + change (m.+1) with (1 + m).
-      lhs nrapply nat_sub_r_add.
-      lhs nrapply nat_sub_comm_r.
+      lhs napply nat_sub_r_add.
+      lhs napply nat_sub_comm_r.
       by destruct IHl^.
   - induction n as [|n IHn] in m |- *.
     1: intro; exact _.
@@ -685,7 +685,7 @@ Defined.
 Definition nat_add_sub_cancel_l m n : n + m - n = m.
 Proof.
   induction n as [|n IHn].
-  - nrapply nat_sub_zero_r.
+  - napply nat_sub_zero_r.
   - exact IHn.
 Defined.
 
@@ -693,8 +693,8 @@ Defined.
 Definition nat_add_sub_cancel_r m n : m + n - n = m.
 Proof.
   rhs_V exact (nat_add_sub_cancel_l m n).
-  nrapply (ap (fun x => x - n)).
-  nrapply nat_add_comm.
+  napply (ap (fun x => x - n)).
+  napply nat_add_comm.
 Defined.
 
 (** We can cancel a right subtrahend when adding it on the right to a subtraction if the subtrahend is less than the number being subtracted from. *)
@@ -702,13 +702,13 @@ Definition nat_add_sub_l_cancel {n m} : n <= m -> (m - n) + n = m.
 Proof.
   intros H.
   induction n as [|n IHn] in m, H |- *.
-  - lhs nrapply nat_add_zero_r.
-    nrapply nat_sub_zero_r.
+  - lhs napply nat_add_zero_r.
+    napply nat_sub_zero_r.
   - destruct m.
     1: contradiction (not_lt_zero_r n).
-    lhs nrapply nat_add_succ_r.
-    nrapply (ap nat_succ).
-    nrapply IHn.
+    lhs napply nat_add_succ_r.
+    napply (ap nat_succ).
+    napply IHn.
     exact (leq_pred' H).
 Defined.
 
@@ -815,7 +815,7 @@ Definition nat_max_l@{} {n m} : m <= n -> nat_max n m = n.
 Proof.
   intros H.
   induction m as [|m IHm] in n, H |- *.
-  1: nrapply nat_max_zero_r.
+  1: napply nat_max_zero_r.
   destruct n.
   1: inversion H.
   cbn; by apply (ap S), IHm, leq_pred'.
@@ -966,7 +966,7 @@ Defined.
 Definition equiv_leq_lt_or_eq {n m} : (n <= m) <~> (n < m) + (n = m).
 Proof.
   srapply equiv_iff_hprop.
-  - nrapply ishprop_sum.
+  - napply ishprop_sum.
     1,2: exact _.
     intros H1 p; destruct p.
     contradiction (lt_irrefl _ _).
@@ -1024,7 +1024,7 @@ Defined.
 Definition nat_trichotomy m n : (m < n) + (m = n) + (m > n).
 Proof.
   generalize (leq_dichotomy m n).
-  snrapply (functor_sum _ idmap).
+  snapply (functor_sum _ idmap).
   exact equiv_leq_lt_or_eq.
 Defined.
 
@@ -1075,9 +1075,9 @@ Definition trunc_index_add_nat_add {n : nat}: trunc_index_add n n = n.+1 + n.+1.
 Proof.
   induction n as [|n IHn].
   1: reflexivity.
-  lhs nrapply trunc_index_add_succ.
-  rhs nrapply (ap nat_to_trunc_index).
-  2: nrapply nat_add_succ_r.
+  lhs napply trunc_index_add_succ.
+  rhs napply (ap nat_to_trunc_index).
+  2: napply nat_add_succ_r.
   exact (ap (fun x => x.+2%trunc) IHn).
 Defined.
 
@@ -1216,7 +1216,7 @@ Definition nat_mul_strictly_monotone {n n' m m'}
   : n < m -> n' < m' -> n * n' < m * m'.
 Proof.
   intros H1 H2.
-  nrapply (lt_leq_lt_trans (m:=n * m')).
+  napply (lt_leq_lt_trans (m:=n * m')).
   1: rapply nat_mul_l_monotone.
   rapply nat_mul_r_strictly_monotone.
 Defined.
@@ -1233,7 +1233,7 @@ Defined.
 (** Addition on the right is order-reflecting. *)
 Definition leq_reflects_add_r {n m} k : n + k <= m + k -> n <= m.
 Proof.
-  rewrite 2 (nat_add_comm _ k); nrapply leq_reflects_add_l.
+  rewrite 2 (nat_add_comm _ k); napply leq_reflects_add_l.
 Defined.
 
 (** Addition on the left is strictly order-reflecting. *)
@@ -1245,7 +1245,7 @@ Defined.
 (** Addition on the right is strictly order-reflecting. *)
 Definition lt_reflects_add_r {n m} k : n + k < m + k -> n < m.
 Proof.
-  rewrite 2 (nat_add_comm _ k); nrapply lt_reflects_add_l.
+  rewrite 2 (nat_add_comm _ k); napply lt_reflects_add_l.
 Defined.
 
 (** ** Further properties of subtraction *)
@@ -1274,7 +1274,7 @@ Defined.
 (** Under certain conditions, subtracting a predecessor is the successor of the subtraction. *)
 Definition nat_sub_pred_r n m : 0 < m -> m < n -> n - nat_pred m = (n - m).+1.
 Proof.
-  revert m; snrapply gt_zero_ind.
+  revert m; snapply gt_zero_ind.
   intros m H1.
   rewrite nat_sub_succ_r.
   rewrite nat_succ_pred.
@@ -1290,7 +1290,7 @@ Proof.
   intros H; induction n as [|n IHn] in |- *.
   - reflexivity.
   - change (?n.+1 + ?m) with (n + m).+1.
-    lhs nrapply nat_sub_succ_l.
+    lhs napply nat_sub_succ_l.
     2: exact (ap nat_succ IHn).
     exact _.
 Defined.
@@ -1497,7 +1497,7 @@ Definition nat_pow_one_l@{} n : nat_pow 1 n = 1.
 Proof.
   induction n as [|n IHn]; simpl.
   1: reflexivity.
-  lhs nrapply nat_add_zero_r.
+  lhs napply nat_add_zero_r.
   exact IHn.
 Defined.
 
@@ -1512,7 +1512,7 @@ Proof.
   induction m as [|m IHm]; simpl.
   - symmetry.
     apply nat_add_zero_r.
-  - rhs_V nrapply nat_mul_assoc.
+  - rhs_V napply nat_mul_assoc.
     exact (ap _ IHm).
 Defined.
 
@@ -1522,13 +1522,13 @@ Definition nat_pow_mul_l@{} n m k
 Proof.
   induction k as [|k IHk]; simpl.
   1: reflexivity.
-  lhs_V nrapply nat_mul_assoc.
-  rhs_V nrapply nat_mul_assoc.
-  nrapply ap.
-  rhs nrapply nat_mul_comm.
-  rhs_V nrapply nat_mul_assoc.
-  nrapply ap.
-  rhs nrapply nat_mul_comm.
+  lhs_V napply nat_mul_assoc.
+  rhs_V napply nat_mul_assoc.
+  napply ap.
+  rhs napply nat_mul_comm.
+  rhs_V napply nat_mul_assoc.
+  napply ap.
+  rhs napply nat_mul_comm.
   exact IHk.
 Defined.
 
@@ -1538,9 +1538,9 @@ Definition nat_pow_mul_r@{} n m k
 Proof.
   induction m as [|m IHm]; simpl.
   - exact (nat_pow_one_l _)^.
-  - lhs nrapply nat_pow_add_r.
-    rhs nrapply nat_pow_mul_l.
-    nrapply ap.
+  - lhs napply nat_pow_add_r.
+    rhs napply nat_pow_mul_l.
+    napply ap.
     exact IHm.
 Defined.
 

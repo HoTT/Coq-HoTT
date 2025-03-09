@@ -17,8 +17,8 @@ Definition trm@{i j | } {A : Type@{i}} : A -> Trm@{i j} A
 Instance ishprop_Trm@{i j k | i <= k, j < k} `{Funext} (A : Type@{i})
   : IsHProp (Trm@{i j} A).
 Proof.
-  nrapply istrunc_forall@{k k k}; intro B.
-  nrapply istrunc_forall@{j k k}; intro ishp.
+  napply istrunc_forall@{k k k}; intro B.
+  napply istrunc_forall@{j k k}; intro ishp.
   apply istrunc_forall@{k j k}.
 Defined.
 

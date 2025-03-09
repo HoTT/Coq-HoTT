@@ -500,7 +500,7 @@ Definition O_inverts_O_leq'@{a i1 i2}
 Proof.
   assert (oleq := O_leq_lift_accrsu O1 O2).
   assert (e := O_inverts_O_leq (lift_accrsu@{a i1 i2} O1) O2 f); clear oleq.
-  nrapply (O_inverts_O_leq O1 (lift_accrsu@{a i1 i1} O1) f).
+  napply (O_inverts_O_leq O1 (lift_accrsu@{a i1 i1} O1) f).
   1:exact _.
   (** It looks like we can say [exact e], but that would collapse the universes [i1] and [i2].  You can check with [Set Printing Universes. Unset Printing Notations.] that [e] and the goal have different universes.  So instead we do this: *)
   refine (@isequiv_homotopic _ _ _ _ e _).

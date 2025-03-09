@@ -26,8 +26,8 @@ Definition ab_sum_const {A : AbGroup} (n : nat) (a : A)
 Proof.
   induction n as [|n IHn] in f, p |- *.
   - reflexivity.
-  - rhs_V nrapply (ap@{Set _} _ (int_nat_succ n)).
-    rhs nrapply grp_pow_succ.
+  - rhs_V napply (ap@{Set _} _ (int_nat_succ n)).
+    rhs napply grp_pow_succ.
     simpl. f_ap.
     apply IHn.
     intros. apply p.
@@ -62,8 +62,8 @@ Definition ab_sum_sum {A : AbGroup} (m n : nat)
    = ab_sum n (fun j Hj => ab_sum m (fun i Hi => f i j Hi Hj)).
 Proof.
   induction n as [|n IHn] in m, f |- *.
-  1: by nrapply ab_sum_zero.
-  lhs nrapply ab_sum_plus; cbn; f_ap.
+  1: by napply ab_sum_zero.
+  lhs napply ab_sum_plus; cbn; f_ap.
 Defined.
 
 (** Finite sums are equal if the functions are equal in the range. *)

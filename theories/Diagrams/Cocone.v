@@ -252,7 +252,7 @@ Section FunctorialityCocone.
     (C : Cocone D X) (_ : UniversalCocone C)
     : UniversalCocone (cocone_postcompose C f).
   Proof.
-    snrapply Build_UniversalCocone; intro.
+    snapply Build_UniversalCocone; intro.
     rewrite <- (path_forall _ _ (fun g => cocone_postcompose_comp f g C)).
     exact isequiv_compose.
   Defined.

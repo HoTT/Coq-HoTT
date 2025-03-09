@@ -76,7 +76,7 @@ Definition Pushout_rec_beta_pglue {A B C f g} (P : Type)
   (a : A)
   : ap (Pushout_rec P pushb pushc pusha) (pglue a) = pusha a.
 Proof.
-  nrapply Coeq_rec_beta_cglue.
+  napply Coeq_rec_beta_cglue.
 Defined.
 
 (** ** Universal property *)
@@ -95,12 +95,12 @@ Definition pushout_rec_unrec {A B C} (f : A -> B) (g : A -> C) P
   (e : Pushout f g -> P)
   : Pushout_rec P (e o pushl) (e o pushr) (fun a => ap e (pglue a)) == e.
 Proof.
-  snrapply Pushout_ind.
+  snapply Pushout_ind.
   1, 2: reflexivity.
   intro a; cbn beta.
   transport_paths FlFr.
   apply equiv_p1_1q.
-  nrapply Pushout_rec_beta_pglue.
+  napply Pushout_rec_beta_pglue.
 Defined.
 
 Definition isequiv_Pushout_rec `{Funext} {A B C} (f : A -> B) (g : A -> C) P
@@ -111,7 +111,7 @@ Proof.
   srefine (isequiv_adjointify _ (pushout_unrec f g) _ _).
   - intro e. apply path_arrow. apply pushout_rec_unrec.
   - intros [[pushb pushc] pusha]; unfold pushout_unrec; cbn.
-    snrapply path_sigma'.
+    snapply path_sigma'.
     + reflexivity.
     + cbn. apply path_forall; intros a.
       apply Pushout_rec_beta_pglue.
@@ -177,16 +177,16 @@ Definition functor_pushout_beta_pglue
   : ap (functor_pushout h k l p q) (pglue a)
     = ap pushl (p a) @ pglue (h a) @ ap pushr (q a)^.
 Proof.
-  lhs nrapply functor_coeq_beta_cglue.
+  lhs napply functor_coeq_beta_cglue.
   symmetry.
-  snrapply ap011.
+  snapply ap011.
   - apply whiskerR.
     unfold pushl.
-    nrapply ap_compose.
+    napply ap_compose.
   - unfold pushr.
-    lhs nrapply ap_compose.
+    lhs napply ap_compose.
     apply ap.
-    nrapply ap_V.
+    napply ap_V.
 Defined.
 
 Lemma functor_pushout_homotopic
@@ -213,13 +213,13 @@ Defined.
 Definition functor_pushout_idmap {A B C : Type} {f : A -> B} {g : A -> C}
   : functor_pushout (f:=f) (g:=g) idmap idmap idmap (fun _ => 1) (fun _ => 1) == idmap.
 Proof.
-  snrapply Pushout_ind.
+  snapply Pushout_ind.
   1,2: reflexivity.
   simpl.
   intros a.
   transport_paths Flr.
-  nrapply moveR_pM.
-  nrapply functor_pushout_beta_pglue.
+  napply moveR_pM.
+  napply functor_pushout_beta_pglue.
 Defined.
 
 Definition functor_pushout_compose
@@ -234,17 +234,17 @@ Definition functor_pushout_compose
       o functor_pushout u v w p q.
 Proof.
   intros a.
-  rhs_V nrapply functor_coeq_compose.
-  snrapply functor_coeq_homotopy.
+  rhs_V napply functor_coeq_compose.
+  snapply functor_coeq_homotopy.
   1: reflexivity.
   1: exact functor_sum_compose.
   1,2: intros x; simpl.
   1,2: apply equiv_1p_q1.
-  1,2: lhs_V nrapply whiskerR.
-  1,3: nrapply ap_compose.
+  1,2: lhs_V napply whiskerR.
+  1,3: napply ap_compose.
   1,2: simpl.
-  1,2: lhs nrapply whiskerR.
-  1,3: nrapply ap_compose.
+  1,2: lhs napply whiskerR.
+  1,3: napply ap_compose.
   1,2: symmetry.
   1,2: apply ap_pp.
 Defined.
@@ -626,7 +626,7 @@ Section Descent.
   Definition fam_podescent (Pe : poDescent f g)
     : Pushout f g -> Type.
   Proof.
-    snrapply (Pushout_rec _ (pod_faml Pe) (pod_famr Pe)).
+    snapply (Pushout_rec _ (pod_faml Pe) (pod_famr Pe)).
     intro a.
     exact (path_universe_uncurried (pod_e Pe a)).
   Defined.
@@ -634,7 +634,7 @@ Section Descent.
   (** A type family over [Pushout f g] induces descent data. *)
   Definition podescent_fam (P : Pushout f g -> Type) : poDescent f g.
   Proof.
-    snrapply Build_poDescent.
+    snapply Build_poDescent.
     - exact (P o pushl).
     - exact (P o pushr).
     - intro a.
@@ -646,8 +646,8 @@ Section Descent.
     (Pe : poDescent f g) (a : A) (pf : pod_faml Pe (f a))
     : transport (fam_podescent Pe) (pglue a) pf = pod_e Pe a pf.
   Proof.
-    nrapply transport_path_universe'.
-    nrapply Pushout_rec_beta_pglue.
+    napply transport_path_universe'.
+    napply Pushout_rec_beta_pglue.
   Defined.
 
   (** A section on the descent data are fiberwise sections that respects the equivalences. *)
@@ -665,7 +665,7 @@ Section Descent.
     (s : poDescentSection Pe)
     : forall (x : Pushout f g), fam_podescent Pe x.
   Proof.
-    snrapply (Pushout_ind _ (pods_sectl s) (pods_sectr s)).
+    snapply (Pushout_ind _ (pods_sectl s) (pods_sectr s)).
     intro a.
     exact (transport_fam_podescent_pglue Pe a _ @ pods_e s a).
   Defined.
@@ -691,7 +691,7 @@ Section Descent.
     (Q : forall (x : Pushout f g), (fam_podescent Pe) x -> Type)
     : poDepDescent Pe.
   Proof.
-    snrapply Build_poDepDescent.
+    snapply Build_poDepDescent.
     - intro b; cbn.
       exact (Q (pushl b)).
     - intros c; cbn.
@@ -705,16 +705,16 @@ Section Descent.
   Definition fam_podepdescent {Pe : poDescent f g} (Qe : poDepDescent Pe)
     : forall (x : Pushout f g), (fam_podescent Pe x) -> Type.
   Proof.
-    snrapply Pushout_ind.
+    snapply Pushout_ind.
     - exact (podd_faml Qe).
     - exact (podd_famr Qe).
     - intro a.
-      nrapply (moveR_transport_p _ (pglue a)).
+      napply (moveR_transport_p _ (pglue a)).
       funext pf.
-      rhs nrapply transport_arrow_toconst.
+      rhs napply transport_arrow_toconst.
       rhs nrefine (ap (podd_famr _ _) _).
       + exact (path_universe (podd_e _ _ _)).
-      + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (pglue _))).
+      + lhs napply (ap (fun x => (transport _ x _)) (inv_V (pglue _))).
         exact (transport_fam_podescent_pglue _ _ _).
   Defined.
 
@@ -734,12 +734,12 @@ Section Descent.
     (s : poDepDescentSection (podepdescent_fam Q))
     : forall (x : Pushout f g) (px : fam_podescent Pe x), Q x px.
     Proof.
-      nrapply (Pushout_ind _ (podds_sectl s) (podds_sectr s) _).
+      napply (Pushout_ind _ (podds_sectl s) (podds_sectr s) _).
       intro a.
       apply dpath_forall.
       intro pf.
       apply (equiv_inj (transport (Q (pushr (g a))) (transport_fam_podescent_pglue Pe a pf))).
-      rhs nrapply (apD (podds_sectr s (g a)) (transport_fam_podescent_pglue Pe a pf)).
+      rhs napply (apD (podds_sectr s (g a)) (transport_fam_podescent_pglue Pe a pf)).
       exact (podds_e s a pf).
     Defined.
 
@@ -758,12 +758,12 @@ Section Descent.
     (s : poDepDescentConstSection Pe Q)
     : forall (x : Pushout f g), fam_podescent Pe x -> Q.
   Proof.
-    snrapply (Pushout_ind _ (poddcs_sectl s) (poddcs_sectr s)); cbn.
+    snapply (Pushout_ind _ (poddcs_sectl s) (poddcs_sectr s)); cbn.
     intro a.
-    nrapply dpath_arrow.
+    napply dpath_arrow.
     intro pf.
-    lhs nrapply transport_const.
-    rhs nrapply (ap _ (transport_fam_podescent_pglue Pe a pf)).
+    lhs napply transport_const.
+    rhs napply (ap _ (transport_fam_podescent_pglue Pe a pf)).
     exact (poddcs_e s a pf).
   Defined.
 
@@ -776,22 +776,22 @@ Section Descent.
   Proof.
     Open Scope long_path_scope.
     destruct pa.
-    rhs nrapply concat_p1.
-    lhs nrapply ap_sig_rec_path_sigma.
-    lhs nrapply (ap (fun x => _ (ap10 x _) @ _)).
-    1: nrapply Pushout_ind_beta_pglue.
-    do 3 lhs nrapply concat_pp_p.
+    rhs napply concat_p1.
+    lhs napply ap_sig_rec_path_sigma.
+    lhs napply (ap (fun x => _ (ap10 x _) @ _)).
+    1: napply Pushout_ind_beta_pglue.
+    do 3 lhs napply concat_pp_p.
     apply moveR_Vp.
     lhs nrefine (1 @@ (1 @@ (_ @@ 1))).
-    1: nrapply (ap10_dpath_arrow (fam_podescent Pe) (fun _ => Q) (pglue a)).
+    1: napply (ap10_dpath_arrow (fam_podescent Pe) (fun _ => Q) (pglue a)).
     lhs nrefine (1 @@ _).
-    { lhs nrapply (1 @@ concat_pp_p _ _ _).
-      lhs nrapply (1 @@ concat_pp_p _ _ _).
-      lhs nrapply concat_V_pp.
-      lhs nrapply (1 @@ concat_pp_p _ _ _).
+    { lhs napply (1 @@ concat_pp_p _ _ _).
+      lhs napply (1 @@ concat_pp_p _ _ _).
+      lhs napply concat_V_pp.
+      lhs napply (1 @@ concat_pp_p _ _ _).
       rewrite concat_p1.
       exact (1 @@ (1 @@ concat_pV_p _ _)). }
-    nrapply concat_V_pp.
+    napply concat_V_pp.
     Close Scope long_path_scope.
   Defined.
 
@@ -817,9 +817,9 @@ Section Flattening.
     {pf : pod_faml Pe (f a)} {pg : pod_famr Pe (g a)} (pa : pod_e Pe a pf = pg)
     : flatten_podl pf = flatten_podr pg.
   Proof.
-    snrapply path_sigma.
+    snapply path_sigma.
     - by apply pglue.
-    - lhs nrapply transport_fam_podescent_pglue.
+    - lhs napply transport_fam_podescent_pglue.
       exact pa.
   Defined.
 
@@ -827,39 +827,39 @@ Section Flattening.
   Lemma equiv_pod_flatten : sig (fam_podescent Pe) <~>
     Pushout (functor_sigma f (fun _ => idmap)) (functor_sigma g (pod_e Pe)).
   Proof.
-    snrapply equiv_adjointify.
-    - snrapply sig_rec.
-      snrapply podepdescent_rec.
-      snrapply Build_poDepDescentConstSection.
+    snapply equiv_adjointify.
+    - snapply sig_rec.
+      snapply podepdescent_rec.
+      snapply Build_poDepDescentConstSection.
       + exact (fun b pb => pushl (b; pb)).
       + exact (fun c pc => pushr (c; pc)).
       + intros a pf.
       cbn.
       exact (@pglue _ _ _
         (functor_sigma f (fun _ => idmap)) (functor_sigma g (pod_e Pe)) (a; pf)).
-    - snrapply Pushout_rec.
+    - snapply Pushout_rec.
       + exact (fun '(b; pb) => (pushl b; pb)).
       + exact (fun '(c; pc) => (pushr c; pc)).
       + intros [a pf]; cbn.
         exact (flatten_pod_glue a 1).
-    - snrapply Pushout_ind.
+    - srapply Pushout_ind.
       1, 2: reflexivity.
       intros [a pf]; cbn.
       transport_paths FFlr; apply equiv_p1_1q.
       rewrite Pushout_rec_beta_pglue.
-      lhs nrapply podepdescent_rec_beta_pglue.
-      nrapply concat_p1.
+      lhs napply podepdescent_rec_beta_pglue.
+      napply concat_p1.
     - intros [x px]; revert x px.
-      snrapply podepdescent_ind.
-      snrapply Build_poDepDescentSection.
+      snapply podepdescent_ind.
+      snapply Build_poDepDescentSection.
       + by intros b pb.
       + by intros c pc.
       + intros a pf; cbn.
-        lhs nrapply transportDD_is_transport.
+        lhs napply transportDD_is_transport.
         transport_paths FFlr; apply equiv_p1_1q.
         rewrite <- (concat_p1 (transport_fam_podescent_pglue _ _ _)).
         rewrite podepdescent_rec_beta_pglue. (* This needs to be in the form [transport_fam_podescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
-        lhs nrapply (ap _ (concat_p1 _)).
+        lhs napply (ap _ (concat_p1 _)).
         exact (Pushout_rec_beta_pglue _ _ _ _ (a; pf)).
   Defined.
 
@@ -883,12 +883,12 @@ Section Paths.
   Local Instance idsys_flatten_podescent
     : @IsIdentitySystem _ (pushl b0) (fam_podescent Pe) p0.
   Proof.
-    snrapply Build_IsIdentitySystem.
+    snapply Build_IsIdentitySystem.
     - intros Q q0 x px.
-      snrapply podepdescent_ind.
+      snapply podepdescent_ind.
       by apply based_podepdescent_ind.
     - intros Q q0; cbn.
-      nrapply (based_podepdescent_ind_beta (podepdescent_fam Q)).
+      napply (based_podepdescent_ind_beta (podepdescent_fam Q)).
   Defined.
 
   (** It follows that the fibers [fam_podescent Pe x] are equivalent to path spaces [(pushl a0) = x]. *)

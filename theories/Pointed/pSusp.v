@@ -39,7 +39,7 @@ Instance is0functor_psusp : Is0Functor psusp
 (** [psusp] is a 1-functor. *)
 Instance is1functor_psusp : Is1Functor psusp.
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   (** Action on 2-cells *)
   - intros X Y f g p.
     pointed_reduce.
@@ -140,7 +140,7 @@ Defined.
 Definition pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
-  snrapply Build_pEquiv.
+  snapply Build_pEquiv.
   1:exact (fmap (pTr _) (loop_susp_unit _)).
   rapply O_inverts_conn_map.
 Defined.
@@ -242,7 +242,7 @@ Qed.
 Definition loop_susp_adjoint `{Funext} (A B : pType)
   : (psusp A ->** B) <~>* (A ->** loops B).
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   - refine (equiv_adjointify
               (fun f => fmap loops f o* loop_susp_unit A)
               (fun g => loop_susp_counit B o* fmap psusp g) _ _).
@@ -262,7 +262,7 @@ Proof.
       apply pmap_precompose_idmap.
   - apply path_pforall.
     unfold equiv_adjointify, equiv_fun.
-    nrapply (pmap_prewhisker _ fmap_loops_pconst @* _).
+    napply (pmap_prewhisker _ fmap_loops_pconst @* _).
     tapply cat_zero_l.
 Defined.
 
@@ -292,7 +292,7 @@ Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
   : Is1Natural (opyon (psusp A)) (opyon A o loops)
       (loop_susp_adjoint A).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros B B' g f.
   refine ( _ @ cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).

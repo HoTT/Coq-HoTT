@@ -167,7 +167,7 @@ Definition equiv_merely_rec_hset_if_domain `{Funext} (X Y : Type)
   : { f : X -> Y & WeaklyConstant f } <~> (merely X -> Y).
 Proof.
   pose proof (Ys' := Trunc_rec Ys : merely X -> IsHSet Y).
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   - intros [f wc].  exact (merely_rec_hset_if_domain f (wc:=wc)).
   - intro g.  exists (g o tr).
     intros x y; apply (ap g), path_ishprop.
@@ -175,7 +175,7 @@ Proof.
     pose proof (Ys' mx).
     strip_truncations; reflexivity.
   - intros [f wc].
-    snrapply path_sigma; cbn.
+    snapply path_sigma; cbn.
     + reflexivity.
     + cbn. funext x y.
       pose (Ys x); apply path_ishprop.

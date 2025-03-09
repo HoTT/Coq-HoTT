@@ -31,15 +31,15 @@ Definition pequiv_hopf_total_join `{Univalence} (X : pType)
   `{IsHSpace X} `{forall a, IsEquiv (a *.)} `{forall a, IsEquiv (.* a)}
   : psigma (hopf_construction X) <~>* pjoin X X.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   { refine (_ oE equiv_pod_flatten (f := const_tt X) (g := const_tt X)
     (@Build_poDescent _ _ _ (const_tt X) (const_tt X)
     (Unit_ind (pointed_type X)) (Unit_ind (pointed_type X))
     (fun x => Build_Equiv _ _ (x *.) (H1 x)))).
-    snrapply equiv_pushout.
+    snapply equiv_pushout.
     (* The equivalence [{x : X & X} <~> X * X] that we need sends [(x; y) to (y, x*y)]. *)
     { cbn. refine (equiv_sigma_prod0 _ _ oE _ oE equiv_sigma_symm0 _ _).
-      snrapply equiv_functor_sigma_id.
+      snapply equiv_functor_sigma_id.
       intros x.
       exact (Build_Equiv _ _ (.* x) _). }
     1,2: exact (equiv_contr_sigma (Unit_ind (pointed_type X))).
@@ -66,7 +66,7 @@ Proposition hopf_retraction `{Univalence} (X : pType)
   : connecting_map_family (hopf_construction X) o* loop_susp_unit X
     ==* pmap_idmap.
 Proof.
-  nrapply hspace_phomotopy_from_homotopy.
+  napply hspace_phomotopy_from_homotopy.
   1: assumption.
   intro x; cbn.
   refine (transport_pp _ _ _ _ @ _); unfold dpoint.
@@ -82,14 +82,14 @@ Proposition isequiv_Pi_connected_hspace `{Univalence}
   `{IsHSpace X}
   : IsEquiv (fmap (pPi (n + n).+1) (loop_susp_unit X)).
 Proof.
-  nrapply isequiv_surj_emb.
+  napply isequiv_surj_emb.
   - apply issurj_pi_connmap.
     destruct n.
     + by apply (conn_map_loop_susp_unit (-1)).
     + rewrite <- trunc_index_add_nat_add.
       by apply (conn_map_loop_susp_unit).
   - pose (is0connected_isconnected n.-2 _).
-    nrapply isembedding_pi_psect.
+    napply isembedding_pi_psect.
     apply hopf_retraction.
 Defined.
 
@@ -100,12 +100,12 @@ Definition freudenthal_hspace' `{Univalence}
   : O_inverts (Tr (m +2+ m).+1) (loop_susp_unit X).
 Proof.
   set (r:=connecting_map_family (hopf_construction X)).
-  nrapply (OO_inverts_conn_map_factor_conn_map _ (m +2+ m) _ r).
+  napply (OO_inverts_conn_map_factor_conn_map _ (m +2+ m) _ r).
   2, 4: exact _.
   1: apply O_lex_leq_Tr.
   rapply (conn_map_homotopic _ equiv_idmap (r o loop_susp_unit X)).
   symmetry.
-  nrapply hopf_retraction.
+  napply hopf_retraction.
 Defined.
 
 (** Note that we don't really need the assumption that [X] is left-invertible in the previous result; for [m >= -1], it follows from connectivity.  And for [m = -2], the conclusion is trivial. Here we state the version for [m >= -1] without left-invertibility. *)
@@ -136,30 +136,30 @@ Proof.
   snrefine (pequiv_hopf_total_join (loops X) o*E _).
   2: exact ishspace_loops.
   2,3: exact _.
-  snrapply Build_pEquiv'.
-  { snrapply equiv_functor_sigma'.
+  snapply Build_pEquiv'.
+  { snapply equiv_functor_sigma'.
     1: exact (emap psusp (equiv_path_inverse _ _)).
-    snrapply Susp_ind; hnf.
+    snapply Susp_ind; hnf.
     1,2: reflexivity.
     intros p.
-    nrapply path_equiv.
+    napply path_equiv.
     funext q.
     simpl.
     lhs rapply (transport_equiv (merid p) _ q).
     simpl.
-    lhs nrapply ap.
-    { lhs nrapply transport_paths_Fl.
-      nrapply whiskerR.
-      { lhs nrapply (ap inverse (ap_V _ _)).
+    lhs napply ap.
+    { lhs napply transport_paths_Fl.
+      napply whiskerR.
+      { lhs napply (ap inverse (ap_V _ _)).
         lhs rapply inv_V.
         apply Susp_rec_beta_merid. } }
-    lhs nrapply (transport_idmap_ap _ (merid p)).
-    lhs nrapply (transport2 idmap).
-    { lhs nrapply ap_compose.
-      lhs nrapply ap.
+    lhs napply (transport_idmap_ap _ (merid p)).
+    lhs napply (transport2 idmap).
+    { lhs napply ap_compose.
+      lhs napply ap.
       1: apply functor_susp_beta_merid.
       apply Susp_rec_beta_merid. }
-    lhs nrapply transport_path_universe.
+    lhs napply transport_path_universe.
     apply concat_V_pp. }
   reflexivity.
 Defined.
@@ -171,21 +171,21 @@ Instance conn_map_loop_susp_counit `{Univalence}
 Proof.
   destruct n.
   - intro x; hnf; exact _.
-  - snrapply (conn_point_elim (-1)).
+  - snapply (conn_point_elim (-1)).
     + exact (isconnected_pred_add' n 0 _).
     + exact _.
-    + nrapply (isconnected_equiv' _ _ (pequiv_pfiber_loops_susp_counit_join X)^-1).
-      nrapply isconnected_join; exact _.
+    + napply (isconnected_equiv' _ _ (pequiv_pfiber_loops_susp_counit_join X)^-1).
+      napply isconnected_join; exact _.
 Defined.
 
 (** In particular, we get the following result.  All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
 Definition pequiv_ptr_psusp_loops `{Univalence} (X : pType) (n : nat) `{IsConnected n.+1 X}
   : pTr n.+2 (psusp (loops X)) <~>* pTr n.+2 X.
 Proof.
-  snrapply Build_pEquiv.
+  snapply Build_pEquiv.
   1: exact (fmap (pTr _) (loop_susp_counit _)).
-  nrapply O_inverts_conn_map.
-  nrapply (isconnmap_pred_add n.-2).
+  napply O_inverts_conn_map.
+  napply (isconnmap_pred_add n.-2).
   rewrite 2 trunc_index_add_succ.
   exact (conn_map_loop_susp_counit X).
 Defined.

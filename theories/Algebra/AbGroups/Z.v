@@ -13,7 +13,7 @@ Local Open Scope mc_add_scope.
 
 Definition abgroup_Z@{} : AbGroup@{Set}.
 Proof.
-  snrapply Build_AbGroup'.
+  snapply Build_AbGroup'.
   - exact Int.
   - exact 0%int.
   - exact int_neg.
@@ -29,7 +29,7 @@ Defined.
 Definition grp_pow_homo {G : Group} (g : G)
   : GroupHomomorphism abgroup_Z G.
 Proof.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   1: exact (grp_pow g).
   intros m n; apply grp_pow_add.
 Defined.
@@ -41,11 +41,11 @@ Proof.
   induction z.
   - reflexivity.
   - cbn.
-    lhs nrapply (grp_pow_succ (G:=abgroup_Z)).
-    rhs nrapply int_mul_succ_l.
+    lhs napply (grp_pow_succ (G:=abgroup_Z)).
+    rhs napply int_mul_succ_l.
     f_ap.
   - cbn.
-    lhs nrapply (grp_pow_pred (G:=abgroup_Z)).
-    rhs nrapply int_mul_pred_l.
+    lhs napply (grp_pow_pred (G:=abgroup_Z)).
+    rhs napply int_mul_pred_l.
     f_ap.
 Defined.

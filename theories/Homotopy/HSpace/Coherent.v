@@ -28,7 +28,7 @@ Definition issig_iscohhspace (A : pType)
 Definition iscohhspace_equiv_cohhspace {X Y : pType} `{IsCohHSpace Y} (f : X <~>* Y)
   : IsCohHSpace X.
 Proof.
-  snrapply Build_IsCohHSpace.
+  snapply Build_IsCohHSpace.
   - rapply (ishspace_equiv_hspace f).
     apply ishspace_cohhspace; assumption.
   - unfold IsCoherent; cbn.
@@ -42,7 +42,7 @@ Defined.
 (** Every loop space is a coherent H-space. *)
 Definition iscohhspace_loops {X : pType} : IsCohHSpace (loops X).
 Proof.
-  snrapply Build_IsCohHSpace.
+  srapply Build_IsCohHSpace.
   - exact ishspace_loops.
   - reflexivity.
 Defined.

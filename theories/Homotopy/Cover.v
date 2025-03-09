@@ -25,10 +25,10 @@ Definition O_pcover_prod `{O : ReflectiveSubuniverse} {X Y : pType@{u}}
 Proof.
   srapply Build_pEquiv'.
   { refine (_ oE equiv_functor_sigma_id _).
-    2: intro; nrapply equiv_path_O_prod.
-    nrapply equiv_sigma_prod_prod. }
-  nrapply path_prod; cbn.
-  all: snrapply path_sigma'.
+    2: intro; napply equiv_path_O_prod.
+    napply equiv_sigma_prod_prod. }
+  napply path_prod; cbn.
+  all: snapply path_sigma'.
   1,3: exact idpath.
   all: cbn.
   all: by rewrite concat_p1, concat_Vp.

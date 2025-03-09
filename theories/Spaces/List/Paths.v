@@ -89,7 +89,7 @@ Section PathList.
     - simpl.
       destruct (decode p).
       by destruct r.
-    - rhs_V nrapply IHl1.
+    - rhs_V napply IHl1.
       simpl.
       destruct (decode p).
       by destruct r.

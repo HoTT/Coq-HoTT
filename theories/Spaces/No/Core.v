@@ -922,7 +922,7 @@ Section NoCodes.
     refine (No_ind_hprop _ _); intros L R ? xL xR xcut xHL xHR.
     nrefine (No_ind_hprop _ _).
     (* Coq can find this proof by typeclass search, but helping it out makes this faster. *)
-    { intro x; nrapply istrunc_prod; nrapply istrunc_arrow; exact _. }
+    { intro x; napply istrunc_prod; napply istrunc_arrow; exact _. }
     intros L' R' ? yL yR ycut yHL yHR. split.
     - intros x_le_y.
       rewrite le'_cut in x_le_y.

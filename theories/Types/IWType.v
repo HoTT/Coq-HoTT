@@ -108,7 +108,7 @@ Section Reduction.
   Definition equiv_wtype_iwtype `{Funext} (x : I)
     : IW' x <~> IW I A B i j x.
   Proof.
-    snrapply equiv_adjointify.
+    snapply equiv_adjointify.
     { rapply (IW'_ind (fun l _ => IW I A B i j l)).
       intros a b c.
       apply iw_sup.
@@ -230,7 +230,7 @@ Section Paths.
     : IW I' A' B' i' j' (x; (a, b)) <~> a = b.
   Proof.
     change (IW I' A' B' i' j' (x; (a, b)) <~> IWPath (x; (a,b))).
-    snrapply equiv_adjointify.
+    snapply equiv_adjointify.
     { intros y.
       induction y as [e f g].
       apply iwpath_sup.
