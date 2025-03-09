@@ -35,7 +35,7 @@ Instance is0functor_cat_postcomp_paths (A : Type) `{Is01Cat A}
   (a b c : A) (g : b $-> c)
   : Is0Functor (cat_postcomp a g).
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   exact (@ap _ _ (cat_postcomp a g)).
 Defined.
 
@@ -44,14 +44,14 @@ Instance is0functor_cat_precomp_paths (A : Type) `{Is01Cat A}
   (a b c : A) (f : a $-> b)
   : Is0Functor (cat_precomp c f).
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   exact (@ap _ _ (cat_precomp c f)).
 Defined.
 
 (** Any type is a 1-category with n-morphisms given by paths. *)
 Instance is1cat_paths {A : Type} : Is1Cat A.
 Proof.
-  snrapply Build_Is1Cat.
+  snapply Build_Is1Cat.
   - exact _.
   - exact _.
   - exact _.
@@ -65,7 +65,7 @@ Defined.
 (** Any type is a 1-groupoid with morphisms given by paths. *)
 Instance is1gpd_paths {A : Type} : Is1Gpd A.
 Proof.
-  snrapply Build_Is1Gpd.
+  snapply Build_Is1Gpd.
   - exact (@concat_pV A).
   - exact (@concat_Vp A).
 Defined.
@@ -73,18 +73,18 @@ Defined.
 (** Any type is a 2-category with higher morphhisms given by paths. *)
 Instance is21cat_paths {A : Type} : Is21Cat A.
 Proof.
-  snrapply Build_Is21Cat.
+  snapply Build_Is21Cat.
   - exact _.
   - exact _.
   - intros x y z p.
-    snrapply Build_Is1Functor.
+    snapply Build_Is1Functor.
     + intros a b q r.
       exact (ap (fun x => whiskerR x _)).
     + reflexivity.
     + intros a b c.
       exact (whiskerR_pp p).
   - intros x y z p.
-    snrapply Build_Is1Functor.
+    snapply Build_Is1Functor.
     + intros a b q r.
       exact (ap (whiskerL p)).
     + reflexivity.
@@ -93,31 +93,31 @@ Proof.
   - intros a b c q r s t h g.
     exact (concat_whisker q r s t h g)^.
   - intros a b c d q r.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros s t h.
     apply concat_p_pp_nat_r.
   - intros a b c d q r.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros s t h.
     apply concat_p_pp_nat_m.
   - intros a b c d q r.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros s t h.
     apply concat_p_pp_nat_l.
   - intros a b.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros p q h; cbn.
     apply moveL_Mp.
-    lhs nrapply concat_p_pp.
+    lhs napply concat_p_pp.
     exact (whiskerR_p1 h).
   - intros a b.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros p q h.
     apply moveL_Mp.
     lhs rapply concat_p_pp.
     exact (whiskerL_1p h).
   - intros a b c d e p q r s.
-    lhs nrapply concat_p_pp.
+    lhs napply concat_p_pp.
     exact (pentagon p q r s).
   - intros a b c p q.
     exact (triangulator p q).

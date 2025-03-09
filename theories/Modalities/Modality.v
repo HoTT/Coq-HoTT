@@ -298,7 +298,7 @@ Proof.
   intros n; generalize dependent A.
   induction n as [|n IHn]; intros; [ exact tt | cbn ].
   refine (extension_from_inO_sigma O B , _).
-  intros h k; nrapply IHn.
+  intros h k; napply IHn.
   set (Z := sig B) in *.
   pose (W := sig (fun a => B a * B a)).
   nrefine (inO_equiv_inO' (Pullback (A := W) (fun a:O_reflector O' A => (a;(h a,k a)))
@@ -378,7 +378,7 @@ Proposition conn_map_O_functor_strong_leq {O1 O2 : ReflectiveSubuniverse} (leq :
   : IsConnMap O1 (O_functor O2 f).
 Proof.
   rapply (cancelR_conn_map _ (to O2 _)).
-  nrapply conn_map_homotopic.
+  napply conn_map_homotopic.
   1: symmetry; apply to_O_natural.
   rapply conn_map_compose.
 Defined.

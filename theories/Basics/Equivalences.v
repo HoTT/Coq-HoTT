@@ -103,7 +103,7 @@ Section EquivTransportD.
     (** The inverse of transportD is defined explicitly.  This allows us to reason about the inverse when the input is not [idpath]. *)
     #[export] Instance isequiv_transportD : IsEquiv (transportD P Q p px).
     Proof.
-      snrapply Build_IsEquiv.
+      snapply Build_IsEquiv.
       { refine (_ o transportD P Q p^ (transport P p px)).
         exact (transport (Q x) (transport_Vp _ p px)). }
       all: by destruct p.
@@ -162,7 +162,7 @@ Definition isequiv_homotopic {A B : Type} (f : A -> B) {g : A -> B}
   `{IsEquiv A B f} (h : f == g)
   : IsEquiv g.
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   - exact f^-1.
   - intro b.  exact ((h _)^ @ eisretr f b).
   - intro a.  exact (ap f^-1 (h a)^ @ eissect f a).
@@ -182,7 +182,7 @@ Definition equiv_homotopic_inverse {A B} (e : A <~> B)
   {f : A -> B} {g : B -> A} (h : f == e) (k : g == e^-1)
   : A <~> B.
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   - exact f.
   - exact g.
   - intro a.  exact (ap f (k a) @ h _ @ eisretr e a).

@@ -63,7 +63,7 @@ Definition dcate_inv {A} {D : A -> Type} `{DHasEquivs A D}
   {a b : A} {f : a $<~> b} {a' : D a} {b' : D b} (f' : DCatEquiv f a' b')
   : DCatEquiv (f^-1$) b' a'.
 Proof.
-  snrapply dcate_adjointify.
+  snapply dcate_adjointify.
   - exact (dcate_inv' f').
   - exact f'.
   - exact (dcate_issect' f').
@@ -139,7 +139,7 @@ Defined.
 Instance hasequivs_total {A} (D : A -> Type) `{DHasEquivs A D}
   : HasEquivs (sig D).
 Proof.
-  snrapply Build_HasEquivs.
+  snapply Build_HasEquivs.
   1:{ intros [a a'] [b b']. exact {f : a $<~> b & DCatEquiv f a' b'}. }
   all: intros aa' bb' [f f'].
   - exact {fe : CatIsEquiv f & DCatIsEquiv f'}.
@@ -178,7 +178,7 @@ Definition dcatie_homotopic {A} {D : A -> Type} `{DHasEquivs A D} {a b : A}
   (p' : DGpdHom p f' g')
   : DCatIsEquiv (fe:=catie_homotopic f p) g'.
 Proof.
-  snrapply dcatie_adjointify.
+  snapply dcatie_adjointify.
   - exact (Build_DCatEquiv (fe':=fe') f')^-1$'.
   - refine (p'^$' $@R' _ $@' _).
     1: exact isd0gpd_hom.
@@ -198,7 +198,7 @@ Instance dcompose_catie {A} {D : A -> Type} `{DHasEquivs A D}
   (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
   : DCatIsEquiv (dcate_fun g' $o' f').
 Proof.
-  snrapply dcatie_adjointify.
+  snapply dcatie_adjointify.
   - exact (dcate_fun f'^-1$' $o' g'^-1$').
   - refine (dcat_assoc _ _ _ $@' _).
     refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).
@@ -366,7 +366,7 @@ Definition dcate_moveL_V1 {A} {D : A -> Type} `{DHasEquivs A D}
   : DGpdHom (cate_moveL_V1 f p) f' (dcate_fun e'^-1$').
 Proof.
   apply (dcate_monic_equiv e').
-  nrapply (p' $@' (dcate_isretr e')^$').
+  napply (p' $@' (dcate_isretr e')^$').
   exact isd0gpd_hom.
 Defined.
 
@@ -377,7 +377,7 @@ Definition dcate_moveL_1V {A} {D : A -> Type} `{DHasEquivs A D}
   : DGpdHom (cate_moveL_1V f p) f' (dcate_fun e'^-1$').
 Proof.
   apply (dcate_epic_equiv e').
-  nrapply (p' $@' (dcate_issect e')^$').
+  napply (p' $@' (dcate_issect e')^$').
   exact isd0gpd_hom.
 Defined.
 
@@ -421,7 +421,7 @@ Definition dcate_inv_compose {A} {D : A -> Type} `{DHasEquivs A D}
     (dcate_fun (f' $oE' e')^-1$') (dcate_fun (e'^-1$' $oE' f'^-1$')).
 Proof.
   refine (_ $@' (dcompose_cate_fun e'^-1$' f'^-1$')^$').
-  - snrapply dcate_inv_adjointify.
+  - snapply dcate_inv_adjointify.
   - exact isd0gpd_hom.
 Defined.
 
@@ -487,7 +487,7 @@ Definition demap_compose {A B : Type}
 Proof.
   refine (dcate_buildequiv_fun _ $@' _).
   refine (dfmap2 F F' (dcompose_cate_fun _ _) $@' _).
-  nrapply dfmap_comp; exact isd1f.
+  napply dfmap_comp; exact isd1f.
 Defined.
 
 (** A variant. *)
@@ -551,7 +551,7 @@ Instance isunivalent1cat_total {A} `{IsUnivalent1Cat A} (D : A -> Type)
   `{!IsDUnivalent1Cat D}
   : IsUnivalent1Cat (sig D).
 Proof.
-  snrapply Build_IsUnivalent1Cat.
+  snapply Build_IsUnivalent1Cat.
   intros aa' bb'.
   apply (isequiv_homotopic
           (dcat_equiv_path_total _ _ o (path_sigma_uncurried D aa' bb')^-1)).

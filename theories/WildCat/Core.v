@@ -610,7 +610,7 @@ Definition basepointpreservingfunctor_compose {B C D : Type}
            (F : B -->* C) (G : C -->* D)
   : B -->* D.
 Proof.
-  snrapply Build_BasepointPreservingFunctor.
+  snapply Build_BasepointPreservingFunctor.
   - exact (G o F).
   - exact _.
   - exact (bp_pointed G $o fmap G (bp_pointed F)).

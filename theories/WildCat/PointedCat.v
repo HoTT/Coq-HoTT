@@ -103,9 +103,9 @@ Lemma fmap_zero_morphism {A B : Type} (F : A -> B)
 Proof.
   refine (fmap_comp F _ _ $@ _).
   refine (_ $@R _ $@ _).
-  1: nrapply fmap_initial; [exact _].
+  1: napply fmap_initial; [exact _].
   refine (_ $@L _ $@ _).
-  1: nrapply fmap_terminal; [exact _].
+  1: napply fmap_terminal; [exact _].
   rapply cat_zero_m.
   rapply pfunctor_zero.
 Defined.
@@ -113,7 +113,7 @@ Defined.
 (** Opposite category of a pointed category is also pointed. *)
 Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
 Proof.
-  snrapply Build_IsPointedCat.
+  snapply Build_IsPointedCat.
   1: unfold op; exact zero_object.
   1,2: exact _.
 Defined.

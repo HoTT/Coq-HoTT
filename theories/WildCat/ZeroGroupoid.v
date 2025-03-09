@@ -46,14 +46,14 @@ Defined.
 Instance is2graph_0gpd : Is2Graph ZeroGpd.
 Proof.
   intros G H.
-  snrapply Build_IsGraph.
+  snapply Build_IsGraph.
   intros f g.
   exact (forall x : G, f x $== g x).
 Defined.
 
 Instance is1cat_0gpd : Is1Cat ZeroGpd.
 Proof.
-  snrapply Build_Is1Cat.
+  snapply Build_Is1Cat.
   - intros G H.
     srapply Build_Is01Cat.
     + intro f. exact (fun x => Id (f x)).
@@ -119,7 +119,7 @@ Proof.
   econstructor.
   - intro y.
     exists (equiv_fun_0gpd f^-1$ y).
-    rapply cat_eisretr.
+    tapply cat_eisretr.
   - apply isinj_equiv_0gpd.
 Defined.
 
@@ -129,10 +129,10 @@ Definition isequiv_0gpd_issurjinj {G H : ZeroGpd} (F : G $-> H)
   : Cat_IsBiInv F.
 Proof.
   destruct e as [e0 e1]; unfold SplEssSurj in e0.
-  srapply catie_adjointify.
-  - snrapply Build_Morphism_0Gpd.
+  stapply catie_adjointify.
+  - snapply Build_Morphism_0Gpd.
     1: exact (fun y => (e0 y).1).
-    snrapply Build_Is0Functor; cbn beta.
+    snapply Build_Is0Functor; cbn beta.
     intros y1 y2 m.
     apply e1.
     exact ((e0 y1).2 $@ m $@ ((e0 y2).2)^$).
@@ -153,9 +153,9 @@ Definition prod_0gpd_pr {I : Type} {G : I -> ZeroGpd}
   : forall i, prod_0gpd I G $-> G i.
 Proof.
   intros i.
-  snrapply Build_Morphism_0Gpd.
+  snapply Build_Morphism_0Gpd.
   1: exact (fun f => f i).
-  snrapply Build_Is0Functor; cbn beta.
+  snapply Build_Is0Functor; cbn beta.
   intros f g p.
   exact (p i).
 Defined.
@@ -164,14 +164,14 @@ Defined.
 Definition equiv_prod_0gpd_corec {I : Type} {G : ZeroGpd} {H : I -> ZeroGpd}
   : (forall i, G $-> H i) <~> (G $-> prod_0gpd I H).
 Proof.
-  snrapply Build_Equiv.
+  snapply Build_Equiv.
   { intro f.
-    snrapply Build_Morphism_0Gpd.
+    snapply Build_Morphism_0Gpd.
     1: exact (fun x i => f i x).
-    snrapply Build_Is0Functor; cbn beta.
+    snapply Build_Is0Functor; cbn beta.
     intros x y p i; simpl.
     exact (fmap (f i) p). }
-  snrapply Build_IsEquiv.
+  snapply Build_IsEquiv.
   - intro f.
     intros i.
     exact (prod_0gpd_pr i $o f).
@@ -188,11 +188,11 @@ Definition cate_prod_0gpd {I J : Type} (ie : I <~> J)
   (f : forall (i : I), G i $<~> H (ie i))
   : prod_0gpd I G $<~> prod_0gpd J H.
 Proof.
-  snrapply cate_adjointify.
-  - snrapply Build_Morphism_0Gpd.
+  snapply cate_adjointify.
+  - snapply Build_Morphism_0Gpd.
     + intros h j.
       exact (transport H (eisretr ie j) (cate_fun (f (ie^-1 j)) (h _))).
-    + nrapply Build_Is0Functor.
+    + napply Build_Is0Functor.
       intros g h p j.
       destruct (eisretr ie j).
       refine (_ $o Hom_path (transport_1 _ _)).

@@ -60,7 +60,7 @@ Definition functor_spushout {X Y Z W : Type}
   (f : X -> Z) (g : Y -> W) (h : forall x y, Q x y -> Q' (f x) (g y))
   : SPushout Q -> SPushout Q'.
 Proof.
-  snrapply spushout_rec.
+  snapply spushout_rec.
   - exact (fun x => spushl Q' (f x)).
   - exact (fun y => spushr Q' (g y)).
   - intros x y q. apply spglue. exact (h x y q).
@@ -74,27 +74,27 @@ Definition functor_spushout_compose {X Y X' Y' X'' Y'' : Type}
   : functor_spushout f' g' h' o functor_spushout f g h
     == functor_spushout (f' o f) (g' o g) (fun x y => h' _ _ o h x y).
 Proof.
-  snrapply spushout_ind.
+  snapply spushout_ind.
   1,2: reflexivity.
   intros x y q; cbn beta.
   transport_paths FFlFr.
   apply equiv_p1_1q.
-  lhs nrapply ap.
-  1: nrapply spushout_rec_beta_spglue.
-  lhs nrapply spushout_rec_beta_spglue.
+  lhs napply ap.
+  1: napply spushout_rec_beta_spglue.
+  lhs napply spushout_rec_beta_spglue.
   symmetry.
-  nrapply (spushout_rec_beta_spglue Q).
+  napply (spushout_rec_beta_spglue Q).
 Defined.
 
 Definition functor_spushout_idmap {X Y : Type} {Q : X -> Y -> Type}
   : functor_spushout idmap idmap (fun x y (q : Q x y) => q) == idmap.
 Proof.
-  snrapply spushout_ind.
+  snapply spushout_ind.
   1,2: reflexivity.
   intros x y q; cbn.
   transport_paths Flr.
   apply equiv_p1_1q.
-  nrapply spushout_rec_beta_spglue.
+  napply spushout_rec_beta_spglue.
 Defined.
 
 Definition functor_spushout_homotopic {X Y Z W : Type}
@@ -108,16 +108,16 @@ Definition functor_spushout_homotopic {X Y Z W : Type}
       = ap (spushl Q') (h x) @ spglue Q' (m x y q))
   : functor_spushout f i l == functor_spushout g j m.
 Proof.
-  snrapply spushout_ind.
+  snapply spushout_ind.
   - intros x; cbn.
     exact (ap (spushl Q') (h x)).
   - intros y; cbn.
     exact (ap (spushr Q') (k y)).
   - intros x y q.
     transport_paths FlFr.
-    lhs nrapply whiskerR.
+    lhs napply whiskerR.
     1: apply spushout_rec_beta_spglue.
-    rhs nrapply whiskerL.
+    rhs napply whiskerL.
     2: apply spushout_rec_beta_spglue.
     apply H.
 Defined.
@@ -127,7 +127,7 @@ Definition equiv_pushout_spushout {X Y Z : Type} (f : X -> Y) (g : X -> Z)
   : Pushout f g
     <~> SPushout (fun (y : Y) (z : Z) => {x : X & f x = y /\ g x = z}).
 Proof.
-  snrapply equiv_pushout.
+  snapply equiv_pushout.
   { nrefine (equiv_sigma_prod _ oE _).
     apply equiv_double_fibration_replacement. }
   1-4: reflexivity.
