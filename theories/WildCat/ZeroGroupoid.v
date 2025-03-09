@@ -34,7 +34,7 @@ Proof.
   snrapply Build_Is1Cat.
   - intros G H.
     srapply Build_Is01Cat.
-    + intro f. exact (fun x => Id (f x)). 
+    + intro f. exact (fun x => Id (f x)).
     + intros f g h p q. exact (fun x => q x $@ p x).
   - intros G H.
     srapply Build_Is0Gpd.
@@ -56,6 +56,7 @@ Proof.
 Defined.
 
 (** We define equivalences of 0-groupoids as the bi-invertible maps, using [Cat_BiInv] and [Cat_IsBiInv].  This definition is chosen to provide what is needed for the Yoneda lemma, and because it specializes to one of the correct definitions for types. *)
+
 Instance hasequivs_0gpd : HasEquivs ZeroGpd
   := cat_hasequivs ZeroGpd.
 
