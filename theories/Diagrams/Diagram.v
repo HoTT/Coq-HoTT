@@ -84,7 +84,7 @@ Section Diagram.
       DiagramMap_comm m1 g x @ h_obj j (D1 _f g x)
       = ap (D2 _f g) (h_obj i x) @ DiagramMap_comm m2 g x)}.
 
-  Global Instance reflexive_DiagramMap_homotopy {D1 D2 : Diagram G} : Reflexive (@DiagramMap_homotopy D1 D2).
+  #[export] Instance reflexive_DiagramMap_homotopy {D1 D2 : Diagram G} : Reflexive (@DiagramMap_homotopy D1 D2).
   Proof.
     intros m.
     snrapply exist.
@@ -193,13 +193,13 @@ Section Diagram.
 
   (** The equivalence of diagram is an equivalence relation. *)
   (** Those instances allows to use the tactics reflexivity, symmetry and transitivity. *)
-  Global Instance reflexive_diagram_equiv : Reflexive diagram_equiv | 1
+  #[export] Instance reflexive_diagram_equiv : Reflexive diagram_equiv | 1
     := fun D => Build_diagram_equiv (diagram_idmap D) _.
 
-  Global Instance symmetric_diagram_equiv : Symmetric diagram_equiv | 1
+  #[export] Instance symmetric_diagram_equiv : Symmetric diagram_equiv | 1
     := fun D1 D2 m => Build_diagram_equiv (diagram_equiv_inv m) _.
 
-  Global Instance transitive_diagram_equiv : Transitive diagram_equiv | 1.
+  #[export] Instance transitive_diagram_equiv : Transitive diagram_equiv | 1.
   Proof.
     intros D1 D2 D3 m1 m2.
     nrapply (Build_diagram_equiv (diagram_comp m2 m1)).

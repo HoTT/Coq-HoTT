@@ -47,7 +47,7 @@ Proof.
   exact (functor_susp (f i)).
 Defined.
 
-Global Instance isaccrsu_sep (O : Subuniverse) `{IsAccRSU O}
+Instance isaccrsu_sep (O : Subuniverse) `{IsAccRSU O}
   : IsAccRSU (Sep O).
 Proof.
   exists (susp_localgen (acc_lgen O)).
@@ -74,7 +74,7 @@ Proof.
   exact (Susp (S i)).
 Defined.
 
-Global Instance isaccmodality_sep (O : Subuniverse) `{IsAccModality O}
+Instance isaccmodality_sep (O : Subuniverse) `{IsAccModality O}
   : IsAccModality (Sep O).
 Proof.
   exists (susp_nullgen (acc_ngen O)).
@@ -103,7 +103,7 @@ Proof.
 Defined.
 
 (** Remark 2.16(1) of CORS *)
-Global Instance O_leq_SepO (O : ReflectiveSubuniverse)
+Instance O_leq_SepO (O : ReflectiveSubuniverse)
   : O <= Sep O.
 Proof.
   intros A ? x y; exact _.
@@ -126,7 +126,7 @@ Proof.
   exact (@in_SepO_embedding (Tr n) _ _ i isem istr).
 Defined.
 
-Global Instance in_SepO_hprop (O : ReflectiveSubuniverse)
+Instance in_SepO_hprop (O : ReflectiveSubuniverse)
        {A : Type} `{IsHProp A}
   : In (Sep O) A.
 Proof.
@@ -148,7 +148,7 @@ Proof.
 Defined.
 
 (** Lemma 2.17 of CORS *)
-Global Instance issurjective_to_SepO (O : ReflectiveSubuniverse) (X : Type)
+Instance issurjective_to_SepO (O : ReflectiveSubuniverse) (X : Type)
            `{Reflects (Sep O) X}
   : IsSurjection (to (Sep O) X).
 Proof.
@@ -180,7 +180,7 @@ Proof.
 Defined.
 
 (** Lemma 2.21 of CORS *)
-Global Instance inSepO_sigma (O : ReflectiveSubuniverse)
+Instance inSepO_sigma (O : ReflectiveSubuniverse)
        {X : Type} {P : X -> Type} `{In (Sep O) X} `{forall x, In O (P x)}
   : In (Sep O) (sig P).
 Proof.
@@ -189,7 +189,7 @@ Proof.
 Defined.
 
 (** Proposition 2.22 of CORS (in funext-free form). *)
-Global Instance reflectsD_SepO (O : ReflectiveSubuniverse)
+Instance reflectsD_SepO (O : ReflectiveSubuniverse)
        {X : Type} `{Reflects (Sep O) X}
   : ReflectsD (Sep O) O X.
 Proof.
@@ -221,15 +221,15 @@ Section JoinConstruction.
   Definition jc_factor1@{} : X -> jc_image. Admitted.
   Definition jc_factor2@{} : jc_image -> Y. Admitted.
   Definition jc_factors@{} : jc_factor2 o jc_factor1 == f. Admitted.
-  Global Instance jc_factor1_issurj@{} : IsSurjection jc_factor1. Admitted.
-  Global Instance jc_factor2_isemb : IsEmbedding jc_factor2. Admitted.
+  #[export] Instance jc_factor1_issurj@{} : IsSurjection jc_factor1. Admitted.
+  #[export] Instance jc_factor2_isemb : IsEmbedding jc_factor2. Admitted.
 End JoinConstruction.
 
 (** We'd like to say that the universe of [O]-modal types is [O]-separated, i.e. belongs to [Sep O].  But since a given subuniverse like [Sep O] lives only on a single universe size, trying to say that in the naive way yields a universe inconsistency. *)
 Fail Goal forall (O : ReflectiveSubuniverse), In (Sep O) (Type_ O).
 
 (** Instead, we do as in Lemma 2.19 of CORS and prove the morally-equivalent "descent" property, using Lemma 2.18 and the join construction. *)
-Global Instance SepO_lex_leq `{Univalence}
+Instance SepO_lex_leq `{Univalence}
        (O : ReflectiveSubuniverse) {X : Type} `{Reflects (Sep O) X}
   : Descends (Sep O) O X.
 Proof.

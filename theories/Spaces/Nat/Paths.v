@@ -33,7 +33,7 @@ Fixpoint path_nat {n m} : (n =n m) -> (n = m) :=
   | _, _ => fun H => match H with end
   end.
 
-Global Instance isequiv_path_nat {n m} : IsEquiv (@path_nat n m).
+Instance isequiv_path_nat {n m} : IsEquiv (@path_nat n m).
 Proof.
   refine (isequiv_adjointify
             (@path_nat n m)

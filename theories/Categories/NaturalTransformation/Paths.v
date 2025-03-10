@@ -36,7 +36,7 @@ Section path_natural_transformation.
   Defined.
 
   (** ** The type of natural transformations is an hSet *)
-  Global Instance trunc_natural_transformation
+  #[export] Instance trunc_natural_transformation
   : IsHSet (NaturalTransformation F G).
   Proof.
     eapply istrunc_equiv_istrunc; [ exact equiv_sig_natural_transformation | ].

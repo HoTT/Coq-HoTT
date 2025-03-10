@@ -37,7 +37,7 @@ Module Export Core.
     := H.
 
   (** *** Indiscrete categories are (saturated/univalent) categories *)
-  Global Instance iscategory_indiscrete_category `{H : IsHProp X}
+  #[export] Instance iscategory_indiscrete_category `{H : IsHProp X}
   : IsCategory (indiscrete_category X).
   Proof.
     intros.

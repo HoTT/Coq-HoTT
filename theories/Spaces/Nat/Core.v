@@ -149,7 +149,7 @@ Definition lt n m : Type0 := leq (S n) m.
 Existing Class lt.
 #[export] Hint Unfold lt : typeclass_instances.
 Infix "<" := lt : nat_scope.
-Global Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
+Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
 
 (** *** Greater than or equal To [>=] *)
 
@@ -157,7 +157,7 @@ Definition geq n m := leq m n.
 Existing Class geq.
 #[export] Hint Unfold geq : typeclass_instances.
 Infix ">=" := geq : nat_scope.
-Global Instance geq_is_leq n m : leq m n -> geq n m | 100 := idmap.
+Instance geq_is_leq n m : leq m n -> geq n m | 100 := idmap.
 
 (*** Greater Than [>] *)
 
@@ -165,7 +165,7 @@ Definition gt n m := lt m n.
 Existing Class gt.
 #[export] Hint Unfold gt : typeclass_instances.
 Infix ">" := gt : nat_scope.
-Global Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
+Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
 
 (** *** Combined comparison predicates *)
 
@@ -217,7 +217,7 @@ Definition nat_succ_pred@{} n : 0 < n -> nat_succ (nat_pred n) = n
 
 (** Injectivity of successor. *)
 Definition path_nat_succ@{} n m (H : S n = S m) : n = m := ap nat_pred H.
-Global Instance isinj_succ : IsInjective nat_succ := path_nat_succ.
+Instance isinj_succ : IsInjective nat_succ := path_nat_succ.
 
 (** Inequality of sucessors is implied with inequality of the arguments. *)
 Definition neq_nat_succ@{} n m : n <> m -> S n <> S m.
@@ -244,7 +244,7 @@ Defined.
 (** ** Truncatedness of natural numbers *)
 
 (** [nat] has decidable paths. *)
-Global Instance decidable_paths_nat@{} : DecidablePaths nat.
+Instance decidable_paths_nat@{} : DecidablePaths nat.
 Proof.
   intros n m.
   induction n as [|n IHn] in m |- *; destruct m.
@@ -257,7 +257,7 @@ Proof.
 Defined.
 
 (** [nat] is therefore a hset. *)
-Global Instance ishset_nat : IsHSet nat := _.
+Instance ishset_nat : IsHSet nat := _.
 
 (** ** Properties of addition *)
 
@@ -306,7 +306,7 @@ Proof.
 Defined.
 
 (** Addition on the left is injective. *)
-Global Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
+Instance isinj_nat_add_l@{} k : IsInjective (nat_add k).
 Proof.
   simple_induction k k Ik; exact _.
 Defined.
@@ -415,7 +415,7 @@ Definition nat_mul_one_r@{} n : n * 1 = n
 (** *** Basic properties of [<=] *)
 
 (** [<=] is reflexive by definition. *)
-Global Instance reflexive_leq : Reflexive leq := leq_refl.
+Instance reflexive_leq : Reflexive leq := leq_refl.
 
 (** Being less than or equal to is a transitive relation. *)
 Definition leq_trans {x y z} : x <= y -> y <= z -> x <= z.
@@ -425,7 +425,7 @@ Defined.
 Hint Immediate leq_trans : typeclass_instances.
 
 (** [<=] is transtiive. *)
-Global Instance transitive_leq : Transitive leq := @leq_trans.
+Instance transitive_leq : Transitive leq := @leq_trans.
 
 (** [0] is less than or equal to any natural number. *)
 Definition leq_zero_l n : 0 <= n.
@@ -434,13 +434,13 @@ Proof.
 Defined.
 Existing Instance leq_zero_l | 10.
 
-Global Instance pred_leq {m} : nat_pred m <= m.
+Instance pred_leq {m} : nat_pred m <= m.
 Proof.
   destruct m; exact _.
 Defined.
 
 (** A predecessor is less than or equal to a predecessor if the original number is less than or equal. *)
-Global Instance leq_pred {n m} : n <= m -> nat_pred n <= nat_pred m.
+Instance leq_pred {n m} : n <= m -> nat_pred n <= nat_pred m.
 Proof.
   intros H; induction H; exact _.
 Defined.
@@ -464,8 +464,8 @@ Proof.
   intros p; by apply IHn, leq_pred'.
 Defined.
 
-Global Instance irreflexive_lt : Irreflexive lt := lt_irrefl.
-Global Instance irreflexive_gt : Irreflexive gt := lt_irrefl.
+Instance irreflexive_lt : Irreflexive lt := lt_irrefl.
+Instance irreflexive_gt : Irreflexive gt := lt_irrefl.
 
 (** [<=] is an antisymmetric relation. *)
 Definition leq_antisym {x y} : x <= y -> y <= x -> x = y.
@@ -478,8 +478,8 @@ Proof.
   contradiction (lt_irrefl _ (leq_trans p q)).
 Defined.
 
-Global Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
-Global Instance antisymemtric_geq : AntiSymmetric geq
+Instance antisymmetric_leq : AntiSymmetric leq := @leq_antisym.
+Instance antisymemtric_geq : AntiSymmetric geq
   := fun _ _ p q => leq_antisym q p.
 
 (** Every natural number is zero or greater than zero. *)
@@ -547,7 +547,7 @@ Defined.
 Definition leq_succ_r_inj n m (p : n <= m.+1) (q : n <= m) : p = leq_succ_r q
   := leq_succ_r_inj_gen n m m.+1 p q idpath.
 
-Global Instance ishprop_leq n m : IsHProp (n <= m).
+Instance ishprop_leq n m : IsHProp (n <= m).
 Proof.
   apply hprop_allpath.
   intros p q; revert p.
@@ -563,7 +563,7 @@ Proof.
   srapply equiv_iff_hprop.
 Defined.
 
-Global Instance decidable_leq n m : Decidable (n <= m).
+Instance decidable_leq n m : Decidable (n <= m).
 Proof.
   revert n.
   simple_induction' m; intros n.
@@ -607,23 +607,23 @@ Definition lt_trans {n m k} : n < m -> m < k -> n < k
   := fun H1 H2 => leq_lt (lt_leq_lt_trans H1 H2).
 Hint Immediate lt_trans : typeclass_instances.
 
-Global Instance transitive_lt : Transitive lt := @lt_trans.
-Global Instance ishprop_lt n m : IsHProp (n < m) := _.
-Global Instance decidable_lt n m : Decidable (lt n m) := _.
+Instance transitive_lt : Transitive lt := @lt_trans.
+Instance ishprop_lt n m : IsHProp (n < m) := _.
+Instance decidable_lt n m : Decidable (lt n m) := _.
 
 (** *** Basic properties of [>=] *)
 
-Global Instance reflexive_geq : Reflexive geq := leq_refl.
-Global Instance transitive_geq : Transitive geq := fun x y z p q => leq_trans q p.
-Global Instance ishprop_geq n m : IsHProp (geq n m) := _.
-Global Instance decidable_geq n m : Decidable (geq n m) := _.
+Instance reflexive_geq : Reflexive geq := leq_refl.
+Instance transitive_geq : Transitive geq := fun x y z p q => leq_trans q p.
+Instance ishprop_geq n m : IsHProp (geq n m) := _.
+Instance decidable_geq n m : Decidable (geq n m) := _.
 
 (** *** Basic properties of [>] *)
 
-Global Instance transitive_gt : Transitive gt
+Instance transitive_gt : Transitive gt
   := fun x y z p q => transitive_lt _ _ _ q p.
-Global Instance ishprop_gt n m : IsHProp (gt n m) := _.
-Global Instance decidable_gt n m : Decidable (gt n m) := _.
+Instance ishprop_gt n m : IsHProp (gt n m) := _.
+Instance decidable_gt n m : Decidable (gt n m) := _.
 
 (** ** Properties of subtraction *)
 
@@ -918,7 +918,7 @@ Defined.
 (** *** Addition lemmas *)
 
 (** The second summand is less than or equal to the sum. *)
-Global Instance leq_add_l n m : n <= m + n.
+Instance leq_add_l n m : n <= m + n.
 Proof.
   simple_induction m m IH.
   - exact (leq_refl n).
@@ -926,7 +926,7 @@ Proof.
 Defined.
 
 (** The first summand is less than or equal to the sum. *)
-Global Instance leq_add_r n m : n <= n + m.
+Instance leq_add_r n m : n <= n + m.
 Proof.
   simple_induction n n IHn.
   - exact (leq_zero_l m).
@@ -936,13 +936,13 @@ Defined.
 (** *** Multiplication lemmas *)
 
 (** The second multiplicand is less than or equal to the product. *)
-Global Instance leq_mul_l n m l : l < m -> n <= m * n.
+Instance leq_mul_l n m l : l < m -> n <= m * n.
 Proof.
   intros H; induction H; exact _.
 Defined.
 
 (** The first multiplicand is less than or equal to the product. *)
-Global Instance leq_mul_r n m l : l < m -> n <= n * m.
+Instance leq_mul_r n m l : l < m -> n <= n * m.
 Proof.
   rewrite nat_mul_comm; exact _.
 Defined.
@@ -1083,7 +1083,7 @@ Defined.
 
 (** *** Subtraction *)
 
-Global Instance leq_sub_add_l n m : n <= n - m + m.
+Instance leq_sub_add_l n m : n <= n - m + m.
 Proof.
   destruct (@leq_dichotomy m n) as [l | g].
   - by rewrite nat_add_sub_l_cancel.
@@ -1091,7 +1091,7 @@ Proof.
     by destruct (equiv_nat_sub_leq _)^.
 Defined.
 
-Global Instance leq_sub_add_r n m : n <= m + (n - m).
+Instance leq_sub_add_r n m : n <= m + (n - m).
 Proof.
   rewrite nat_add_comm; exact _.
 Defined.
@@ -1137,9 +1137,9 @@ Hint Immediate nat_add_monotone : typeclass_instances.
 (** *** Strict monotonicity of addition *)
 
 (** [nat_succ] is strictly monotone. *)
-Global Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
+Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
 
-Global Instance lt_succ_r {n m} : n < m -> n < m.+1 := _.
+Instance lt_succ_r {n m} : n < m -> n < m.+1 := _.
 
 (** Addition on the left is strictly monotone. *)
 Definition nat_add_l_strictly_monotone {n m} k
@@ -1250,7 +1250,7 @@ Defined.
 
 (** ** Further properties of subtraction *)
 
-Global Instance leq_sub_l n m : n - m <= n.
+Instance leq_sub_l n m : n - m <= n.
 Proof.
   apply equiv_nat_sub_leq.
   rewrite nat_sub_comm_r.

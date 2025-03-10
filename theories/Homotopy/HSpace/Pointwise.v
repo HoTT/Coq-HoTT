@@ -7,7 +7,7 @@ Local Open Scope path_scope.
 (** * Pointwise H-space structures *)
 
 (** Whenever [X] is an H-space, so is the type of maps into [X]. *)
-Global Instance ishspace_map `{Funext} (X : pType) (Y : Type)
+Instance ishspace_map `{Funext} (X : pType) (Y : Type)
   `{IsHSpace X} : IsHSpace [Y -> X, const pt].
 (* Note: When writing [f * g], Coq only finds this instance if [f] is explicitly in the pointed type [[Y -> X, const pt]]. *)
 Proof.
@@ -20,7 +20,7 @@ Proof.
 Defined.
 
 (** If [X] is coherent, so is [[Y -> X, const pt]]. *)
-Global Instance iscoherent_ishspace_map `{Funext} (X : pType) (Y : Type)
+Instance iscoherent_ishspace_map `{Funext} (X : pType) (Y : Type)
   `{IsCoherent X} : IsCoherent [Y -> X, const pt].
 Proof.
   hnf; cbn.
@@ -29,7 +29,7 @@ Proof.
 Defined.
 
 (** If [X] is left-invertible, so is [[Y -> X, const pt]]. *)
-Global Instance isleftinvertible_hspace_map `{Funext} (X : pType) (Y : Type)
+Instance isleftinvertible_hspace_map `{Funext} (X : pType) (Y : Type)
   `{IsHSpace X} `{forall x, IsEquiv (x *.)}
   : forall f : [Y -> X, const pt], IsEquiv (f *.).
 Proof.
@@ -41,7 +41,7 @@ Defined.
 
 
 (** For the type of pointed maps [Y ->** X], coherence of [X] is needed even to get a noncoherent H-space structure on [Y ->** X]. *)
-Global Instance ishspace_pmap `{Funext} (X Y : pType) `{IsCoherent X}
+Instance ishspace_pmap `{Funext} (X Y : pType) `{IsCoherent X}
   : IsHSpace (Y ->** X).
 Proof.
   snrapply Build_IsHSpace.
@@ -71,7 +71,7 @@ Proof.
       apply iscoherent.
 Defined.
 
-Global Instance iscoherent_hspace_pmap `{Funext} (X Y : pType) `{IsCoherent X}
+Instance iscoherent_hspace_pmap `{Funext} (X Y : pType) `{IsCoherent X}
   : IsCoherent (Y ->** X).
 Proof.
   (* Note that [pt] sometimes means the constant map [Y ->* X]. *)
@@ -93,7 +93,7 @@ Proof.
 Defined.
 
 (** If the H-space structure on [X] is left-invertible, so is the one induced on [Y ->** X]. *)
-Global Instance isleftinvertible_hspace_pmap `{Funext} (X Y : pType)
+Instance isleftinvertible_hspace_pmap `{Funext} (X Y : pType)
   `{IsCoherent X} `{forall x, IsEquiv (x *.)}
   : forall f : Y ->** X, IsEquiv (f *.).
 Proof.

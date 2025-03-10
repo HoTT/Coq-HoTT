@@ -261,7 +261,7 @@ Proof.
   apply trijoin_id_sym_nat.
 Defined.
 
-Global Instance join_associator : Associator Join.
+Instance join_associator : Associator Join.
 Proof.
   snrapply Build_Associator; simpl.
   - exact join_assoc.

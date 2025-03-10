@@ -36,7 +36,7 @@ Proof.
   - apply biinv_isequiv.
 Defined.
 
-Global Instance ishprop_biinv `{Funext} `(f : A -> B) : IsHProp (BiInv f) | 0.
+Instance ishprop_biinv `{Funext} `(f : A -> B) : IsHProp (BiInv f) | 0.
 Proof.
   apply hprop_inhabited_contr.
   intros bif; pose (fe := isequiv_biinv f bif).

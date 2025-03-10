@@ -77,7 +77,7 @@ Module Import CommaCategory.
       issig.
     Defined.
 
-    Global Instance trunc_object `{IsTrunc n A, IsTrunc n B}
+    #[export] Instance trunc_object `{IsTrunc n A, IsTrunc n B}
            `{forall s d, IsTrunc n (morphism C s d)}
     : IsTrunc n object.
     Proof.
@@ -173,7 +173,7 @@ Module Import CommaCategory.
       apply issig_morphism_helper; assumption.
     Defined.
 
-    Global Instance trunc_morphism abf a'b'f'
+    #[export] Instance trunc_morphism abf a'b'f'
            `{IsTrunc n (Category.Core.morphism A (abf.(a)) (a'b'f'.(a)))}
            `{IsTrunc n (Category.Core.morphism B (abf.(b)) (a'b'f'.(b)))}
            `{forall m1 m2,
@@ -266,7 +266,7 @@ Proof.
   abstract path_comma_t.
 Defined.
 
-Global Instance isstrict_comma_category A B C S T
+Instance isstrict_comma_category A B C S T
        `{IsStrictCategory A, IsStrictCategory B}
 : IsStrictCategory (@comma_category A B C S T).
 Proof.
@@ -287,7 +287,7 @@ Qed.
       simpl in *.
 
 
-    Global Instance comma_category_IsCategory `{IsCategory A, IsCategory B}
+    #[export] Instance comma_category_IsCategory `{IsCategory A, IsCategory B}
     : IsCategory comma_category.
     Proof.
       hnf.

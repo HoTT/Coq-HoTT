@@ -36,7 +36,7 @@ End prod.
 Local Infix "*" := prod : category_scope.
 
 (** ** The product of strict categories is strict *)
-Global Instance isstrict_category_product
+Instance isstrict_category_product
        `{IsStrictCategory C, IsStrictCategory D}
 : IsStrictCategory (C * D).
 Proof.

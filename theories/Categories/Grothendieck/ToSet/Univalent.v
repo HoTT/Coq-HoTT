@@ -45,7 +45,7 @@ Section Grothendieck.
     { exact category_isotoid_helper. }
   Defined.
 
-  Global Instance preservation : IsCategory (category F).
+  #[export] Instance preservation : IsCategory (category F).
   Proof.
     intros s d.
     refine (@isequiv_homotopic _ _ category_isotoid (idtoiso (category F) (x:=s) (y:=d)) _ _).

@@ -56,12 +56,13 @@ Section LexModality.
     := OO_ispullback_connmap_mapino O O p.
 
   (** RSS Theorem 3.1 (viii) *)
-  Global Instance conn_map_functor_hfiber_to_O
+  #[export] Instance
+    conn_map_functor_hfiber_to_O
          {Y X : Type} (f : Y -> X) (x : X)
     : IsConnMap O (functor_hfiber (fun y => (to_O_natural O f y)^) x)
     := OO_conn_map_functor_hfiber_to_O O O f x.
 
-  Global Instance isequiv_O_functor_hfiber
+  #[export] Instance isequiv_O_functor_hfiber
          {A B} (f : A -> B) (b : B)
     : IsEquiv (O_functor_hfiber O f b).
   Proof.
@@ -81,7 +82,7 @@ Section LexModality.
     := Build_Equiv _ _ (O_functor_hfiber O f b) _.
 
   (** RSS Theorem 3.1 (ix) *)
-  Global Instance isequiv_path_O
+  #[export] Instance isequiv_path_O
          {X : Type@{i}} (x y : X)
     : IsEquiv (path_OO O O x y)
     := isequiv_path_OO O O x y.
@@ -98,7 +99,7 @@ Section LexModality.
   Defined.
 
   (** RSS Theorem 3.1 (x).  This justifies the term "left exact". *)
-  Global Instance O_inverts_functor_pullback_to_O
+  #[export] Instance O_inverts_functor_pullback_to_O
          {A B C : Type} (f : B -> A) (g : C -> A)
     : O_inverts O (functor_pullback f g (O_functor O f) (O_functor O g)
                                     (to O A) (to O B) (to O C)
@@ -166,7 +167,7 @@ Section LexModality.
     := OO_cancelL_conn_map O O f g.
 
   (** RSS Theorem 3.1 (xii) *)
-  Global Instance conn_map_O_inverts
+  #[export] Instance conn_map_O_inverts
          {A B : Type} (f : A -> B) `{O_inverts O f}
     : IsConnMap O f
     := conn_map_OO_inverts O O f.
@@ -184,12 +185,12 @@ Section LexModality.
   Defined.  
 
   (** RSS Theorem 3.11 (iii): in the accessible case, the universe is modal. *)
-  Global Instance inO_typeO_lex `{Univalence} `{IsAccRSU O}
+  #[export] Instance inO_typeO_lex `{Univalence} `{IsAccRSU O}
     : In (lift_accrsu O) (Type_ O)
     := _.
 
   (** Part of RSS Corollary 3.9: lex modalities preserve [n]-types for all [n].  This is definitely not equivalent to lex-ness, since it is true for the truncation modalities that are not lex.  But it is also not true of all modalities; e.g. the shape modality in a cohesive topos can take 0-types to [oo]-types.  With a little more work, this can probably be proven without [Funext]. *)
-  Global Instance istrunc_O_lex `{Funext}
+  #[export] Instance istrunc_O_lex `{Funext}
          {n : trunc_index} {A : Type} `{IsTrunc n A}
     : IsTrunc n (O A).
   Proof.

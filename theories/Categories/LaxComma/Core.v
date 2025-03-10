@@ -69,7 +69,7 @@ Definition oplax_comma_category `{Funext} A B
 : PreCategory
   := (lax_comma_category S T)^op.
 
-Global Instance isstrict_lax_comma_category `{Funext} A B
+Instance isstrict_lax_comma_category `{Funext} A B
        (S : Pseudofunctor A) (T : Pseudofunctor B)
        `{IsStrictCategory A, IsStrictCategory B}
        `{forall a b, IsHSet (Functor (S a) (T b))}
@@ -78,7 +78,7 @@ Proof.
   typeclasses eauto.
 Qed.
 
-Global Instance isstrict_oplax_comma_category `{fs : Funext} A B S T HA HB H
+Instance isstrict_oplax_comma_category `{fs : Funext} A B S T HA HB H
 : IsStrictCategory (@oplax_comma_category fs A B S T H)
   := @isstrict_lax_comma_category fs A B S T HA HB H.
 
@@ -96,7 +96,7 @@ Global Instance isstrict_oplax_comma_category `{fs : Funext} A B S T HA HB H
       simpl in *.
 
 
-    Global Instance comma_category_IsCategory `{IsCategory A, IsCategory B}
+    #[export] Instance comma_category_IsCategory `{IsCategory A, IsCategory B}
     : IsCategory comma_category.
     Proof.
       hnf.
@@ -180,30 +180,30 @@ Module Export LaxCommaCoreNotations.
 
     Global Arguments get_LCC / {A B C} x y {z} {_}.
 
-    Global Instance LCC_comma `{Funext} A B
+    #[export] Instance LCC_comma `{Funext} A B
            (S : Pseudofunctor A) (T : Pseudofunctor B)
            {_ : forall a b, IsHSet (Functor (S a) (T b))}
     : LCC_Builder S T (lax_comma_category S T) | 1000
       := tt.
 
-    Global Instance LCC_slice `{Funext} A x (F : Pseudofunctor A)
+    #[export] Instance LCC_slice `{Funext} A x (F : Pseudofunctor A)
            `{forall a0, IsHSet (Functor (F a0) x)}
     : LCC_Builder F x (lax_slice_category x F) | 100
       := tt.
 
-    Global Instance LCC_coslice `{Funext} A x (F : Pseudofunctor A)
+    #[export] Instance LCC_coslice `{Funext} A x (F : Pseudofunctor A)
            `{forall a0, IsHSet (Functor x (F a0))}
     : LCC_Builder x F (lax_coslice_category x F) | 100
       := tt.
 
-    Global Instance LCC_slice_over `{Funext}
+    #[export] Instance LCC_slice_over `{Funext}
            P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}
            a
            `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a0.1 a)}
     : LCC_Builder a (@sub_pre_cat _ P HF) (@lax_slice_category_over _ P HF a _) | 10
       := tt.
 
-    Global Instance LCC_coslice_over `{Funext}
+    #[export] Instance LCC_coslice_over `{Funext}
            P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}
            a
            `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a a0.1)}
@@ -216,30 +216,30 @@ Module Export LaxCommaCoreNotations.
 
     Global Arguments get_OLCC / {A B C} x y {z} {_}.
 
-    Global Instance OLCC_comma `{Funext} A B
+    #[export] Instance OLCC_comma `{Funext} A B
            (S : Pseudofunctor A) (T : Pseudofunctor B)
            {_ : forall a b, IsHSet (Functor (S a) (T b))}
     : OLCC_Builder S T (lax_comma_category S T) | 1000
       := tt.
 
-    Global Instance OLCC_slice `{Funext} A x (F : Pseudofunctor A)
+    #[export] Instance OLCC_slice `{Funext} A x (F : Pseudofunctor A)
            `{forall a0, IsHSet (Functor (F a0) x)}
     : OLCC_Builder F x (lax_slice_category x F) | 100
       := tt.
 
-    Global Instance OLCC_coslice `{Funext} A x (F : Pseudofunctor A)
+    #[export] Instance OLCC_coslice `{Funext} A x (F : Pseudofunctor A)
            `{forall a0, IsHSet (Functor x (F a0))}
     : OLCC_Builder x F (lax_coslice_category x F) | 100
       := tt.
 
-    Global Instance OLCC_slice_over `{Funext}
+    #[export] Instance OLCC_slice_over `{Funext}
            P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}
            a
            `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a0.1 a)}
     : OLCC_Builder a (@sub_pre_cat _ P HF) (@lax_slice_category_over _ P HF a _) | 10
       := tt.
 
-    Global Instance OLCC_coslice_over `{Funext}
+    #[export] Instance OLCC_coslice_over `{Funext}
            P `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}
            a
            `{forall a0 : @sub_pre_cat _ P HF, IsHSet (Functor a a0.1)}

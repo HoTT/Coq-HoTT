@@ -33,20 +33,20 @@ Fixpoint fin_to_nat {n} : Fin n -> nat
          end
      end.
 
-Global Instance decidable_fin (n : nat)
+Instance decidable_fin (n : nat)
 : Decidable (Fin n).
 Proof.
   destruct n as [|n]; try exact _.
   exact (inl (inr tt)).
 Defined.
 
-Global Instance decidablepaths_fin@{} (n : nat)
+Instance decidablepaths_fin@{} (n : nat)
 : DecidablePaths (Fin n).
 Proof.
   simple_induction n n IHn; simpl; exact _.
 Defined.
 
-Global Instance contr_fin1 : Contr (Fin 1).
+Instance contr_fin1 : Contr (Fin 1).
 Proof.
   refine (contr_equiv' Unit (sum_empty_l Unit)^-1).
 Defined.
@@ -333,7 +333,7 @@ Proof.
 Qed.
 
 (** Now it's time for funext. *)
-Global Instance isequiv_fin_equiv `{Funext} (n m : nat)
+Instance isequiv_fin_equiv `{Funext} (n m : nat)
   : IsEquiv (fin_equiv' n m).
 Proof.
   refine (isequiv_pathsplit 0 _); split.

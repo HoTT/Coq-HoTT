@@ -182,7 +182,7 @@ Section FunctorialityCone.
 
   (** The postcomposition with a diagram equivalence is an equivalence. *)
 
-  Global Instance cone_precompose_equiv {D1 D2 : Diagram G}
+  #[export] Instance cone_precompose_equiv {D1 D2 : Diagram G}
     (m : D1 ~d~ D2) (X : Type) : IsEquiv (cone_postcompose (X:=X) m).
   Proof.
     srapply isequiv_adjointify.
@@ -201,7 +201,7 @@ Section FunctorialityCone.
 
   (** The precomposition with an equivalence is an equivalence. *)
 
-  Global Instance cone_postcompose_equiv {D : Diagram G} `(f : Y <~> X)
+  #[export] Instance cone_postcompose_equiv {D : Diagram G} `(f : Y <~> X)
     : IsEquiv (fun C : Cone X D => cone_precompose C f).
   Proof.
     srapply isequiv_adjointify.
@@ -228,7 +228,7 @@ Section FunctorialityCone.
 
   (** Universality of a cone is preserved by composition with a (diagram) equivalence. *)
 
-  Global Instance cone_postcompose_equiv_universality {D1 D2 : Diagram G}
+  #[export] Instance cone_postcompose_equiv_universality {D1 D2 : Diagram G}
     (m: D1 ~d~ D2) {X} (C : Cone X D1) (_ : UniversalCone C)
     : UniversalCone (cone_postcompose (X:=X) m C).
   Proof.
@@ -237,7 +237,7 @@ Section FunctorialityCone.
     srapply isequiv_compose.
   Defined.
 
-  Global Instance cone_precompose_equiv_universality {D: Diagram G} `(f: Y <~> X)
+  #[export] Instance cone_precompose_equiv_universality {D: Diagram G} `(f: Y <~> X)
     (C : Cone X D) (_ : UniversalCone C)
     : UniversalCone (cone_precompose C f).
   Proof.

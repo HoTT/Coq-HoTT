@@ -29,7 +29,7 @@ Module Export Trunc.
   Arguments tr {n A} a.
 
   (** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
-  Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
+  #[export] Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
     : IsTrunc@{j} n (Trunc@{i} n A).
   Admitted.
 
@@ -77,7 +77,7 @@ Section TruncationModality.
     : IsTrunc n A <-> IsEquiv (@tr n A)
     := inO_iff_isequiv_to_O (Tr n) A.
 
-  Global Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
+  #[export] Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
     := fst (trunc_iff_isequiv_truncation A) _.
 
   Definition equiv_tr (A : Type) `{IsTrunc n A}
@@ -95,10 +95,10 @@ Section TruncationModality.
     : Tr@{i} n X -> Tr@{j} n Y
     := O_functor@{k k k} (Tr n) f.
 
-  Global Instance is0functor_Tr : Is0Functor (Tr n)
+  #[export] Instance is0functor_Tr : Is0Functor (Tr n)
     := Build_Is0Functor _ _ _ _ (Tr n) (@Trunc_functor).
 
-  Global Instance Trunc_functor_isequiv {X Y : Type}
+  #[export] Instance Trunc_functor_isequiv {X Y : Type}
     (f : X -> Y) `{IsEquiv _ _ f}
     : IsEquiv (Trunc_functor f)
     := isequiv_O_functor (Tr n) f.
@@ -119,7 +119,7 @@ Section TruncationModality.
     : Tr n (X * Y) <~> Tr n X * Tr n Y
     := equiv_O_prod_cmp (Tr n) X Y.
 
-  Global Instance is1functor_Tr : Is1Functor (Tr n).
+  #[export] Instance is1functor_Tr : Is1Functor (Tr n).
   Proof.
     apply Build_Is1Functor.
     - apply @O_functor_homotopy.
@@ -130,7 +130,7 @@ Section TruncationModality.
 End TruncationModality.
 
 (** We have to teach Coq to translate back and forth between [IsTrunc n] and [In (Tr n)]. *)
-Global Instance inO_tr_istrunc {n : trunc_index} (A : Type) `{IsTrunc n A}
+Instance inO_tr_istrunc {n : trunc_index} (A : Type) `{IsTrunc n A}
   : In (Tr n) A.
 Proof.
   assumption.
@@ -153,7 +153,7 @@ Hint Extern 1000 (IsTrunc _ _) => simple apply istrunc_inO_tr; solve [ trivial ]
 (** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc].  You can always apply [istrunc_inO_tr] explicitly, but sometimes it also works to just [pose] it into the context. *)
 
 (** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)
-Global Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
+Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
   (f : A -> B) `{IsTruncMap n A B f}
   : MapIn (Tr n) f.
 Proof.
@@ -268,7 +268,7 @@ Defined.
 (** ** Embeddings *)
 
 (** For any point in the image of an embedding, the fibers are contractable. *)
-Global Instance contr_hfiber_emb {A B} (a : A) (f : A -> B)
+Instance contr_hfiber_emb {A B} (a : A) (f : A -> B)
   `{IsEmbedding f}
   : Contr (hfiber f (f a)).
 Proof.

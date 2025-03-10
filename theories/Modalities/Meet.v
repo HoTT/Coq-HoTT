@@ -23,14 +23,14 @@ Section RSUMeet.
     - intros T U [? ?] f feq; split; apply (inO_equiv_inO _ f).
   Defined.
 
-  Global Instance inO_inmeet_l (X : Type) `{im : In Meet X} : In L X := fst im.
-  Global Instance inO_inmeet_r (X : Type) `{im : In Meet X} : In O X := snd im.
+  #[export] Instance inO_inmeet_l (X : Type) `{im : In Meet X} : In L X := fst im.
+  #[export] Instance inO_inmeet_r (X : Type) `{im : In Meet X} : In O X := snd im.
 
   (** The basic tool in studying its reflectivity is the "plus construction" that applies the two reflectors in sequence. *)
 
   Definition Plus (X : Type) := L (O X).
 
-  Global Instance inO_plus_l (X : Type) : In L (Plus X) := _.
+  #[export] Instance inO_plus_l (X : Type) : In L (Plus X) := _.
 
   (** This is not necessarily a reflector, but it is a well-pointed endofunctor. *)
 
@@ -109,7 +109,7 @@ Section RSUMeet.
 
   (** It follows that if [Plus X] ever *does* lie in the meet, then it is a reflection. *)
 
-  Global Instance prereflects_plus_inO (X : Type) `{In O (Plus X)}
+  #[export] Instance prereflects_plus_inO (X : Type) `{In O (Plus X)}
     : PreReflects Meet X.
   Proof.
     unshelve econstructor.
@@ -118,7 +118,7 @@ Section RSUMeet.
     - apply to_plus.
   Defined.
 
-  Global Instance reflects_plus_inO (X : Type) `{In O (Plus X)}
+  #[export] Instance reflects_plus_inO (X : Type) `{In O (Plus X)}
     : Reflects Meet X.
   Proof.
     constructor; intros; apply ooextendable_plus.
@@ -314,7 +314,7 @@ Section LexMeet.
   Defined.
 
   (** Therefore, if a type starts out as n-plus-separated, then n+2 applications of the plus-construction suffice to make it (-2)-plus-separated, i.e. in the meet subuniverse.  Hence it has a reflection. *)
-  Global Instance prereflects_plus_nsep (n : trunc_index) (X : Type) `{In (nSep n (Meet L O)) X}
+  #[export] Instance prereflects_plus_nsep (n : trunc_index) (X : Type) `{In (nSep n (Meet L O)) X}
     : PreReflects (Meet L O) X.
   Proof.
     generalize dependent X; induction n as [|n IHn]; intros X ?.
@@ -326,7 +326,7 @@ Section LexMeet.
     - exact (to (Meet L O) (Plus L O X) o to_plus L O X).
   Defined.
 
-  Global Instance reflects_plus_nsep (n : trunc_index) (X : Type) `{In (nSep n (Meet L O)) X}
+  #[export] Instance reflects_plus_nsep (n : trunc_index) (X : Type) `{In (nSep n (Meet L O)) X}
     : Reflects (Meet L O) X.
   Proof.
     generalize dependent X; induction n as [|n IHn]; intros X ?.

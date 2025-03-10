@@ -267,10 +267,10 @@ Global Ltac square_ind g h a b :=
 (** ** Use the WildCat library to organize things *)
 
 (** We begin by showing that [JoinRecData A B P] is a 0-groupoid, one piece at a time. *)
-Global Instance isgraph_joinrecdata (A B P : Type) : IsGraph (JoinRecData A B P)
+Instance isgraph_joinrecdata (A B P : Type) : IsGraph (JoinRecData A B P)
   := {| Hom := JoinRecPath |}.
 
-Global Instance is01cat_joinrecdata (A B P : Type) : Is01Cat (JoinRecData A B P).
+Instance is01cat_joinrecdata (A B P : Type) : Is01Cat (JoinRecData A B P).
 Proof.
   apply Build_Is01Cat.
   - intro f.
@@ -286,7 +286,7 @@ Proof.
       by interval_ind f1 a b.
 Defined.
 
-Global Instance is0gpd_joinrecdata (A B P : Type) : Is0Gpd (JoinRecData A B P).
+Instance is0gpd_joinrecdata (A B P : Type) : Is0Gpd (JoinRecData A B P).
 Proof.
   apply Build_Is0Gpd.
   intros f g h.
@@ -306,7 +306,7 @@ Definition joinrecdata_0gpd (A B P : Type) : ZeroGpd
   It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
 
 (** First we need to show that the induced map is a morphism in [ZeroGpd], i.e. that it is a 0-functor. *)
-Global Instance is0functor_joinrecdata_fun {A B P Q : Type} (g : P -> Q)
+Instance is0functor_joinrecdata_fun {A B P Q : Type} (g : P -> Q)
   : Is0Functor (@joinrecdata_fun A B P Q g).
 Proof.
   apply Build_Is0Functor.
@@ -319,7 +319,7 @@ Proof.
 Defined.
 
 (** [joinrecdata_0gpd A B] is a 0-functor from [Type] to [ZeroGpd] (one level up). *)
-Global Instance is0functor_joinrecdata_0gpd (A B : Type) : Is0Functor (joinrecdata_0gpd A B).
+Instance is0functor_joinrecdata_0gpd (A B : Type) : Is0Functor (joinrecdata_0gpd A B).
 Proof.
   apply Build_Is0Functor.
   intros P Q g.
@@ -329,7 +329,7 @@ Proof.
 Defined.
 
 (** [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]. *)
-Global Instance is1functor_joinrecdata_0gpd (A B : Type) : Is1Functor (joinrecdata_0gpd A B).
+Instance is1functor_joinrecdata_0gpd (A B : Type) : Is1Functor (joinrecdata_0gpd A B).
 Proof.
   apply Build_Is1Functor.
   (* If [g1 g2 : P -> Q] are homotopic, then the induced maps are homotopic: *)
@@ -391,7 +391,7 @@ Local Definition join_rec_natequiv_check (A B P : Type)
   := idpath.
 
 (** It follows that [join_rec A B P] is a 0-functor. *)
-Global Instance is0functor_join_rec (A B P : Type) : Is0Functor (@join_rec A B P).
+Instance is0functor_join_rec (A B P : Type) : Is0Functor (@join_rec A B P).
 Proof.
   change (Is0Functor (equiv_fun_0gpd (join_rec_natequiv A B P))).
   exact _.
@@ -586,7 +586,7 @@ Section FunctorJoin.
       apply join_natsq.
   Defined.
 
-  Global Instance isequiv_functor_join {A B C D}
+  #[export] Instance isequiv_functor_join {A B C D}
     (f : A -> C) `{!IsEquiv f} (g : B -> D) `{!IsEquiv g}
     : IsEquiv (functor_join f g).
   Proof.
@@ -607,7 +607,7 @@ Section FunctorJoin.
   Definition equiv_functor_join {A B C D} (f : A <~> C) (g : B <~> D)
     : Join A B <~> Join C D := Build_Equiv _ _ (functor_join f g) _.
 
-  Global Instance is0bifunctor_join : Is0Bifunctor Join.
+  #[export] Instance is0bifunctor_join : Is0Bifunctor Join.
   Proof.
     snrapply Build_Is0Bifunctor'.
     1,2: exact _.
@@ -616,7 +616,7 @@ Section FunctorJoin.
     exact (functor_join f g).
   Defined.
 
-  Global Instance is1bifunctor_join : Is1Bifunctor Join.
+  #[export] Instance is1bifunctor_join : Is1Bifunctor Join.
   Proof.
     snrapply Build_Is1Bifunctor'.
     nrapply Build_Is1Functor.
@@ -737,7 +737,7 @@ Section JoinSym.
                               (join_sym_homotopic A B)
                               (join_sym_homotopic B A).
 
-  Global Instance isequiv_join_sym A B : IsEquiv (join_sym A B)
+  #[export] Instance isequiv_join_sym A B : IsEquiv (join_sym A B)
     := equiv_isequiv (equiv_join_sym A B).
 
   (** It's also straightforward to directly prove that [join_sym] is an equivalence.  The above approach is meant to illustrate the Yoneda lemma.  In the case of [equiv_trijoin_twist], the Yoneda approach seems to be more straightforward. *)
@@ -780,7 +780,7 @@ End JoinSym.
 Section JoinTrunc.
 
   (** Joining with a contractible type produces a contractible type *)
-  Global Instance contr_join A B `{Contr A} : Contr (Join A B).
+  #[export] Instance contr_join A B `{Contr A} : Contr (Join A B).
   Proof.
     apply (Build_Contr _ (joinl (center A))).
     snrapply Join_ind.
@@ -792,7 +792,7 @@ Section JoinTrunc.
   Defined.
 
   (** The join of hprops is an hprop *)
-  Global Instance ishprop_join `{Funext} A B `{IsHProp A} `{IsHProp B} : IsHProp (Join A B).
+  #[export] Instance ishprop_join `{Funext} A B `{IsHProp A} `{IsHProp B} : IsHProp (Join A B).
   Proof.
     apply hprop_inhabited_contr.
     snrapply Join_rec.
@@ -827,7 +827,7 @@ Section JoinTrunc.
   Defined.
 
   (** Joins add connectivity *)
-  Global Instance isconnected_join `{Funext} {m n : trunc_index}
+  #[export] Instance isconnected_join `{Funext} {m n : trunc_index}
          (A B : Type) `{IsConnected m A} `{IsConnected n B}
     : IsConnected (m +2+ n) (Join A B).
   Proof.
@@ -878,7 +878,7 @@ Section JoinEmpty.
   Definition equiv_join_empty_left A : Join Empty A <~> A
     := equiv_join_empty_right _ oE equiv_join_sym _ _.
 
-  Global Instance join_right_unitor : RightUnitor Join Empty.
+  #[export] Instance join_right_unitor : RightUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_right.
@@ -892,7 +892,7 @@ Section JoinEmpty.
       + intros a [].
   Defined.
 
-  Global Instance join_left_unitor : LeftUnitor Join Empty.
+  #[export] Instance join_left_unitor : LeftUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
     - apply equiv_join_empty_left.

@@ -165,7 +165,7 @@ Proof.
 Defined.
 
 (** As a corollary we get 2n-connectivity of [loop_susp_counit X] for an n-connected [X]. *)
-Global Instance conn_map_loop_susp_counit `{Univalence}
+Instance conn_map_loop_susp_counit `{Univalence}
   {n : trunc_index} (X : pType) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (loop_susp_counit X).
 Proof.

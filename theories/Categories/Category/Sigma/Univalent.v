@@ -27,7 +27,7 @@ Section onobjects.
   Variable A : PreCategory.
   Variable Pobj : A -> Type.
 
-  Global Instance iscategory_sig_obj `{forall a, IsHProp (Pobj a), A_cat : IsCategory A}
+  #[export] Instance iscategory_sig_obj `{forall a, IsHProp (Pobj a), A_cat : IsCategory A}
   : IsCategory (sig_obj A Pobj).
   Proof.
     intros s d.
@@ -112,7 +112,7 @@ Section onmorphisms.
       exact (path_sigma' _ 1 (contr _)). }
   Defined.
 
-  Global Instance iscategory_sig_mor `{A_cat : IsCategory A}
+  #[export] Instance iscategory_sig_mor `{A_cat : IsCategory A}
   : IsCategory A'.
   Proof.
     intros s d.
@@ -136,7 +136,7 @@ Section onmorphisms.
     destruct x; reflexivity.
   Defined.
 
-  Global Instance isequiv_iscategory_sig_mor `{Funext}
+  #[export] Instance isequiv_iscategory_sig_mor `{Funext}
   : IsEquiv (@iscategory_sig_mor).
   Proof.
     refine (isequiv_iff_hprop _ (@iscategory_from_sig_mor)).
@@ -332,7 +332,7 @@ Section on_both.
 
   Local Arguments Pmor_iso_T : simpl never.
 
-  Global Instance iscategory_sig `{A_cat : IsCategory A}
+  #[export] Instance iscategory_sig `{A_cat : IsCategory A}
   : IsCategory A'.
   Proof.
     intros s d.

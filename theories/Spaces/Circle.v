@@ -75,7 +75,7 @@ Proof.
 Defined.
 
 (** The [Circle] is pointed by [base]. *)
-Global Instance ispointed_Circle : IsPointed Circle := base.
+#[export] Instance ispointed_Circle : IsPointed Circle := base.
 
 Definition pCircle : pType := [Circle, base].
 
@@ -168,7 +168,7 @@ End EncodeDecode.
 (** ** Connectedness and truncatedness of the [Circle] *)
 
 (** The circle is 0-connected. *)
-Global Instance isconnected_Circle `{Univalence} : IsConnected 0 Circle.
+Instance isconnected_Circle `{Univalence} : IsConnected 0 Circle.
 Proof.
   apply is0connected_merely_allpath.
   1: exact (tr base).
@@ -180,7 +180,7 @@ Proof.
 Defined.
 
 (** It follows that the circle is a 1-type. *)
-Global Instance istrunc_Circle `{Univalence} : IsTrunc 1 Circle.
+Instance istrunc_Circle `{Univalence} : IsTrunc 1 Circle.
 Proof.
   apply istrunc_S.
   intros x y.
@@ -213,7 +213,7 @@ Definition Circle_rec_uncurried (P : Type)
   : {b : P & b = b} -> (Circle -> P)
   := fun x => Circle_rec P (pr1 x) (pr2 x).
 
-Global Instance isequiv_Circle_rec_uncurried `{Funext} (P : Type) : IsEquiv (Circle_rec_uncurried P).
+Instance isequiv_Circle_rec_uncurried `{Funext} (P : Type) : IsEquiv (Circle_rec_uncurried P).
 Proof.
   srapply isequiv_adjointify.
   - exact (fun g => (g base ; ap g loop)).
