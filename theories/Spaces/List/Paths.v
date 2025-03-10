@@ -18,7 +18,7 @@ Section PathList.
       | _, _ => Empty
     end.
 
-  Global Instance reflexive_listeq : Reflexive ListEq. 
+  #[export] Instance reflexive_listeq : Reflexive ListEq. 
   Proof.
     intros l.
     induction l as [| a l IHl].
@@ -56,7 +56,7 @@ Section PathList.
   Defined.
 
   (** By case analysis on both lists, it's easy to show that [ListEq] is [n.+1]-truncated if [A] is [n.+2]-truncated. *)
-  Global Instance istrunc_listeq n {l1 l2} {H : IsTrunc n.+2 A}
+  #[export] Instance istrunc_listeq n {l1 l2} {H : IsTrunc n.+2 A}
     : IsTrunc n.+1 (ListEq l1 l2).
   Proof.
     induction l1 in l2 |- *.
@@ -68,7 +68,7 @@ Section PathList.
   Defined.
 
   (** The path space of lists is a retract of [ListEq], therefore it is [n.+1]-truncated if [ListEq] is [n.+1]-truncated. By the previous result, this holds when [A] is [n.+2]-truncated. *) 
-  Global Instance istrunc_list n {H : IsTrunc n.+2 A} : IsTrunc n.+2 (list A).
+  #[export] Instance istrunc_list n {H : IsTrunc n.+2 A} : IsTrunc n.+2 (list A).
   Proof.
     apply istrunc_S.
     intros x y.

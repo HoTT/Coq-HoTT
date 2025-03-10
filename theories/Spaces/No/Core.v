@@ -158,11 +158,11 @@ Module Export Surreals.
     := game_lt_r (game_of o xL) (game_of o xR)
                  (game_of o yL) (game_of o yR) r.
 
-  Global Instance ishprop_No_le {x y : GenNo}
+  #[export] Instance ishprop_No_le {x y : GenNo}
   : IsHProp (x <= y).
   Admitted.
 
-  Global Instance ishprop_No_lt {x y : GenNo}
+  #[export] Instance ishprop_No_lt {x y : GenNo}
   : IsHProp (x < y).
   Admitted.
 
@@ -520,7 +520,7 @@ Proof.
   - intros r. exact (Conway_theorem0_lemma2 (xR r) (IHR r) _ _ _ _ 1).
 Defined.
 
-Instance reflexive_le `{Funext} : Reflexive le
+#[export] Instance reflexive_le `{Funext} : Reflexive le
   := le_reflexive.
 
 (** Theorem 0 Part (ii), left half *)
@@ -547,7 +547,7 @@ Proof.
   apply le_reflexive.
 Defined.
 
-Global Instance isset_No `{Funext} : IsHSet No.
+#[export] Instance isset_No `{Funext} : IsHSet No.
 Proof.
   refine (@ishset_hrel_subpaths No (fun (x y:No) => (x <= y) * (y <= x)) _ _ _).
   - intros x; split; apply le_reflexive.
@@ -962,7 +962,7 @@ Section NoCodes.
     assumption.
   Qed.
 
-  Global Instance trans_le : Transitive le
+  #[export] Instance trans_le : Transitive le
     := @le_le_trans.
 
   Corollary le_lt_trans {x y z : No}
@@ -989,7 +989,7 @@ Section NoCodes.
   : (x < y) -> (y < z) -> (x < z)
     := fun p q => lt_le_trans p (lt_le q).
 
-  Global Instance trans_lt : Transitive lt
+  #[export] Instance trans_lt : Transitive lt
     := @lt_lt_trans.
 
 End NoCodes.
@@ -1002,7 +1002,7 @@ Definition MaxSort : OptionSort := fun _ _ => Unit.
 Definition No : Type := GenNo MaxSort.
 
 (** This instance should be the one found by default, so that cuts live in [No] unless otherwise specified.  Thus, all other global instances of [InSort] should be declared with higher priority. *)
-Global Instance insort_maxsort {L R : Type}
+Instance insort_maxsort {L R : Type}
   : InSort MaxSort L R | 0
   := tt.
 
@@ -1081,7 +1081,7 @@ Section RaiseSort.
     : (No_raise x <  No_raise y) -> (x <  y)
     := snd (No_raise_reflects_lelt x y).
 
-  Global Instance isemb_No_raise : IsEmbedding No_raise.
+  #[export] Instance isemb_No_raise : IsEmbedding No_raise.
   Proof.
     apply isembedding_isinj_hset.
     intros x y e; apply path_No.
@@ -1098,7 +1098,7 @@ End RaiseSort.
 (** The type of "plump ordinals" can be identified with surreal numbers that hereditarily have no right options. *)
 Definition OrdSort : OptionSort := fun L R => ~R.
 Definition POrd := GenNo OrdSort.
-Global Instance insort_ordsort {L : Type}
+Instance insort_ordsort {L : Type}
   : InSort OrdSort L Empty | 100
   := idmap.
 
@@ -1109,13 +1109,13 @@ Definition DecSort : OptionSort
   := fun L R => Decidable L * Decidable R.
 Definition DecNo : Type := GenNo DecSort.
 
-Global Instance insort_decsort {L R : Type}
+Instance insort_decsort {L R : Type}
          {dl : Decidable L} {dr : Decidable R}
   : InSort DecSort L R | 100
   := (dl , dr).
 
 (** Perhaps surprisingly, this is not a restriction at all!  Any surreal number can be presented by a cut in which all the option sorts are hereditarily decidable.  The basic idea is that we can always add a "sufficiently large" right option and a "sufficiently small" left option in order to make both families of options inhabited without changing the value of the cut, but the details are a bit tricky. *)
-Global Instance isequiv_DecNo_raise `{Univalence}
+Instance isequiv_DecNo_raise `{Univalence}
   : IsEquiv (@No_raise DecSort).
 Proof.
   apply isequiv_surj_emb; try exact _.

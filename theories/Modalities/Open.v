@@ -48,7 +48,7 @@ Defined.
 (** ** The open modality is lex *)
 
 (** Note that unlike most other cases, we can prove this without univalence (though we do of course need funext). *)
-Global Instance lex_open `{Funext} (U : HProp)
+Instance lex_open `{Funext} (U : HProp)
   : Lex (Op U).
 Proof.
   apply lex_from_isconnected_paths.
@@ -63,7 +63,7 @@ Defined.
 
 (** ** The open modality is accessible. *)
 
-Global Instance acc_open `{Funext} (U : HProp)
+Instance acc_open `{Funext} (U : HProp)
   : IsAccModality (Op U).
 Proof.
   unshelve econstructor.

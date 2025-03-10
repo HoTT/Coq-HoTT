@@ -127,7 +127,7 @@ Proof.
 Defined.
 
 (** If Y is a set, then IsComplex is an HProp. *)
-Global Instance ishprop_iscomplex_hset `{Funext} {F X Y : pType} `{IsHSet Y}
+Instance ishprop_iscomplex_hset `{Funext} {F X Y : pType} `{IsHSet Y}
   (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsComplex i f) := _.
 
@@ -146,7 +146,7 @@ Definition issig_isexact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->*
   : _ <~> IsExact n i f := ltac:(issig).
 
 (** If Y is a set, then IsExact is an HProp. *)
-Global Instance ishprop_isexact_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
+Instance ishprop_isexact_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
   (n : Modality) (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsExact n i f).
 Proof.
@@ -283,7 +283,7 @@ Proof.
 Defined.
 
 (** If a complex [F -> E -> B] is [O]-exact, the map [F -> B] is [O]-local, and path types in [Y] are [O]-local, then the induced map [cxfib] is an equivalence. *)
-Global Instance isequiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y}
+Instance isequiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
   : IsEquiv (cxfib cx_isexact).
 Proof.
@@ -327,7 +327,7 @@ Proof.
   - cbn. exact (concat_p1 _ @ concat_1p _)^.
 Defined.
 
-Global Instance isexact_pfib {X Y} (f : X ->* Y)
+Instance isexact_pfib {X Y} (f : X ->* Y)
   : IsExact purely (pfib f) f.
 Proof.
   exists (iscomplex_pfib f).
@@ -341,7 +341,7 @@ Definition i_fiberseq {F X Y} (fs : FiberSeq F X Y)
   : F ->* X
   := pfib fs.1 o* fs.2.
 
-Global Instance isexact_purely_fiberseq {F X Y : pType} (fs : FiberSeq F X Y)
+Instance isexact_purely_fiberseq {F X Y : pType} (fs : FiberSeq F X Y)
   : IsExact purely (i_fiberseq fs) fs.1.
 Proof.
   srapply Build_IsExact; [ srapply Build_pHomotopy | ].
@@ -379,7 +379,7 @@ Proof.
 Defined.
 
 (** Now we can deduce that [loops] preserves purely-exact sequences. The hardest part is modifying the first map back to [fmap loops i]. *)
-Global Instance isexact_loops {F X Y} (i : F ->* X) (f : X ->* Y)
+Instance isexact_loops {F X Y} (i : F ->* X) (f : X ->* Y)
   `{IsExact purely F X Y i f}
   : IsExact purely (fmap loops i) (fmap loops f).
 Proof.
@@ -395,7 +395,7 @@ Proof.
     apply pr1_pfiber_fmap_loops.
 Defined.
 
-Global Instance isexact_iterated_loops {F X Y}
+Instance isexact_iterated_loops {F X Y}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f} (n : nat)
   : IsExact purely (fmap (iterated_loops n) i) (fmap (iterated_loops n) f).
 Proof.
@@ -403,7 +403,7 @@ Proof.
 Defined.
 
 (** (n.+1)-truncation preserves n-exactness. *)
-Global Instance isexact_ptr `{Univalence} (n : trunc_index)
+Instance isexact_ptr `{Univalence} (n : trunc_index)
   {F X Y : pType} (i : F ->* X) (f : X ->* Y)
   `{IsExact (Tr n) F X Y i f}
   : IsExact (Tr n) (fmap (pTr n.+1) i) (fmap (pTr n.+1) f).
@@ -424,7 +424,7 @@ Proof.
 Defined.
 
 (** In particular, (n.+1)-truncation takes fiber sequences to n-exact ones. *)
-Global Instance isexact_ptr_purely `{Univalence} (n : trunc_index)
+Instance isexact_ptr_purely `{Univalence} (n : trunc_index)
   {F X Y : pType} (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : IsExact (Tr n) (fmap (pTr n.+1) i) (fmap (pTr n.+1) f).
 Proof.
@@ -460,7 +460,7 @@ Definition connecting_map {F X Y}
   : loops Y ->* F
   := i_fiberseq (connect_fiberseq i f).
 
-Global Instance isexact_connect_R {F X Y}
+Instance isexact_connect_R {F X Y}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : IsExact purely (fmap loops f) (connecting_map i f).
 Proof.

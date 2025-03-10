@@ -36,7 +36,7 @@ Module Export ClassifyingSpace.
 
     Axiom bloop_pp : forall x y, bloop (x * y) = bloop x @ bloop y.
 
-    Global Instance istrunc_ClassifyingSpace
+    #[export] Instance istrunc_ClassifyingSpace
       : IsTrunc 1 (ClassifyingSpace G).
     Proof. Admitted.
 
@@ -146,7 +146,7 @@ Section Eliminators.
 End Eliminators.
 
 (** The classifying space is 0-connected. *)
-Global Instance isconnected_classifyingspace {G : Group}
+Instance isconnected_classifyingspace {G : Group}
   : IsConnected 0 (ClassifyingSpace G).
 Proof.
   apply (Build_Contr _ (tr bbase)).
@@ -155,7 +155,7 @@ Proof.
 Defined.
 
 (** The classifying space of a group is pointed. *)
-Global Instance ispointed_classifyingspace (G : Group)
+Instance ispointed_classifyingspace (G : Group)
   : IsPointed (ClassifyingSpace G)
   := bbase.
 
@@ -268,7 +268,7 @@ Section EncodeDecode.
     exact bloop_id.
   Defined.
 
-  Global Instance isequiv_bloop : IsEquiv (@bloop G).
+  #[export] Instance isequiv_bloop : IsEquiv (@bloop G).
   Proof.
     srapply isequiv_adjointify.
     + exact (encode _).
@@ -392,7 +392,7 @@ Section HSpace_bg.
     reflexivity.
   Defined.
 
-  Global Instance ishspace_bg : IsHSpace (B G)
+  #[export] Instance ishspace_bg : IsHSpace (B G)
     := Build_IsHSpace _
           bg_mul
           bg_mul_left_id
@@ -402,7 +402,7 @@ End HSpace_bg.
 
 (** Functoriality of B(-) *)
 
-Global Instance is0functor_pclassifyingspace : Is0Functor B.
+Instance is0functor_pclassifyingspace : Is0Functor B.
 Proof.
   apply Build_Is0Functor.
   intros G H f.
@@ -438,7 +438,7 @@ Proof.
   apply pbloop_natural.
 Defined.
 
-Global Instance is1functor_pclassifyingspace : Is1Functor B.
+Instance is1functor_pclassifyingspace : Is1Functor B.
 Proof.
   apply Build_Is1Functor.
   (** Action on 2-cells *)
@@ -490,7 +490,7 @@ Proof.
 Defined.
 
 (** Interestingly, [fmap B] is an equivalence *)
-Global Instance isequiv_fmap_pclassifyingspace `{U : Univalence} (G H : Group)
+Instance isequiv_fmap_pclassifyingspace `{U : Univalence} (G H : Group)
   : IsEquiv (fmap B (a := G) (b := H)).
 Proof.
   snrapply isequiv_adjointify.
@@ -531,7 +531,7 @@ Proof.
   2: apply isequiv_fmap_pclassifyingspace.
 Defined.
 
-Global Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)
+Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)
   : Is1Natural (opyon G) (opyon (B G) o B) (equiv_grp_homo_pmap_bg G).
 Proof.
   snrapply Build_Is1Natural.

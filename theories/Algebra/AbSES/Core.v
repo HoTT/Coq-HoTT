@@ -1,8 +1,8 @@
 Require Import Basics Types Truncations.Core.
-Require Import HSet WildCat.
+Require Import HSet WildCat Pointed.
 Require Import Groups.QuotientGroup Groups.ShortExactSequence.
 Require Import AbelianGroup AbGroups.Biproduct AbHom.
-Require Import Homotopy.ExactSequence Pointed.
+Require Import Homotopy.ExactSequence.
 Require Import Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.

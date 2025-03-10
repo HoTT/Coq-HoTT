@@ -6,7 +6,7 @@ Local Open Scope pointed_scope.
 
 (** So far, everything is about general reflective subuniverses, but in the future results about modalities can be placed here as well. *)
 
-Global Instance ispointed_O `{O : ReflectiveSubuniverse} (X : Type)
+#[export] Instance ispointed_O `{O : ReflectiveSubuniverse} (X : Type)
   `{IsPointed X} : IsPointed (O X) := to O _ (point X).
 
 Definition pto (O : ReflectiveSubuniverse@{u}) (X : pType@{u})

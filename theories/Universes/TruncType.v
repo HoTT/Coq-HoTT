@@ -25,7 +25,7 @@ Section TruncType.
     exact (equiv_path_sigma_hprop (_;_) (_;_)).
   Defined.
 
-  Global Instance isequiv_ap_trunctype {n : trunc_index} (A B : n-Type)
+  #[export] Instance isequiv_ap_trunctype {n : trunc_index} (A B : n-Type)
     : IsEquiv (@ap _ _ (@trunctype_type n) A B).
   Proof.
     srefine (isequiv_homotopic _^-1%equiv _).
@@ -41,7 +41,7 @@ Section TruncType.
     : A <~> B -> (A = B :> TruncType n)
   := equiv_path_trunctype@{a b} A B.
 
-  Global Instance isequiv_path_trunctype {n : trunc_index} {A B : TruncType n}
+  #[export] Instance isequiv_path_trunctype {n : trunc_index} {A B : TruncType n}
     : IsEquiv (@path_trunctype n A B) := _.
 
   (** [path_trunctype] is functorial *)
@@ -93,7 +93,7 @@ Section TruncType.
   Definition path_hset {A B} := @path_trunctype 0 A B.
   Definition path_hprop {A B} := @path_trunctype (-1) A B.
 
-  Global Instance istrunc_trunctype {n : trunc_index}
+  #[export] Instance istrunc_trunctype {n : trunc_index}
     : IsTrunc n.+1 (TruncType n) | 0.
   Proof.
     apply istrunc_S.
@@ -104,9 +104,9 @@ Section TruncType.
     - exact istrunc_equiv.
   Defined.
 
-  Global Instance isset_HProp : IsHSet HProp := _.
+  #[export] Instance isset_HProp : IsHSet HProp := _.
 
-  Global Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type & IsTrunc n A } | 0.
+  #[export] Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type & IsTrunc n A } | 0.
   Proof.
     intro n.
     exact (istrunc_equiv_istrunc _ issig_trunctype^-1).
@@ -125,7 +125,7 @@ Section TruncType.
 
   (** ** Facts about HProps using univalence *)
 
-  Global Instance trunc_path_IsHProp X Y `{IsHProp Y}
+  #[export] Instance trunc_path_IsHProp X Y `{IsHProp Y}
   : IsHProp (X = Y).
   Proof.
     apply hprop_allpath.
@@ -143,10 +143,10 @@ Section TruncType.
   : (A <-> B) -> A = B :> HProp
     := (@path_hprop A B) o (@equiv_iff_hprop_uncurried A _ B _).
 
-  Global Instance isequiv_path_iff_ishprop_uncurried `{IsHProp A, IsHProp B}
+  #[export] Instance isequiv_path_iff_ishprop_uncurried `{IsHProp A, IsHProp B}
   : IsEquiv (@path_iff_ishprop_uncurried A _ B _) := _.
 
-  Global Instance isequiv_path_iff_hprop_uncurried {A B : HProp}
+  #[export] Instance isequiv_path_iff_hprop_uncurried {A B : HProp}
   : IsEquiv (@path_iff_hprop_uncurried A B) := _.
 
   Definition path_iff_ishprop `{IsHProp A, IsHProp B}

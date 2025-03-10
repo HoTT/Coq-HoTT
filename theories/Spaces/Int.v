@@ -117,7 +117,7 @@ Definition Int_rec := Int_ind.
 (** *** Decidable Equality *)
 
 (** The integers have decidable equality. *)
-Global Instance decidable_paths_int@{} : DecidablePaths Int.
+Instance decidable_paths_int@{} : DecidablePaths Int.
 Proof.
   intros x y.
   destruct x as [x | | x], y as [y |  | y].
@@ -131,12 +131,12 @@ Proof.
 Defined.
 
 (** By Hedberg's theorem, we have that the integers are a set. *)
-Global Instance ishset_int@{} : IsHSet Int := _.
+Instance ishset_int@{} : IsHSet Int := _.
 
 (** *** Pointedness *)
 
 (** We sometimes want to treat the integers as a pointed type with basepoint given by 0. *)
-Global Instance ispointed_int : IsPointed Int := 0.
+Instance ispointed_int : IsPointed Int := 0.
 
 (** ** Operations *)
 
@@ -184,7 +184,7 @@ Proof.
 Defined.
 
 (** Negation is an equivalence. *)
-Global Instance isequiv_int_neg@{} : IsEquiv int_neg.
+Instance isequiv_int_neg@{} : IsEquiv int_neg.
 Proof.
   snrapply (isequiv_adjointify int_neg int_neg).
   1,2: exact int_neg_neg.
@@ -219,11 +219,11 @@ Proof.
 Defined.
 
 (** The successor is an equivalence on [Int] *)
-Global Instance isequiv_int_succ@{} : IsEquiv int_succ
+Instance isequiv_int_succ@{} : IsEquiv int_succ
   := isequiv_adjointify int_succ int_pred int_pred_succ int_succ_pred.
 
 (** The predecessor is an equivalence on [Int] *)
-Global Instance isequiv_int_pred@{} : IsEquiv int_pred
+Instance isequiv_int_pred@{} : IsEquiv int_pred
   := isequiv_inverse int_succ.
 
 (** *** Addition *)

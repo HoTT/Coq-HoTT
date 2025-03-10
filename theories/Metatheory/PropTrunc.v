@@ -45,7 +45,7 @@ Proof.
 Defined.
 
 (** The propositional truncation is a hprop. *)
-Global Instance ishprop_proptrunc `{Funext} (A : Type)
+Instance ishprop_proptrunc `{Funext} (A : Type)
   : IsHProp (PropTrunc A).
 Proof.
   rapply hprop_inhabited_contr.

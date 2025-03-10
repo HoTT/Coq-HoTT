@@ -60,7 +60,7 @@ Local Notation "! x" := (@from_terminal _ terminal_category _ _ _ x) : functor_s
 Section unique.
   Context `{Funext}.
 
-  Global Instance trunc_initial_category_function
+  #[export] Instance trunc_initial_category_function
          `{@IsInitialCategory zero} T
   : Contr (zero -> T).
   Proof.
@@ -72,7 +72,7 @@ Section unique.
 
   Variable C : PreCategory.
 
-  Global Instance trunc_initial_category
+  #[export] Instance trunc_initial_category
          `{@IsInitialCategory zero}
   : Contr (Functor zero C).
   Proof.
@@ -85,7 +85,7 @@ Section unique.
       ).
   Defined.
 
-  Global Instance trunc_to_initial_category
+  #[export] Instance trunc_to_initial_category
          `{@IsInitialCategory zero}
   : IsHProp (Functor C zero).
   Proof.
@@ -98,7 +98,7 @@ Section unique.
   : IsInitialCategory C
     := fun P x => initial_category_ind P (F x).
 
-  Global Instance trunc_terminal_category
+  #[export] Instance trunc_terminal_category
          `{@IsTerminalCategory one H1 H2}
   : Contr (Functor C one).
   Proof.

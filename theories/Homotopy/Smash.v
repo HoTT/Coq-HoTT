@@ -351,7 +351,7 @@ Proof.
   exact (ap022 _ (concat_p1 (p pt))^ (concat_p1 (q pt))^ @ (concat_p1 _)^).
 Defined.
 
-Global Instance is0bifunctor_smash : Is0Bifunctor Smash.
+#[export] Instance is0bifunctor_smash : Is0Bifunctor Smash.
 Proof.
   snrapply Build_Is0Bifunctor'.
   1,2: exact _.
@@ -360,7 +360,7 @@ Proof.
   exact (functor_smash f g).
 Defined.
 
-Global Instance is1bifunctor_smash : Is1Bifunctor Smash.
+#[export] Instance is1bifunctor_smash : Is1Bifunctor Smash.
 Proof.
   snrapply Build_Is1Bifunctor'.
   snrapply Build_Is1Functor.

@@ -69,7 +69,7 @@ Section Homotopies.
 
   (** Weak funext implies that the "based homotopy space" of the Pi-type is contractible, just like the based path space. *)
   (** Use priority 1, so we don't override [Contr Unit]. *)
-  Global Instance contr_basedhtpy : Contr {g : forall x, B x & f == g } | 1.
+  #[export] Instance contr_basedhtpy : Contr {g : forall x, B x & f == g } | 1.
   Proof.
     unfold WeakFunext in wf.    (* Allow typeclass inference to find it *)
     apply (Build_Contr _ (f;idhtpy)). intros [g h].

@@ -27,7 +27,7 @@ Definition power_iterated_shift X n
   : power_iterated (X -> HProp) n = (power_iterated X n -> HProp)
   := (nat_iter_succ_r _ _ _)^.
 
-Global Instance hset_power {UA : Univalence} (X : HSet)
+Instance hset_power {UA : Univalence} (X : HSet)
   : IsHSet (X -> HProp).
 Proof.
   apply istrunc_S.
@@ -37,7 +37,7 @@ Proof.
   intros x. apply path_ishprop.
 Qed.
 
-Global Instance hset_power_iterated {UA : Univalence} (X : HSet) n
+Instance hset_power_iterated {UA : Univalence} (X : HSet) n
   : IsHSet (power_iterated X n).
 Proof.
   nrapply (nat_iter_invariant n power_type (fun A => IsHSet A)).

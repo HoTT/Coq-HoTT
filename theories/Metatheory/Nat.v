@@ -1076,7 +1076,7 @@ Section AssumeStuff.
     Qed.
 
     (** And we're done! *)
-    Global Instance contr_NRec@{} : Contr NRec.
+    #[export] Instance contr_NRec@{} : Contr NRec.
     Proof.
       refine (istrunc_isequiv_istrunc partials partials_nrec).
       refine (isequiv_adjointify _ nrec_partials nrec_partials_sect _).

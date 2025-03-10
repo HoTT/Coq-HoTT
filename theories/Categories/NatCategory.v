@@ -24,7 +24,7 @@ Module Export Core.
   Coercion CardinalityRepresentative : nat >-> Sortclass.
 
   (** ** [Fin n] is an hSet *)
-  Global Instance trunc_cardinality_representative (n : nat)
+  #[export] Instance trunc_cardinality_representative (n : nat)
   : IsHSet (CardinalityRepresentative n).
   Proof.
     induction n; [ typeclasses eauto |].

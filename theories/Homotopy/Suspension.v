@@ -209,10 +209,10 @@ Proof.
   apply ap, h.
 Defined.
 
-Global Instance is0functor_susp : Is0Functor Susp
+Instance is0functor_susp : Is0Functor Susp
   := Build_Is0Functor _ _ _ _ Susp (@functor_susp).
 
-Global Instance is1functor_susp : Is1Functor Susp
+Instance is1functor_susp : Is1Functor Susp
   := Build_Is1Functor _ _ _ _ _ _ _ _ _ _ Susp _
       (@functor2_susp) (@functor_susp_idmap) (@functor_susp_compose).
 
@@ -529,7 +529,7 @@ Defined.
 
 (** ** Contractibility of the suspension *)
 
-Global Instance contr_susp (A : Type) `{Contr A}
+Instance contr_susp (A : Type) `{Contr A}
   : Contr (Susp A).
 Proof.
   unfold Susp; exact _.
@@ -537,7 +537,7 @@ Defined.
 
 (** ** Connectedness of the suspension *)
 
-Global Instance isconnected_susp {n : trunc_index} {X : Type}
+Instance isconnected_susp {n : trunc_index} {X : Type}
   `{H : IsConnected n X} : IsConnected n.+1 (Susp X).
 Proof.
   apply isconnected_from_elim.
@@ -572,7 +572,7 @@ Proof.
   nrapply inv_V.
 Defined.
 
-Global Instance isequiv_susp_neg (A : Type) : IsEquiv (susp_neg A)
+Instance isequiv_susp_neg (A : Type) : IsEquiv (susp_neg A)
   := isequiv_involution (susp_neg A) (susp_neg_inv A).
 
 Definition equiv_susp_neg (A : Type) : Susp A <~> Susp A

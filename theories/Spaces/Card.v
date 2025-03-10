@@ -41,11 +41,11 @@ Defined.
 Section contents.
   Context `{Univalence}.
 
-  Global Instance plus_card : Plus Card := sum_card.
-  Global Instance mult_card : Mult Card := prod_card.
-  Global Instance zero_card : Zero Card := tr (Build_HSet Empty).
-  Global Instance one_card : One Card := tr (Build_HSet Unit).
-  Global Instance le_card : Le Card := leq_card.
+  #[export] Instance plus_card : Plus Card := sum_card.
+  #[export] Instance mult_card : Mult Card := prod_card.
+  #[export] Instance zero_card : Zero Card := tr (Build_HSet Empty).
+  #[export] Instance one_card : One Card := tr (Build_HSet Unit).
+  #[export] Instance le_card : Le Card := leq_card.
 
   (* Reduce an algebraic equation to an equivalence *)
   Local Ltac reduce :=
@@ -85,7 +85,7 @@ Section contents.
   Instance leftabsorb_card : LeftAbsorb mult_card zero_card.
   Proof. reduce. apply prod_empty_l. Defined.
 
-  Global Instance issemiring_card : IsSemiCRing Card.
+  #[export] Instance issemiring_card : IsSemiCRing Card.
   Proof.
     repeat split; try exact _.
     - repeat intro. simpl_ops.
@@ -139,7 +139,7 @@ Section contents.
     apply Hab. apply Hbc. exact Hxy.
   Defined.
 
-  Global Instance preorder_card : PreOrder le_card.
+  #[export] Instance preorder_card : PreOrder le_card.
   Proof. split; exact _. Defined.
 
 End contents.
@@ -152,7 +152,7 @@ End contents.
 Definition Injection X Y :=
   { f : X -> Y | IsInjective f }.
 
-Global Instance Injection_refl :
+Instance Injection_refl :
   Reflexive Injection.
 Proof.
   intros X. exists (fun x => x). intros x x'. done.
@@ -168,7 +168,7 @@ Qed.
 Definition InjectsInto X Y :=
   merely (Injection X Y).
 
-Global Instance InjectsInto_refl :
+Instance InjectsInto_refl :
   Reflexive InjectsInto.
 Proof.
   intros X. apply tr. reflexivity.

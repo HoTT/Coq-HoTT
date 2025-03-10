@@ -51,7 +51,7 @@ Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
 Arguments PathSquare_rec {A} P f {_ _ _ _ _ _ _ _} _.
 
 (* PathSquare_ind is an equivalence, similar to how paths_ind is *)
-Global Instance isequiv_PathSquare_ind `{Funext} {A}
+Instance isequiv_PathSquare_ind `{Funext} {A}
   (P : forall (a00 a10 a01 a11 : A) (p : a00 = a10) (p0 : a01 = a11)
     (p1 : a00 = a01) (p2 : a10 = a11),
     PathSquare p p0 p1 p2 -> Type) : IsEquiv (PathSquare_ind P).
@@ -94,7 +94,7 @@ Defined.
 Notation sq_path := equiv_sq_path.
 
 (** Squares in (n+2)-truncated types are n-truncated *)
-Global Instance istrunc_sq n
+Instance istrunc_sq n
   {A} `{!IsTrunc n.+2 A} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
   {p0x : a00 = a01} {p1x : a10 = a11}

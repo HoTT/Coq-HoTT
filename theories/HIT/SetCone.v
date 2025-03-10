@@ -9,7 +9,7 @@ Section SetCone.
 
   Definition setcone := Trunc 0 (Pushout@{_ _ Set _} f (const_tt A)).
 
-  Global Instance istrunc_setcone : IsHSet setcone := _.
+  #[export] Instance istrunc_setcone : IsHSet setcone := _.
 
   Definition setcone_point : setcone := tr (push (inr tt)).
 End SetCone.

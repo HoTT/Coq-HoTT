@@ -38,7 +38,7 @@ Proof.
     eapply path_ishprop.
 Defined.
 
-Global Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
+Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
 Proof.
   exact (istrunc_equiv_istrunc _ equiv_hset_axiomK).
 Defined.
@@ -84,7 +84,7 @@ Proof.
   apply path_ishprop.
 Defined.
 
-Global Instance isequiv_hrel_subpaths
+Instance isequiv_hrel_subpaths
        X R
        `{Reflexive X R}
        `{forall x y, IsHProp (R x y)}
@@ -107,7 +107,7 @@ Definition ismono {X Y} (f : X -> Y)
   := forall (Z : HSet),
      forall g h : Z -> X, f o g = f o h -> g = h.
 
-Global Instance isinj_embedding {A B : Type} (m : A -> B)
+Instance isinj_embedding {A B : Type} (m : A -> B)
   : IsEmbedding m -> IsInjective m.
 Proof.
   intros ise x y p.

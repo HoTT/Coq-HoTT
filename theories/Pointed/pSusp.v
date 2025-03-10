@@ -16,13 +16,13 @@ Local Open Scope pointed_scope.
 
 (** ** Pointedness of [Susp] and path spaces thereof *)
 (** We arbitrarily choose [North] to be the point. *)
-Global Instance ispointed_susp {X : Type} : IsPointed (Susp X) | 0
+Instance ispointed_susp {X : Type} : IsPointed (Susp X) | 0
   := North.
 
-Global Instance ispointed_path_susp `{IsPointed X}
+Instance ispointed_path_susp `{IsPointed X}
   : IsPointed (North = South :> Susp X) | 0 := merid (point X).
 
-Global Instance ispointed_path_susp' `{IsPointed X}
+Instance ispointed_path_susp' `{IsPointed X}
   : IsPointed (South = North :> Susp X) | 0 := (merid (point X))^.
 
 Definition psusp (X : Type) : pType
@@ -32,12 +32,12 @@ Definition psusp (X : Type) : pType
 
 (** [psusp] has a functorial action. *)
 (** TODO: make this a displayed functor *)
-Global Instance is0functor_psusp : Is0Functor psusp
+Instance is0functor_psusp : Is0Functor psusp
   := Build_Is0Functor _ _ _ _ psusp (fun X Y f
       => Build_pMap (psusp X) (psusp Y) (functor_susp f) 1).
 
 (** [psusp] is a 1-functor. *)
-Global Instance is1functor_psusp : Is1Functor psusp.
+Instance is1functor_psusp : Is1Functor psusp.
 Proof.
   snrapply Build_Is1Functor.
   (** Action on 2-cells *)
@@ -129,7 +129,7 @@ Definition loop_susp_unit (X : pType) : X ->* loops (psusp X)
       (fun x => merid x @ (merid (point X))^) (concat_pV _).
 
 (** By Freudenthal, we have that this map is (2n+2)-connected when [X] is (n+1)-connected. *)
-Global Instance conn_map_loop_susp_unit `{Univalence} (n : trunc_index)
+Instance conn_map_loop_susp_unit `{Univalence} (n : trunc_index)
   (X : pType) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (loop_susp_unit X).
 Proof.
@@ -288,7 +288,7 @@ Proof.
   exact (fmap_comp psusp g f).
 Defined.
 
-Global Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
+Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
   : Is1Natural (opyon (psusp A)) (opyon A o loops)
       (loop_susp_adjoint A).
 Proof.

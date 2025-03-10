@@ -33,7 +33,7 @@ Proof.
 Defined.
 
 (** Every type admits the trivial uniform structure with the standard identity type on every level. *)
-Global Instance trivial_us {X : Type} : UStructure X | 100.
+Instance trivial_us {X : Type} : UStructure X | 100.
 Proof.
   srapply (Build_UStructure _ (fun n x y => (x = y))).
   exact (fun _ _ _ => idmap).

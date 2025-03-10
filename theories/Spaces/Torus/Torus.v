@@ -78,7 +78,7 @@ Proof.
 Admitted.
 
 (** The torus is pointed. *)
-Global Instance ispointed_torus : IsPointed Torus := tbase.
+Instance ispointed_torus : IsPointed Torus := tbase.
 
 (** The loops commute. *)
 Definition loops_commute_torus : loop_a @ loop_b = loop_b @ loop_a

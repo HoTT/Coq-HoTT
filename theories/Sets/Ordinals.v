@@ -15,7 +15,7 @@ Local Open Scope hprop_scope.
 Inductive Accessible {A} (R : Lt A) (a : A) :=
   acc : (forall b, b < a -> Accessible R b) -> Accessible R a.
 
-Global Instance ishprop_Accessible `{Funext} {A} (R : Lt A) (a : A) :
+Instance ishprop_Accessible `{Funext} {A} (R : Lt A) (a : A) :
   IsHProp (Accessible R a).
 Proof.
   apply hprop_allpath.
@@ -28,7 +28,7 @@ Qed.
 Class WellFounded {A} (R : Relation A) :=
   well_foundedness : forall a : A, Accessible R a.
 
-Global Instance ishprop_WellFounded `{Funext} {A} (R : Relation A) :
+Instance ishprop_WellFounded `{Funext} {A} (R : Relation A) :
   IsHProp (WellFounded R).
 Proof.
   apply hprop_allpath; intros H1 H2.
@@ -41,7 +41,7 @@ Qed.
 Class Extensional {A} (R : Lt A) :=
   extensionality : forall a b : A, (forall c : A, c < a <-> c < b) -> a = b.
 
-Global Instance ishprop_Extensional `{Funext} {A} `{IsHSet A} (R : Relation A)
+Instance ishprop_Extensional `{Funext} {A} `{IsHSet A} (R : Relation A)
   : IsHProp (Extensional R).
 Proof. unfold Extensional. exact _. Qed.
 
@@ -61,7 +61,7 @@ Class IsOrdinal@{carrier relation} (A : Type@{carrier}) (R : Relation@{carrier r
   ordinal_well_foundedness
   ordinal_transitivity.
 
-Global Instance ishprop_IsOrdinal `{Funext} A R
+Instance ishprop_IsOrdinal `{Funext} A R
   : IsHProp (IsOrdinal A R).
 Proof.
   eapply istrunc_equiv_istrunc. {
@@ -81,7 +81,7 @@ Existing Instances ordinal_relation ordinal_property.
 Coercion ordinal_as_hset (A : Ordinal) : HSet
   := Build_HSet (ordinal_carrier A).
 
-Global Instance irreflexive_ordinal_relation A R
+Instance irreflexive_ordinal_relation A R
   : IsOrdinal A R -> Irreflexive R.
 Proof.
   intros is_ordinal a H.
@@ -110,7 +110,7 @@ Definition Isomorphism : TypeWithRelation -> TypeWithRelation -> Type
   := fun '(A; R__A) '(B; R__B) =>
        { f : A <~> B & forall a a', R__A a a' <-> R__B (f a) (f a') }.
 
-Global Instance isomorphism_id : Reflexive Isomorphism.
+Instance isomorphism_id : Reflexive Isomorphism.
 Proof. intros A. exists equiv_idmap. cbn. intros a a'. reflexivity. Qed.
 
 Lemma isomorphism_inverse
@@ -139,7 +139,7 @@ Proof.
   - intros gfa_gfa'. apply Hf. apply Hg. exact gfa_gfa'.
 Defined.
 
-Global Instance isomorphism_compose_backwards : Transitive Isomorphism
+Instance isomorphism_compose_backwards : Transitive Isomorphism
   := transitive_Isomorphism.
 
 Definition equiv_path_Ordinal `{Univalence} (A B : Ordinal)
@@ -253,7 +253,7 @@ Class IsSimulation {A B : Type} {R__A : Lt A} {R__B : Lt B} (f : A -> B) :=
   }.
 Arguments simulation_is_hom {_ _ _ _} _ {_ _ _}.
 
-Global Instance ishprop_IsSimulation `{Funext}
+Instance ishprop_IsSimulation `{Funext}
          {A B : Ordinal} (f : A -> B) :
   IsHProp (IsSimulation f).
 Proof.
@@ -262,7 +262,7 @@ Proof.
   - exact _.
 Qed.
 
-Global Instance isinjective_simulation
+Instance isinjective_simulation
          {A : Type} {R : Lt A} `{IsOrdinal A R}
          {B : Type} {Q : Lt B} `{IsOrdinal B Q}
          (f : A -> B) {is_simulation : IsSimulation f}
@@ -338,7 +338,7 @@ Proof.
 Qed.
 
 
-Global Instance is_simulation_isomorphism
+Instance is_simulation_isomorphism
          {A : Type} {R__A : Lt A}
          {B : Type} {R__B : Lt B}
          (f : Isomorphism (A; R__A) (B; R__B))
@@ -352,7 +352,7 @@ Proof.
 Qed.
 
 
-Global Instance ishprop_Isomorphism `{Funext} (A B : Ordinal)
+Instance ishprop_Isomorphism `{Funext} (A B : Ordinal)
   : IsHProp (Isomorphism A B).
 Proof.
   apply hprop_allpath; intros f g. apply path_sigma_hprop; cbn.
@@ -360,7 +360,7 @@ Proof.
 Qed.
 
 
-Global Instance ishset_Ordinal `{Univalence}
+Instance ishset_Ordinal `{Univalence}
   : IsHSet Ordinal.
 Proof.
   apply istrunc_S.
@@ -478,7 +478,7 @@ Proof.
 Defined.
 
 
-Global Instance is_simulation_out `{PropResizing}
+Instance is_simulation_out `{PropResizing}
   {A : Ordinal} (a : A)
   : IsSimulation (out : ↓a -> A).
 Proof.
@@ -496,7 +496,7 @@ Proof.
 Qed.
 
 
-Global Instance isinjective_initial_segment `{Funext} `{PropResizing}
+Instance isinjective_initial_segment `{Funext} `{PropResizing}
   (A : Ordinal)
   : IsInjective (initial_segment : A -> Ordinal).
 Proof.
@@ -566,11 +566,11 @@ Qed.
 
 (** * `Ordinal` is an ordinal *)
 
-Global Instance lt_Ordinal@{carrier relation +} `{PropResizing}
+Instance lt_Ordinal@{carrier relation +} `{PropResizing}
   : Lt Ordinal@{carrier relation}
   := fun A B => exists b : B, A = ↓b.
 
-Global Instance is_mere_relation_lt_on_Ordinal `{Univalence} `{PropResizing}
+Instance is_mere_relation_lt_on_Ordinal `{Univalence} `{PropResizing}
   : is_mere_relation Ordinal lt_Ordinal.
 Proof.
   intros A B.
@@ -608,7 +608,7 @@ Proof.
     apply initial_segment_property.
 Qed.
 
-Global Instance Ordinal_is_ordinal `{PropResizing} `{Univalence}
+Instance Ordinal_is_ordinal `{PropResizing} `{Univalence}
   : IsOrdinal Ordinal (<).
 Proof.
   constructor.
@@ -796,7 +796,7 @@ Proof.
       * reflexivity.
 Defined.
 
-Global Instance le_on_Ordinal : Le Ordinal :=
+Instance le_on_Ordinal : Le Ordinal :=
   fun A B => exists f : A -> B, IsSimulation f.
 
 Definition limit_is_upper_bound `{Univalence} `{PropResizing}

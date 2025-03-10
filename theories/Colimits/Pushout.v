@@ -285,7 +285,7 @@ End EquivPushout.
 
 (** The pushout of a span of contractible types is contractible *)
 
-Global Instance contr_pushout {A B C : Type} `{Contr A, Contr B, Contr C}
+Instance contr_pushout {A B C : Type} `{Contr A, Contr B, Contr C}
        (f : A -> B) (g : A -> C)
   : Contr (Pushout f g).
 Proof.
@@ -553,7 +553,7 @@ End PushoutAssoc.
 
 (** ** Pushouts of equvialences are equivalences *)
 
-Global Instance isequiv_pushout_isequiv {A B C} (f : A -> B) (g : A -> C)
+Instance isequiv_pushout_isequiv {A B C} (f : A -> B) (g : A -> C)
        `{IsEquiv _ _ f} : IsEquiv (pushr' f g).
 Proof.
   srefine (isequiv_adjointify _ _ _ _).
@@ -575,7 +575,7 @@ Proof.
   - intros c; reflexivity.
 Defined.
 
-Global Instance isequiv_pushout_isequiv' {A B C} (f : A -> B) (g : A -> C)
+Instance isequiv_pushout_isequiv' {A B C} (f : A -> B) (g : A -> C)
        `{IsEquiv _ _ g} : IsEquiv (pushl' f g).
 Proof.
   srefine (isequiv_adjointify _ _ _ _).

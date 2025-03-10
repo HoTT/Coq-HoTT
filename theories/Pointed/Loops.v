@@ -10,7 +10,7 @@ Local Open Scope path_scope.
 (** ** Loop spaces *)
 
 (** The type [x = x] is pointed. *)
-Global Instance ispointed_loops A (a : A) : IsPointed (a = a) := 1.
+Instance ispointed_loops A (a : A) : IsPointed (a = a) := 1.
 
 Definition loops (A : pType) : pType
   := [point A = point A, 1].
@@ -43,7 +43,7 @@ Defined.
 (** ** Functoriality of loop spaces *)
 
 (** Action on 1-cells *)
-Global Instance is0functor_loops : Is0Functor loops.
+Instance is0functor_loops : Is0Functor loops.
 Proof.
   apply Build_Is0Functor.
   intros A B f.
@@ -53,7 +53,7 @@ Proof.
   apply whiskerL. apply concat_1p.
 Defined.
 
-Global Instance is1functor_loops : Is1Functor loops.
+Instance is1functor_loops : Is1Functor loops.
 Proof.
   apply Build_Is1Functor.
   (** Action on 2-cells *)
@@ -97,7 +97,7 @@ Proof.
 Defined.
 
 (** Loops is a pointed functor *)
-Global Instance ispointedfunctor_loops : IsPointedFunctor loops.
+Instance ispointedfunctor_loops : IsPointedFunctor loops.
 Proof.
   snrapply Build_IsPointedFunctor'.
   1-4: exact _.
@@ -112,14 +112,14 @@ Defined.
 (** *** Iterated loops functor *)
 
 (** Action on 1-cells *)
-Global Instance is0functor_iterated_loops n : Is0Functor (iterated_loops n).
+Instance is0functor_iterated_loops n : Is0Functor (iterated_loops n).
 Proof.
   induction n.
   1: exact _.
   nrapply is0functor_compose; exact _.
 Defined.
 
-Global Instance is1functor_iterated_loops n : Is1Functor (iterated_loops n).
+Instance is1functor_iterated_loops n : Is1Functor (iterated_loops n).
 Proof.
   induction n.
   1: exact _.
@@ -145,14 +145,14 @@ Proof.
 Defined.
 
 (** The loop space functor decreases the truncation level by one.  *)
-Global Instance istrunc_fmap_loops {n} (A B : pType) (f : A ->* B)
+Instance istrunc_fmap_loops {n} (A B : pType) (f : A ->* B)
   `{IsTruncMap n.+1 _ _ f} : IsTruncMap n (fmap loops f).
 Proof.
   intro p. exact (istrunc_equiv_istrunc _ (hfiber_fmap_loops f p)).
 Defined.
 
 (** And likewise the connectedness.  *)
-Global Instance isconnected_fmap_loops `{Univalence} {n : trunc_index}
+Instance isconnected_fmap_loops `{Univalence} {n : trunc_index}
   (A B : pType) (f : A ->* B) `{IsConnMap n.+1 _ _ f}
   : IsConnMap n (fmap loops f).
 Proof.
@@ -314,7 +314,7 @@ Defined.
 Definition loopsD {A} : pFam A -> pFam (loops A)
   := fun Pp => Build_pFam (fun q : loops A => transport Pp q (dpoint Pp) = (dpoint Pp)) 1.
 
-Global Instance istrunc_pfam_loopsD {n} {A} (P : pFam A)
+Instance istrunc_pfam_loopsD {n} {A} (P : pFam A)
        {H :IsTrunc_pFam n.+1 P}
   : IsTrunc_pFam n (loopsD P).
 Proof.
@@ -424,7 +424,7 @@ Proof.
 Defined.
 
 (** [loops_inv] is a natural transformation. *)
-Global Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
+Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
 Proof.
   snrapply Build_Is1Natural.
   intros A B f.

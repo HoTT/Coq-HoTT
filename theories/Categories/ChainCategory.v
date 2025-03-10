@@ -79,7 +79,7 @@ Module Export Strict.
 End Strict.
 
 Module Export Univalent.
-  Global Instance iscategory_omega : IsCategory omega.
+  Instance iscategory_omega : IsCategory omega.
   Proof.
     intros s d.
     refine (isequiv_iff_hprop _ _).

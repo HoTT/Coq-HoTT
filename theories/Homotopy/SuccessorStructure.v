@@ -108,26 +108,26 @@ Defined.
 Definition ssHomotopy {A : SuccStr} {P : ssFam A} (f g : ssForall P)
   := ssForall (ssfam_sshomotopy f g).
 
-Global Instance isgraph_ss : IsGraph SuccStr.
+Instance isgraph_ss : IsGraph SuccStr.
 Proof.
   snrapply Build_IsGraph.
   intros X Y.
   exact (@ssForall X (ssfam_const Y)).
 Defined.
 
-Global Instance isgraph_ssforall {A : SuccStr} (P : ssFam A)
+Instance isgraph_ssforall {A : SuccStr} (P : ssFam A)
   : IsGraph (ssForall P).
 Proof.
   snrapply Build_IsGraph.
   exact ssHomotopy.
 Defined.
 
-Global Instance is2graph_ssforall {A : SuccStr} (P : ssFam A)
+Instance is2graph_ssforall {A : SuccStr} (P : ssFam A)
   : Is2Graph (ssForall P)
   := {}.
 
-Global Instance is2graph_ss : Is2Graph SuccStr := {}.
-Global Instance is3graph_ss : Is3Graph SuccStr := {}.
+Instance is2graph_ss : Is2Graph SuccStr := {}.
+Instance is3graph_ss : Is3Graph SuccStr := {}.
 
 Ltac sselim_elim eq x :=
   match type of (eq x) with
@@ -169,7 +169,7 @@ Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) 
 Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) constr(x5) := sselim x0; sselim x1 x2 x3 x4 x5.
 Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) constr(x5) constr(x6) := sselim x0; sselim x1 x2 x3 x4 x5 x6.
 
-Global Instance is01cat_ss : Is01Cat SuccStr.
+Instance is01cat_ss : Is01Cat SuccStr.
 Proof.
   snrapply Build_Is01Cat.
   - intro X.
@@ -184,7 +184,7 @@ Proof.
       exact (ap f (ss_fun_succ g x) @ ss_fun_succ f (g x)).
 Defined.
 
-Global Instance is01cat_ssforall {A : SuccStr} (P : ssFam A)
+Instance is01cat_ssforall {A : SuccStr} (P : ssFam A)
   : Is01Cat (ssForall P).
 Proof.
   snrapply Build_Is01Cat.
@@ -202,7 +202,7 @@ Proof.
       by destruct (p x), (q x).
 Defined.
 
-Global Instance is0gpd_ssforall {A : SuccStr} (P : ssFam A)
+Instance is0gpd_ssforall {A : SuccStr} (P : ssFam A)
   : Is0Gpd (ssForall P).
 Proof.
   snrapply Build_Is0Gpd.
@@ -215,7 +215,7 @@ Proof.
     by destruct (p x).
 Defined.
 
-Global Instance is1cat_ss : Is1Cat SuccStr.
+Instance is1cat_ss : Is1Cat SuccStr.
 Proof.
   snrapply Build_Is1Cat'.
   1,2: exact _.

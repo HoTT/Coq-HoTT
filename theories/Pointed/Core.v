@@ -20,18 +20,18 @@ Notation "'pt'" := (point _) : pointed_scope.
 Notation "[ X , x ]" := (Build_pType X x) : pointed_scope.
 
 (** The unit type is pointed *)
-Global Instance ispointed_unit : IsPointed Unit := tt.
+Instance ispointed_unit : IsPointed Unit := tt.
 
 (** The Unit pType *)
 Definition pUnit : pType := [Unit, tt].
 
 (** A sigma type of pointed components is pointed. *)
-Global Instance ispointed_sigma `{IsPointed A} `{IsPointed (B (point A))}
+Instance ispointed_sigma `{IsPointed A} `{IsPointed (B (point A))}
 : IsPointed (sig B)
   := (point A; point (B (point A))).
 
 (** A product of pointed types is pointed. *)
-Global Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
+Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
   := (point A, point B).
 
 (** We override the notation for products in pointed_scope *)
@@ -319,7 +319,7 @@ Proof.
   - apply path_prod; apply point_eq.
 Defined.
 
-(** [isequiv_functor_prod] applies, and is a Global Instance. *)
+(** [isequiv_functor_prod] applies, and is an Instance. *)
 Definition equiv_functor_pprod {A A' B B' : pType} (f : A <~>* A') (g : B <~>* B')
   : A * B <~>* A' * B'
   := Build_pEquiv _ _ (functor_pprod f g) _.
@@ -333,7 +333,7 @@ Definition phomotopy_reflexive {A : pType} {P : pFam A} (f : pForall A P)
   : f ==* f
   := Build_pHomotopy (fun x => 1) (concat_pV _)^.
 
-Global Instance phomotopy_reflexive' {A : pType} {P : pFam A}
+Instance phomotopy_reflexive' {A : pType} {P : pFam A}
   : Reflexive (@pHomotopy A P)
   := @phomotopy_reflexive A P.
 
@@ -346,7 +346,7 @@ Proof.
   by pelim p f g.
 Defined.
 
-Global Instance phomotopy_symmetric' {A P}
+Instance phomotopy_symmetric' {A P}
   : Symmetric (@pHomotopy A P)
   := @phomotopy_symmetric A P.
 
@@ -361,7 +361,7 @@ Proof.
   nrapply whiskerL; nrapply concat_V_pp.
 Defined.
 
-Global Instance phomotopy_transitive' {A P} : Transitive (@pHomotopy A P)
+Instance phomotopy_transitive' {A P} : Transitive (@pHomotopy A P)
   := @phomotopy_transitive A P.
 
 Notation "p @* q" := (phomotopy_transitive p q) : pointed_scope.
@@ -521,7 +521,7 @@ Proof.
   exact (concat_1p _)^.
 Defined.
 
-Global Instance contr_pmap_from_contr `{Funext} {A B : pType} `{C : Contr A}
+Instance contr_pmap_from_contr `{Funext} {A B : pType} `{C : Contr A}
   : Contr (A ->* B).
 Proof.
   rapply (contr_equiv' { b : B & b = pt }).
@@ -534,40 +534,40 @@ Defined.
 (** Note that the definitions for [pForall] are also used for the higher structure in [pType]. *)
 
 (** pType is a graph *)
-Global Instance isgraph_ptype : IsGraph pType
+Instance isgraph_ptype : IsGraph pType
   := Build_IsGraph pType (fun X Y => X ->* Y).
 
 (** pForall is a graph *)
-Global Instance isgraph_pforall (A : pType) (P : pFam A)
+Instance isgraph_pforall (A : pType) (P : pFam A)
   : IsGraph (pForall A P)
   := Build_IsGraph _ pHomotopy.
 
 (** pType is a 0-coherent 1-category *)
-Global Instance is01cat_ptype : Is01Cat pType
+Instance is01cat_ptype : Is01Cat pType
   := Build_Is01Cat pType _ (@pmap_idmap) (@pmap_compose).
 
 (** pForall is a 0-coherent 1-category *)
-Global Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P).
+Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P).
 Proof.
   econstructor.
   - exact phomotopy_reflexive.
   - intros a b c f g. exact (g @* f).
 Defined.
 
-Global Instance is2graph_ptype : Is2Graph pType := fun f g => _.
+Instance is2graph_ptype : Is2Graph pType := fun f g => _.
 
-Global Instance is2graph_pforall (A : pType) (P : pFam A)
+Instance is2graph_pforall (A : pType) (P : pFam A)
   : Is2Graph (pForall A P)
   := fun f g => _.
 
 (** pForall is a 0-coherent 1-groupoid *)
-Global Instance is0gpd_pforall (A : pType) (P : pFam A) : Is0Gpd (pForall A P).
+Instance is0gpd_pforall (A : pType) (P : pFam A) : Is0Gpd (pForall A P).
 Proof.
   srapply Build_Is0Gpd. intros ? ? h. exact h^*.
 Defined.
 
 (** pType is a 1-coherent 1-category *)
-Global Instance is1cat_ptype : Is1Cat pType.
+Instance is1cat_ptype : Is1Cat pType.
 Proof.
   snrapply Build_Is1Cat'.
   1, 2: exact _.
@@ -583,7 +583,7 @@ Proof.
 Defined.
 
 (** pType is a pointed category *)
-Global Instance ispointedcat_ptype : IsPointedCat pType.
+Instance ispointedcat_ptype : IsPointedCat pType.
 Proof.
   snrapply Build_IsPointedCat.
   + exact pUnit.
@@ -600,7 +600,7 @@ Definition path_zero_morphism_pconst (A B : pType)
   : (@pconst A B) = zero_morphism := idpath.
 
 (** pForall is a 1-category *)
-Global Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.
+Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.
 Proof.
   snrapply Build_Is1Cat'.
   1, 2: exact _.
@@ -614,17 +614,17 @@ Proof.
 Defined.
 
 (** pForall is a 1-groupoid *)
-Global Instance is1gpd_pforall (A : pType) (P : pFam A) : Is1Gpd (pForall A P) | 10.
+Instance is1gpd_pforall (A : pType) (P : pFam A) : Is1Gpd (pForall A P) | 10.
 Proof.
   econstructor.
   + intros ? ? p. exact (phomotopy_compose_pV p).
   + intros ? ? p. exact (phomotopy_compose_Vp p).
 Defined.
 
-Global Instance is3graph_ptype : Is3Graph pType
+Instance is3graph_ptype : Is3Graph pType
   := fun f g => is2graph_pforall _ _.
 
-Global Instance is21cat_ptype : Is21Cat pType.
+Instance is21cat_ptype : Is21Cat pType.
 Proof.
   unshelve econstructor.
   - exact _.
@@ -700,13 +700,13 @@ Proof.
 Defined.
 
 (** The forgetful map from pType to Type is a 0-functor *)
-Global Instance is0functor_pointed_type : Is0Functor pointed_type.
+Instance is0functor_pointed_type : Is0Functor pointed_type.
 Proof.
   apply Build_Is0Functor. intros. exact f.
 Defined.
 
 (** The forgetful map from pType to Type is a 1-functor *)
-Global Instance is1functor_pointed_type : Is1Functor pointed_type.
+Instance is1functor_pointed_type : Is1Functor pointed_type.
 Proof.
   apply Build_Is1Functor.
   + intros ? ? ? ? h. exact h.
@@ -715,7 +715,7 @@ Proof.
 Defined.
 
 (** pType has binary products *)
-Global Instance hasbinaryproducts_ptype : HasBinaryProducts pType.
+Instance hasbinaryproducts_ptype : HasBinaryProducts pType.
 Proof.
   intros X Y.
   snrapply Build_BinaryProduct.
@@ -737,7 +737,7 @@ Proof.
 Defined.
 
 (** pType has I-indexed product. *)
-Global Instance hasallproducts_ptype `{Funext} : HasAllProducts pType.
+Instance hasallproducts_ptype `{Funext} : HasAllProducts pType.
 Proof.
   intros I x.
   snrapply Build_Product.
@@ -888,7 +888,7 @@ Proof.
 Defined.
 
 (** Pointed homotopies in a set form an HProp. *)
-Global Instance ishprop_phomotopy_hset `{Funext} {X Y : pType} `{IsHSet Y} (f g : X ->* Y)
+Instance ishprop_phomotopy_hset `{Funext} {X Y : pType} `{IsHSet Y} (f g : X ->* Y)
   : IsHProp (f ==* g)
   := inO_equiv_inO' (O:=Tr (-1)) _ (issig_phomotopy f g).
 
@@ -952,7 +952,7 @@ Definition pequiv_path_equiv_path_ptype_inverse `{Univalence} {A B : pType}
   : @pequiv_path A B = (equiv_path_ptype A B)^-1
   := idpath.
 
-Global Instance isequiv_pequiv_path `{Univalence} {A B : pType}
+Instance isequiv_pequiv_path `{Univalence} {A B : pType}
   : IsEquiv (@pequiv_path A B)
   := isequiv_inverse (equiv_path_ptype A B).
 
@@ -984,7 +984,7 @@ Proof.
 Defined.
 
 (** Under funext, pType has morphism extensionality *)
-Global Instance hasmorext_ptype `{Funext} : HasMorExt pType.
+Instance hasmorext_ptype `{Funext} : HasMorExt pType.
 Proof.
   srapply Build_HasMorExt; intros A B f g.
   refine (isequiv_homotopic (equiv_path_pforall f g)^-1%equiv _).
@@ -992,7 +992,7 @@ Proof.
 Defined.
 
 (** pType has equivalences *)
-Global Instance hasequivs_ptype : HasEquivs pType.
+Instance hasequivs_ptype : HasEquivs pType.
 Proof.
   srapply (
     Build_HasEquivs _ _ _ _ _ pEquiv (fun A B f => IsEquiv f));
@@ -1009,7 +1009,7 @@ Proof.
     + intros x; exact (s x).
 Defined.
 
-Global Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
+Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).
 Proof.
   rapply hasmorext_core.
   intros A B f g.
@@ -1019,7 +1019,7 @@ Proof.
 Defined.
 
 (** pType is a univalent 1-coherent 1-category *)
-Global Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
+Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
 Proof.
   srapply Build_IsUnivalent1Cat; intros A B.
   (* [cate_equiv_path] is almost definitionally equal to [pequiv_path].  Both are defined by path induction, sending [idpath A] to [id_cate A] and [pequiv_pmap_idmap A], respectively.  [id_cate A] is almost definitionally equal to [pequiv_pmap_idmap A], except that the former uses [catie_adjointify], so the adjoint law is different. However, the underlying pointed maps are definitionally equal. *)
@@ -1032,7 +1032,7 @@ Defined.
 (** The free base point added to a type. This is in fact a functor and left adjoint to the forgetful functor pType to Type. *)
 Definition pointify (S : Type) : pType := [S + Unit, inr tt].
 
-Global Instance is0functor_pointify : Is0Functor pointify.
+Instance is0functor_pointify : Is0Functor pointify.
 Proof.
   apply Build_Is0Functor.
   intros A B f.

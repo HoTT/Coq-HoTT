@@ -119,7 +119,7 @@ Section path_functor.
   Defined.
 
   (** ** Classify equality of functors up to equivalence *)
-  Global Instance isequiv_path_functor_uncurried (F G : Functor C D)
+  #[export] Instance isequiv_path_functor_uncurried (F G : Functor C D)
   : IsEquiv (@path_functor_uncurried F G).
   Proof.
     apply (isequiv_adjointify (@path_functor_uncurried F G)
@@ -148,7 +148,7 @@ Section path_functor.
     exact (pr1^-1).
   Defined.
 
-  Global Instance isequiv_path_path_functor_uncurried F G p q
+  #[export] Instance isequiv_path_path_functor_uncurried F G p q
   : IsEquiv (@path_path_functor_uncurried F G p q).
   Proof.
     unfold path_path_functor_uncurried.
@@ -162,7 +162,7 @@ Section path_functor.
   Defined.
 
   (** ** If the objects in [D] are n-truncated, then so is the type of functors [C → D] *)
-  Global Instance trunc_functor `{IsTrunc n D} `{forall s d, IsTrunc n (morphism D s d)}
+  #[export] Instance trunc_functor `{IsTrunc n D} `{forall s d, IsTrunc n (morphism D s d)}
   : IsTrunc n (Functor C D).
   Proof.
     eapply istrunc_equiv_istrunc; [ exact equiv_sig_functor | ].

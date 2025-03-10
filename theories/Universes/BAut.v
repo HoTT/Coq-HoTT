@@ -14,7 +14,7 @@ Definition BAut (X : Type@{u}) := { Z : Type@{u} & merely (Z = X) }.
 
 Coercion BAut_pr1 X : BAut X -> Type := pr1.
 
-Global Instance ispointed_baut {X : Type} : IsPointed (BAut X) := (X; tr 1).
+Instance ispointed_baut {X : Type} : IsPointed (BAut X) := (X; tr 1).
 
 (** We also define a pointed version [pBAut X], since the coercion [BAut_pr1] doesn't work if [BAut X] is a [pType]. *)
 Definition pBAut (X : Type) : pType
@@ -57,7 +57,7 @@ Ltac baut_reduce :=
 (** ** Truncation *)
 
 (** If [X] is an [n.+1]-type, then [BAut X] is an [n.+2]-type. *)
-Global Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
+Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
 : IsTrunc n.+2 (BAut X).
 Proof.
   apply istrunc_S.
@@ -67,7 +67,7 @@ Proof.
 Defined.
 
 (** If [X] is truncated, then so is every element of [BAut X]. *)
-Global Instance trunc_el_baut {n X} `{Funext} `{IsTrunc n X} (Z : BAut X)
+Instance trunc_el_baut {n X} `{Funext} `{IsTrunc n X} (Z : BAut X)
   : IsTrunc n Z
   := ltac:(by baut_reduce).
 

@@ -35,7 +35,7 @@ Definition qglue@{i j k} {A : Type@{i}} {R : Relation@{i j} A} {a b : A}
   : R a b -> class_of@{i j k} R a = class_of R b
   := fun p => ap tr (gqglue p).
 
-Global Instance ishset_quotient {A : Type} (R : Relation A)
+Instance ishset_quotient {A : Type} (R : Relation A)
   : IsHSet (Quotient R) := _.
 
 Definition Quotient_ind@{i j k l} {A : Type@{i}} (R : Relation@{i j} A)
@@ -184,7 +184,7 @@ Section Equiv.
   Defined.
 
   (** Being in a class is decidable if the relation is decidable. *)
-  Global Instance decidable_in_class `{forall a b, Decidable (R a b)}
+  #[export] Instance decidable_in_class `{forall a b, Decidable (R a b)}
   : forall x a, Decidable (in_class x a).
   Proof.
     by srapply Quotient_ind_hprop.
@@ -220,7 +220,7 @@ Section Equiv.
   Defined.
 
   (** The map [class_of : A -> A/R] is a surjection. *)
-  Global Instance issurj_class_of : IsSurjection (class_of R).
+  #[export] Instance issurj_class_of : IsSurjection (class_of R).
   Proof.
     apply BuildIsSurjection.
     srapply Quotient_ind_hprop.
@@ -298,7 +298,7 @@ Section Functoriality.
   Context {A : Type} (R : Relation A)
           {B : Type} (S : Relation B).
 
-  Global Instance isequiv_quotient_functor (f : A -> B)
+  #[export] Instance isequiv_quotient_functor (f : A -> B)
     (fresp : forall a b, R a b <-> S (f a) (f b)) `{IsEquiv _ _ f}
     : IsEquiv (Quotient_functor R S f (fun a b => fst (fresp a b))).
   Proof.

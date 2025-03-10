@@ -123,7 +123,7 @@ Section PO.
   Defined.
 
   (** A nice property: the pushout of an equivalence is an equivalence. *)
-  Global Instance PO_of_equiv (Hf : IsEquiv f)
+  #[export] Instance PO_of_equiv (Hf : IsEquiv f)
     : IsEquiv por.
   Proof.
     srapply isequiv_adjointify.

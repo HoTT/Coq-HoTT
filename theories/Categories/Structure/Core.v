@@ -122,7 +122,7 @@ Local Notation "a <= b" := (a <=_{ _ } b)%long_structure : structure_scope.
 
 
 (** *** Being a structure homomorphism is a preorder *)
-Global Instance preorder_is_structure_homomorphism
+#[export] Instance preorder_is_structure_homomorphism
        X (P : NotionOfStructure X) x
 : PreOrder (is_structure_homomorphism P x x (identity x)).
 Proof.
@@ -145,7 +145,7 @@ Class IsStandardNotionOfStructure X (P : NotionOfStructure X) :=
 (** Note that for a standard notion of structure, each type [P x] must
     actually be a set. *)
 
-Global Instance istrunc_homomorphism_standard_notion_of_structure
+#[export] Instance istrunc_homomorphism_standard_notion_of_structure
        X P `{@IsStandardNotionOfStructure X P} x
 : IsHSet (P x).
 Proof.

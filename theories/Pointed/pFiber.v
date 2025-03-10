@@ -8,7 +8,7 @@ Local Open Scope pointed_scope.
 
 (** ** Pointed fibers *)
 
-Global Instance ispointed_fiber {A B : pType} (f : A ->* B) : IsPointed (hfiber f (point B))
+Instance ispointed_fiber {A B : pType} (f : A ->* B) : IsPointed (hfiber f (point B))
   := (point A; point_eq f).
 
 Definition pfiber {A B : pType} (f : A ->* B) : pType := [hfiber f (point B), _].

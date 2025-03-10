@@ -16,7 +16,7 @@ Definition Choice_type :=
 
 Axiom AC : forall `{Choice}, Choice_type.
 
-Global Instance is_global_axiom_propresizing : IsGlobalAxiom Choice := {}.
+Instance is_global_axiom_propresizing : IsGlobalAxiom Choice := {}.
 
 
 
