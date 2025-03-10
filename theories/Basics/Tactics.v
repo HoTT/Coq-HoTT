@@ -324,6 +324,11 @@ Tactic Notation "napply" uconstr(term)
 Tactic Notation "napply'" uconstr(term)
   := do_with_holes' ltac:(fun x => nrefine x) term.
 
+(** TODO: remove when min Coq/Rocq version is 9.0 *)
+#[deprecated(note="nrapply was renamed to napply", since="9.0")]
+Tactic Notation "nrapply" uconstr(term)
+  := fail "nrapply was renamed to napply".
+
 (** [rapply] is equivalent in strength to [napply], i.e., it should succeed iff [napply] succeeds, but it solves all possible typeclasses after successful unification with the goal. The implementation is: try [nrefine t, t _, t _ _], ... until success; upon success, revert the last (successful) application of [nrefine] and call [refine (t _ _ _)]. *)
 Tactic Notation "rapply" uconstr(term)
   := do_with_holes ltac:(fun x => assert_succeeds (nrefine x); refine x) term.
@@ -342,6 +347,11 @@ Tactic Notation "snapply" uconstr(term)
   := do_with_holes ltac:(fun x => snrefine x) term.
 Tactic Notation "snapply'" uconstr(term)
   := do_with_holes' ltac:(fun x => snrefine x) term.
+
+(** TODO: remove when min Coq/Rocq version is 9.0 *)
+#[deprecated(note="snrapply was renamed to snapply", since="9.0")]
+Tactic Notation "snrapply" uconstr(term)
+  := fail "snrapply was renamed to napply".
 
 (** See comment for [rapply]. This cannot be simplified to [snrefine x] because we don't want the [global_axiom] tactic to run here. *)
 Tactic Notation "srapply" uconstr(term)
