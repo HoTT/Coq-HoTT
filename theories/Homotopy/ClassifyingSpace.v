@@ -580,7 +580,7 @@ Proof.
     rapply pequiv_pclassifyingspace_pi1. }
   snrapply Build_NatEquiv.
   1: intro; exact pequiv_ptr_rec.
-  rapply is1natural_prewhisker.
+  exact (is1natural_prewhisker (G:=opyon X) B (opyoneda _ _ _)).
 Defined.
 
 (** The classifying space functor and the fundamental group functor form an adjunction (pType needs to be restricted to the subcategory of 0-connected pTypes). Note that the full adjunction should also be natural in X, but this was not needed yet. *)

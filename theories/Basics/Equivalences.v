@@ -532,7 +532,7 @@ Defined.
 
 (** Using [equiv_ind], we define a handy little tactic which introduces a variable [x] and simultaneously substitutes it along an equivalence [E]. *)
 Ltac equiv_intro E x :=
-  match goal with
+  hnf; match goal with
     | |- forall y, @?Q y =>
       refine (equiv_ind E Q _); intros x
   end.
