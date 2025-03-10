@@ -932,7 +932,7 @@ Here are some acceptable tactics to use in transparent definitions
 - `case`, `elim`, `destruct`, `induction`
 - `apply`, `eapply`, `assumption`, `eassumption`, `exact`
 - `refine`, `nrefine`, `srefine`, `snrefine` (see below for the last three)
-- `rapply`, `napply`, `srapply`, `snapply` (see below)
+- `rapply`, `napply`, `tapply`, `srapply`, `snapply`, `stapply` (see below)
 - `lhs`, `lhs_V`, `rhs`, `rhs_V`
 - `reflexivity`, `symmetry`, `transitivity`, `etransitivity`
 - `by`, `done`
