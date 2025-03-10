@@ -3,7 +3,8 @@ Require Import Types.Bool Types.Prod Types.Forall.
 Require Import WildCat.Bifunctor WildCat.Core WildCat.Equiv WildCat.EquivGpd
                WildCat.Forall WildCat.NatTrans WildCat.Opposite
                WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid
-               WildCat.Monoidal WildCat.MonoidalTwistConstruction.
+               WildCat.Monoidal WildCat.MonoidalTwistConstruction
+               WildCat.FunctorCat.
 
 (** * Categories with products *)
 
@@ -87,7 +88,7 @@ Section Lemmata.
   Proof.
     snrapply Build_Is0Functor.
     intros a b f.
-    snrapply Build_Morphism_0Gpd.
+    snrapply Build_Fun01.
     - intros g i.
       exact (f $o g i).
     - snrapply Build_Is0Functor.
