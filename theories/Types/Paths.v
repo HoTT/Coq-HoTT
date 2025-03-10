@@ -169,6 +169,9 @@ Defined.
 Tactic Notation "transport_paths" uconstr(lemma) :=
   lhs nrapply lemma; apply moveR_Vp_p_inv.
 
+Tactic Notation "transport_paths" "Fl" := lhs nrapply transport_paths_Fl.
+Tactic Notation "transport_paths" "Fr" := lhs nrapply transport_paths_Fr.
+
 Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
 Tactic Notation "transport_paths" "lFr" := transport_paths transport_paths_lFr.
 
