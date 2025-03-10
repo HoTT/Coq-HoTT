@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Decimal.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(************************************************************************)</span>
+<span class="c">(*         *   The Coq Proof Assistant / The Coq Development Team       *)</span>
+<span class="c">(*  v      *         Copyright INRIA, CNRS and contributors             *)</span>
+<span class="c">(* &lt;O___,, * (see version control and CREDITS file for authors &amp; dates) *)</span>
+<span class="c">(*   \VV/  **************************************************************)</span>
+<span class="c">(*    //   *    This file is distributed under the terms of the         *)</span>
+<span class="c">(*         *     GNU Lesser General Public License Version 2.1          *)</span>
+<span class="c">(*         *     (see LICENSE file for the text of the license)         *)</span>
+<span class="sd">(************************************************************************)</span>
+
+<span class="sd">(************************************************************************)</span>
+<span class="c">(* This file has been modified for use in the HoTT library              *)</span>
+<span class="sd">(************************************************************************)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="decimal-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="decimal-v-chk0"><span class="kn">Require Import</span> Basics.Overture.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Decimal numbers *)</span>
+
+<span class="sd">(** These numbers coded in base 10 will be used for parsing and printing</span>
+<span class="sd">    other Coq numeral datatypes in an human-readable way.</span>
+<span class="sd">    See the [Numeral Notation] command.</span>
+<span class="sd">    We represent numbers in base 10 as lists of decimal digits,</span>
+<span class="sd">    in big-endian order (most significant digit comes first). *)</span>
+
+<span class="sd">(** Unsigned integers are just lists of digits.</span>
+<span class="sd">    For instance, ten is (D1 (D0 Nil)) *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">uint</span> : Type0 :=
+ | Nil
+ | D0 (_:uint)
+ | D1 (_:uint)
+ | D2 (_:uint)
+ | D3 (_:uint)
+ | D4 (_:uint)
+ | D5 (_:uint)
+ | D6 (_:uint)
+ | D7 (_:uint)
+ | D8 (_:uint)
+ | D9 (_:uint).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [Nil] is the number terminator. Taken alone, it behaves as zero,</span>
+<span class="sd">    but rather use [D0 Nil] instead, since this form will be denoted</span>
+<span class="sd">    as [0], while [Nil] will be printed as [Nil]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">zero</span> := (D0 Nil).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** For signed integers, we use two constructors [Pos] and [Neg]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variant</span> <span class="nf">int</span> : Type0 := Pos (d:uint) | Neg (d:uint).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** For decimal numbers, we use two constructors [Decimal] and</span>
+<span class="sd">    [DecimalExp], depending on whether or not they are given with an</span>
+<span class="sd">    exponent (e.g., 1.02e+01). [i] is the integral part while [f] is</span>
+<span class="sd">    the fractional part (beware that leading zeroes do matter). *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variant</span> <span class="nf">decimal</span> : Type0 :=
+ | Decimal (i:int) (f:uint)
+ | DecimalExp (i:int) (f:uint) (e:int).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> dec_uint_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> dec_uint_scope <span class="kr">with</span> uint.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> dec_uint_scope <span class="kr">with</span> uint.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> dec_int_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> dec_int_scope <span class="kr">with</span> int.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> dec_int_scope <span class="kr">with</span> int.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> uint <span class="kr">as</span> num.uint.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> int <span class="kr">as</span> num.int.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> decimal <span class="kr">as</span> num.decimal.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">nb_digits</span> <span class="nv">d</span> :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Nil =&gt; O
+  | D0 d | D1 d | D2 d | D3 d | D4 d | D5 d | D6 d | D7 d | D8 d | D9 d =&gt;
+    S (nb_digits d)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This representation favors simplicity over canonicity.</span>
+<span class="sd">    For normalizing numbers, we need to remove head zero digits,</span>
+<span class="sd">    and choose our canonical representation of 0 (here [D0 Nil]</span>
+<span class="sd">    for unsigned numbers and [Pos (D0 Nil)] for signed numbers). *)</span>
+
+<span class="sd">(** [nzhead] removes all head zero digits *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">nzhead</span> <span class="nv">d</span> :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | D0 d =&gt; nzhead d
+  | _ =&gt; d
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [unorm] : normalization of unsigned integers *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">unorm</span> <span class="nv">d</span> :=
+  <span class="kr">match</span> nzhead d <span class="kr">with</span>
+  | Nil =&gt; zero
+  | d =&gt; d
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [norm] : normalization of signed integers *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">norm</span> <span class="nv">d</span> :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Pos d =&gt; Pos (unorm d)
+  | Neg d =&gt;
+    <span class="kr">match</span> nzhead d <span class="kr">with</span>
+    | Nil =&gt; Pos zero
+    | d =&gt; Neg d
+    <span class="kr">end</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A few easy operations. For more advanced computations, use the conversions</span>
+<span class="sd">    with other Coq numeral datatypes (e.g. Z) and the operations on them. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">opp</span> (<span class="nv">d</span>:int) :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Pos d =&gt; Neg d
+  | Neg d =&gt; Pos d
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** For conversions with binary numbers, it is easier to operate</span>
+<span class="sd">    on little-endian numbers. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">revapp</span> (<span class="nv">d</span> <span class="nv">d&#39;</span> : uint) :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Nil =&gt; d&#39;
+  | D0 d =&gt; revapp d (D0 d&#39;)
+  | D1 d =&gt; revapp d (D1 d&#39;)
+  | D2 d =&gt; revapp d (D2 d&#39;)
+  | D3 d =&gt; revapp d (D3 d&#39;)
+  | D4 d =&gt; revapp d (D4 d&#39;)
+  | D5 d =&gt; revapp d (D5 d&#39;)
+  | D6 d =&gt; revapp d (D6 d&#39;)
+  | D7 d =&gt; revapp d (D7 d&#39;)
+  | D8 d =&gt; revapp d (D8 d&#39;)
+  | D9 d =&gt; revapp d (D9 d&#39;)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">rev</span> <span class="nv">d</span> := revapp d Nil.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">app</span> <span class="nv">d</span> <span class="nv">d&#39;</span> := revapp (rev d) d&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">app_int</span> <span class="nv">d1</span> <span class="nv">d2</span> :=
+  <span class="kr">match</span> d1 <span class="kr">with</span> Pos d1 =&gt; Pos (app d1 d2) | Neg d1 =&gt; Neg (app d1 d2) <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [nztail] removes all trailing zero digits and return both the</span>
+<span class="sd">    result and the number of removed digits. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">nztail</span> <span class="nv">d</span> :=
+  <span class="kr">let fix</span> <span class="nv">aux</span> <span class="nv">d_rev</span> :=
+    <span class="kr">match</span> d_rev <span class="kr">with</span>
+    | D0 d_rev =&gt; <span class="kr">let</span> (<span class="nv">r</span>, n) := aux d_rev <span class="kr">in</span> pair r (S n)
+    | _ =&gt; pair d_rev O
+    <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> (<span class="nv">r</span>, n) := aux (rev d) <span class="kr">in</span> pair (rev r) n.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">nztail_int</span> <span class="nv">d</span> :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Pos d =&gt; <span class="kr">let</span> (<span class="nv">r</span>, n) := nztail d <span class="kr">in</span> pair (Pos r) n
+  | Neg d =&gt; <span class="kr">let</span> (<span class="nv">r</span>, n) := nztail d <span class="kr">in</span> pair (Neg r) n
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Little</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Successor of little-endian numbers *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">succ</span> <span class="nv">d</span> :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Nil =&gt; D1 Nil
+  | D0 d =&gt; D1 d
+  | D1 d =&gt; D2 d
+  | D2 d =&gt; D3 d
+  | D3 d =&gt; D4 d
+  | D4 d =&gt; D5 d
+  | D5 d =&gt; D6 d
+  | D6 d =&gt; D7 d
+  | D7 d =&gt; D8 d
+  | D8 d =&gt; D9 d
+  | D9 d =&gt; D0 (succ d)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Doubling little-endian numbers *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">double</span> <span class="nv">d</span> :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Nil =&gt; Nil
+  | D0 d =&gt; D0 (double d)
+  | D1 d =&gt; D2 (double d)
+  | D2 d =&gt; D4 (double d)
+  | D3 d =&gt; D6 (double d)
+  | D4 d =&gt; D8 (double d)
+  | D5 d =&gt; D0 (succ_double d)
+  | D6 d =&gt; D2 (succ_double d)
+  | D7 d =&gt; D4 (succ_double d)
+  | D8 d =&gt; D6 (succ_double d)
+  | D9 d =&gt; D8 (succ_double d)
+  <span class="kr">end</span>
+
+<span class="kr">with</span> succ_double d :=
+  <span class="kr">match</span> d <span class="kr">with</span>
+  | Nil =&gt; D1 Nil
+  | D0 d =&gt; D1 (double d)
+  | D1 d =&gt; D3 (double d)
+  | D2 d =&gt; D5 (double d)
+  | D3 d =&gt; D7 (double d)
+  | D4 d =&gt; D9 (double d)
+  | D5 d =&gt; D1 (succ_double d)
+  | D6 d =&gt; D3 (succ_double d)
+  | D7 d =&gt; D5 (succ_double d)
+  | D8 d =&gt; D7 (succ_double d)
+  | D9 d =&gt; D9 (succ_double d)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Little</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Pseudo-conversion functions used when declaring</span>
+<span class="sd">    Numeral Notations on [uint] and [int]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">uint_of_uint</span> (<span class="nv">i</span>:uint) := i.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">int_of_int</span> (<span class="nv">i</span>:int) := i.</span></span></pre>
+</div>
+</div></body>
+</html>
