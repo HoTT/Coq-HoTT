@@ -1,6 +1,6 @@
 (** * Impredicative truncations *)
 
-(** In this file, under the assumptions of propositional resizing [PropResizing] and function extensionality [Funext], we define the proposition truncation in any universe. In the main library, these are constructed using HITs. The definitions here are meant to be for illustration. *)
+(** In this file, under the assumptions of propositional resizing [PropResizing] and function extensionality [Funext], we define the propositional truncation in any universe. In the main library, these are constructed using HITs. The definitions here are meant to be for illustration. *)
 
 Require Import HoTT.Basics.
 Require Import Universes.Smallness.

@@ -928,7 +928,7 @@ Section JoinPower.
 
 End JoinPower.
 
-(** ** Doulbe recursion for Join *)
+(** ** Double recursion for Join *)
 
 Section Rec2.
   Context {A B C D : Type} (P : Type)
