@@ -28,10 +28,10 @@ Definition Build_CRing' (R : AbGroup) `(!One R, !Mult R)
   (dist_l : LeftDistribute (.*.) (+)) (unit_l : LeftIdentity (.*.) 1)
   : CRing.
 Proof.
-  snrapply Build_CRing.
+  snapply Build_CRing.
   - rapply (Build_Ring R); only 1,2,4: exact _.
     + intros x y z.
-      lhs nrapply comm.
+      lhs napply comm.
       lhs rapply dist_l.
       f_ap.
     + intros x.
@@ -62,8 +62,8 @@ Defined.
 Definition rng_mult_permute_2_3 {R : CRing} (x y z : R)
   : x * y * z = x * z * y.
 Proof.
-  lhs_V nrapply rng_mult_assoc.
-  rhs_V nrapply rng_mult_assoc.
+  lhs_V napply rng_mult_assoc.
+  rhs_V napply rng_mult_assoc.
   apply ap, rng_mult_comm.
 Defined.
 
@@ -84,10 +84,10 @@ Definition isinvertible_cring (R : CRing) (x : R)
   (inv : R) (inv_l : inv * x = 1)
   : IsInvertible R x.
 Proof.
-  snrapply Build_IsInvertible.
+  snapply Build_IsInvertible.
   - exact inv.
   - exact inv_l.
-  - lhs nrapply rng_mult_comm.
+  - lhs napply rng_mult_comm.
     exact inv_l.
 Defined.
 
@@ -266,9 +266,9 @@ Instance commutative_quotientring_mult (R : CRing) (I : Ideal R)
 Proof.
   intros x; srapply QuotientRing_ind_hprop; intros y; revert x.
   srapply QuotientRing_ind_hprop; intros x; hnf.
-  lhs_V nrapply rng_homo_mult.
-  rhs_V nrapply rng_homo_mult.
-  snrapply ap.
+  lhs_V napply rng_homo_mult.
+  rhs_V napply rng_homo_mult.
+  snapply ap.
   apply commutativity.
 Defined.
 

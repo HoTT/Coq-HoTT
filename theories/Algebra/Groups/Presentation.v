@@ -107,7 +107,7 @@ Definition Build_Finite_GroupPresentation n m
   (f : FinSeq m (FreeGroup (Fin n)))
   : GroupPresentation.
 Proof.
-  snrapply Build_GroupPresentation.
+  snapply Build_GroupPresentation.
   - exact (Fin n).
   - exact (Fin m).
   - exact f.

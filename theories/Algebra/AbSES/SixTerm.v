@@ -30,7 +30,7 @@ Definition isexact_ext_contra_sixterm_ii `{Funext}
       (fmap10 (A:=Group^op) ab_hom (projection E) G)
       (fmap10 (A:=Group^op) ab_hom (inclusion E) G).
 Proof.
-  snrapply Build_IsExact.
+  snapply Build_IsExact.
   { apply phomotopy_homotopy_hset; intro f.
     apply equiv_path_grouphomomorphism; intro b; cbn.
     refine (ap f _ @ grp_homo_unit f).
@@ -79,7 +79,7 @@ Instance isexact_ext_contra_sixterm_iii@{u v +} `{Univalence}
       (fmap10 (A:=Group^op) ab_hom (inclusion E) G)
       (abses_pushout_ext E).
 Proof.
-  snrapply Build_IsExact.
+  snapply Build_IsExact.
   - apply phomotopy_homotopy_hset; intro g; cbn.
     (* this equation holds purely *)
     apply (ap tr@{v}).
@@ -115,7 +115,7 @@ Proof.
               (grp_iso_inverse
                  (abses_kernel_iso (inclusion F) (projection F))) _).
     (* now it's easy to construct map into the kernel *)
-    snrapply grp_kernel_corec.
+    snapply grp_kernel_corec.
     1: exact (grp_pullback_pr1 _ _ $o p' $o ab_biprod_inr $o inclusion E).
     intro x.
     refine (right_square (abses_pullback_morphism F _) _ @ _).
@@ -123,7 +123,7 @@ Proof.
     apply isexact_inclusion_projection.
   - exact (grp_pullback_pr1 _ _ $o p' $o ab_biprod_inr).
   - intro a.
-    nrapply abses_kernel_iso_inv_beta.
+    napply abses_kernel_iso_inv_beta.
   - intro e.
     refine (right_square (abses_pullback_morphism F _) _
               @ ap (projection E) _).
@@ -135,7 +135,7 @@ Instance isexact_ext_contra_sixterm_iv `{Univalence}
   : IsExact (Tr (-1)) (abses_pushout_ext E)
       (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E))).
 Proof.
-  snrapply Build_IsExact.
+  snapply Build_IsExact.
   - apply phomotopy_homotopy_hset; intro g; cbn.
     (* this equation holds purely *)
     apply (ap tr@{v}).
@@ -145,9 +145,9 @@ Proof.
     apply abses_pushout_point.
   (* since we are proving a proposition, we may convert [p] to an actual path *)
   - intros [F p].
-    revert dependent F; nrapply (Trunc_ind (n:=0) (A:=AbSES B G)).
+    revert dependent F; napply (Trunc_ind (n:=0) (A:=AbSES B G)).
     (* [exact _.] works here, but is slow. *)
-    { intro x; nrapply istrunc_forall.
+    { intro x; napply istrunc_forall.
       intro y; exact (istrunc_leq (trunc_index_leq_succ _)). }
     intro F.
     equiv_intros (equiv_path_Tr (n:=-1) (abses_pullback (projection E) F) pt) p.
@@ -200,7 +200,7 @@ Proof.
   (* we first move [equiv_Z1_hom] across the total space *)
   apply moveL_isexact_equiv.
   (* now we change the left map so as to apply exactness at iii from above *)
-  snrapply (isexact_homotopic_i (Tr (-1))).
+  snapply (isexact_homotopic_i (Tr (-1))).
   1: exact (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A o*
               (pequiv_inverse
                  (pequiv_groupisomorphism (equiv_Z1_hom A)))).

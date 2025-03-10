@@ -13,6 +13,6 @@ Definition cyclic_in (n : nat) : abgroup_Z $-> cyclic n
 Definition ab_mul_cyclic_in (n : nat) (x y : abgroup_Z)
   : ab_mul y (cyclic_in n x) = cyclic_in n (y * x)%int.
 Proof.
-  lhs_V nrapply ab_mul_natural.
+  lhs_V napply ab_mul_natural.
   apply ap, abgroup_Z_ab_mul.
 Defined.

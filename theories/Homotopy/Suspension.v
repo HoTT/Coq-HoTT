@@ -59,7 +59,7 @@ Definition Susp_ind_FlFr {X Y : Type} (f g : Susp X -> Y)
   (Hmerid : forall x, ap f (merid x) @ HS = HN @ ap g (merid x))
   : f == g.
 Proof.
-  snrapply (Susp_ind _ HN HS).
+  snapply (Susp_ind _ HN HS).
   intros x.
   transport_paths FlFr.
   exact (Hmerid x).
@@ -72,7 +72,7 @@ Definition Susp_ind_FFlr {X Y : Type} (f : Susp X -> Y) (g : Y -> Susp X)
   (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ merid x)
   : g o f == idmap.
 Proof.
-  snrapply (Susp_ind _ HN HS).
+  snapply (Susp_ind _ HN HS).
   intros x; cbn beta.
   transport_paths FFlr.
   exact (Hmerid x).
@@ -85,7 +85,7 @@ Definition Susp_ind_FFlFr {X Y Z : Type}
   (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ ap h (merid x))
   : g o f == h.
 Proof.
-  snrapply (Susp_ind _ HN HS).
+  snapply (Susp_ind _ HN HS).
   intros x; cbn beta.
   transport_paths FFlFr.
   exact (Hmerid x).
@@ -98,7 +98,7 @@ Definition Susp_ind_FFlFFr {X Y Y' Z : Type}
   (Hmerid : forall x, ap g (ap f (merid x)) @ HS = HN @ ap g' (ap f' (merid x)))
   : g o f == g' o f'.
 Proof.
-  snrapply (Susp_ind _ HN HS).
+  snapply (Susp_ind _ HN HS).
   intros x; cbn beta.
   transport_paths FFlFFr.
   exact (Hmerid x).
@@ -139,7 +139,7 @@ Defined.
 Definition Susp_rec_eta_homotopic {X Y : Type} (f : Susp X -> Y)
   : f == Susp_rec (f North) (f South) (fun x => ap f (merid x)).
 Proof.
-  snrapply Susp_ind_FlFr.
+  snapply Susp_ind_FlFr.
   1, 2: reflexivity.
   intro x.
   apply equiv_p1_1q.
@@ -176,11 +176,11 @@ Definition functor_susp_compose {X Y Z}
   (f : X -> Y) (g : Y -> Z)
   : functor_susp (g o f) == functor_susp g o functor_susp f.
 Proof.
-  snrapply Susp_ind_FlFr.
+  snapply Susp_ind_FlFr.
   1,2: reflexivity.
   intro x.
   apply equiv_p1_1q.
-  lhs nrapply functor_susp_beta_merid; symmetry.
+  lhs napply functor_susp_beta_merid; symmetry.
   lhs nrefine (ap_compose (functor_susp f) _ (merid x)).
   lhs nrefine (ap _ (functor_susp_beta_merid _ _)).
   apply functor_susp_beta_merid.
@@ -189,11 +189,11 @@ Defined.
 Definition functor_susp_idmap {X}
   : functor_susp idmap == (idmap : Susp X -> Susp X).
 Proof.
-  snrapply Susp_ind_FlFr.
+  snapply Susp_ind_FlFr.
   1,2: reflexivity.
   intro x.
   apply equiv_p1_1q.
-  lhs nrapply functor_susp_beta_merid.
+  lhs napply functor_susp_beta_merid.
   symmetry; apply ap_idmap.
 Defined.
 
@@ -204,8 +204,8 @@ Proof.
   1, 2: reflexivity.
   intro x.
   apply equiv_p1_1q.
-  lhs nrapply (functor_susp_beta_merid f).
-  rhs nrapply (functor_susp_beta_merid g).
+  lhs napply (functor_susp_beta_merid f).
+  rhs napply (functor_susp_beta_merid g).
   apply ap, h.
 Defined.
 
@@ -221,7 +221,7 @@ Instance is1functor_susp : Is1Functor Susp
 Definition equiv_Susp_rec `{Funext} (X Y : Type)
   : (Susp X -> Y) <~> { NS : Y * Y & X -> fst NS = snd NS }.
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   - intros f.
     exists (f North, f South).
     intros x; exact (ap f (merid x)).
@@ -337,7 +337,7 @@ Section UnivPropNat.
       <~> DPath (P o functor_susp f) (merid x) (fst NS) (snd NS).
   Proof.
     etransitivity.
-    - nrapply (equiv_transport (fun p => DPath P p (fst NS) (snd NS))).
+    - napply (equiv_transport (fun p => DPath P p (fst NS) (snd NS))).
       symmetry; apply functor_susp_beta_merid.
     - symmetry. 
       exact (dp_compose (functor_susp f) P (merid x)).
@@ -461,7 +461,7 @@ Proof.
       refine (extendable_postcompose' n _ _ f _ IH); clear IH.
       intros y.
       etransitivity.
-      1: nrapply ds_dp.
+      1: napply ds_dp.
       etransitivity.
       1: apply ds_transport_dpath.
       subst h' k'; cbn.
@@ -479,7 +479,7 @@ Proof.
       refine (extendable_postcompose' n _ _ f _ (e _ _)); intros y.
       symmetry.
       etransitivity.
-      1: nrapply ds_dp.
+      1: napply ds_dp.
       etransitivity.
       1: apply ds_transport_dpath.
       etransitivity.
@@ -560,16 +560,16 @@ Definition susp_neg (A : Type) : Susp A -> Susp A
 (** The negation map is an involution. *)
 Definition susp_neg_inv (A : Type) : susp_neg A o susp_neg A == idmap.
 Proof.
-  snrapply Susp_ind_FFlr.
+  snapply Susp_ind_FFlr.
   1, 2: reflexivity.
   intro a.
   apply equiv_p1_1q.
-  lhs nrapply ap.
-  1: snrapply Susp_rec_beta_merid.
-  lhs nrapply (ap_V _ (merid a)).
-  lhs nrapply ap.
-  1: snrapply Susp_rec_beta_merid.
-  nrapply inv_V.
+  lhs napply ap.
+  1: snapply Susp_rec_beta_merid.
+  lhs napply (ap_V _ (merid a)).
+  lhs napply ap.
+  1: snapply Susp_rec_beta_merid.
+  napply inv_V.
 Defined.
 
 Instance isequiv_susp_neg (A : Type) : IsEquiv (susp_neg A)
@@ -582,29 +582,29 @@ Definition equiv_susp_neg (A : Type) : Susp A <~> Susp A
 Definition susp_neg_stable (A : Type)
   : functor_susp (susp_neg A) == susp_neg (Susp A).
 Proof.
-  snrapply Susp_ind_FlFr; simpl.
+  snapply Susp_ind_FlFr; simpl.
   - exact (merid North).
   - exact (merid South)^.
   - intro x.
-    lhs nrapply whiskerR.
-    1: nrapply functor_susp_beta_merid.
-    rhs nrapply whiskerL.
-    2: nrapply Susp_rec_beta_merid.
-    revert x; snrapply Susp_ind_FlFr; simpl.
+    lhs napply whiskerR.
+    1: napply functor_susp_beta_merid.
+    rhs napply whiskerL.
+    2: napply Susp_rec_beta_merid.
+    revert x; snapply Susp_ind_FlFr; simpl.
     + exact (concat_pV _ @ (concat_pV _)^).
     + reflexivity.
     + intro a.
-      lhs nrapply concat_p1.
-      lhs nrapply (ap_compose _ (fun y => merid y @ _) (merid a)).
-      lhs nrapply ap.
-      1: nrapply Susp_rec_beta_merid.
+      lhs napply concat_p1.
+      lhs napply (ap_compose _ (fun y => merid y @ _) (merid a)).
+      lhs napply ap.
+      1: napply Susp_rec_beta_merid.
       simpl.
       generalize (merid a) as p.
       generalize (@South A) as s.
       intros s p; destruct p.
       simpl.
       symmetry.
-      lhs nrapply concat_p1.
+      lhs napply concat_p1.
       apply concat_pV.
 Defined.
 
@@ -612,13 +612,13 @@ Defined.
 Definition susp_neg_natural {A B : Type} (f : A -> B)
   : susp_neg B o functor_susp f == functor_susp f o susp_neg A.
 Proof.
-  snrapply Susp_ind_FFlFFr.
+  snapply Susp_ind_FFlFFr.
   1, 2: reflexivity.
   intro a.
   apply equiv_p1_1q.
-  lhs nrapply (ap _ (Susp_rec_beta_merid _)).
-  rhs nrapply (ap _ (Susp_rec_beta_merid _)).
-  rhs nrapply (ap_V _ (merid a)).
-  rhs nrapply (ap _ (Susp_rec_beta_merid _)).
-  nrapply Susp_rec_beta_merid.
+  lhs napply (ap _ (Susp_rec_beta_merid _)).
+  rhs napply (ap _ (Susp_rec_beta_merid _)).
+  rhs napply (ap_V _ (merid a)).
+  rhs napply (ap _ (Susp_rec_beta_merid _)).
+  napply Susp_rec_beta_merid.
 Defined.

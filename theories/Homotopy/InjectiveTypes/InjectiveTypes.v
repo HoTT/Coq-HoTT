@@ -39,7 +39,7 @@ Section UniverseStructure.
   #[export] Instance alg_inj_contr@{} (D : Type@{w}) (cD : Contr D)
     : IsAlgebraicInjectiveType@{} D.
   Proof.
-    snrapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
+    snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
     - exact (const (center D)).
     - intros x.
       exact (contr _).
@@ -61,7 +61,7 @@ End UniverseStructure.
 Definition alg_inj_Type_sigma@{u v uv suv | u <= uv, v <= uv, uv < suv} `{Univalence}
   : IsAlgebraicInjectiveType@{u v suv uv suv suv} Type@{uv}.
 Proof.
-  snrapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
+  snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
   - exact (f <| j).
   - intros x.
     rapply isext_leftkanfam.
@@ -70,7 +70,7 @@ Defined.
 Instance alg_inj_Type_forall@{u v uv suv | u <= uv, v <= uv, uv < suv} `{Univalence}
   : IsAlgebraicInjectiveType@{u v suv uv suv suv} Type@{uv}.
 Proof.
-  snrapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
+  snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
   - exact (f |> j).
   - intros x. 
     rapply isext_rightkanfam.
@@ -86,7 +86,7 @@ Definition alg_inj_retract
   (retr : r o s == idmap) (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
   : IsAlgebraicInjectiveType@{u v w' uv uw' vw'} D'.
 Proof.
-  snrapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
+  snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
   - exact (r o lift_ai _ (s o f)).
   - intros x. rhs_V apply (retr (f x)).
     exact (ap r (is_ext_ai _ (s o f) x)).
@@ -103,7 +103,7 @@ Section UniverseStructure.
     (Dai : forall a, IsAlgebraicInjectiveType@{u v w uv uw vw} (D a))
     : IsAlgebraicInjectiveType@{u v tw uv utw vtw} (forall a, D a).
   Proof.
-    snrapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
+    snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
     - exact (fun y a => lift_ai _ (fun x => f x a) y).
     - intros x. funext a.
       exact (is_ext_ai _ (fun x => f x a) x).
@@ -139,7 +139,7 @@ Definition alg_uuinj_alg_usu_inj
   (D : Type@{w}) (Dai : IsAlgebraicInjectiveType@{u su w su uw suw} D)
   : IsAlgebraicInjectiveType@{u u w u uw uw} D.
 Proof.
-  snrapply Build_IsAlgebraicInjectiveType.
+  snapply Build_IsAlgebraicInjectiveType.
   - exact (@lift_ai D Dai).
   - exact (@is_ext_ai D Dai).
 Defined.
@@ -161,7 +161,7 @@ Definition alg_flab_cconst_is_const@{u w uw | u <= uw, w <= uw}
   (D : Type@{w}) (ccond : cconst_is_const_cond@{u w uw} D)
   : IsAlgebraicFlabbyType@{u w} D.
 Proof.
-  snrapply Build_IsAlgebraicFlabbyType; intros P f.
+  snapply Build_IsAlgebraicFlabbyType; intros P f.
   - apply (ccond P f).
     apply (cconst_factors_hprop _ _ idmap f).
     reflexivity.
@@ -188,7 +188,7 @@ Section UniverseStructure.
     {D : Type@{w}} (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
     : IsAlgebraicFlabbyType@{u w} D.
   Proof.
-    snrapply Build_IsAlgebraicFlabbyType; intros P f.
+    snapply Build_IsAlgebraicFlabbyType; intros P f.
     - srapply (lift_ai _ f tt).
     - apply is_ext_ai.
   Defined.
@@ -198,7 +198,7 @@ Section UniverseStructure.
     {D : Type@{w}} (Daf : IsAlgebraicFlabbyType@{uv w} D)
     : IsAlgebraicInjectiveType@{u v w uv uw vw} D.
   Proof.
-    snrapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
+    snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
     - intros y. exact (center_af (fun x : Build_HProp (hfiber j y) => f x.1)).
     - intros x. exact (contr_af _ (x; idpath (j x))).
   Defined.
@@ -221,7 +221,7 @@ Defined.
 Definition alg_flab_Type_sigma@{u su | u < su} `{Univalence}
   : IsAlgebraicFlabbyType@{u su} Type@{u}.
 Proof.
-  snrapply Build_IsAlgebraicFlabbyType; intros P A.
+  snapply Build_IsAlgebraicFlabbyType; intros P A.
   - exact (sig@{u u} (fun p => A p)).
   - intros p.
     apply path_universe_uncurried.
@@ -231,7 +231,7 @@ Defined.
 Instance alg_flab_Type_forall@{u su | u < su} `{Univalence}
   : IsAlgebraicFlabbyType@{u su} Type@{u}.
 Proof.
-  snrapply Build_IsAlgebraicFlabbyType; intros P A.
+  snapply Build_IsAlgebraicFlabbyType; intros P A.
   - exact (forall p : P, A p).
   - intros p.
     apply path_universe_uncurried.
@@ -248,7 +248,7 @@ Section AssumePropResizing.
     {D : Type@{w}} (Daf : IsAlgebraicFlabbyType@{v w} D)
     : IsAlgebraicFlabbyType@{u w} D.
   Proof.
-    snrapply Build_IsAlgebraicFlabbyType; intros P f;
+    snapply Build_IsAlgebraicFlabbyType; intros P f;
     pose (e := (equiv_smalltype@{v u} P));
     pose (PropQ := (@istrunc_equiv_istrunc _ _ e^-1 (-1) _)).
     - exact (center_af (f o e)).
@@ -318,8 +318,8 @@ Section UniverseStructure.
     : ((IsInjectiveType@{u v w uv uw vw uvw} D) : Type@{T}).
   Proof.
     revert mDai.
-    nrapply Trunc_rec@{T T}. (* Manually stripping truncations so as to control universe variables. *)
-    - repeat (nrapply istrunc_forall@{T T T}; intro).
+    napply Trunc_rec@{T T}. (* Manually stripping truncations so as to control universe variables. *)
+    - repeat (napply istrunc_forall@{T T T}; intro).
       apply istrunc_truncation.
     - intro Dai.
       exact (inj_alg_inj@{} D Dai).
@@ -400,7 +400,7 @@ Definition alg_flab_pointed_lem@{u w}
   `{ExcludedMiddle} {D : Type@{w}} (d : D)
   : IsAlgebraicFlabbyType@{u w} D.
 Proof.
-  snrapply Build_IsAlgebraicFlabbyType; intros P f.
+  snapply Build_IsAlgebraicFlabbyType; intros P f.
   - destruct (LEM P _) as [p | np].
     + exact (f p).
     + exact d.

@@ -33,7 +33,7 @@ Qed.
 Lemma hprop_GCH {PR : PropResizing} {FE : Funext} :
   IsHProp GCH.
 Proof.
-  repeat (nrapply istrunc_forall; intros).
+  repeat (napply istrunc_forall; intros).
   apply hprop_allpath. intros [H|H] [H'|H'].
   - enough (H = H') as ->; trivial. apply path_ishprop.
   - apply Empty_rec. eapply merely_destruct; try eapply (Cantor_inj a); trivial. by apply InjectsInto_trans with a0.

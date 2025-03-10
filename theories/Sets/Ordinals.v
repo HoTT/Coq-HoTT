@@ -164,7 +164,7 @@ Proof.
   srapply equiv_functor_sigma'.
   - exact (equiv_equiv_path A B).
   - cbn. intros p.
-    nrapply equiv_iff_hprop.
+    napply equiv_iff_hprop.
     + apply (istrunc_equiv_istrunc (forall b b' : B, (p # (<)) b b' = (b < b'))). {
         transitivity (forall b : B, (p # lt) b = lt b). {
           apply equiv_functor_forall_id; intros b. apply equiv_path_arrow.
@@ -773,7 +773,7 @@ Proof.
                      smalltype (factor2 f A < factor2 f B)
                      : Type@{i}).
   exists carrier relation.
-  snrapply (isordinal_simulation (factor2 f)).
+  snapply (isordinal_simulation (factor2 f)).
   1-4: exact _.
   - apply isinjective_factor2.
   - constructor.
@@ -832,7 +832,7 @@ Definition resize_ordinal@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@
   : Ordinal@{j _}.
 Proof.
   exists C (fun c1 c2 : C => smalltype (g c1 < g c2)).
-  snrapply (isordinal_simulation g). 2, 3, 4, 5: exact _.
+  snapply (isordinal_simulation g); only 2, 3, 4, 5: exact _.
   - exact (istrunc_equiv_istrunc B (equiv_inverse g)).
   - constructor.
     + intros a a' a_a'. apply (equiv_smalltype _). exact a_a'.

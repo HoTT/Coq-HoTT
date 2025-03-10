@@ -220,7 +220,7 @@ Section ring_props.
     rapply (right_cancellation (+) (0 * y)).
     lhs_V rapply simple_distribute_r.
     rhs rapply left_identity.
-    nrapply (ap (.* y)).
+    napply (ap (.* y)).
     apply left_identity.
   Defined.
 
@@ -230,7 +230,7 @@ Section ring_props.
     rapply (right_cancellation (+) (x * 0)).
     lhs_V rapply simple_distribute_l.
     rhs rapply left_identity.
-    nrapply (ap (x *.)).
+    napply (ap (x *.)).
     apply left_identity.
   Defined.
 
@@ -302,7 +302,7 @@ Section ring_props.
 
   Lemma negate_mult_distr_l x y : -(x * y) = -x * y.
   Proof.
-    lhs nrapply negate_mult_l.
+    lhs napply negate_mult_l.
     lhs exact (simple_associativity (f := (.*.)) (-1) x y).
     apply (ap (.* y)).
     symmetry.
@@ -311,7 +311,7 @@ Section ring_props.
 
   Lemma negate_mult_distr_r x y : -(x * y) = x * -y.
   Proof.
-    lhs nrapply negate_mult_r.
+    lhs napply negate_mult_r.
     lhs_V rapply (simple_associativity (f := (.*.)) x y).
     apply (ap (x *.)).
     symmetry.
@@ -380,12 +380,12 @@ Section ring_props.
     2: apply negate_zero_prod_l.
     split.
     - intros E.
-      lhs_V nrapply negate_mult_distr_l.
-      lhs nrapply negate_mult_distr_r.
+      lhs_V napply negate_mult_distr_l.
+      lhs napply negate_mult_distr_r.
       exact E.
     - intros E.
-      lhs_V nrapply negate_mult_distr_r.
-      lhs nrapply negate_mult_distr_l.
+      lhs_V napply negate_mult_distr_r.
+      lhs napply negate_mult_distr_l.
       exact E.
   Defined.
 
@@ -418,7 +418,7 @@ Section ring_props.
     intros z ? x y p.
     apply stable.
     intro U.
-    nrapply (mult_ne_0' (x - y) z).
+    napply (mult_ne_0' (x - y) z).
     - exact _.
     - intros r.
       apply U, equal_by_zero_sum, r.

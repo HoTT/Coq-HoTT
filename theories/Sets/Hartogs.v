@@ -78,7 +78,7 @@ Section Hartogs_Number.
   Proof.
     set (carrier := {B : Ordinal@{A _} & card B <= card A}).
     set (relation := fun (B C : carrier) => B.1 < C.1).
-    exists carrier relation. snrapply (isordinal_simulation pr1).
+    exists carrier relation. snapply (isordinal_simulation pr1).
     1-4: exact _.
     - apply isinj_embedding, (mapinO_pr1 (Tr (-1))). (* Faster than [exact _.] *)
     - constructor.
@@ -116,10 +116,10 @@ Section Hartogs_Number.
                   forall X : 𝒫 A,
                     IsHProp { b : B & forall a, X a <-> exists b', b' < b /\ a = f b' }). {
           intros X. apply hprop_allpath; intros [b1 Hb1] [b2 Hb2].
-          snrapply path_sigma_hprop; cbn.
-          - intros b. snrapply istrunc_forall.
-            intros a. snrapply istrunc_prod. 2: exact _.
-            snrapply istrunc_arrow.
+          snapply path_sigma_hprop; cbn.
+          - intros b. snapply istrunc_forall.
+            intros a. snapply istrunc_prod. 2: exact _.
+            snapply istrunc_arrow.
             rapply ishprop_sigma_disjoint. intros b1' b2' [_ ->] [_ p].
             apply (injective_f). exact p.
           - apply extensionality. intros b'. split.
@@ -187,7 +187,7 @@ Section Hartogs_Number.
         apply isomorphism_inverse. assumption.
       }
       enough (merely (Isomorphism (X : Type; ϕ X) C)). {
-        revert X1. nrapply Trunc_rec. {
+        revert X1. napply Trunc_rec. {
           exact (ishprop_Isomorphism (Build_Ordinal X (ϕ X) _) C).
         }
         auto.
@@ -200,8 +200,8 @@ Section Hartogs_Number.
   Definition uni_fix (X : 𝒫 (𝒫 (𝒫 A))) : ((𝒫 (𝒫 (𝒫 A))) : Type@{A}).
   Proof.
     revert X.
-    nrapply power_morph.
-    nrapply power_morph.
+    napply power_morph.
+    napply power_morph.
     exact power_inj.
   Defined.
 
@@ -222,7 +222,7 @@ Section Hartogs_Number.
     apply equiv_inverse. unshelve eexists.
     - intros a. exists (uni_fix (hartogs_number'_injection.1 a)).
       apply equiv_smalltype, tr. exists a. reflexivity.
-    - snrapply isequiv_surj_emb.
+    - snapply isequiv_surj_emb.
       + apply BuildIsSurjection. intros [X HX]. eapply merely_destruct.
         * eapply equiv_smalltype, HX.
         * intros [a <-]. cbn. apply tr. exists a. cbn. apply ap. apply path_ishprop.
@@ -260,7 +260,7 @@ Section Hartogs_Number.
       + srapply equiv_adjointify.
         * intros [a Ha % equiv_smalltype]. unshelve eexists.
           -- exists a. transitivity (card hartogs_number).
-             ++ nrapply le_Cardinal_lt_Ordinal; exact Ha.
+             ++ napply le_Cardinal_lt_Ordinal; exact Ha.
              ++ exact HN.
           -- apply equiv_smalltype. cbn. exact Ha.
         * intros [[a Ha] H % equiv_smalltype]. exists a.

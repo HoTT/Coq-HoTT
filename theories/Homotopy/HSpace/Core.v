@@ -68,14 +68,14 @@ Instance isequiv_hspace_left_op `{Univalence} {A : pType}
   `{IsHSpace A} `{IsConnected 0 A}
   : forall (a : A), IsEquiv (a *.).
 Proof.
-  nrapply conn_point_elim; exact _.
+  napply conn_point_elim; exact _.
 Defined.
 
 Instance isequiv_hspace_right_op `{Univalence} {A : pType}
   `{IsHSpace A} `{IsConnected 0 A}
   : forall (a : A), IsEquiv (.* a).
 Proof.
-  nrapply conn_point_elim; exact _.
+  napply conn_point_elim; exact _.
 Defined.
 
 (** ** Left-invertible H-spaces are homogeneous *)
@@ -102,7 +102,7 @@ Definition homogeneous_pt_id_beta' `{Funext} {A : pType} `{IsHomogeneous A}
 Definition ishspace_homogeneous {A : pType} `{IsHomogeneous A}
   : IsHSpace A.
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact (fun a b => homogeneous_pt_id a b).
   - intro a; cbn.
     apply eisretr.
@@ -125,7 +125,7 @@ Definition phomotopy_from_path_arrow {A B : pType}
   (q : m pt == idmap) {f g : B ->* A} (K : pointed_fun f = pointed_fun g)
   : f ==* g.
 Proof.
-  nrapply issig_phomotopy.
+  napply issig_phomotopy.
   destruct f as [f fpt], g as [g gpt]; cbn in *.
   induction K.
   destruct A as [A a0]; cbn in *.
@@ -146,14 +146,14 @@ Definition hspace_phomotopy_from_homotopy `{Funext} {A B : pType}
   `{IsHSpace A} {f g : B ->* A} (K : f == g)
   : f ==* g.
 Proof.
-  snrapply (phomotopy_from_homotopy _ _ K).
+  snapply (phomotopy_from_homotopy _ _ K).
   - intro a.
     exact (fmap loops (pmap_hspace_left_op a o* (pequiv_hspace_left_op pt)^-1*)).
   - lazy beta.
     transitivity (fmap (b:=A) loops pmap_idmap).
-    2: rapply (fmap_id loops).
-    rapply (fmap2 loops).
-    nrapply peisretr.
+    2: tapply (fmap_id loops).
+    tapply (fmap2 loops).
+    napply peisretr.
 Defined.
 
 (** A version with actual paths. *)
@@ -170,7 +170,7 @@ Defined.
 Definition ishspace_equiv_hspace {X Y : pType} `{IsHSpace Y} (f : X <~>* Y)
   : IsHSpace X.
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact (fun a b => f^-1 (f a * f b)).
   - intro b.
     rhs_V exact (eissect f b).
@@ -187,7 +187,7 @@ Defined.
 (** Every loop space is an H-space. Making this an instance breaks CayleyDickson.v because Coq finds this instance rather than the expected one. *)
 Definition ishspace_loops {X : pType} : IsHSpace (loops X).
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact concat.
   - exact concat_1p.
   - exact concat_p1.

@@ -110,8 +110,8 @@ Qed.
 Local Instance mul_1_r : RightIdentity@{N N} (mult : Mult nat) (one : One nat).
 Proof.
   intros a.
-  lhs nrapply mul_S_r.
-  lhs nrapply (ap _ (mul_0_r a)).
+  lhs napply mul_S_r.
+  lhs napply (ap _ (mul_0_r a)).
   apply add_0_r.
 Qed.
 

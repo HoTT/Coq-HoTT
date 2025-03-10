@@ -22,7 +22,7 @@ Section QuotientRing.
   Instance iscong_mult_incosetL
     : @IsCongruence R ring_mult (in_cosetL I).
   Proof.
-    snrapply Build_IsCongruence.
+    snapply Build_IsCongruence.
     intros x x' y y' p q.
     change (I ( - (x * y) + (x' * y'))).
     rewrite <- (rng_plus_zero_l (x' * y')).
@@ -60,7 +60,7 @@ Section QuotientRing.
       apply ap.
       apply associativity. }
     (* Left and right identity follow from the underlying structure *)
-    1,2: snrapply Quotient_ind_hprop; [exact _ | intro x].
+    1,2: snapply Quotient_ind_hprop; [exact _ | intro x].
     1,2: unfold mult, sg_op; simpl.
     1-2: apply ap.
     1: apply left_identity.
@@ -69,12 +69,12 @@ Section QuotientRing.
     { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group,
         plus, mult, plus_quotient_group; simpl.
-      nrapply ap.
+      napply ap.
       apply simple_distribute_l. }
     { srapply Quotient_ind3_hprop; intros x y z.
       unfold sg_op, mult_is_sg_op, mult_quotient_group,
         plus, mult, plus_quotient_group; simpl.
-      nrapply ap.
+      napply ap.
       apply simple_distribute_r. }
   Defined.
 
@@ -89,7 +89,7 @@ Infix "/" := QuotientRing : ring_scope.
 Definition rng_quotient_map {R : Ring} (I : Ideal R)
   : RingHomomorphism R (R / I).
 Proof.
-  snrapply Build_RingHomomorphism'.
+  snapply Build_RingHomomorphism'.
   1: exact grp_quotient_map.
   repeat split.
 Defined.
@@ -126,13 +126,13 @@ Definition QuotientRing_rec {R : Ring} {I : Ideal R} (S : Ring)
   (f : R $-> S) (H : forall x, I x -> f x = 0) 
   : R / I $-> S.
 Proof.
-  snrapply Build_RingHomomorphism'.
-  - snrapply (grp_quotient_rec _ _ f).
+  snapply Build_RingHomomorphism'.
+  - snapply (grp_quotient_rec _ _ f).
     exact H.
   - split.
     + srapply QuotientRing_ind2_hprop.
-      nrapply rng_homo_mult.
-    + nrapply rng_homo_one.
+      napply rng_homo_mult.
+    + napply rng_homo_one.
 Defined.
 
 (** ** Quotient theory *)
@@ -141,7 +141,7 @@ Defined.
 Definition rng_first_iso `{Funext} {A B : Ring} (f : A $-> B)
   : A / ideal_kernel f ≅ rng_image f.
 Proof.
-  snrapply Build_RingIsomorphism''.
+  snapply Build_RingIsomorphism''.
   1: rapply abgroup_first_iso.
   split.
   { srapply QuotientRing_ind2_hprop; intros x y.
@@ -155,7 +155,7 @@ Defined.
 Lemma rng_quotient_invar {R : Ring} {I J : Ideal R} (p : (I ↔ J)%ideal)
   : R / I ≅ R / J.
 Proof.
-  snrapply Build_RingIsomorphism'.
+  snapply Build_RingIsomorphism'.
   { srapply equiv_quotient_functor'.
     1: exact equiv_idmap.
     intros x y; cbn.

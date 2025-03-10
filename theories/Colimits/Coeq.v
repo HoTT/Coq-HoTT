@@ -59,7 +59,7 @@ Definition Coeq_ind_hprop {B A f g} (P : @Coeq B A f g -> Type)
   (i : forall a, P (coeq a))
   : forall x, P x.
 Proof.
-  snrapply Coeq_ind.
+  snapply Coeq_ind.
   1: exact i.
   intros b.
   rapply path_ishprop.
@@ -70,23 +70,23 @@ Definition Coeq_ind_eta_homotopic {B A f g} {P : @Coeq B A f g -> Type}
   : h == Coeq_ind P (h o coeq) (fun b => apD h (cglue b)).
 Proof.
   unfold pointwise_paths.
-  nrapply (Coeq_ind _ (fun _ => 1)).
+  napply (Coeq_ind _ (fun _ => 1)).
   intros b.
-  lhs nrapply transport_paths_FlFr_D.
-  lhs nrapply (whiskerL _ (Coeq_ind_beta_cglue _ _ _ _)).
-  lhs nrapply (whiskerR (concat_p1 _)).
-  nrapply concat_Vp.
+  lhs napply transport_paths_FlFr_D.
+  lhs napply (whiskerL _ (Coeq_ind_beta_cglue _ _ _ _)).
+  lhs napply (whiskerR (concat_p1 _)).
+  napply concat_Vp.
 Defined.
 
 Definition Coeq_rec_eta_homotopic {B A f g} {P : Type} (h : @Coeq B A f g -> P)
   : h == Coeq_rec P (h o coeq) (fun b => ap h (cglue b)).
 Proof.
   unfold pointwise_paths.
-  nrapply (Coeq_ind _ (fun _ => 1)).
+  napply (Coeq_ind _ (fun _ => 1)).
   intros b.
   transport_paths FlFr.
   apply equiv_p1_1q.
-  symmetry; nrapply Coeq_rec_beta_cglue.
+  symmetry; napply Coeq_rec_beta_cglue.
 Defined.
 
 Definition Coeq_ind_eta `{Funext}
@@ -107,12 +107,12 @@ Definition Coeq_ind_homotopy {B A f g} (P : @Coeq B A f g -> Type)
   : Coeq_ind P m r == Coeq_ind P n s.
 Proof.
   unfold pointwise_paths.
-  nrapply Coeq_ind; intros b.
-  lhs nrapply (transport_paths_FlFr_D (f:=Coeq_ind P m r) (g:=Coeq_ind P n s)).
-  lhs nrapply (whiskerL _ (Coeq_ind_beta_cglue P n s b)).
-  lhs nrapply (whiskerR (whiskerR (ap inverse (Coeq_ind_beta_cglue P m r b)) _)).
-  lhs nrapply concat_pp_p; nrapply moveR_Mp.
-  rhs nrapply (whiskerR (inv_V _)).
+  napply Coeq_ind; intros b.
+  lhs napply (transport_paths_FlFr_D (f:=Coeq_ind P m r) (g:=Coeq_ind P n s)).
+  lhs napply (whiskerL _ (Coeq_ind_beta_cglue P n s b)).
+  lhs napply (whiskerR (whiskerR (ap inverse (Coeq_ind_beta_cglue P m r b)) _)).
+  lhs napply concat_pp_p; napply moveR_Mp.
+  rhs napply (whiskerR (inv_V _)).
   exact (p b).
 Defined.
 
@@ -138,7 +138,7 @@ Proof.
     cbn.
     transport_paths FlFr.
     apply equiv_p1_1q.
-    nrapply Coeq_rec_beta_cglue.
+    napply Coeq_rec_beta_cglue.
   - intros [h q]; srapply path_sigma'.
     + reflexivity.
     + cbn.
@@ -174,12 +174,12 @@ Definition functor_coeq_idmap {B A f g}
   : functor_coeq (B:=B) (A:=A) (f:=f) (g:=g) idmap idmap (fun _ => 1) (fun _  => 1)
     == idmap.
 Proof.
-  snrapply Coeq_ind.
+  snapply Coeq_ind.
   1: reflexivity.
   intros b.
   transport_paths Flr.
   apply moveR_pM.
-  nrapply functor_coeq_beta_cglue.
+  napply functor_coeq_beta_cglue.
 Defined.
 
 Definition functor_coeq_compose {B A f g B' A' f' g' B'' A'' f'' g''}
@@ -343,25 +343,25 @@ Section CoeqRec2.
   Definition Coeq_rec2 : Coeq f g -> Coeq f' g' -> P.
   Proof.
     intros x y; revert x.
-    snrapply Coeq_rec.
+    snapply Coeq_rec.
     - intros a.
       revert y.
-      snrapply Coeq_rec.
+      snapply Coeq_rec.
       + intros a'.
         exact (coeq' a a').
       + intros b'; cbn.
         apply cgluer.
     - intros b.
       revert y.
-      snrapply Coeq_ind.
+      snapply Coeq_ind.
       + intros a'.
         cbn.
         apply cgluel.
       + intros b'.
         transport_paths (transport_paths_FlFr (cglue b')).
-        lhs nrapply (_ @@ 1).
+        lhs napply (_ @@ 1).
         1: apply Coeq_rec_beta_cglue.
-        rhs nrapply (1 @@ _).
+        rhs napply (1 @@ _).
         2: apply Coeq_rec_beta_cglue.
         symmetry.
         apply cgluelr.
@@ -374,13 +374,13 @@ Section CoeqRec2.
   Definition Coeq_rec2_beta_cgluel (a : A) (b' : B')
     : ap (Coeq_rec2 (coeq a)) (cglue b') = cgluer a b'.
   Proof.
-    nrapply Coeq_rec_beta_cglue.
+    napply Coeq_rec_beta_cglue.
   Defined.
 
   Definition Coeq_rec2_beta_cgluer (b : B) (a' : A')
     : ap (fun x => Coeq_rec2 x (coeq a')) (cglue b) = cgluel b a'.
   Proof.
-    nrapply Coeq_rec_beta_cglue.
+    napply Coeq_rec_beta_cglue.
   Defined.
 
   (** TODO: [Coeq_rec2_beta_cgluelr] *)
@@ -499,7 +499,7 @@ Section Descent.
   Definition fam_cdescent (Pe : cDescent f g)
     : Coeq f g -> Type.
   Proof.
-    snrapply (Coeq_rec _ (cd_fam Pe)).
+    snapply (Coeq_rec _ (cd_fam Pe)).
     intro b.
     exact (path_universe_uncurried (cd_e Pe b)).
   Defined.
@@ -507,7 +507,7 @@ Section Descent.
   (** A type family over [Coeq f g] induces descent data. *)
   Definition cdescent_fam (P : Coeq f g -> Type) : cDescent f g.
   Proof.
-    snrapply Build_cDescent.
+    snapply Build_cDescent.
     - exact (P o coeq).
     - intro b.
       exact (equiv_transport P (cglue b)).
@@ -518,8 +518,8 @@ Section Descent.
     (Pe : cDescent f g) (b : B) (pf : cd_fam Pe (f b))
     : transport (fam_cdescent Pe) (cglue b) pf = cd_e Pe b pf.
   Proof.
-    nrapply transport_path_universe'.
-    nrapply Coeq_rec_beta_cglue.
+    napply transport_path_universe'.
+    napply Coeq_rec_beta_cglue.
   Defined.
 
   (** A section on the descent data is a fiberwise section that respects the equivalences. *)
@@ -535,7 +535,7 @@ Section Descent.
     (s : cDescentSection Pe)
     : forall (x : Coeq f g), fam_cdescent Pe x.
   Proof.
-    snrapply (Coeq_ind _ (cds_sect s)).
+    snapply (Coeq_ind _ (cds_sect s)).
     intro b.
     exact (transport_fam_cdescent_cglue Pe b _ @ cds_e s b).
   Defined.
@@ -560,7 +560,7 @@ Section Descent.
     (Q : forall x : Coeq f g, (fam_cdescent Pe) x -> Type)
     : cDepDescent Pe.
   Proof.
-    snrapply Build_cDepDescent.
+    snapply Build_cDepDescent.
     - intro a; cbn.
       exact (Q (coeq a)).
     - intros b pf.
@@ -572,15 +572,15 @@ Section Descent.
   Definition fam_cdepdescent {Pe : cDescent f g} (Qe : cDepDescent Pe)
     : forall (x : Coeq f g), (fam_cdescent Pe x) -> Type.
   Proof.
-    snrapply Coeq_ind.
+    snapply Coeq_ind.
     - exact (cdd_fam Qe).
     - intro b.
-      nrapply (moveR_transport_p _ (cglue b)).
+      napply (moveR_transport_p _ (cglue b)).
       funext pa.
-      rhs nrapply transport_arrow_toconst.
+      rhs napply transport_arrow_toconst.
       rhs nrefine (ap (cdd_fam _ _) _).
       + exact (path_universe (cdd_e _ _ _)).
-      + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (cglue _))).
+      + lhs napply (ap (fun x => (transport _ x _)) (inv_V (cglue _))).
         exact (transport_fam_cdescent_cglue _ _ _).
   Defined.
 
@@ -599,7 +599,7 @@ Section Descent.
     (s : cDepDescentSection (cdepdescent_fam Q))
     : forall (x : Coeq f g) (px : fam_cdescent Pe x), Q x px.
     Proof.
-      nrapply (Coeq_ind _ (cdds_sect s) _).
+      napply (Coeq_ind _ (cdds_sect s) _).
       intro b.
       apply dpath_forall.
       intro pf.
@@ -622,12 +622,12 @@ Section Descent.
     (s : cDepDescentConstSection Pe Q)
     : forall (x : Coeq f g), fam_cdescent Pe x -> Q.
   Proof.
-    snrapply (Coeq_ind _ (cddcs_sect s)).
+    snapply (Coeq_ind _ (cddcs_sect s)).
     intro b.
-    nrapply dpath_arrow.
+    napply dpath_arrow.
     intro pf.
-    lhs nrapply transport_const.
-    rhs nrapply (ap _ (transport_fam_cdescent_cglue Pe b pf)).
+    lhs napply transport_const.
+    rhs napply (ap _ (transport_fam_cdescent_cglue Pe b pf)).
     exact (cddcs_e s b pf).
   Defined.
 
@@ -640,22 +640,22 @@ Section Descent.
   Proof.
     Open Scope long_path_scope.
     destruct pb.
-    rhs nrapply concat_p1.
-    lhs nrapply ap_sig_rec_path_sigma.
-    lhs nrapply (ap (fun x => _ (ap10 x _) @ _)).
-    1: nrapply Coeq_ind_beta_cglue.
-    do 3 lhs nrapply concat_pp_p.
+    rhs napply concat_p1.
+    lhs napply ap_sig_rec_path_sigma.
+    lhs napply (ap (fun x => _ (ap10 x _) @ _)).
+    1: napply Coeq_ind_beta_cglue.
+    do 3 lhs napply concat_pp_p.
     apply moveR_Vp.
     lhs nrefine (1 @@ (1 @@ (_ @@ 1))).
-    1: nrapply (ap10_dpath_arrow (fam_cdescent Pe) (fun _ => Q) (cglue b)).
+    1: napply (ap10_dpath_arrow (fam_cdescent Pe) (fun _ => Q) (cglue b)).
     lhs nrefine (1 @@ _).
-    { lhs nrapply (1 @@ concat_pp_p _ _ _).
-      lhs nrapply (1 @@ concat_pp_p _ _ _).
-      lhs nrapply concat_V_pp.
-      lhs nrapply (1 @@ concat_pp_p _ _ _).
+    { lhs napply (1 @@ concat_pp_p _ _ _).
+      lhs napply (1 @@ concat_pp_p _ _ _).
+      lhs napply concat_V_pp.
+      lhs napply (1 @@ concat_pp_p _ _ _).
       rewrite concat_p1.
       exact (1 @@ (1 @@ concat_pV_p _ _)). }
-    nrapply concat_V_pp.
+    napply concat_V_pp.
     Close Scope long_path_scope.
   Defined.
 
@@ -680,9 +680,9 @@ Section Flattening.
     {pf : cd_fam Pe (f b)} {pg : cd_fam Pe (g b)} (pb : cd_e Pe b pf = pg)
     : flatten_cd pf = flatten_cd pg.
   Proof.
-    snrapply path_sigma.
+    snapply path_sigma.
     - by apply cglue.
-    - lhs nrapply transport_fam_cdescent_cglue.
+    - lhs napply transport_fam_cdescent_cglue.
       exact pb.
   Defined.
 
@@ -690,36 +690,36 @@ Section Flattening.
   Lemma equiv_cd_flatten : sig (fam_cdescent Pe) <~>
     Coeq (functor_sigma f (fun _ => idmap)) (functor_sigma g (cd_e Pe)).
   Proof.
-    snrapply equiv_adjointify.
-    - snrapply sig_rec.
-      snrapply cdepdescent_rec.
-      snrapply Build_cDepDescentConstSection.
+    snapply equiv_adjointify.
+    - snapply sig_rec.
+      snapply cdepdescent_rec.
+      snapply Build_cDepDescentConstSection.
       + exact (fun a x => coeq (a; x)).
       + intros b pf.
       cbn.
       exact (@cglue _ _
         (functor_sigma f (fun _ => idmap)) (functor_sigma g (cd_e Pe)) (b; pf)).
-    - snrapply Coeq_rec.
+    - snapply Coeq_rec.
       + exact (fun '(a; x) => (coeq a; x)).
       + intros [b pf]; cbn.
         exact (flatten_cd_glue b 1).
-    - snrapply Coeq_ind.
+    - snapply Coeq_ind; cbn beta.
       1: reflexivity.
       intros [b pf]; cbn.
       transport_paths FFlr; apply equiv_p1_1q.
       rewrite Coeq_rec_beta_cglue.
-      lhs nrapply cdepdescent_rec_beta_cglue.
-      nrapply concat_p1.
+      lhs napply cdepdescent_rec_beta_cglue.
+      napply concat_p1.
     - intros [x px]; revert x px.
-      snrapply cdepdescent_ind.
-      snrapply Build_cDepDescentSection.
+      snapply cdepdescent_ind.
+      snapply Build_cDepDescentSection.
       + by intros a pa.
       + intros b pf; cbn.
-        lhs nrapply transportDD_is_transport.
+        lhs napply transportDD_is_transport.
         transport_paths FFlr; apply equiv_p1_1q.
         rewrite <- (concat_p1 (transport_fam_cdescent_cglue _ _ _)).
         rewrite cdepdescent_rec_beta_cglue. (* This needs to be in the form [transport_fam_cdescent_cglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
-        lhs nrapply (ap _ (concat_p1 _)).
+        lhs napply (ap _ (concat_p1 _)).
         exact (Coeq_rec_beta_cglue _ _ _ (b; pf)).
   Defined.
 
@@ -743,12 +743,12 @@ Section Paths.
   Local Instance idsys_flatten_cdescent
     : @IsIdentitySystem _ (coeq a0) (fam_cdescent Pe) p0.
   Proof.
-    snrapply Build_IsIdentitySystem.
+    snapply Build_IsIdentitySystem.
     - intros Q q0 x p.
-      snrapply cdepdescent_ind.
+      snapply cdepdescent_ind.
       by apply based_cdepdescent_ind.
     - intros Q q0; cbn.
-      nrapply (based_cdepdescent_ind_beta (cdepdescent_fam Q)).
+      napply (based_cdepdescent_ind_beta (cdepdescent_fam Q)).
   Defined.
 
   (** It follows that the fibers [fam_cdescent Pe x] are equivalent to path spaces [(coeq a0) = x]. *)

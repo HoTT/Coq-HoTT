@@ -17,28 +17,28 @@ Section Induced_category.
 
   Local Instance isgraph_induced `{IsGraph B} : IsGraph A.
   Proof.
-    nrapply Build_IsGraph.
+    napply Build_IsGraph.
     intros a1 a2. 
     exact (f a1 $-> f a2).
   Defined.
 
   Local Instance is01cat_induced `{Is01Cat B} : Is01Cat A.
   Proof.
-    nrapply Build_Is01Cat; intros_of_type A; cbn.
+    napply Build_Is01Cat; intros_of_type A; cbn.
     + apply Id.
     + exact cat_comp.
   Defined.
 
   Local Instance is0gpd_induced `{Is0Gpd B} : Is0Gpd A.
   Proof.
-    nrapply Build_Is0Gpd; intros_of_type A; cbn.
+    napply Build_Is0Gpd; intros_of_type A; cbn.
     exact gpd_rev.
   Defined.
 
   (** The structure map along which we induce the category structure becomes a functor with respect to the induced structure. *)
   Local Instance is0functor_induced `{IsGraph B} : Is0Functor f.
   Proof.
-    nrapply Build_Is0Functor; intros_of_type A; cbn.
+    napply Build_Is0Functor; intros_of_type A; cbn.
     exact idmap.
   Defined.
 
@@ -49,9 +49,9 @@ Section Induced_category.
 
   Local Instance is1cat_induced `{Is1Cat B} : Is1Cat A.
   Proof.
-    snrapply Build_Is1Cat; intros_of_type A; cbn.
+    snapply Build_Is1Cat; intros_of_type A; cbn.
     + rapply is01cat_hom.
-    + nrapply is0gpd_hom.
+    + napply is0gpd_hom.
     + rapply is0functor_postcomp.
     + rapply is0functor_precomp.
     + exact cat_assoc.
@@ -81,11 +81,11 @@ Section Induced_category.
     + exact cate_fun.
     + apply cate_isequiv'.
     + apply cate_buildequiv'.
-    + nrapply cate_buildequiv_fun'.
+    + napply cate_buildequiv_fun'.
     + apply cate_inv'.
-    + nrapply cate_issect'.
-    + nrapply cate_isretr'.
-    + nrapply catie_adjointify'.
+    + napply cate_issect'.
+    + napply cate_isretr'.
+    + napply catie_adjointify'.
   Defined.
 
 End Induced_category.

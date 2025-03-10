@@ -26,27 +26,27 @@ Defined.
 
 Instance isequiv_join_to_susp (A : Type) : IsEquiv (join_to_susp A).
 Proof.
-  snrapply (isequiv_adjointify _ (susp_to_join A)).
-  - snrapply Susp_ind.
+  snapply (isequiv_adjointify _ (susp_to_join A)).
+  - snapply Susp_ind.
     1,2: reflexivity.
     intros a; cbn beta.
     transport_paths FFlr.
     apply equiv_p1_1q.
-    lhs nrapply (ap _ _); [nrapply Susp_rec_beta_merid | ].
-    lhs nrapply (ap_pp _ _ (jglue false a)^).
+    lhs napply (ap _ _); [napply Susp_rec_beta_merid | ].
+    lhs napply (ap_pp _ _ (jglue false a)^).
     lhs nrefine (_ @@ _).
-    1: lhs nrapply ap_V; nrapply (ap inverse).
-    1,2: nrapply Join_rec_beta_jglue.
+    1: lhs napply ap_V; napply (ap inverse).
+    1,2: napply Join_rec_beta_jglue.
     apply concat_p1.
   - srapply (Join_ind_FFlr (join_to_susp A)); cbn beta.
     1: intros [|]; reflexivity.
     1: intros a; apply jglue.
     intros b a; cbn beta.
     lhs nrefine (ap _ _ @@ 1).
-    1: nrapply Join_rec_beta_jglue.
+    1: napply Join_rec_beta_jglue.
     destruct b.
-    all: rhs nrapply concat_1p.
-    + lhs nrefine (_ @@ 1); [nrapply Susp_rec_beta_merid | ].
+    all: rhs napply concat_1p.
+    + lhs nrefine (_ @@ 1); [napply Susp_rec_beta_merid | ].
       apply concat_pV_p.
     + apply concat_1p.
 Defined.
