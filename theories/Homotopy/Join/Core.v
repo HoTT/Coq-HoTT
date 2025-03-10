@@ -131,7 +131,7 @@ Section Join.
     (P_B : B -> P) (P_g : forall a b, P_A a = P_B b) a b
     : ap (Join_rec P_A P_B P_g) (jglue a b) = P_g a b.
   Proof.
-    snrapply (Pushout_rec_beta_pglue _ _ _ _ (a, b)).
+    exact (Pushout_rec_beta_pglue _ _ _ _ (a, b)).
   Defined.
 
   (** If [A] is ipointed, so is [Join A B]. *)
@@ -591,12 +591,12 @@ Section FunctorJoin.
     : IsEquiv (functor_join f g).
   Proof.
     snrapply isequiv_adjointify.
-    - apply (functor_join f^-1 g^-1).
+    - exact (functor_join f^-1 g^-1).
     - etransitivity.
       1: symmetry; apply functor_join_compose.
       etransitivity.
       1: exact (functor2_join (eisretr f) (eisretr g)).
-      apply functor_join_idmap.
+      exact functor_join_idmap.
     - etransitivity.
       1: symmetry; apply functor_join_compose.
       etransitivity.
@@ -881,7 +881,7 @@ Section JoinEmpty.
   #[export] Instance join_right_unitor : RightUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
-    - apply equiv_join_empty_right.
+    - exact equiv_join_empty_right.
     - snrapply Build_Is1Natural.
       intros A B f.
       cbn -[equiv_join_empty_right].
@@ -895,7 +895,7 @@ Section JoinEmpty.
   #[export] Instance join_left_unitor : LeftUnitor Join Empty.
   Proof.
     snrapply Build_NatEquiv.
-    - apply equiv_join_empty_left.
+    - exact equiv_join_empty_left.
     - snrapply Build_Is1Natural.
       intros A B f x.
       cbn -[equiv_join_empty_right].

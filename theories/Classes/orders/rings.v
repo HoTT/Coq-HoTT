@@ -16,7 +16,7 @@ Section from_ring_order.
 
   Lemma from_ring_order: SemiRingOrder (≤).
   Proof.
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   - intros x y E. exists (- x + y).
     rewrite simple_associativity, plus_negate_r, plus_0_l.
     reflexivity.
@@ -35,7 +35,7 @@ Section from_strict_ring_order.
 
   Lemma from_strict_ring_order: StrictSemiRingOrder (<).
   Proof.
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   - intros x y E. exists (- x + y).
     rewrite simple_associativity, plus_negate_r, plus_0_l.
     reflexivity.
@@ -55,7 +55,7 @@ Section from_pseudo_ring_order.
 
   Lemma from_pseudo_ring_order: PseudoSemiRingOrder (<).
   Proof.
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   - intros x y E. exists (- x + y).
     rewrite simple_associativity, plus_negate_r, plus_0_l.
     reflexivity.
@@ -77,9 +77,9 @@ Section from_full_pseudo_ring_order.
   Lemma from_full_pseudo_ring_order: FullPseudoSemiRingOrder (≤) (<).
   Proof.
   split.
-  - apply _.
+  - exact _.
   - apply from_pseudo_ring_order;trivial.
-  - apply le_iff_not_lt_flip;trivial.
+  - exact le_iff_not_lt_flip;trivial.
   Qed.
 End from_full_pseudo_ring_order.
 
@@ -297,7 +297,7 @@ Section another_ring_order.
 
   Lemma reflecting_preserves_nonneg : (forall x, 0 ≤ f x -> 0 ≤ x) -> OrderReflecting f.
   Proof.
-  intros E. repeat (split; try apply _). intros x y F.
+  intros E. repeat (split; try exact _). intros x y F.
   apply flip_nonneg_minus, E.
   rewrite preserves_plus, preserves_negate.
   apply (flip_nonneg_minus (f x)), F.
@@ -346,11 +346,11 @@ Section another_pseudo_ring_order.
   intros P.
   pose proof (projected_pseudo_order f P).
   pose proof (projected_strict_ring_order f P).
-  apply from_pseudo_ring_order; try apply _.
+  apply from_pseudo_ring_order; try exact _.
   pose proof (@pseudo_order_apart R1 H0 R1lt pseudo_srorder_strict : IsApart R1).
   pose proof (pseudo_order_apart : IsApart R2).
   pose proof (strong_injective_mor f).
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   intros x₁ y₁ x₂ y₂ E.
   apply (strong_injective f) in E. rewrite 2!(preserves_mult (f:=f)) in E.
   apply (merely_destruct (strong_binary_extensionality (.*.) _ _ _ _ E));
@@ -371,6 +371,6 @@ Section another_full_pseudo_ring_order.
   Proof.
   intros P1 P2. pose proof (projected_full_pseudo_order f P1 P2).
   pose proof (projected_pseudo_ring_order f P2).
-  split; try apply _. apply le_iff_not_lt_flip.
+  split; try exact _. exact le_iff_not_lt_flip.
   Qed.
 End another_full_pseudo_ring_order.

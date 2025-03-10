@@ -124,7 +124,7 @@ Section Extensions.
     <~> PathSplit n (fun (g : forall b, C b) => g oD f).
   Proof.
     generalize dependent C; simple_induction n n IHn; intros C.
-    1:apply equiv_idmap.
+    1:exact equiv_idmap.
     refine (_ *E _); simpl.
     - refine (equiv_functor_forall' 1 _); intros g; simpl.
       refine (equiv_functor_sigma' 1 _); intros rec.
@@ -183,7 +183,7 @@ Section Extensions.
   Proof.
     generalize dependent C; revert D.
     simple_induction n n IH; intros C D g; simpl.
-    1:apply idmap.
+    1:exact idmap.
     refine (functor_prod _ _).
     - refine (functor_forall (functor_forall idmap
                                              (fun a => (g (f a))^-1)) _);
@@ -237,7 +237,7 @@ Section Extensions.
       refine (extendable_postcompose' n (fun b => h' (g b) = k' (g b)) (fun b => h b = k b) f _ _).
       + intros b.
         exact (equiv_concat_lr ((fst extg h).2 b)^ ((fst extg k).2 b)).
-      + apply (IHn (fun c => h' c = k' c) (snd extg h' k') (snd extgf h' k')).
+      + exact (IHn (fun c => h' c = k' c) (snd extg h' k') (snd extgf h' k')).
   Defined.
 
   Definition cancelR_extendable (n : nat)
@@ -251,8 +251,8 @@ Section Extensions.
       apply ((fst extgf (h oD f)).2).
     - intros h k.
       apply IHn.
-      + apply (snd extf (h oD g) (k oD g)).
-      + apply (snd extgf h k).
+      + exact (snd extf (h oD g) (k oD g)).
+      + exact (snd extgf h k).
   Defined.
 
   (** And transfer across homotopies *)
@@ -350,7 +350,7 @@ Section Extensions.
          {A B : Type} (C : B -> Type) (f : A -> B)
   : IsHProp (ooExtendableAlong f C).
   Proof.
-    refine (istrunc_equiv_istrunc _ (equiv_ooextendable_pathsplit C f)^-1).
+    exact (istrunc_equiv_istrunc _ (equiv_ooextendable_pathsplit C f)^-1).
   Defined.
 
   Definition equiv_ooextendable_isequiv `{Funext}

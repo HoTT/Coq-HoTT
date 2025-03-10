@@ -50,7 +50,7 @@ Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) 
 Proof.
   induction n as [|n IHn].
   - reflexivity.
-  - eapply Injection_trans; try apply IHn.
+  - eapply Injection_trans; try exact IHn.
     apply Injection_power. exact _.
 Qed.
 

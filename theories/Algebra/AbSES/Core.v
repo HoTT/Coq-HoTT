@@ -134,7 +134,7 @@ Proof.
   intros E F.
   refine (istrunc_equiv_istrunc _ equiv_path_abses_iso (n:=0)).
   rapply istrunc_sigma.
-  apply ishset_groupisomorphism.
+  exact ishset_groupisomorphism.
 Defined.
 
 Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
@@ -180,7 +180,7 @@ Proof.
     strip_truncations.
     refine (a.2^ @ ap (inclusion E ) _ @ grp_homo_unit (inclusion E)).
     rapply (isinj_embedding (inclusion F) _ _).
-    refine ((p0 a.1)^ @ (ap phi a.2) @ p @ (grp_homo_unit _)^).
+    exact ((p0 a.1)^ @ (ap phi a.2) @ p @ (grp_homo_unit _)^).
 Defined.
 
 (** Below we prove that homomorphisms respecting [projection] and [inclusion] correspond to paths in [AbSES B A]. We refer to such homomorphisms simply as path data in [AbSES B A]. *)
@@ -372,7 +372,7 @@ Definition equiv_path_data_homotopy `{Univalence} {X : Type} {B A : AbGroup@{u}}
            (f g : X -> AbSES B A) : (f $=> g) <~> f == g.
 Proof.
   srapply equiv_functor_forall_id; intro x; cbn.
-  srapply equiv_path_abses_iso.
+  exact equiv_path_abses_iso.
 Defined.
 
 Definition pmap_abses_const {B' A' B A : AbGroup@{u}} : AbSES B A -->* AbSES B' A'
@@ -389,7 +389,7 @@ Proof.
   1: reflexivity.
   apply moveL_pV.
   refine (concat_1p _ @ _).
-  apply equiv_path_abses_1.
+  exact equiv_path_abses_1.
 Defined.
 
 Lemma abses_ap_fmap `{Univalence} {B0 B1 A0 A1 : AbGroup@{u}}
@@ -458,7 +458,7 @@ Proof.
   - intro f.
     snrefine (_;_).
     + refine (ab_biprod_rec ab_biprod_inl _).
-      refine (ab_biprod_corec f grp_homo_id).
+      exact (ab_biprod_corec f grp_homo_id).
     + split; intro x; cbn.
       * apply path_prod; cbn.
         -- exact (ap _ (grp_homo_unit f) @ right_identity _).

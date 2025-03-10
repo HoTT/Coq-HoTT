@@ -237,7 +237,7 @@ Proof.
   rhs_V nrapply functor_coeq_compose.
   snrapply functor_coeq_homotopy.
   1: reflexivity.
-  1: apply functor_sum_compose.
+  1: exact functor_sum_compose.
   1,2: intros x; simpl.
   1,2: apply equiv_1p_q1.
   1,2: lhs_V nrapply whiskerR.
@@ -274,9 +274,9 @@ Section EquivPushout.
   Proof.
     refine (functor_coeq_beta_cglue _ _ _ _ a @ _).
     refine (_ @@ 1 @@ _).
-    - symmetry; refine (ap_compose inl coeq _).
+    - symmetry; exact (ap_compose inl coeq _).
     - refine (ap (ap coeq) (ap_V _ _)^ @ _).
-      symmetry; refine (ap_compose inr coeq _).
+      symmetry; exact (ap_compose inr coeq _).
   Defined.
 
 End EquivPushout.
@@ -436,7 +436,7 @@ Section PushoutAssoc.
       : pushout_assoc_left -> P.
     Proof.
       srefine (Pushout_rec _ _ pushd _).
-      - srefine (Pushout_rec _ pushb pushc pusha1).
+      - exact (Pushout_rec _ pushb pushc pusha1).
       - exact pusha2.
     Defined.
 
@@ -500,7 +500,7 @@ Section PushoutAssoc.
       : pushout_assoc_right -> P.
     Proof.
       srefine (Pushout_rec _ pushb _ _).
-      - srefine (Pushout_rec _ pushc pushd pusha2).
+      - exact (Pushout_rec _ pushc pushd pusha2).
       - exact pusha1.
     Defined.
 
@@ -715,7 +715,7 @@ Section Descent.
       rhs nrefine (ap (podd_famr _ _) _).
       + exact (path_universe (podd_e _ _ _)).
       + lhs nrapply (ap (fun x => (transport _ x _)) (inv_V (pglue _))).
-        nrapply (transport_fam_podescent_pglue _ _ _).
+        exact (transport_fam_podescent_pglue _ _ _).
   Defined.
 
   (** A section of dependent descent data [Qe : poDepDescent Pe] are fiberwise sections [podds_sectl] and [podds_sectr], together with coherences [pods_e]. *)
@@ -790,7 +790,7 @@ Section Descent.
       lhs nrapply concat_V_pp.
       lhs nrapply (1 @@ concat_pp_p _ _ _).
       rewrite concat_p1.
-      nrapply (1 @@ (1 @@ concat_pV_p _ _)). }
+      exact (1 @@ (1 @@ concat_pV_p _ _)). }
     nrapply concat_V_pp.
     Close Scope long_path_scope.
   Defined.
@@ -835,13 +835,13 @@ Section Flattening.
       + exact (fun c pc => pushr (c; pc)).
       + intros a pf.
       cbn.
-      apply (@pglue _ _ _
+      exact (@pglue _ _ _
         (functor_sigma f (fun _ => idmap)) (functor_sigma g (pod_e Pe)) (a; pf)).
     - snrapply Pushout_rec.
       + exact (fun '(b; pb) => (pushl b; pb)).
       + exact (fun '(c; pc) => (pushr c; pc)).
       + intros [a pf]; cbn.
-        apply (flatten_pod_glue a 1).
+        exact (flatten_pod_glue a 1).
     - snrapply Pushout_ind.
       1, 2: reflexivity.
       intros [a pf]; cbn.
@@ -860,7 +860,7 @@ Section Flattening.
         rewrite <- (concat_p1 (transport_fam_podescent_pglue _ _ _)).
         rewrite podepdescent_rec_beta_pglue. (* This needs to be in the form [transport_fam_podescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
         lhs nrapply (ap _ (concat_p1 _)).
-        nrapply (Pushout_rec_beta_pglue _ _ _ _ (a; pf)).
+        exact (Pushout_rec_beta_pglue _ _ _ _ (a; pf)).
   Defined.
 
 End Flattening.

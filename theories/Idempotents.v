@@ -122,7 +122,7 @@ Proof.
   apply equiv_functor_sigma_id; intros K.
   apply equiv_functor_forall_id; intros a; cbn.
   apply equiv_concat_lr.
-  - refine (concat_p1 _ @ ap_idmap (H a)).
+  - exact (concat_p1 _ @ ap_idmap (H a)).
   - symmetry; apply concat_1p.
 Defined.
 
@@ -273,7 +273,7 @@ Proof.
   rewrite !ap_V; apply moveR_Vp.
   rewrite <- ap_compose.
   rewrite isidem2; try exact _.
-  symmetry; refine (concat_Ap (isidem f) (p x)).
+  symmetry; exact (concat_Ap (isidem f) (p x)).
   Close Scope long_path_scope.
 Qed.
 
@@ -334,7 +334,7 @@ Instance ispreidem_split {X : Type} (f : X -> X) (S : Splitting f)
 : IsPreIdempotent f.
 Proof.
   destruct S as [R p].
-  refine (ispreidem_homotopic _ p); exact _.
+  exact (ispreidem_homotopic _ p).
 Defined.
 
 Arguments ispreidem_split / .
@@ -343,7 +343,7 @@ Instance isqidem_split {X : Type} (f : X -> X) (S : Splitting f)
 : @IsQuasiIdempotent X f (ispreidem_split f S).
 Proof.
   destruct S as [R p].
-  refine (isqidem_homotopic _ p); exact _.
+  exact (isqidem_homotopic _ p).
 Defined.
 
 Arguments isqidem_split / .
@@ -571,7 +571,7 @@ Section AlreadySplit.
     simple refine (Build_Equiv _ _ (r o split_idem_sect (s o r))
               (Build_IsEquiv _ _ _ (split_idem_retr (s o r) o s) _ _ _)).
     - intros a; simpl.
-      refine (H _ @ H _).
+      exact (H _ @ H _).
     - intros a; simpl.
       refine (_ @ split_idem_issect (s o r) a).
       apply ap.
@@ -701,7 +701,7 @@ Section RetractOfRetracts.
       unfold hfiber.
       refine (equiv_functor_sigma' (equiv_sigma_assoc _ _)^-1 (fun a => _)); simpl.
       destruct a as [[g I] J]; unfold quasiidempotent_pr1; simpl.
-      apply equiv_idmap.
+      exact equiv_idmap.
     - simpl.  unfold hfiber, Splitting.
       refine (equiv_functor_sigma_id _);
         intros R; simpl.
@@ -727,7 +727,7 @@ Section RetractOfRetracts.
                       retract_retractof_qidem pr1 preidem_retract
                       _ f))
               (Splitting_PreIdempotent f) _).
-    - symmetry; refine (hfiber_fibration f _).
+    - symmetry; exact (hfiber_fibration f _).
     - intros [[g I] J]; simpl.
       refine (path_sigma' _ 1 _); simpl.
       apply path_forall; intros x; apply split_idem_preidem.
@@ -743,7 +743,7 @@ Section RetractOfRetracts.
       apply equiv_functor_forall_id; intros x; simpl.
       unfold isidem.
       apply equiv_concat_l.
-      refine (concat_p1 _ @ concat_1p _).
+      exact (concat_p1 _ @ concat_1p _).
   Defined.
 
 End RetractOfRetracts.
@@ -778,7 +778,7 @@ Section CoherentIdempotents.
   #[export] Instance isqidem_isidem {X : Type} (f : X -> X)
          `{IsIdempotent _ f} : @IsQuasiIdempotent X f (ispreidem_isidem f).
   Proof.
-    refine (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).2.
+    exact (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).2.
   Defined.
 
   Definition Idempotent (X : Type) := { f : X -> X & IsIdempotent f }.
@@ -841,7 +841,7 @@ Proof.
   apply equiv_concat_r.
   refine (cancelR _ _ (ep x) _).
   rewrite <- ap_compose.
-  refine (concat_A1p ep (ep x)).
+  exact (concat_A1p ep (ep x)).
 Qed.
 
 (** Therefore, there is a unique coherentification of the canonical witness [preidem_idmap] of pre-idempotency for the identity.  Hence, to show that not every quasi-idempotent is coherent, it suffices to give a witness of quasi-idempotency extending [preidem_idmap] which is nontrivial (i.e. not equal to [qidem_idmap]).  Such a witness is exactly an element of the 2-center, and we know that some types such as [BAut (BAut Bool)] have nontrivial 2-centers.  In [Spaces.BAut.Bool.IncoherentIdempotent] we use this to construct an explicit counterexample. *)

@@ -96,7 +96,7 @@ Proof.
   - intros; apply cate_issect.
   - intros; apply cate_isretr.
   - intros [gamma ?] r s a; cbn in *.
-    refine (catie_adjointify (alpha a) (gamma a) (r a) (s a)).
+    exact (catie_adjointify (alpha a) (gamma a) (r a) (s a)).
 Defined.
 
 (** Bundled opposite functors *)
@@ -104,7 +104,7 @@ Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
   : Fun01 A B -> Fun01 A^op B^op.
 Proof.
   intros F.
-  rapply (Build_Fun01 A^op B^op F).
+  exact (Build_Fun01 A^op B^op F).
 Defined.
 
 (** ** Categories of 1-coherent 1-functors *)
@@ -206,5 +206,5 @@ Definition fun11_compose {A B C} `{Is1Cat A, Is1Cat B, Is1Cat C}
 Proof.
   intros F G.
   nrapply Build_Fun11.
-  rapply (is1functor_compose G F).
+  exact (is1functor_compose G F).
 Defined.

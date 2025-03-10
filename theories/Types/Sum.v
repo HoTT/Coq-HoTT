@@ -121,10 +121,10 @@ Instance ishprop_hfiber_inl {A B : Type} (z : A + B)
 : IsHProp (hfiber inl z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
-  - refine (istrunc_equiv_istrunc _
+  - exact (istrunc_equiv_istrunc _
               (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inl x) (inl a)))).
-  - refine (istrunc_isequiv_istrunc _
+  - exact (istrunc_isequiv_istrunc _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1).
 Defined.
 
@@ -132,10 +132,10 @@ Instance decidable_hfiber_inl {A B : Type} (z : A + B)
 : Decidable (hfiber inl z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
-  - refine (decidable_equiv' _
+  - exact (decidable_equiv' _
               (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inl x) (inl a))) _).
-  - refine (decidable_equiv _
+  - exact (decidable_equiv _
               (fun xp => inl_ne_inr (xp.1) b xp.2)^-1 _).
 Defined.
 
@@ -143,9 +143,9 @@ Instance ishprop_hfiber_inr {A B : Type} (z : A + B)
 : IsHProp (hfiber inr z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
-  - refine (istrunc_isequiv_istrunc _
+  - exact (istrunc_isequiv_istrunc _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1).
-  - refine (istrunc_equiv_istrunc _
+  - exact (istrunc_equiv_istrunc _
               (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inr x) (inr b)))).
 Defined.
@@ -154,9 +154,9 @@ Instance decidable_hfiber_inr {A B : Type} (z : A + B)
 : Decidable (hfiber inr z).
 Proof.
   destruct z as [a|b]; unfold hfiber.
-  - refine (decidable_equiv _
+  - exact (decidable_equiv _
               (fun xp => inr_ne_inl (xp.1) a xp.2)^-1 _).
-  - refine (decidable_equiv' _
+  - exact (decidable_equiv' _
               (equiv_functor_sigma_id
                  (fun x => equiv_path_sum (inr x) (inr b))) _).
 Defined.
@@ -498,7 +498,7 @@ Proof.
   refine (path_sum_inl B'' _).
   refine (unfunctor_sum_l_beta _ _ _ @ _).
   refine (ap k (unfunctor_sum_l_beta _ _ _) @ _).
-  refine ((unfunctor_sum_l_beta _ _ _)^).
+  exact ((unfunctor_sum_l_beta _ _ _)^).
 Defined.
 
 Definition unfunctor_sum_r_compose {A A' A'' B B' B'' : Type}
@@ -513,7 +513,7 @@ Proof.
   refine (path_sum_inr A'' _).
   refine (unfunctor_sum_r_beta _ _ _ @ _).
   refine (ap k (unfunctor_sum_r_beta _ _ _) @ _).
-  refine ((unfunctor_sum_r_beta _ _ _)^).
+  exact ((unfunctor_sum_r_beta _ _ _)^).
 Defined.
 
 (** [unfunctor_sum] also preserves fibers, if both summands are preserved. *)
@@ -894,13 +894,13 @@ Proof.
   refine (t oE (_ +E 1) oE g^-1).
   destruct (equiv_indecomposable_sum s^-1) as [[p q]|[p q]];
   destruct (equiv_indecomposable_sum f^-1) as [[u v]|[u v]].
-  - refine (v oE q^-1).
+  - exact (v oE q^-1).
   - elim (indecompose0 (v^-1 o p)).
   - refine (Empty_rec (indecompose0 _)); intros a.
     destruct (is_inl_or_is_inr (h (inl a))) as [l|r].
     * exact (q^-1 (a;l)).
     * exact (v^-1 (a;r)).
-  - refine (u oE p^-1).
+  - exact (u oE p^-1).
 Defined.
 
 Definition equiv_unfunctor_sum_contr_ll {A A' B B' : Type}

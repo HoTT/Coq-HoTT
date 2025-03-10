@@ -324,7 +324,7 @@ Proof.
   unfold Associator.
   snrapply associator_op'.
   1: exact _.
-  nrapply associator_cat_binprod.
+  exact associator_cat_binprod.
 Defined.
 
 (** *** Codiagonal *)
@@ -434,7 +434,7 @@ Proof.
   destruct (dec_paths i a) as [p|].
   - destruct p.
     exact (Id _).
-  - apply zero_morphism. 
+  - exact zero_morphism.
 Defined.
 
 Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}

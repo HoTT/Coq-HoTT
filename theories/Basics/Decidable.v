@@ -95,7 +95,7 @@ Defined.
 Definition iff_stable P `(Stable P) : ~~P <-> P.
 Proof.
   split.
-  - apply stable.
+  - exact stable.
   - exact not_not_unit.
 Defined.
 

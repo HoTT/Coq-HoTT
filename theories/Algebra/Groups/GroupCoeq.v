@@ -46,7 +46,7 @@ Proof.
     assert (q2 := p (freeproduct_inr x)).
     simpl in q1, q2.
     rewrite 2 right_identity in q1, q2.
-    refine (q1^ @ q2). }
+    exact (q1^ @ q2). }
   { hnf. intros [k p].
     apply path_sigma_hprop.
     simpl.

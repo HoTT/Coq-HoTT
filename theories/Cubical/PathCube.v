@@ -265,7 +265,7 @@ Proof.
   1,2: exact sq_tr_refl_v^.
   1,2: exact (eisretr tr _)^.
   refine (_ oE equiv_ap' tr _ _).
-  apply equiv_cu_G11.
+  exact equiv_cu_G11.
 Defined.
 
 (* Finally this is an even simpler rotation *)
@@ -278,7 +278,7 @@ Proof.
   refine (cu_rot_tb_fb oE _).
   refine (cu_ccGGGG _ _ _ _ oE _).
   1-4: exact sq_tr_refl_v^.
-  by apply equiv_cu_G11.
+  by exact equiv_cu_G11.
 Defined.
 
 Notation cu_G11 := equiv_cu_G11.
@@ -347,7 +347,7 @@ Definition equiv_cu_ds
       (sq_ap f s) (sq_ap g s).
 Proof.
   destruct s.
-  apply cu_GG1.
+  exact cu_GG1.
 Defined.
 
 Notation cu_ds := equiv_cu_ds.

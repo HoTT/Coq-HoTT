@@ -396,7 +396,7 @@ Proof.
   - intros [r ?] [s ?]; exists (r * s).
     by apply issubring_mult.
   - exists 1.
-    apply issubring_one.
+    exact issubring_one.
   - snrapply rng_mult_assoc.
   - snrapply rng_dist_l.
   - snrapply rng_dist_r.
@@ -444,7 +444,7 @@ Definition ring_product_corec (R S T : Ring)
 Proof.
   intros f g.
   srapply Build_RingHomomorphism'.
-  1: apply (ab_biprod_corec f g).
+  1: exact (ab_biprod_corec f g).
   repeat split.
   1: cbn; intros x y; apply path_prod; apply rng_homo_mult.
   cbn; apply path_prod; apply rng_homo_one.
@@ -687,7 +687,7 @@ Defined.
 Definition rng_inv_r {R : Ring} (x : R) `{IsInvertible R x}
   : x * inverse_elem x = 1.
 Proof.
-  rhs_V nrapply (right_inverse_eq x).
+  rhs_V exact (right_inverse_eq x).
   f_ap.
   apply path_left_inverse_elem_right_inverse_elem.
 Defined.
@@ -730,7 +730,7 @@ Instance isleftinvertible_mult {R : Ring} (x y : R)
 Proof.
   intros [x' p] [y' q].
   exists (y' * x').
-  rhs_V nrapply q.
+  rhs_V exact q.
   lhs nrapply rng_mult_assoc.
   f_ap.
   rhs_V nrapply rng_mult_one_r.

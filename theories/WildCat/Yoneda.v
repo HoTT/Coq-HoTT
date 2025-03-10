@@ -27,7 +27,7 @@ Proof.
   - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p1 p2] q;
       unfold fst, snd in *.
     apply path_hom.
-    refine (((p2 $@R q) $@R _) $@ ((g2 $o q) $@L p1)).
+    exact (((p2 $@R q) $@R _) $@ ((g2 $o q) $@L p1)).
   - intros [a1 a2] f; cbn in *.
     apply path_hom.
     exact (cat_idr _ $@ cat_idl f).
@@ -38,7 +38,7 @@ Proof.
     refine (_ $@ cat_assoc_opp _ _ _).
     refine (g2 $@L _).
     refine (_ $@ cat_assoc_opp _ _ _).
-    refine (cat_assoc_opp _ _ _).
+    exact (cat_assoc_opp _ _ _).
 Defined.
 
 Instance is0bifunctor_hom {A} `{Is01Cat A}
@@ -192,12 +192,12 @@ Definition opyon_cancel {A : Type} `{Is01Cat A} (a b : A)
 
 Definition opyon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A Type.
 Proof.
-  rapply (Build_Fun01 _ _ (opyon a)).
+  exact (Build_Fun01 _ _ (opyon a)).
 Defined.
 
 Definition opyon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A Type.
 Proof.
-  rapply (Build_Fun11 _ _ (opyon a)).
+  exact (Build_Fun11 _ _ (opyon a)).
 Defined.
 
 (** An equivalence between representable functors induces an equivalence between the representing objects. *)

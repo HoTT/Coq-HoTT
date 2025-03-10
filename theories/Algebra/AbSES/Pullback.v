@@ -169,7 +169,7 @@ Lemma ap_abses_pullback `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
 Proof.
   induction p.
   nrefine (_ @ ap equiv_path_abses_iso _).
-  2: refine ((fmap_id_strong _ _)^ @ ap _ equiv_path_absesV_1^).
+  2: exact ((fmap_id_strong _ _)^ @ ap _ equiv_path_absesV_1^).
   exact equiv_path_abses_1^.
 Defined.
 
@@ -239,7 +239,7 @@ Definition abses_pullback_pmap_id `{Univalence} {A B : AbGroup}
   : abses_pullback_pmap (A:=A) (@grp_homo_id B) ==* pmap_idmap.
 Proof.
   srapply Build_pHomotopy.
-  1: apply abses_pullback_id.
+  1: exact abses_pullback_id.
   refine (_ @ (concat_p1 _)^).
   nrapply (ap equiv_path_abses_iso).
   apply path_sigma_hprop.
@@ -359,7 +359,7 @@ Proof.
   - srapply equiv_functor_grp_pullback.
     1-3: exact grp_iso_id.
     1: reflexivity.
-    apply h.
+    exact h.
   - intro a; cbn.
     by srapply equiv_path_pullback_hset; split.
   - reflexivity.
@@ -479,7 +479,7 @@ Instance is1functor_abses'10 `{Univalence} {A : AbGroup}
 Proof.
   apply Build_Is1Functor; intros; cbn.
   - by apply abses_pullback_homotopic.
-  - apply abses_pullback_id.
+  - exact abses_pullback_id.
   - symmetry; apply abses_pullback_compose.
 Defined.
 
@@ -496,6 +496,6 @@ Instance is1functor_abses10 `{Univalence} {A : AbGroup}
 Proof.
   apply Build_Is1Functor; intros; cbn.
   - by apply abses_pullback_phomotopic.
-  - apply abses_pullback_pmap_id.
+  - exact abses_pullback_pmap_id.
   - symmetry; apply abses_pullback_pcompose.
 Defined.

@@ -77,7 +77,7 @@ Module PseudonaturalTransformationParts.
 
     Definition A_to_B_1 : Functor A B.
     Proof.
-      refine (Build_Functor
+      exact (Build_Functor
                 A B
                 (fun x__Fx_to_Gx => fun x y m => x__Fx_to_Gx y o p_morphism_of F m)%functor
                 (fun x__s x__d x__m => fun x y m => x__m y oR p_morphism_of F m)
@@ -90,7 +90,7 @@ Module PseudonaturalTransformationParts.
 
     Definition A_to_B_2 : Functor A B.
     Proof.
-      refine (Build_Functor
+      exact (Build_Functor
                 A B
                 (fun x__Fx_to_Gx => fun x y m => p_morphism_of G m o x__Fx_to_Gx x)%functor
                 (fun x__s x__d x__m => fun x y m => p_morphism_of G m oL x__m x)
@@ -124,7 +124,7 @@ Module PseudonaturalTransformationParts.
 
     Definition B_to_C_1 : Functor B C.
     Proof.
-      refine (Build_Functor
+      exact (Build_Functor
                 B C
                 (fun xym__Fx_to_Gy => fun x y z m1 m2 => xym__Fx_to_Gy y z m1 o p_morphism_of F m2)%functor
                 (fun xym__s xym__d xym__m => fun x y z m1 m2 => xym__m y z m1 oR p_morphism_of F m2)
@@ -137,7 +137,7 @@ Module PseudonaturalTransformationParts.
 
     Definition B_to_C_2 : Functor B C.
     Proof.
-      refine (Build_Functor
+      exact (Build_Functor
                 B C
                 (fun xym__Fx_to_Gy => fun x y z m1 m2 => p_morphism_of G m1 o xym__Fx_to_Gy x y m2)%functor
                 (fun xym__s xym__d xym__m => fun x y z m1 m2 => p_morphism_of G m1 oL xym__m x y m2)

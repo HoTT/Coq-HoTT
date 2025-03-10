@@ -35,7 +35,7 @@ Context (N : Type@{UN}) `{Naturals@{UN UN UN UN UN UN UN UNalt} N}.
 Proof.
 assert (E : sig (fun _ : N => N) <~> (T N)).
 - issig.
-- apply (istrunc_equiv_istrunc _ E).
+- exact (istrunc_equiv_istrunc _ E).
 Qed.
 
 #[export] Instance inject : Cast N (T N) := fun x => C x 0.
@@ -140,13 +140,13 @@ Qed.
 #[export] Instance Tlt_hprop@{}
   : is_mere_relation (T N) Tlt.
 Proof.
-intros;unfold Tlt;apply _.
+intros;unfold Tlt;exact _.
 Qed.
 
 Local Existing Instance pseudo_order_apart.
 #[export] Instance Tapart_hprop@{} : is_mere_relation (T N) Tapart.
 Proof.
-intros;unfold Tapart;apply _.
+intros;unfold Tapart;exact _.
 Qed.
 
 Lemma le_respects_aux@{} : forall q1 q2, equiv q1 q2 ->
@@ -350,7 +350,7 @@ Proof.
 apply (@Z_ind (fun x => forall y z, _));intros x.
 2:apply (Z_ind2@{i j} _);auto.
 apply (@istrunc_forall@{UN j j} _).
-intros. apply istrunc_forall@{UN i j}.
+intros. exact istrunc_forall@{UN i j}.
 Defined.
 
 Definition Z_rec@{i} {T : Type@{i} } {sT : IsHSet T}
@@ -381,14 +381,14 @@ intros q r.
 destruct (dec (PairT.equiv q r)) as [E|E].
 - left. apply Z_path,E.
 - right. intros E'.
-  apply E. apply (related_path E').
+  apply E. exact (related_path E').
 Defined.
 
 #[export] Instance R_dec `{DecidablePaths N}
   : DecidablePaths Z.
 Proof.
 hnf. apply (Z_ind2 _).
-apply dec_Z_of_pair.
+exact dec_Z_of_pair.
 Defined.
 
 (* Relations, operations and constants *)
@@ -470,7 +470,7 @@ Qed.
 (* A final word about inject *)
 Lemma Z_of_N_morphism@{} : IsSemiRingPreserving (cast N Z).
 Proof.
-repeat (constructor; try apply _).
+repeat (constructor; try exact _).
 - intros x y.
   apply Z_path. red. simpl. ring_with_nat.
 - intros x y. apply Z_path. red;simpl.
@@ -589,7 +589,7 @@ Instance Zmult_nonneg@{} : forall x y : Z, PropHolds (0 â‰¤ x) -> PropHolds (0 â
                   exact Zmult_nonneg']).
 
 #[export] Instance Z_order@{} : SemiRingOrder Zle.
-Proof. pose proof Z_ring; apply rings.from_ring_order; apply _. Qed.
+Proof. pose proof Z_ring; apply rings.from_ring_order; exact _. Qed.
 
 (* Make this computable? Would need to compute through Z_ind2. *)
 #[export] Instance Zle_dec `{forall x y : N, Decidable (x <= y)}
@@ -597,7 +597,7 @@ Proof. pose proof Z_ring; apply rings.from_ring_order; apply _. Qed.
 Proof.
 apply (Z_ind2 _).
 intros a b. change (Decidable (PairT.Tle a b)).
-unfold PairT.Tle. apply _.
+unfold PairT.Tle. exact _.
 Qed.
 
 Definition Zlt_HProp@{} : Z -> Z -> HProp@{UN}.
@@ -622,7 +622,7 @@ Definition Zlt_def@{i} := ltac:(first [exact Zlt_def'@{Uhuge i}|exact Zlt_def'@{
 Lemma Zlt_strict' : StrictOrder Zlt.
 Proof.
 split.
-- apply _.
+- exact _.
 - (* we need to change so that it sees Empty,
      needed to figure out IsHProp (using Funext) *)
   change (forall x, x < x -> Empty). apply (Z_ind (fun _ => _ -> _)).
@@ -683,7 +683,7 @@ Instance Zmult_pos@{} : forall x y : Z, PropHolds (0 < x) -> PropHolds (0 < y) -
                   exact Zmult_pos'@{}]).
 
 #[export] Instance Z_strict_srorder : StrictSemiRingOrder Zlt.
-Proof. pose proof Z_ring; apply from_strict_ring_order; apply _. Qed.
+Proof. pose proof Z_ring; apply from_strict_ring_order; exact _. Qed.
 
 #[export] Instance Zlt_dec `{forall x y : N, Decidable (x < y)}
   : forall x y : Z, Decidable (x < y).
@@ -691,7 +691,7 @@ Proof.
 apply (Z_ind2 _).
 intros a b. change (Decidable (PairT.Tlt a b)).
 unfold PairT.Tlt.
-apply _.
+exact _.
 Qed.
 
 Local Existing Instance pseudo_order_apart.
@@ -799,7 +799,7 @@ split;[apply _|split;try apply _|].
   + intros a b.
     apply @istrunc_prod;[|apply _].
     apply (@istrunc_arrow _).
-    apply ishprop_sum;try apply _.
+    apply ishprop_sum;try exact _.
     intros E1 E2;apply (irreflexivity lt a).
     transitivity b;trivial.
   + intros a b;rewrite Zapart_def,!Zlt_def;unfold PairT.Tapart,PairT.Tlt.
@@ -846,8 +846,8 @@ Instance Z_full_pseudo_srorder@{}
 Proof.
 pose proof Z_ring.
 first [apply from_full_pseudo_ring_order@{UN UN UN UN UN UN UN Ularge}|
-       apply from_full_pseudo_ring_order]; try apply _.
-apply apartness.strong_binary_setoid_morphism_commutative.
+       apply from_full_pseudo_ring_order]; try exact _.
+exact apartness.strong_binary_setoid_morphism_commutative.
 Qed.
 
 Goal FullPseudoSemiRingOrder Zle Zlt.
@@ -859,7 +859,7 @@ Abort.
 Proof.
 red. intros R ??????.
 eapply Z_rec.
-apply (PairT.to_ring_respects N).
+exact (PairT.to_ring_respects N).
 Defined.
 
 Lemma Z_to_ring_morphism' `{IsCRing B} : IsSemiRingPreserving (integers_to_ring Z B).
@@ -919,9 +919,9 @@ Qed.
 
 #[export] Instance Z_integers@{} : Integers Z.
 Proof.
-split;try apply _.
-- apply Z_ring.
-- apply @Z_to_ring_unique.
+split;try exact _.
+- exact Z_ring.
+- exact @Z_to_ring_unique.
 Qed.
 
 Context `{!NatDistance N}.
@@ -993,7 +993,7 @@ destruct (nat_distance_sig pa pb) as [[z1 E1] | [z1 E1]];simpl.
       rewrite E2,plus_0_r in E1.
       rewrite <-E3,E1 in E.
       apply (left_cancellation plus (pb + nb)).
-      rewrite plus_0_r. etransitivity;[apply E|].
+      rewrite plus_0_r. etransitivity;[exact E|].
       ring_with_nat.
   + rewrite Sum.transport_sum,Sigma.transport_sigma.
     destruct (nat_distance_sig na nb) as [[z2 E3] | [z2 E3]];

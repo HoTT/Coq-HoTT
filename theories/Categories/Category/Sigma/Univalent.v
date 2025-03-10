@@ -121,7 +121,7 @@ Section onmorphisms.
               (equiv_compose iscategory_sig_mor_helper^-1 (@idtoiso _ _ _))
               _).
     intro x; apply path_isomorphic; cbn.
-    destruct x; refine (path_sigma' _ 1 (contr _)).
+    destruct x; exact (path_sigma' _ 1 (contr _)).
   Defined.
 
   Definition iscategory_from_sig_mor `{A'_cat : IsCategory A'}
@@ -139,7 +139,7 @@ Section onmorphisms.
   #[export] Instance isequiv_iscategory_sig_mor `{Funext}
   : IsEquiv (@iscategory_sig_mor).
   Proof.
-    refine (isequiv_iff_hprop _ (@iscategory_from_sig_mor)).
+    exact (isequiv_iff_hprop _ (@iscategory_from_sig_mor)).
   Defined.
 End onmorphisms.
 
@@ -237,7 +237,7 @@ Section on_both.
       refine (H' @ _);
       first [ refine (_ @ ((P_left_identity (identity (x; _)))^)..2)
                 | refine ((((P_left_identity (identity (x; _)))^)..2)^ @ _) ];
-      refine (ap (fun p => transport _ p _) (path_ishprop _ _)).
+      exact (ap (fun p => transport _ p _) (path_ishprop _ _)).
   Defined.
 
   Global Arguments Pmor_iso_adjust / .
@@ -266,8 +266,8 @@ Section on_both.
   Proof.
     eexists. Unshelve.
     3:exact (e.1^-1%morphism; e.2.2.1).
-    { refine (path_sigma' _ left_inverse e.2.2.2.1). }
-    { refine (path_sigma' _ right_inverse e.2.2.2.2). }
+    { exact (path_sigma' _ left_inverse e.2.2.2.1). }
+    { exact (path_sigma' _ right_inverse e.2.2.2.2). }
   Defined.
 
   Local Definition iso_A'_decode {s d}
@@ -346,7 +346,7 @@ Section on_both.
     { destruct s as [s0 s1], d as [d0 d1]; cbn.
       intro p; destruct p; cbn.
       refine ((@Pmor_iso_adjust s0 s1 d1)^-1 o _).
-      refine (@Pidtoiso _ _ _). }
+      exact (@Pidtoiso _ _ _). }
     { (* Do this in small steps to make it fast. *)
       nrefine isequiv_compose. 1:apply isequiv_inverse.
       nrefine isequiv_compose. 2:apply isequiv_inverse.

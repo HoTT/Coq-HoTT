@@ -18,7 +18,7 @@ Local Open Scope pointed_scope.
 
 Instance is1type_torus `{Univalence} : IsTrunc 1 Torus.
 Proof.
-  refine (istrunc_equiv_istrunc _ equiv_torus_prod_Circle^-1).
+  exact (istrunc_equiv_istrunc _ equiv_torus_prod_Circle^-1).
 Qed.
 
 (** The torus is 0-connected *)
@@ -38,7 +38,7 @@ Local Notation S1 := ([Circle, _]).
 Lemma pequiv_torus_prod_circles `{Funext} : T  <~>* S1 * S1.
 Proof.
   srapply Build_pEquiv'.
-  1: apply equiv_torus_prod_Circle.
+  1: exact equiv_torus_prod_Circle.
   reflexivity.
 Defined.
 
@@ -51,7 +51,7 @@ Proof.
   etransitivity.
   1: apply grp_iso_pi_prod.
   apply grp_iso_prod.
-  1,2: apply pi1_circle.
+  1,2: exact pi1_circle.
 Defined.
 
 (** Loop space of torus *)
@@ -59,5 +59,5 @@ Theorem loops_torus `{Univalence} : loops T <~>* Int * Int.
 Proof.
   (* Since [T] is 1-truncated, [loops T] is 0-truncated, and is therefore equivalent to its 0-truncation. *)
   refine (_ o*E pequiv_ptr (n:=0)).
-  nrapply pi1_torus.
+  exact pi1_torus.
 Defined.

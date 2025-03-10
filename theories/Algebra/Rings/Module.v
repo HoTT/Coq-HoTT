@@ -451,7 +451,7 @@ Proof.
   - simpl; exact _.
   - apply Build_LeftModuleIsomorphism.
   - reflexivity.
-  - intros M N; apply lm_iso_inverse.
+  - intros M N; exact lm_iso_inverse.
   - intros M N f; apply eissect.
   - intros M N f; apply eisretr.
   - intros M N f g fg gf.
@@ -547,7 +547,7 @@ Proof.
     + intros n Nn; simpl.
       apply qglue.
       apply issubgroup_in_inv_op.
-      2: apply issubgroup_in_unit.
+      2: exact issubgroup_in_unit.
       by apply is_left_submodule.
   - intros r m n; revert m.
     snrapply Quotient_ind_hprop; [exact _ | intros m; revert n].
@@ -632,7 +632,7 @@ Definition rm_prod {R : Ring} : RightModule R -> RightModule R -> RightModule R
 Definition lm_prod_fst {R : Ring} {M N : LeftModule R} : lm_prod M N $-> M.
 Proof.
   snrapply Build_LeftModuleHomomorphism.
-  - apply grp_prod_pr1.
+  - exact grp_prod_pr1.
   - reflexivity.
 Defined.
 
@@ -642,7 +642,7 @@ Definition rm_prod_fst {R : Ring} {M N : RightModule R} : rm_prod M N $-> M
 Definition lm_prod_snd {R : Ring} {M N : LeftModule R} : lm_prod M N $-> N.
 Proof.
   snrapply Build_LeftModuleHomomorphism.
-  - apply grp_prod_pr2.
+  - exact grp_prod_pr2.
   - reflexivity.
 Defined.
 
@@ -654,7 +654,7 @@ Definition lm_prod_corec {R : Ring} {M N : LeftModule R} (L : LeftModule R)
   : L $-> lm_prod M N.
 Proof.
   snrapply Build_LeftModuleHomomorphism.
-  - apply (grp_prod_corec f g).
+  - exact (grp_prod_corec f g).
   - intros r l.
     apply path_prod; apply lm_homo_lact.
 Defined.

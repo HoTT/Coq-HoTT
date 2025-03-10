@@ -961,7 +961,7 @@ Proof.
   snrapply (_ oE equiv_moveR_Mp _ _ _).
   snrapply (_ oE equiv_concat_l _ _).
   3: exact (moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 s))).
-  snrapply (equiv_moveR_pM _ _ _).
+  exact (equiv_moveR_pM _ _ _).
 Defined.
 
 (* This special case of [equiv_path_ind] comes up a lot. *)

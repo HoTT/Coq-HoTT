@@ -517,7 +517,7 @@ Proof.
   revert x; refine (No_ind_hprop _ _); intros.
   apply le_lr.
   - intros l. refine (Conway_theorem0_lemma1 (xL l) (IHL l) _ _ _ _ 1).
-  - intros r. refine (Conway_theorem0_lemma2 (xR r) (IHR r) _ _ _ _ 1).
+  - intros r. exact (Conway_theorem0_lemma2 (xR r) (IHR r) _ _ _ _ 1).
 Defined.
 
 #[export] Instance reflexive_le `{Funext} : Reflexive le
@@ -694,11 +694,11 @@ Section NoCodes.
             split; [ intros [h3 h4]; split
                    | intros h3; strip_truncations;
                      destruct h3 as [[l' h3]|[r h3]] ] ;
-            [ intros l; refine (snd (xL_let l).2.2 y z (h3 l) y_le_z)
-            | intros r''; refine (h2 r'' (h3 , h4))
-            | refine (h1 l' h3)
+            [ intros l; exact (snd (xL_let l).2.2 y z (h3 l) y_le_z)
+            | intros r''; exact (h2 r'' (h3 , h4))
+            | exact (h1 l' h3)
             | apply tr, inr; exists r;
-              refine (snd (fst (fst (xR_let r).2.2)) y z h3 y_le_z) ] ).
+              exact (snd (fst (fst (xR_let r).2.2)) y z h3 y_le_z) ] ).
       - abstract (
             cbn;
             intros L' R' ? yL yR ycut x_let_yL x_let_yR y_lt_le;
@@ -797,8 +797,8 @@ Section NoCodes.
           intros L'' R'' ? zL zR zcut zLH zRH; split;
           [ rewrite !inner_cut_le;
             intros y_le_z; split;
-            [ intros l; refine (xL_lt_z l {{ zL | zR // zcut }} y_le_z)
-            | intros r; refine (snd (zRH r) (snd y_le_z r)) ]
+            [ intros l; exact (xL_lt_z l {{ zL | zR // zcut }} y_le_z)
+            | intros r; exact (snd (zRH r) (snd y_le_z r)) ]
           | rewrite !inner_cut_lt;
             intros y_lt_z; strip_truncations;
             destruct y_lt_z as [[l y_le_zL]|[r yR_le_z]];
@@ -1016,7 +1016,7 @@ Section RaiseSort.
     simple refine (No_rec No le lt _ _ _ _ _).
     - intros L R ? xL xR xcut fxL fxR fxcut.
       exact {{ fxL | fxR // fxcut }}.
-    - apply path_No.
+    - exact path_No.
     - intros; apply le_lr; assumption.
     - intros; apply lt_l with l; assumption.
     - intros; apply lt_r with r; assumption.
@@ -1164,7 +1164,7 @@ Proof.
       * unfold y. rewrite (No_raise_cut _ _ _).2.
         apply le_lr; [ intros [] | intros r ].
         rewrite <- (IHR r).2.
-        refine (lt_ropt _ _ _ (inr (inr r))).
+        exact (lt_ropt _ _ _ (inr (inr r))).
     + rewrite (IHL l).2.
       refine (lt_lopt _ _ _ l).
   - intros r.
@@ -1182,7 +1182,7 @@ Proof.
       * apply No_raise_lt.
         refine (lt_lopt _ _ _ tt).
     + rewrite (IHR r).2.
-      refine (lt_ropt _ _ _ r).
+      exact (lt_ropt _ _ _ r).
 Defined.
 
 Definition equiv_DecNo_raise `{Univalence}

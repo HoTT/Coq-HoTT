@@ -37,7 +37,7 @@ Definition interval_rec_beta_seg (P : Type) (a b : P) (p : a = b)
 Proof.
   refine (cancelL (transport_const seg a) _ _ _).
   refine ((apD_const (interval_ind (fun _ => P) a b _) seg)^ @ _).
-  refine (interval_ind_beta_seg (fun _ => P) _ _ _).
+  exact (interval_ind_beta_seg (fun _ => P) _ _ _).
 Defined.
 
 (** ** The interval is contractible. *)
@@ -46,5 +46,5 @@ Instance contr_interval : Contr interval | 0.
 Proof.
   apply (Build_Contr _ zero).
   refine (interval_ind _ 1 seg _).
-  refine (transport_paths_r _ _ @ concat_1p _).
+  exact (transport_paths_r _ _ @ concat_1p _).
 Defined.

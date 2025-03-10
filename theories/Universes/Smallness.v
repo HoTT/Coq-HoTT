@@ -191,7 +191,7 @@ Instance islocallysmall_trunc@{i j k | i < k, j <= k} `{PropResizing}
 Proof.
   revert n X T.
   simple_induction n n IHn; cbn.
-  - nrapply issmall_hprop@{i j}.
+  - exact issmall_hprop@{i j}.
   - intros X T x y.
     rapply IHn.
 Defined.

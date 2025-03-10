@@ -25,7 +25,7 @@ Proof.
   { apply Hp; apply Hp; intros H; by apply Hp. }
   unfold p at 1. split.
   - intros H. apply equiv_smalltype in H. apply H. reflexivity.
-  - intros H. apply equiv_smalltype. intros q -> % HI. apply H.
+  - intros H. apply equiv_smalltype. intros q -> % HI. exact H.
 Qed.
 
 (* The concluding disjunction of GCH is excluse since otherwise we'd obtain an injection of P(X) into X. *)
@@ -111,7 +111,7 @@ Section LEM.
     - intros [i Hi]. destruct (Cantor_sing (fun p => @proj1 _ _ (i p))) as [p HP].
       + intros x y H % injective_proj1. by apply Hi.
       + destruct (i p) as [q Hq]; cbn in *.
-        eapply merely_destruct; try apply Hq.
+        eapply merely_destruct; try exact Hq.
         intros [H|H]; [destruct (HP H)|by apply tr].
   Qed.
 
@@ -126,8 +126,8 @@ Proof.
   pose (sings := { p : nat -> HProp | sing (Build_HSet nat) p \/ (P + ~ P) }).
   destruct (gch (Build_HSet nat) (Build_HSet sings)) as [H|H].
   - cbn. exists idmap. apply isinj_idmap.
-  - apply tr. apply H1.
-  - apply tr. apply H2.
-  - apply Empty_rec. eapply merely_destruct; try apply H. apply H3.
-  - apply H.
+  - apply tr. exact H1.
+  - apply tr. exact H2.
+  - apply Empty_rec. eapply merely_destruct; try exact H. exact H3.
+  - exact H.
 Qed.

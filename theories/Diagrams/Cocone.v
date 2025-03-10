@@ -197,7 +197,7 @@ Section FunctorialityCocone.
     (m : D1 ~d~ D2) (X : Type) : IsEquiv (cocone_precompose (X:=X) m).
   Proof.
     srapply isequiv_adjointify.
-    1: apply (cocone_precompose (diagram_equiv_inv m)).
+    1: exact (cocone_precompose (diagram_equiv_inv m)).
     + intros C.
       etransitivity.
       - apply cocone_precompose_comp.
@@ -245,7 +245,7 @@ Section FunctorialityCocone.
   Proof.
     srapply Build_UniversalCocone; intro.
     rewrite (path_forall _ _ (fun f => cocone_precompose_postcompose m f C)).
-    srapply isequiv_compose.
+    exact isequiv_compose.
   Defined.
 
   #[export] Instance cocone_postcompose_equiv_universality {D: Diagram G} `(f: X <~> Y)
@@ -254,7 +254,7 @@ Section FunctorialityCocone.
   Proof.
     snrapply Build_UniversalCocone; intro.
     rewrite <- (path_forall _ _ (fun g => cocone_postcompose_comp f g C)).
-    srapply isequiv_compose.
+    exact isequiv_compose.
   Defined.
 
 End FunctorialityCocone.

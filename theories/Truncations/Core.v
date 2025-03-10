@@ -55,10 +55,10 @@ Definition Trunc_rec_tr n {A : Type}
 Definition Tr (n : trunc_index) : Modality.
 Proof.
   srapply (Build_Modality (fun A => IsTrunc n A)); cbn.
-  - intros A B ? f ?; rapply (istrunc_isequiv_istrunc A f).
+  - intros A B ? f ?; exact (istrunc_isequiv_istrunc A f).
   - exact (Trunc n).
   - intros; apply istrunc_truncation.
-  - intros A; apply tr.
+  - intros A; exact tr.
   - intros A B ? f oa; cbn in *.
     exact (Trunc_ind B f oa).
   - intros; reflexivity.
@@ -123,8 +123,8 @@ Section TruncationModality.
   Proof.
     apply Build_Is1Functor.
     - apply @O_functor_homotopy.
-    - apply @Trunc_functor_idmap.
-    - apply @Trunc_functor_compose.
+    - exact @Trunc_functor_idmap.
+    - exact @Trunc_functor_compose.
   Defined.
 
 End TruncationModality.
@@ -180,7 +180,7 @@ Proof.
   intros [C ContrC].
   apply equiv_path_sigma_hprop.
   apply path_universe_uncurried.
-  symmetry; apply equiv_contr_unit.
+  symmetry; exact equiv_contr_unit.
 Defined.
 
 (** ** A few special things about the (-1)-truncation *)
@@ -203,7 +203,7 @@ Definition himage {X Y} (f : X -> Y) := image (Tr (-1)) f.
 Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
 Proof.
   refine (@contr_trunc_conn (Tr (-1)) A _ _); try assumption.
-  refine (contr_inhabited_hprop _ ma).
+  exact (contr_inhabited_hprop _ ma).
 Defined.
 
 (** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)
@@ -234,7 +234,7 @@ Lemma iff_merely_issurjection {X : Type} (P : X -> Type)
 Proof.
   refine (iff_compose _ (iff_forall_inO_mapinO_pr1 (Conn _) P)).
   apply iff_functor_forall; intro a.
-  symmetry; apply (iff_contr_hprop (Tr (-1) (P a))).
+  symmetry; exact (iff_contr_hprop (Tr (-1) (P a))).
 Defined.
 
 Lemma equiv_merely_issurjection `{Funext} {X : Type} (P : X -> Type)
@@ -336,7 +336,7 @@ Proof.
     1: exact _. (* The first part is an equivalence, so it's an embedding. *)
     rapply mapinO_functor_forall_id.
     intro y.
-    apply isembedding_equiv_fun.
+    exact isembedding_equiv_fun.
   - (* The composite is an equivalence because it is homotopic to the identity. *)
     simpl.
     srapply (isequiv_homotopic idmap).

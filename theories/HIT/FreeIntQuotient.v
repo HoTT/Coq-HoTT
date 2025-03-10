@@ -45,7 +45,7 @@ Section FreeIntAction.
                    (Wtil Unit Unit idmap idmap (unit_name R) (unit_name f))
                    (cct tt) (fun r => (ppt tt r)^) b).
         rewrite ap_V; symmetry.
-        refine (inverse2
+        exact (inverse2
                   (Wtil_rec_beta_ppt
                      RmodZ (unit_name (fun r => coeq r))
                      (unit_name (fun r => (cglue r)^)) tt b) @ inv_V _).

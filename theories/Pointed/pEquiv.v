@@ -8,7 +8,7 @@ Local Open Scope pointed_scope.
 (* Pointed equivalence is a reflexive relation. *)
 Instance pequiv_reflexive : Reflexive pEquiv.
 Proof.
-  intro; apply pequiv_pmap_idmap.
+  intro; exact pequiv_pmap_idmap.
 Defined.
 
 (* We can probably get rid of the following notation, and use ^-1$ instead. *)
@@ -17,7 +17,7 @@ Notation "f ^-1*" := (@cate_inv pType _ _ _ _ hasequivs_ptype _ _ f) : pointed_s
 (* Pointed equivalence is a symmetric relation. *)
 Instance pequiv_symmetric : Symmetric pEquiv.
 Proof.
-  intros ? ?; apply pequiv_inverse.
+  intros ? ?; exact pequiv_inverse.
 Defined.
 
 (* Pointed equivalences compose. *)
@@ -28,7 +28,7 @@ Definition pequiv_compose {A B C : pType} (f : A <~>* B) (g : B <~>* C)
 (* Pointed equivalence is a transitive relation. *)
 Instance pequiv_transitive : Transitive pEquiv.
 Proof.
-  intros ? ? ?; apply pequiv_compose.
+  intros ? ? ?; exact pequiv_compose.
 Defined.
 
 Notation "g o*E f" := (pequiv_compose f g) : pointed_scope.

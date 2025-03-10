@@ -112,7 +112,7 @@ Proof.
       transitivity (ap idmap (wf ((wA ^-1) a))
                        @ (eisretr wB (wB (f ((wA ^-1) a))))^).
       * apply whiskerR, inverse, ap_idmap.
-      * apply (concat_Ap (fun b' => (eisretr wB b')^) _).
+      * exact (concat_Ap (fun b' => (eisretr wB b')^) _).
     + apply ap.
       rewrite ap_compose, !ap_V.
       apply inverse, inv_V.
@@ -120,6 +120,6 @@ Proof.
     subst p.
     rewrite <- ap_compose.
     path_via (eisretr wB _ @ ap idmap (ap f' (eisretr wA a))).
-    + apply (concat_Ap (eisretr wB) _).
+    + exact (concat_Ap (eisretr wB) _).
     + apply ap, ap_idmap.
 Defined.

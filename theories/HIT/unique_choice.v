@@ -27,5 +27,5 @@ Lemma unique_choice {X Y} (R:X->Y->Type) :
    -> {f : X -> Y & forall x, (R x (f x))}.
 intros X0 X1.
 exists (fun x:X => (pr1 (iota _ (X0 x) (X1 x)))).
-intro x. apply (pr2 (iota _ (X0 x) (X1 x))).
+intro x. exact (pr2 (iota _ (X0 x) (X1 x))).
 Qed.

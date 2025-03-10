@@ -74,7 +74,7 @@ Section CayleyDicksonSpheroid_Properties.
   #[export] Instance cds_conjug_right_inv : RightInverse (.*.) cds_conjug mon_unit.
   Proof.
     intro x.
-    lhs_V rapply (ap (.* conj x) (involutive x)).
+    lhs_V exact (ap (.* conj x) (involutive x)).
     rapply left_inverse.
   Defined.
 
@@ -105,7 +105,7 @@ Proof.
   lhs_V nrapply functor_susp_compose.
   rhs_V nrapply functor_susp_idmap.
   nrapply functor2_susp.
-  rapply involutive.
+  exact involutive.
 Defined.
 
 (** [conjugate_susp A] is involutive as any composite of commuting involutions is an involution. *)
@@ -149,7 +149,7 @@ Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)
 Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)
   : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.
 Proof.
-  srapply cds_conjug_left_inv.
+  exact cds_conjug_left_inv.
 Defined.
 
 Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)
@@ -281,7 +281,7 @@ Section ImaginaroidHSpace.
     1,2: exact (fun _ => ap _ (hspace_left_identity _)).
     intros a b.
     lhs nrapply whiskerR.
-    1: nrapply (Join_rec_beta_jglue _ _ _ a b).
+    1: exact (Join_rec_beta_jglue _ _ _ a b).
     symmetry.
     apply join_natsq.
   Defined.
@@ -294,7 +294,7 @@ Section ImaginaroidHSpace.
     1: exact (fun _ => ap joinr (hspace_left_identity _)).
     intros a b.
     lhs nrapply whiskerR.
-    1: nrapply (Join_rec_beta_jglue _ _ _ a b).
+    1: exact (Join_rec_beta_jglue _ _ _ a b).
     simpl; symmetry.
     apply join_natsq.
   Defined.

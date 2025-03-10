@@ -30,19 +30,19 @@ Section choose_has_quotient_choice.
   Local Instance reflexive_relclass
     : forall x, Reflexive (RelClassEquiv x).
   Proof.
-    intros a b. apply equiv_idmap.
+    intros a b. exact equiv_idmap.
   Qed.
 
   Local Instance symmetric_relclass
     : forall x, Symmetric (RelClassEquiv x).
   Proof.
-    intros a b1 b2 p. apply (equiv_inverse p).
+    intros a b1 b2 p. exact (equiv_inverse p).
   Qed.
 
   Local Instance transitive_relclass
     : forall x, Transitive (RelClassEquiv x).
   Proof.
-    intros a b1 b2 b3 p q. apply (equiv_compose q p).
+    intros a b1 b2 b3 p q. exact (equiv_compose q p).
   Qed.
 
   Local Instance hprop_choose_cod (a : A)
@@ -158,7 +158,7 @@ Instance isequiv_has_tr0_choice_to_has_quotient_choice
   : IsEquiv (has_quotient_choice_tr0choice A).
 Proof.
   srapply isequiv_iff_hprop.
-  - apply istrunc_forall.
+  - exact istrunc_forall.
   - apply has_tr0_choice_quotientchoice.
 Qed.
 

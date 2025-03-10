@@ -45,7 +45,7 @@ Proof.
     intros p.
     apply nlem.
     apply inl.
-    apply p.
+    exact p.
 Defined.
 
 (** DNE is equivalent to "every proposition is a negation". *)

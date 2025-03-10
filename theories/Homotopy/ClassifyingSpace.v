@@ -191,7 +191,7 @@ Definition pbloop {G : Group} : G ->* loops (B G).
 Proof.
   srapply Build_pMap.
   1: exact bloop.
-  apply bloop_id.
+  exact bloop_id.
 Defined.
 
 (* This says that [B] is left adjoint to the loop space functor from pointed 1-types to groups. *)
@@ -220,7 +220,7 @@ Section EncodeDecode.
   Local Definition codes : B G -> HSet.
   Proof.
     srapply ClassifyingSpace_rec.
-    + srapply (Build_HSet G).
+    + exact (Build_HSet G).
     + intro x.
       apply path_trunctype.
       exact (Build_Equiv _ _ (fun t => t * x) _).
@@ -265,7 +265,7 @@ Section EncodeDecode.
   Proof.
     intros b p.
     destruct p.
-    apply bloop_id.
+    exact bloop_id.
   Defined.
 
   #[export] Instance isequiv_bloop : IsEquiv (@bloop G).
@@ -431,7 +431,7 @@ Definition natequiv_g_loops_bg `{Univalence}
   : NatEquiv ptype_group (loops o B).
 Proof.
   snrapply Build_NatEquiv.
-  1: intros G; rapply pequiv_g_loops_bg.
+  1: intros G; exact pequiv_g_loops_bg.
   snrapply Build_Is1Natural.
   intros X Y f.
   symmetry.
@@ -496,7 +496,7 @@ Proof.
   snrapply isequiv_adjointify.
   { intros f.
     refine (grp_homo_compose (grp_iso_inverse _) (grp_homo_compose _ _)).
-    1,3: rapply grp_iso_g_loopgroup_bg.
+    1,3: exact grp_iso_g_loopgroup_bg.
     exact (grp_homo_loops f). }
   { intros f.
     rapply equiv_path_pforall.

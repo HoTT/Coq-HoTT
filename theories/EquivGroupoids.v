@@ -110,112 +110,112 @@ Section AssumeFunext.
   : e = g^-1 oE f -> g oE e = f.
   Proof.
     intro h.
-    refine (ap (fun e => g oE e) h @ ecompose_e_Ve _ _).
+    exact (ap (fun e => g oE e) h @ ecompose_e_Ve _ _).
   Defined.
 
   Definition emoveR_eM {A B C} (e : B <~> A) (f : B <~> C) (g : A <~> C)
   : g = f oE e^-1 -> g oE e = f.
   Proof.
     intro h.
-    refine (ap (fun g => g oE e) h @ ecompose_eV_e _ _).
+    exact (ap (fun g => g oE e) h @ ecompose_eV_e _ _).
   Defined.
 
   Definition emoveR_Ve {A B C} (e : B <~> A) (f : B <~> C) (g : C <~> A)
   : e = g oE f -> g^-1 oE e = f.
   Proof.
     intro h.
-    refine (ap (fun e => g^-1 oE e) h @ ecompose_V_ee _ _).
+    exact (ap (fun e => g^-1 oE e) h @ ecompose_V_ee _ _).
   Defined.
 
   Definition emoveR_eV {A B C} (e : A <~> B) (f : B <~> C) (g : A <~> C)
   : g = f oE e -> g oE e^-1 = f.
   Proof.
     intro h.
-    refine (ap (fun g => g oE e^-1) h @ ecompose_ee_V _ _).
+    exact (ap (fun g => g oE e^-1) h @ ecompose_ee_V _ _).
   Defined.
 
   Definition emoveL_Me {A B C} (e : A <~> B) (f : A <~> C) (g : B <~> C)
   : g^-1 oE f = e -> f = g oE e.
   Proof.
     intro h.
-    refine ((ecompose_e_Ve _ _)^ @ ap (fun e => g oE e) h).
+    exact ((ecompose_e_Ve _ _)^ @ ap (fun e => g oE e) h).
   Defined.
 
   Definition emoveL_eM {A B C} (e : A <~> B) (f : A <~> C) (g : B <~> C)
   : f oE e^-1 = g -> f = g oE e.
   Proof.
     intro h.
-    refine ((ecompose_eV_e _ _)^ @ ap (fun g => g oE e) h).
+    exact ((ecompose_eV_e _ _)^ @ ap (fun g => g oE e) h).
   Defined.
 
   Definition emoveL_Ve {A B C} (e : A <~> C) (f : A <~> B) (g : B <~> C)
   : g oE f = e -> f = g^-1 oE e.
   Proof.
     intro h.
-    refine ((ecompose_V_ee _ _)^ @ ap (fun e => g^-1 oE e) h).
+    exact ((ecompose_V_ee _ _)^ @ ap (fun e => g^-1 oE e) h).
   Defined.
 
   Definition emoveL_eV {A B C} (e : A <~> B) (f : B <~> C) (g : A <~> C)
   : f oE e = g -> f = g oE e^-1.
   Proof.
     intro h.
-    refine ((ecompose_ee_V _ _)^ @ ap (fun g => g oE e^-1) h).
+    exact ((ecompose_ee_V _ _)^ @ ap (fun g => g oE e^-1) h).
   Defined.
 
   Definition emoveL_1M {A B} (e f : A <~> B)
   : e oE f^-1 = 1 -> e = f.
   Proof.
     intro h.
-    refine ((ecompose_eV_e _ _)^ @ ap (fun ef => ef oE f) h @ ecompose_1e _).
+    exact ((ecompose_eV_e _ _)^ @ ap (fun ef => ef oE f) h @ ecompose_1e _).
   Defined.
 
   Definition emoveL_M1 {A B} (e f : A <~> B)
   : f^-1 oE e = 1 -> e = f.
   Proof.
     intro h.
-    refine ((ecompose_e_Ve _ _)^ @ ap (fun fe => f oE fe) h @ ecompose_e1 _).
+    exact ((ecompose_e_Ve _ _)^ @ ap (fun fe => f oE fe) h @ ecompose_e1 _).
   Defined.
 
   Definition emoveL_1V {A B} (e : A <~> B) (f : B <~> A)
   : e oE f = 1 -> e = f^-1.
   Proof.
     intro h.
-    refine ((ecompose_ee_V _ _)^ @ ap (fun ef => ef oE f^-1) h @ ecompose_1e _).
+    exact ((ecompose_ee_V _ _)^ @ ap (fun ef => ef oE f^-1) h @ ecompose_1e _).
   Defined.
 
   Definition emoveL_V1 {A B} (e : A <~> B) (f : B <~> A)
   : f oE e = 1 -> e = f^-1.
   Proof.
     intro h.
-    refine ((ecompose_V_ee _ _)^ @ ap (fun fe => f^-1 oE fe) h @ ecompose_e1 _).
+    exact ((ecompose_V_ee _ _)^ @ ap (fun fe => f^-1 oE fe) h @ ecompose_e1 _).
   Defined.
 
   Definition emoveR_M1 {A B} (e f : A <~> B)
   : 1 = e^-1 oE f -> e = f.
   Proof.
     intro h.
-    refine ((ecompose_e1 _)^ @ ap (fun ef => e oE ef) h @ ecompose_e_Ve _ _).
+    exact ((ecompose_e1 _)^ @ ap (fun ef => e oE ef) h @ ecompose_e_Ve _ _).
   Defined.
 
   Definition emoveR_1M {A B} (e f : A <~> B)
   : 1 = f oE e^-1 -> e = f.
   Proof.
     intro h.
-    refine ((ecompose_1e _)^ @ ap (fun fe => fe oE e) h @ ecompose_eV_e _ _).
+    exact ((ecompose_1e _)^ @ ap (fun fe => fe oE e) h @ ecompose_eV_e _ _).
   Defined.
 
   Definition emoveR_1V {A B} (e : A <~> B) (f : B <~> A)
   : 1 = f oE e -> e^-1 = f.
   Proof.
     intro h.
-    refine ((ecompose_1e _)^ @ ap (fun fe => fe oE e^-1) h @ ecompose_ee_V _ _).
+    exact ((ecompose_1e _)^ @ ap (fun fe => fe oE e^-1) h @ ecompose_ee_V _ _).
   Defined.
 
   Definition emoveR_V1 {A B} (e : A <~> B) (f : B <~> A)
   : 1 = e oE f -> e^-1 = f.
   Proof.
     intro h.
-    refine ((ecompose_e1 _)^ @ ap (fun ef => e^-1 oE ef) h @ ecompose_V_ee _ _).
+    exact ((ecompose_e1 _)^ @ ap (fun ef => e^-1 oE ef) h @ ecompose_V_ee _ _).
   Defined.
 
   (** We could package these up into tactics, much the same as the [with_rassoc] and [rewrite_move*] of [PathGroupoids.v].  I have not done so yet because there is currently no place where we would use these tactics.  If there is a use case, they are easy enough to copy from [PathGroupoids.v]. *)

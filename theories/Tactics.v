@@ -79,7 +79,7 @@ Lemma path_forall_recr_beta `{Funext} A B x0 P f g e Px
 Proof.
   etransitivity.
   - apply path_forall_recr_beta'.
-  - refine (transport_path_prod' _ _ _ _).
+  - exact (transport_path_prod' _ _ _ _).
 Defined.
 
 

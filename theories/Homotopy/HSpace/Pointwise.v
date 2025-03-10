@@ -25,7 +25,7 @@ Instance iscoherent_ishspace_map `{Funext} (X : pType) (Y : Type)
 Proof.
   hnf; cbn.
   refine (ap _ _).
-  funext y; apply iscoherent.
+  funext y; exact iscoherent.
 Defined.
 
 (** If [X] is left-invertible, so is [[Y -> X, const pt]]. *)
@@ -68,7 +68,7 @@ Proof.
     + pelim f; cbn.
       symmetry.
       lhs nrapply (concat_p1 _ @ concat_1p _ @ concat_1p _).
-      apply iscoherent.
+      exact iscoherent.
 Defined.
 
 Instance iscoherent_hspace_pmap `{Funext} (X Y : pType) `{IsCoherent X}
@@ -81,7 +81,7 @@ Proof.
   apply path_pforall.
   snrapply Build_pHomotopy.
   - intro y; cbn.
-    apply iscoherent.
+    exact iscoherent.
   - cbn.
     generalize iscoherent as isc.
     unfold left_identity, right_identity.

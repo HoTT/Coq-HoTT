@@ -49,7 +49,7 @@ Proof.
   - exact _.
   - intros T B T_inO f feq.
     cbn; intros u; pose (T_inO u).
-    refine (contr_equiv _ f); exact _.
+    exact (contr_equiv _ f).
   - intros ; exact (Join U X).
   - intros T u.
     pose (contr_inhabited_hprop _ u).

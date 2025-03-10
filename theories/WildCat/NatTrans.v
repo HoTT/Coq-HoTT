@@ -88,7 +88,7 @@ Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
 Proof.
   snrapply Build_Is1Natural.
   intros a b f; cbn.
-  refine (cat_idl _ $@ (cat_idr _)^$).
+  exact (cat_idl _ $@ (cat_idr _)^$).
 Defined.
 
 (** The composite of 1-natural transformations is 1-natural. *)
@@ -236,7 +236,7 @@ Lemma nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
 Proof.
   intros alpha.
   nrapply Build_NatTrans.
-  rapply (is1natural_natequiv alpha).
+  exact (is1natural_natequiv alpha).
 Defined.
 
 (** Throws a warning, but can probably be ignored. *)
@@ -257,7 +257,7 @@ Definition Build_NatEquiv' {A B : Type} `{IsGraph A} `{HasEquivs B}
 Proof.
   snrapply Build_NatEquiv.
   - intro a.
-    refine (Build_CatEquiv (alpha a)).
+    exact (Build_CatEquiv (alpha a)).
   - snrapply Build_Is1Natural'.
     + intros a a' f.
       refine ((cate_buildequiv_fun _ $@R _) $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).
@@ -331,7 +331,7 @@ Proof.
   snrapply Build_Is1Natural.
   intros X Y f.
   refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).
-  refine (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
+  exact (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
 Defined.
 
 (** ** Pointed natural transformations *)

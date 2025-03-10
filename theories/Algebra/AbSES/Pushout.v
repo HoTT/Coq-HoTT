@@ -221,7 +221,7 @@ Definition ap_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
 Proof.
   induction p.
   refine (_ @ ap _ _).
-  2: refine ((abses_pushout_path_data_1 f)^ @ ap _ equiv_path_absesV_1^).
+  2: exact ((abses_pushout_path_data_1 f)^ @ ap _ equiv_path_absesV_1^).
   exact equiv_path_abses_1^.
 Defined.
 
@@ -320,7 +320,7 @@ Definition abses_pushout_pmap_id `{Univalence} {A B : AbGroup}
   : abses_pushout_pmap (B:=B) (@grp_homo_id A) ==* @pmap_idmap (AbSES B A).
 Proof.
   srapply Build_pHomotopy.
-  1: apply abses_pushout_id.
+  1: exact abses_pushout_id.
   refine (_ @ (concat_p1 _)^).
   (* For some reason Coq spends time finding [x] below, so we specify it. *)
   nrapply (ap equiv_path_abses_iso
@@ -339,10 +339,10 @@ Proof.
   apply abses_path_data_to_iso.
   snrefine (_; (_, _)).
   - srapply (ab_pushout_rec (inclusion _)).
-    1: apply ab_pushout_inr.
+    1: exact ab_pushout_inr.
     intro x.
     refine (ap _ (h x) @ _).
-    apply (ab_pushout_commsq x).
+    exact (ab_pushout_commsq x).
   - apply ab_pushout_rec_beta_left.
   - rapply Quotient_ind_hprop; intros [a' e]; simpl.
     exact (ap (fun x => _ + projection E x) (grp_unit_l _)^).
@@ -431,7 +431,7 @@ Instance is1functor_abses'01 `{Univalence} {B : AbGroup^op}
 Proof.
   apply Build_Is1Functor; intros; cbn.
   - by apply abses_pushout_homotopic.
-  - apply abses_pushout_id.
+  - exact abses_pushout_id.
   - apply abses_pushout_compose.
 Defined.
 

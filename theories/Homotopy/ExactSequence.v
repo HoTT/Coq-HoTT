@@ -208,7 +208,7 @@ Proof.
   refine (conn_map_homotopic n (cxfib (cx_isexact)) _ _ _).
   intro u. simpl. srapply path_hfiber.
   1: reflexivity.
-  refine (concat_1p _ @ concat_V_pp _ _)^.
+  exact (concat_1p _ @ concat_V_pp _ _)^.
 Defined.
 
 (** And also passage across squares with equivalences. *)
@@ -313,7 +313,7 @@ Definition isexact_purely_O {O : Modality} {F X Y : pType}
   : IsExact O i f.
 Proof.
   srapply Build_IsExact.
-  1: apply cx_isexact.
+  1: exact cx_isexact.
   exact _.
 Defined.
 
@@ -556,6 +556,6 @@ Proof.
   refine (_ oE _).
   (** To apply [equiv_sigma_pfibration] we need to invert the equivalence on the fiber. *)
   { do 2 (rapply equiv_functor_sigma_id; intro).
-    apply equiv_pequiv_inverse. }
+    exact equiv_pequiv_inverse. }
   exact ((equiv_sigma_assoc _ _)^-1 oE equiv_sigma_pfibration).
 Defined.

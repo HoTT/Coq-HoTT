@@ -47,7 +47,7 @@ Proof.
   generalize dependent B; revert A.
   simple_induction n n IHn; intros A B f ?.
   - exact _.
-  - apply contr_prod.
+  - exact contr_prod.
 Defined.
 
 #[export] Instance ishprop_pathsplit (n : nat) `(f : A -> B)
@@ -63,7 +63,7 @@ Definition equiv_pathsplit_isequiv (n : nat) `(f : A -> B)
 Proof.
   refine (equiv_iff_hprop _ _).
   - apply isequiv_pathsplit.
-  - intros ?; refine (center _).
+  - intros ?; exact (center _).
 Defined.
 
 (** Path-splitness transfers across commutative squares of equivalences. *)
@@ -73,7 +73,7 @@ Lemma equiv_functor_pathsplit (n : nat) {A B C D}
 : PathSplit n f <~> PathSplit n g.
 Proof.
   destruct n as [|n].
-  1:apply equiv_idmap.
+  1:exact equiv_idmap.
   destruct n as [|n].
   - simpl.
     refine (_ *E equiv_contr_contr).
@@ -85,8 +85,8 @@ Proof.
   - refine (_ oE equiv_pathsplit_isequiv n f).
     refine ((equiv_pathsplit_isequiv n g)^-1 oE _).
     apply equiv_iff_hprop; intros e.
-    + refine (isequiv_commsq f g h k (fun a => (p a)^)).
-    + refine (isequiv_commsq' f g h k p).
+    + exact (isequiv_commsq f g h k (fun a => (p a)^)).
+    + exact (isequiv_commsq' f g h k p).
 Defined.
 
 (** A map is oo-path-split if it is n-path-split for all n.  This is also equivalent to being an equivalence. *)
@@ -102,7 +102,7 @@ Definition isequiv_oopathsplit `{f : A -> B}
            `(f : A -> B) `{IsEquiv _ _ f}
 : Contr (ooPathSplit f).
 Proof.
-  apply contr_forall.
+  exact contr_forall.
 Defined.
 
 #[export]  Instance ishprop_oopathsplit `(f : A -> B)
@@ -117,8 +117,8 @@ Definition equiv_oopathsplit_isequiv `(f : A -> B)
 : ooPathSplit f <~> IsEquiv f.
 Proof.
   refine (equiv_iff_hprop _ _).
-  - apply isequiv_oopathsplit.
-  - intros ?; refine (center _).
+  - exact isequiv_oopathsplit.
+  - intros ?; exact (center _).
 Defined.
 
 End AssumeFunext.

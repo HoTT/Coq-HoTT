@@ -63,7 +63,7 @@ Section TruncType.
     rewrite (path_sigma_hprop_V (path_universe_uncurried f)).
     refine (concat_p1 _ @ concat_1p _ @ _).
     refine (_ @ (ap inverse (concat_1p _))^ @ (ap inverse (concat_p1 _))^).
-    refine (ap_V _ _).
+    exact (ap_V _ _).
   Qed.
 
   Definition path_trunctype_pp {n : trunc_index} {A B C : TruncType n}
@@ -76,7 +76,7 @@ Section TruncType.
     refine (concat_p1 _ @ concat_1p _ @ _).
     refine (_ @ (ap _ (concat_1p _))^ @ (ap _ (concat_p1 _))^).
     refine (_ @ (ap (fun z => z @ _) (concat_1p _))^ @ (ap (fun z => z @ _) (concat_p1 _))^).
-    refine (ap_pp _ _ _).
+    exact (ap_pp _ _ _).
   Qed.
 
   Definition ap_trunctype {n : trunc_index} {A B : TruncType n} {f : A <~> B}
@@ -100,8 +100,8 @@ Section TruncType.
     intros A B.
     refine (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i j} A B)).
     case n as [ | n'].
-    - apply contr_equiv_contr_contr. (* The reason is different in this case. *)
-    - apply istrunc_equiv.
+    - exact contr_equiv_contr_contr. (* The reason is different in this case. *)
+    - exact istrunc_equiv.
   Defined.
 
   #[export] Instance isset_HProp : IsHSet HProp := _.
@@ -109,7 +109,7 @@ Section TruncType.
   #[export] Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type & IsTrunc n A } | 0.
   Proof.
     intro n.
-    apply (istrunc_equiv_istrunc _ issig_trunctype^-1).
+    exact (istrunc_equiv_istrunc _ issig_trunctype^-1).
   Defined.
 
   (** ** Some standard inhabitants *)
@@ -166,7 +166,7 @@ Section TruncType.
   Lemma equiv_path_iff_hprop {A B : HProp}
     : (A <-> B) <~> (A = B).
   Proof.
-    refine (equiv_path_trunctype' _ _ oE equiv_path_iff_ishprop).
+    exact (equiv_path_trunctype' _ _ oE equiv_path_iff_ishprop).
   Defined.
 
 End TruncType.

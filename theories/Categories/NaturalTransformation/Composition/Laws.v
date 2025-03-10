@@ -89,7 +89,7 @@ Section whisker.
     Lemma composition_of_whisker_r B (I : Functor B C)
     : (T o T') oR I = (T oR I) o (T' oR I).
     Proof.
-      path_natural_transformation; apply idpath.
+      path_natural_transformation; exact idpath.
     Qed.
   End whisker.
 End whisker.

@@ -40,7 +40,7 @@ Section ColimitProd.
     eapply iscolimit_postcompose_equiv.
     - apply equiv_sigma_prod0.
     - eapply iscolimit_precompose_equiv.
-      + symmetry; apply diagram_equiv_prod_sigma.
+      + symmetry; exact diagram_equiv_prod_sigma.
       + by apply iscolimit_sigma.
   Defined.
 

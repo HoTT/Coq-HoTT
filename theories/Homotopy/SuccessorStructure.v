@@ -102,7 +102,7 @@ Proof.
   snrapply Build_ssFam.
   1: exact (fun x => f x = g x).
   cbn; intros x p.
-  refine (ss_fun_succ f x @ ap dss_succ p @ (ss_fun_succ g x)^).
+  exact (ss_fun_succ f x @ ap dss_succ p @ (ss_fun_succ g x)^).
 Defined.
 
 Definition ssHomotopy {A : SuccStr} {P : ssFam A} (f g : ssForall P)

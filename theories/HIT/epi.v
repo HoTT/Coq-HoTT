@@ -61,14 +61,14 @@ Section cones.
     pose (tot:= { h : B -> setcone f & tr o push o inl o f = h o f }).
     transparent assert (l : tot).
     { simple refine (tr o _ o inl; _).
-      { refine push. }
-      { refine idpath. } }
+      { exact push. }
+      { exact idpath. } }
     pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f => @tr 0 _ o f) (path_forall _ _ alpha1))) : tot).
     subst tot.
     assert (X : l = r).
       { let lem := constr:(fun X push' => hepi (Build_HSet (setcone f)) (tr o push' o @inl _ X)) in
         pose (lem _ push).
-        refine (path_contr l r). }
+        exact (path_contr l r). }
     subst l r.
 
     pose (I0 b := ap10 (X ..1) b).
@@ -150,7 +150,7 @@ Section isepi_issurj.
     (** Prove that the truncated sigma is equivalent to Unit *)
     pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
     apply path_hprop. simpl. simpl in i.
-    apply (equiv_contr_unit).
+    exact (equiv_contr_unit).
   Defined.
 
   Lemma isepi_issurj : IsSurjection f.
@@ -159,7 +159,7 @@ Section isepi_issurj.
     pose (i := isepi'_contr_cone _ epif).
 
     assert (X0 : forall x : setcone f, fam x = fam (setcone_point f)).
-    { intros. apply contr_dom_equiv. apply i. }
+    { intros. apply contr_dom_equiv. exact i. }
     specialize (X0 (tr (push (inl y)))). simpl in X0.
     unfold IsConnected.
     refine (transport (fun A => Contr A) (ap trunctype_type X0)^ _); exact _.
