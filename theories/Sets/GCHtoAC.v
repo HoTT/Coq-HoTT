@@ -52,7 +52,7 @@ Proof.
   - exact (fun x => match x with inl _ => O | inr n => S n end).
   - exact (fun n => match n with O => inl tt | S n => inr n end).
   - by intros [].
-  - by intros [[]|n]. 
+  - by intros [[]|n].
 Qed.
 
 Lemma path_unit_fun X :
@@ -170,7 +170,7 @@ Fact Cantor_path_injection {X Y} :
   (X -> HProp) = (X + Y) -> (X + X) = X -> Injection (X -> HProp) Y.
 Proof.
   intros H1 H2. assert (H : X + Y = (X -> HProp) * (X -> HProp)).
-  - by rewrite <- H1, path_sum_prod, H2. 
+  - by rewrite <- H1, path_sum_prod, H2.
   - apply equiv_path in H as [f [g Hfg Hgf _]].
     pose (f' x := fst (f (inl x))). destruct (hCantor f') as [p Hp].
     pose (g' q := g (p, q)). assert (H' : forall q x, g' q <> inl x).

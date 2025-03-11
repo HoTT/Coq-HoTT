@@ -376,7 +376,7 @@ Proof.
   set (fa := (cate_fun f a) (Id a)).     (* Equivalently, [un_opyoneda_0gpd a _ f]. *)
   set (gb := (cate_fun f^-1$ b) (Id b)). (* Equivalently, [un_opyoneda_0gpd b _ f^-1$]. *)
   srapply (cate_adjointify fa gb).
-  (* [opyoneda_0gpd] is defined by postcomposition, so [opyoneda_isretr_0gpd] simplifies both LHSs.*)
+  (* [opyoneda_0gpd] is defined by postcomposition, so [opyoneda_isretr_0gpd] simplifies both LHS's.*)
   - exact (opyoneda_isretr_0gpd _ _ f^-1$ a fa $@ cat_eissect (f a) (Id a)).
   - exact (opyoneda_isretr_0gpd _ _ f     b gb $@ cat_eisretr (f b) (Id b)).
 Defined.

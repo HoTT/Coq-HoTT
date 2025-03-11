@@ -41,7 +41,7 @@ Module Export ClassifyingSpace.
     Proof. Admitted.
 
   End ClassifyingSpace.
-  
+
   Arguments bloop {G} _%_mc_mult_scope.
 
   (** Now we can state the expected dependent elimination principle, and derive other versions of the elimination principle from it. *)

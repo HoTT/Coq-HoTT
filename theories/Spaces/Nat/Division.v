@@ -672,7 +672,7 @@ Proof.
   exists k.
   rewrite nat_mul_assoc.
   rewrite p.
-  rapply nat_mul_div_cancel_r.  
+  rapply nat_mul_div_cancel_r.
 Defined.
 
 (** ** Greatest Common Divisor *)
@@ -990,7 +990,7 @@ Proof.
   by rewrite nat_gcd_idem, nat_mul_div_cancel_l.
 Defined.
 
-(** [n] divides the least common multiple of [n] and [m]. *) 
+(** [n] divides the least common multiple of [n] and [m]. *)
 Instance nat_divides_r_lcm_l n m : (n | nat_lcm n m) := _.
 
 (** [m] divides the least common multiple of [n] and [m]. *)
