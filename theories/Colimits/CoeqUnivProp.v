@@ -12,7 +12,10 @@ Require Import WildCat.EquivGpd.
 Require Import WildCat.Forall.
 Require Import WildCat.NatTrans.
 Require Import WildCat.Paths.
+Require Import WildCat.FunctorCat.
 Require Import WildCat.ZeroGroupoid.
+
+(* Successful typeclass inference in this file is sensitive to the order of imports; in particular FunctorCat should not be the last import. *)
 
 (** Using wild 0-groupoids, the universal property can be proven without funext. A simple equivalence of 0-groupoids between [Coeq f g -> P] and [{ h : A -> P & h o f == h o g }] would not carry all the higher-dimensional information, but if we generalize it to dependent functions, then it does suffice. *)
 Section UnivProp.
@@ -107,7 +110,7 @@ Section UnivProp.
       $<~> Build_ZeroGpd (sig Coeq_ind_data) _ _ _.
   Proof.
     snrapply Build_CatEquiv.
-    1: rapply Build_Morphism_0Gpd.
+    1: rapply Build_Fun01.
     rapply isequiv_0gpd_issurjinj.
   Defined.
 
