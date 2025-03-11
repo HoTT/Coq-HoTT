@@ -17,7 +17,7 @@ Record Graph := {
 Instance isgraph_graph : IsGraph Graph
   := { Hom A B := Fun01 A B }.
 
-  (** A 2-cell between graph homomorphisms $[F G : A $-> B] is a wild [Transformation], i.e., a family of 1-cells [forall x, F x $-> G x] subject to no coherence conditions. When [A] and [B] have more structure (e.g., they are 1-categories or bicategories) a stronger notion of 2-cell is appropriate, such as a (possibly lax or oplax) natural transformation.*)
+  (** A 2-cell between graph homomorphisms [F G : A $-> B] is a wild [Transformation], i.e., a family of 1-cells [forall x, F x $-> G x] subject to no coherence conditions. When [A] and [B] have more structure (e.g., they are 1-categories or bicategories) a stronger notion of 2-cell is appropriate, such as a (possibly lax or oplax) natural transformation.*)
 Instance is2graph_graph : Is2Graph Graph
   := fun A B => {| Hom F G := Transformation (fun01_F F) (fun01_F G) |}.
 

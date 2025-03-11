@@ -9,12 +9,12 @@ Require Import WildCat.Core WildCat.NatTrans WildCat.FunctorCat.
 
 (** A category is a [Type] together with a proof that it is a 1-category. *)
 Record Category := {
-    category_carrier :> Type;
-    isgraph_category_carrier :: IsGraph category_carrier;
-    is01cat_category_carrier :: Is01Cat category_carrier;
-    is2graph_category_carrier :: Is2Graph category_carrier;
-    is1cat_category_carrier :: Is1Cat category_carrier
-  }.
+  category_carrier :> Type;
+  isgraph_category_carrier :: IsGraph category_carrier;
+  is01cat_category_carrier :: Is01Cat category_carrier;
+  is2graph_category_carrier :: Is2Graph category_carrier;
+  is1cat_category_carrier :: Is1Cat category_carrier
+}.
 
 (** Morphisms of categories are given by functors. *)
 Instance isgraph_cat : IsGraph Category
