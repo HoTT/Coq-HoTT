@@ -15,6 +15,8 @@ Require Import WildCat.Paths.
 Require Import WildCat.FunctorCat.
 Require Import WildCat.ZeroGroupoid.
 
+(* Successful typeclass inference in this file is sensitive to the order of imports; in particular FunctorCat should not be the last import. *)
+
 (** Using wild 0-groupoids, the universal property can be proven without funext. A simple equivalence of 0-groupoids between [Coeq f g -> P] and [{ h : A -> P & h o f == h o g }] would not carry all the higher-dimensional information, but if we generalize it to dependent functions, then it does suffice. *)
 Section UnivProp.
   Context {B A : Type} (f g : B -> A) (P : Coeq f g -> Type).
