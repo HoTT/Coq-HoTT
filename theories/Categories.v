@@ -70,7 +70,7 @@ Require HoTT.Categories.Yoneda.
 Require HoTT.Categories.Structure.
 (** ** Fundamental Pregroupoids *)
 Require HoTT.Categories.FundamentalPreGroupoidCategory.
-(** ** Homotopy Precategory *)
+(** ** Homotopy precategory *)
 Require HoTT.Categories.HomotopyPreCategory.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
