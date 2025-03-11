@@ -317,7 +317,7 @@ Proof.
   apply (cate_epic_equiv e^-1$).
   exact (p $@ (compose_hh_V _ _)^$).
 Defined.
-  
+
 Definition cate_moveR_eM {A} `{HasEquivs A} {a b c : A}
   (e : b $<~> a) (f : a $-> c) (g : b $-> c)
   (p : f $== g $o e^-1$)
@@ -565,7 +565,7 @@ Instance is0functor_core_precomp {A : Type} `{HasEquivs A}
 Proof.
   apply Build_Is0Functor.
   intros f g al; cbn in h.
-  (** Why can't Coq resolve this? *)
+  (** TODO: Why can't Coq resolve this? *)
   refine (compose_cate_fun f h
            $@ (_ $@R h)
            $@ (compose_cate_fun g h)^$).
@@ -620,7 +620,7 @@ Proof.
 Defined.
 
 Instance hasmorext_core {A : Type} `{HasEquivs A, !HasMorExt A}
-  `{forall x y (f g : uncore x $<~> uncore y), IsEquiv (ap (x := f) (y := g) cate_fun)} 
+  `{forall x y (f g : uncore x $<~> uncore y), IsEquiv (ap (x := f) (y := g) cate_fun)}
   : HasMorExt (core A).
 Proof.
   snrapply Build_HasMorExt.

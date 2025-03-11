@@ -109,7 +109,7 @@ Proof.
   nrapply nat_dist_sub_r.
 Defined.
 
-(** The divisor is greater than zero when the dividend is greater than zero. *)
+(** The divisor is greater than zero when the number being divided is greater than zero. *)
 Definition gt_zero_divides n m (d : (n | m)) (gt0 : 0 < m)
   : 0 < n.
 Proof.
@@ -589,7 +589,7 @@ Defined.
 
 (** Dividing a number by a quotient is the same as dividing the product of the number with the denominator of the quotient by the numerator of the quotient. *)
 Definition nat_div_div_r n m k : (k | m) -> n / (m / k) = (n * k) / m.
-Proof. 
+Proof.
   intros [d r].
   destruct (nat_zero_or_gt_zero k) as [[] | kp].
   1: by rewrite nat_mul_zero_r, nat_div_zero_l.

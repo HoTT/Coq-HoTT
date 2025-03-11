@@ -111,7 +111,7 @@ End GroupCongruenceQuotient.
 Section Cosets.
 
   Context (G : Group) (H : Subgroup G).
-  
+
   Definition LeftCoset := G / in_cosetL H.
 
   (** TODO: Way too many universes, needs fixing *)
@@ -130,7 +130,7 @@ Section Cosets.
     := fcard LeftCoset.
 
   Definition RightCoset := G / in_cosetR H.
-  
+
   (** The set of left cosets is equivalent to the set of right coset. *)
   Definition equiv_leftcoset_rightcoset
     : LeftCoset <~> RightCoset.
@@ -244,7 +244,7 @@ Definition grp_quotient_rec_beta' {G : Group}
   : (grp_quotient_rec G N f h) $o grp_quotient_map == f
     := fun _ => idpath.
 
-(** The proof of normality is irrelevant up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
+(** The proof of normality is irrelevant up to equivalence. It is unfortunate that it doesn't hold definitionally. *)
 Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
   {k k' : IsNormalSubgroup H}
   : QuotientGroup' G H k ≅ QuotientGroup' G H k'.

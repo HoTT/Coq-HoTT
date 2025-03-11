@@ -123,7 +123,7 @@ Definition stable_equiv {A B} (f : A -> B) `{!IsEquiv f}
   As we see, the dead code [f x] and [f y] is actually evaluated,
   which is of course an utter waste.
   Therefore we introduce [decide_rel] and [bool_decide_rel].
-     [bool_decide_rel (=) x y -> [bool]_decide_rel (fun a b => f a = f b) x y -> ...]
+     [bool_decide_rel (=) x y -> bool_decide_rel (fun a b => f a = f b) x y -> ...]
   Now the definition of equality remains under a lambda and
   our problem does not occur anymore!
 *)

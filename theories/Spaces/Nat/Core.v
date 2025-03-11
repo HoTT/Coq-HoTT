@@ -1054,7 +1054,7 @@ Definition lt_iff_not_geq {n m} : ~(n >= m) <-> n < m
 
 (** *** Dichotomy of [<>] *)
 
-(** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence; however, one of the sections requires [Funext] since we are comparing two inequality proofs. It is therefore more useful to keep it as a bi-implication. Note that this is a negated version of antisymmetry of [<=]. *)
+(** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence; however, one of the sections requires [Funext] since we are comparing two inequality proofs. It is therefore more useful to keep it as a biimplication. Note that this is a negated version of antisymmetry of [<=]. *)
 Definition neq_iff_lt_or_gt {n m} : n <> m <-> (n < m) + (n > m).
 Proof.
   split.
