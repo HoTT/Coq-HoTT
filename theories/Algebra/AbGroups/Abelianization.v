@@ -53,11 +53,11 @@ From this we can show that Abel G is an abelian group.
 
 In fact this models the following HIT:
 
-<<<
+<<
 HIT Abel (G : Group) := 
  | abel_in : G -> Abel G
  | abel_in_comm : forall x y z, abel_in (x * (y * z)) = abel_in (x * (z * y)).
->>>
+>>
 
 We also derive [abel_in] and [abel_in_comm] from our coequalizer definition, and even prove the induction and computation rules for this HIT.
 
