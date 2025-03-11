@@ -37,7 +37,7 @@ Definition entry_Build_Vector {A : Type} {n}
   (f : forall (i : nat), (i < n)%nat -> A) i {Hi : (i < n)%nat}
   : entry (Build_Vector A n f) i = f i Hi.
 Proof.
-  snrapply nth'_Build_list.
+  snapply nth'_Build_list.
 Defined.
 
 Instance istrunc_vector@{i} (A : Type@{i}) (n : nat) k `{IsTrunc k.+2 A}
@@ -51,7 +51,7 @@ Definition path_vector@{i} (A : Type@{i}) {n : nat} (v1 v2 : Vector@{i} A n)
   : v1 = v2.
 Proof.
   rapply path_sigma_hprop@{i i i}.
-  snrapply path_list_nth'.
+  snapply path_list_nth'.
   1: exact (pr2 v1 @ (pr2 v2)^).
   intros i Hi.
   snrefine (_ @ H i (pr2 v1 # Hi) @ _).
@@ -135,8 +135,8 @@ Section VectorAddition.
 
   Definition abgroup_vector : AbGroup.
   Proof.
-    snrapply Build_AbGroup.
-    1: snrapply Build_Group.
+    snapply Build_AbGroup.
+    1: snapply Build_Group.
     5: repeat split.
     - exact (Vector A n).
     - exact vector_plus.
@@ -198,7 +198,7 @@ Section VectorScale.
   Definition isleftmodule_isleftmodule_vector
     : IsLeftModule R (abgroup_vector M n).
   Proof.
-    snrapply Build_IsLeftModule.
+    snapply Build_IsLeftModule.
     - exact vector_lact.
     - exact left_heterodistribute_vector_lact_plus.
     - exact right_heterodistribute_vector_lact_plus.

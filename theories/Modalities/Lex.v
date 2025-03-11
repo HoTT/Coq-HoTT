@@ -118,7 +118,7 @@ Section LexModality.
     : IsPullback (O_functor_square O _ _ _ _ (pullback_commsq f g)).
   Proof.
     unfold IsPullback.
-    nrapply (isequiv_homotopic
+    napply (isequiv_homotopic
                (O_rec (functor_pullback _ _ _ _ _ _ _
                                         (to_O_natural O f) (to_O_natural O g)))).
     1: apply isequiv_O_rec_O_inverts; exact _.
@@ -126,24 +126,24 @@ Section LexModality.
     etransitivity.
     1: intro x; apply O_rec_beta.
     symmetry.
-    snrapply pullback_homotopic; intros [b [c e]]; cbn.
+    snapply pullback_homotopic; intros [b [c e]]; cbn.
     all: change (to (modality_subuniv O)) with (to O).
-    - nrapply (to_O_natural O).
-    - nrapply (to_O_natural O).
+    - napply (to_O_natural O).
+    - napply (to_O_natural O).
     - Open Scope long_path_scope.
-      lhs nrapply concat_p_pp.
-      lhs nrapply (concat_p_pp _ _ _ @@ 1).
+      lhs napply concat_p_pp.
+      lhs napply (concat_p_pp _ _ _ @@ 1).
       rewrite to_O_natural_compose.
       unfold O_functor_square.
       rewrite O_functor_homotopy_beta.
       rewrite 6 concat_pp_p.
       do 3 apply whiskerL.
-      rhs_V nrapply concat_pp_p.
+      rhs_V napply concat_pp_p.
       apply moveL_pM.
-      lhs_V nrapply inv_pp.
-      rhs_V nrapply inv_Vp.
+      lhs_V napply inv_pp.
+      rhs_V napply inv_Vp.
       apply (ap inverse).
-      nrapply to_O_natural_compose.
+      napply to_O_natural_compose.
       Close Scope long_path_scope.
   Defined.
 
@@ -181,7 +181,7 @@ Section LexModality.
     pose proof (O_inverts_isconnected O (fun _:A => tt)).
     exists (OO_descend_O_inverts O O (fun _:A => tt) P tt); split.
     - apply OO_descend_O_inverts_inO.
-    - intros; nrapply OO_descend_O_inverts_beta.
+    - intros; napply OO_descend_O_inverts_beta.
   Defined.  
 
   (** RSS Theorem 3.11 (iii): in the accessible case, the universe is modal. *)

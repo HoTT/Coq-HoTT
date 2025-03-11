@@ -41,26 +41,26 @@ Section UnivProp.
 
   Local Instance isd01cat_Coeq_ind_data : IsD01Cat Coeq_ind_data.
   Proof.
-    nrapply Build_IsD01Cat.
+    napply Build_IsD01Cat.
     - intros h h' b; exact (concat_1p_p1 _).
     - intros h k j p q h' k' j' p' q' b.
-      lhs nrapply ap_pp_p.
-      lhs nrapply (whiskerL _ (p' b)).
-      lhs nrapply concat_p_pp.
-      lhs nrapply (whiskerR (q' b)).
-      nrapply concat_pp_p.
+      lhs napply ap_pp_p.
+      lhs napply (whiskerL _ (p' b)).
+      lhs napply concat_p_pp.
+      lhs napply (whiskerR (q' b)).
+      napply concat_pp_p.
   Defined.
 
   Local Instance isd0gpd_Coeq_ind_data : IsD0Gpd Coeq_ind_data.
   Proof.
     intros h k p r s p' b.
-    lhs nrapply (whiskerR (ap_V _ _)).
-    nrapply moveL_pV.
-    lhs nrapply concat_pp_p.
-    lhs nrapply (whiskerL _ (p' b)^).
-    lhs nrapply concat_p_pp.
-    lhs nrapply (whiskerR (concat_Vp _)).
-    nrapply concat_1p.
+    lhs napply (whiskerR (ap_V _ _)).
+    napply moveL_pV.
+    lhs napply concat_pp_p.
+    lhs napply (whiskerL _ (p' b)^).
+    lhs napply concat_p_pp.
+    lhs napply (whiskerR (concat_Vp _)).
+    napply concat_1p.
   Defined.
 
   (** Here is the functor. The domain is the fully-applied type of [Coeq_ind]: sections of [P] over [Coeq f g]. The codomain consists of input data for [Coeq_ind] given a 0-groupoid structure via [is0gpd_total]. *)
@@ -75,41 +75,41 @@ Section UnivProp.
   (** Use [Set Printing Implicit] to see the 0-groupoid structures described above. *)
   Local Instance is0functor_Coeq_ind_inv : Is0Functor Coeq_ind_inv.
   Proof.
-    nrapply Build_Is0Functor.
+    napply Build_Is0Functor.
     intros h k p.
     exists (p o coeq).
     intros b.
-    nrapply moveL_pM.
+    napply moveL_pM.
     exact ((apD_homotopic p (cglue b))^).
   Defined.
 
   Local Instance issurjinj_Coeq_ind_inv : IsSurjInj Coeq_ind_inv.
   Proof.
-    nrapply Build_IsSurjInj.
+    napply Build_IsSurjInj.
     - intros [h r].
       exists (Coeq_ind P h r).
       exists (fun a => idpath).
       intros b.
       apply equiv_1p_q1.
       symmetry.
-      nrapply Coeq_ind_beta_cglue.
+      napply Coeq_ind_beta_cglue.
     - intros h k [p p'].
-      snrapply Coeq_ind.
+      snapply Coeq_ind.
       1: exact p.
       intros b; specialize (p' b).
-      lhs nrapply transport_paths_FlFr_D.
-      lhs nrapply concat_pp_p.
-      lhs nrapply (whiskerL _ p').
-      lhs nrapply concat_p_pp.
-      lhs nrapply (whiskerR (concat_Vp _)).
-      nrapply concat_1p.
+      lhs napply transport_paths_FlFr_D.
+      lhs napply concat_pp_p.
+      lhs napply (whiskerL _ p').
+      lhs napply concat_p_pp.
+      lhs napply (whiskerR (concat_Vp _)).
+      napply concat_1p.
   Defined.
 
   Definition equiv_0gpd_Coeq_ind
     : Build_ZeroGpd Coeq_ind_type _ _ _
       $<~> Build_ZeroGpd (sig Coeq_ind_data) _ _ _.
   Proof.
-    snrapply Build_CatEquiv.
+    snapply Build_CatEquiv.
     1: rapply Build_Fun01.
     rapply isequiv_0gpd_issurjinj.
   Defined.
@@ -161,24 +161,24 @@ Section UnivPropNat.
           dp_compose coeq P (q b)^ (apD m (q b)^)).
   Proof.
     nrefine (ap _ _ @ (dp_apD_compose' _ _ _ (Coeq_ind P m r))^)^.
-    lhs nrapply (dp_whiskerL _ (dp_apD_compose_inv coeq P (Coeq_ind P m r))^).
-    lhs nrapply (dp_whiskerR _ (dp_whiskerR _ (dp_apD_compose_inv coeq P _)^)).
-    lhs nrapply (dp_whiskerR _ (dp_whiskerL _ (Coeq_ind_beta_cglue _ _ _ _)^)).
-    lhs nrapply (dp_whiskerR _ (dp_apD_pp _ _ _ _ _)^).
+    lhs napply (dp_whiskerL _ (dp_apD_compose_inv coeq P (Coeq_ind P m r))^).
+    lhs napply (dp_whiskerR _ (dp_whiskerR _ (dp_apD_compose_inv coeq P _)^)).
+    lhs napply (dp_whiskerR _ (dp_whiskerL _ (Coeq_ind_beta_cglue _ _ _ _)^)).
+    lhs napply (dp_whiskerR _ (dp_apD_pp _ _ _ _ _)^).
     exact (dp_apD_pp _ _ _ _ _)^.
   Defined.
 
   Local Instance is0functor_functor_Coeq_ind_data
     : Is0Functor functor_Coeq_ind_data.
   Proof.
-    nrapply Build_Is0Functor.
+    napply Build_Is0Functor.
     intros [m r] [n s] [u v].
     exists (u o k).
     intros b.
-    lhs nrapply (whiskerL _ Coeq_ind_functor_coeq_beta_cglue^).
-    rhs nrapply (whiskerR Coeq_ind_functor_coeq_beta_cglue^ _).
-    nrapply moveL_Mp.
-    lhs nrapply concat_p_pp.
+    lhs napply (whiskerL _ Coeq_ind_functor_coeq_beta_cglue^).
+    rhs napply (whiskerR Coeq_ind_functor_coeq_beta_cglue^ _).
+    napply moveL_Mp.
+    lhs napply concat_p_pp.
     lhs nrefine (transport_paths_FlFr_D (cglue b) (Coeq_ind_homotopy P u v _))^.
     apply (ds_dp (Coeq_ind P m r o _) (Coeq_ind P n s o _) _ _ _).
     exact (dp_apD_nat (Coeq_ind_homotopy P u v o _) (cglue b)).
@@ -192,7 +192,7 @@ Section UnivPropNat.
   Local Instance is0functor_functor_Coeq_ind_type
     : Is0Functor functor_Coeq_ind_type.
   Proof.
-    nrapply Build_Is0Functor.
+    napply Build_Is0Functor.
     intros m n r.
     exact (r o functor_coeq h k p q).
   Defined.
@@ -216,12 +216,12 @@ Section UnivPropNat.
     intros m.
     exists (fun _ => idpath).
     intros b; simpl.
-    lhs nrapply concat_1p; rhs nrapply concat_p1.
-    rhs nrapply (dp_apD_compose' _ _ (functor_coeq_beta_cglue h k p q b) _).
-    nrapply ap.
+    lhs napply concat_1p; rhs napply concat_p1.
+    rhs napply (dp_apD_compose' _ _ (functor_coeq_beta_cglue h k p q b) _).
+    napply ap.
     nrefine (_ @ (dp_apD_pp _ _ _ _ _)^).
-    rhs nrapply (dp_whiskerR _ (dp_apD_pp _ _ _ _ _)).
-    lhs nrapply (dp_whiskerL _ (dp_apD_compose_inv _ _ _)^).
+    rhs napply (dp_whiskerR _ (dp_apD_pp _ _ _ _ _)).
+    lhs napply (dp_whiskerL _ (dp_apD_compose_inv _ _ _)^).
     exact (dp_whiskerR _ (dp_whiskerR _ (dp_apD_compose_inv _ _ _)^)).
   Defined.
 

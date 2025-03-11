@@ -109,10 +109,10 @@ Section Smash.
     : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel' a b)
     = (Pgl a) @Dp ((Pgl b)^D).
   Proof.
-    lhs nrapply dp_apD_pp.
+    lhs napply dp_apD_pp.
     apply ap011.
     1: apply Smash_ind_beta_gluel.
-    lhs nrapply dp_apD_V.
+    lhs napply dp_apD_V.
     apply ap.
     apply Smash_ind_beta_gluel.
   Defined.
@@ -124,10 +124,10 @@ Section Smash.
     : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer' a b)
     = (Pgr a) @Dp ((Pgr b)^D).
   Proof.
-    lhs nrapply dp_apD_pp.
+    lhs napply dp_apD_pp.
     apply ap011.
     1: apply Smash_ind_beta_gluer.
-    lhs nrapply dp_apD_V.
+    lhs napply dp_apD_V.
     apply ap.
     apply Smash_ind_beta_gluer.
   Defined.
@@ -139,7 +139,7 @@ Section Smash.
     : apD (Smash_ind Psm Pl Pr Pgl Pgr) (glue a b)
     = ((Pgl a) @Dp ((Pgl pt)^D)) @Dp ((Pgr pt) @Dp ((Pgr b)^D)).
   Proof.
-    lhs nrapply dp_apD_pp.
+    lhs napply dp_apD_pp.
     apply ap011.
     - apply Smash_ind_beta_gluel'.
     - apply Smash_ind_beta_gluer'.
@@ -161,30 +161,30 @@ Section Smash.
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a : X)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a.
   Proof.
-    rhs_V nrapply (eissect dp_const).
+    rhs_V napply (eissect dp_const).
     apply moveL_equiv_V.
-    lhs_V nrapply dp_apD_const.
-    nrapply Smash_ind_beta_gluel.
+    lhs_V napply dp_apD_const.
+    napply Smash_ind_beta_gluel.
   Defined.
 
   Definition Smash_rec_beta_gluer {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (b : Y)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.
   Proof.
-    rhs_V nrapply (eissect dp_const).
+    rhs_V napply (eissect dp_const).
     apply moveL_equiv_V.
-    lhs_V nrapply dp_apD_const.
-    nrapply Smash_ind_beta_gluer.
+    lhs_V napply dp_apD_const.
+    napply Smash_ind_beta_gluer.
   Defined.
 
   Definition Smash_rec_beta_gluel' {P : Type} {Psm : X -> Y -> P} {Pl Pr : P}
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : X)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel' a b) = Pgl a @ (Pgl b)^.
   Proof.
-    lhs nrapply ap_pp.
+    lhs napply ap_pp.
     f_ap.
     1: apply Smash_rec_beta_gluel.
-    lhs nrapply ap_V.
+    lhs napply ap_V.
     apply inverse2.
     apply Smash_rec_beta_gluel.
   Defined.
@@ -193,10 +193,10 @@ Section Smash.
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : Y)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer' a b) = Pgr a @ (Pgr b)^.
   Proof.
-    lhs nrapply ap_pp.
+    lhs napply ap_pp.
     f_ap.
     1: apply Smash_rec_beta_gluer.
-    lhs nrapply ap_V.
+    lhs napply ap_V.
     apply inverse2.
     apply Smash_rec_beta_gluer.
   Defined.
@@ -206,7 +206,7 @@ Section Smash.
     (b : Y) : ap (Smash_rec Psm Pl Pr Pgl Pgr) (glue a b)
     = ((Pgl a) @ (Pgl pt)^) @ (Pgr pt @ (Pgr b)^).
   Proof.
-    lhs nrapply ap_pp.
+    lhs napply ap_pp.
     f_ap.
     - apply Smash_rec_beta_gluel'.
     - apply Smash_rec_beta_gluer'.
@@ -229,7 +229,7 @@ Definition Smash_ind_FlFr {A B : pType} {P : Type} (f g : Smash A B -> P)
   (Hgluer : forall b, ap f (gluer b) @ Hr = Hsm pt b @ ap g (gluer b))
   : f == g.
 Proof.
-  snrapply (Smash_ind Hsm Hl Hr).
+  snapply (Smash_ind Hsm Hl Hr).
   - intros a.
     transport_paths FlFr.
     exact (Hgluel a).
@@ -247,7 +247,7 @@ Definition Smash_ind_FFlr {A B : pType} {P : Type}
   (Hgluer : forall b, ap g (ap f (gluer b)) @ Hr = Hsm pt b @ gluer b)
   : g o f == idmap.
 Proof.
-  snrapply (Smash_ind Hsm Hl Hr).
+  snapply (Smash_ind Hsm Hl Hr).
   - intros a; cbn beta.
     transport_paths FFlr.
     exact (Hgluel a).
@@ -262,12 +262,12 @@ Definition functor_smash {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
   : Smash A B $-> Smash X Y.
 Proof.
   srapply Build_pMap.
-  - snrapply (Smash_rec (fun a b => sm (f a) (g b)) auxl auxr).
+  - snapply (Smash_rec (fun a b => sm (f a) (g b)) auxl auxr).
     + intro a; cbn beta.
-      rhs_V nrapply (gluel (f a)).
+      rhs_V napply (gluel (f a)).
       exact (ap011 _ 1 (point_eq g)).
     + intro b; cbn beta.
-      rhs_V nrapply (gluer (g b)).
+      rhs_V napply (gluer (g b)).
       exact (ap011 _ (point_eq f) 1).
   - exact (ap011 _ (point_eq f) (point_eq g)).
 Defined.
@@ -275,18 +275,18 @@ Defined.
 Definition functor_smash_idmap (X Y : pType)
   : functor_smash (@pmap_idmap X) (@pmap_idmap Y) $== pmap_idmap.
 Proof.
-  snrapply Build_pHomotopy.
-  { snrapply Smash_ind_FlFr.
+  snapply Build_pHomotopy.
+  { snapply Smash_ind_FlFr.
     1-3: reflexivity.
     - intros x.
       apply equiv_p1_1q.
-      rhs nrapply ap_idmap.
-      lhs nrapply Smash_rec_beta_gluel.
+      rhs napply ap_idmap.
+      lhs napply Smash_rec_beta_gluel.
       apply concat_1p.
     - intros y.
       apply equiv_p1_1q.
-      rhs nrapply ap_idmap.
-      lhs nrapply Smash_rec_beta_gluer.
+      rhs napply ap_idmap.
+      lhs napply Smash_rec_beta_gluer.
       apply concat_1p. }
   reflexivity.
 Defined.
@@ -296,26 +296,26 @@ Definition functor_smash_compose {X Y A B C D : pType}
   : functor_smash (h $o f) (k $o g) $== functor_smash h k $o functor_smash f g.
 Proof.
   pointed_reduce.
-  snrapply Build_pHomotopy.
-  { snrapply Smash_ind_FlFr.
+  snapply Build_pHomotopy.
+  { snapply Smash_ind_FlFr.
     1-3: reflexivity.
     - intros x.
       apply equiv_p1_1q.
-      lhs nrapply Smash_rec_beta_gluel.
+      lhs napply Smash_rec_beta_gluel.
       symmetry.
-      lhs nrapply (ap_compose (functor_smash _ _) _ (gluel x)).
-      lhs nrapply ap.
-      2: nrapply Smash_rec_beta_gluel.
-      lhs nrapply Smash_rec_beta_gluel.
+      lhs napply (ap_compose (functor_smash _ _) _ (gluel x)).
+      lhs napply ap.
+      2: napply Smash_rec_beta_gluel.
+      lhs napply Smash_rec_beta_gluel.
       apply concat_1p.
     - intros y.
       apply equiv_p1_1q.
-      lhs nrapply Smash_rec_beta_gluer.
+      lhs napply Smash_rec_beta_gluer.
       symmetry.
-      lhs nrapply (ap_compose (functor_smash _ _) _ (gluer y)).
-      lhs nrapply ap.
-      2: nrapply Smash_rec_beta_gluer.
-      lhs nrapply Smash_rec_beta_gluer.
+      lhs napply (ap_compose (functor_smash _ _) _ (gluer y)).
+      lhs napply ap.
+      2: napply Smash_rec_beta_gluer.
+      lhs napply Smash_rec_beta_gluer.
       apply concat_1p. }
   reflexivity.
 Defined.
@@ -326,26 +326,26 @@ Definition functor_smash_homotopic {X Y A B : pType}
   : functor_smash f g $== functor_smash h k.
 Proof.
   pointed_reduce.
-  snrapply Build_pHomotopy.
-  { snrapply Smash_ind_FlFr.
+  snapply Build_pHomotopy.
+  { snapply Smash_ind_FlFr.
     1: exact (fun x y => ap011 _ (p x) (q y)).
     1,2: reflexivity.
     - intros x.
-      lhs nrapply concat_p1.
-      lhs nrapply Smash_rec_beta_gluel.
-      rhs nrapply whiskerL.
-      2: nrapply Smash_rec_beta_gluel.
+      lhs napply concat_p1.
+      lhs napply Smash_rec_beta_gluel.
+      rhs napply whiskerL.
+      2: napply Smash_rec_beta_gluel.
       simpl; induction (p x); simpl.
-      rhs_V nrapply concat_pp_p.
+      rhs_V napply concat_pp_p.
       apply whiskerR.
-      nrapply ap_pp.
+      napply ap_pp.
     - intros y.
-      lhs nrapply concat_p1.
-      lhs nrapply Smash_rec_beta_gluer.
-      rhs nrapply whiskerL.
-      2: nrapply Smash_rec_beta_gluer.
+      lhs napply concat_p1.
+      lhs napply Smash_rec_beta_gluer.
+      rhs napply whiskerL.
+      2: napply Smash_rec_beta_gluer.
       simpl; induction (q y); simpl.
-      rhs_V nrapply concat_pp_p.
+      rhs_V napply concat_pp_p.
       apply whiskerR.
       exact (ap011_pp _ _ _ 1 1). }
   exact (ap022 _ (concat_p1 (p pt))^ (concat_p1 (q pt))^ @ (concat_p1 _)^).
@@ -353,17 +353,17 @@ Defined.
 
 #[export] Instance is0bifunctor_smash : Is0Bifunctor Smash.
 Proof.
-  snrapply Build_Is0Bifunctor'.
+  snapply Build_Is0Bifunctor'.
   1,2: exact _.
-  nrapply Build_Is0Functor.
+  napply Build_Is0Functor.
   intros [X Y] [A B] [f g].
   exact (functor_smash f g).
 Defined.
 
 #[export] Instance is1bifunctor_smash : Is1Bifunctor Smash.
 Proof.
-  snrapply Build_Is1Bifunctor'.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Bifunctor'.
+  snapply Build_Is1Functor.
   - intros [X Y] [A B] [f g] [h i] [p q].
     exact (functor_smash_homotopic p q).
   - intros [X Y].
@@ -380,25 +380,25 @@ Definition pswap (X Y : pType) : Smash X Y $-> Smash Y X
 Definition pswap_pswap {X Y : pType}
   : pswap X Y $o pswap Y X $== pmap_idmap.
 Proof.
-  snrapply Build_pHomotopy.
-  - snrapply Smash_ind_FFlr.
+  snapply Build_pHomotopy.
+  - snapply Smash_ind_FFlr.
     1-3: reflexivity.
     + intros y.
       apply equiv_p1_1q.
-      lhs nrapply ap.
+      lhs napply ap.
       1: apply Smash_rec_beta_gluel.
-      nrapply Smash_rec_beta_gluer.
+      napply Smash_rec_beta_gluer.
     + intros x.
       apply equiv_p1_1q.
-      lhs nrapply ap.
+      lhs napply ap.
       1: apply Smash_rec_beta_gluer.
-      nrapply Smash_rec_beta_gluel.
+      napply Smash_rec_beta_gluel.
   - reflexivity.
 Defined.
 
 Definition pequiv_pswap {X Y : pType} : Smash X Y $<~> Smash Y X.
 Proof.
-  snrapply cate_adjointify.
+  snapply cate_adjointify.
   1,2: exact (pswap _ _).
   1,2: exact pswap_pswap.
 Defined.
@@ -407,35 +407,35 @@ Definition pswap_natural {A B X Y : pType} (f : A $-> X) (g : B $-> Y)
   : pswap X Y $o functor_smash f g $== functor_smash g f $o pswap A B.
 Proof.
   pointed_reduce.
-  snrapply Build_pHomotopy.
-  - snrapply Smash_ind_FlFr.
+  snapply Build_pHomotopy.
+  - snapply Smash_ind_FlFr.
     1-3: reflexivity.
     + intros a.
       apply equiv_p1_1q.
-      rhs nrapply (ap_compose (pswap _ _) _ (gluel a)).
-      rhs nrapply ap.
+      rhs napply (ap_compose (pswap _ _) _ (gluel a)).
+      rhs napply ap.
       2: apply Smash_rec_beta_gluel.
-      rhs nrapply Smash_rec_beta_gluer.
-      lhs nrapply (ap_compose (functor_smash _ _) (pswap _ _) (gluel a)).
-      lhs nrapply ap.
+      rhs napply Smash_rec_beta_gluer.
+      lhs napply (ap_compose (functor_smash _ _) (pswap _ _) (gluel a)).
+      lhs napply ap.
       1: apply Smash_rec_beta_gluel.
       simpl.
-      lhs nrapply ap.
+      lhs napply ap.
       1: apply concat_1p.
-      rhs nrapply concat_1p.
-      nrapply Smash_rec_beta_gluel.
+      rhs napply concat_1p.
+      napply Smash_rec_beta_gluel.
     + intros b.
       apply equiv_p1_1q.
-      rhs nrapply (ap_compose (pswap _ _) (functor_smash _ _) (gluer b)).
-      rhs nrapply ap.
+      rhs napply (ap_compose (pswap _ _) (functor_smash _ _) (gluer b)).
+      rhs napply ap.
       2: apply Smash_rec_beta_gluer.
-      rhs nrapply Smash_rec_beta_gluel.
-      lhs nrapply (ap_compose (functor_smash _ _) (pswap _ _) (gluer b)).
-      lhs nrapply ap.
+      rhs napply Smash_rec_beta_gluel.
+      lhs napply (ap_compose (functor_smash _ _) (pswap _ _) (gluer b)).
+      lhs napply ap.
       1: apply Smash_rec_beta_gluer.
-      lhs nrapply ap.
+      lhs napply ap.
       1: apply concat_1p.
-      rhs nrapply concat_1p.
-      nrapply Smash_rec_beta_gluer.
+      rhs napply concat_1p.
+      napply Smash_rec_beta_gluer.
   - reflexivity.
 Defined.

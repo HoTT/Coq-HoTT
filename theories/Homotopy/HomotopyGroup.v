@@ -121,9 +121,9 @@ Instance is0functor_pi1 : Is0Functor Pi1.
 Proof.
   apply Build_Is0Functor.
   intros X Y f.
-  snrapply Build_GroupHomomorphism.
-  { rapply (fmap (Tr 0)).
-    rapply (fmap loops).
+  snapply Build_GroupHomomorphism.
+  { tapply (fmap (Tr 0)).
+    tapply (fmap loops).
     assumption. }
   (** Note: we don't have to be careful about which paths we choose here since we are trying to inhabit a proposition. *)
   intros x y.
@@ -197,14 +197,14 @@ Definition pi_loops n X : Pi n.+1 X <~>* Pi n (loops X).
 Proof.
   destruct n.
   1: reflexivity.
-  rapply (emap (pTr 0 o loops)).
+  tapply (emap (pTr 0 o loops)).
   apply unfold_iterated_loops'.
 Defined.
 
 (** Except in the lowest case, this can be expressed as an isomorphism of groups. *)
 Definition groupiso_pi_loops n X : Pi n.+2 X $<~> Pi n.+1 (loops X).
 Proof.
-  snrapply (groupiso_pi_functor 0).
+  snapply (groupiso_pi_functor 0).
   apply unfold_iterated_loops'.
 Defined.
 
@@ -230,8 +230,8 @@ Proof.
                                (pequiv_ppi_ptr_iterated_loops _ _))^-1* o*E _).
   (* For this composite, the proof is straightforward. *)
   refine (_ o*E pequiv_ptr_functor 0 _).
-  1: nrapply iterated_loops_prod.
-  snrapply Build_pEquiv'; cbn.
+  1: napply iterated_loops_prod.
+  snapply Build_pEquiv'; cbn.
   - exact (equiv_O_prod_cmp 0 _ _).
   - reflexivity.
 Defined.
@@ -240,13 +240,13 @@ Defined.
 Definition pi_prod {n : nat} (X Y : pType)
   : pPi n (X * Y) <~>* (pPi n X) * (pPi n Y).
 Proof.
-  snrapply Build_pEquiv.
+  snapply Build_pEquiv.
   (* This describes the natural map. *)
   - rapply (equiv_pprod_coind (pfam_const _) (pfam_const _)); split.
     + exact (fmap (pPi n) (@pfst X Y)).
     + exact (fmap (pPi n) (@psnd X Y)).
   (* To see that it is an equivalence, we show that it is homotopic to [pi_prod']. *)
-  - snrapply (isequiv_homotopic' (pi_prod' X Y)).
+  - snapply (isequiv_homotopic' (pi_prod' X Y)).
     intro xy.
     destruct n; strip_truncations.
     + apply path_prod; reflexivity.
@@ -260,7 +260,7 @@ Defined.
 Lemma grp_iso_pi_prod {n : nat} (X Y : pType)
   : GroupIsomorphism (Pi n.+1 (X * Y)) (grp_prod (Pi n.+1 X) (Pi n.+1 Y)).
 Proof.
-  snrapply Build_GroupIsomorphism.
+  snapply Build_GroupIsomorphism.
   (* The underlying map is the natural one, so it is automatically a group homomorphism. *)
   - apply grp_prod_corec.
     + exact (fmap (Pi n.+1) (@pfst X Y)).
@@ -289,7 +289,7 @@ Instance isequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
   : IsEquiv (fmap (pPi n) f).
 Proof.
   (* For [n = 0] and [n] a successor, [fmap (pPi n) f] is definitionally equal to the map in the previous result as a map of types. *)
-  destruct n; rapply isequiv_pi_connmap'.
+  destruct n; tapply isequiv_pi_connmap'.
 Defined.
 
 Definition pequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
@@ -340,7 +340,7 @@ Proposition isembedding_pi_psect {n : nat} {X Y : pType}
   : IsEmbedding (fmap (pPi n) s).
 Proof.
   apply isembedding_isinj_hset.
-  rapply (isinj_section (r:=fmap (pPi n) r)).
+  tapply (isinj_section (r:=fmap (pPi n) r)).
   intro x.
   lhs_V exact (fmap_comp (pPi n) s r x).
   lhs exact (fmap2 (pPi n) k x).

@@ -76,34 +76,34 @@ Section Reduction.
   Proof.
     intros x y.
     strip_truncations.
-    revert x; snrapply Coeq_rec.
+    revert x; snapply Coeq_rec.
     { intros x; revert y.
-      snrapply Coeq_rec.
+      snapply Coeq_rec.
       { intros y.
         exact (freegroup_eta (x ++ y)). }
       intros [[y a] z]; simpl.
       change (freegroup_eta (x ++ y ++ ([a] ++ [a^'] ++ z))
         = freegroup_eta (x ++ y ++ z)).
-      rhs nrapply ap.
-      2: nrapply app_assoc.
-      lhs nrapply ap.
-      1: nrapply app_assoc.
-      nrapply (freegroup_tau _ a). }
+      rhs napply ap.
+      2: napply app_assoc.
+      lhs napply ap.
+      1: napply app_assoc.
+      napply (freegroup_tau _ a). }
     intros [[c b] d].
     revert y.
     srapply Coeq_ind_hprop.
     intro a.
     change (freegroup_eta ((c ++ [b] ++ [b^'] ++ d) ++ a)
       = freegroup_eta ((c ++ d) ++ a)).
-    lhs_V nrapply ap.
-    1: nrapply app_assoc.
-    lhs_V nrapply (ap (fun x => freegroup_eta (c ++ x))).
-    1: nrapply app_assoc.
-    lhs_V nrapply (ap (fun x => freegroup_eta (c ++ _ ++ x))).
-    1: nrapply app_assoc.
-    rhs_V nrapply ap.
-    2: nrapply app_assoc.
-    nrapply freegroup_tau.
+    lhs_V napply ap.
+    1: napply app_assoc.
+    lhs_V napply (ap (fun x => freegroup_eta (c ++ x))).
+    1: napply app_assoc.
+    lhs_V napply (ap (fun x => freegroup_eta (c ++ _ ++ x))).
+    1: napply app_assoc.
+    rhs_V napply ap.
+    2: napply app_assoc.
+    napply freegroup_tau.
   Defined.
 
   (** The unit of the free group is the empty word *)
@@ -119,20 +119,20 @@ Section Reduction.
     : word_change_sign (x ++ y) = word_change_sign y ++ word_change_sign x.
   Proof.
     unfold word_change_sign.
-    lhs nrapply (ap reverse).
-    1: nrapply list_map_app.
-    nrapply reverse_app.
+    lhs napply (ap reverse).
+    1: napply list_map_app.
+    napply reverse_app.
   Defined.
 
   (** This is also involutive *)
   Lemma word_change_sign_inv x : word_change_sign (word_change_sign x) = x.
   Proof.
     unfold word_change_sign.
-    lhs_V nrapply list_map_reverse.
-    lhs nrapply ap.
-    1: nrapply reverse_reverse. 
-    lhs_V nrapply list_map_compose.
-    snrapply list_map_id.
+    lhs_V napply list_map_reverse.
+    lhs napply ap.
+    1: napply reverse_reverse. 
+    lhs_V napply list_map_compose.
+    snapply list_map_id.
     intros a ?.
     apply change_sign_inv.
   Defined.
@@ -142,15 +142,15 @@ Section Reduction.
   Proof.
     induction x.
     1: reflexivity.
-    lhs nrapply (ap (fun x => freegroup_eta (x ++ _))).
-    1: nrapply reverse_cons.
+    lhs napply (ap (fun x => freegroup_eta (x ++ _))).
+    1: napply reverse_cons.
     change (freegroup_eta ((word_change_sign x ++ [a^']) ++ [a] ++ x)
       = mon_unit). 
-    lhs_V nrapply ap.
-    1: nrapply app_assoc.
+    lhs_V napply ap.
+    1: napply app_assoc.
     set (a' := a^').
     rewrite <- (change_sign_inv a).
-    lhs nrapply freegroup_tau.
+    lhs napply freegroup_tau.
     exact IHx.
   Defined.
 
@@ -174,20 +174,20 @@ Section Reduction.
       exact (word_change_sign x). }
     intros [[b a] c].
     unfold map1, map2.
-    lhs nrapply ap.
-    { lhs nrapply word_change_sign_ww.
-      nrapply (ap (fun x => x ++ _)). 
-      lhs nrapply word_change_sign_ww.
-      nrapply (ap (fun x => x ++ _)). 
-      lhs nrapply word_change_sign_ww.
-      nrapply (ap (fun x => _ ++ x)).
+    lhs napply ap.
+    { lhs napply word_change_sign_ww.
+      napply (ap (fun x => x ++ _)). 
+      lhs napply word_change_sign_ww.
+      napply (ap (fun x => x ++ _)). 
+      lhs napply word_change_sign_ww.
+      napply (ap (fun x => _ ++ x)).
       exact (word_change_sign_inv [a]). }
-    lhs_V nrapply ap.
-    1: rhs_V nrapply app_assoc.
-    1: nrapply app_assoc.
-    rhs nrapply ap.
-    2: nrapply word_change_sign_ww.
-    nrapply freegroup_tau.
+    lhs_V napply ap.
+    1: rhs_V napply app_assoc.
+    1: napply app_assoc.
+    rhs napply ap.
+    2: napply word_change_sign_ww.
+    napply freegroup_tau.
   Defined.
 
   (** Now we can start to prove the group laws. Since these are hprops we can ignore what happens with the path constructor. *)
@@ -200,8 +200,8 @@ Section Reduction.
     revert x; srapply Coeq_ind_hprop; intro x.
     revert y; srapply Coeq_ind_hprop; intro y.
     revert z; srapply Coeq_ind_hprop; intro z.
-    nrapply (ap (tr o coeq)).
-    nrapply app_assoc.
+    napply (ap (tr o coeq)).
+    napply app_assoc.
   Defined.
 
   (** Left identity *)
@@ -218,7 +218,7 @@ Section Reduction.
     rapply Trunc_ind.
     srapply Coeq_ind_hprop; intros x.
     apply (ap tr), ap.
-    nrapply app_nil.
+    napply app_nil.
   Defined.
 
   (** Left inverse *)
@@ -240,7 +240,7 @@ Section Reduction.
   (** Finally we have defined the free group on [A] *)
   Definition FreeGroup : Group.
   Proof.
-    snrapply (Build_Group freegroup_type); repeat split; exact _.
+    snapply (Build_Group freegroup_type); repeat split; exact _.
   Defined.
   
   Definition word_rec (G : Group) (s : A -> G) : A + A -> G.
@@ -264,7 +264,7 @@ Section Reduction.
     : words_rec G s (x :: xs)%list = word_rec G s x * words_rec G s xs.
   Proof.
     induction xs in x |- *.
-    - symmetry; nrapply grp_unit_r.
+    - symmetry; napply grp_unit_r.
     - reflexivity.
   Defined.
 
@@ -272,13 +272,13 @@ Section Reduction.
     : words_rec G s (x ++ y) = words_rec G s x * words_rec G s y.
   Proof.
     induction x as [|x xs IHxs] in y |- *.
-    - symmetry; nrapply grp_unit_l.
+    - symmetry; napply grp_unit_l.
     - change ((?x :: ?xs) ++ y) with (x :: xs ++ y).
-      lhs nrapply words_rec_cons.
-      lhs nrapply ap.
-      1: nrapply IHxs.
-      lhs nrapply grp_assoc.
-      nrapply (ap (.* _)).
+      lhs napply words_rec_cons.
+      lhs napply ap.
+      1: napply IHxs.
+      lhs napply grp_assoc.
+      napply (ap (.* _)).
       symmetry.
       apply words_rec_cons.
   Defined.
@@ -287,24 +287,24 @@ Section Reduction.
     : words_rec G s (map1 (b, a, c)) = words_rec G s (map2 (b, a, c)).
   Proof.
     unfold map1, map2.
-    rhs nrapply (words_rec_pp G s).
-    lhs nrapply words_rec_pp.
-    nrapply (ap (_ *.)).
-    lhs nrapply words_rec_pp.
-    lhs nrapply ap.
-    1: nrapply words_rec_pp.
-    lhs nrapply grp_assoc.
-    rhs_V nrapply grp_unit_l.
-    nrapply (ap (.* _)).
+    rhs napply (words_rec_pp G s).
+    lhs napply words_rec_pp.
+    napply (ap (_ *.)).
+    lhs napply words_rec_pp.
+    lhs napply ap.
+    1: napply words_rec_pp.
+    lhs napply grp_assoc.
+    rhs_V napply grp_unit_l.
+    napply (ap (.* _)).
     destruct a; simpl.
-    - nrapply grp_inv_r.
-    - nrapply grp_inv_l.
+    - napply grp_inv_r.
+    - napply grp_inv_l.
   Defined.
 
   (** Given a group [G] we can construct a group homomorphism [FreeGroup A $-> G] if we have a map [A -> G]. *)
   Definition FreeGroup_rec {G : Group} (s : A -> G) : FreeGroup $-> G.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     { rapply Trunc_rec.
       srapply Coeq_rec.
       1: apply words_rec, s.
@@ -366,8 +366,8 @@ Section Reduction.
     - exact (concat (grp_homo_unit f) (grp_homo_unit f')^).
     - exact H.
     - intros x y p q. refine (grp_homo_op_agree f f' _ q).
-      lhs nrapply grp_homo_inv.
-      rhs nrapply grp_homo_inv.
+      lhs napply grp_homo_inv.
+      rhs napply grp_homo_inv.
       exact (ap _ p).
   Defined.
 
@@ -377,16 +377,16 @@ Section Reduction.
     : IsFreeGroupOn A FreeGroup freegroup_in.
   Proof.
     intros G f.
-    snrapply Build_Contr.
+    snapply Build_Contr.
     { srefine (_;_); simpl.
       1: apply FreeGroup_rec, f.
       intro x; reflexivity. }
     intros [g h].
-    nrapply path_sigma_hprop; [ exact _ |].
+    napply path_sigma_hprop; [ exact _ |].
     simpl.
     apply equiv_path_grouphomomorphism.
     symmetry.
-    snrapply FreeGroup_ind_homotopy.
+    snapply FreeGroup_ind_homotopy.
     exact h.
   Defined.
 
@@ -464,7 +464,7 @@ Proof.
   1: intros ? ?; exact (equiv_isequiv (equiv_isfreegroupon_rec)^-1).
   intros k G g.
   specialize (k G).
-  snrapply contr_equiv'.
+  snapply contr_equiv'.
   1: exact (hfiber (fun f x => grp_homo_map f (i x)) g).
   { rapply equiv_functor_sigma_id.
     intro y; symmetry.
@@ -489,7 +489,7 @@ Section FreeGroupGenerated.
   Proof.
     apply isfreegroupon_rec.
     intro s.
-    snrapply subgroup_generated_gen_incl.
+    snapply subgroup_generated_gen_incl.
     - exact (i s).
     - exact (s; idpath).
   Defined.
@@ -512,7 +512,7 @@ Section FreeGroupGenerated.
   Definition isgenerated_isfreegroupon
     : isgeneratedby F_S (hfiber i).
   Proof.
-    snrapply issurj_retr.
+    snapply issurj_retr.
     - exact to_subgroup_generated.
     - apply ap10; cbn.
       exact (ap grp_homo_map is_retraction).
@@ -531,7 +531,7 @@ Section FreeGroupGenerated.
   Definition iso_subgroup_incl_freegroupon
     : GroupIsomorphism (subgroup_generated (hfiber i)) F_S.
   Proof.
-    nrapply Build_GroupIsomorphism.
+    napply Build_GroupIsomorphism.
     exact isequiv_subgroup_incl_freegroupon.
   Defined.
 
@@ -542,40 +542,40 @@ End FreeGroupGenerated.
 Definition freegroup_rec_in {A : Type}
   : FreeGroup_rec freegroup_in $== Id (FreeGroup A).
 Proof.
-  by snrapply FreeGroup_ind_homotopy.
+  by snapply FreeGroup_ind_homotopy.
 Defined.
 
 Definition freegroup_rec_compose {A : Type} {G H : Group}
   (f : A -> G) (k : G $-> H)
   : FreeGroup_rec (k o f) $== k $o FreeGroup_rec f.
 Proof.
-  by snrapply FreeGroup_ind_homotopy; intros x.
+  by snapply FreeGroup_ind_homotopy; intros x.
 Defined.
 
 Definition freegroup_const {A : Type} {G : Group}
   : FreeGroup_rec (fun _ : A => 1) $== @grp_homo_const _ G.
 Proof.
-  by snrapply FreeGroup_ind_homotopy.
+  by snapply FreeGroup_ind_homotopy.
 Defined.
   
 (** ** Functoriality *)
 
 Instance is0functor_freegroup : Is0Functor FreeGroup.
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros X Y f.
-  snrapply FreeGroup_rec.
+  snapply FreeGroup_rec.
   exact (freegroup_in o f).
 Defined.
 
 Instance is1functor_freegroup : Is1Functor FreeGroup.
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros X Y f g p.
-    snrapply FreeGroup_ind_homotopy.
+    snapply FreeGroup_ind_homotopy.
     intros x.
     exact (ap freegroup_in (p x)).
   - intro; exact freegroup_rec_in.
   - intros X Y Z f g.
-    by snrapply FreeGroup_ind_homotopy.
+    by snapply FreeGroup_ind_homotopy.
 Defined.

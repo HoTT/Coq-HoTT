@@ -206,6 +206,6 @@ Definition fun11_compose {A B C} `{Is1Cat A, Is1Cat B, Is1Cat C}
   : Fun11 B C -> Fun11 A B -> Fun11 A C.
 Proof.
   intros F G.
-  nrapply Build_Fun11.
+  napply Build_Fun11.
   exact (is1functor_compose G F).
 Defined.

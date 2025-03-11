@@ -95,7 +95,7 @@ Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
   : equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.
 Proof.
   apply path_equiv, path_arrow.
-  nrapply transport_pp.
+  napply transport_pp.
 Defined.
 
 Definition path_universe_compose_uncurried {A B C : Type}

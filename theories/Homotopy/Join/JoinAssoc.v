@@ -12,11 +12,11 @@ Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
 Definition trijoinrecdata_twist (A B C P : Type)
   : trijoinrecdata_0gpd A B C P $-> trijoinrecdata_0gpd B A C P.
 Proof.
-  snrapply Build_Fun01.
+  snapply Build_Fun01.
   (* The map of types [TriJoinRecData A B C P -> TriJoinRecData B A C P]: *)
   - cbn.
     intros [f1 f2 f3 f12 f13 f23 f123].
-    snrapply (Build_TriJoinRecData f2 f1 f3).
+    snapply (Build_TriJoinRecData f2 f1 f3).
     + intros b a; exact (f12 a b)^.
     + exact f23.
     + exact f13.
@@ -26,7 +26,7 @@ Proof.
   (* It respects the paths. *)
   - apply Build_Is0Functor.
     intros f g h; cbn in *.
-    snrapply Build_TriJoinRecPath; intros; simpl.
+    snapply Build_TriJoinRecPath; intros; simpl.
     1, 2, 3, 5, 6: apply h.
     + cbn zeta.
       prism_ind_two g h b a _X_; cbn beta.
@@ -53,14 +53,14 @@ Defined.
 Definition trijoinrecdata_twist_natequiv (A B C : Type)
   : NatEquiv (trijoinrecdata_0gpd_fun A B C) (trijoinrecdata_0gpd_fun B A C).
 Proof.
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   (* An equivalence of 0-groupoids for each [P]: *)
   - intro P.
-    snrapply cate_adjointify.
+    snapply cate_adjointify.
     1, 2: apply trijoinrecdata_twist.
     1, 2: apply trijoinrecdata_twist_inv.
   (* Naturality: *)
-  - snrapply Build_Is1Natural.
+  - snapply Build_Is1Natural.
     intros P Q g f; simpl.
     bundle_trijoinrecpath.
     all: intros; cbn.
@@ -80,7 +80,7 @@ Definition trijoinrecdata_fun_twist (A B C : Type)
 Definition equiv_trijoin_twist' (A B C : Type)
   : TriJoin A B C <~> TriJoin B A C.
 Proof.
-  rapply (opyon_equiv_0gpd (A:=Type)).
+  tapply (opyon_equiv_0gpd (A:=Type)).
   apply trijoinrecdata_fun_twist.
 Defined.
 
@@ -122,7 +122,7 @@ Definition trijoin_twist_homotopic (A B C : Type)
 Proof.
   symmetry.
   (** Both sides are [trijoin_rec] applied to [TriJoinRecData]: *)
-  rapply (fmap trijoin_rec).
+  tapply (fmap trijoin_rec).
   bundle_trijoinrecpath; intros; cbn.
   1: refine (ap inverse _).
   1, 2, 3: apply ap_idmap.
@@ -198,8 +198,8 @@ Definition trijoin_twist_nat' {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : 
     == functor_trijoin g f h o trijoin_twist A B C.
 Proof.
   intro x.
-  rhs nrapply trijoin_rec_trijoin_twist.
-  nrapply trijoin_rec_functor_trijoin.
+  rhs napply trijoin_rec_trijoin_twist.
+  napply trijoin_rec_functor_trijoin.
 Defined.
 
 (** And now a version using [functor_join]. *)
@@ -209,7 +209,7 @@ Definition trijoin_twist_nat {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : C
 Proof.
   intro x.
   lhs nrefine (ap _ (functor_trijoin_as_functor_join f g h x)).
-  rhs nrapply functor_trijoin_as_functor_join.
+  rhs napply functor_trijoin_as_functor_join.
   apply trijoin_twist_nat'.
 Defined.
 
@@ -221,8 +221,8 @@ Definition trijoin_id_sym_nat {A B C A' B' C'} (f : A -> A') (g : B -> B') (h : 
     == functor_join f (functor_join h g) o trijoin_id_sym A B C.
 Proof.
   intro x; simpl.
-  lhs_V nrapply functor_join_compose.
-  rhs_V nrapply functor_join_compose.
+  lhs_V napply functor_join_compose.
+  rhs_V napply functor_join_compose.
   apply functor2_join.
   - reflexivity.
   - apply join_sym_nat.
@@ -235,7 +235,7 @@ Definition trijoin_id_sym_nat' {A B C A' B' C'} (f : A -> A') (g : B -> B') (h :
 Proof.
   intro x.
   lhs_V nrefine (ap _ (functor_trijoin_as_functor_join f g h x)).
-  rhs_V nrapply functor_trijoin_as_functor_join.
+  rhs_V napply functor_trijoin_as_functor_join.
   apply trijoin_id_sym_nat.
 Defined.
 
@@ -250,11 +250,11 @@ Proof.
   intro x.
   unfold join_assoc; cbn.
   (* First we pass the [functor_joins]s through the outer [join_sym]. *)
-  rhs_V nrapply join_sym_nat.
+  rhs_V napply join_sym_nat.
   (* Strip off the outer [join_sym]. *)
   apply (ap _).
   (* Next we pass the [functor_join]s through [trijoin_twist]. *)
-  rhs_V nrapply trijoin_twist_nat.
+  rhs_V napply trijoin_twist_nat.
   (* Strip off the [trijoin_twist]. *)
   apply (ap _).
   (* Finally, we pass the [functor_join]s through [trijoin_id_sym]. *)
@@ -263,9 +263,9 @@ Defined.
 
 Instance join_associator : Associator Join.
 Proof.
-  snrapply Build_Associator; simpl.
+  snapply Build_Associator; simpl.
   - exact join_assoc.
-  - snrapply Build_Is1Natural.
+  - snapply Build_Is1Natural.
     intros [[A B] C] [[A' B'] C'] [[f g] h]; cbn.
     apply join_assoc_nat.
 Defined.
@@ -283,18 +283,18 @@ Proof.
   intro x.
   rapply moveR_equiv_M.
   unfold equiv_join_empty_right at 1; cbn.
-  lhs nrapply functor_join_join_rec; cbn.
-  lhs nrapply trijoin_rec_trijoin_twist.
+  lhs napply functor_join_join_rec; cbn.
+  lhs napply trijoin_rec_trijoin_twist.
   revert x.
   apply moveR_trijoin_rec.
-  snrapply Build_TriJoinRecPath; intros; cbn.
+  snapply Build_TriJoinRecPath; intros; cbn.
   3, 5, 6, 7: by destruct c.
   - reflexivity.
   - reflexivity.
   - apply equiv_p1_1q.
     symmetry.
-    lhs nrapply (ap_compose (functor_join idmap _) _ (join12 a b)).
-    lhs nrapply ap.
+    lhs napply (ap_compose (functor_join idmap _) _ (join12 a b)).
+    lhs napply ap.
     1: apply functor_join_beta_jglue.
     apply join_sym_beta_jglue.
 Defined.
@@ -302,8 +302,8 @@ Defined.
 Definition join_trianglelaw : TriangleIdentity Join Empty.
 Proof.
   intros A B x; cbn. 
-  lhs nrapply (functor_join_compose idmap _ idmap _).
-  lhs_V nrapply join_trianglelaw'.
+  lhs napply (functor_join_compose idmap _ idmap _).
+  lhs_V napply join_trianglelaw'.
   unfold join_assoc; cbn.
   apply join_sym_nat.
 Defined.
@@ -316,7 +316,7 @@ Defined.
 Definition trijoinrecdata_id_sym {A B C P} (f : TriJoinRecData A B C P)
   : TriJoinRecData A C B P.
 Proof.
-  snrapply (Build_TriJoinRecData (j1 f) (j3 f) (j2 f)); intros.
+  snapply (Build_TriJoinRecData (j1 f) (j3 f) (j2 f)); intros.
   - apply (j13 f).
   - apply (j12 f).
   - symmetry; apply (j23 f).
@@ -375,7 +375,7 @@ Definition hexagon_join_twist_sym A B C
     == trijoin_twist B C A o trijoin_id_sym B A C o trijoin_twist A B C.
 Proof.
   (* It's enough to show that both sides induces the same natural transformation under the covariant Yoneda embedding, i.e., after postcomposing with a general function [f]. *)
-  rapply (opyon_faithful_0gpd (A:=Type)).
+  tapply (opyon_faithful_0gpd (A:=Type)).
   intros P f.
   (* We replace [f] by [trijoin_rec t] for generic [t].  This will allow induction later. *)
   pose proof (p := issect_trijoin_rec_inv f).

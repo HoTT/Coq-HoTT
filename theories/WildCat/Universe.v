@@ -149,21 +149,21 @@ Defined.
 
 Instance is21cat_type : Is21Cat Type.
 Proof.
-  snrapply Build_Is21Cat.
+  snapply Build_Is21Cat.
   1-4, 6-7: exact _.
   - intros a b c f g h k p q x; cbn.
     symmetry.
     apply concat_Ap.
   - intros a b c d f g.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros h i p x; cbn.
     exact (concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
   - intros a b.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros f g p x; cbn.
     exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
   - intros a b.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros f g p x; cbn.
     exact (concat_p1 _ @ (concat_1p _)^).
   - reflexivity.

@@ -71,7 +71,7 @@ Definition rng_homo_compose {A B C : Ring}
   (f : RingHomomorphism B C) (g : RingHomomorphism A B)
   : RingHomomorphism A C.
 Proof.
-  snrapply Build_RingHomomorphism.
+  snapply Build_RingHomomorphism.
   1: exact (f o g).
   rapply compose_sr_morphism.
 Defined.
@@ -113,17 +113,17 @@ End RingLaws.
 Definition rng_dist_l_negate {A : Ring} (x y z : A)
   : x * (y - z) = x * y - x * z.
 Proof.
-  lhs nrapply rng_dist_l.
-  nrapply ap.
-  nrapply rng_mult_negate_r.
+  lhs napply rng_dist_l.
+  napply ap.
+  napply rng_mult_negate_r.
 Defined.
 
 Definition rng_dist_r_negate {A : Ring} (x y z : A)
   : (x - y) * z = x * z - y * z.
 Proof.
-  lhs nrapply rng_dist_r.
-  nrapply ap.
-  nrapply rng_mult_negate_l.
+  lhs napply rng_dist_r.
+  napply ap.
+  napply rng_mult_negate_l.
 Defined.
 
 Section RingHomoLaws.
@@ -165,8 +165,8 @@ Definition rng_iso_inverse {A B : Ring}
   : RingIsomorphism A B -> RingIsomorphism B A.
 Proof.
   intros [f e].
-  snrapply Build_RingIsomorphism.
-  { snrapply Build_RingHomomorphism.
+  snapply Build_RingIsomorphism.
+  { snapply Build_RingHomomorphism.
     1: exact f^-1.
     exact _. }
   exact _.
@@ -297,7 +297,7 @@ Instance hasmorext_ring `{Funext} : HasMorExt Ring.
 Proof.
   srapply Build_HasMorExt.
   intros A B f g; cbn in *.
-  snrapply @isequiv_homotopic.
+  snapply @isequiv_homotopic.
   1: exact (equiv_path_ringhomomorphism^-1%equiv).
   1: exact _.
   intros []; reflexivity. 
@@ -347,8 +347,8 @@ Definition Build_IsSubring' {R : Ring} (S : R -> Type)
   (H3 : S 1)
   : IsSubring S.
 Proof.
-  snrapply Build_IsSubring.
-  - snrapply Build_IsSubgroup'.
+  snapply Build_IsSubring.
+  - snapply Build_IsSubgroup'.
     + exact _.
     + pose (p := H1 1 1 H3 H3).
       rewrite rng_plus_negate_r in p.
@@ -369,8 +369,8 @@ Definition Build_Subring'' {R : Ring} (S : Subgroup R)
   (H2 : S 1)
   : Subring R.
 Proof.
-  snrapply (Build_Subring _ S).
-  snrapply Build_IsSubring.
+  snapply (Build_Subring _ S).
+  snapply Build_IsSubring.
   - exact _.
   - exact H1.
   - exact H2.
@@ -391,17 +391,17 @@ Coercion subgroup_subring {R} : Subring R -> Subgroup R
 (** The ring given by a subring. *)
 Coercion ring_subring {R : Ring} (S : Subring R) : Ring.
 Proof.
-  snrapply (Build_Ring (subgroup_subring S)).
+  snapply (Build_Ring (subgroup_subring S)).
   3-7: hnf; intros; srapply path_sigma_hprop.
   - intros [r ?] [s ?]; exists (r * s).
     by apply issubring_mult.
   - exists 1.
     exact issubring_one.
-  - snrapply rng_mult_assoc.
-  - snrapply rng_dist_l.
-  - snrapply rng_dist_r.
-  - snrapply rng_mult_one_l.
-  - snrapply rng_mult_one_r.
+  - napply rng_mult_assoc.
+  - napply rng_dist_l.
+  - napply rng_dist_r.
+  - napply rng_mult_one_l.
+  - napply rng_mult_one_r.
 Defined.
 
 (** ** Product ring *)
@@ -409,7 +409,7 @@ Defined.
 Definition ring_product : Ring -> Ring -> Ring.
 Proof.
   intros R S.
-  snrapply Build_Ring.
+  snapply Build_Ring.
   - exact (ab_biprod R S).
   - exact (fun '(r1 , s1) '(r2 , s2) => (r1 * r2 , s1 * s2)).
   - exact (ring_one , ring_one).
@@ -427,14 +427,14 @@ Infix "×" := ring_product : ring_scope.
 
 Definition ring_product_fst {R S : Ring} : R × S $-> R.
 Proof.
-  snrapply Build_RingHomomorphism.
+  snapply Build_RingHomomorphism.
   1: exact fst.
   repeat split.
 Defined.
 
 Definition ring_product_snd {R S : Ring} : R × S $-> S.
 Proof.
-  snrapply Build_RingHomomorphism.
+  snapply Build_RingHomomorphism.
   1: exact snd.
   repeat split.
 Defined.
@@ -453,7 +453,7 @@ Defined.
 Definition equiv_ring_product_corec `{Funext} (R S T : Ring)
   : (R $-> S) * (R $-> T) <~> (R $-> S × T).
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   1: exact (uncurry (ring_product_corec _ _ _)).
   { intros f.
     exact (ring_product_fst $o f, ring_product_snd $o f). }
@@ -467,7 +467,7 @@ Defined.
 Instance hasbinaryproducts_ring : HasBinaryProducts Ring.
 Proof.
   intros R S.
-  snrapply Build_BinaryProduct.
+  snapply Build_BinaryProduct.
   - exact (R × S).
   - exact ring_product_fst.
   - exact ring_product_snd.
@@ -483,7 +483,7 @@ Defined.
 (** The image of a ring homomorphism *)
 Definition rng_image {R S : Ring} (f : R $-> S) : Subring S.
 Proof.
-  snrapply (Build_Subring'' (grp_image f)).
+  snapply (Build_Subring'' (grp_image f)).
   - simpl.
     intros x y p q.
     strip_truncations; apply tr.
@@ -499,7 +499,7 @@ Defined.
 Lemma rng_homo_image_incl {R S} (f : RingHomomorphism R S)
   : (rng_image f : Ring) $-> S.
 Proof.
-  snrapply Build_RingHomomorphism.
+  snapply Build_RingHomomorphism.
   1: exact pr1.
   repeat split.
 Defined.
@@ -508,7 +508,7 @@ Defined.
 Lemma rng_image_issurj {R S} (f : RingHomomorphism R S) {issurj : IsSurjection f}
   : (rng_image f : Ring) ≅ S.
 Proof.
-  snrapply Build_RingIsomorphism.
+  snapply Build_RingIsomorphism.
   1: exact (rng_homo_image_incl f).
   exact _.
 Defined. 
@@ -522,7 +522,7 @@ Proof.
   intros [R mult one
     [is_abgroup [[monoid_ishset mult_assoc] li ri] ld rd]
     mult_assoc_opp].
-  snrapply Build_Ring'.
+  snapply Build_Ring'.
   4: split.
   5: split.
   5: split.
@@ -542,9 +542,9 @@ Defined.
 (** The opposite ring is a functor. *)
 Instance is0functor_rng_op : Is0Functor rng_op.
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros R S f.
-  snrapply Build_RingHomomorphism'.
+  snapply Build_RingHomomorphism'.
   - exact f.
   - split.
     + exact (fun x y => rng_homo_mult f y x).
@@ -553,7 +553,7 @@ Defined.
 
 Instance is1functor_rng_op : Is1Functor rng_op.
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros R S f g p.
     exact p.
   - intros R; cbn; reflexivity.
@@ -583,7 +583,7 @@ Definition rng_sum_dist_l {R : Ring} (n : nat) (f : forall k, (k < n)%nat -> R) 
 Proof.
   induction n as [|n IHn].
   1: apply rng_mult_zero_r.
-  lhs nrapply rng_dist_l; simpl; f_ap.
+  lhs napply rng_dist_l; simpl; f_ap.
 Defined.
 
 (** Ring multiplication distributes over finite sums on the right. *)
@@ -592,7 +592,7 @@ Definition rng_sum_dist_r {R : Ring} (n : nat) (f : forall k, (k < n)%nat -> R) 
 Proof.
   induction n as [|n IHn].
   1: apply rng_mult_zero_l.
-  lhs nrapply rng_dist_r; simpl; f_ap.
+  lhs napply rng_dist_r; simpl; f_ap.
 Defined.
 
 (** ** Invertible elements *)
@@ -654,7 +654,7 @@ Definition path_left_right_inverse {R : Ring} (x x' x'' : R)
   (p : x' * x = 1) (q : x * x'' = 1)
   : x' = x''.
 Proof.
-  rhs_V nrapply rng_mult_one_l.
+  rhs_V napply rng_mult_one_l.
   rewrite <- p. 
   rewrite <- simple_associativity.
   rewrite q.
@@ -667,7 +667,7 @@ Definition path_left_inverse_elem_right_inverse_elem
   {R : Ring} x `{!IsInvertible R x}
   : left_inverse_elem x = right_inverse_elem x.
 Proof.
-  nrapply (path_left_right_inverse x).
+  napply (path_left_right_inverse x).
   - apply left_inverse_eq.
   - apply right_inverse_eq.
 Defined.
@@ -697,7 +697,7 @@ Definition isinvertible_unique {R : Ring} (x y : R) `{IsInvertible R x} `{IsInve
   : inverse_elem x = inverse_elem y.
 Proof.
   destruct p.
-  snrapply (path_left_right_inverse x).
+  snapply (path_left_right_inverse x).
   - apply rng_inv_l.
   - apply rng_inv_r.
 Defined.
@@ -716,8 +716,8 @@ Defined.
 (** Being invertible is a proposition. *)
 Instance ishprop_isinvertible {R x} : IsHProp (IsInvertible R x).
 Proof.
-  nrapply (istrunc_equiv_istrunc _ (equiv_isinvertible_left_right_inverse x)).
-  snrapply hprop_allpath; intros [y [p1 p2]] [z [q1 q2]].
+  napply (istrunc_equiv_istrunc _ (equiv_isinvertible_left_right_inverse x)).
+  snapply hprop_allpath; intros [y [p1 p2]] [z [q1 q2]].
   rapply path_sigma_hprop; cbn.
   exact (path_left_right_inverse x y z p1 q2).
 Defined.
@@ -731,10 +731,10 @@ Proof.
   intros [x' p] [y' q].
   exists (y' * x').
   rhs_V exact q.
-  lhs nrapply rng_mult_assoc.
+  lhs napply rng_mult_assoc.
   f_ap.
-  rhs_V nrapply rng_mult_one_r.
-  lhs_V nrapply rng_mult_assoc.
+  rhs_V napply rng_mult_one_r.
+  lhs_V napply rng_mult_assoc.
   f_ap.
 Defined.
 
@@ -758,7 +758,7 @@ Instance isleftinvertible_neg {R : Ring} (x : R)
 Proof.
   intros H.
   exists (- left_inverse_elem x).
-  lhs nrapply rng_mult_negate_negate.
+  lhs napply rng_mult_negate_negate.
   apply left_inverse_eq.
 Defined.
 
@@ -816,7 +816,7 @@ Defined.
 (** [1] is always invertible, and by the above [-1]. *)
 Instance isinvertible_one {R} : IsInvertible R 1.
 Proof.
-  snrapply Build_IsInvertible.
+  snapply Build_IsInvertible.
   - exact one.
   - apply rng_mult_one_l.
   - apply rng_mult_one_l.
@@ -827,11 +827,11 @@ Instance isinvertible_rng_homo {R S} (f : R $-> S)
   : forall x, IsInvertible R x -> IsInvertible S (f x).
 Proof.
   intros x H.
-  snrapply Build_IsInvertible.
+  snapply Build_IsInvertible.
   1: exact (f (inverse_elem x)).
-  1,2: lhs_V nrapply rng_homo_mult.
-  1,2: rhs_V nrapply (rng_homo_one f).
-  1,2: nrapply (ap f).
+  1,2: lhs_V napply rng_homo_mult.
+  1,2: rhs_V napply (rng_homo_one f).
+  1,2: napply (ap f).
   - exact (rng_inv_l x).
   - exact (rng_inv_r x).
 Defined.
@@ -842,7 +842,7 @@ Defined.
 Definition rng_unit_group (R : Ring) : Group.
 Proof.
   (** TODO: Use a generalised version of [Build_Subgroup] that works for subgroups of monoids. *)
-  snrapply Build_Group.
+  snapply Build_Group.
   - exact {x : R & IsInvertible R x}.
   - intros [x p] [y q].
     exists (x * y).
@@ -868,14 +868,14 @@ Instance isequiv_rng_inv_mult_l {R : Ring} {x : R}
   `{IsInvertible R x}
   : IsEquiv (x *.).
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   1: exact (inverse_elem x *.).
   1,2: intros y.
-  1,2: lhs nrapply rng_mult_assoc.
-  1,2: rhs_V nrapply rng_mult_one_l.
-  1,2: snrapply (ap (.* y)).
-  - nrapply rng_inv_r.
-  - nrapply rng_inv_l.
+  1,2: lhs napply rng_mult_assoc.
+  1,2: rhs_V napply rng_mult_one_l.
+  1,2: snapply (ap (.* y)).
+  - napply rng_inv_r.
+  - napply rng_inv_l.
 Defined.
 
 (** This can be proved by combining [isequiv_rng_inv_mult_l (R:=rng_op R)] with [isinvertible_rng_op], but then the inverse map is given by multiplying by [right_inverse_elem x] not [inverse_elem x], which complicates calculations. *)
@@ -883,14 +883,14 @@ Instance isequiv_rng_inv_mult_r {R : Ring} {x : R}
   `{IsInvertible R x}
   : IsEquiv (.* x).
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   1: exact (.* inverse_elem x).
   1,2: intros y.
-  1,2: lhs_V nrapply rng_mult_assoc.
-  1,2: rhs_V nrapply rng_mult_one_r.
-  1,2: snrapply (ap (y *.)).
-  - nrapply rng_inv_l.
-  - nrapply rng_inv_r.
+  1,2: lhs_V napply rng_mult_assoc.
+  1,2: rhs_V napply rng_mult_one_r.
+  1,2: snapply (ap (y *.)).
+  - napply rng_inv_l.
+  - napply rng_inv_r.
 Defined.
 
 (** *** Invertible element movement lemmas *)

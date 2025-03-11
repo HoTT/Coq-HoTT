@@ -49,7 +49,7 @@ Proof.
   split.
   - intros ns.
     exact (ns o inl, ns o inr).
-  - by intros []; snrapply sum_ind.
+  - by intros []; snapply sum_ind.
 Defined.
 
 Definition iff_contradiction A : A * ~A <-> Empty.

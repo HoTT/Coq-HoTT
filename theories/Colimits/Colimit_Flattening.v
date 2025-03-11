@@ -135,8 +135,8 @@ Section Flattening.
       set (L := cocone_extends Z (cocone_postcompose cocone_E' f)).
       refine (transport_forall _ _ _ @ _).
       transport_paths (transport_paths_FlFr (f:=fun y0 => L (_; y0))).
-      lhs nrapply concat_p1.
-      lhs_V nrapply concat_1p.
+      lhs napply concat_p1.
+      lhs_V napply concat_1p.
       refine (_^ @@ 1).
       lhs rapply (transportD_is_transport E' (fun w => L w = f w)).
       transport_paths FlFr; apply equiv_p1_1q.
@@ -164,7 +164,7 @@ Section Flattening.
         etransitivity.
         1: srapply moveL_transport_V_1.
         etransitivity.
-        1: nrapply inverse2; snrapply transport_VpV.
+        1: napply inverse2; snapply transport_VpV.
         symmetry; apply ap_V. }
       rewrite p1eq; clear p1eq p1.
       rewrite <- ap_compose; cbn.

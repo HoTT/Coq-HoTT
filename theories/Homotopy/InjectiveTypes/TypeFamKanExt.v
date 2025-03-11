@@ -31,14 +31,14 @@ Section UniverseStructure.
     (P : X -> Type@{w}) (j : X -> Y) (isem : IsEmbedding@{u v uv} j) (x : X)
     : Equiv@{uvw w} (LeftKanFam@{} P j (j x)) (P x).
   Proof.
-    rapply (@equiv_contr_sigma (hfiber j (j x)) _ _).
+    exact (@equiv_contr_sigma (hfiber j (j x)) _ _).
   Defined.
 
   Definition isext_equiv_rightkanfam@{} `{Funext} {X : Type@{u}} {Y : Type@{v}}
     (P : X -> Type@{w}) (j : X -> Y) (isem : IsEmbedding@{u v uv} j) (x : X)
     : Equiv@{uvw w} (RightKanFam@{} P j (j x)) (P x).
   Proof.
-    rapply (@equiv_contr_forall _ (hfiber j (j x)) _ _).
+    exact (@equiv_contr_forall _ (hfiber j (j x)) _ _).
   Defined.
 
   Definition isext_leftkanfam@{suvw | uvw < suvw} `{Univalence} {X : Type@{u}} {Y : Type@{v}}
@@ -66,7 +66,7 @@ Definition contr_rightkanfam `{Funext} {X : Type} {Y : Type}
   (P : X -> Type@{w}) (j : X -> Y) (y : Y) (ynin : forall x : X, j x <> y)
   : Contr ((P |> j) y).
 Proof.
-  snrapply contr_forall.
+  snapply contr_forall.
   intros [x p].
   apply (Empty_rec (ynin x p)).
 Defined.
@@ -76,7 +76,7 @@ Definition equiv_leftkanfam {X : Type} {Y : Type}
   (P : X -> Type) (j : X -> Y)
   : {x : X & P x} <~> {y : Y & (P <| j) y}.
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   - exact (fun w : {x : X & P x} => (j w.1; (w.1; idpath); w.2)).
   - exact (fun '((y; ((x; p); y')) : {y : Y & (P <| j) y}) => (x; y')).
   - by intros [y [[x []] y']].
@@ -87,7 +87,7 @@ Definition equiv_rightkanfam `{Funext} {X : Type} {Y : Type}
   (P : X -> Type@{w}) (j : X -> Y)
   : (forall x, P x) <~> (forall y, (P |> j) y).
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   - intros g y w. exact (g w.1).
   - exact (fun h x => h (j x) (x; idpath)).
   - intros h. by funext y [x []].
@@ -113,7 +113,7 @@ Definition transform_leftkanfam_rightkanfam {X Y : Type}
   : (P <| j) >=> (P |> j).
 Proof.
   intros y [w' z] w.
-  snrapply (transport (fun a => P a.1) _ z).
+  snapply (transport (fun a => P a.1) _ z).
   srapply path_ishprop.
 Defined.
 
@@ -161,14 +161,14 @@ Proof.
   - funext y. funext [[w []] c]. srefine (ap10 (F w) c).
   - simpl.
     funext x.
-    lhs nrapply transport_forall_constant.
-    lhs nrapply transport_paths_Fl.
+    lhs napply transport_forall_constant.
+    lhs napply transport_paths_Fl.
     apply moveR_Vp.
-    rhs nrapply concat_p1.
+    rhs napply concat_p1.
     unfold compose_mapfam, unit_leftkanfam.
     symmetry.
     pose (i := fun px: P x => ((x; 1); px) : (P <| j) (j x)).
-    lhs nrapply (ap_compose (fun k : (P <| j) >=> R => k (j x)) (fun ka => ka o i)).
+    lhs napply (ap_compose (fun k : (P <| j) >=> R => k (j x)) (fun ka => ka o i)).
     (* [ap (fun k => k (j x))] is exactly [apD10], so it cancels the first [path_forall]. *)
     lhs nrefine (ap _ (apD10_path_forall _ _ _ _)).
     lhs rapply (ap_precompose _ i).
@@ -197,20 +197,20 @@ Proof.
   - funext y. funext C. funext [x p]. destruct p. srefine (ap10 (F x) C).
   - simpl.
     funext x.
-    lhs nrapply transport_forall_constant.
-    lhs nrapply transport_paths_Fl.
+    lhs napply transport_forall_constant.
+    lhs napply transport_paths_Fl.
     apply moveR_Vp.
     symmetry.
-    lhs nrapply concat_p1.
+    lhs napply concat_p1.
     unfold compose_mapfam.
-    lhs nrapply (ap_compose (fun k : R >=> (P |> j) => k (j x)) (fun ka => _ o ka)).
+    lhs napply (ap_compose (fun k : R >=> (P |> j) => k (j x)) (fun ka => _ o ka)).
     (* [ap (fun k => k (j x))] is exactly [apD10], so it cancels the first [path_forall]. *)
     lhs nrefine (ap _ (apD10_path_forall _ _ _ _)).
-    lhs nrapply ap_postcompose.
+    lhs napply ap_postcompose.
     unfold path_forall, ap10.
     rewrite (eisretr apD10).
     change (ap _ ?p) with (apD10 p (x; 1)).
-    nrapply moveR_equiv_V.
+    napply moveR_equiv_V.
     funext r.
     exact (apD10_path_forall _ _ _ (x; _)).
 Defined.
@@ -220,7 +220,7 @@ Definition leftadjoint_leftkanfam `{Funext} {X Y : Type} (P : X -> Type)
   (R : Y -> Type) (j : X -> Y)
   : ((P <| j) >=> R) <~> (P >=> R o j).
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   - intros a x B. exact (a (j x) ((x; idpath); B)).
   - intros b y [[x p] C]. exact (p # (b x C)).
   - intros b. by funext x C.
@@ -231,7 +231,7 @@ Definition rightadjoint_rightkanfam `{Funext} {X Y : Type} (P : X -> Type)
   (R : Y -> Type) (j : X -> Y)
   : (R >=> (P |> j)) <~> (R o j >=> P).
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   - intros a x C. exact (a (j x) C (x; idpath)).
   - intros a y C [x p]. apply (a x). exact (p^ # C).
   - intros a. by funext x C.
@@ -246,7 +246,7 @@ Section EmbedProofLeft.
   Definition isequiv_counit_leftkanfam_leftkanfam (P : X -> Type) {y : Y}
     : IsEquiv (counit_leftkanfam (P <| j) j y).
   Proof.
-    snrapply isequiv_adjointify.
+    snapply isequiv_adjointify.
     - exact (fun '(((x; p); C) : (P <| j) y) => ((x; p); ((x; idpath); C))).
     - by intros [[x []] C].
     - intros [[x []] [[x' p'] C]]; cbn; cbn in C, p'.
@@ -265,7 +265,7 @@ Section EmbedProofLeft.
   #[export] Instance isequiv_leftkanfam_counit_equiv
     : IsEquiv leftkanfam_counit_equiv.
   Proof.
-    snrapply isequiv_adjointify.
+    snapply isequiv_adjointify.
     - intros [R e]. exact (R o j).
     - intros [R e]. srapply path_sigma_hprop; cbn.
       funext y.
@@ -289,7 +289,7 @@ Section EmbedProofRight.
   Definition isequiv_unit_rightkanfam_rightkanfam (P : X -> Type) {y : Y}
     : IsEquiv (unit_rightkanfam (P |> j) j y).
   Proof.
-    snrapply isequiv_adjointify.
+    snapply isequiv_adjointify.
     - intros C [x p]. exact (C (x; p) (x; idpath)).
     - intros C. funext [x p]. destruct p. funext w.
       rapply (@transport _ (fun t => C t (t.1; idpath) = C (x; idpath) t) _ w
@@ -308,7 +308,7 @@ Section EmbedProofRight.
   #[export] Instance isequiv_rightkanfam_unit_equiv
     : IsEquiv rightkanfam_unit_equiv.
   Proof.
-    snrapply isequiv_adjointify.
+    snapply isequiv_adjointify.
     - intros [R e]. exact (R o j).
     - intros [R e]. srapply path_sigma_hprop; cbn.
       funext y.

@@ -23,8 +23,8 @@ Proof.
   - intros b. exact (center {a : A & f a = b}).2.
   - intros a. exact (@contr {x : A & f x = f a} _ (a;1))..1.
   - intros a; cbn. apply moveL_M1.
-    lhs_V nrapply transport_paths_l.
-    lhs_V nrapply transport_compose.
+    lhs_V napply transport_paths_l.
+    lhs_V napply transport_compose.
     exact ((@contr {x : A & f x = f a} _ (a;1))..2).
 Defined.
 
@@ -132,7 +132,7 @@ Section AssumeFunext.
   #[export] Instance isequiv_ap_equiv_fun {A B : Type} (e1 e2 : A <~> B)
     : IsEquiv (ap (x:=e1) (y:=e2) (@equiv_fun A B)).
   Proof.
-    snrapply isequiv_homotopic.
+    snapply isequiv_homotopic.
     - exact (equiv_path_equiv e1 e2)^-1%equiv.
     - exact _.
     - intro p. exact (ap_compose (fun v => (equiv_fun v; equiv_isequiv v)) pr1 p)^.

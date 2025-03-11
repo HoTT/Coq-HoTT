@@ -50,7 +50,7 @@ Definition sigma_closed_issmall@{i j | } {A : Type@{j}}
   : IsSmall@{i j} { a : A & B a }.
 Proof.
   exists { a : (smalltype A) & (smalltype (B (equiv_smalltype A a))) }.
-  snrapply equiv_functor_sigma'; intros; apply equiv_smalltype.
+  snapply equiv_functor_sigma'; intros; apply equiv_smalltype.
 Defined.
 
 (** If a map has small codomain and fibers, then the domain is small. *)
@@ -60,7 +60,7 @@ Definition issmall_issmall_codomain_fibers@{i j | } {X Y : Type@{j}}
   (sF : forall y : Y, IsSmall@{i j} (hfiber f y))
   : IsSmall@{i j} X.
 Proof.
-  nrapply issmall_equiv_issmall.
+  napply issmall_equiv_issmall.
   - exact (equiv_fibration_replacement f)^-1%equiv.
   - apply sigma_closed_issmall; assumption.
 Defined.
@@ -131,7 +131,7 @@ Proof.
   simple_induction n n IHn.
   - exact @issmall_equiv_issmall.
   - intros A B e lsA b b'.
-    nrapply IHn.
+    napply IHn.
     * exact (equiv_ap' (e^-1%equiv) b b')^-1%equiv.
     * apply lsA.
 Defined.
@@ -179,7 +179,7 @@ Definition islocallysmall_islocallysmall_codomain_fibers@{i j k | i < k, j <= k}
   (sF : forall y : Y, IsLocallySmall@{i j k} n (hfiber f y))
   : IsLocallySmall@{i j k} n X.
 Proof.
-  nrapply islocallysmall_equiv_islocallysmall.
+  napply islocallysmall_equiv_islocallysmall.
   - exact (equiv_fibration_replacement f)^-1%equiv.
   - apply sigma_closed_islocallysmall; assumption.
 Defined.

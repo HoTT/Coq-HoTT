@@ -9,7 +9,7 @@ Require Import WildCat.Core.
 (** The ring of integers *)
 Definition cring_Z : CRing.
 Proof.
-  snrapply Build_CRing'.
+  snapply Build_CRing'.
   - exact abgroup_Z.
   - exact 1%int.
   - exact int_mul.
@@ -29,7 +29,7 @@ Definition rng_int_mult_dist_r {R : Ring} (r : R) (n : cring_Z)
   : rng_int_mult R r n = (rng_int_mult R 1 n) * r.
 Proof.
   cbn.
-  rhs nrapply (grp_pow_natural (grp_homo_rng_right_mult r)); cbn.
+  rhs napply (grp_pow_natural (grp_homo_rng_right_mult r)); cbn.
   by rewrite rng_mult_one_l.
 Defined.
 
@@ -38,7 +38,7 @@ Definition rng_int_mult_dist_l {R : Ring} (r : R) (n : cring_Z)
   : rng_int_mult R r n = r * (rng_int_mult R 1 n).
 Proof.
   cbn.
-  rhs nrapply (grp_pow_natural (grp_homo_rng_left_mult r)); cbn.
+  rhs napply (grp_pow_natural (grp_homo_rng_left_mult r)); cbn.
   by rewrite rng_mult_one_r.
 Defined.
 
@@ -48,14 +48,14 @@ Instance issemigrouppreserving_mult_rng_int_mult (R : Ring)
 Proof.
   intros x y.
   cbn; unfold sg_op.
-  lhs nrapply grp_pow_int_mul.
-  nrapply rng_int_mult_dist_l.
+  lhs napply grp_pow_int_mul.
+  napply rng_int_mult_dist_l.
 Defined.
 
 (** [rng_int_mult R 1] is a ring homomorphism *)
 Definition rng_homo_int (R : Ring) : (cring_Z : Ring) $-> R.
 Proof.
-  snrapply Build_RingHomomorphism.
+  snapply Build_RingHomomorphism.
   1: exact (rng_int_mult R 1).
   repeat split.
   1,2: exact _.
@@ -82,6 +82,6 @@ Proof.
     clear IHx.
     change (-1 + g (-x)%int = g (-x).-1%int).
     rewrite <- (rng_homo_minus_one g).
-    lhs_V nrapply (rng_homo_plus g).
+    lhs_V napply (rng_homo_plus g).
     f_ap.
 Defined.

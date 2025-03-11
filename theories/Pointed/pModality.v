@@ -27,7 +27,7 @@ Definition pO_rec_beta `{O : ReflectiveSubuniverse} {X Y : pType}
   : pO_rec f o* pto O X ==* f.
 Proof.
   srapply Build_pHomotopy.
-  1: nrapply O_rec_beta.
+  1: napply O_rec_beta.
   cbn.
   apply moveL_pV.
   exact (concat_1p _)^.
@@ -38,13 +38,13 @@ Definition pequiv_o_pto_O `{Funext}
   (O : ReflectiveSubuniverse) (P Q : pType) `{In O Q}
   : ([O P, _] ->** Q) <~>* (P ->** Q).
 Proof.
-  snrapply Build_pEquiv.
+  snapply Build_pEquiv.
   (* We could just use the map [e] defined in the next bullet, but we want Coq to immediately unfold the underlying map to this. *)
   - exact (Build_pMap _ _ (fun f => f o* pto O P) 1).
   (* We'll give an equivalence that definitionally has the same underlying map. *)
   - transparent assert (e : (([O P, _] ->* Q) <~> (P ->* Q))).
     + refine (issig_pmap P Q oE _ oE (issig_pmap [O P, _] Q)^-1%equiv).
-      snrapply equiv_functor_sigma'.
+      snapply equiv_functor_sigma'.
       * rapply equiv_o_to_O.
       * intro f; cbn.
       (* [reflexivity] works here, but then the underlying map won't agree definitionally with precomposition by [pto P], since pointed composition inserts a reflexivity path here. *)
@@ -67,7 +67,7 @@ Definition equiv_O_pfunctor `(O : ReflectiveSubuniverse) {X Y : pType}
 Definition pto_O_natural `(O : ReflectiveSubuniverse) {X Y : pType}
   (f : X ->* Y) : O_pfunctor O f o* pto O X ==* pto O Y o* f.
 Proof.
-  nrapply pO_rec_beta.
+  napply pO_rec_beta.
 Defined.
 
 Definition pequiv_O_inverts `(O : ReflectiveSubuniverse) {X Y : pType}

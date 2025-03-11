@@ -257,7 +257,7 @@ Section ClassifyingMaps.
   Proof.
     refine (_ oE equiv_postcompose' equiv_baut_typeO).
     refine (_ oE equiv_sigma_fibration_O).
-    snrapply equiv_functor_sigma_id; intro p.
+    snapply equiv_functor_sigma_id; intro p.
     rapply equiv_functor_forall_id; intro y.
     by apply Trunc_functor_equiv.
   Defined.
@@ -266,7 +266,7 @@ Section ClassifyingMaps.
   Proposition pequiv_pbaut_typeOp@{u v +} `{Univalence} {F : Type@{u}}
     : pBAut@{u v} F <~>* [Type_ (subuniverse_merely_equiv F), (F; tr equiv_idmap)].
   Proof.
-    snrapply Build_pEquiv'; cbn.
+    snapply Build_pEquiv'; cbn.
     1: exact equiv_baut_typeO.
     by apply path_sigma_hprop.
   Defined.

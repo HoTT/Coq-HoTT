@@ -111,7 +111,7 @@ Proof.
       intro x; simpl.
       lhs exact (ap (fun k => b x + k) (grp_homo_unit c)).
       apply right_identity.
-    + lhs nrapply transport_sigma'.
+    + lhs napply transport_sigma'.
       apply path_sigma_hprop.
       apply equiv_path_grouphomomorphism.
       intro y; simpl.
@@ -124,7 +124,7 @@ Definition path_ab_pushout `{Univalence} {A B C : AbGroup} (f : A $-> B) (g : A 
   : @in_cosetL (ab_biprod B C) (ab_pushout_subgroup f g) bc0 bc1
                <~> (grp_quotient_map bc0 = grp_quotient_map bc1 :> ab_pushout f g).
 Proof.
-  nrapply path_quotient; exact _.
+  napply path_quotient; exact _.
 Defined.
 
 (** The pushout of an embedding is an embedding. *)
@@ -143,7 +143,7 @@ Proof.
     exact (left_inverse 0 @ (grp_homo_unit g)^).
   - apply grp_moveR_M1.
     rhs_V exact (ap fst p); unfold fst; symmetry.
-    rhs_V nrapply grp_inv_unit.
+    rhs_V napply grp_inv_unit.
     apply ap.
     exact (ap f z @ grp_homo_unit f).
 Defined.

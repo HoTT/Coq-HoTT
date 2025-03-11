@@ -19,7 +19,7 @@ Proof.
                       & {H : f o s == idmap
                              & H pt = ap f p @ (point_eq f) @ 1 }}}.
   2: make_equiv.
-  do 3 (nrapply equiv_functor_sigma_id; intro).
+  do 3 (napply equiv_functor_sigma_id; intro).
   rapply equiv_concat_r.
   exact (concat_p1 _)^.
 Defined.

@@ -414,7 +414,7 @@ Canonical Structure default_TruncType := fun n T P => (@Build_TruncType n T P).
 Definition smallntype@{i j} (n : trunc_index) (P : TruncType@{j} n) {smallP : IsSmall@{i j} P}
   : TruncType@{i} n.
 Proof.
-  nrapply (Build_TruncType n (smalltype P)).
+  napply (Build_TruncType n (smalltype P)).
   apply (@istrunc_equiv_istrunc _ _ (equiv_smalltype P)^-1 n _).
 Defined.
 
@@ -453,7 +453,7 @@ Theorem hprop_allpath (A : Type)
   : (forall (x y : A), x = y) -> IsHProp A.
 Proof.
   intros H; apply istrunc_S; intros x y.
-  nrapply contr_paths_contr.
+  napply contr_paths_contr.
   exact (Build_Contr _ x (H x)).
 Defined.
 
@@ -512,7 +512,7 @@ Instance ishprop_istrunc `{Funext} (n : trunc_index) (A : Type)
   : IsHProp (IsTrunc n A) | 0.
 Proof.
   revert A; simple_induction n n IH; cbn; intro A.
-  - nrapply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold (-2) A)^-1%equiv).
+  - napply (istrunc_equiv_istrunc _ (equiv_istrunc_unfold (-2) A)^-1%equiv).
     apply hprop_allpath.
     intros [a1 c1] [a2 c2].
     destruct (c1 a2).

@@ -26,7 +26,7 @@ Section AlgFlabSigma.
   Definition alg_flab_sigma (cond : alg_flab_sigma_condition)
     : IsAlgebraicFlabbyType {x : X & A x}.
   Proof.
-    snrapply Build_IsAlgebraicFlabbyType; intros P f.
+    snapply Build_IsAlgebraicFlabbyType; intros P f.
     all: pose (C := cond P (pr1 o f)).
     - (* We need to give a point in [{x : X * A x}].  Since [X] is algebraically flabby, we get a point in [X]: *)
       exists (center_af (pr1 o f)).
@@ -35,8 +35,8 @@ Section AlgFlabSigma.
     - intros h; cbn.
       change (cond P (fun x : P => (f x).1)) with C.
       (* We need to show that the point we gave is equal to [f h]. *)
-      snrapply path_sigma; cbn.
-      + nrapply contr_af.
+      snapply path_sigma; cbn.
+      + napply contr_af.
       + exact (apD10 (C.2 (pr2 o f)) h).
   Defined.
 
@@ -107,14 +107,14 @@ Section AlgFlabUniverse.
     destruct (condf _ f) as [s J].
     exists s.
     intro g.
-    lhs_V nrapply (homotopic_alg_flab_map_alg_flab_map_forall P f (s g)).
+    lhs_V napply (homotopic_alg_flab_map_alg_flab_map_forall P f (s g)).
     apply J.
   Defined.
 
   Definition alg_flab_sigma_forall `{Univalence} (condf : alg_flab_sigma_condition_forall)
     : IsAlgebraicFlabbyType {X : Type & A X}.
   Proof.
-    nrapply alg_flab_sigma.
+    napply alg_flab_sigma.
     exact (sigma_condition_sigma_condition_forall condf).
   Defined.
 
@@ -126,14 +126,14 @@ Section AlgFlabUniverse.
     destruct (condf _ f) as [s J].
     exists s.
     intro g.
-    lhs_V nrapply (homotopic_alg_flab_map_alg_flab_map_sigma P f (s g)).
+    lhs_V napply (homotopic_alg_flab_map_alg_flab_map_sigma P f (s g)).
     apply J.
   Defined.
 
   Definition alg_flab_sigma_sigma `{Univalence} (conds : alg_flab_sigma_condition_sigma)
     : IsAlgebraicFlabbyType {X : Type & A X}.
   Proof.
-    nrapply alg_flab_sigma.
+    napply alg_flab_sigma.
     exact (sigma_condition_sigma_condition_sigma conds).
   Defined.
 

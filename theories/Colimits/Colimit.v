@@ -74,7 +74,7 @@ Definition ap_colim_homotopic {G : Graph} {D : Diagram G} {i j : G} (f : G i j) 
   : ap (colim j) (ap (D _f f) p)
     = colimp i j f x @ ap (colim i) p @ (colimp i j f y)^.
 Proof.
-  lhs_V nrapply ap_compose.
+  lhs_V napply ap_compose.
   exact (ap_homotopic (colimp _ _ _) p).
 Defined.
 
@@ -142,11 +142,11 @@ Definition Colimit_rec_homotopy {G : Graph} {D : Diagram G} (P : Type) (C : Coco
       legs_comm C i j g x @ h_obj i x = h_obj j ((D _f g) x) @ ap f (colimp i j g x))
   : Colimit_rec P C == f.
 Proof.
-  snrapply Colimit_ind.
+  snapply Colimit_ind.
   - simpl. exact h_obj.
   - cbn beta; intros i j g x.
     transport_paths FlFr.
-    lhs nrapply (Colimit_rec_beta_colimp _ _ _ _ _ _ @@ 1).
+    lhs napply (Colimit_rec_beta_colimp _ _ _ _ _ _ @@ 1).
     apply h_comm.
 Defined.
 
@@ -157,10 +157,10 @@ Definition Colimit_rec_homotopy' {G : Graph} {D : Diagram G} (P : Type) (C1 C2 :
       legs_comm C1 i j g x @ h_obj i x = h_obj j (D _f g x) @ legs_comm C2 i j g x)
   : Colimit_rec P C1 == Colimit_rec P C2.
 Proof.
-  snrapply Colimit_rec_homotopy.
+  snapply Colimit_rec_homotopy.
   - exact h_obj.
   - intros i j g x.
-    rhs nrapply (1 @@ Colimit_rec_beta_colimp _ _ _ _ _ _).
+    rhs napply (1 @@ Colimit_rec_beta_colimp _ _ _ _ _ _).
     apply h_comm.
 Defined.
 
@@ -173,7 +173,7 @@ Proof.
   - exact (cocone_postcompose (cocone_colimit D)).
   - intro f.
     apply path_forall.
-    snrapply Colimit_rec_homotopy.
+    snapply Colimit_rec_homotopy.
     1: reflexivity.
     intros; cbn.
     apply concat_p1_1p.
@@ -224,13 +224,13 @@ Definition functor_Colimit_half_homotopy {G : Graph} {D1 D2 : Diagram G}
   : functor_Colimit_half m1 HQ == functor_Colimit_half m2 HQ.
 Proof.
   destruct h as [h_obj h_comm].
-  snrapply Colimit_rec_homotopy'.
+  snapply Colimit_rec_homotopy'.
   - intros i x; cbn. apply ap, h_obj.
   - intros i j g x; simpl.
     Open Scope long_path_scope.
     (* TODO: Most of the work here comes from a mismatch between the direction of the path in [DiagramMap_comm] and [legs_comm] in the [Cocone] record, causing a reversal in [cocone_precompose].  There is no reversal in [cocone_postcompose], so I think [Cocone] should change. If that is done, then this result wouldn't be needed at all, and one could directly use [Colimit_rec_homotopy']. *)
     rewrite ap_V.
-    lhs nrapply concat_pp_p.
+    lhs napply concat_pp_p.
     apply moveR_Vp.
     rewrite ! concat_p_pp.
     rewrite <- 2 ap_pp.
@@ -256,28 +256,28 @@ Definition functor_Colimit_homotopy {G : Graph} {D1 D2 : Diagram G}
 Definition functor_Colimit_half_compose {G : Graph} {A B C : Diagram G} (f : DiagramMap A B) (g : DiagramMap B C) {Q} (HQ : Cocone C Q)
   : functor_Colimit_half (diagram_comp g f) HQ == functor_Colimit_half g HQ o functor_Colimit f.
 Proof.
-  snrapply Colimit_rec_homotopy.
+  snapply Colimit_rec_homotopy.
   - reflexivity.
   - intros i j k x; cbn.
     apply equiv_p1_1q.
     unfold comm_square_comp.
     Open Scope long_path_scope.
-    lhs nrapply (ap_V _ _ @@ 1).
-    lhs nrapply (inverse2 (ap_pp (HQ j) _ _) @@ 1).
-    lhs nrapply (inv_pp _ _ @@ 1).
+    lhs napply (ap_V _ _ @@ 1).
+    lhs napply (inverse2 (ap_pp (HQ j) _ _) @@ 1).
+    lhs napply (inv_pp _ _ @@ 1).
     symmetry.
-    lhs nrapply (ap_compose (functor_Colimit f)).
-    lhs nrapply (ap _ (Colimit_rec_beta_colimp _ _ _ _ _ _)).
+    lhs napply (ap_compose (functor_Colimit f)).
+    lhs napply (ap _ (Colimit_rec_beta_colimp _ _ _ _ _ _)).
     (* [legs_comm] unfolds to a composite of paths, but the next line works best without unfolding it. *)
-    lhs nrapply ap_pp.
-    lhs nrefine (1 @@ _). 1: nrapply functor_Colimit_half_beta_colimp.
+    lhs napply ap_pp.
+    lhs nrefine (1 @@ _). 1: napply functor_Colimit_half_beta_colimp.
     simpl.
-    lhs nrapply concat_p_pp.
+    lhs napply concat_p_pp.
     nrefine (_ @@ 1).
     apply ap011.
-    2: nrapply ap_V.
-    lhs_V nrapply (ap_compose (colim j)); simpl.
-    lhs nrapply (ap_V (HQ j o g j) _).
+    2: napply ap_V.
+    lhs_V napply (ap_compose (colim j)); simpl.
+    lhs napply (ap_V (HQ j o g j) _).
     apply ap, ap_compose.
     Close Scope long_path_scope.
 Defined.
@@ -327,10 +327,10 @@ Section FunctorialityColimit.
     : cocone_postcompose HQ1 (t o functor_colimit m HQ1 HQ2)
       = cocone_precompose m (cocone_postcompose HQ2 t).
     Proof.
-      lhs nrapply cocone_postcompose_comp.
+      lhs napply cocone_postcompose_comp.
       lhs_V exact (ap (fun x => cocone_postcompose x t)
         (functor_colimit_commute m HQ1 HQ2)).
-      nrapply cocone_precompose_postcompose.
+      napply cocone_precompose_postcompose.
     Defined.
 
   (** In order to show that colimits are functorial, we show that this is true after precomposing with the cocone. *)
@@ -341,10 +341,10 @@ Section FunctorialityColimit.
     : cocone_postcompose HQ1 (functor_colimit n HQ2 HQ3 o functor_colimit m HQ1 HQ2)
       = cocone_postcompose HQ1 (functor_colimit (diagram_comp n m) HQ1 HQ3).
   Proof.
-    lhs nrapply cocone_precompose_postcompose_comp.
-    lhs_V nrapply (ap _ (functor_colimit_commute n HQ2 HQ3)).
-    lhs nrapply cocone_precompose_comp.
-    nrapply functor_colimit_commute.
+    lhs napply cocone_precompose_postcompose_comp.
+    lhs_V napply (ap _ (functor_colimit_commute n HQ2 HQ3)).
+    lhs napply cocone_precompose_comp.
+    napply functor_colimit_commute.
   Defined.
 
   Definition functor_colimit_compose {D1 D2 D3 : Diagram G}

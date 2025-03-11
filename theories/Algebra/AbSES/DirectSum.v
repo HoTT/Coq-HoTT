@@ -16,8 +16,8 @@ Lemma ab_biprod_exact {A E B X F Y : AbGroup}
   : IsExact (Tr (-1)) (functor_ab_biprod i j)
             (functor_ab_biprod p q).
 Proof.
-  snrapply Build_IsExact.
-  - snrapply phomotopy_homotopy_hset.
+  snapply Build_IsExact.
+  - snapply phomotopy_homotopy_hset.
     1: exact _.
     intro x; apply path_prod; cbn.
     + apply ex0.
@@ -54,7 +54,7 @@ Lemma functor_abses_directsum `{Funext} {A A' B B' C C' D D' : AbGroup}
       (f : AbSESMorphism E E') (g : AbSESMorphism F F')
   : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum E' F').
 Proof.
-  snrapply Build_AbSESMorphism.
+  snapply Build_AbSESMorphism.
   + exact (functor_ab_biprod (component1 f) (component1 g)).
   + exact (functor_ab_biprod (component2 f) (component2 g)).
   + exact (functor_ab_biprod (component3 f) (component3 g)).
@@ -68,7 +68,7 @@ Defined.
 Definition abses_diagonal `{Funext} {A B : AbGroup} (E : AbSES B A)
   : AbSESMorphism E (abses_direct_sum E E).
 Proof.
-  snrapply Build_AbSESMorphism.
+  snapply Build_AbSESMorphism.
   1,2,3: exact ab_diagonal.
   all: reflexivity.
 Defined.
@@ -77,7 +77,7 @@ Defined.
 Definition abses_codiagonal `{Funext} {A B : AbGroup} (E : AbSES B A)
   : AbSESMorphism (abses_direct_sum E E) E.
 Proof.
-  snrapply Build_AbSESMorphism.
+  snapply Build_AbSESMorphism.
   1,2,3: exact ab_codiagonal.
   all: intro x; cbn; apply grp_homo_op.
 Defined.
@@ -87,7 +87,7 @@ Definition abses_swap_morphism `{Funext} {A A' B B' : AbGroup}
            (E : AbSES B A) (F : AbSES B' A')
   : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum F E).
 Proof.
-  snrapply Build_AbSESMorphism.
+  snapply Build_AbSESMorphism.
   1,2,3: exact direct_sum_swap.
   all: reflexivity.
 Defined.
@@ -97,7 +97,7 @@ Lemma abses_twist_directsum `{Funext} {A B : AbGroup} (E F G : AbSES B A)
   : AbSESMorphism (abses_direct_sum (abses_direct_sum E F) G)
                   (abses_direct_sum (abses_direct_sum G F) E).
 Proof.
-  snrapply Build_AbSESMorphism.
+  snapply Build_AbSESMorphism.
   1,2,3: exact ab_biprod_twist.
   all: reflexivity.
 Defined.

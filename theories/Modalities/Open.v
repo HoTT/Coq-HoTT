@@ -11,7 +11,7 @@ Local Open Scope path_scope.
 
 Definition Op `{Funext} (U : HProp) : Modality.
 Proof.
-  snrapply easy_modality.
+  snapply easy_modality.
   - intros X; exact (U -> X).
   - intros T x; cbn.
     exact (fun _ => x).
@@ -53,7 +53,7 @@ Instance lex_open `{Funext} (U : HProp)
 Proof.
   apply lex_from_isconnected_paths.
   intros A Ac x y.
-  nrapply contr_forall.
+  napply contr_forall.
   intro u.
   pose (contr_inhabited_hprop U u).
   rapply contr_paths_contr.

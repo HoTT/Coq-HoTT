@@ -44,7 +44,7 @@ Definition ap_trijoin {A B C P : Type} (f : TriJoin A B C -> P)
   (a : A) (b : B) (c : C)
   : ap f (join12 a b) @ ap f (join23 b c) = ap f (join13 a c).
 Proof.
-  nrapply ap_trijoin_general.
+  napply ap_trijoin_general.
 Defined.
 
 Definition ap_trijoin_general_transport {J W P : Type} (f : J -> P)
@@ -64,7 +64,7 @@ Definition ap_trijoin_transport {A B C P : Type} (f : TriJoin A B C -> P)
   : ap_trijoin f a b c
     = (1 @@ ap_compose _ f _)^ @ (transport_paths_Fr _ _)^ @ apD (fun x => ap f (jglue a x)) (jglue b c).
 Proof.
-  nrapply ap_trijoin_general_transport.
+  napply ap_trijoin_general_transport.
 Defined.
 
 Definition ap_trijoin_general_V {J W P : Type} (f : J -> P)
@@ -83,7 +83,7 @@ Definition ap_trijoin_V {A B C P : Type} (f : TriJoin A B C -> P)
   : ap_triangle f (triangle_v a (jglue b c)^)
      = (1 @@ (ap (ap f) (ap_V joinr _) @ ap_V f _)) @ moveR_pV _ _ _ (ap_trijoin f a b c)^.
 Proof.
-  nrapply ap_trijoin_general_V.
+  napply ap_trijoin_general_V.
 Defined.
 
 (** ** The induction principle for the triple join *)
@@ -123,22 +123,22 @@ Definition trijoin_ind (A B C : Type) (P : TriJoin A B C -> Type)
                        = transport2 _ (join123 a b c) _ @ join13' a c)
   : forall x, P x.
 Proof.
-  snrapply Join_ind.
+  snapply Join_ind.
   - exact join1'.
-  - snrapply Join_ind.
+  - snapply Join_ind.
     + exact join2'.
     + exact join3'.
     + intros b c.
       lhs rapply (transport_compose P).
       apply join23'.
   - intro a.
-    snrapply Join_ind.
+    snapply Join_ind.
     + simpl. exact (join12' a).
     + simpl. exact (join13' a).
     + intros b c; cbn beta zeta.
-      lhs nrapply (transport_paths_FlFr_D (jglue b c)).
-      lhs nrapply (1 @@ _).
-      1: nrapply Join_ind_beta_jglue.
+      lhs napply (transport_paths_FlFr_D (jglue b c)).
+      lhs napply (1 @@ _).
+      1: napply Join_ind_beta_jglue.
       apply trijoin_ind_helper, join123'.
 Defined.
 
@@ -161,18 +161,18 @@ Arguments Build_TriJoinRecData {A B C P}%_type_scope (j1 j2 j3 j12 j13 j23 j123)
 Definition trijoin_rec {A B C P : Type} (f : TriJoinRecData A B C P)
   : TriJoin A B C $-> P.
 Proof.
-  snrapply Join_rec.
+  snapply Join_rec.
   - exact (j1 f).
-  - snrapply Join_rec.
+  - snapply Join_rec.
     + exact (j2 f).
     + exact (j3 f).
     + exact (j23 f).
   - intro a.
-    snrapply Join_ind; cbn beta.
+    snapply Join_ind; cbn beta.
     + exact (j12 f a).
     + exact (j13 f a).
     + intros b c.
-      lhs nrapply transport_paths_Fr.
+      lhs napply transport_paths_Fr.
       exact (1 @@ Join_rec_beta_jglue _ _ _ _ _ @ j123 f a b c).
 Defined.
 
@@ -189,7 +189,7 @@ Definition trijoin_rec_beta_join23 {A B C P : Type} (f : TriJoinRecData A B C P)
   : ap (trijoin_rec f) (join23 b c) = j23 f b c.
 Proof.
   unfold trijoin_rec, join23.
-  lhs_V nrapply (ap_compose joinr); simpl.
+  lhs_V napply (ap_compose joinr); simpl.
   apply Join_rec_beta_jglue.
 Defined.
 
@@ -211,7 +211,7 @@ Definition trijoin_rec_beta_join123 {A B C P : Type} (f : TriJoinRecData A B C P
         @ j123 f a b c @ (trijoin_rec_beta_join13 f a c)^.
 Proof.
   (* Expand the LHS: *)
-  lhs nrapply ap_trijoin_transport.
+  lhs napply ap_trijoin_transport.
   rewrite (apD_homotopic (Join_rec_beta_jglue _ _ _ _) (jglue b c)).
   rewrite Join_ind_beta_jglue.
   (* Change [ap (transport __) _] on LHS. *)
@@ -222,14 +222,14 @@ Proof.
   (* unfold trijoin_rec_beta_join23. *)
   (* Note that one of the [ap]s on the LHS computes to [u @@ 1], so that's what is in the lemma: *)
   (* change (ap (fun q => q @ ?x) ?u) with (u @@ @idpath _ x). *)
-  nrapply trijoin_rec_beta_join123_helper.
+  napply trijoin_rec_beta_join123_helper.
 Qed.
 
 (** We're next going to define a map in the other direction.  We do it via showing that [TriJoinRecData] is a 0-coherent 1-functor to [Type]. We'll later show that it is a 1-functor to 0-groupoids. *)
 Definition trijoinrecdata_fun {A B C P Q : Type} (g : P -> Q) (f : TriJoinRecData A B C P)
   : TriJoinRecData A B C Q.
 Proof.
-  snrapply Build_TriJoinRecData.
+  snapply Build_TriJoinRecData.
   - exact (g o j1 f).
   - exact (g o j2 f).
   - exact (g o j3 f).
@@ -351,7 +351,7 @@ Definition bundle_trijoinrecpath {A B C P : Type} {j1' : A -> P} {j2' : B -> P} 
   {f g : TriJoinRecData' j1' j2' j3'} (h : TriJoinRecPath' f g)
   : TriJoinRecPath (bundle_trijoinrecdata f) (bundle_trijoinrecdata g).
 Proof.
-  snrapply Build_TriJoinRecPath.
+  snapply Build_TriJoinRecPath.
   1, 2, 3: reflexivity.
   1, 2, 3: intros; apply equiv_p1_1q.
   - apply (h12' h).
@@ -368,21 +368,21 @@ Ltac bundle_trijoinrecpath :=
   match goal with |- TriJoinRecPath ?F ?G =>
     refine (bundle_trijoinrecpath (f:=unbundle_trijoinrecdata F)
                                   (g:=unbundle_trijoinrecdata G) _) end;
-  snrapply Build_TriJoinRecPath'.
+  snapply Build_TriJoinRecPath'.
 
 (** Using these paths, we can restate the beta rule for [trijoin_rec].  The statement using [TriJoinRecPath'] typechecks only because [trijoin_rec] computes definitionally on the path constructors. *)
 Definition trijoin_rec_beta' {A B C P : Type} (f : TriJoinRecData A B C P)
   : TriJoinRecPath' (unbundle_trijoinrecdata (trijoin_rec_inv (trijoin_rec f)))
                     (unbundle_trijoinrecdata f).
 Proof.
-  snrapply Build_TriJoinRecPath'; cbn.
+  snapply Build_TriJoinRecPath'; cbn.
   - apply trijoin_rec_beta_join12.
   - apply trijoin_rec_beta_join13.
   - apply trijoin_rec_beta_join23.
   - intros a b c.
     unfold prism'.
     apply moveR_pM.
-    nrapply trijoin_rec_beta_join123.
+    napply trijoin_rec_beta_join123.
 Defined.
 
 (** We can upgrade this to an unprimed path. This says that [trijoin_rec_inv] is split surjective. *)
@@ -427,7 +427,7 @@ Local Definition isinj_trijoin_rec_inv_helper {J P : Type} {f g : J -> P}
     = transport2 (fun x => f x = g x) abc H1 @ transport_paths_FlFr' ac H1 H3 H13.
 Proof.
   revert b c ab ac bc abc H2 H3 H12 H13 H23 H123.
-  nrapply triangle_ind; cbn.
+  napply triangle_ind; cbn.
   unfold ap_triangle, transport_paths_FlFr', transport; cbn -[concat_pp_p].
   generalize dependent (f a); intro fa; clear f.
   generalize dependent (g a); intro ga; clear g a.
@@ -450,11 +450,11 @@ Definition isinj_trijoin_rec_inv {A B C P : Type} {f g : TriJoin A B C -> P}
   (h : TriJoinRecPath (trijoin_rec_inv f) (trijoin_rec_inv g))
   : f == g.
 Proof.
-  snrapply trijoin_ind.
+  snapply trijoin_ind.
   1: apply (h1 h).
   1: apply (h2 h).
   1: apply (h3 h).
-  1, 2, 3: intros; nrapply transport_paths_FlFr'.
+  1, 2, 3: intros; napply transport_paths_FlFr'.
   1: apply (h12 h).
   1: apply (h13 h).
   1: apply (h23 h).
@@ -547,7 +547,7 @@ Proof.
     cbn.
     apply concat_p1_1p.
   - intros f1 f2 f3 k2 k1.
-    snrapply Build_TriJoinRecPath; intros; cbn beta.
+    snapply Build_TriJoinRecPath; intros; cbn beta.
     + exact (h1 k1 a @ h1 k2 a).
     + exact (h2 k1 b @ h2 k2 b).
     + exact (h3 k1 c @ h3 k2 c).
@@ -570,7 +570,7 @@ Instance is0gpd_trijoinrecdata (A B C P : Type) : Is0Gpd (TriJoinRecData A B C P
 Proof.
   apply Build_Is0Gpd.
   intros f g h.
-  snrapply Build_TriJoinRecPath; intros; cbn beta.
+  snapply Build_TriJoinRecPath; intros; cbn beta.
   + exact (h1 h a)^.
   + exact (h2 h b)^.
   + exact (h3 h c)^.
@@ -598,7 +598,7 @@ Instance is0functor_trijoinrecdata_fun {A B C P Q : Type} (g : P -> Q)
 Proof.
   apply Build_Is0Functor.
   intros f1 f2 h.
-  snrapply Build_TriJoinRecPath; intros; cbn.
+  snapply Build_TriJoinRecPath; intros; cbn.
   1, 2, 3: apply (ap g).
   1: apply (h1 h).
   1: apply (h2 h).
@@ -617,7 +617,7 @@ Instance is0functor_trijoinrecdata_0gpd (A B C : Type) : Is0Functor (trijoinrecd
 Proof.
   apply Build_Is0Functor.
   intros P Q g.
-  snrapply Build_Fun01.
+  snapply Build_Fun01.
   - exact (trijoinrecdata_fun g).
   - apply is0functor_trijoinrecdata_fun.
 Defined.
@@ -628,7 +628,7 @@ Proof.
   apply Build_Is1Functor.
   (* If [g1 g2 : P -> Q] are homotopic, then the induced maps are homotopic: *)
   - intros P Q g1 g2 h f; cbn in *.
-    snrapply Build_TriJoinRecPath; intros; cbn.
+    snapply Build_TriJoinRecPath; intros; cbn.
     1, 2, 3: apply h.
     1, 2, 3: apply concat_Ap.
     triangle_ind f a b c; cbn.
@@ -652,7 +652,7 @@ Definition trijoinrecdata_0gpd_fun (A B C : Type) : Fun11 Type ZeroGpd
 Definition trijoin_nattrans_recdata {A B C J : Type} (f : TriJoinRecData A B C J)
   : NatTrans (opyon_0gpd J) (trijoinrecdata_0gpd_fun A B C).
 Proof.
-  snrapply Build_NatTrans.
+  snapply Build_NatTrans.
   - rapply opyoneda_0gpd; exact f.
   - exact _.
 Defined.  
@@ -666,7 +666,7 @@ Definition trijoin_rec_inv_nattrans (A B C : Type)
 Definition trijoin_rec_inv_natequiv (A B C : Type)
   : NatEquiv (opyon_0gpd (TriJoin A B C)) (trijoinrecdata_0gpd_fun A B C).
 Proof.
-  snrapply Build_NatEquiv'.
+  snapply Build_NatEquiv'.
   1: apply trijoin_rec_inv_nattrans.
   intro P.
   apply isequiv_0gpd_issurjinj.
@@ -736,7 +736,7 @@ Definition trijoinrecdata_tricomp_0fun {A B C A' B' C' P}
 Proof.
   (* This line is not needed, but clarifies the proof. *)
   unfold trijoinrecdata_tricomp; destruct p.
-  snrapply Build_TriJoinRecPath; intros; cbn; apply_hyp.
+  snapply Build_TriJoinRecPath; intros; cbn; apply_hyp.
   (* E.g., the first goal is [j1 k (f a) = j1 l (f a)], and this is solved by [h1 p (f a)]. We just precompose all fields of [p] with [f], [g] and [h]. *)
 Defined.
 
@@ -746,7 +746,7 @@ Definition trijoinrecdata_tricomp2 {A B C A' B' C' P} (k : TriJoinRecData A B C 
   (p : f == f') (q : g == g') (r : h == h')
   : trijoinrecdata_tricomp k f g h $== trijoinrecdata_tricomp k f' g' h'.
 Proof.
-  snrapply Build_TriJoinRecPath; intros; cbn.
+  snapply Build_TriJoinRecPath; intros; cbn.
   - apply ap, p.
   - apply ap, q.
   - apply ap, r.
@@ -784,7 +784,7 @@ Definition functor_trijoin_compose {A B C A' B' C' A'' B'' C''}
   : functor_trijoin (f' o f) (g' o g) (h' o h) == functor_trijoin f' g' h' o functor_trijoin f g h.
 Proof.
   symmetry.
-  nrapply trijoin_rec_functor_trijoin.
+  napply trijoin_rec_functor_trijoin.
 Defined.
 
 Definition functor_trijoin_idmap {A B C}
@@ -802,7 +802,7 @@ Definition functor2_trijoin {A B C A' B' C'}
   : functor_trijoin f g h == functor_trijoin f' g' h'.
 Proof.
   unfold functor_trijoin.
-  rapply (fmap trijoin_rec).
+  tapply (fmap trijoin_rec).
   exact (trijoinrecdata_tricomp2 _ p q r).
 Defined.
 
@@ -813,7 +813,7 @@ Instance isequiv_functor_trijoin {A B C A' B' C'}
   : IsEquiv (functor_trijoin f g h).
 Proof.
   (* This proof is almost identical to the proof of [isequiv_functor_join]. *)
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   - exact (functor_trijoin f^-1 g^-1 h^-1).
   - etransitivity.
     1: symmetry; apply functor_trijoin_compose.

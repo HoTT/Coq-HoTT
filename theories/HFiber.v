@@ -59,7 +59,7 @@ Definition functor_hfiber {A B C D}
            (p : k o f == g o h) (b : B)
 : hfiber f b -> hfiber g (k b).
 Proof.
-  snrapply @functor_sigma.
+  snapply @functor_sigma.
   - exact h.
   - intros a e; exact ((p a)^ @ ap k e).
 Defined.

@@ -38,7 +38,7 @@ Proof.
   rewrite rng_idem.
   rewrite rng_plus_negate_r.
   rewrite rng_negate_zero.
-  nrapply rng_plus_zero_r.
+  napply rng_plus_zero_r.
 Defined.
 
 (** If [e] is idempotent, then it is also an idempotent element of the opposite ring. *)
@@ -51,7 +51,7 @@ Definition rng_power_idem {R : Ring} (e : R) `{IsIdempotent R e} (n : nat)
   : (1 <= n)%nat -> rng_power e n = e.
 Proof.
   intros L; induction L.
-  - snrapply rng_mult_one_r.
+  - snapply rng_mult_one_r.
   - rhs_V rapply rng_idem.
     exact (ap (e *.) IHL).
 Defined.
@@ -61,7 +61,7 @@ Instance isidempotent_rng_homo {R S : Ring} (f : R $-> S) (e : R)
   : IsIdempotent R e -> IsIdempotent S (f e).
 Proof.
   intros p.
-  lhs_V nrapply rng_homo_mult.
+  lhs_V napply rng_homo_mult.
   exact (ap f p).
 Defined.
 
@@ -98,7 +98,7 @@ Hint Immediate isorthogonal_swap : typeclass_instances.
 Instance isorthogonal_op {R : Ring} (e f : R) `{r : IsOrthogonal R e f}
   : IsOrthogonal (rng_op R) e f.
 Proof.
-  snrapply Build_IsOrthogonal.
+  snapply Build_IsOrthogonal.
   - exact (rng_idem_orth' (R:=R)).
   - exact (rng_idem_orth (R:=R)).
 Defined.
@@ -120,7 +120,7 @@ Defined.
 Instance isorthogonal_complement {R : Ring} (e : R) `{IsIdempotent R e}
   : IsOrthogonal R e (1 - e).
 Proof.
-  snrapply Build_IsOrthogonal.
+  snapply Build_IsOrthogonal.
   1: rewrite rng_dist_l_negate,rng_mult_one_r.
   2: rewrite rng_dist_r_negate, rng_mult_one_l.
   1,2: rewrite rng_idem.

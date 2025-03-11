@@ -58,18 +58,18 @@ Proof.
   induction w as [|? w IHw] in x, y, z |- *.
   - simpl.
     apply equiv_p1_1q.
-    lhs nrapply concat_p1.
+    lhs napply concat_p1.
     apply ap_idmap.
   - simpl.
-    rhs_V nrapply ap_pp.
+    rhs_V napply ap_pp.
     rhs_V exact (ap (ap (cons a)) (IHw x y z)).
-    rhs nrapply ap_pp.
+    rhs napply ap_pp.
     f_ap.
-    { rhs nrapply ap_pp.
+    { rhs napply ap_pp.
       f_ap.
       apply ap_compose. }
-    lhs_V nrapply ap_compose.
-    nrapply (ap_compose (fun l => l ++ z)).
+    lhs_V napply ap_compose.
+    napply (ap_compose (fun l => l ++ z)).
 Defined.
 
 (** The length of a concatenated list is the sum of the lengths of the two lists. *)
@@ -164,7 +164,7 @@ Proof.
   induction l as [|x l IHl].
   - reflexivity.
   - simpl.
-    nrapply ap011.
+    napply ap011.
     + exact (Hf _ (inl idpath)).
     + apply IHl.
       intros y Hy.
@@ -248,7 +248,7 @@ Proof.
   symmetry.
   induction l as [|x l IHl] in acc |- * using list_ind@{i i}.
   - apply nat_add_zero_r.
-  - rhs_V nrapply IHl.
+  - rhs_V napply IHl.
     apply nat_add_succ_r.
 Defined.
 
@@ -273,7 +273,7 @@ Defined.
 Definition list_map_reverse {A B} (f : A -> B) (l : list A)
   : list_map f (reverse l) = reverse (list_map f l).
 Proof.
-  nrapply list_map_reverse_acc.
+  napply list_map_reverse_acc.
 Defined.
 
 (** [reverse_acc] is the same as concatenating the reversed list with the accumulator. *)
@@ -282,8 +282,8 @@ Definition reverse_acc_cons {A : Type} (l l' : list A)
 Proof.
   induction l as [|a l IHl] in l' |- *.
   1: reflexivity.
-  lhs nrapply IHl.
-  lhs nrapply (app_assoc _ [a]).
+  lhs napply IHl.
+  lhs napply (app_assoc _ [a]).
   f_ap; symmetry.
   apply IHl.
 Defined.
@@ -306,11 +306,11 @@ Proof.
   induction l as [|a l IHl] in l' |- *.
   1: symmetry; apply app_nil.
   simpl.
-  lhs nrapply reverse_cons.
-  rhs nrapply ap.
-  2: nrapply reverse_cons.
-  rhs nrapply app_assoc.
-  nrapply (ap (fun l => l ++ [a])).
+  lhs napply reverse_cons.
+  rhs napply ap.
+  2: napply reverse_cons.
+  rhs napply app_assoc.
+  napply (ap (fun l => l ++ [a])).
   exact (IHl l').
 Defined.
 
@@ -320,9 +320,9 @@ Definition reverse_reverse {A : Type} (l : list A)
 Proof.
   induction l.
   1: reflexivity.
-  lhs nrapply ap.
-  1: nrapply reverse_cons.
-  lhs nrapply reverse_app.
+  lhs napply ap.
+  1: napply reverse_cons.
+  lhs napply reverse_app.
   exact (ap _ IHl).
 Defined.
 
@@ -402,7 +402,7 @@ Proof.
   1: intros x'; destruct x'.
   intros [| i].
   - revert a p.
-    snrapply paths_ind_r@{i i}.
+    snapply paths_ind_r@{i i}.
     snrefine (exist@{i i} _ 0 _).
     snrefine (exist _ _ idpath).
     apply leq_succ.
@@ -490,13 +490,13 @@ Proof.
   1: discriminate.
   f_ap.
   - exact (H 0 _).
-  - snrapply IHl.
+  - snapply IHl.
     1: by apply path_nat_succ.
     intros n Hn.
     snrefine ((nth'_cons l n a Hn _)^ @ _).
     1: apply leq_succ, Hn.
-    lhs nrapply H.
-    nrapply nth'_cons.
+    lhs napply H.
+    napply nth'_cons.
 Defined.
 
 (** The [nth n] element of a concatenated list [l ++ l'] where [n < length l] is the [nth] element of [l]. *)
@@ -728,7 +728,7 @@ Proof.
   2: exact (leq_trans _ H).
   rewrite <- nat_sub_l_add_r.
   2: exact _.
-  lhs nrapply nat_sub_succ_r.
+  lhs napply nat_sub_succ_r.
   apply ap.
   apply nat_add_sub_cancel_l.
 Defined.
@@ -741,7 +741,7 @@ Proof.
   intros p.
   apply equiv_inlist_app in p.
   revert p.
-  snrapply sum_rec.
+  snapply sum_rec.
   - apply take_inlist.
   - apply drop_inlist.
 Defined.
@@ -767,27 +767,27 @@ Proof.
   - simpl.
     apply iff_inverse.
     apply iff_equiv.
-    snrapply prod_empty_l@{v}.
+    snapply prod_empty_l@{v}.
   - simpl.
-    nrapply iff_compose.
+    napply iff_compose.
     2: { apply iff_inverse.
          apply iff_equiv.
          exact (sum_distrib_r@{k k k _ _ _ k k} _ _ _). }
     destruct (dec a) as [p|p].
     + simpl.
-      snrapply iff_compose.
+      snapply iff_compose.
       1: exact (sum (a = x) (prod (InList@{u} x l) (P x))).
       1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.
       split; apply functor_sum@{k k k k}; only 2,4: exact idmap.
       * intros [].
         exact (idpath, p).
       * exact fst.
-    + nrapply iff_compose.
+    + napply iff_compose.
       1: exact IHl.
       apply iff_inverse.
       apply iff_equiv.
       nrefine (equiv_compose'@{k k k} (sum_empty_l@{k} _) _).
-      snrapply equiv_functor_sum'@{k k k k k k}.
+      snapply equiv_functor_sum'@{k k k k k k}.
       2: exact equiv_idmap.
       apply equiv_to_empty.
       by intros [[] r].
@@ -818,7 +818,7 @@ Defined.
 Definition length_seq@{} (n : nat)
   : length (seq n) = n.
 Proof.
-  lhs nrapply length_reverse.
+  lhs napply length_reverse.
   apply length_seq_rev.
 Defined.
 
@@ -840,7 +840,7 @@ Proof.
   transparent assert (f : (forall n, {k : nat & k < n}
     -> {k : nat & k < n.+1})).
   { intros m.
-    snrapply (functor_sigma idmap).
+    snapply (functor_sigma idmap).
     intros k H.
     exact (leq_succ_r H). }
   induction n as [|n IHn].
@@ -860,7 +860,7 @@ Proof.
   induction n as [|n IHn].
   1: reflexivity.
   cbn; f_ap.
-  lhs nrapply length_list_map.
+  lhs napply length_list_map.
   exact IHn.
 Defined.
 
@@ -868,7 +868,7 @@ Defined.
 Definition length_seq'@{} (n : nat)
   : length (seq' n) = n.
 Proof.
-  lhs nrapply length_reverse.
+  lhs napply length_reverse.
   apply length_seq_rev'.
 Defined.
 
@@ -879,7 +879,7 @@ Proof.
   induction n as [|n IHn].
   1: reflexivity.
   simpl; f_ap.
-  lhs_V nrapply list_map_compose.
+  lhs_V napply list_map_compose.
   exact IHn.
 Defined.
 
@@ -887,7 +887,7 @@ Defined.
 Definition seq_seq'@{} (n : nat)
   : list_map pr1 (seq' n) = seq n.
 Proof.
-  lhs nrapply list_map_reverse_acc.
+  lhs napply list_map_reverse_acc.
   apply (ap reverse).
   apply seq_rev_seq_rev'.
 Defined.
@@ -913,29 +913,29 @@ Proof.
   1: destruct (not_lt_zero_r _ H).
   rewrite seq_succ.
   destruct (dec (i < n)) as [H'|H'].
-  - lhs nrapply nth_app.
+  - lhs napply nth_app.
     1: by rewrite length_seq.
     by apply IHn.
   - apply geq_iff_not_lt in H'.
     apply leq_pred' in H.
     destruct (leq_antisym H H').
-    lhs nrapply nth_last.
+    lhs napply nth_last.
     { rewrite length_app.
       rewrite nat_add_comm.
       apply length_seq. }
-    nrapply last_app.
+    napply last_app.
 Defined.
 
 (** The [nth'] element of a [seq'] is [i]. *)
 Definition nth'_seq'@{} (n i : nat) (H : i < length (seq' n))
   : (nth' (seq' n) i H).1 = i.
 Proof.
-  unshelve lhs_V nrapply nth'_list_map.
+  unshelve lhs_V napply nth'_list_map.
   1: by rewrite length_list_map.
-  unshelve lhs nrapply (ap011D (fun x y => nth' x _ y) _ idpath).
+  unshelve lhs napply (ap011D (fun x y => nth' x _ y) _ idpath).
   2: apply seq_seq'.
   apply isinj_some.
-  lhs_V nrapply nth_nth'.
+  lhs_V napply nth_nth'.
   apply nth_seq.
   by rewrite length_seq' in H.
 Defined.
@@ -965,7 +965,7 @@ Definition length_Build_list {A : Type} (n : nat)
   (f : forall (i : nat), (i < n) -> A)
   : length (Build_list n f) = n.
 Proof.
-  lhs nrapply length_list_map.
+  lhs napply length_list_map.
   apply length_seq'.
 Defined.
 
@@ -975,9 +975,9 @@ Definition nth'_Build_list {A : Type} {n : nat}
   : nth' (Build_list n f) i Hi' = f i Hi.
 Proof.
   unshelve lhs snrefine (nth'_list_map _ _ _ (_^ # Hi) _).
-  1: nrapply length_seq'.
-  snrapply ap011D.
-  1: nrapply nth'_seq'.
+  1: napply length_seq'.
+  snapply ap011D.
+  1: napply nth'_seq'.
   rapply path_ishprop.
 Defined.
 
@@ -994,7 +994,7 @@ Definition nth'_list_restrict {A : Type} (s : nat -> A) {n : nat}
   {i : nat} (Hi : i < length (list_restrict s n))
   : nth' (list_restrict s n) i Hi = s i.
 Proof.
-  unshelve lhs snrapply nth'_list_map.
+  unshelve lhs snapply nth'_list_map.
   - exact ((length_list_restrict _ _ @ (length_seq' n)^) # Hi).
   - exact (ap s (nth'_seq' _ _ _)).
 Defined.
@@ -1228,7 +1228,7 @@ Definition list_exists_seq {n : nat} (P : nat -> Type)
 Proof.
   split.
   - intros [k p].
-    snrapply (list_exists_inlist P _ k _ p).
+    snapply (list_exists_inlist P _ k _ p).
     apply inlist_seq, H.
     exact p.
   - intros H1.
@@ -1244,8 +1244,8 @@ Definition decidable_exists_nat (n : nat) (P : nat -> Type)
   (H2 : forall k, Decidable (P k))
   : Decidable (exists k, P k).
 Proof.
-  nrapply decidable_iff.
-  1: apply iff_inverse; nrapply list_exists_seq.
+  napply decidable_iff.
+  1: apply iff_inverse; napply list_exists_seq.
   1: exact H1.
   exact _.
 Defined.

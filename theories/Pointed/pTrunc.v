@@ -62,7 +62,7 @@ Proof.
   apply Build_Is1Functor.
   - intros X Y f g p.
     srapply pTr_ind; cbn.
-    snrapply Build_pForall.
+    snapply Build_pForall.
     + cbn. exact (fun x => ap tr (p x)).
     + pointed_reduce.
       exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_p1 _))^.
@@ -117,7 +117,7 @@ Proof.
   intros A n.
   cbn; etransitivity.
   1: apply ptr_loops.
-  rapply (emap loops).
+  tapply (emap loops).
   apply IHk.
 Defined.
 
@@ -152,8 +152,8 @@ Defined.
 Definition pequiv_ptr_prod (n : trunc_index) (A B : pType)
   : pTr n (A * B) <~>* pTr n A * pTr n B.
 Proof.
-  snrapply Build_pEquiv'.
-  1: nrapply equiv_Trunc_prod_cmp.
+  snapply Build_pEquiv'.
+  1: napply equiv_Trunc_prod_cmp.
   reflexivity.
 Defined.
 
@@ -165,7 +165,7 @@ Definition istrunc_pforall `{Univalence} {m n : trunc_index}
   (Y : pFam@{u v} X) {istY : forall x, IsTrunc (n +2+ m) (Y x)}
   : IsTrunc@{w} n (pForall X Y).
 Proof.
-  nrapply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall@{v w u} Y)).
+  napply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall@{v w u} Y)).
   rapply (istrunc_extension_along_conn (n:=m) _ Y (HP:=istY)).
 Defined.
 
