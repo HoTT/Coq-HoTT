@@ -1,6 +1,6 @@
 (** * Kan extensions of type families *)
 
-(** This is part of the formalization of section 4 of the paper: Injective Types in Univalent Mathematics by Martin Escardo.  Many proofs are guided by Martin Escardo's original Agda formalization of this paper which can be found at: https://www.cs.bham.ac.uk/~mhe/TypeTopology/InjectiveTypes.Article.html. *)
+(** This is part of the formalization of section 4 of the paper: Injective Types in Univalent Mathematics by Martín Escardó.  Many proofs are guided by Martín Escardó's original Agda formalization of this paper which can be found at: https://www.cs.bham.ac.uk/~mhe/TypeTopology/InjectiveTypes.Article.html. *)
 
 Require Import Basics.
 Require Import Types.Sigma Types.Unit Types.Arrow Types.Forall Types.Empty Types.Universe Types.Equiv Types.Paths.

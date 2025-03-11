@@ -306,7 +306,7 @@ Proof.
     intro f. apply nullhomot_paths_from_susp, HX.
 Defined.
 
-(** Iterated loop spaces can be described using pointed maps from spheres.  The [n = 0] case of this is stated using Bool in [pmap_from_bool] above, and the [n = 1] case of this is stated using [Circle] in [pmap_from_circle_loops] in Circle.v. *)
+(** Iterated loop spaces can be described using pointed maps from spheres.  The [n = 0] case of this is stated using [Bool] in [pmap_from_bool] above, and the [n = 1] case of this is stated using [Circle] in [pmap_from_circle_loops] in Circle.v. *)
 Definition pmap_from_psphere_iterated_loops `{Funext} (n : nat) (X : pType)
   : (psphere n ->** X) <~>* iterated_loops n X.
 Proof.

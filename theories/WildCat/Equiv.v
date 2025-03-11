@@ -565,7 +565,7 @@ Instance is0functor_core_precomp {A : Type} `{HasEquivs A}
 Proof.
   apply Build_Is0Functor.
   intros f g al; cbn in h.
-  (** Why can't coq resolve this? *)
+  (** Why can't Coq resolve this? *)
   refine (compose_cate_fun f h
            $@ (_ $@R h)
            $@ (compose_cate_fun g h)^$).

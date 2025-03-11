@@ -39,7 +39,7 @@ Include Category.Sigma.
 Include Category.Strict.
 Include Category.Sum.
 Include Category.Univalent.
-(** We don't want to make utf-8 notations the default, so we don't export them. *)
+(** We don't want to make UTF-8 notations the default, so we don't export them. *)
 
 (** ** Subcategories *)
 (** For the subfolders, we need to re-create the module structure.  Alas, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)

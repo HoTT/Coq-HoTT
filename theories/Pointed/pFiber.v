@@ -100,7 +100,7 @@ Definition square_pequiv_pfiber {A B C D}
   : h o* pfib f ==* pfib g o* pequiv_pfiber h k p
   := square_functor_pfiber p.
 
-(** The triple-fiber functor is equal to the negative of the loopspace functor. *)
+(** The triple-fiber functor is equal to the negative of the loop space functor. *)
 Definition pfiber2_fmap_loops {A B : pType} (f : A ->* B)
 : pfiber2_loops f o* pfib (pfib (pfib f))
   ==* fmap loops f o* (loops_inv _ o* pfiber2_loops (pfib f)).

@@ -226,7 +226,7 @@ Definition QuotientGroup' (G : Group) (N : Subgroup G) (H : IsNormalSubgroup N)
 
 Local Open Scope group_scope.
 
-(** Computation rule for grp_quotient_rec. *)
+(** Computation rule for [grp_quotient_rec]. *)
 Corollary grp_quotient_rec_beta `{F : Funext} {G : Group}
           (N : NormalSubgroup G) (H : Group)
           {A : Group} (f : G $-> A)
@@ -236,7 +236,7 @@ Proof.
   apply equiv_path_grouphomomorphism; reflexivity.
 Defined.
 
-(** Computation rule for grp_quotient_rec. *)
+(** Computation rule for [grp_quotient_rec]. *)
 Definition grp_quotient_rec_beta' {G : Group}
           (N : NormalSubgroup G) (H : Group)
           {A : Group} (f : G $-> A)
@@ -244,7 +244,7 @@ Definition grp_quotient_rec_beta' {G : Group}
   : (grp_quotient_rec G N f h) $o grp_quotient_map == f
     := fun _ => idpath.
 
-(** The proof of normality is irrelevent up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
+(** The proof of normality is irrelevant up to equivalence. This is unfortunate that it doesn't hold definitionally. *)
 Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
   {k k' : IsNormalSubgroup H}
   : QuotientGroup' G H k ≅ QuotientGroup' G H k'.

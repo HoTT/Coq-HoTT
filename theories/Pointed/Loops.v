@@ -72,7 +72,7 @@ Proof.
     { intro p.
       refine (concat_1p _ @ concat_p1 _ @ ap_idmap _). }
     reflexivity.
-  (** Preservation of compositon. *)
+  (** Preservation of composition. *)
   - intros A B c g f.
     srapply Build_pHomotopy.
     { intros p. cbn.
@@ -251,7 +251,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** There is a natural map from [loops (X * Y)] to [loops X * loops Y], and ideally it would definitionally underly the equivalence [loops_prod].  That's not the case, but we show that [loops_prod] is homotopic to the expected maps after projecting to each factor. *)
+(** There is a natural map from [loops (X * Y)] to [loops X * loops Y], and ideally it would definitionally underlie the equivalence [loops_prod].  That's not the case, but we show that [loops_prod] is homotopic to the expected maps after projecting to each factor. *)
 Definition pfst_loops_prod (X Y : pType)
   : pfst o* loops_prod X Y ==* fmap loops pfst.
 Proof.

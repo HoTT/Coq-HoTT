@@ -7,7 +7,7 @@ Local Open Scope trunc_scope.
 
 (** * Varieties of constant function *)
 
-(** Recall that a function [f : X -> Y] is *weakly constant*, [WeaklyConstant f], if [forall x y, f x = f y].  We show, following Kraus, Escardo, Coquand, and Altenkirch, that the type of fixed points of a weakly constant endofunction is an hprop.  However, to avoid potential confusion with [Coq.Init.Wf.Fix], instead of their notation [Fix], we denote this type by [FixedBy]. *)
+(** Recall that a function [f : X -> Y] is *weakly constant*, [WeaklyConstant f], if [forall x y, f x = f y].  We show, following Kraus, Escardó, Coquand, and Altenkirch, that the type of fixed points of a weakly constant endofunction is an hprop.  However, to avoid potential confusion with [Coq.Init.Wf.Fix], instead of their notation [Fix], we denote this type by [FixedBy]. *)
 
 Definition FixedBy {X : Type} (f : X -> X) := {x : X & f x = x}.
 

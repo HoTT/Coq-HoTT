@@ -37,7 +37,7 @@ Section AssumeUnivalence.
     (** Post-compose with [pequiv_loops_bg_g] *)
     nrefine (natequiv_compose _ _).
     1: exact (natequiv_postwhisker _ (natequiv_inverse natequiv_g_loops_bg)).
-    (** Loop-susp adjoint *)
+    (** Loop-suspension adjoint *)
     nrefine (natequiv_compose _ _).
     1: exact (natequiv_prewhisker
       (natequiv_loop_susp_adjoint_r (pointify S)) B).
@@ -71,7 +71,7 @@ Section AssumeUnivalence.
     exact grp_homo_id.
   Defined.
 
-  (** The fundemental group of an S-bouquet is the free group on S. *)
+  (** The fundamental group of an S-bouquet is the free group on S. *)
   #[export] Instance isfreegroupon_pi1bouquet (S : Type)
     : IsFreeGroupOn S (Pi 1 (Bouquet S)) (pi1bouquet_incl S).
   Proof.

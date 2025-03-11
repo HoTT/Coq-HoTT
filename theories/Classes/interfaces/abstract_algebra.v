@@ -176,7 +176,7 @@ Section upper_classes.
   #[export] Existing Instances intdom_nozeroes.
 
   (* We do not include strong extensionality for (-) and (/)
-    because it can de derived *)
+    because it can be derived *)
   Class IsField {Aap: Apart A} {Arecip: Recip A} :=
     { field_ring : IsCRing
     ; field_apart : IsApart A

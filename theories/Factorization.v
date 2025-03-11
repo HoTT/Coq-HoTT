@@ -262,7 +262,7 @@ Section FactSys.
     repeat rewrite concat_p_pp; apply whiskerR.
     (* Next we set up for a naturality. *)
     rewrite (ap_compose q^-1 f2), <- ap_pp, <- inv_pp.
-    (* The next line appears to do nothing, but in fact it is necessary for the subsequent [rewrite] to succeed, because [lift_factsys] appears in the invisible implicit point-arguments of [paths].  One way to discover issues of that sort is to turn on printing of all implicit argumnets with [Set Printing All]; another is to use [Set Debug Tactic Unification] and inspect the output to see what [rewrite] is trying and failing to unify. *)
+    (* The next line appears to do nothing, but in fact it is necessary for the subsequent [rewrite] to succeed, because [lift_factsys] appears in the invisible implicit point-arguments of [paths].  One way to discover issues of that sort is to turn on printing of all implicit arguments with [Set Printing All]; another is to use [Set Debug Tactic Unification] and inspect the output to see what [rewrite] is trying and failing to unify. *)
     unfold lift_factsys.
     rewrite <- ap_pp.
     rewrite <- ap_V, <- ap_compose.

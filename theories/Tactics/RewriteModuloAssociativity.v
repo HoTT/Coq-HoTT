@@ -1,4 +1,4 @@
-(** * Tactics for rewriting modulo assciativity *)
+(** * Tactics for rewriting modulo associativity *)
 Require Import Overture PathGroupoids.
 Require Import Tactics.BinderApply.
 

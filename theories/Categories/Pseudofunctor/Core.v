@@ -18,7 +18,7 @@ Section pseudofunctor.
 
   Variable C : PreCategory.
 
-  (** Quoting from nCatLab (http://ncatlab.org/nlab/show/pseudofunctor):
+  (** Quoting from nLab (http://ncatlab.org/nlab/show/pseudofunctor):
 
       Given bicategories [C] and [D], a pseudofunctor (or weak 2-functor,
       or just functor) [P : C → D] consists of:

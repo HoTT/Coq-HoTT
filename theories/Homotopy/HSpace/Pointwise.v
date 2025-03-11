@@ -40,7 +40,7 @@ Proof.
 Defined.
 
 
-(** For the type of pointed maps [Y ->** X], coherence of [X] is needed even to get a noncoherent H-space structure on [Y ->** X]. *)
+(** For the type of pointed maps [Y ->** X], coherence of [X] is needed even to get a non-coherent H-space structure on [Y ->** X]. *)
 Instance ishspace_pmap `{Funext} (X Y : pType) `{IsCoherent X}
   : IsHSpace (Y ->** X).
 Proof.

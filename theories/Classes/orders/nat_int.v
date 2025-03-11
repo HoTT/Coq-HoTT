@@ -11,7 +11,7 @@ Generalizable Variables N R f.
 Section Univ.
 Context `{Funext} `{Univalence}.
 
-(*
+(**
 We axiomatize the order on the naturals and the integers as a non trivial
 pseudo semiring order that satisfies the biinduction principle. We prove
 some results that hold for the order on the naturals and the integers.

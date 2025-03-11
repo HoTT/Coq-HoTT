@@ -9,7 +9,7 @@ Set Asymmetric Patterns.
 Local Open Scope profunctor_scope.
 
 Section identity.
-  (** Quoting nCatLab:
+  (** Quoting nLab:
 
       In particular the identity profunctor [Id : C ⇸ C] is represented by the identity functor and hence is given by the hom-functor [C(−,−) : Cᵒᵖ × C → Set]. *)
 

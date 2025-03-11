@@ -243,7 +243,7 @@ Qed.
 
 (** * Simulations *)
 
-(* We define the notion of simulations between arbitrary relations. For simplicity, most lemmas about simulations are formulated for ordinals only, even if they do not need all properties of ordinals. The only exception is isordinal_simulation which can be used to prove that a relation is an ordinal. *)
+(** We define the notion of simulations between arbitrary relations. For simplicity, most lemmas about simulations are formulated for ordinals only, even if they do not need all properties of ordinals. The only exception is [isordinal_simulation] which can be used to prove that a relation is an ordinal. *)
 
 Class IsSimulation {A B : Type} {R__A : Lt A} {R__B : Lt B} (f : A -> B) :=
   { simulation_is_hom {a a'}

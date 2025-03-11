@@ -78,7 +78,7 @@ Definition cat_exchange {A : Type} `{Is21Cat A} {a b c : A}
   : (p $@ q) $@@ (r $@ s) $== (p $@@ r) $@ (q $@@ s).
 Proof.
   unfold "$@@".
-  (** We use the distributivity of [$@R] and [$@L] in a (2,1)-category (since they are functors) to see that we have the same dadta on both sides of the 3-morphism. *)
+  (** We use the distributivity of [$@R] and [$@L] in a (2,1)-category (since they are functors) to see that we have the same data on both sides of the 3-morphism. *)
   nrefine ((_ $@L cat_prewhisker_pp _ _ _ ) $@ _).
   nrefine ((cat_postwhisker_pp _ _ _ $@R _) $@ _).
   (** Now we reassociate and whisker on the left and right. *)

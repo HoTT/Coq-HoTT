@@ -83,7 +83,7 @@ Defined.
 
 (** The concrete description of transport in sigmas and pis is rather trickier than in the other types. In particular, these cannot be described just in terms of transport in simpler types; they require the full Id-elim rule by way of "dependent transport" [transportD].
 
-  In particular this indicates why "transport" alone cannot be fully defined by induction on the structure of types, although Id-elim/transportD can be (cf. Observational Type Theory). A more thorough set of lemmas, along the lines of the present ones but dealing with Id-elim rather than just transport, might be nice to have eventually? *)
+  In particular this indicates why "transport" alone cannot be fully defined by induction on the structure of types, although Id-elim/[transportD] can be (cf. Observational Type Theory). A more thorough set of lemmas, along the lines of the present ones but dealing with Id-elim rather than just transport, might be nice to have eventually? *)
 Definition transport_forall
   {A : Type} {P : A -> Type} {C : forall x, P x -> Type}
   {x1 x2 : A} (p : x1 = x2) (f : forall y : P x1, C x1 y)

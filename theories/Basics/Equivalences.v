@@ -66,7 +66,7 @@ Definition equiv_compose' {A B C : Type} (g : B <~> C) (f : A <~> B)
 (** We put [g] and [f] in [equiv_scope] explicitly.  This is a partial work-around for https://github.com/coq/coq/issues/3990, which is that implicitly bound scopes don't nest well. *)
 Notation "g 'oE' f" := (equiv_compose' g%equiv f%equiv) : equiv_scope.
 
-(* The TypeClass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
+(* The typeclass [Transitive] has a different order of parameters than [equiv_compose].  Thus in declaring the instance we have to switch the order of arguments. *)
 Instance transitive_equiv : Transitive Equiv | 0 :=
   fun _ _ _ f g => equiv_compose g f.
 
@@ -100,7 +100,7 @@ Section EquivTransportD.
     Context {A : Type} (P : A -> Type) (Q : forall a : A, P a -> Type)
       {x y : A} (p : x = y) {px : P x}.
 
-    (** The inverse of transportD is defined explicitly.  This allows us to reason about the inverse when the input is not [idpath]. *)
+    (** The inverse of [transportD] is defined explicitly.  This allows us to reason about the inverse when the input is not [idpath]. *)
     #[export] Instance isequiv_transportD : IsEquiv (transportD P Q p px).
     Proof.
       snrapply Build_IsEquiv.
@@ -592,7 +592,7 @@ Ltac ev_equiv :=
 
 (** ** Building equivalences between nested sigma and record types *)
 
-(** The following tactic [make_equiv] builds an equivalence between two types built out of arbitrarily nested sigma and record types, not necessarily right-associated, as long as they have all the same underyling components.  This is more general than [issig] in that it doesn't just prove equivalences between a single record type and a single right-nested tower of sigma types, but less powerful in that it can't deduce the latter nested tower of sigmas automatically: you have to have both sides of the equivalence known. *)
+(** The following tactic [make_equiv] builds an equivalence between two types built out of arbitrarily nested sigma and record types, not necessarily right-associated, as long as they have all the same underlying components.  This is more general than [issig] in that it doesn't just prove equivalences between a single record type and a single right-nested tower of sigma types, but less powerful in that it can't deduce the latter nested tower of sigmas automatically: you have to have both sides of the equivalence known. *)
 
 (* Perform [intros] repeatedly, recursively destructing all possibly-nested record types. We use a custom induction principle for [Contr], since [elim] produces two goals. The [hnf] is important, for example to unfold [IsUnitPreserving] to an equality, which the [lazymatch] then ignores. *)
 Ltac decomposing_intros :=

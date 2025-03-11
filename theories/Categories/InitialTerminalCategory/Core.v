@@ -20,7 +20,7 @@ Class IsTerminalCategory (C : PreCategory)
   : Type0 := {}.
 
 (** ** Initial categories *)
-(** An initial precategory is one whose objects have the recursion priniciple of the empty type *)
+(** An initial precategory is one whose objects have the recursion principle of the empty type *)
 Class IsInitialCategory (C : PreCategory)
   := initial_category_ind : forall P : Type, C -> P.
 
@@ -31,7 +31,7 @@ Instance trunc_initial_category_mor `{IsInitialCategory C} x y
 : Contr (morphism C x y)
   := initial_category_ind _ x.
 
-(** ** Default intitial ([0]) and terminal ([1]) precategories. *)
+(** ** Default initial ([0]) and terminal ([1]) precategories. *)
 Instance is_initial_category_0 : IsInitialCategory 0 := (fun T => @Empty_ind (fun _ => T)).
 Instance: IsTerminalCategory 1 | 0 := {}.
 Instance: Contr (object 1) | 0 := _.

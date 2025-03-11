@@ -9,7 +9,7 @@ Generalizable All Variables.
 
 (** * Coequalizer as a colimit *)
 
-(** In this file, we define [Coequalizer] the coequalizer of two maps as the colimit of a particuliar diagram, and then show that it is equivalent to [Coeq] the primitive coequalizer defined as an HIT. *)
+(** In this file, we define [Coequalizer] the coequalizer of two maps as the colimit of a particular diagram, and then show that it is equivalent to [Coeq] the primitive coequalizer defined as an HIT. *)
 
 
 (** ** [Coequalizer] *)

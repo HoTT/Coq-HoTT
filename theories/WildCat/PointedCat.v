@@ -12,7 +12,7 @@ Class IsPointedCat (A : Type) `{Is1Cat A} := {
 Existing Instance isinitial_zero_object.
 Existing Instance isterminal_zero_object.
 
-(** The zero morphism between objects [a] and [b] of a pointed category [A] is the unique morphism that factors throguh the zero object. *)
+(** The zero morphism between objects [a] and [b] of a pointed category [A] is the unique morphism that factors through the zero object. *)
 Definition zero_morphism {A : Type} `{IsPointedCat A} {a b : A} : a $-> b
   := (mor_initial _ b) $o (mor_terminal a _).
 
@@ -27,7 +27,7 @@ Section ZeroLaws.
   Definition cat_zero_target (h : a $-> zero_object) : h $== zero_morphism
     := (mor_terminal_unique _ _ _)^$ $@ (mor_terminal_unique _ _ _).
 
-  (** We show the last two arguments so that end pointes can easily be specified. *)
+  (** We show the last two arguments so that end points can easily be specified. *)
   Arguments zero_morphism {_ _ _ _ _ _} _ _.
 
   Definition cat_zero_l : zero_morphism b c $o f $== zero_morphism a c.
@@ -86,7 +86,7 @@ Proof.
     rapply cate_isterminal.
 Defined.
 
-(** Pointed functors preserve the zero object upto isomorphism. *)
+(** Pointed functors preserve the zero object up to isomorphism. *)
 Lemma pfunctor_zero {A B : Type} (F : A -> B)
   `{IsPointedCat A, IsPointedCat B, !HasEquivs B,
     !Is0Functor F, !Is1Functor F, !IsPointedFunctor F}
@@ -95,7 +95,7 @@ Proof.
   rapply cate_isinitial.
 Defined.
 
-(** Pointed functors preserve the zero morphism upto homotopy *)
+(** Pointed functors preserve the zero morphism up to homotopy *)
 Lemma fmap_zero_morphism {A B : Type} (F : A -> B)
   `{IsPointedCat A, IsPointedCat B, !HasEquivs B,
     !Is0Functor F, !Is1Functor F, !IsPointedFunctor F} {a b : A}

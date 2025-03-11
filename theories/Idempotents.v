@@ -197,7 +197,7 @@ Proof.
   - simpl. intros x; reflexivity.
 Defined.
 
-(** Any weakly constant pre-idempotent splits (Escardo) *)
+(** Any weakly constant pre-idempotent splits (Escardó) *)
 Definition split_preidem_wconst (X : Type) (f : PreIdempotent X)
            `{WeaklyConstant _ _ f}
 : Splitting f.
@@ -208,7 +208,7 @@ Proof.
   - simpl. intros x; reflexivity.
 Defined.
 
-(** If [f] is pre-idempotent and [f x = x] is collapsible for all [x], then [f] splits (Escardo). *)
+(** If [f] is pre-idempotent and [f x = x] is collapsible for all [x], then [f] splits (Escardó). *)
 Definition split_preidem_splitsupp (X : Type) (f : PreIdempotent X)
            (ss : forall x, Collapsible (f x = x))
 : Splitting f.
@@ -232,7 +232,7 @@ Proof.
   apply istruncmap_mapinO_tr; exact _.
 Defined.
 
-(** Conversely, if [f] splits with a section that is an embedding, then (it is pre-idempotent and) [f x = x] is collapsible for all [x] (Escardo). *)
+(** Conversely, if [f] splits with a section that is an embedding, then (it is pre-idempotent and) [f x = x] is collapsible for all [x] (Escardó). *)
 Definition splitsupp_split_isemb (X : Type) (f : X -> X) (S : Splitting f)
            `{IsEmbedding (retract_sect S.1)}
 : forall x, Collapsible (f x = x).

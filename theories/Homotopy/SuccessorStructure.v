@@ -75,7 +75,7 @@ Notation "'Z3'" := (Stratified (+Z) 3) : succ_scope.
 
 (** ** Category of successor structures *)
 
-(** Inspired by the construction of the wildcat structure on pType, we can give SuccStr a wildcat structure in a similar manner (all the way up). *)
+(** Inspired by the construction of the wildcat structure on [pType], we can give [SuccStr] a wildcat structure in a similar manner (all the way up). *)
 
 Record ssFam (A : SuccStr) := {
   ss_fam :> A -> Type;

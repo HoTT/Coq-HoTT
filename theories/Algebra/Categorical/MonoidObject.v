@@ -20,7 +20,7 @@ Section MonoidObject.
   Class IsMonoidObject (x : A) := {
     (** A multiplication map from the tensor product of [x] with itself to [x]. *)
     mo_mult : tensor x x $-> x;
-    (** A unit of the multplication. *)
+    (** A unit of the multiplication. *)
     mo_unit : unit $-> x;
     (** The multiplication map is associative. *)
     mo_assoc : mo_mult $o fmap10 tensor mo_mult x $o associator x x x
@@ -57,7 +57,7 @@ Section ComonoidObject.
 
   (** We can build comonoid objects from the following data: *)
   Definition Build_IsComonoidObject (x : A)
-    (** A comultplication map. *)
+    (** A comultiplication map. *)
     (co_comult : x $-> tensor x x)
     (** A counit. *)
     (co_counit : x $-> unit)
@@ -184,7 +184,7 @@ Proof.
     exact (co_right_counit (A:=A^op) tensor unit (x:=x)).
 Defined.
 
-(** A cocommutative cocomonoid object in [A^op] is a commutative monoid object in [A]. *)
+(** A cocommutative comonoid object in [A^op] is a commutative monoid object in [A]. *)
 Definition cmo_coco_op {A : Type} {tensor : A -> A -> A} {unit : A}
   `{HasEquivs A, !Is0Bifunctor tensor, !Is1Bifunctor tensor}
   `{!Associator tensor, !LeftUnitor tensor unit, !RightUnitor tensor unit,

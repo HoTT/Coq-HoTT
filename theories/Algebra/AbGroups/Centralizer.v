@@ -74,11 +74,11 @@ Proof.
     + (* The case when k = g: *)
       induction q.
       reflexivity.
-    + (* The case when k = mon_unit: *)
+    + (* The case when [k = mon_unit]: *)
       apply centralizer_unit.
     + (* The case when k = k1 (-k2): *)
       srapply (issubgroup_in_op_inv (H:=centralizer (gen tt))); assumption.
-  - (* The case when h = mon_unit: *)
+  - (* The case when [h = mon_unit]: *)
     symmetry; apply centralizer_unit.
   - (* The case when h = h1 (-h2): *)
     symmetry.

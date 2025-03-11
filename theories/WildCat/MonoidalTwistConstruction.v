@@ -77,7 +77,7 @@ Section TwistConstruction.
 
   (** *** Finer naturality *)
 
-  (** The naturality postulates we have for [twist] are natural in all their arguments similtaneously. We show the finer naturality of [twist] in each argument separately as this becomes more useful in practice. *)
+  (** The naturality postulates we have for [twist] are natural in all their arguments simultaneously. We show the finer naturality of [twist] in each argument separately as this becomes more useful in practice. *)
 
   Definition twist_nat_l {a a'} (f : a $-> a') b c
     : twist a' b c $o fmap10 cat_tensor f (cat_tensor b c)
@@ -319,7 +319,7 @@ Section TwistConstruction.
     refine (_ $@ (((cat_assoc _ _ _) $@R _) $@R _)).
     do 2 refine (_ $@ ((cat_assoc _ _ _) $@R _)).
     do 2 refine (_ $@ cat_assoc _ _ _).
-    (** Cancel two braids next to eachother. *)
+    (** Cancel two braids next to each other. *)
     apply moveL_fmap01_fmap01_braidR.
     apply moveL_fmap01_twistR.
     refine (_ $@ (cat_assoc _ _ _)^$).

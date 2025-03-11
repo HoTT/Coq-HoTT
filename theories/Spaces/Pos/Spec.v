@@ -79,7 +79,7 @@ Proof.
   apply x1_inj, H.
 Qed.
 
-(** * Injectivity of pos_succ *)
+(** * Injectivity of [pos_succ] *)
 Lemma pos_succ_inj n m : pos_succ n = pos_succ m -> n = m.
 Proof.
   revert m.
@@ -166,7 +166,7 @@ Proof.
   induction p; cbn; trivial; by apply ap.
 Qed.
 
-(** pos_succ and doubling functions *)
+(** [pos_succ] and doubling functions *)
 
 Lemma pos_pred_double_succ n
   : pos_pred_double (pos_succ n) = n~1.
@@ -184,7 +184,7 @@ Proof.
   cbn; apply ap, nH.
 Qed.
 
-(** ** Iteration and pos_succ *)
+(** ** Iteration and [pos_succ] *)
 Lemma pos_iter_succ_l {A} (f : A -> A) p a
   : pos_iter f (pos_succ p) a = f (pos_iter f p a).
 Proof.
@@ -260,7 +260,7 @@ Proof.
   by rewrite pos_mul_add_distr_r.
 Qed.
 
-(** ** pos_succ and pos_mul *)
+(** ** [pos_succ] and [pos_mul] *)
 
 Lemma pos_mul_succ_l p q
   : (pos_succ p) * q = p * q + q.

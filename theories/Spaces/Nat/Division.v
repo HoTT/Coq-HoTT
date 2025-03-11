@@ -109,7 +109,7 @@ Proof.
   nrapply nat_dist_sub_r.
 Defined.
 
-(** The divisor is greater than zero when the divident is greater than zero. *)
+(** The divisor is greater than zero when the dividend is greater than zero. *)
 Definition gt_zero_divides n m (d : (n | m)) (gt0 : 0 < m)
   : 0 < n.
 Proof.
@@ -713,7 +713,7 @@ Proof.
   split; [intros [H1 H2] | intros H; split]; exact _.
 Defined.
 
-(** If [p] is divisible by all common divisors of [n] and [m], and [p] is also a common divisor, then it must necesserily be equal to the greatest common divisor. *)
+(** If [p] is divisible by all common divisors of [n] and [m], and [p] is also a common divisor, then it must necessarily be equal to the greatest common divisor. *)
 Definition nat_gcd_unique n m p
   (H : forall q, (q | n) -> (q | m) -> (q | p))
   : (p | n) -> (p | m) -> nat_gcd n m = p.
@@ -722,7 +722,7 @@ Proof.
   rapply nat_divides_antisym.
 Defined.
 
-(** As a corollary of uniquness, we get that the greatest common divisor operation is commutative. *)
+(** As a corollary of uniqueness, we get that the greatest common divisor operation is commutative. *)
 Definition nat_gcd_comm n m : nat_gcd n m = nat_gcd m n.
 Proof.
   rapply nat_gcd_unique.

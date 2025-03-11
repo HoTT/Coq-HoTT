@@ -222,7 +222,7 @@ Proof.
       apply Hin.
 Defined.
 
-(** As a commonly occuring special case of the above induction principle, we have the case when the predicate in question is showing that two group homomorphisms out of the tensor product are homotopic. In order to do this, it suffices to show it only for simple tensors. The homotopy is closed under addition, so we don't need to hypothesise anything else. *)
+(** As a commonly occurring special case of the above induction principle, we have the case when the predicate in question is showing that two group homomorphisms out of the tensor product are homotopic. In order to do this, it suffices to show it only for simple tensors. The homotopy is closed under addition, so we don't need to hypothesise anything else. *)
 Definition ab_tensor_prod_ind_homotopy {A B G : AbGroup}
   {f f' : ab_tensor_prod A B $-> G}
   (H : forall a b, f (tensor a b) = f' (tensor a b))
@@ -361,7 +361,7 @@ Proof.
     nrapply grp_homo_op.
 Defined.
 
-(** The universal property of the tensor product is that biadditive maps between abelian groups are in one-to-one corresondance with maps out of the tensor product. In this sense, the tensor product is the most perfect object describing biadditive maps between two abelian groups. *)
+(** The universal property of the tensor product is that biadditive maps between abelian groups are in one-to-one correspondence with maps out of the tensor product. In this sense, the tensor product is the most perfect object describing biadditive maps between two abelian groups. *)
 Definition equiv_ab_tensor_prod_rec `{Funext} (A B C : AbGroup)
   : Biadditive A B C <~> (ab_tensor_prod A B $-> C).
 Proof.
@@ -451,7 +451,7 @@ Defined.
 
 (** ** Symmetry of the Tensor Product *)
 
-(** The tensor product is symmetric in that the order in which we take the tensor shouldn't matter upto isomorphism. *)
+(** The tensor product is symmetric in that the order in which we take the tensor shouldn't matter up to isomorphism. *)
 
 (** We can define a swap map which swaps the order of simple tensors. *)
 Definition ab_tensor_swap {A B} : ab_tensor_prod A B $-> ab_tensor_prod B A.
@@ -649,7 +649,7 @@ Proof.
   exact (tensor_ab_mul z a b).
 Defined.
 
-(** The hexagon identity is also straighforward to prove. We simply have to reduce all the involved functions on the simple tensors using our custom triple tensor induction principle. *)
+(** The hexagon identity is also straightforward to prove. We simply have to reduce all the involved functions on the simple tensors using our custom triple tensor induction principle. *)
 Instance hexagon_ab_tensor_prod : HexagonIdentity ab_tensor_prod.
 Proof.
   snrapply hexagon_twist.

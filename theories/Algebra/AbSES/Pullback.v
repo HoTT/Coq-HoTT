@@ -221,7 +221,7 @@ Definition abses_pullback_pmap `{Univalence} {A B B' : AbGroup} (f : B' $-> B)
 
 (** ** Functoriality of [abses_pullback] *)
 
-(** [abses_pullback] is psuedo-functorial, and we can state this in terms of actual homotopies or "path data homotopies." We decorate the latter with the suffix ('). *)
+(** [abses_pullback] is pseudo-functorial, and we can state this in terms of actual homotopies or "path data homotopies." We decorate the latter with the suffix ('). *)
 
 (** For every [E : AbSES B A], the pullback of [E] along [id_B] is [E]. *)
 Definition abses_pullback_id `{Univalence} {A B : AbGroup}

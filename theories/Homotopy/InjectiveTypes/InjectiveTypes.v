@@ -1,6 +1,6 @@
 (** * Injective Types *)
 
-(** Formalization of the paper: Injective Types in Univalent Mathematics by Martin Escardo (with some extra results). *)
+(** Formalization of the paper: Injective Types in Univalent Mathematics by Martín Escardó (with some extra results). *)
 
 Require Import Basics Types.
 Require Import Truncations.Core Truncations.Constant.

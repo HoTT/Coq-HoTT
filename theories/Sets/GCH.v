@@ -28,7 +28,7 @@ Proof.
   - intros H. apply equiv_smalltype. intros q -> % HI. exact H.
 Qed.
 
-(* The concluding disjunction of GCH is excluse since otherwise we'd obtain an injection of P(X) into X. *)
+(* The concluding disjunction of GCH is exclusive since otherwise we'd obtain an injection of P(X) into X. *)
 
 Lemma hprop_GCH {PR : PropResizing} {FE : Funext} :
   IsHProp GCH.

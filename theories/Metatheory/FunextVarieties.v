@@ -27,7 +27,7 @@ Definition WeakFunext :=
     (forall x, Contr (P x)) -> Contr (forall x, P x).
 
 (** The obvious implications are
-   Funext -> NaiveFunext -> WeakFunext and NaiveFunext -> NaiveNondepFunext.
+   [Funext -> NaiveFunext -> WeakFunext] and [NaiveFunext -> NaiveNondepFunext].
    None of these do anything fiddly with the universes either. *)
 
 Definition Funext_implies_NaiveFunext@{i j max}
@@ -51,11 +51,11 @@ Definition NaiveFunext_implies_NaiveNondepFunext@{i j max}
   : NaiveFunext@{i j max} -> NaiveNondepFunext@{i j max}
   := fun nf A B f g => nf A (fun _ => B) f g.
 
-(** The non-obvious directions are that WeakFunext implies Funext and that NaiveNondepFunext implies WeakFunext (and hence all four are logically equivalent). *)
+(** The non-obvious directions are that [WeakFunext] implies Funext and that [NaiveNondepFunext] implies [WeakFunext] (and hence all four are logically equivalent). *)
 
-(** ** Weak funext implies Funext *)
+(** ** [WeakFunext] implies [Funext] *)
 
-(** To show that WeakFunext implies Funext, the point is that under weak funext, the space of "pointwise homotopies" has the same universal property as the space of paths. *)
+(** To show that [WeakFunext] implies Funext, the point is that under weak funext, the space of "pointwise homotopies" has the same universal property as the space of paths. *)
 
 Section Homotopies.
 
@@ -142,7 +142,7 @@ Proof.
            (fun f => ((fun x => (x ; f x)) ; 1)) (fun f => 1)).
 Defined.
 
-(** Therefore, naive nondependent funext also implies full funext.  Interestingly, this requires the universe of the assumption codomain to be not just that of the conclusion codomain, but the max of that universe with the domain universe (which is unchanged). *)
+(** Therefore, naive non-dependent funext also implies full funext.  Interestingly, this requires the universe of the assumption codomain to be not just that of the conclusion codomain, but the max of that universe with the domain universe (which is unchanged). *)
 Definition NaiveNondepFunext_implies_Funext@{i j max}
   : NaiveNondepFunext@{i max max} -> Funext_type@{i j max}
   := WeakFunext_implies_Funext o NaiveNondepFunext_implies_WeakFunext.

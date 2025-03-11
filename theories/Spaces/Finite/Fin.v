@@ -57,7 +57,7 @@ Proof.
   elim (f (inr tt)).
 Defined.
 
-(** The zeroth element of a non-empty finite set is the left most element. It also happens to be the biggest by termsize. *)
+(** The zeroth element of a non-empty finite set is the left most element. It also happens to be the biggest by term size. *)
 Fixpoint fin_zero {n : nat} : Fin n.+1 :=
   match n with
   | O => inr tt
@@ -413,7 +413,7 @@ Proof.
   - exact fin_zero.
 Defined.
 
-(** fsucc allows us to convert a natural number into an element of a finite set. This can be thought of as the modulo map. *)
+(** [fsucc] allows us to convert a natural number into an element of a finite set. This can be thought of as the modulo map. *)
 Fixpoint fin_nat {n : nat} (m : nat) : Fin n.+1
   := match m with
       | 0 => fin_zero

@@ -32,7 +32,7 @@ Record Adjunction {C D : Type} (F : C -> D) (G : D -> C)
   `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G} :=
 {
   equiv_adjunction (x : C) (y : D) : (F x $-> y) <~> (x $-> G y) ;
-  (** Naturality condition in both varibles seperately *)
+  (** Naturality condition in both variable separately *)
   (** The left variable is a bit trickier to state since we have opposite categories involved. *)
   is1natural_equiv_adjunction_l (y : D)
     : Is1Natural (A := C^op) (yon y o F)

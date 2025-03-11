@@ -72,7 +72,7 @@ Section hom_proj_prod_algebra.
 
 End hom_proj_prod_algebra.
 
-(** The product algebra univarsal mapping property [ump_prod_algebra]. *)
+(** The product algebra universal mapping property [ump_prod_algebra]. *)
 
 Section ump_prod_algebra.
   Context
@@ -167,7 +167,7 @@ End prod_algebra_notations.
 
 Import prod_algebra_notations.
 
-(** Specialisation of the product algebra univarsal mapping property
+(** Specialization of the product algebra universal mapping property
     to binary product. *)
 
 Section ump_bin_prod_algebra.

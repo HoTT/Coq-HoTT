@@ -476,7 +476,7 @@ Definition equiv_induction_comp {U : Type} (P : forall V, U <~> V -> Type)
   : equiv_induction P didmap U (equiv_idmap U) = didmap
   := (equiv_ind_comp (P U) _ 1).
 
-(** Martin-Lof style *)
+(** Martin-Löf style *)
 Theorem equiv_induction' (P : forall U V, U <~> V -> Type)
   : (forall T, P T T (equiv_idmap T)) -> (forall U V (w : U <~> V), P U V w).
 Proof.

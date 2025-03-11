@@ -8,7 +8,7 @@ Delimit Scope dsquare_scope with dsquare.
 
 Local Open Scope dpath_scope.
 
-(* Dependent squares *)
+(** Dependent squares *)
 
 Definition DPathSquare {A} (P : A -> Type) {a00 a10 a01 a11}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x p1x}
@@ -30,7 +30,7 @@ Notation "1" := ds_id : dsquare_scope.
 
 Section DPathSquareConstructors.
 
-  (* Different ways of constructing dependent squares *)
+  (** Different ways of constructing dependent squares *)
 
   Context {A} {a0 a1 : A} {p : a0 = a1} {P : A -> Type}
     {b0 b1} (dp : DPath P p b0 b1).
@@ -49,7 +49,7 @@ Section DPathSquareConstructors.
 
 End DPathSquareConstructors.
 
-(* DPathSquares can be given by 2-dimensional DPaths *)
+(** [DPathSquare]s can be given by 2-dimensional [DPath]s *)
 Definition equiv_ds_dpath {A} (P : A -> Type) {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
   {p0x : a00 = a01} {p1x : a10 = a11}
@@ -68,7 +68,7 @@ Defined.
 
 Notation ds_dpath := equiv_ds_dpath.
 
-(* We have an apD for DPathSquares *)
+(** We have an [apD] for [DPathSquare]s *)
 Definition ds_apD {A} {B : A -> Type} (f : forall a, B a) {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x p1x} (s : PathSquare px0 px1 p0x p1x)
   : DPathSquare B s (apD f px0) (apD f px1) (apD f p0x) (apD f p1x).
@@ -76,7 +76,7 @@ Proof.
   by destruct s.
 Defined.
 
-(* A DPathSquare over a constant family is given by just a square *)
+(* A [DPathSquare] over a constant family is given by just a square *)
 Definition ds_const {A P : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   {s : PathSquare px0 px1 p0x p1x} {b00 b10 b01 b11 : P}
@@ -107,7 +107,7 @@ Defined.
 
 Notation ds_const' := equiv_ds_const'.
 
-(* dp_apD fits into a natural square *)
+(** [dp_apD] fits into a natural square *)
 Definition dp_apD_nat {A} {P : A -> Type} {f g : forall x, P x} {x y : A}
   (q : f == g) (p : x = y)
   : DPathSquare P (sq_refl_h _) (apD f p) (apD g p) (q x) (q y).
@@ -128,7 +128,7 @@ Defined.
 
 Notation ds_G1 := equiv_ds_G1.
 
-(** A DPath in a path-type is naturally a DPathSquare.  *)
+(** A [DPath] in a path-type is naturally a [DPathSquare].  *)
 
 Definition equiv_ds_dp {A : Type} {B : A -> Type} (f g : forall a : A, B a)
   {x1 x2 : A} (p : x1 = x2) (q1 : f x1 = g x1) (q2 : f x2 = g x2)

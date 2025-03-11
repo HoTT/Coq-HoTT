@@ -35,7 +35,7 @@ Proof.
 Defined.
 
 Section equiv_iso_set_cat.
-  (** ** Isomorphisms in [set_cat] are eqivalent to equivalences. *)
+  (** ** Isomorphisms in [set_cat] are equivalent to equivalences. *)
   Context `{Funext}.
 
   Definition isiso_isequiv s d (m : morphism set_cat s d)
@@ -90,7 +90,7 @@ Section equiv_iso_set_cat.
 End equiv_iso_set_cat.
 
 Section equiv_iso_prop_cat.
-  (** ** Isomorphisms in [prop_cat] are eqivalent to equivalences. *)
+  (** ** Isomorphisms in [prop_cat] are equivalent to equivalences. *)
   Context `{Funext}.
 
   Definition isiso_isequiv_prop s d (m : morphism prop_cat s d)

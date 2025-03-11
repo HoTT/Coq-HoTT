@@ -251,7 +251,7 @@ Section RingMovement.
   Definition rng_moveR_M0 : 0 = - x + y <~> x = y := @grp_moveR_M1 R x y.
   Definition rng_moveR_0M : 0 = y + - x <~> x = y := @grp_moveR_1M R x y.
 
-  (** TODO: Movement laws about mult *)
+  (** TODO: Movement laws about [mult] *)
 
 End RingMovement.
 
@@ -322,7 +322,7 @@ Defined.
 (** ** Subrings *)
 
 (** TODO: factor out this definition as a submonoid *)
-(** A subring is a subgorup of the underlying abelian group of a ring that is closed under multiplication and contains [1]. *)
+(** A subring is a subgroup of the underlying abelian group of a ring that is closed under multiplication and contains [1]. *)
 Class IsSubring {R : Ring} (S : R -> Type) := {
   issubring_issubgroup :: IsSubgroup S;
   issubring_mult {x y} : S x -> S y -> S (x * y);
@@ -518,7 +518,7 @@ Defined.
 (** Given a ring [R] we can reverse the order of the multiplication to get another ring [R^op]. *)
 Definition rng_op : Ring -> Ring.
 Proof.
-  (** Let's carefully pull apart the ring structure and put it back together. Unfortunately, our definition of ring has some redundant data such as multiple hset assumptions, due to the mixing of algebraic strucutres. This isn't a problem in practice, but it does mean using typeclass inference here will pick up the wrong instance, therefore we carefully put it back together. See test/Algebra/Rings/Ring.v for a test checking this operation is definitionally involutive. *)
+  (** Let's carefully pull apart the ring structure and put it back together. Unfortunately, our definition of ring has some redundant data such as multiple hset assumptions, due to the mixing of algebraic structures. This isn't a problem in practice, but it does mean using typeclass inference here will pick up the wrong instance, therefore we carefully put it back together. See test/Algebra/Rings/Ring.v for a test checking this operation is definitionally involutive. *)
   intros [R mult one
     [is_abgroup [[monoid_ishset mult_assoc] li ri] ld rd]
     mult_assoc_opp].
@@ -627,7 +627,7 @@ Class IsInvertible (R : Ring) (x : R) := Build_IsInvertible' {
   isrightinvertible_isinvertible :: IsRightInvertible R x;
 }.
 
-(** We can show an element is invertible by providing an inverse element which is a left and right inverse similtaneously. We will later show that the two inverses of an invertible element must be equal anyway. *)
+(** We can show an element is invertible by providing an inverse element which is a left and right inverse simultaneously. We will later show that the two inverses of an invertible element must be equal anyway. *)
 Definition Build_IsInvertible {R : Ring} (x : R)
   (inv : R) (inv_l : inv * x = 1) (inv_r : x * inv = 1)
   : IsInvertible R x.

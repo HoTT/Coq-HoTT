@@ -2,7 +2,7 @@ Require Import Basics Types Limits.Pullback Cubical.PathSquare.
 Require Import Algebra.Groups.Group.
 Require Import WildCat.Core.
 
-(** Pullbacks of groups are formalized by equipping the set-pullback with the desired group structure. The universal property in the category of groups is proved by saying that the corecursion principle (grp_pullback_corec) is an equivalence. *) 
+(** Pullbacks of groups are formalized by equipping the set-pullback with the desired group structure. The universal property in the category of groups is proved by saying that the corecursion principle [grp_pullback_corec] is an equivalence. *) 
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.

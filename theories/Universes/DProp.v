@@ -30,7 +30,7 @@ Record DProp :=
   }.
 >>
 
-At some point we may want to go that route, but it would be more work.  In particualar, [Instance]s of [Decidable] wouldn't be automatically computed for us, and the characterization of the homotopy type of [DProp] itself would be a lot harder. *)
+At some point we may want to go that route, but it would be more work.  In particular, [Instance]s of [Decidable] wouldn't be automatically computed for us, and the characterization of the homotopy type of [DProp] itself would be a lot harder. *)
 
 Coercion dprop_type : DProp >-> Sortclass.
 Existing Instance ishprop_dprop.

@@ -259,7 +259,7 @@ Reserved Notation "x ^++" (at level 1).
 Reserved Notation "x ^++ k" (at level 1).
 Reserved Notation "b ^+f" (at level 1).
 
-(** Mathclasses *)
+(** Math classes *)
 Reserved Notation "' x" (at level 20).
 Reserved Notation "// x" (at level 40, no associativity).
 Reserved Infix "?=" (at level 70, no associativity).

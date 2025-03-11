@@ -53,7 +53,7 @@ Section AlgFlabUniverse.
     (Trefl : forall X, (T (equiv_idmap X) == idmap)).
   Arguments T {X Y} _ _. (* This is needed, despite the braces above. *)
 
-  (** When studying the sigma type [{X : Type & A X}], the map [alg_flab_map] can be exchanged for either of these simpler maps.  This first one will turn out to be homotopic to [alg_flab_map] when [Type] is given its "forall" flabiness structure. *)
+  (** When studying the sigma type [{X : Type & A X}], the map [alg_flab_map] can be exchanged for either of these simpler maps.  This first one will turn out to be homotopic to [alg_flab_map] when [Type] is given its "forall" flabbiness structure. *)
   Definition alg_flab_map_forall `{Funext}
     (P : HProp) (f : P -> Type)
     : A (forall h, f h) -> (forall h, A (f h)).
@@ -63,7 +63,7 @@ Section AlgFlabUniverse.
     apply (@equiv_contr_forall _ _ (contr_inhabited_hprop _ _)).
   Defined.
 
-  (** And this one is homotopic to [alg_flab_map] when [Type] is given its "sigma" flabiness structure. *)
+  (** And this one is homotopic to [alg_flab_map] when [Type] is given its "sigma" flabbiness structure. *)
   Definition alg_flab_map_sigma
     (P : HProp) (f : P -> Type)
     : A {h : P & f h} -> (forall h, A (f h)).
@@ -150,7 +150,7 @@ Proof.
     reflexivity.
 Defined.
 
-(** The following results are adapted from section 7 of Injective Types in Univalent Mathematics by Martin Escardo, using the above results. *)
+(** The following results are adapted from section 7 of Injective Types in Univalent Mathematics by Martín Escardó, using the above results. *)
 
 (** For a subuniverse, the flabbiness condition is equivalent to closure under proposition indexed pi types (or sigma types), so using this we can state a simpler theorem for proving flabbiness of subuniverses. *)
 Definition alg_flab_subuniverse_forall `{Univalence} (O : Subuniverse)

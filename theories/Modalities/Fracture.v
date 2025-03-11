@@ -19,7 +19,7 @@ O2 A --> O2 (O1 A)
 
 is a pullback.  This says in a certain precise sense that [A] can be recovered from its [O1]- and [O2]-reflections together with some information about how they fit together.  If we think of [O1] and [O2] as subuniverses or subtoposes, then the fracture theorem says that their "union", or more precisely their *gluing*, is the whole universe.
 
-We will prove the fracture theorem holds under the assumptions that [O2] is lex, and that [O1]-connected types are [O2]-modal.  Note that like lex-ness, the latter is also a "large" hypothesis.  But also as with lex-ness, rather than hypothesize it polymorphically with a module type, we just hypothesize it in the obvious way and allow the polymophism of the resulting theorem to be computed automatically.  This actually gives more precise information: the fracture theorem for a particular type [A] only depends on this hypothesis for types [B] lying in the same universe as [A].  (In fact, as we will see, it only needs the special cases of the fibers of [to O1 A], but in examples it seems no harder to verify the general case.)
+We will prove the fracture theorem holds under the assumptions that [O2] is lex, and that [O1]-connected types are [O2]-modal.  Note that like lex-ness, the latter is also a "large" hypothesis.  But also as with lex-ness, rather than hypothesize it polymorphically with a module type, we just hypothesize it in the obvious way and allow the polymorphism of the resulting theorem to be computed automatically.  This actually gives more precise information: the fracture theorem for a particular type [A] only depends on this hypothesis for types [B] lying in the same universe as [A].  (In fact, as we will see, it only needs the special cases of the fibers of [to O1 A], but in examples it seems no harder to verify the general case.)
 
 It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is trivial.  This is naturally expressed in the context of the fracture theorem by saying that [O2]-modal types are [O1]-connected, i.e. the converse of the second hypothesis of our fracture theorem.  When this also holds, we can show that the universe [Type] can actually be reconstructed, up to equivalence, from the universes of [O1]- and [O2]-modal types and the [O2]-reflection from the first to the second, using the "Artin gluing construction" from topos theory.  *)
 
@@ -52,7 +52,7 @@ It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is
 
     (** ** The fracture gluing theorem *)
 
-    (** We now also assume the converse of the second hyopthesis *)
+    (** We now also assume the converse of the second hypothesis *)
     Definition Disjoint : Type
       := forall (A : Type), In O2 A -> IsConnected O1 A.
     Context (isconnectedo1_ino2 : Disjoint).

@@ -4,7 +4,7 @@ Require Import HoTT.Basics HoTT.Types.
 Require Import Modalities.Identity.
 Require Import Spaces.Circle Spaces.TwoSphere HoTT.Truncations Homotopy.Suspension.
 
-(** Some unicode symbols that we don't use within the library.  See also Utf8Minimal.v for a small number of symbols uses in the Classes library. *)
+(** Some Unicode symbols that we don't use within the library.  See also Utf8Minimal.v for a small number of symbols uses in the Classes library. *)
 
 Notation Type₀ := Type0.
 Notation pr₁ := pr1.

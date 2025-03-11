@@ -49,7 +49,7 @@ Proof.
   exact (path_isomorphism (def_isomorphic e)).
 Defined.
 
-(** Identified algebras are isomorophic [A = B → A ≅ B] *)
+(** Identified algebras are isomorphic [A = B → A ≅ B] *)
 
 Lemma isomorphic_id {σ} {A B : Algebra σ} (p : A = B) : A ≅ B.
 Proof.

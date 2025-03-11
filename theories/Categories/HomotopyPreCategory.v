@@ -1,4 +1,4 @@
-(** * Homotopy PreCategory of Types *)
+(** * Homotopy Precategory of Types *)
 Require Import Category.Core.
 Require Import HoTT.Basics HoTT.Truncations.Core.
 
@@ -41,7 +41,7 @@ Module HomotopyPreCategoryInternals.
   End homotopy_precategory.
 End HomotopyPreCategoryInternals.
 
-(** ** The Homotopy PreCategory of Types *)
+(** ** The Homotopy Precategory of Types *)
 Definition homotopy_precategory : PreCategory.
 Proof.
   refine (@Build_PreCategory

@@ -512,7 +512,7 @@ Definition issymmetricmonoidal_op' {A : Type} (tensor : A -> A -> A) (unit : A)
   := issymmetricmonoidal_op (A:=A^op) tensor unit.
 
 (** ** Further Coherence Conditions *)
-(** In MacLane's original axiomatisation of a monoidal category, 3 extra coherence conditions were given in addition to the pentagon and triangle identities. It was later shown by Kelly that these axioms are redundant and follow from the rest. We reproduce these arguments here. *)
+(** In Mac Lane's original axiomatisation of a monoidal category, 3 extra coherence conditions were given in addition to the pentagon and triangle identities. It was later shown by Kelly that these axioms are redundant and follow from the rest. We reproduce these arguments here. *)
 
 (** The left unitor of a tensor can be decomposed as an associator and a functorial action of the tensor on a left unitor. *)
 Definition left_unitor_associator {A} (tensor : A -> A -> A) (unit : A)

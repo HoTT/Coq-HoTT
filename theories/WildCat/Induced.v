@@ -6,7 +6,7 @@ Require Import WildCat.Equiv.
 
 (** A map [A -> B] of types, where [B] is some type of wild category, induces the same level of structure on [A], via taking everything to be defined on the image.
 
-This needs to be separate from Core because of HasEquivs usage.  We don't make these definitions Global Instances because we only want to apply them manually, but we make them Local Instances so that subsequent ones can pick up the previous ones automatically. *)
+This needs to be separate from Core because of [HasEquivs] usage.  We don't make these definitions Global Instances because we only want to apply them manually, but we make them Local Instances so that subsequent ones can pick up the previous ones automatically. *)
 
 (** In most of the proofs, we only want to use [intro] on variables of type [A], so this will be handy. *)
 Ltac intros_of_type A :=

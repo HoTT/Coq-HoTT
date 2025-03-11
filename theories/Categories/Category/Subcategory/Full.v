@@ -1,5 +1,5 @@
 (** * Full Subcategories *)
-(** We reuse the generalizion given by ∑-precategories; a full subcategory has a sigma type as its objects. *)
+(** We reuse the generalization given by ∑-precategories; a full subcategory has a sigma type as its objects. *)
 Require Import Category.Sigma.OnObjects.
 
 Notation full := sig_obj.

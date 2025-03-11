@@ -18,7 +18,7 @@ Arguments sum_ind {A B} P f g s : rename.
 Scheme sum_rec := Minimality for sum Sort Type.
 Arguments sum_rec {A B} P f g s : rename.
 
-(** ** CoUnpacking *)
+(** ** Co-Unpacking *)
 
 (** Sums are coproducts, so there should be a dual to [unpack_prod].  I'm not sure what it is, though. *)
 
@@ -1013,7 +1013,7 @@ Proof.
   intros a na; exact (na a).
 Defined.
 
-(** ** Binary coproducts are equivalent to dependent sigmas where the first component is a bool. *)
+(** ** Binary coproducts are equivalent to dependent sigmas where the first component is a [Bool]. *)
 
 Definition sig_of_sum A B (x : A + B)
 : { b : Bool & if b then A else B }

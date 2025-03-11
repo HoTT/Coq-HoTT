@@ -1,5 +1,5 @@
 (** This file implements [IsHomomorphism] and [IsIsomorphism].
-    It developes basic algebra homomorphisms and isomorphims. The main
+    It develops basic algebra homomorphisms and isomorphims. The main
     theorem in this file is the [path_isomorphism] theorem, which
     states that there is a path between isomorphic algebras. *)
 

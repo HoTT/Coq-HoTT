@@ -9,7 +9,7 @@ Set Asymmetric Patterns.
 
 Local Notation sig_type := sig.
 
-(** We can generalize the notion of [sig] to categories.  This is, essentially, a type-theoretic perspecitive on the Grothendieck construction. *)
+(** We can generalize the notion of [sig] to categories.  This is, essentially, a type-theoretic perspective on the Grothendieck construction. *)
 
 Section sig_obj_mor.
   Variable A : PreCategory.

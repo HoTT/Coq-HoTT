@@ -118,7 +118,7 @@ Proof.
   exact (freudenthal_hspace' (m:=m.+1) X).
 Defined.
 
-(** Here we give a generalization of a result from Eilenberg-MacLane Spaces in Homotopy Type Theory, Dan Licata and Eric Finster.  Their version corresponds to [m = -2] in our version.  Their encode-decode proof was formalized in this library in EMSpace.v until this shorter and more general approach was found. *)
+(** Here we give a generalization of a result from Eilenberg-Mac Lane Spaces in Homotopy Type Theory, Dan Licata and Eric Finster.  Their version corresponds to [m = -2] in our version.  Their encode-decode proof was formalized in this library in EMSpace.v until this shorter and more general approach was found. *)
 Definition licata_finster `{Univalence}
   {m : trunc_index} (X : pType) `{IsConnected m.+2 X}
   (k := (m.+1 +2+ m.+1).+1) `{IsHSpace X} `{IsTrunc k X}

@@ -83,7 +83,7 @@ Ltac clear_dup :=
 
 Ltac clear_dups := repeat clear_dup.
 
-(** Try to clear everything except some hyp *)
+(** Try to clear everything except some hypothesis *)
 
 Ltac clear_except hyp :=
   repeat match goal with [ H : _ |- _ ] =>
@@ -210,7 +210,7 @@ Ltac refine_hyp c :=
 
 (** TODO: From here comes from Overture.v *)
 
-(** Clear a hypothesis and also its dependencies.  Taken from Coq stdlib, with the performance-enhancing change to [lazymatch] suggested at [https://github.com/coq/coq/issues/11689]. *)
+(** Clear a hypothesis and also its dependencies.  Taken from Coq Stdlib, with the performance-enhancing change to [lazymatch] suggested at [https://github.com/coq/coq/issues/11689]. *)
 Tactic Notation "clear" "dependent" hyp(h) :=
   let rec depclear h :=
   clear h ||
@@ -221,7 +221,7 @@ Tactic Notation "clear" "dependent" hyp(h) :=
  in depclear h.
 
 
-(** A version of [generalize dependent] that applies only to a hypothesis.  Taken from Coq stdlib. *)
+(** A version of [generalize dependent] that applies only to a hypothesis.  Taken from Coq Stdlib. *)
 Tactic Notation "revert" "dependent" hyp(h) :=
   generalize dependent h.
 
@@ -346,7 +346,7 @@ Tactic Notation "lhs_V" tactic3(tac) := nrefine (ltac:(tac)^ @ _).
 Tactic Notation "rhs" tactic3(tac) := nrefine (_ @ ltac:(tac)^).
 Tactic Notation "rhs_V" tactic3(tac) := nrefine (_ @ ltac:(tac)).
 
-(** Ssreflect tactics, adapted by Robbert Krebbers *)
+(** SSReflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=
   trivial; intros; solve
     [ repeat first
@@ -395,7 +395,7 @@ Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_in
 Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e) simple_intropattern(f)
   := funext a; funext b; funext c; funext d; funext e; funext f.
 
-(* Test whether a tactic fails or succeeds, without actually doing anything.  Taken from Coq stdlib. *)
+(* Test whether a tactic fails or succeeds, without actually doing anything.  Taken from Coq Stdlib. *)
 Ltac assert_fails tac :=
   tryif (once tac) then gfail 0 tac "succeeds" else idtac.
 Tactic Notation "assert_succeeds" tactic3(tac) :=
@@ -604,7 +604,7 @@ Local Ltac unify_with_projections term u :=
   (unify_first_evar_with term u;
    tryif has_evar term then fail 0 term "has evars remaining" else idtac).
 
-(* Completely destroys v into its pieces and trys to put pieces in sigma. *)
+(* Completely destroys v into its pieces and tries to put pieces in sigma. *)
 Local Ltac refine_with_exist_as_much_as_needed_then_destruct v :=
   ((destruct v; shelve) +
    (snrefine (_ ; _);
@@ -635,11 +635,11 @@ Ltac issig :=
     refine built
   (** Going from a record to a sigma type *)
   | refine_with_exist_as_much_as_needed_then_destruct v
-  (** Proving eissect *)
+  (** Proving [eissect] *)
   | destruct v; cbn [pr1 pr2]; reflexivity
-  (** Proving eisretr *)
+  (** Proving [eisretr] *)
   | reflexivity
-  (** Proving eisadj *)
+  (** Proving [eisadj] *)
   | reflexivity ].
 
 (** We show how the tactic works in a couple of examples. *)
@@ -658,10 +658,10 @@ Proof.
   issig.
 Defined.
 
-(** The general reasoning behind the issig tactic is: if we know the type of the record, econstructor will give us the constructor applied to evars for each field. If we assume that there are no evars in the type, we can unify the first evar with u.1, the next evar with u.2.1, the next with u.2.2.1, etc, and if we run out of evars or projections, we backtrack and instead fill the final evar with u.2.2....2. (Note that if we strip the trailing evars from the constructor before unifying them, we get a term with a Pi type, and if we drop the final codomain and turn the Pi type into a Sigma, this lets us autogenerate the Sigma type we should be using; this is how the versions that don't need a hand-crafted Sigma type work: they unify the generated type with the term in the goal that should be the Sigma type.)
+(** The general reasoning behind the [issig] tactic is: if we know the type of the record, econstructor will give us the constructor applied to evars for each field. If we assume that there are no evars in the type, we can unify the first evar with u.1, the next evar with u.2.1, the next with u.2.2.1, etc, and if we run out of evars or projections, we backtrack and instead fill the final evar with u.2.2....2. (Note that if we strip the trailing evars from the constructor before unifying them, we get a term with a Pi type, and if we drop the final codomain and turn the Pi type into a Sigma, this lets us autogenerate the Sigma type we should be using; this is how the versions that don't need a hand-crafted Sigma type work: they unify the generated type with the term in the goal that should be the Sigma type.)
 
-Generating the function the other way is a bit trickier, because there's no easy way to get our hands on all the projections of the record, and moreover we don't even know how many pairings we'll need. The thing we want to do is introduce the right number of pairings, destruct the variable of record type in the goal for each component, and then magically use the right projection. I'll get back to the magic in a moment; first we need to take care of the "right number" of pairings. We could pull a trick where we infer the number by looking at the term we get from econstructor in a goal whose type is the record. Instead, I chose the more concise route of coding a tactic that introduces the minimum number of pairings needed to make the magic work. How does it know the minimum number? It doesn't need to! The wonder of (recursive) multisuccess tactics is that you can say "try no pairings, and if that makes any future tactic fail, backtrack and try one pairing, and if that doesn't work, backtrack and try two pairings, etc". (The downside is that the error messages you get when you set things up wrong are truly incomprehensible, because if you make a typo in any of the fields of the Sigma type the error message you end up getting is something like "(_; _) is a Sigma type but it was expected to have the type of the final field" (and it's always about the final field, regardless of which field you made a typo in). So plausibly it's worth it to still do the small issig tactics by hand, and only use this tactic for >= 5 fields or something.)
+Generating the function the other way is a bit trickier, because there's no easy way to get our hands on all the projections of the record, and moreover we don't even know how many pairings we'll need. The thing we want to do is introduce the right number of pairings, destruct the variable of record type in the goal for each component, and then magically use the right projection. I'll get back to the magic in a moment; first we need to take care of the "right number" of pairings. We could pull a trick where we infer the number by looking at the term we get from econstructor in a goal whose type is the record. Instead, I chose the more concise route of coding a tactic that introduces the minimum number of pairings needed to make the magic work. How does it know the minimum number? It doesn't need to! The wonder of (recursive) multisuccess tactics is that you can say "try no pairings, and if that makes any future tactic fail, backtrack and try one pairing, and if that doesn't work, backtrack and try two pairings, etc". (The downside is that the error messages you get when you set things up wrong are truly incomprehensible, because if you make a typo in any of the fields of the Sigma type the error message you end up getting is something like "(_; _) is a Sigma type but it was expected to have the type of the final field" (and it's always about the final field, regardless of which field you made a typo in). So plausibly it's worth it to still do the small [issig] tactics by hand, and only use this tactic for >= 5 fields or something.)
 
-Okay, now onto the magic. How do we know which field is the right one? Well, there's only one answer that lets us prove the section and retraction by destruct+reflexivity, so we can let unification solve this problem for us. It's important to have destructed the record variable in each of the pair-component evars, because unification is not (yet) smart enough to invert records for us; this is what the destruct before shelve in the inverse function generation tactic is. We cbn pr1 and pr2 to make the unification problem be completely syntactic (no need to unfold anything during unification). This is probably not strictly necessary, but seems like good form to me.
+Okay, now onto the magic. How do we know which field is the right one? Well, there's only one answer that lets us prove the section and retraction by destruct+reflexivity, so we can let unification solve this problem for us. It's important to have destructed the record variable in each of the pair-component evars, because unification is not (yet) smart enough to invert records for us; this is what the destruct before shelve in the inverse function generation tactic is. We [cbn] [pr1] and [pr2] to make the unification problem be completely syntactic (no need to unfold anything during unification). This is probably not strictly necessary, but seems like good form to me.
 
-Finally, we can prove the other one of the section/retraction pair (I can never recall which is which), and the adjoint, by reflexivity. (Perhaps it would be better to use exact idpath, if we want to not have to unfold reflexivity when using equivalences generated by these tactics.) *)
+Finally, we can prove the other one of the section/retraction pair (I can never recall which is which), and the adjoint, by reflexivity. (Perhaps it would be better to use exact [idpath], if we want to not have to unfold reflexivity when using equivalences generated by these tactics.) *)

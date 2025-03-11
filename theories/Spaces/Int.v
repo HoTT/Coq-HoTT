@@ -142,7 +142,7 @@ Instance ispointed_int : IsPointed Int := 0.
 
 (** *** Addition *)
 
-(** Addition for integers is defined by integer inductionn on the first argument. *)
+(** Addition for integers is defined by integer induction on the first argument. *)
 Definition int_add@{} (x y : Int) : Int.
 Proof.
   induction x as [|x IHx|x IHx] in y |- *.
@@ -343,7 +343,7 @@ Defined.
       
 (** *** Multiplication *)
 
-(** Multiplication with a successor on the left is the sum of the multplication without the sucesseor and the multiplicand which was not a successor. *)
+(** Multiplication with a successor on the left is the sum of the multiplication without the successor and the multiplicand which was not a successor. *)
 Definition int_mul_succ_l@{} (x y : Int) : x.+1 * y = y + x * y.
 Proof.
   induction x as [|[|x] IHx|[] IHx] in y |- *.
@@ -717,7 +717,7 @@ Proof.
     by rewrite IHm, concat_p_pp.
 Defined.
 
-(** Under univalence, exponentiation of loops corresponds to iteration of autoequivalences. *)
+(** Under univalence, exponentiation of loops corresponds to iteration of auto-equivalences. *)
 
 Definition equiv_path_loopexp {A : Type} (p : A = A) (z : Int) (a : A)
   : equiv_path A A (loopexp p z) a = int_iter (equiv_path A A p) z a.

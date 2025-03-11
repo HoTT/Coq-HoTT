@@ -459,7 +459,7 @@ Proof.
   all: exact isnormal.
 Defined.
 
-(** Our definiiton of normal subgroup implies the usual definition of invariance under conjugation. *)
+(** Our definition of normal subgroup implies the usual definition of invariance under conjugation. *)
 Definition isnormal_conj {G : Group} (N : Subgroup G)
   `{!IsNormalSubgroup N} {x y : G}
   : N x <~> N (y * x * y^).
@@ -1062,7 +1062,7 @@ Proof.
   apply grp_image_in.
 Defined.
 
-(** ** Image of a subgroup under a group homomoprhism *)
+(** ** Image of a subgroup under a group homomorphism *)
 
 (** The image of a subgroup under group homomorphism. *) 
 Definition subgroup_image {G H : Group} (f : G $-> H)

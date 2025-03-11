@@ -22,7 +22,7 @@ Definition Cofiber {X Y : Type} (f : X -> Y)
 Definition cofib {X Y : Type} (f : X -> Y) : Y -> Cofiber f
   := pushl.
 
-(** We have a distinguised point in the cofiber, where the image of [f] is contracted to. *)
+(** We have a distinguished point in the cofiber, where the image of [f] is contracted to. *)
 Definition cf_apex {X Y : Type} (f : X -> Y) : Cofiber f
   := pushr tt.
 
@@ -44,7 +44,7 @@ Proof.
     exact (null.2 a).
 Defined.
 
-(** The induction principle is similar, although requries a dependent form of null homotopy. *)
+(** The induction principle is similar, although requires a dependent form of null homotopy. *)
 Definition cofiber_ind {X Y : Type} (f : X -> Y) (P : Cofiber f -> Type)
   (g : forall y, P (cofib f y))
   (null : exists b, forall x, transport P (cfglue f x) (g (f x)) = b)
@@ -97,7 +97,7 @@ Local Open Scope trunc_scope.
 
 (** ** Connectivity of cofibers *)
 
-(** The cofiber of an [n]-conencted map is [n.+1]-connected. *)
+(** The cofiber of an [n]-connected map is [n.+1]-connected. *)
 Definition isconnnected_cofiber (n : trunc_index) {X Y : Type} (f : X -> Y)
   {fc : IsConnMap n f}
   : IsConnected n.+1 (Cofiber f).

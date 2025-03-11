@@ -159,7 +159,7 @@ Defined.
 
 (** Our next goal is to prove that the Baer sum is associative.  Rather than showing this directly, we first prove [baer_sum_twist], which says that [abses_baer_sum (abses_baer_sum E F) G = abses_baer_sum (abses_baer_sum G F) E].  The proof of this mimics the proof of commutativity above.  Then we prove associativity by combining this with commutativity. *)
 
-(** The trinary Baer sum of three short exact sequences. *)
+(** The ternary Baer sum of three short exact sequences. *)
 Definition abses_trinary_baer_sum `{Univalence}
   {A B : AbGroup@{u}} (E F G : AbSES B A)
   : AbSES B A
@@ -167,7 +167,7 @@ Definition abses_trinary_baer_sum `{Univalence}
        (abses_pushout ab_cotriagonal
           (abses_direct_sum (abses_direct_sum E F) G)).
 
-(** For [E, F, G : AbSES B A], the Baer sum of [E], [F] and [G] (associated left) is equal to the trinary Baer sum of [E], [F] and [G]. *)
+(** For [E, F, G : AbSES B A], the Baer sum of [E], [F] and [G] (associated left) is equal to the ternary Baer sum of [E], [F] and [G]. *)
 Lemma baer_sum_is_trinary `{Univalence} {A B : AbGroup@{u}} (E F G : AbSES B A)
   : abses_baer_sum (abses_baer_sum E F) G = abses_trinary_baer_sum E F G.
 Proof.
@@ -184,7 +184,7 @@ Proof.
     apply abses_pushout_compose.
 Defined.
 
-(** For [E, F, G : AbSES B A], we can "twist" the order of the trinary Baer sum as follows. *)
+(** For [E, F, G : AbSES B A], we can "twist" the order of the ternary Baer sum as follows. *)
 Lemma twist_trinary_baer_sum `{Univalence}
   {A B : AbGroup@{u}} (E F G : AbSES B A)
   : abses_trinary_baer_sum E F G = abses_trinary_baer_sum G F E.

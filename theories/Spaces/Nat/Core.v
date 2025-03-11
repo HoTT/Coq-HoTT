@@ -8,7 +8,7 @@ Local Unset Elimination Schemes.
 
 (** * Natural numbers *)
 
-(** We want to close the trunc_scope so that notations from there don't conflict here. *)
+(** We want to close the [trunc_scope] so that notations from there don't conflict here. *)
 Local Close Scope trunc_scope.
 Local Open Scope nat_scope.
 
@@ -219,7 +219,7 @@ Definition nat_succ_pred@{} n : 0 < n -> nat_succ (nat_pred n) = n
 Definition path_nat_succ@{} n m (H : S n = S m) : n = m := ap nat_pred H.
 Instance isinj_succ : IsInjective nat_succ := path_nat_succ.
 
-(** Inequality of sucessors is implied with inequality of the arguments. *)
+(** Inequality of successors is implied with inequality of the arguments. *)
 Definition neq_nat_succ@{} n m : n <> m -> S n <> S m.
 Proof.
   intros np q.
@@ -338,7 +338,7 @@ Defined.
 Definition nat_mul_zero_l@{} n : 0 * n = 0
   := idpath.
 
-(** Multiplicaiton by [0] on the right is [0]. *)
+(** Multiplication by [0] on the right is [0]. *)
 Definition nat_mul_zero_r@{} n : n * 0 = 0.
 Proof.
   by induction n.
@@ -424,7 +424,7 @@ Proof.
 Defined.
 Hint Immediate leq_trans : typeclass_instances.
 
-(** [<=] is transtiive. *)
+(** [<=] is transitive. *)
 Instance transitive_leq : Transitive leq := @leq_trans.
 
 (** [0] is less than or equal to any natural number. *)
@@ -712,7 +712,7 @@ Proof.
     exact (leq_pred' H).
 Defined.
 
-(** We can cancel a right subtrahend when adding it on the left to a subtraction if the subtrahend is less than the nubmer being subtracted from. *)
+(** We can cancel a right subtrahend when adding it on the left to a subtraction if the subtrahend is less than the number being subtracted from. *)
 Definition nat_add_sub_r_cancel {n m} : n <= m -> n + (m - n) = m.
 Proof.
   intros H.
@@ -1054,7 +1054,7 @@ Definition lt_iff_not_geq {n m} : ~(n >= m) <-> n < m
 
 (** *** Dichotomy of [<>] *)
 
-(** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence however one of the sections requires funext since we are comparing two inequality proofs. It is therefore more useful to keep it as a biimplication. Note that this is a negated version of antisymmetry of [<=]. *)
+(** The inequality of natural numbers is equivalent to [n < m] or [n > m]. This could be an equivalence; however, one of the sections requires [Funext] since we are comparing two inequality proofs. It is therefore more useful to keep it as a bi-implication. Note that this is a negated version of antisymmetry of [<=]. *)
 Definition neq_iff_lt_or_gt {n m} : n <> m <-> (n < m) + (n > m).
 Proof.
   split.
@@ -1108,7 +1108,7 @@ Defined.
 
 (** *** Monotonicity of addition *)
 
-(** TODO: use OrderPreserving from canonical_names *)
+(** TODO: use [OrderPreserving] from canonical_names *)
 
 (** Addition on the left is monotone. *)
 Definition nat_add_l_monotone {n m} k

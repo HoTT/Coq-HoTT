@@ -140,7 +140,7 @@ Section ChineseRemainderTheorem.
 
 End ChineseRemainderTheorem.
 
-(** We also have the same for products of ideals when in a commuatative ring. *)
+(** We also have the same for products of ideals when in a commutative ring. *)
 Theorem chinese_remainder_prod `{Univalence}
   {R : CRing} (I J : Ideal R) (c : Coprime I J)
   : R / (I ⋅ J)%ideal ≅ (R / I) × (R / J).

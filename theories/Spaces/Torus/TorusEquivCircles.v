@@ -105,7 +105,7 @@ Proof.
 Defined.
 
 (* NOTE: The last step in the previous proof can be done as a sequence of
-   refines however coq really struggles to unify this. Below is the original
+   refines however Coq really struggles to unify this. Below is the original
    way we proved the last statement before making it short and sweet. As can
    be seen, we need to give refine hints using existential variables which is
    tedious to write out, and perhaps motivates why we wrote it as one big

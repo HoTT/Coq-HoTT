@@ -8,6 +8,8 @@ Require Import Truncations.
 
 (** * The Generalized Blakers-Massey Theorem *)
 
+(** This file follows the paper "A Generalized Blakers-Massey Theorem" (https://arxiv.org/abs/1703.09050) by Mathieu Anel, Georg Biedermann, Eric Finster, André Joyal, hereafter referred to as ABFJ. We also follow "A Mechanization of the Blakers-Massey Connectivity Theorem in Homotopy Type Theory" by Favonia, Eric Finster, Dan Licata, and Peter LeFanu Lumsdaine, hereafter referred to as HFLL. *)
+
 (** ** Path algebra helper lemma *)
 
 (** Here is a strange-looking path algebra helper lemma that is easier to prove by lifting to a general case and doing a path-induction blast.  It says something about what happens when we transport from the center of a based path-space to some other point, assuming we know a particular way to "compute" the action of the type family in question. *)
@@ -43,7 +45,7 @@ Defined.
 Section GBM.
     Context {X Y : Type} (Q : X -> Y -> Type).
 
-    (** Here's the hypothesis of ABFJ generalized Blakers-Massey.  It works for any reflective subuniverse, not only modalities! *)
+    (** Here's the hypothesis of ABFJ's generalized Blakers-Massey.  It works for any reflective subuniverse, not only modalities! *)
     Context (O : ReflectiveSubuniverse).
     Context
       (isconnected_cogap :
@@ -94,7 +96,7 @@ Section GBM.
 
     (** *** Left-hand codes *)
 
-    (** We enhance the HFLL and ABFJ theorems by defining a version of code-left that doesn't depend on one map being surjective. *)
+    (** We enhance the the HFLL and ABFJ theorems by defining a version of code-left that doesn't depend on one map being surjective. *)
 
     Section CodeLeft.
       Context {x0 x1 : X} (r : left x0 = left x1).
@@ -153,7 +155,7 @@ Section GBM.
                        ((codeleft2_y0 yqqu; codeleft2_q10 yqqu) = (y1; q11)
                                            :> {y:Y & Q x1 y})}.
 
-        (** Since this connected type is itself a join, hence a pushout, the second step is to distribute this and reexpress the whole thing as another pushout of iterated Sigma-types (again mostly expressed as records for performance reasons). *)
+        (** Since this connected type is itself a join, hence a pushout, the second step is to distribute this and re-express the whole thing as another pushout of iterated Sigma-types (again mostly expressed as records for performance reasons). *)
 
         Record Ocodeleft2b
         := { Ocodeleft2b_s   : x0 = x1 ;
@@ -520,7 +522,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       exact (Build_Contr _ (center_code p r) (contraction_code q00 (p;r))).
     Defined.
 
-    (** This version is sufficient for the classical Blakers-Massey theorem, as we'll see below, since its leg-wise connectivity hypothesis implies the above surjectivity assumption.  ABFJ have a different method for eliminating the surjectivity assumption using a lemma about pushouts of monos also being pullbacks, though it seems to only work for coderight. *)
+    (** This version is sufficient for the classical Blakers-Massey theorem, as we'll see below, since its leg-wise connectivity hypothesis implies the above surjectivity assumption.  Anel-Biedermann-Finster-Joyal have a different method for eliminating the surjectivity assumption using a lemma about pushouts of monos also being pullbacks, though it seems to only work for coderight. *)
 
 End GBM.
 

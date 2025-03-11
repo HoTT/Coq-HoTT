@@ -11,7 +11,7 @@ Section bounded_search.
 
   Context (P : nat -> Type) (P_dec : forall n, Decidable (P n)).
   
-  (** We open type_scope again after nat_scope in order to use the product type notation. *)
+  (** We open [type_scope] again after [nat_scope] in order to use the product type notation. *)
   Local Open Scope nat_scope.
   Local Open Scope type_scope.
   

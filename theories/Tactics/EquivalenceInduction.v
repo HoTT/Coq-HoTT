@@ -14,7 +14,7 @@ Class RespectsEquivalenceR@{i j k s0 s1} (A : Type@{i}) (P : forall (B : Type@{j
 
     1. In the dependent cases, where one equivalence-respectfulness proof will show up in the body of another goal, it might be the case that using sigma types allows us to reuse the respectfulness lemmas of sigma types, rather than writing new ones for this type.
 
-    2. We expect it to be significantly useful to see the type of the fields than the type of the record, because we expect this type to show up as a goal infrequently.  Sigma types have more informative notations than record type names; the user can run hnf to see what is left to do in the side conditions. *)
+    2. We expect it to be significantly useful to see the type of the fields than the type of the record, because we expect this type to show up as a goal infrequently.  Sigma types have more informative notations than record type names; the user can run [hnf] to see what is left to do in the side conditions. *)
 
 Global Arguments RespectsEquivalenceL : clear implicits.
 Global Arguments RespectsEquivalenceR : clear implicits.

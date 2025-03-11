@@ -79,7 +79,7 @@ Defined.
 (** We create a database of hints for the group theory library *)
 Create HintDb group_db.
 
-(** Our group laws can be proven easily with tactics such as [rapply associativity]. However this requires a typeclass search on more general algebraic structures. Therefore we explicitly list many groups laws here so that coq can use them. We also create hints for each law in our groups database. *)
+(** Our group laws can be proven easily with tactics such as [rapply associativity]. However this requires a typeclass search on more general algebraic structures. Therefore we explicitly list many groups laws here so that Coq can use them. We also create hints for each law in our groups database. *)
 Section GroupLaws.
   Context {G : Group} (x y z : G).
 
@@ -306,7 +306,7 @@ Defined.
 
 (** ** Group Isomorphisms *)
 
-(** Group isomorphsims are group homomorphisms whose underlying map happens to be an equivalence. They allow us to consider two groups to be the "same". They can be inverted and composed just like equivalences. *)
+(** Group isomorphisms are group homomorphisms whose underlying map happens to be an equivalence. They allow us to consider two groups to be the "same". They can be inverted and composed just like equivalences. *)
 
 (** An isomorphism of groups is defined as group homomorphism that is an equivalence. *)
 Record GroupIsomorphism (G H : Group) := Build_GroupIsomorphism {
@@ -508,7 +508,7 @@ Section GroupEquations.
 
 End GroupEquations.
 
-(** ** Cancelation lemmas *)
+(** ** Cancellation lemmas *)
 
 (** Group elements can be cancelled both on the left and the right. *)
 Definition grp_cancelL {G : Group} {x y : G} z : x = y <~> z * x = z * y

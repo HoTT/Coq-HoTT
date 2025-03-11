@@ -398,7 +398,7 @@ Ltac destruct_head_hnf_matcher T HT :=
 Ltac destruct_head_hnf T := destruct_all_matches ltac:(destruct_head_hnf_matcher T).
 Ltac destruct_head_hnf' T := destruct_all_matches' ltac:(destruct_head_hnf_matcher T).
 
-(** Turns a context object, obtained via, e.g., [match goal with |- context G[...] => ... end], into a lambda / gallina function. *)
+(** Turns a context object, obtained via, e.g., [match goal with |- context G[...] => ... end], into a lambda / Gallina function. *)
 Ltac context_to_lambda G :=
   let ret := constr:(fun x => let k := x in
                               ltac:(

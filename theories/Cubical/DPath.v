@@ -10,7 +10,7 @@ Definition DPath {A} (P : A -> Type) {a0 a1} (p : a0 = a1)
   (b0 : P a0) (b1 : P a1) : Type
   := transport P p b0 = b1.
 
-(** This allows DPaths to collapse to paths under cbn *)
+(** This allows [DPath]s to collapse to paths under [cbn] *)
 Arguments DPath _ / _ _ _ : simpl nomatch.
 
 Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
@@ -24,13 +24,13 @@ Proof.
   apply path_ishprop.
 Defined.
 
-(** We have reflexivity for DPaths, this helps coq guess later *)
+(** We have reflexivity for [DPath]s, this helps Coq guess later *)
 Definition dp_id {A} {P : A -> Type} {a : A} {x : P a} : DPath P 1 x x := 1%path.
 
 (** Although [1%dpath] is definitionally [1%path], when [1%path] is used where a dependent path is expected, Coq sometimes has trouble interpreting this. So we make a custom notation for [1] in [dpath_scope]. *)
 Notation "1" := dp_id : dpath_scope.
 
-(** DPath induction *)
+(** [DPath] induction *)
 Definition DPath_ind (A : Type) (P : A -> Type) (P0 : forall (a0 a1 : A)
   (p : a0 = a1) (b0 : P a0) (b1 : P a1), DPath P p b0 b1 -> Type)
   : (forall (x : A) (y : P x), P0 x x 1%path y y 1) ->
@@ -40,7 +40,7 @@ Proof.
   intros X a0 a1 [] b0 b1 []; apply X.
 Defined.
 
-(** A DPath over a constant family is just a path *)
+(** A [DPath] over a constant family is just a path *)
 Definition equiv_dp_const {A C} {a0 a1 : A} {p : a0 = a1} {x y}
   : (x = y) <~> DPath (fun _ => C) p x y.
 Proof.
@@ -49,7 +49,7 @@ Defined.
 
 Notation dp_const := equiv_dp_const.
 
-(** dp_apD of a non-dependent map is just a constant DPath *)
+(** [dp_apD] of a non-dependent map is just a constant [DPath] *)
 Definition dp_apD_const {A B} (f : A -> B) {a0 a1 : A}
   (p : a0 = a1) : apD f p = dp_const (ap f p).
 Proof.
@@ -104,7 +104,7 @@ Defined.
 
 Notation "x '^D'" := (dp_inverse x) : dpath_scope.
 
-(** dp_apD distributes over concatenation *)
+(** [dp_apD] distributes over concatenation *)
 Definition dp_apD_pp (A : Type) (P : A -> Type) (f : forall a, P a)
   {a0 a1 a2 : A} (p : a0 = a1) (q : a1 = a2)
   : apD f (p @ q) = (apD f p) @Dp (apD f q).
@@ -112,7 +112,7 @@ Proof.
   by destruct p, q.
 Defined.
 
-(** dp_apD respects inverses *)
+(** [dp_apD] respects inverses *)
 Definition dp_apD_V (A : Type) (P : A -> Type) (f : forall a, P a)
   {a0 a1 : A} (p : a0 = a1) : apD f p^ = (apD f p)^D.
 Proof.
@@ -216,7 +216,7 @@ Section DGroupoid.
 End DGroupoid.
 
 (** Dependent paths over paths *)
-(** These can be found under names such as dp_paths_l akin to transport_paths_l *)
+(** These can be found under names such as [dp_paths_l] akin to [transport_paths_l] *)
 
 Definition equiv_dp_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y) r
   : p^ @ q = r <~> DPath (fun x => x = y) p q r.
@@ -338,10 +338,10 @@ Definition dp_apD_compose_inv {A B : Type} (f : A -> B) (P : B -> Type)
 (** Type constructors *)
 
 (** Many of these lemmas exist already for transports but we prove them for
-   DPaths anyway. If we change the definition of DPath to the transport,
+   [DPath]s anyway. If we change the definition of [DPath] to the transport,
    then these will no longer be needed. It is however, far more readable
-   to keep such lemmas seperate, since it is difficult to otherwise search
-   for a DPath lemma if they are all written using transports. *)
+   to keep such lemmas separate, since it is difficult to otherwise search
+   for a [DPath] lemma if they are all written using transports. *)
 
 (** A version of [equiv_path_sigma] for [DPath]s *)
 Definition equiv_path_sigma_dp {A P} {x x' : A} {y : P x} {y' : P x'}
@@ -357,7 +357,7 @@ Proof.
   apply ap_pr1_path_sigma.
 Defined.
 
-(* DPath over a forall *)
+(* [DPath] over a forall *)
 Definition equiv_dp_forall `{Funext} {A : Type} {B : A -> Type} {C : sig B -> Type}
   {a1 a2 : A} {p : a1 = a2} {f : forall x, C (a1; x)} {g : forall x, C (a2; x)}
   : (forall (x : B a1) (y : B a2) (q : DPath B p x y),
@@ -379,7 +379,7 @@ Defined.
 
 Notation dp_forall := equiv_dp_forall.
 
-(* DPath over an arrow *)
+(* [DPath] over an arrow *)
 Definition equiv_dp_arrow `{Funext} {A : Type} {B C : A -> Type}
   {a1 a2 : A} {p : a1 = a2} {f :  B a1 -> C a1} {g : B a2 -> C a2}
   : (forall x, DPath C p (f x) (g (p # x)))

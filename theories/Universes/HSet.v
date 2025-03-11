@@ -116,7 +116,7 @@ Proof.
   exact (ap pr1 q).
 Defined.
 
-(** Computation rule for isinj_embedding. *)
+(** Computation rule for [isinj_embedding]. *)
 Lemma isinj_embedding_beta {X Y : Type} (f : X -> Y) {I : IsEmbedding f} {x : X}
   : (isinj_embedding f I x x idpath) = idpath.
 Proof.

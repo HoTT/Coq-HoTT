@@ -246,7 +246,7 @@ Hypothesis HN_ninject : forall X, ~ InjectsInto (HN X) X.
 Variable HN_bound : nat.
 Hypothesis HN_inject : forall X, InjectsInto (HN X) (power_iterated X HN_bound).
 
-(* This section then concludes the intermediate result that abstractly, any function HN behaving like the Hartogs number is tamed in the presence of GCH.  Morally we show that X <= HN(X) for all X, we just ensure that X is large enough by considering P(N + X). *)
+(* This section then concludes the intermediate result that abstractly, any function [HN] behaving like the Hartogs number is tamed in the presence of GCH.  Morally we show that [X <= HN X] for all [X], we just ensure that X is large enough by considering P(N + X). *)
 
 Lemma InjectsInto_sum X Y X' Y' :
   InjectsInto X X' -> InjectsInto Y Y' -> InjectsInto (X + Y) (X' + Y').
@@ -262,7 +262,7 @@ Proof.
   - apply ap. apply Hg. apply path_sum_inr with X'. exact H.
 Qed.
 
-(* The main proof is by induction on the cardinality bound for HN.  As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)
+(* The main proof is by induction on the cardinality bound for [HN].  As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)
 
 Lemma Sierpinski_step (X : HSet) n :
   GCH -> infinite X -> powfix X -> InjectsInto (HN X) (power_iterated X n) -> InjectsInto X (HN X).

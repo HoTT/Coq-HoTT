@@ -164,7 +164,7 @@ Definition equiv_sigma_pfibration_O_connected@{u v +} `{Univalence} (O : Subuniv
       <~> { p : pSlice@{u v} Y & pfiber p.2 <~>* F }
   := equiv_pfiber_fibration_pfibration oE equiv_sigma_fibration_Op_connected.
 
-(** As a corollary, pointed maps into the unverse of O-local types are just pointed maps into the universe, when the base [Y] is connected. *)
+(** As a corollary, pointed maps into the universe of O-local types are just pointed maps into the universe, when the base [Y] is connected. *)
 Definition equiv_pmap_typeO_type_connected `{Univalence} {O : Subuniverse}
       {Y : pType@{u}} `{IsConnected 0 Y} {F : Type@{u}} `{inO : In O F}
   : (Y ->* [Type_ O, (F; inO)]) <~> (Y ->* [Type@{u}, F])

@@ -126,7 +126,7 @@ Proof.
     exact (concat_p1 _ @ concat_1p _).
 Defined.
 
-(** If Y is a set, then IsComplex is an HProp. *)
+(** If Y is a set, then [IsComplex] is an HProp. *)
 Instance ishprop_iscomplex_hset `{Funext} {F X Y : pType} `{IsHSet Y}
   (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsComplex i f) := _.
@@ -145,7 +145,7 @@ Existing Instance conn_map_isexact.
 Definition issig_isexact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y)
   : _ <~> IsExact n i f := ltac:(issig).
 
-(** If Y is a set, then IsExact is an HProp. *)
+(** If Y is a set, then [IsExact] is an HProp. *)
 Instance ishprop_isexact_hset `{Univalence} {F X Y : pType} `{IsHSet Y}
   (n : Modality) (i : F ->* X) (f : X ->* Y)
   : IsHProp (IsExact n i f).
