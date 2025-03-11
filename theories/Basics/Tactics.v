@@ -326,7 +326,7 @@ Tactic Notation "napply'" uconstr(term)
 
 (** TODO: remove when min Coq/Rocq version is 9.1 (~ end of 2026). *)
 #[deprecated(note="nrapply was renamed to napply and will be removed soon",
-  since="Coq-HoTT v9.1")]
+  since="2025-03-11")]
 Tactic Notation "nrapply" uconstr(term) := napply term.
 
 (** [rapply] is equivalent in strength to [napply], i.e., it should succeed iff [napply] succeeds, but it solves all possible typeclasses after successful unification with the goal. The implementation is: try [nrefine t, t _, t _ _], ... until success; upon success, revert the last (successful) application of [nrefine] and call [refine (t _ _ _)]. *)
@@ -350,7 +350,7 @@ Tactic Notation "snapply'" uconstr(term)
 
 (** TODO: remove when min Coq/Rocq version is 9.1 (~ end of 2026). *)
 #[deprecated(note="snrapply was renamed to snapply and will be removed soon",
-  since="Coq-HoTT v9.1")]
+  since="2025-03-11")]
 Tactic Notation "snrapply" uconstr(term) := snapply term.
 
 (** See comment for [rapply]. This cannot be simplified to [snrefine x] because we don't want the [global_axiom] tactic to run here. *)
