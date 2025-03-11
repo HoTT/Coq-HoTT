@@ -60,7 +60,7 @@
     - [12.2. Approval of pull requests](#122-approval-of-pull-requests)
     - [12.3. Commit messages](#123-commit-messages)
     - [12.4. Creating new files](#124-creating-new-files)
-    - [12.5. Travis](#125-travis)
+    - [12.5. Continuous Integration](#125-continuous-integration)
     - [12.6. Git rebase](#126-git-rebase)
     - [12.7. Timing scripts](#127-timing-scripts)
   - [13. Bugs in Coq](#13-bugs-in-coq)
@@ -1384,18 +1384,23 @@ You will probably also want to add your new file to `HoTT.v`, unless
 it is outside the core (e.g. in `contrib/`) or should not be exported
 for some other reason.
 
-### 12.5. Travis ###
+### 12.5. Continuous Integration ###
 
-We use the [Travis Continuous Integration Platform][travis] to check
-that pull requests do not break anything, and also to automatically
-update various things (such as the documentation and
-dependency graph linked on the [project wiki][wiki]).  Normally you
-shouldn't need to know anything about this; Travis automatically
-checks every pull request made to the central repository.
+We use [GitHub Actions][github-actions] to check the compilation of
+pull requests, do documentation building, and run the testing suite.
 
-[travis]: https://travis-ci.org/
+Documentation shown on the [project wiki][wiki] is built and deployed
+after a pull request is merged.
 
-[wiki]: https://github.com/HoTT/HoTT/wiki
+Normally you shouldn't need to know anything about this; GitHub
+actions will automatically check every pull request made.
+
+The file `.github/workflows/ci.yml` contains the configuration for
+GitHub Actions. This has to be updated very rarely.
+
+[github-actions]: https://github.com/features/actions
+
+[wiki]: https://github.com/HoTT/Coq-HoTT/wiki
 
 ### 12.6. Git rebase ###
 
