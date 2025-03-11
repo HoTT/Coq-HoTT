@@ -99,7 +99,7 @@ Definition ssfam_const {A : SuccStr} (B : SuccStr) : ssFam A
 Definition ssfam_sshomotopy {A : SuccStr} {P : ssFam A} (f g : ssForall P)
   : ssFam A.
 Proof.
-  snrapply Build_ssFam.
+  snapply Build_ssFam.
   1: exact (fun x => f x = g x).
   cbn; intros x p.
   exact (ss_fun_succ f x @ ap dss_succ p @ (ss_fun_succ g x)^).
@@ -110,7 +110,7 @@ Definition ssHomotopy {A : SuccStr} {P : ssFam A} (f g : ssForall P)
 
 Instance isgraph_ss : IsGraph SuccStr.
 Proof.
-  snrapply Build_IsGraph.
+  snapply Build_IsGraph.
   intros X Y.
   exact (@ssForall X (ssfam_const Y)).
 Defined.
@@ -118,7 +118,7 @@ Defined.
 Instance isgraph_ssforall {A : SuccStr} (P : ssFam A)
   : IsGraph (ssForall P).
 Proof.
-  snrapply Build_IsGraph.
+  snapply Build_IsGraph.
   exact ssHomotopy.
 Defined.
 
@@ -157,7 +157,7 @@ Ltac sselim f :=
     end
   | _ => fail "sselim: no eq found"
   end;  
-  nrapply paths_ind_r;
+  napply paths_ind_r;
   try clear eq;
   try clear f.
 
@@ -171,13 +171,13 @@ Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) 
 
 Instance is01cat_ss : Is01Cat SuccStr.
 Proof.
-  snrapply Build_Is01Cat.
+  snapply Build_Is01Cat.
   - intro X.
-    snrapply Build_ssForall.
+    snapply Build_ssForall.
     + exact (fun x => x).
     + reflexivity.
   - intros X Y Z f g.
-    snrapply Build_ssForall.
+    snapply Build_ssForall.
     + intro x.
       exact (f (g x)).
     + intro x.
@@ -187,14 +187,14 @@ Defined.
 Instance is01cat_ssforall {A : SuccStr} (P : ssFam A)
   : Is01Cat (ssForall P).
 Proof.
-  snrapply Build_Is01Cat.
+  snapply Build_Is01Cat.
   - intro f.
-    snrapply Build_ssForall.
+    snapply Build_ssForall.
     + reflexivity.
     + intro x; simpl.
       by destruct (ss_fun_succ f x).
   - intros f g h p q.
-    snrapply Build_ssForall.
+    snapply Build_ssForall.
     + intro x.
       exact (q x @ p x).
     + intro x; cbn.
@@ -205,9 +205,9 @@ Defined.
 Instance is0gpd_ssforall {A : SuccStr} (P : ssFam A)
   : Is0Gpd (ssForall P).
 Proof.
-  snrapply Build_Is0Gpd.
+  snapply Build_Is0Gpd.
   intros f g p.
-  snrapply Build_ssForall.
+  snapply Build_ssForall.
   - intro x.
     exact (p x)^.
   - intro x; cbn.
@@ -217,12 +217,12 @@ Defined.
 
 Instance is1cat_ss : Is1Cat SuccStr.
 Proof.
-  snrapply Build_Is1Cat'.
+  snapply Build_Is1Cat'.
   1,2: exact _.
   - intros X Y Z g.
-    snrapply Build_Is0Functor.
+    snapply Build_Is0Functor.
     intros f h p.
-    snrapply Build_ssForall.
+    snapply Build_ssForall.
     + intro x.
       exact (ap g (p x)).
     + intro x; cbn.
@@ -231,9 +231,9 @@ Proof.
       sselim g.
       by destruct (eq (f x)).
   - intros X Y Z g.
-    snrapply Build_Is0Functor.
+    snapply Build_Is0Functor.
     intros f h q.
-    snrapply Build_ssForall.
+    snapply Build_ssForall.
     + intros x.
       apply q.
     + intros x; cbn.

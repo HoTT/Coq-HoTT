@@ -25,9 +25,9 @@ Definition Build_Matrix (R : Type) (m n : nat)
   (M_fun : forall (i : nat) (j : nat), (i < m)%nat -> (j < n)%nat -> R)
   : Matrix R m n.
 Proof.
-  snrapply Build_Vector.
+  snapply Build_Vector.
   intros i Hi.
-  snrapply Build_Vector.
+  snapply Build_Vector.
   intros j Hj.
   exact (M_fun i j Hi Hj).
 Defined.
@@ -40,10 +40,10 @@ Definition Build_Matrix' (R : Type) (m n : nat)
   : Matrix R m n.
 Proof.
   snrefine (_; _).
-  - snrapply list_sigma.
+  - snapply list_sigma.
     + exact l.
     + exact wf_col.
-  - by lhs nrapply length_list_sigma.
+  - by lhs napply length_list_sigma.
 Defined.
 
 Definition entries@{i|} {R : Type@{i}} {m n} (M : Matrix R m n)
@@ -81,9 +81,9 @@ Definition path_matrix {R : Type} {m n} (M N : Matrix R m n)
   (H : forall i j (Hi : (i < m)%nat) (Hj : (j < n)%nat), entry M i j = entry N i j)
   : M = N.
 Proof.
-  snrapply path_vector.
+  snapply path_vector.
   intros i Hi.
-  snrapply path_vector.
+  snapply path_vector.
   intros j Hj.
   exact (H i j Hi Hj).
 Defined.
@@ -110,8 +110,8 @@ Instance isleftmodule_isleftmodule_matrix (A : AbGroup) (m n : nat)
   {R : Ring} `{IsLeftModule R A}
   : IsLeftModule R (abgroup_matrix A m n).
 Proof.
-  snrapply isleftmodule_isleftmodule_vector.
-  snrapply isleftmodule_isleftmodule_vector.
+  snapply isleftmodule_isleftmodule_vector.
+  snapply isleftmodule_isleftmodule_vector.
   exact _.
 Defined.
 
@@ -130,7 +130,7 @@ Definition matrix_lact {R : Ring} {m n : nat} (r : R) (M : Matrix R m n)
 Definition matrix_mult {R : Ring@{i}} {m n k : nat} (M : Matrix R m n) (N : Matrix R n k)
   : Matrix R m k.
 Proof.
-  snrapply Build_Matrix.
+  snapply Build_Matrix.
   intros i j Hi Hj.
   exact (ab_sum n (fun k Hk => entry M i k * entry N k j)).
 Defined.
@@ -145,19 +145,19 @@ Definition associative_matrix_mult (R : Ring) (m n p q : nat)
       (@matrix_mult R m n q) (@matrix_mult R n p q)
       (@matrix_mult R m p q) (@matrix_mult R m n p).
 Proof.
-  intros M N P; nrapply path_matrix; intros i j Hi Hj.
+  intros M N P; napply path_matrix; intros i j Hi Hj.
   rewrite 2 entry_Build_Matrix.
-  lhs nrapply path_ab_sum.
+  lhs napply path_ab_sum.
   { intros k Hk.
     rewrite entry_Build_Matrix.
     apply rng_sum_dist_l. }
-  lhs nrapply ab_sum_sum.
-  rhs nrapply path_ab_sum.
+  lhs napply ab_sum_sum.
+  rhs napply path_ab_sum.
   2: intros k Hk; by rewrite entry_Build_Matrix.
-  nrapply path_ab_sum.
+  napply path_ab_sum.
   intros k Hk.
-  rhs nrapply rng_sum_dist_r.
-  nrapply path_ab_sum.
+  rhs napply rng_sum_dist_r.
+  napply path_ab_sum.
   intros l Hl.
   apply associativity.
 Defined.
@@ -170,7 +170,7 @@ Proof.
   rewrite !entry_Build_Matrix, !entry_Build_Vector.
   change (?x = ?y + ?z) with (x = sg_op y z).
   rewrite <- ab_sum_plus.
-  nrapply path_ab_sum.
+  napply path_ab_sum.
   intros k Hk.
   rewrite entry_Build_Matrix.
   apply rng_dist_l.
@@ -184,7 +184,7 @@ Proof.
   rewrite !entry_Build_Matrix, !entry_Build_Vector.
   change (?x = ?y + ?z) with (x = sg_op y z).
   rewrite <- ab_sum_plus.
-  nrapply path_ab_sum.
+  napply path_ab_sum.
   intros k Hk.
   rewrite entry_Build_Matrix.
   apply rng_dist_r.
@@ -196,9 +196,9 @@ Definition left_identity_matrix_mult (R : Ring) (m n: nat)
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
   rewrite entry_Build_Matrix.
-  lhs nrapply path_ab_sum.
+  lhs napply path_ab_sum.
   1: intros k Hk; by rewrite entry_Build_Matrix.
-  nrapply rng_sum_kronecker_delta_l.
+  napply rng_sum_kronecker_delta_l.
 Defined.
 
 (** The identity matrix acts as a right identity for matrix multiplication. *)
@@ -207,16 +207,16 @@ Definition right_identity_matrix_mult (R : Ring) (m n : nat)
 Proof.
   intros M; apply path_matrix; intros i j Hi Hj.
   rewrite entry_Build_Matrix.
-  lhs nrapply path_ab_sum.
+  lhs napply path_ab_sum.
   1: intros k Hk; by rewrite entry_Build_Matrix.
-  nrapply rng_sum_kronecker_delta_r'.
+  napply rng_sum_kronecker_delta_r'.
 Defined.
 
 (** TODO: define this as an R-algebra. What is an R-algebra over a non-commutative right however? (Here we have a bimodule which might be important) *)
 (** Matrices over a ring form a (generally) non-commutative ring. *)
 Definition matrix_ring (R : Ring@{i}) (n : nat) : Ring.
 Proof.
-  snrapply Build_Ring.
+  snapply Build_Ring.
   - exact (abgroup_matrix R n n).
   - exact matrix_mult.
   - exact (identity_matrix R n).
@@ -233,14 +233,14 @@ Definition matrix_mult_lact_l {R : Ring} {m n p : nat}
       (@matrix_mult R m n p) (@matrix_lact R m n).
 Proof.
   intros r M N.
-  snrapply path_matrix.
+  snapply path_matrix.
   intros i j Hi Hj.
   rewrite !entry_Build_Matrix, !entry_Build_Vector. 
-  lhs nrapply rng_sum_dist_l.
-  snrapply path_ab_sum.
+  lhs napply rng_sum_dist_l.
+  snapply path_ab_sum.
   intros k Hk; cbn.
   rewrite !entry_Build_Matrix.
-  snrapply rng_mult_assoc.
+  snapply rng_mult_assoc.
 Defined.
 
 (** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analagous statement for the right action. We haven't yet stated a definition of right module yet though. *)
@@ -268,8 +268,8 @@ Definition matrix_transpose_transpose {R : Type} {m n} (M : Matrix R m n)
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
-  lhs nrapply entry_Build_Matrix.
-  nrapply entry_Build_Matrix.
+  lhs napply entry_Build_Matrix.
+  napply entry_Build_Matrix.
 Defined.
 
 (** Transpose distributes over addition. *)
@@ -322,7 +322,7 @@ Definition matrix_transpose_mult_comm {R : CRing} {m n p}
   : matrix_transpose (matrix_mult M N)
     = matrix_mult (matrix_transpose N) (matrix_transpose M).
 Proof.
-  lhs nrapply matrix_transpose_mult.
+  lhs napply matrix_transpose_mult.
   apply matrix_mult_rng_op.
 Defined.
 
@@ -351,7 +351,7 @@ Defined.
 Definition matrix_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : Matrix R n n.
 Proof.
-  snrapply Build_Matrix.
+  snapply Build_Matrix.
   intros i j H1 H2.
   exact (kronecker_delta i j * Vector.entry v i).
 Defined.
@@ -361,10 +361,10 @@ Definition matrix_diag_plus {R : Ring@{i}} {n : nat} (v w : Vector R n)
   : matrix_plus (matrix_diag v) (matrix_diag w) = matrix_diag (vector_plus v w).
 Proof.
   symmetry.
-  snrapply path_matrix.
+  snapply path_matrix.
   intros i j Hi Hj.
   rewrite 2 entry_Build_Matrix, 5 entry_Build_Vector.
-  nrapply rng_dist_l.
+  napply rng_dist_l.
 Defined.
 
 (** Matrix multiplication of diagonal matrices is the same as multiplying the corresponding vectors pointwise. *)
@@ -372,10 +372,10 @@ Definition matrix_diag_mult {R : Ring} {n : nat} (v w : Vector R n)
   : matrix_mult (matrix_diag v) (matrix_diag w)
     = matrix_diag (vector_map2 (.*.) v w).
 Proof.
-  snrapply path_matrix.
+  snapply path_matrix.
   intros i j Hi Hj.
   rewrite 2 entry_Build_Matrix.
-  lhs snrapply path_ab_sum.
+  lhs snapply path_ab_sum.
   { intros k Hk.
     rewrite 2 entry_Build_Matrix.
     rewrite rng_mult_assoc.
@@ -391,7 +391,7 @@ Defined.
 Definition matrix_transpose_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
   : matrix_transpose (matrix_diag v) = matrix_diag v.
 Proof.
-  snrapply path_matrix.
+  snapply path_matrix.
   intros i j Hi Hj.
   rewrite 3 entry_Build_Matrix.
   rewrite kronecker_delta_symm.
@@ -406,7 +406,7 @@ Instance isinj_matrix_diag {R : Ring@{i}} {n : nat}
   : IsInjective (@matrix_diag R n).
 Proof.
   intros v1 v2 p.
-  snrapply path_vector.
+  snapply path_vector.
   intros i Hi.
   apply (ap (fun M => entry M i i)) in p.
   rewrite 2 entry_Build_Matrix in p.
@@ -431,9 +431,9 @@ Definition issig_IsDiagonal {R : Ring@{i}} {n : nat} {M : Matrix R n n}
 Instance ishprop_isdiagonal {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   : IsHProp (IsDiagonal M).
 Proof.
-  snrapply hprop_allpath.
+  snapply hprop_allpath.
   intros x y.
-  snrapply ((equiv_ap' issig_IsDiagonal^-1%equiv _ _ )^-1%equiv).
+  snapply ((equiv_ap' issig_IsDiagonal^-1%equiv _ _ )^-1%equiv).
   rapply path_sigma_hprop; cbn.
   apply isinj_matrix_diag.
   exact ((isdiagonal_diag M)^ @ isdiagonal_diag M).
@@ -444,7 +444,7 @@ Instance isdiagonal_matrix_zero {R : Ring@{i}} {n : nat}
   : IsDiagonal (matrix_zero R n n).
 Proof.
   exists (vector_zero R n).
-  snrapply path_matrix.
+  snapply path_matrix.
   intros i j Hi Hj.
   rewrite 2 entry_Build_Matrix, entry_Build_Vector.
   by rewrite rng_mult_zero_r.
@@ -455,7 +455,7 @@ Instance isdiagonal_identity_matrix {R : Ring@{i}} {n : nat}
   : IsDiagonal (identity_matrix R n).
 Proof.
   exists (Build_Vector R n (fun _ _ => 1)).
-  snrapply path_matrix.
+  snapply path_matrix.
   intros i j Hi Hj.
   rewrite 2 entry_Build_Matrix, entry_Build_Vector.
   by rewrite rng_mult_one_r.
@@ -478,7 +478,7 @@ Instance isdiagonal_matrix_negate {R : Ring@{i}} {n : nat}
 Proof.
   exists (vector_neg _ _ (isdiagonal_diag_vector M)).
   rewrite (isdiagonal_diag M).
-  snrapply path_matrix.
+  snapply path_matrix.
   intros i j Hi Hj.
   rewrite !entry_Build_Matrix, !entry_Build_Vector.
   by rewrite rng_mult_negate_r.
@@ -513,13 +513,13 @@ Definition matrix_diag_vector {R : Ring} {n : nat} (M : Matrix R n n)
 Definition matrix_diag_ring@{i} (R : Ring@{i}) (n : nat)
   : Subring@{i i} (matrix_ring R n).
 Proof.
-  snrapply (Build_Subring' (fun M : matrix_ring R n => IsDiagonal M) _); hnf.
+  snapply (Build_Subring' (fun M : matrix_ring R n => IsDiagonal M) _); hnf.
   - intros; exact _.
   - intros x y dx dy.
-    nrapply isdiagonal_matrix_plus; trivial.
-    by nrapply isdiagonal_matrix_negate.
-  - nrapply isdiagonal_matrix_mult.
-  - nrapply isdiagonal_identity_matrix.
+    napply isdiagonal_matrix_plus; trivial.
+    by napply isdiagonal_matrix_negate.
+  - napply isdiagonal_matrix_mult.
+  - napply isdiagonal_identity_matrix.
 Defined.
 
 (** ** Trace *)
@@ -533,7 +533,7 @@ Definition matrix_trace_plus {R : Ring} {n} (M N : Matrix R n n)
   : matrix_trace (matrix_plus M N) = (matrix_trace M) + (matrix_trace N).
 Proof.
   unfold matrix_trace.
-  lhs nrapply path_ab_sum.
+  lhs napply path_ab_sum.
   { intros i Hi.
     by rewrite entry_Build_Matrix. }
   by rewrite ab_sum_plus.
@@ -555,16 +555,16 @@ Definition matrix_trace_mult {R : CRing} {m n : nat}
   (M : Matrix R m n) (N : Matrix R n m)
   : matrix_trace (matrix_mult M N) = matrix_trace (matrix_mult N M).
 Proof.
-  lhs nrapply path_ab_sum.
+  lhs napply path_ab_sum.
   { intros i Hi.
-    lhs nrapply entry_Build_Matrix.
-    nrapply path_ab_sum.
+    lhs napply entry_Build_Matrix.
+    napply path_ab_sum.
     intros j Hj.
     apply rng_mult_comm. }
-  lhs nrapply ab_sum_sum.
+  lhs napply ab_sum_sum.
   apply path_ab_sum.
   intros i Hi.
-  rhs nrapply entry_Build_Matrix.
+  rhs napply entry_Build_Matrix.
   reflexivity.
 Defined.
 
@@ -574,7 +574,7 @@ Definition trace_transpose {R : Ring} {n} (M : Matrix R n n)
 Proof.
   apply path_ab_sum.
   intros i Hi.
-  nrapply entry_Build_Matrix.
+  napply entry_Build_Matrix.
 Defined.
 
 (** ** Matrix minors *)
@@ -727,7 +727,7 @@ Proof.
   intros i j Hi Hj lt_i_j.
   rewrite entry_Build_Matrix.
   rewrite <- rng_negate_zero; f_ap.
-  by nrapply H.
+  by napply H.
 Defined.
 
 (** The negation of a lower triangular matrix is lower triangular. *)
@@ -768,7 +768,7 @@ Instance lower_triangular_mult {R : Ring@{i}} {n : nat}
 Proof.
   unfold IsLowerTriangular.
   rewrite matrix_transpose_mult.
-  nrapply (upper_triangular_mult (R:=rng_op R)); assumption.
+  napply (upper_triangular_mult (R:=rng_op R)); assumption.
 Defined.
 
 (** The zero matrix is upper triangular. *)
@@ -834,7 +834,7 @@ Defined.
 Definition upper_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
   : Subring@{i i} (matrix_ring@{i} R n).
 Proof.
-  nrapply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M)).
+  napply (Build_Subring' (fun M : matrix_ring R n => IsUpperTriangular M)).
   - exact _.
   (* These can all be found by typeclass search, but being explicit makes this faster. *)
   - intros x y ? ?; exact (upper_triangular_plus x (-y)).
@@ -846,7 +846,7 @@ Defined.
 Definition lower_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
   : Subring@{i i} (matrix_ring R n).
 Proof.
-  nrapply (Build_Subring'@{i i} (fun M : matrix_ring R n => IsLowerTriangular M)).
+  napply (Build_Subring'@{i i} (fun M : matrix_ring R n => IsLowerTriangular M)).
   - exact _.
   (* These can all be found by typeclass search, but being explicit makes this faster. *)
   - intros x y ? ?; exact (lower_triangular_plus x (-y)).
@@ -918,7 +918,7 @@ Instance isdiagonal_upper_triangular_issymmetric {R : Ring@{i}} {n : nat}
   : IsDiagonal M.
 Proof.
   exists (matrix_diag_vector M).
-  snrapply path_matrix.
+  snapply path_matrix.
   intros i j Hi Hj.
   rewrite entry_Build_Matrix, entry_Build_Vector.
   strip_truncations.
@@ -965,7 +965,7 @@ Proof.
   unfold IsSkewSymmetric.
   rewrite matrix_transpose_zero.
   symmetry.
-  nrapply (rng_negate_zero (A:=matrix_ring R n)).
+  napply (rng_negate_zero (A:=matrix_ring R n)).
 Defined.
 
 (** The negation of a skew-symmetric matrix is skew-symmetric. *)
@@ -985,7 +985,7 @@ Instance isskewsymmetric_matrix_scale {R : Ring@{i}} {n : nat}
 Proof.
   unfold IsSkewSymmetric.
   rewrite matrix_transpose_lact.
-  rhs_V nrapply (lm_neg (M:=Build_LeftModule _ (abgroup_matrix R n n) _) r M).
+  rhs_V napply (lm_neg (M:=Build_LeftModule _ (abgroup_matrix R n n) _) r M).
   f_ap.
 Defined.
 
@@ -1006,7 +1006,7 @@ Instance isskewsymmetric_matrix_plus {R : Ring@{i}} {n : nat}
 Proof.
   unfold IsSkewSymmetric.
   rewrite matrix_transpose_plus.
-  rhs nrapply (grp_inv_op (G:=abgroup_matrix R n n)).
+  rhs napply (grp_inv_op (G:=abgroup_matrix R n n)).
   rhs_V rapply AbelianGroup.abgroup_commutative.
   f_ap.
 Defined.
@@ -1023,7 +1023,7 @@ Section MatrixCat.
 
   #[export] Instance is01cat_matrixcat {R : Ring} : Is01Cat (MatrixCat R).
   Proof.
-    snrapply Build_Is01Cat.
+    snapply Build_Is01Cat.
     - exact (identity_matrix R).
     - intros l m n M N.
       exact (matrix_mult N M).
@@ -1035,7 +1035,7 @@ Section MatrixCat.
   (** [MatrixCat R] forms a strong 1-category. *)
   #[export] Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
   Proof.
-    snrapply Build_Is1Cat_Strong.
+    snapply Build_Is1Cat_Strong.
     (* Most of the structure comes from typeclasses in WildCat.Paths. *)
     1-4: exact _.
     - apply (associative_matrix_mult R).

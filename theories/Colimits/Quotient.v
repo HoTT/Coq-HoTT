@@ -47,7 +47,7 @@ Proof.
   rapply Trunc_ind; srapply GraphQuotient_ind.
   - exact pclass.
   - intros a b p.
-    lhs nrapply (transport_compose P).
+    lhs napply (transport_compose P).
     exact (peq a b p).
 Defined.
 
@@ -59,7 +59,7 @@ Definition Quotient_ind_beta_qglue@{i j k l}
   (a b : A) (p : R a b)
   : apD (Quotient_ind@{i j k l} R P pclass peq) (qglue p) = peq a b p.
 Proof.
-  lhs nrapply apD_compose'.
+  lhs napply apD_compose'.
   unfold Quotient_ind.
   nrefine (ap _ (GraphQuotient_ind_beta_gqglue _ pclass
     (fun a b p0 => transport_compose P tr _ _ @ peq a b p0) _ _ _) @ _).
@@ -72,7 +72,7 @@ Definition Quotient_rec@{i j k l}
   (peq : forall a b, R a b -> pclass a = pclass b)
   : Quotient@{i j k} R -> P.
 Proof.
-  srapply Trunc_rec; snrapply GraphQuotient_rec.
+  srapply Trunc_rec; snapply GraphQuotient_rec.
   - exact pclass.
   - exact peq.
 Defined.
@@ -84,8 +84,8 @@ Definition Quotient_rec_beta_qglue @{i j k l}
   (a b : A) (p : R a b)
   : ap (Quotient_rec@{i j k l} R P pclass peq) (qglue p) = peq a b p.
 Proof.
-  lhs_V nrapply (ap_compose tr).
-  snrapply GraphQuotient_rec_beta_gqglue.
+  lhs_V napply (ap_compose tr).
+  snapply GraphQuotient_rec_beta_gqglue.
 Defined.
 
 Arguments Quotient : simpl never.
@@ -159,9 +159,9 @@ Definition Quotient_rec2 {A : Type} (R : Relation A) (B : Type) `{IsHSet B}
 Proof.
   srapply Quotient_ind2.
   - exact dclass.
-  - intros; lhs nrapply transport_const.
+  - intros; lhs napply transport_const.
     by apply dequiv_l.
-  - intros; lhs nrapply transport_const.
+  - intros; lhs napply transport_const.
     by apply dequiv_r.
 Defined.
 
@@ -354,7 +354,7 @@ Section Kernel.
     srefine (_;_).
     { refine (Quotient_ind R (fun _ => B) f _).
       intros x y p.
-      lhs nrapply transport_const.
+      lhs napply transport_const.
       exact ((is_ker x y)^-1 p). }
     repeat split; try exact _.
     intro u.

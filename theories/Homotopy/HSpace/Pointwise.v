@@ -11,7 +11,7 @@ Instance ishspace_map `{Funext} (X : pType) (Y : Type)
   `{IsHSpace X} : IsHSpace [Y -> X, const pt].
 (* Note: When writing [f * g], Coq only finds this instance if [f] is explicitly in the pointed type [[Y -> X, const pt]]. *)
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact (fun f g y => (f y) * (g y)).
   - intro g; funext y.
     apply hspace_left_identity.
@@ -44,9 +44,9 @@ Defined.
 Instance ishspace_pmap `{Funext} (X Y : pType) `{IsCoherent X}
   : IsHSpace (Y ->** X).
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - intros f g.
-    snrapply Build_pMap.
+    snapply Build_pMap.
     + exact (fun y => hspace_op (f y) (g y)).
     + cbn.
       refine (ap _ (point_eq g) @ _); cbn.
@@ -54,7 +54,7 @@ Proof.
       apply hspace_left_identity.
   - intro g.
     apply path_pforall.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     + intro y; cbn.
       apply hspace_left_identity.
     + cbn.
@@ -62,12 +62,12 @@ Proof.
       exact (1 @@ concat_1p _ @ concat_A1p _ _)^.
   - intro f.
     apply path_pforall.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     + intro y; cbn.
       apply hspace_right_identity.
     + pelim f; cbn.
       symmetry.
-      lhs nrapply (concat_p1 _ @ concat_1p _ @ concat_1p _).
+      lhs napply (concat_p1 _ @ concat_1p _ @ concat_1p _).
       exact iscoherent.
 Defined.
 
@@ -79,7 +79,7 @@ Proof.
   (* Both identities are created using [path_pforall]. *)
   refine (ap path_pforall _).
   apply path_pforall.
-  snrapply Build_pHomotopy.
+  snapply Build_pHomotopy.
   - intro y; cbn.
     exact iscoherent.
   - cbn.
@@ -102,7 +102,7 @@ Proof.
   - exact (fun a => equiv_hspace_left_op (f a)).
   - cbn. exact (right_identity _ @ point_eq f).
   - intro g.
-    apply path_pforall; snrapply Build_pHomotopy.
+    apply path_pforall; snapply Build_pHomotopy.
     + intro y; cbn.
       reflexivity.
     + cbn. apply (moveR_1M _ _)^-1.

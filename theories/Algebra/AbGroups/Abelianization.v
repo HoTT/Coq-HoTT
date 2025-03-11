@@ -30,14 +30,14 @@ Definition isequiv_group_precomp_isabelianization `{Funext}
   `{!IsAbelianization G_ab eta} (A : AbGroup)
   : IsEquiv (group_precomp A eta).
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   - intros g.
     exact (surjinj_inv (group_precomp A eta) g).
   - intros f.
-    snrapply equiv_path_grouphomomorphism.
+    snapply equiv_path_grouphomomorphism.
     exact (eisretr0gpd_inv (group_precomp A eta) f).
   - intros f.
-    snrapply equiv_path_grouphomomorphism.
+    snapply equiv_path_grouphomomorphism.
     exact (eissect0gpd_inv (group_precomp A eta) f).
 Defined.
 
@@ -53,11 +53,11 @@ From this we can show that Abel G is an abelian group.
 
 In fact this models the following HIT:
 
-<<<
+<<
 HIT Abel (G : Group) := 
  | abel_in : G -> Abel G
  | abel_in_comm : forall x y z, abel_in (x * (y * z)) = abel_in (x * (z * y)).
->>>
+>>
 
 We also derive [abel_in] and [abel_in_comm] from our coequalizer definition, and even prove the induction and computation rules for this HIT.
 
@@ -96,8 +96,8 @@ Section Abel.
     (c : forall x y z, abel_in_comm x y z # a (x * (y * z)) = a (x * (z * y)))
     : forall (x : Abel), P x.
   Proof.
-    srapply Trunc_ind.
-    snrapply Coeq_ind.
+    rapply Trunc_ind.
+    snapply Coeq_ind.
     1: exact a.
     intros [[x y] z].
     nrefine (transport_compose _ _ _ _ @ _).
@@ -145,7 +145,7 @@ Section Abel.
 End Abel.
 
 (** The [IsHProp] argument of [Abel_ind_hprop] can usually be found by typeclass resolution, but [srapply] is slow, so we use this tactic instead. *)
-Local Ltac Abel_ind_hprop x := snrapply Abel_ind_hprop; [exact _ | intro x].
+Local Ltac Abel_ind_hprop x := snapply Abel_ind_hprop; [exact _ | intro x].
 
 (** We make sure that [G] is implicit in the arguments of [abel_in]
  and [abel_in_comm]. *)
@@ -196,7 +196,7 @@ Section AbelGroup.
     Abel_ind_hprop z; revert y.
     Abel_ind_hprop y; revert x.
     Abel_ind_hprop x; simpl.
-    nrapply (ap abel_in); apply associativity.
+    napply (ap abel_in); apply associativity.
   Defined.
 
   (** From this we know that [Abel G] is a semigroup. *)
@@ -209,13 +209,13 @@ Section AbelGroup.
   #[export] Instance leftidentity_abel : LeftIdentity (.*.) 1.
   Proof.
     Abel_ind_hprop x; cbn beta.
-    nrapply (ap abel_in); apply left_identity.
+    napply (ap abel_in); apply left_identity.
   Defined.
 
   #[export] Instance rightidentity_abel : RightIdentity (.*.) 1.
   Proof.
     Abel_ind_hprop x; cbn beta.
-    nrapply (ap abel_in); apply right_identity.
+    napply (ap abel_in); apply right_identity.
   Defined.
 
   (** Hence [Abel G] is a monoid *)
@@ -246,9 +246,9 @@ Section AbelGroup.
   Proof.
     srapply (Abel_rec _ _ (abel_in o inv)).
     intros x y z; cbn beta.
-    lhs nrapply ap.
-    2: rhs nrapply ap.
-    1,3: lhs rapply inverse_sg_op; nrapply (ap (.* _)); rapply inverse_sg_op.
+    lhs napply ap.
+    2: rhs napply ap.
+    1,3: lhs rapply inverse_sg_op; napply (ap (.* _)); rapply inverse_sg_op.
     change (abel_in z^ * abel_in y^ * abel_in x^
       = abel_in y^ * abel_in z^ * abel_in x^).
     apply (ap (.* _)).
@@ -259,13 +259,13 @@ Section AbelGroup.
   #[export] Instance leftinverse_abel : LeftInverse (.*.) (^) 1.
   Proof.
     Abel_ind_hprop x; simpl.
-    nrapply (ap abel_in); apply left_inverse.
+    napply (ap abel_in); apply left_inverse.
   Defined.
 
   Instance rightinverse_abel : RightInverse (.*.) (^) 1.
   Proof.
     Abel_ind_hprop x; simpl.
-    nrapply (ap abel_in); apply right_inverse.
+    napply (ap abel_in); apply right_inverse.
   Defined.
 
   (** Thus [Abel G] is a group *)
@@ -298,7 +298,7 @@ Defined.
 Definition abel : Group -> AbGroup.
 Proof.
   intro G.
-  snrapply Build_AbGroup.
+  snapply Build_AbGroup.
   - srapply (Build_Group (Abel G)).
   - exact _.
 Defined.
@@ -313,10 +313,10 @@ Definition abel_unit {G : Group} : G $-> abel G
 Definition grp_homo_abel_rec {G : Group} {A : AbGroup} (f : G $-> A)
   : abel G $-> A.
 Proof.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   { srapply (Abel_rec _ _ f).
     intros x y z.
-    nrapply grp_homo_op_agree; trivial.
+    napply grp_homo_op_agree; trivial.
     refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).
     apply commutativity. }
   intros y.
@@ -412,15 +412,15 @@ Defined.
 
 Instance is0functor_abel : Is0Functor abel.
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros A B f.
-  snrapply grp_homo_abel_rec.
+  snapply grp_homo_abel_rec.
   exact (abel_unit $o f).
 Defined.
 
 Instance is1functor_abel : Is1Functor abel.
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros A B f g p.
     unfold abel.
     rapply Abel_ind_hprop.

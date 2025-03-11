@@ -78,7 +78,7 @@ Instance nat_divides_factorial_mul_factorial_add n m
   : (factorial n * factorial m | factorial (n + m)).
 Proof.
   remember (n + m) as k eqn:p.
-  revert k n m p; snrapply nat_ind_strong; hnf; intros k IH n m p.
+  revert k n m p; snapply nat_ind_strong; hnf; intros k IH n m p.
   destruct k.
   { apply equiv_nat_add_zero in p.
     destruct p as [p q].
@@ -95,11 +95,11 @@ Proof.
     rapply nat_divides_mul_monotone.
     rapply IH.
     exact (ap nat_pred p').
-  - nrapply nat_divides_add.
+  - napply nat_divides_add.
     + apply helper, p.
     + rewrite nat_mul_comm.
       apply helper.
-      lhs nrapply nat_add_comm; exact p.
+      lhs napply nat_add_comm; exact p.
 Defined.
 
 (** Here is a variant of [nat_divides_factorial_mul_factorial_add] that is more suitable for binomial coefficients. *)

@@ -64,7 +64,7 @@ Definition pequiv_S0_Bool : psphere 0 <~>* pBool
 Definition pmap_from_bool `{Funext} (X : pType)
   : (pBool ->** X) <~>* X.
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   - refine (_ oE (issig_pmap _ _)^-1%equiv).
     refine (_ oE (equiv_functor_sigma_pb (equiv_bool_rec_uncurried X))^-1%equiv); cbn.
     make_equiv_contr_basedpaths.
@@ -92,7 +92,7 @@ Proof.
     refine (ap _ (Circle_rec_beta_loop _ _ _) @ _).
     refine (ap_pp _ _ (merid South)^ @ _).
     refine ((1 @@ ap_V _ _) @ _).
-    refine ((_ @@ (ap inverse _)) @ _). 1, 2: nrapply Susp_rec_beta_merid.
+    refine ((_ @@ (ap inverse _)) @ _). 1, 2: napply Susp_rec_beta_merid.
     simpl.
     apply concat_p1.
   - refine (Susp_ind (fun x => Circle_to_S1 (S1_to_Circle x) = x)
@@ -103,7 +103,7 @@ Proof.
     apply (equiv_ind (S0_to_Bool ^-1)); intros x.
     case x; simpl.
     2: reflexivity.
-    lhs nrapply concat_1p.
+    lhs napply concat_1p.
     unfold Circle_to_S1; rewrite Circle_rec_beta_loop.
     symmetry; apply concat_pV_p.
 Defined.

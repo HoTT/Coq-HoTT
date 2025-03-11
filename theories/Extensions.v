@@ -750,7 +750,7 @@ Proof.
     rapply ds_G1.
     refine (dp_apD_compose' _ _ (ap_cyl_cylcoeq_cglue p q b) _ @ _).
     apply moveR_equiv_V.
-    nrapply Coeq_ind_beta_cglue.
+    napply Coeq_ind_beta_cglue.
 Defined.
 
 (** Now we can easily iterate into higher extendability. *)

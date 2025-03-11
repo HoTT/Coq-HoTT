@@ -45,7 +45,7 @@ Proof.
   snrefine ((to_S; to_S_beta); _).
   intro g.
   exists (idsys_ind (fun a r => to_S a r = pr1 g a r) (to_S_beta @ (pr2 g)^)).
-  snrapply idsys_ind_beta.
+  snapply idsys_ind_beta.
 Defined.
 
 (** If a pointed type family [(R; r0)] has homotopy contractible mapping spaces in the sense above, then [fun p => transport R p r0] is a fiberwise equivalence. This is a strong form of Theorem 5.8.2, (ii) implies (iii). *)
@@ -58,7 +58,7 @@ Definition equiv_path_homocontr_pfammap {A : Type} {a0 : A}
 Proof.
   pose (inv := (H (fun a => a0 = a) 1).1.1).
   pose proof (inv_beta := (H (fun a => a0 = a) 1).1.2); cbn in inv_beta.
-  snrapply (isequiv_adjointify _ (inv a)); cbn.
+  snapply (isequiv_adjointify _ (inv a)); cbn.
   - destruct (H R r0) as [[f fp] h].
     pose proof (h' := fun g => (h g).1 a); cbn in h'; clear h fp.
     (* Both sides are the underlying maps of [pfammap]s, so [h'] says that both are homotopic to [f a]. *)
@@ -85,12 +85,12 @@ Definition identitysystem_contr_sigma {A : Type} {a0 : A} (R : A -> Type)
   (r0 : R a0) {C : Contr (sig R)}
   : IsIdentitySystem R r0.
 Proof.
-  snrapply Build_IsIdentitySystem.
+  snapply Build_IsIdentitySystem.
   - intros D d0 a r.
     exact (transport (fun ar : sig R => D (pr1 ar) (pr2 ar))
              (path_contr (a0; r0) (a; r)) d0).
   - intros D d0; cbn; unfold path_contr.
-    nrapply (transport2 _ (concat_Vp _)).
+    napply (transport2 _ (concat_Vp _)).
 Defined.
 
 (** Assuming function extensionality, pointed homotopy contractible fiberwise mapping spaces of pointed type families are contractible. We thus obtain the proper statement of Theorem 5.8.2. *)
@@ -100,17 +100,17 @@ Definition contr_pfammap_homocontr `{Funext} {A : Type} {a0 : A}
   (fH : exists f : pfamMap R S r0 s0, forall g, pfammap_homotopy f g)
   : Contr (pfamMap R S r0 s0).
 Proof.
-  snrapply Build_Contr.
+  snapply Build_Contr.
   - exact fH.1.
   - intro g.
-    snrapply path_sigma; cbn.
+    snapply path_sigma; cbn.
     + funext a.
-      nrapply path_forall.
+      napply path_forall.
       exact ((fH.2 g).1 a).
     + transport_path_forall_hammer.
-      lhs nrapply transport_paths_l.
-      nrapply moveR_Vp.
-      nrapply moveL_pM.
+      lhs napply transport_paths_l.
+      napply moveR_Vp.
+      napply moveL_pM.
       symmetry.
       exact (fH.2 g).2.
 Defined.
@@ -133,8 +133,8 @@ Instance isequiv_transport_identitysystem {A : Type} {a0 : A}
   (R : A -> Type) (r0 : R a0) `{!IsIdentitySystem _ r0} (a : A)
   : IsEquiv (fun p : a0 = a => transport R p r0).
 Proof.
-  nrapply equiv_path_homocontr_pfammap.
-  by nrapply homocontr_pfammap_identitysystem.
+  napply equiv_path_homocontr_pfammap.
+  by napply homocontr_pfammap_identitysystem.
 Defined.
 
 Definition equiv_transport_identitysystem {A : Type} {a0 : A}

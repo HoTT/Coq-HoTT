@@ -234,25 +234,25 @@ Section TwistConstruction.
   (** Now we can use [associator_twist'] and show that it is a natural equivalence in each variable. *)
   Instance associator_twist : Associator cat_tensor.
   Proof.
-    snrapply Build_Associator.
+    snapply Build_Associator.
     - exact associator_twist'.
-    - snrapply Build_Is1Natural.
+    - snapply Build_Is1Natural.
       simpl; intros [[a b] c] [[a' b'] c'] [[f g] h]; simpl in f, g, h.
       (** To prove naturality it will be easier to reason about squares. *)
       change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
       (** First we remove all the equivalences from the equation. *)
-      nrapply hconcatL.
+      napply hconcatL.
       1: apply associator_twist'_unfold.
-      nrapply hconcatR.
+      napply hconcatR.
       2: apply associator_twist'_unfold.
       (** The first square involving [braid] on its own is a naturality square. *)
-      nrapply vconcat.
+      napply vconcat.
       2: rapply braid_nat.
       (** The second square is just the naturality of twist. *)
-      nrapply vconcat.
+      napply vconcat.
       2: apply twist_nat.
-      nrapply hconcatL.
-      2: nrapply hconcatR.
+      napply hconcatL.
+      2: napply hconcatR.
       1,3: symmetry; rapply fmap01_is_fmap11.
       (** Leaving us with a square with a functor application. *)
       rapply fmap11_square.
@@ -269,18 +269,18 @@ Section TwistConstruction.
   (** Since we assume the [right_unitor] exists, we can derive the [left_unitor] from it together with [braid]. *)
   Instance left_unitor_twist : LeftUnitor cat_tensor cat_tensor_unit.
   Proof.
-    snrapply Build_NatEquiv'.
-    - snrapply Build_NatTrans.
+    snapply Build_NatEquiv'.
+    - snapply Build_NatTrans.
       + exact (fun a => right_unitor a $o braid cat_tensor_unit a).
-      + snrapply Build_Is1Natural.
+      + snapply Build_Is1Natural.
         intros a b f.
         change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
-        nrapply vconcat.
+        napply vconcat.
         2: exact (isnat right_unitor f).
-        rapply braid_nat_r.
+        napply braid_nat_r.
     - intros a.
       rapply compose_catie'.
-      rapply catie_braid.
+      exact (catie_braid _ _).
   Defined.
 
   (** *** Triangle *)

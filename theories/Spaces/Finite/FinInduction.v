@@ -32,8 +32,8 @@ Proof.
   induction (path_fin_to_finnat_fin_zero n)^.
   intro p.
   destruct (hset_path2 1 p).
-  lhs nrapply transport_1.
-  nrapply finnat_ind_beta_zero.
+  lhs napply transport_1.
+  napply finnat_ind_beta_zero.
 Defined.
 
 Lemma fin_ind_beta_fsucc (P : forall n : nat, Fin n -> Type)

@@ -78,7 +78,7 @@ Section PO.
     1: reflexivity.
     unfold popp in pp'.
     intro a. apply moveR_transport_p.
-    rhs_V nrapply transport_pp.
+    rhs_V napply transport_pp.
     destruct u.
     symmetry; apply pp'.
   Defined.
@@ -93,7 +93,7 @@ Section PO.
     : forall x, apD (PO_ind P l' r' pp') (popp x) = pp' x.
   Proof.
     intro x.
-    lhs nrapply apD_pp.
+    lhs napply apD_pp.
     rewrite (Colimit_ind_beta_colimp P _ _ (inl tt) (inr true) tt x).
     rewrite concat_p1, apD_V.
     rewrite (Colimit_ind_beta_colimp P _ _ (inl tt) (inr false) tt x).
@@ -116,7 +116,7 @@ Section PO.
     refine (_ @@ _).
     1: exact (Colimit_rec_beta_colimp P (Build_span_cocone l' r' pp')
                 (inl tt) (inr true) tt x).
-    lhs nrapply ap_V.
+    lhs napply ap_V.
     apply (inverse2 (q:=1)).
     exact (Colimit_rec_beta_colimp P (Build_span_cocone l' r' pp')
              (inl tt) (inr false) tt x).
@@ -182,9 +182,9 @@ Section is_PO_pushout.
           intros [u|b] [u'|b'] [] x.
           destruct u, b'; cbn.
           2: reflexivity.
-          rhs nrapply concat_1p.
+          rhs napply concat_1p.
           lhs refine (_ @@ 1).
-          1: nrapply Pushout_rec_beta_pglue.
+          1: napply Pushout_rec_beta_pglue.
           unfold popp', legs_comm.
           apply concat_pV_p.
       + intro h.
@@ -194,8 +194,8 @@ Section is_PO_pushout.
         intro a; cbn beta.
         transport_paths FlFr; apply equiv_p1_1q.
         unfold popp'; cbn.
-        rhs_V nrapply concat_p1.
-        nrapply Pushout_rec_beta_pglue.
+        rhs_V napply concat_p1.
+        napply Pushout_rec_beta_pglue.
   Defined.
 
   Definition equiv_pushout_PO : Pushout f g <~> PO f g.
@@ -210,7 +210,7 @@ Section is_PO_pushout.
   Proof.
     cbn.
     refine (_ @ _).
-    1: nrapply Pushout_rec_beta_pglue.
+    1: napply Pushout_rec_beta_pglue.
     unfold popp'; cbn.
     rewrite 2 concat_1p.
     reflexivity.
@@ -220,15 +220,15 @@ Section is_PO_pushout.
     (pusha : forall a : A, pushb (f a) = pushc (g a))
     : Pushout_rec P pushb pushc pusha == PO_rec P pushb pushc pusha o equiv_pushout_PO.
   Proof.
-    snrapply Pushout_ind.
+    snapply Pushout_ind.
     1, 2: reflexivity.
     intro a; cbn beta.
     transport_paths FlFr; apply equiv_p1_1q.
     lhs exact (Pushout_rec_beta_pglue P pushb pushc pusha a).
     symmetry.
-    lhs nrapply (ap_compose equiv_pushout_PO _ (pglue a)).
-    lhs nrapply (ap _ (equiv_pushout_PO_beta_pglue a)).
-    nrapply PO_rec_beta_pp.
+    lhs napply (ap_compose equiv_pushout_PO _ (pglue a)).
+    lhs napply (ap _ (equiv_pushout_PO_beta_pglue a)).
+    napply PO_rec_beta_pp.
   Defined.
 
 End is_PO_pushout.

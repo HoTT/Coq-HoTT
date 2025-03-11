@@ -21,7 +21,7 @@ Definition pfiber2_loops {A B : pType} (f : A ->* B)
   : pfiber (pfib f) <~>* loops B.
 Proof.
   pointed_reduce_pmap f.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   1: make_equiv_contr_basedpaths.
   reflexivity.
 Defined.
@@ -61,7 +61,7 @@ Proof.
   induction n.
   1: reflexivity.
   refine (_ o*E pfiber_fmap_loops _ ).
-  rapply (emap loops).
+  tapply (emap loops).
   exact IHn.
 Defined.
 

@@ -87,7 +87,7 @@ Notation "f ^-1$" := (cate_inv f).
 (** * Opposite categories preserve having equivalences. *)
 Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
 Proof.
-  snrapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
+  snapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
   - exact (b $<~> a).
   - exact CatIsEquiv.
   - apply cate_fun'.
@@ -167,7 +167,7 @@ Definition catie_homotopic {A} `{HasEquivs A} {a b : A}
   (f : a $-> b) `{!CatIsEquiv f} {g : a $-> b} (p : f $== g)
   : CatIsEquiv g.
 Proof.
-  snrapply catie_adjointify.
+  snapply catie_adjointify.
   - exact (Build_CatEquiv f)^-1$.
   - refine (p^$ $@R _ $@ _).
     refine ((cate_buildequiv_fun f)^$ $@R _ $@ _).
@@ -415,7 +415,7 @@ Definition cate_inv_compose' {A} `{HasEquivs A} {a b c : A} (e : a $<~> b) (f : 
   : cate_fun (f $oE e)^-1$ $== e^-1$ $o f^-1$.
 Proof.
   nrefine (_ $@ cate_buildequiv_fun _).
-  nrapply cate_inv_compose.
+  napply cate_inv_compose.
 Defined.
 
 Definition cate_inv_V {A} `{HasEquivs A} {a b : A} (e : a $<~> b)
@@ -623,9 +623,9 @@ Instance hasmorext_core {A : Type} `{HasEquivs A, !HasMorExt A}
   `{forall x y (f g : uncore x $<~> uncore y), IsEquiv (ap (x := f) (y := g) cate_fun)}
   : HasMorExt (core A).
 Proof.
-  snrapply Build_HasMorExt.
+  snapply Build_HasMorExt.
   intros X Y f g; cbn in *.
-  snrapply isequiv_homotopic.
+  snapply isequiv_homotopic.
   - exact (GpdHom_path o (ap (x:=f) (y:=g) cate_fun)).
   - exact isequiv_compose.
   - intro p; by induction p.

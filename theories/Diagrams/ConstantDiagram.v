@@ -2,7 +2,7 @@ Require Import Basics Types.Paths.
 Require Import Cone.
 Require Import Cocone.
 Require Import Diagram.
-Require Import Graph.
+Require Import Diagrams.Graph.
 
 (** * Constant diagram *)
 

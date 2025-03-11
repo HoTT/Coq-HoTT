@@ -292,7 +292,7 @@ Section LexMeet.
     { apply mapinO_tr_istruncmap, contr_map_isequiv, composing; assumption. }
     pose (O_eq_Tr n).
     apply (mapinO_O_leq (Sep (Tr n)) _), mapinO_from_diagonal.
-    nrapply (mapinO_homotopic (Tr n) _ (fun u => (diagonal_plus_functor f u)^)).
+    napply (mapinO_homotopic (Tr n) _ (fun u => (diagonal_plus_functor f u)^)).
     apply mapinO_compose.
     2:rapply mapinO_isequiv.
     apply IHn.

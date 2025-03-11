@@ -37,7 +37,7 @@ Definition cofiber_rec {X Y Z : Type} (f : X -> Y) (g : Y -> Z)
   (null : NullHomotopy (g o f))
   : Cofiber f -> Z.
 Proof.
-  snrapply Pushout_rec.
+  snapply Pushout_rec.
   - exact g.
   - intros; exact null.1.
   - intros a.
@@ -50,7 +50,7 @@ Definition cofiber_ind {X Y : Type} (f : X -> Y) (P : Cofiber f -> Type)
   (null : exists b, forall x, transport P (cfglue f x) (g (f x)) = b)
   : forall x, P x.
 Proof.
-  snrapply Pushout_ind.
+  snapply Pushout_ind.
   - intros y; apply g.
   - intros []; exact null.1.
   - exact null.2.
@@ -75,7 +75,7 @@ Definition functor_cofiber_homotopy {X Y X' Y' : Type} {f : X -> Y} {f' : X' -> 
   (r : forall x, p x @ ap f' (u x) = v (f x) @ p' x)
   : functor_cofiber g h p == functor_cofiber g' h' p'.
 Proof.
-  snrapply (functor_pushout_homotopic u v (fun _ => 1) r).
+  snapply (functor_pushout_homotopic u v (fun _ => 1) r).
   intro x; exact (concat_1p _ @ ap_const _ _).
 Defined.
 
@@ -105,16 +105,16 @@ Proof.
   apply isconnected_from_elim.
   intros C H' g.
   exists (g (cf_apex _)).
-  snrapply cofiber_ind.
+  snapply cofiber_ind.
   - rapply (conn_map_elim n f).
     intros x.
     exact (ap g (cfglue f x)).
   - exists idpath.
     intros x.
-    lhs snrapply transport_paths_Fl.
+    lhs snapply transport_paths_Fl.
     apply moveR_Vp.
-    rhs nrapply concat_p1.
-    nrapply conn_map_comp.
+    rhs napply concat_p1.
+    napply conn_map_comp.
 Defined.
 
 (** ** Comparison of fibers and cofibers *)
@@ -123,7 +123,7 @@ Definition fiber_to_path_cofiber {X Y : Type} (f : X -> Y) (y : Y)
   : hfiber f y -> cofib f y = cf_apex f.
 Proof.
   intros [x p].
-  lhs_V nrapply (ap (cofib f) p).
+  lhs_V napply (ap (cofib f) p).
   apply cfglue.
 Defined.
 
@@ -134,13 +134,13 @@ Definition isconnected_fiber_to_cofiber `{Univalence}
   : IsConnMap (m +2+ n) (fiber_to_path_cofiber f y).
 Proof.
   (* It's enough to check the connectivity of [functor_sigma idmap (fiber_to_path_cofiber f)]. *)
-  revert y; snrapply conn_map_fiber.
+  revert y; snapply conn_map_fiber.
   (* We precompose with the equivalence [X <~> { y : Y & hfiber f y }]. *)
   rapply (cancelR_conn_map _ (equiv_fibration_replacement _)).
   (* The Sigma-type [{ y : Y & cofib f y = cf_apex f}] in the codomain is the fiber of the map [cofib f], and so it is equivalent to the pullback of the cospan in the pushout square defining [Cofiber f].  We postcompose with this equivalence. *)
-  snrapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_hfiber _ _)^-1%equiv).
+  snapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_hfiber _ _)^-1%equiv).
   (* The composite is homotopic to the map from [blakers_massey_po], with the only difference being an extra [1 @ _]. *)
-  snrapply conn_map_homotopic.
+  snapply conn_map_homotopic.
   3: rapply blakers_massey_po.
   (* Use [compute.] to see the details of the goal. *)
   intros x.

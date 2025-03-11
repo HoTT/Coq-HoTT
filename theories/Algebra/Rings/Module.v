@@ -57,7 +57,7 @@ Section LeftModuleFacts.
   Definition lm_zero_l : 0 *L m = 0.
   Proof.
     apply (grp_cancelL1 (z := lact 0 m)).
-    lhs_V nrapply lm_dist_r.
+    lhs_V napply lm_dist_r.
     f_ap.
     apply rng_plus_zero_r.
   Defined.
@@ -66,7 +66,7 @@ Section LeftModuleFacts.
   Definition lm_zero_r : r *L (0 : M) = 0.
   Proof.
     apply (grp_cancelL1 (z := lact r 0)).
-    lhs_V nrapply lm_dist_l.
+    lhs_V napply lm_dist_l.
     f_ap.
     apply grp_unit_l.
   Defined.
@@ -75,9 +75,9 @@ Section LeftModuleFacts.
   Definition lm_minus_one : -1 *L m = -m.
   Proof.
      apply grp_moveL_1V.
-     lhs nrapply (ap (_ +) (lm_unit m)^).
-     lhs_V nrapply lm_dist_r.
-     rhs_V nrapply lm_zero_l.
+     lhs napply (ap (_ +) (lm_unit m)^).
+     lhs_V napply lm_dist_r.
+     rhs_V napply lm_zero_l.
      f_ap.
      apply grp_inv_l.
   Defined.
@@ -86,8 +86,8 @@ Section LeftModuleFacts.
   Definition lm_neg : r *L -m = - (r *L m).
   Proof.
     apply grp_moveL_1V.
-    lhs_V nrapply lm_dist_l.
-    rhs_V nrapply lm_zero_r.
+    lhs_V napply lm_dist_l.
+    rhs_V napply lm_zero_r.
     f_ap.
     apply grp_inv_l.
   Defined.
@@ -199,7 +199,7 @@ Instance isleftmodule_leftsubmodule {R : Ring}
   {M : LeftModule R} (N : LeftSubmodule M)
   : IsLeftModule R N.
 Proof.
-  snrapply Build_IsLeftModule.
+  snapply Build_IsLeftModule.
   - intros r [n n_in_N].
     exists (r *L n).
     by apply lsm_submodule.
@@ -240,8 +240,8 @@ Definition Build_IsLeftSubmodule' {R : Ring} {M : LeftModule R}
   (c : forall r n m, H n -> H m -> H (n + r *L m))
   : IsLeftSubmodule H.
 Proof.
-  snrapply Build_IsLeftSubmodule.
-  - snrapply Build_IsSubgroup'.
+  snapply Build_IsLeftSubmodule.
+  - snapply Build_IsSubgroup'.
     + exact _.
     + exact z.
     + intros x y hx hy.
@@ -268,8 +268,8 @@ Definition Build_LeftSubmodule' {R : Ring} {M : LeftModule R}
   : LeftSubmodule M.
 Proof.
   pose (p := Build_IsLeftSubmodule' H z c).
-  snrapply Build_LeftSubmodule.
-  1: snrapply (Build_Subgroup _ H).
+  snapply Build_LeftSubmodule.
+  1: snapply (Build_Subgroup _ H).
   2: exact p.
   rapply ils_issubgroup.
 Defined.
@@ -304,7 +304,7 @@ Definition rm_homo_ract {R : Ring} {M N : RightModule R}
 
 Definition lm_homo_id {R : Ring} (M : LeftModule R) : LeftModuleHomomorphism M M.
 Proof.
-  snrapply Build_LeftModuleHomomorphism.
+  snapply Build_LeftModuleHomomorphism.
   - exact grp_homo_id.
   - reflexivity.
 Defined.
@@ -317,10 +317,10 @@ Definition lm_homo_compose {R : Ring} {M N L : LeftModule R}
   -> LeftModuleHomomorphism M L.
 Proof.
   intros f g.
-  snrapply Build_LeftModuleHomomorphism.
+  snapply Build_LeftModuleHomomorphism.
   - exact (grp_homo_compose f g).
   - intros r m.
-    rhs_V nrapply lm_homo_lact.
+    rhs_V napply lm_homo_lact.
     apply (ap f).
     apply lm_homo_lact.
 Defined.
@@ -335,8 +335,8 @@ Definition Build_LeftModuleHomomorphism' {R : Ring} {M N : LeftModule R}
   (f : M -> N) (p : forall r x y, f (r *L x + y) = r *L f x + f y)
   : LeftModuleHomomorphism M N.
 Proof.
-  snrapply Build_LeftModuleHomomorphism.
-  - snrapply Build_GroupHomomorphism.
+  snapply Build_LeftModuleHomomorphism.
+  - snapply Build_GroupHomomorphism.
     + exact f.
     + intros x y.
       rewrite <- (lm_unit (f x)).
@@ -347,12 +347,12 @@ Proof.
     simpl.
     rewrite <- (grp_unit_r (lact r m)).
     rewrite p.
-    rhs_V nrapply grp_unit_r.
+    rhs_V napply grp_unit_r.
     apply grp_cancelL.
     specialize (p 1 0 0).
     rewrite 2 lm_unit in p.
     apply (grp_cancelL1 (z := f 0)).
-    lhs_V nrapply p.
+    lhs_V napply p.
     apply ap.
     apply grp_unit_l.
 Defined.
@@ -374,8 +374,8 @@ Definition Build_LeftModuleIsomorphism' {R : Ring} (M N : LeftModule R)
   (f : GroupIsomorphism M N) (p : forall r x, f (r *L x) = r *L f x)
   : LeftModuleIsomorphism M N.
 Proof.
-  snrapply Build_LeftModuleIsomorphism.
-  - snrapply Build_LeftModuleHomomorphism.
+  snapply Build_LeftModuleIsomorphism.
+  - snapply Build_LeftModuleHomomorphism.
     + exact f.
     + exact p.
   - exact _.
@@ -390,16 +390,16 @@ Definition lm_iso_inverse {R : Ring} {M N : LeftModule R}
   : LeftModuleIsomorphism M N -> LeftModuleIsomorphism N M.
 Proof.
   intros f.
-  snrapply Build_LeftModuleIsomorphism.
-  - snrapply Build_LeftModuleHomomorphism'.
+  snapply Build_LeftModuleIsomorphism.
+  - snapply Build_LeftModuleHomomorphism'.
     + exact f^-1.
     + intros r m n.
       apply moveR_equiv_V. 
-      rhs nrapply grp_homo_op.
+      rhs napply grp_homo_op.
       symmetry.
       f_ap.
       2: apply eisretr.
-      lhs nrapply lm_homo_lact.
+      lhs napply lm_homo_lact.
       apply ap.
       apply eisretr.
   - exact _.
@@ -426,15 +426,15 @@ Instance is2graph_leftmodule {R : Ring} : Is2Graph (LeftModule R)
 
 Instance is1cat_leftmodule {R : Ring} : Is1Cat (LeftModule R).
 Proof.
-  snrapply Build_Is1Cat'.
+  snapply Build_Is1Cat'.
   - intros M N; rapply is01cat_induced.
   - intros M N; rapply is0gpd_induced.
   - intros M N L h.
-    snrapply Build_Is0Functor.
+    snapply Build_Is0Functor.
     intros f g p m.
     exact (ap h (p m)).
   - intros M N L f.
-    snrapply Build_Is0Functor.
+    snapply Build_Is0Functor.
     intros g h p m.
     exact (p (f m)).
   - simpl; reflexivity.
@@ -444,7 +444,7 @@ Defined.
 
 Instance hasequivs_leftmodule {R : Ring} : HasEquivs (LeftModule R).
 Proof.
-  snrapply Build_HasEquivs.
+  snapply Build_HasEquivs.
   - exact LeftModuleIsomorphism.
   - intros M N; exact IsEquiv.
   - intros M N f; exact f.
@@ -483,8 +483,8 @@ Instance isleftsubmodule_grp_kernel {R : Ring}
 Proof.
   srapply Build_IsLeftSubmodule.
   intros r m n.
-  lhs nrapply lm_homo_lact.
-  rhs_V nrapply (lm_zero_r r).
+  lhs napply lm_homo_lact.
+  rhs_V napply (lm_zero_r r).
   apply ap.
   exact n.
 Defined.
@@ -511,7 +511,7 @@ Proof.
   srapply Build_IsLeftSubmodule.
   intros r m; apply Trunc_functor; intros [n p].
   exists (r *L n).
-  lhs nrapply lm_homo_lact.
+  lhs napply lm_homo_lact.
   apply ap.
   exact p.
 Defined.
@@ -536,11 +536,11 @@ Instance isleftmodule_quotientabgroup {R : Ring}
   (M : LeftModule R) (N : LeftSubmodule M)
   : IsLeftModule R (QuotientAbGroup M N).
 Proof.
-  snrapply Build_IsLeftModule.
+  snapply Build_IsLeftModule.
   - intros r.
-    snrapply quotient_abgroup_rec.
+    snapply quotient_abgroup_rec.
     + refine (grp_quotient_map $o _). 
-      snrapply Build_GroupHomomorphism.
+      snapply Build_GroupHomomorphism.
       * exact (lact r).
       * intros x y.
         apply lm_dist_l.
@@ -550,19 +550,19 @@ Proof.
       2: exact issubgroup_in_unit.
       by apply is_left_submodule.
   - intros r m n; revert m.
-    snrapply Quotient_ind_hprop; [exact _ | intros m; revert n].
-    snrapply Quotient_ind_hprop; [exact _ | intros n; simpl].
+    snapply Quotient_ind_hprop; [exact _ | intros m; revert n].
+    snapply Quotient_ind_hprop; [exact _ | intros n; simpl].
     rapply ap.
     apply lm_dist_l.
   - intros r s.
-    snrapply Quotient_ind_hprop; [exact _| intros m; simpl].
+    snapply Quotient_ind_hprop; [exact _| intros m; simpl].
     rapply ap.
     apply lm_dist_r.
   - intros r s.
-    snrapply Quotient_ind_hprop; [exact _| intros m; simpl].
+    snapply Quotient_ind_hprop; [exact _| intros m; simpl].
     rapply ap.
     apply lm_assoc.
-  - snrapply Quotient_ind_hprop; [exact _| intros m; simpl].
+  - snapply Quotient_ind_hprop; [exact _| intros m; simpl].
     rapply ap.
     apply lm_unit.
 Defined.
@@ -593,7 +593,7 @@ Local Open Scope wc_iso_scope.
 Definition lm_first_iso `{Funext} {R : Ring} {M N : LeftModule R} (f : M $-> N)
   : M / lm_kernel f ≅ lm_image f.
 Proof.
-  snrapply Build_LeftModuleIsomorphism'.
+  snapply Build_LeftModuleIsomorphism'.
   1: rapply abgroup_first_iso.
   intros r.
   srapply Quotient_ind_hprop; intros m.
@@ -612,8 +612,8 @@ Definition rm_first_iso `{Funext} {R : Ring} {M N : RightModule R} (f : M $-> N)
 Definition lm_prod {R : Ring} : LeftModule R -> LeftModule R -> LeftModule R.
 Proof.
   intros M N.
-  snrapply (Build_LeftModule R (ab_biprod M N)).
-  snrapply Build_IsLeftModule.
+  snapply (Build_LeftModule R (ab_biprod M N)).
+  snapply Build_IsLeftModule.
   - intros r.
     apply functor_prod; exact (lact r).
   - intros r m n.
@@ -631,7 +631,7 @@ Definition rm_prod {R : Ring} : RightModule R -> RightModule R -> RightModule R
 
 Definition lm_prod_fst {R : Ring} {M N : LeftModule R} : lm_prod M N $-> M.
 Proof.
-  snrapply Build_LeftModuleHomomorphism.
+  snapply Build_LeftModuleHomomorphism.
   - exact grp_prod_pr1.
   - reflexivity.
 Defined.
@@ -641,7 +641,7 @@ Definition rm_prod_fst {R : Ring} {M N : RightModule R} : rm_prod M N $-> M
 
 Definition lm_prod_snd {R : Ring} {M N : LeftModule R} : lm_prod M N $-> N.
 Proof.
-  snrapply Build_LeftModuleHomomorphism.
+  snapply Build_LeftModuleHomomorphism.
   - exact grp_prod_pr2.
   - reflexivity.
 Defined.
@@ -653,7 +653,7 @@ Definition lm_prod_corec {R : Ring} {M N : LeftModule R} (L : LeftModule R)
   (f : L $-> M) (g : L $-> N)
   : L $-> lm_prod M N.
 Proof.
-  snrapply Build_LeftModuleHomomorphism.
+  snapply Build_LeftModuleHomomorphism.
   - exact (grp_prod_corec f g).
   - intros r l.
     apply path_prod; apply lm_homo_lact.
@@ -668,7 +668,7 @@ Instance hasbinaryproducts_leftmodule {R : Ring}
   : HasBinaryProducts (LeftModule R).
 Proof.
   intros M N.
-  snrapply Build_BinaryProduct.
+  snapply Build_BinaryProduct.
   - exact (lm_prod M N).
   - exact lm_prod_fst.
   - exact lm_prod_snd.
@@ -692,7 +692,7 @@ Definition lm_sum_dist_l {R : Ring} (M : LeftModule R) (n : nat)
 Proof.
   induction n as [|n IHn].
   1: apply lm_zero_r.
-  lhs nrapply lm_dist_l; simpl; f_ap.
+  lhs napply lm_dist_l; simpl; f_ap.
 Defined.
 
 (** Right scalar multiplication distributes over finite sums of right module elements. *)
@@ -708,7 +708,7 @@ Definition lm_sum_dist_r {R : Ring} (M : LeftModule R) (n : nat)
 Proof.
   induction n as [|n IHn].
   1: apply lm_zero_l.
-  lhs nrapply lm_dist_r; simpl; f_ap.
+  lhs napply lm_dist_r; simpl; f_ap.
 Defined.
 
 (** Right module elements distribute over finite sums of scalar. *)

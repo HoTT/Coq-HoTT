@@ -36,7 +36,7 @@ Proof.
   intros a b np mq.
   destruct np as [n p], mq as [m q].
   exists (n + m)%nat.
-  lhs_V nrapply rng_power_mult_law.
+  lhs_V napply rng_power_mult_law.
   f_ap.
 Defined.
 
@@ -92,8 +92,8 @@ Section Localization.
   Proof.
     exists 1.
     refine (mss_one, _).
-    lhs_V nrapply rng_mult_assoc.
-    rhs_V nrapply rng_mult_assoc.
+    lhs_V napply rng_mult_assoc.
+    rhs_V napply rng_mult_assoc.
     exact (ap (1 *.) p).
   Defined.
 
@@ -130,7 +130,7 @@ Section Localization.
     refine (x * y ; (mss_mult sx sy, _)).
     simpl.
     rewrite 2 rng_dist_l, 2 rng_dist_r.
-    snrapply (ap011 (+)). 
+    snapply (ap011 (+)). 
     - rewrite 4 rng_mult_assoc.
       rewrite 8 (rng_mult_permute_2_3 _ y).
       apply (ap (.* y)).
@@ -138,14 +138,14 @@ Section Localization.
       apply (ap (.* t)).
       rewrite (rng_mult_permute_2_3 _ t').
       f_ap.
-    - do 2 lhs_V nrapply rng_mult_assoc.
-      do 2 rhs_V nrapply rng_mult_assoc.
+    - do 2 lhs_V napply rng_mult_assoc.
+      do 2 rhs_V napply rng_mult_assoc.
       f_ap.
       rewrite 6 rng_mult_assoc.
       rewrite 2 (rng_mult_permute_2_3 _ _ t').
       rewrite 2 (rng_mult_permute_2_3 _ _ t).
-      lhs_V nrapply rng_mult_assoc.
-      rhs_V nrapply rng_mult_assoc.
+      lhs_V napply rng_mult_assoc.
+      rhs_V napply rng_mult_assoc.
       f_ap; apply rng_mult_comm.
   Defined.
 
@@ -188,8 +188,8 @@ Section Localization.
     rewrite 4 rng_mult_assoc.
     rewrite (rng_mult_permute_2_3 _ _ (denominator f1')).
     rewrite (rng_mult_permute_2_3 _ _ (denominator f1)).
-    lhs_V nrapply rng_mult_assoc.
-    rhs_V nrapply rng_mult_assoc.
+    lhs_V napply rng_mult_assoc.
+    rhs_V napply rng_mult_assoc.
     f_ap.
   Defined.
 
@@ -203,8 +203,8 @@ Section Localization.
     rewrite 2 (rng_mult_permute_2_3 _ _ (denominator f2')).
     rewrite (rng_mult_permute_2_3 _ _ (numerator f2')).
     rewrite 2 (rng_mult_permute_2_3 _ _ (denominator f2)).
-    lhs_V nrapply rng_mult_assoc.
-    rhs_V nrapply rng_mult_assoc.
+    lhs_V napply rng_mult_assoc.
+    rhs_V napply rng_mult_assoc.
     f_ap.
   Defined.
 
@@ -354,7 +354,7 @@ Section Localization.
 
   Definition rng_localization : CRing.
   Proof.
-    snrapply Build_CRing'.
+    snapply Build_CRing'.
     (* All of the laws can be found by typeclass search, but it's slightly faster if we fill them in: *)
     1: exact (Build_AbGroup' (Quotient fraction_eq)
                 commutative_plus_rng_localization
@@ -366,18 +366,18 @@ Section Localization.
 
   Definition loc_in : R $-> rng_localization.
   Proof.
-    snrapply Build_RingHomomorphism.
+    snapply Build_RingHomomorphism.
     1: exact (class_of _ o frac_in).
-    snrapply Build_IsSemiRingPreserving.
-    - snrapply Build_IsMonoidPreserving.
+    snapply Build_IsSemiRingPreserving.
+    - snapply Build_IsMonoidPreserving.
       + intros x y.
-        snrapply qglue.
+        snapply qglue.
         apply fraction_eq_simple.
         by simpl; rewrite 5 rng_mult_one_r.
       + reflexivity.
-    - snrapply Build_IsMonoidPreserving.
+    - snapply Build_IsMonoidPreserving.
       + intros x y.
-        snrapply qglue.
+        snapply qglue.
         apply fraction_eq_simple.
         by simpl; rewrite 3 rng_mult_one_r.
       + reflexivity.
@@ -397,64 +397,64 @@ Section Localization.
       - simpl.
         intros x y z.
         apply rng_inv_moveR_rV.
-        rhs_V nrapply rng_mult_move_left_assoc.
-        rhs_V nrapply rng_mult_assoc.
+        rhs_V napply rng_mult_move_left_assoc.
+        rhs_V napply rng_mult_assoc.
         apply rng_inv_moveL_Vr.
-        lhs_V nrapply rng_homo_mult.
-        rhs_V nrapply rng_homo_mult.
-        nrapply (equiv_inj (f z.1 *.)).
-        { nrapply isequiv_rng_inv_mult_l.
+        lhs_V napply rng_homo_mult.
+        rhs_V napply rng_homo_mult.
+        napply (equiv_inj (f z.1 *.)).
+        { napply isequiv_rng_inv_mult_l.
           exact (H _ (fst z.2)). }
-        lhs_V nrapply rng_homo_mult.
-        rhs_V nrapply rng_homo_mult.
-        lhs nrapply ap.
-        1: lhs nrapply rng_mult_assoc.
-        1: nrapply rng_mult_permute_2_3.
-        rhs nrapply ap.
-        2: nrapply rng_mult_assoc.
+        lhs_V napply rng_homo_mult.
+        rhs_V napply rng_homo_mult.
+        lhs napply ap.
+        1: lhs napply rng_mult_assoc.
+        1: napply rng_mult_permute_2_3.
+        rhs napply ap.
+        2: napply rng_mult_assoc.
         exact (ap f (snd z.2)).
     Defined.
 
     Instance issemiringpreserving_rng_localization_rec_map
       : IsSemiRingPreserving rng_localization_rec_map.
     Proof.
-      snrapply Build_IsSemiRingPreserving.
-      - snrapply Build_IsMonoidPreserving.
+      snapply Build_IsSemiRingPreserving.
+      - snapply Build_IsMonoidPreserving.
         + srapply Quotient_ind2_hprop.
           intros x y; simpl.
           apply rng_inv_moveR_rV.
-          rhs nrapply rng_dist_r.
+          rhs napply rng_dist_r.
           rewrite rng_homo_plus.
           rewrite 3 rng_homo_mult.
           f_ap.
-          1,2: rhs_V nrapply rng_mult_assoc.
+          1,2: rhs_V napply rng_mult_assoc.
           1,2: f_ap.
-          1,2: lhs_V nrapply rng_mult_one_l.
-          1,2: rhs nrapply rng_mult_assoc.
-          2: rhs nrapply rng_mult_comm.
-          2: rhs nrapply rng_mult_assoc.
+          1,2: lhs_V napply rng_mult_one_l.
+          1,2: rhs napply rng_mult_assoc.
+          2: rhs napply rng_mult_comm.
+          2: rhs napply rng_mult_assoc.
           1,2: f_ap.
           1,2: symmetry.
           * apply rng_inv_l.
           * apply rng_inv_r. 
         + hnf; simpl. rewrite rng_homo_zero.
-          nrapply rng_mult_zero_l.
-      - snrapply Build_IsMonoidPreserving.
+          napply rng_mult_zero_l.
+      - snapply Build_IsMonoidPreserving.
         + srapply Quotient_ind2_hprop.
           intros x y; simpl.
           apply rng_inv_moveR_rV.
-          lhs nrapply rng_homo_mult.
-          rhs_V nrapply rng_mult_assoc.
-          rhs_V nrapply rng_mult_assoc.
+          lhs napply rng_homo_mult.
+          rhs_V napply rng_mult_assoc.
+          rhs_V napply rng_mult_assoc.
           apply ap.
           apply rng_inv_moveL_Vr.
-          lhs nrapply rng_mult_comm.
-          rhs_V nrapply rng_mult_assoc.
+          lhs napply rng_mult_comm.
+          rhs_V napply rng_mult_assoc.
           apply ap.
           apply rng_inv_moveL_Vr.
           symmetry.
-          rhs nrapply rng_mult_comm.
-          nrapply rng_homo_mult.
+          rhs napply rng_mult_comm.
+          napply rng_homo_mult.
         + apply rng_inv_moveR_rV; symmetry.
           apply rng_mult_one_l.
     Defined.
@@ -467,8 +467,8 @@ Section Localization.
     Proof.
       intros x; simpl.   
       apply rng_inv_moveR_rV.
-      lhs_V nrapply rng_mult_one_r.
-      nrapply ap; symmetry.
+      lhs_V napply rng_mult_one_r.
+      napply ap; symmetry.
       apply rng_homo_one.
     Defined.
   
@@ -478,7 +478,7 @@ Section Localization.
   #[export] Instance isinvertible_rng_localization (x : R) (Sx : S x)
     : IsInvertible rng_localization (loc_in x).
   Proof.
-    snrapply isinvertible_cring.
+    snapply isinvertible_cring.
     - exact (class_of _ (Build_Fraction 1 x Sx)).
     - apply qglue, fraction_eq_simple.
       exact (ring_mult_assoc_opp _ _ _ _).
@@ -488,7 +488,7 @@ Section Localization.
   #[export] Instance isinvertible_denominator (f : Fraction)
     : IsInvertible rng_localization (loc_in (denominator f)).
   Proof.
-    snrapply isinvertible_rng_localization.
+    snapply isinvertible_rng_localization.
     exact (in_mult_subset_denominator f).
   Defined.
   
@@ -503,7 +503,7 @@ Section Localization.
       = loc_in (numerator f) * inverse_elem (loc_in (denominator f)).
   Proof.
     apply qglue, fraction_eq_simple.
-    nrapply rng_mult_assoc.
+    napply rng_mult_assoc.
   Defined.
 
   Definition rng_localization_ind
@@ -515,7 +515,7 @@ Section Localization.
     (Hmul : forall x y, P x -> P y -> P (x * y))
     : forall x, P x.
   Proof.
-    snrapply Quotient_ind.
+    snapply Quotient_ind.
     - exact _.
     - intros f.
       refine (transport P (fraction_decompose f)^ _).
@@ -538,8 +538,8 @@ Section Localization.
       apply isinvertible_unique.
       exact q.
     - hnf; intros x y q r.
-      lhs nrapply rng_homo_mult.
-      rhs nrapply rng_homo_mult.
+      lhs napply rng_homo_mult.
+      rhs napply rng_homo_mult.
       f_ap.
   Defined.
 

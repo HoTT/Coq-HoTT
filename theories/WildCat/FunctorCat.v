@@ -18,6 +18,7 @@ Coercion fun01_F : Fun01 >-> Funclass.
 Existing Instance fun01_is0functor.
 
 Arguments Build_Fun01 A B {isgraph_A isgraph_B} F {fun01_is0functor} : rename.
+Arguments fun01_F {A B isgraph_A isgraph_B} : rename.
 
 Definition issig_Fun01 (A B : Type) `{IsGraph A} `{IsGraph B}
   : _  <~> Fun01 A B := ltac:(issig).
@@ -205,6 +206,6 @@ Definition fun11_compose {A B C} `{Is1Cat A, Is1Cat B, Is1Cat C}
   : Fun11 B C -> Fun11 A B -> Fun11 A C.
 Proof.
   intros F G.
-  nrapply Build_Fun11.
+  napply Build_Fun11.
   exact (is1functor_compose G F).
 Defined.

@@ -162,15 +162,15 @@ Definition moveR_Vp_p_inv {A : Type} {w x y z : A}
   (h : p @ s = q @ r)
   : p^ @ q @ r = s.
 Proof.
-  lhs nrapply concat_pp_p.
+  lhs napply concat_pp_p.
   apply moveR_Vp, h^.
 Defined.
 
 Tactic Notation "transport_paths" uconstr(lemma) :=
-  lhs nrapply lemma; apply moveR_Vp_p_inv.
+  lhs napply lemma; apply moveR_Vp_p_inv.
 
-Tactic Notation "transport_paths" "Fl" := lhs nrapply transport_paths_Fl.
-Tactic Notation "transport_paths" "Fr" := lhs nrapply transport_paths_Fr.
+Tactic Notation "transport_paths" "Fl" := lhs napply transport_paths_Fl.
+Tactic Notation "transport_paths" "Fr" := lhs napply transport_paths_Fr.
 
 Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
 Tactic Notation "transport_paths" "lFr" := transport_paths transport_paths_lFr.
@@ -194,7 +194,7 @@ Definition transport011_paths {A B X} (f : A -> X) (g : B -> X)
 Proof.
   destruct p, q; cbn.
   symmetry.
-  lhs nrapply concat_p1.
+  lhs napply concat_p1.
   apply concat_1p.
 Defined.
 

@@ -237,15 +237,15 @@ Defined.
 Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_prod f g) | 1000.
 Proof.
-  snrapply Build_IsEquiv.
+  snapply Build_IsEquiv.
   - exact (functor_prod f^-1 g^-1).
   - intro z.
     exact (path_prod' (eisretr f _) (eisretr g _)).
   - intro w.
     exact (path_prod' (eissect f _) (eissect g _)).
   - intros [a b]; simpl.
-    lhs nrapply (ap (fun p => path_prod' p _) (eisadj f _)).
-    rhs nrapply ap_functor_prod.
+    lhs napply (ap (fun p => path_prod' p _) (eisadj f _)).
+    rhs napply ap_functor_prod.
     exact (ap _ (eisadj g _)).
 Defined.
 

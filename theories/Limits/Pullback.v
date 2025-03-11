@@ -38,7 +38,7 @@ Defined.
 Instance isequiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
   : IsEquiv (@pullback_corec_uncurried A B C D k g).
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   - intro m.
     exact (pullback_pr1 o m ; pullback_pr2 o m ; (pullback_commsq k g) o m).
   - reflexivity.
@@ -92,7 +92,7 @@ Definition equiv_pullback_unit_prod (A B : Type)
 : Pullback (const_tt A) (const_tt B) <~> A * B.
 Proof.
   refine (equiv_sigma_prod0 A B oE _).
-  snrapply equiv_functor_sigma_id; intro a; cbn.
+  snapply equiv_functor_sigma_id; intro a; cbn.
   rapply equiv_sigma_contr.
 Defined.
 
@@ -100,7 +100,7 @@ Defined.
 Definition equiv_pullback_unit_hfiber {A B : Type} (f : A -> B) (g : Unit -> B)
   : Pullback f g <~> hfiber f (g tt).
 Proof.
-  snrapply equiv_functor_sigma_id; intro a; cbn.
+  snapply equiv_functor_sigma_id; intro a; cbn.
   exact (equiv_contr_sigma (fun c => _ = g c)).
 Defined.
 
@@ -200,7 +200,7 @@ Definition isequiv_functor_hfiber_ispullback {A B C D : Type}
 Proof.
   apply isequiv_from_functor_sigma.
   unfold IsPullback in e.
-  snrapply isequiv_commsq'.
+  snapply isequiv_commsq'.
   4: exact (equiv_fibration_replacement f)^-1%equiv.
   1: exact (Pullback k g).
   1: exact (pullback_corec p).
@@ -460,7 +460,7 @@ Section Pasting.
     intro b.
     pose (e1' := isequiv_functor_hfiber_ispullback _ e1 (i b)).
     pose (e2' := isequiv_functor_hfiber_ispullback _ e2 b).
-    snrapply isequiv_commsq'.
+    snapply isequiv_commsq'.
     7: apply isequiv_idmap.
     4: exact (functor_hfiber_compose H K b).
     1,2: exact _.
@@ -474,7 +474,7 @@ Section Pasting.
     intro b.
     pose (e1' := isequiv_functor_hfiber_ispullback _ e1 (i b)).
     pose (e2' := isequiv_functor_hfiber_ispullback _ e2 b).
-    snrapply isequiv_commsq'.
+    snapply isequiv_commsq'.
     9: apply isequiv_idmap.
     4: symmetry; exact (functor_hfiber_compose H K b).
     1,2: exact _.

@@ -28,7 +28,7 @@ Definition ab_Z1 `{Funext} : AbGroup
 Lemma equiv_Z1_hom@{u v | u < v} `{Funext} (A : AbGroup@{u})
   : GroupIsomorphism (ab_hom@{u v} ab_Z1@{u v} A) A.
 Proof.
-  snrapply Build_GroupIsomorphism'.
+  snapply Build_GroupIsomorphism'.
   - refine (_ oE (equiv_freegroup_rec@{u u u v} A Unit)^-1).
     symmetry. exact (Build_Equiv _ _ (fun a => unit_name a) _).
   - intros f g. cbn. reflexivity.

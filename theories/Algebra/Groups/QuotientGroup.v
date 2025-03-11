@@ -61,7 +61,7 @@ Section GroupCongruenceQuotient.
   #[export] Instance congquot_sgop_associative : Associative congquot_sgop.
   Proof.
     srapply Quotient_ind3_hprop; intros x y z.
-    snrapply (ap (class_of R)).
+    snapply (ap (class_of R)).
     rapply associativity.
   Defined.
   Global Opaque congquot_sgop_associative.
@@ -71,7 +71,7 @@ Section GroupCongruenceQuotient.
   #[export] Instance congquot_leftidentity : LeftIdentity (.*.) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
-    snrapply (ap (class_of R)).
+    snapply (ap (class_of R)).
     rapply left_identity.
   Defined.
   Global Opaque congquot_leftidentity.
@@ -79,7 +79,7 @@ Section GroupCongruenceQuotient.
   #[export] Instance congquot_rightidentity : RightIdentity (.*.) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x.
-    snrapply (ap (class_of R)).
+    snapply (ap (class_of R)).
     rapply right_identity.
   Defined.
   Global Opaque congquot_rightidentity.
@@ -89,7 +89,7 @@ Section GroupCongruenceQuotient.
   #[export] Instance quotientgroup_leftinverse : LeftInverse (.*.) (^) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x; cbn beta.
-    snrapply (ap (class_of R)).
+    snapply (ap (class_of R)).
     rapply left_inverse.
   Defined.
   Global Opaque quotientgroup_leftinverse.
@@ -97,7 +97,7 @@ Section GroupCongruenceQuotient.
   #[export] Instance quotientgroup_rightinverse : RightInverse (.*.) (^) mon_unit.
   Proof.
     srapply Quotient_ind_hprop; intro x; cbn beta.
-    snrapply (ap (class_of R)).
+    snapply (ap (class_of R)).
     rapply right_inverse.
   Defined.
   Global Opaque quotientgroup_rightinverse.
@@ -119,7 +119,7 @@ Section Cosets.
   #[export] Instance finite_leftcoset `{Univalence, Finite G, Finite H}
     : Finite LeftCoset.
   Proof.
-    nrapply finite_quotient.
+    napply finite_quotient.
     1-5: exact _.
     intros x y.
     apply (detachable_finite_subset H).
@@ -135,7 +135,7 @@ Section Cosets.
   Definition equiv_leftcoset_rightcoset
     : LeftCoset <~> RightCoset.
   Proof.
-    snrapply equiv_quotient_functor.
+    snapply equiv_quotient_functor.
     - exact inv.
     - exact _.
     - intros x y; simpl.
@@ -146,7 +146,7 @@ Section Cosets.
   #[export] Instance finite_rightcoset `{Univalence, Finite G, Finite H}
     : Finite RightCoset.
   Proof.
-    nrapply finite_equiv'.
+    napply finite_equiv'.
     1: exact equiv_leftcoset_rightcoset.
     exact _.
   Defined.
@@ -179,7 +179,7 @@ Section QuotientGroup.
 
   Definition grp_quotient_map : G $-> QuotientGroup.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     1: exact (class_of _).
     intros ??; reflexivity.
   Defined.
@@ -188,13 +188,13 @@ Section QuotientGroup.
              (h : forall n : G, N n -> f n = mon_unit)
     : QuotientGroup $-> A.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     - srapply Quotient_rec.
       + exact f.
       + cbn; intros x y n.
         apply grp_moveR_M1.
-        rhs_V nrapply (ap (.* f y) (grp_homo_inv _ _)).
-        rhs_V nrapply grp_homo_op.
+        rhs_V napply (ap (.* f y) (grp_homo_inv _ _)).
+        rhs_V napply grp_homo_op.
         symmetry; apply h; assumption.
     - intro x.
       refine (Quotient_ind_hprop _ _ _).
@@ -249,7 +249,7 @@ Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
   {k k' : IsNormalSubgroup H}
   : QuotientGroup' G H k ≅ QuotientGroup' G H k'.
 Proof.
-  snrapply Build_GroupIsomorphism'.
+  snapply Build_GroupIsomorphism'.
   1: reflexivity.
   intro x.
   srapply Quotient_ind_hprop; intro y; revert x.
@@ -299,7 +299,7 @@ Section FirstIso.
   #[export] Instance isequiv_grp_image_quotient
     : IsEquiv grp_image_quotient.
   Proof.
-    snrapply isequiv_surj_emb.
+    snapply isequiv_surj_emb.
     1: srapply cancelR_conn_map.
     srapply isembedding_isinj_hset.
     srapply Quotient_ind2_hprop.
@@ -324,7 +324,7 @@ Instance finite_quotientgroup {U : Univalence} (G : Group) (H : NormalSubgroup G
   (fin_G : Finite G) (fin_H : Finite H)
   : Finite (QuotientGroup G H).
 Proof.
-  nrapply finite_quotient.
+  napply finite_quotient.
   1-5: exact _.
   intros x y.
   pose (dec_H := detachable_finite_subset H).
@@ -358,7 +358,7 @@ Instance catie_grp_quotient_map_trivial {G : Group} (N : NormalSubgroup G)
   (triv : IsTrivialGroup N)
   : CatIsEquiv (@grp_quotient_map G N).
 Proof.
-  snrapply catie_adjointify.
+  snapply catie_adjointify.
   - srapply (grp_quotient_rec _ _ (Id _)).
     exact triv.
   - by srapply grp_quotient_ind_hprop.
@@ -393,6 +393,6 @@ Proof.
   apply related_quotient_paths in triv.
   2-5: exact _.
   apply equiv_subgroup_inv.
-  nrapply (subgroup_in_op_l _ _ 1 triv) .
+  napply (subgroup_in_op_l _ _ 1 triv) .
   apply subgroup_in_unit.
 Defined.

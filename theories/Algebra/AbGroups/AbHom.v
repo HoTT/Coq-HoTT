@@ -21,7 +21,7 @@ Instance inverse_hom {A : Group} {B : AbGroup}
 (** For [A] and [B] groups, with [B] abelian, homomorphisms [A $-> B] form an abelian group. *)
 Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.
 Proof.
-  snrapply (Build_Group' (GroupHomomorphism A B) sgop_hom grp_homo_const inverse_hom).
+  snapply (Build_Group' (GroupHomomorphism A B) sgop_hom grp_homo_const inverse_hom).
   1: exact _.
   all: hnf; intros; apply equiv_path_grouphomomorphism; intro; cbn.
   - apply associativity.
@@ -31,7 +31,7 @@ Defined.
 
 Definition ab_hom `{Funext} (A : Group) (B : AbGroup) : AbGroup.
 Proof.
-  snrapply (Build_AbGroup (grp_hom A B)).
+  snapply (Build_AbGroup (grp_hom A B)).
   intros f g; cbn.
   apply equiv_path_grouphomomorphism; intro x; cbn.
   apply commutativity.
@@ -52,7 +52,7 @@ Definition ab_coeq_glue {A B : AbGroup} {f g : A $-> B}
   : ab_coeq_in (f:=f) (g:=g) $o f $== ab_coeq_in $o g.
 Proof.
   intros x.
-  nrapply qglue.
+  napply qglue.
   apply tr.
   by exists x.
 Defined.
@@ -61,14 +61,14 @@ Definition ab_coeq_rec {A B : AbGroup} {f g : A $-> B}
   {C : AbGroup} (i : B $-> C) (p : i $o f $== i $o g) 
   : ab_coeq f g $-> C.
 Proof.
-  snrapply (grp_quotient_rec _ _ i).
+  snapply (grp_quotient_rec _ _ i).
   cbn.
   intros b H.
   strip_truncations.
   destruct H as [a q].
   destruct q; simpl.
-  lhs nrapply grp_homo_op.
-  lhs nrapply (ap (+ _)).
+  lhs napply grp_homo_op.
+  lhs napply (ap (+ _)).
   1: apply grp_homo_inv.
   apply grp_moveL_M1^-1.
   exact (p a)^.
@@ -101,7 +101,7 @@ Definition functor_ab_coeq {A B : AbGroup} {f g : A $-> B} {A' B' : AbGroup} {f'
   (a : A $-> A') (b : B $-> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
   : ab_coeq f g $-> ab_coeq f' g'.
 Proof.
-  snrapply ab_coeq_rec.
+  snapply ab_coeq_rec.
   1: exact (ab_coeq_in $o b).
   refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
   refine ((_ $@L p^$) $@ _ $@ (_ $@L q)).
@@ -116,7 +116,7 @@ Definition functor2_ab_coeq {A B : AbGroup} {f g : A $-> B} {A' B' : AbGroup} {f
   (s : b $== b')
   : functor_ab_coeq a b p q $== functor_ab_coeq a' b' p' q'.
 Proof.
-  snrapply ab_coeq_ind_homotopy.
+  snapply ab_coeq_ind_homotopy.
   intros x.
   exact (ap ab_coeq_in (s x)).
 Defined.
@@ -130,14 +130,14 @@ Definition functor_ab_coeq_compose {A B : AbGroup} {f g : A $-> B}
   : functor_ab_coeq a' b' p' q' $o functor_ab_coeq a b p q
   $== functor_ab_coeq (a' $o a) (b' $o b) (hconcat p p') (hconcat q q').
 Proof.
-  snrapply ab_coeq_ind_homotopy.
+  snapply ab_coeq_ind_homotopy.
   simpl; reflexivity.
 Defined.
 
 Definition functor_ab_coeq_id {A B : AbGroup} (f g : A $-> B)
   : functor_ab_coeq (f:=f) (g:=g) (Id _) (Id _) (hrefl _) (hrefl _) $== Id _.
 Proof.
-  snrapply ab_coeq_ind_homotopy.
+  snapply ab_coeq_ind_homotopy.
   reflexivity.
 Defined.
 
@@ -146,15 +146,15 @@ Definition grp_iso_ab_coeq {A B : AbGroup} {f g : A $-> B}
   (a : A $<~> A') (b : B $<~> B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
   : ab_coeq f g $<~> ab_coeq f' g'.
 Proof.
-  snrapply cate_adjointify.
+  snapply cate_adjointify.
   - exact (functor_ab_coeq a b p q).
   - exact (functor_ab_coeq a^-1$ b^-1$ (hinverse _ _ p) (hinverse _ _ q)).
   - nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
       $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).
-    rapply cate_isretr.
+    tapply cate_isretr.
   - nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
       $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).
-    rapply cate_issect.
+    tapply cate_issect.
 Defined.
 
 (** ** The bifunctor [ab_hom] *)
@@ -162,8 +162,8 @@ Defined.
 Instance is0functor_ab_hom01 `{Funext} {A : Group^op}
   : Is0Functor (ab_hom A).
 Proof.
-  snrapply (Build_Is0Functor _ AbGroup); intros B B' f.
-  snrapply Build_GroupHomomorphism.
+  snapply (Build_Is0Functor _ AbGroup); intros B B' f.
+  snapply Build_GroupHomomorphism.
   1: exact (fun g => grp_homo_compose f g).
   intros phi psi.
   apply equiv_path_grouphomomorphism; intro a; cbn.
@@ -173,8 +173,8 @@ Defined.
 Instance is0functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
   : Is0Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B).
 Proof.
-  snrapply (Build_Is0Functor (Group^op) AbGroup); intros A A' f.
-  snrapply Build_GroupHomomorphism.
+  snapply (Build_Is0Functor (Group^op) AbGroup); intros A A' f.
+  snapply Build_GroupHomomorphism.
   1: exact (fun g => grp_homo_compose g f).
   intros phi psi.
   by apply equiv_path_grouphomomorphism.
@@ -183,7 +183,7 @@ Defined.
 Instance is1functor_ab_hom01 `{Funext} {A : Group^op}
   : Is1Functor (ab_hom A).
 Proof.
-  nrapply Build_Is1Functor.
+  napply Build_Is1Functor.
   - intros B B' f g p phi.
     apply equiv_path_grouphomomorphism; intro a; cbn.
     exact (p (phi a)).
@@ -196,7 +196,7 @@ Defined.
 Instance is1functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
   : Is1Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B).
 Proof.
-  nrapply Build_Is1Functor.
+  napply Build_Is1Functor.
   - intros A A' f g p phi.
     apply equiv_path_grouphomomorphism; intro a; cbn.
     exact (ap phi (p a)).
@@ -215,7 +215,7 @@ Defined.
 Instance is1bifunctor_ab_hom `{Funext}
   : Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
 Proof.
-  nrapply Build_Is1Bifunctor''.
+  napply Build_Is1Bifunctor''.
   1,2: exact _.
   intros A A' f B B' g phi; cbn.
   by apply equiv_path_grouphomomorphism.

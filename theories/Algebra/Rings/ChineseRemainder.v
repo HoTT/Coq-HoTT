@@ -41,7 +41,7 @@ Section ChineseRemainderTheorem.
     revert a; srapply QuotientRing_ind_hprop; intro a.
     revert b; srapply QuotientRing_ind_hprop; intro b.
     (** We can think of [a] and [b] as the pair [(a mod I, b mod J)]. We need to show that there merely exists some element in [R] that gets mapped by  [rng_homo_crt] to the pair. *)
-    snrapply Build_Contr; [|intros z; strip_truncations; apply path_ishprop].
+    snapply Build_Contr; [|intros z; strip_truncations; apply path_ishprop].
     (** We make this choice and show it maps as desired. *)
     apply tr; exists (b * x + a * y).
     (** Finally using some simple ring laws we can show it maps to our pair. *)
@@ -114,7 +114,7 @@ Section ChineseRemainderTheorem.
   Theorem chinese_remainder : R / (I ∩ J)%ideal ≅ (R / I) × (R / J).
   Proof.
     (** We use the first isomorphism theorem. Coq can already infer which map we wish to use, so for clarity we tell it not to do so. *)
-    snrapply rng_first_iso'.
+    snapply rng_first_iso'.
     1: exact rng_homo_crt.
     1: exact _.
     (** Finally we must show the ideal of this map is the intersection. *)

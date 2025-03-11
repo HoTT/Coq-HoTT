@@ -557,20 +557,20 @@ Definition blakers_massey_po `{Univalence} (m n : trunc_index)
 Proof.
   (** We postcompose our map with an equivalence from the the pullback of the pushout of [f] and [g] to the pullback of an equivalent [SPushout] over a family [Q]. *)
   pose (Q := fun y z => {x : X & f x = y /\ g x = z}).
-  snrapply cancelL_equiv_conn_map.
+  snapply cancelL_equiv_conn_map.
   1: exact (Pullback (spushl Q) (spushr Q)).
-  1: by snrapply (equiv_pullback (equiv_pushout_spushout _ _)).
+  1: by snapply (equiv_pullback (equiv_pushout_spushout _ _)).
   (** Next we precompose with the equivalence from the total space of [Q] to [X]. *)
   rapply (cancelR_conn_map _ (equiv_double_fibration_replacement f g)^-1%equiv).
   (** Next we prove that this composition is homotopic to [spushout_sjoin_map Q]. *)
-  snrapply (conn_map_homotopic _ (spushout_sjoin_map Q)).
+  snapply (conn_map_homotopic _ (spushout_sjoin_map Q)).
   { intros [y [z [x [[] []]]]].
-    snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
-    lhs nrapply concat_1p.
-    lhs nrapply concat_p1.
-    lhs nrapply functor_coeq_beta_cglue.
-    lhs nrapply concat_p1.
-    nrapply concat_1p. }
+    snapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
+    lhs napply concat_1p.
+    lhs napply concat_p1.
+    lhs napply functor_coeq_beta_cglue.
+    lhs napply concat_p1.
+    napply concat_1p. }
   rapply blakers_massey_total_map.
   (** What's left is to check that the partial total spaces of [Q] are connected, which we get since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
   - intros z.

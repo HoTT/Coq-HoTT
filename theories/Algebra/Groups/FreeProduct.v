@@ -54,7 +54,7 @@ Section FreeProduct.
     induction x as [|x xs].
     1: symmetry; apply app_nil.
     simpl.
-    destruct x; rhs nrapply app_assoc; f_ap.
+    destruct x; rhs napply app_assoc; f_ap.
   Defined.
 
 
@@ -216,8 +216,8 @@ Section FreeProduct.
       DPath P (amal_omega_K x y) (e (x ++ [inr mon_unit] ++ y)) (e (x ++ y)))
     : forall x, P x.
   Proof.
-    snrapply Trunc_ind; [exact _|].
-    snrapply Coeq_ind.
+    snapply Trunc_ind; [exact _|].
+    snapply Coeq_ind.
     1: exact e.
     intro a.
     destruct a as [ [ [ [a | a ] | a] | a ] | a ].
@@ -259,7 +259,7 @@ Section FreeProduct.
     (ok : forall (x y : Words), e (x ++ [inr mon_unit] ++ y) = e (x ++ y))
     : amal_type -> P.
   Proof.
-    snrapply amal_type_ind.
+    snapply amal_type_ind.
     1: exact _.
     1: exact e.
     all: intros; apply dp_const.
@@ -426,7 +426,7 @@ Section FreeProduct.
     rapply amal_type_ind_hprop; intro z; revert y.
     rapply amal_type_ind_hprop; intro y; revert x.
     rapply amal_type_ind_hprop; intro x.
-    nrapply (ap amal_eta).
+    napply (ap amal_eta).
     rapply app_assoc.
   Defined.
 
@@ -439,8 +439,8 @@ Section FreeProduct.
   #[export] Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
-    nrapply (ap amal_eta).
-    nrapply app_nil.
+    napply (ap amal_eta).
+    napply app_nil.
   Defined.
 
   Lemma amal_eta_word_concat_Vw (x : Words) : amal_eta (word_inverse x ++ x) = mon_unit.
@@ -519,7 +519,7 @@ Section FreeProduct.
 
   Definition AmalgamatedFreeProduct : Group.
   Proof.
-    snrapply (Build_Group amal_type); repeat split; exact _.
+    snapply (Build_Group amal_type); repeat split; exact _.
   Defined.
 
   (** Using foldr. It's important that we use foldr as foldl is near impossible to reason about. *)
@@ -589,14 +589,14 @@ Section FreeProduct.
     (p : h $o f $== k $o g)
     : AmalgamatedFreeProduct $-> X.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     1: srapply (AmalgamatedFreeProduct_rec' X h k p).
     exact _.
   Defined.
 
   Definition amal_inl : H $-> AmalgamatedFreeProduct.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     { intro x.
       exact (amal_eta [inl x]). }
     intros x y.
@@ -608,7 +608,7 @@ Section FreeProduct.
 
   Definition amal_inr : K $-> AmalgamatedFreeProduct.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     { intro x.
       exact (amal_eta [inr x]). }
     intros x y.
@@ -627,7 +627,7 @@ Section FreeProduct.
     : {h : GroupHomomorphism H X & {k : GroupHomomorphism K X & h o f == k o g }}
       <~> GroupHomomorphism AmalgamatedFreeProduct X.
   Proof.
-    snrapply equiv_adjointify.
+    snapply equiv_adjointify.
     1: intros [h [k p]]; exact (AmalgamatedFreeProduct_rec X h k p).
     { intros r.
       exists (grp_homo_compose r amal_inl).
@@ -685,7 +685,7 @@ Section FreeProduct.
     : k $== k'.
   Proof.
     rapply (amalgamatedfreeproduct_ind_hprop _ l r).
-    intros x y; nrapply grp_homo_op_agree. (* A bit slow, ~0.05s *)
+    intros x y; napply grp_homo_op_agree. (* A bit slow, ~0.05s *)
   Defined. (* A bit slow, ~0.05s *)
 
 End FreeProduct.
@@ -710,7 +710,7 @@ Definition freeproduct_inr {G H : Group} : GroupHomomorphism H (FreeProduct G H)
 Definition FreeProduct_rec {G H K : Group} (f : G $-> K) (g : H $-> K)
   : FreeProduct G H $-> K.
 Proof.
-  snrapply (AmalgamatedFreeProduct_rec _ f g).
+  snapply (AmalgamatedFreeProduct_rec _ f g).
   intros [].
   exact (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
@@ -730,7 +730,7 @@ Definition freeproduct_ind_homotopy {G H K : Group}
   : f $== f'.
 Proof.
   rapply (freeproduct_ind_hprop _ l r).
-  intros x y; nrapply grp_homo_op_agree. (* Slow, ~0.2s. *)
+  intros x y; napply grp_homo_op_agree. (* Slow, ~0.2s. *)
 Defined. (* Slow, ~0.15s. *)
 
 Definition freeproduct_rec_beta_inl {G H K : Group}
@@ -760,7 +760,7 @@ Defined.
 Instance hasbinarycoproducts : HasBinaryCoproducts Group.
 Proof.
   intros G H.
-  snrapply Build_BinaryCoproduct.
+  snapply Build_BinaryCoproduct.
   - exact (FreeProduct G H).
   - exact freeproduct_inl.
   - exact freeproduct_inr.
@@ -768,5 +768,5 @@ Proof.
   - intros; apply freeproduct_rec_beta_inl.
   - intros; apply freeproduct_rec_beta_inr.
   - intros Z f g p q.
-    by snrapply freeproduct_ind_homotopy.
+    by snapply freeproduct_ind_homotopy.
 Defined.

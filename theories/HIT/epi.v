@@ -29,7 +29,7 @@ Proof.
   (** TODO(JasonGross): Can we do this entirely by chaining equivalences? *)
   apply equiv_iff_hprop.
   { intro hepi.
-    nrapply (Build_Contr _ (g; idpath)).
+    napply (Build_Contr _ (g; idpath)).
     intro xy; specialize (hepi xy).
     apply path_sigma_uncurried.
     exists hepi.

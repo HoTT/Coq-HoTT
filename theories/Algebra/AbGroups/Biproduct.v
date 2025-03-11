@@ -31,7 +31,7 @@ Definition ab_biprod_ind {A B : AbGroup}
   : forall x, P x.
 Proof.
   intros [a b].
-  snrapply ((grp_prod_decompose a b)^ # _).
+  snapply ((grp_prod_decompose a b)^ # _).
   apply Hop.
   - exact (Hinl a).
   - exact (Hinr b).
@@ -47,8 +47,8 @@ Proof.
   - exact Hinl.
   - exact Hinr.
   - intros x y p q.
-    lhs nrapply grp_homo_op.
-    rhs nrapply grp_homo_op.
+    lhs napply grp_homo_op.
+    rhs napply grp_homo_op.
     f_ap.
 Defined.
 
@@ -68,7 +68,7 @@ Proposition ab_biprod_rec {A B Y : AbGroup}
             (f : A $-> Y) (g : B $-> Y)
   : (ab_biprod A B) $-> Y.
 Proof.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   - intros [a b]; exact (f a + g b).
   - intros [a b] [a' b']; simpl.
     rewrite (grp_homo_op f).
@@ -153,17 +153,17 @@ Definition ab_biprod_functor_beta {Z X Y A B : AbGroup} (f0 : Z $-> X) (f1 : Z $
 Instance is0bifunctor_ab_biprod : Is0Bifunctor ab_biprod.
 Proof.
   srapply Build_Is0Bifunctor'.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros [A B] [A' B'] [f g].
   exact (functor_ab_biprod f g).
 Defined.
 
 Instance is1bifunctor_ab_biprod : Is1Bifunctor ab_biprod.
 Proof.
-  snrapply Build_Is1Bifunctor'.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Bifunctor'.
+  snapply Build_Is1Functor.
   - intros [A B] [A' B'] [f g] [f' g'] [p q] [a b].
-    snrapply equiv_path_prod.
+    snapply equiv_path_prod.
     exact (p a, q b).
   - reflexivity.
   - cbn; reflexivity.
@@ -234,7 +234,7 @@ Defined.
 Definition direct_sum_swap {A B : AbGroup}
   : ab_biprod A B $<~> ab_biprod B A.
 Proof.
-  snrapply Build_GroupIsomorphism'.
+  snapply Build_GroupIsomorphism'.
   - apply equiv_prod_symm.
   - intro; reflexivity.
 Defined.
@@ -275,7 +275,7 @@ Definition ab_diagonal_swap {A : AbGroup}
 Lemma ab_biprod_assoc {A B C : AbGroup}
   : ab_biprod A (ab_biprod B C) $<~> ab_biprod (ab_biprod A B) C.
 Proof.
-  snrapply Build_GroupIsomorphism'.
+  snapply Build_GroupIsomorphism'.
   - apply equiv_prod_assoc.
   - unfold IsSemiGroupPreserving; reflexivity.
 Defined.
@@ -302,12 +302,12 @@ Defined.
 Lemma ab_biprod_twist {A B C : AbGroup@{u}}
   : ab_biprod (ab_biprod A B) C $<~> ab_biprod (ab_biprod C B) A.
 Proof.
-  snrapply Build_GroupIsomorphism.
-  - snrapply Build_GroupHomomorphism.
+  snapply Build_GroupIsomorphism.
+  - snapply Build_GroupHomomorphism.
     + intros [[a b] c].
       exact ((c,b),a).
     + unfold IsSemiGroupPreserving. reflexivity.
-  - snrapply isequiv_adjointify.
+  - snapply isequiv_adjointify.
     + intros [[c b] a].
       exact ((a,b),c).
     + reflexivity.
