@@ -21,7 +21,7 @@ Definition is3graph_paths (A : Type) `{Is2Graph A} : Is3Graph A
 
 (** We assume these as instances for the rest of the file with a low priority. *)
 Local Existing Instances isgraph_paths is2graph_paths is3graph_paths | 10.
-
+Local Canonical isgraph_paths.
 (** Any type has composition and identity morphisms given by path concatenation and reflexivity. *)
 Instance is01cat_paths (A : Type) : Is01Cat A
   := {| Id := @idpath _ ; cat_comp := fun _ _ _ x y => concat y x |}.
@@ -69,10 +69,10 @@ Defined.
 
 Instance IsTruncatedBicat_paths (A: Type) : IsTruncatedBicat A.
 Proof.
-  snrapply Build_IsTruncatedBicat.
+  snapply Build_IsTruncatedBicat.
   - exact _.
   - intros a b c. simpl. change concatR with (cat_comp (a:=a) (b:=b) (c:=c)).
-    rapply is0bifunctor_cat_comp_paths.
+    rapply (is0bifunctor_cat_comp_paths A a b c).
   - intros a b c d; apply concat_p_pp.
   - intros a b c d; apply concat_pp_p.
   - intros a b f; apply concat_p1.
@@ -93,11 +93,11 @@ Instance Is1Bifunctor_cat_comp_paths (A: Type) (a b c : A)
   : Is1Bifunctor (cat_comp (a:=a) (b:=b) (c:=c)).
 Proof.
   apply Build_Is1Bifunctor''.
-  - intro q. snrapply Build_Is1Functor.
+  - intro q. snapply Build_Is1Functor.
     + intros ? ? ? ?. exact( (ap (fun x => whiskerR x _))).
     + reflexivity.
     + intros p0 p1 p2. apply whiskerR_pp.
-  - intro p. snrapply Build_Is1Functor.
+  - intro p. snapply Build_Is1Functor.
     + intros ? ? ? ?. exact (ap (whiskerL p)).
     + reflexivity.
     + intros p0 p1 p2. exact (whiskerL_pp p).
@@ -107,7 +107,7 @@ Defined.
 (** Any type is a 2-category with higher morphisms given by paths. *)
 Instance is21cat_paths {A : Type} : Is21Cat A.
 Proof.
-  snrapply Build_Is21Cat; [snrapply Build_IsBicategory | | ].
+  snapply Build_Is21Cat; [snapply Build_IsBicategory | | ].
   1-3, 12-13: exact _.
   - (* assoc and assoc_opp are inverse *)
     intros a b c d f g h. constructor; simpl; destruct h, g, f; reflexivity.
@@ -117,19 +117,19 @@ Proof.
     intros a b f; constructor; destruct f; reflexivity.
   - (* assoc is natural *)
     intros a b c d.
-    snrapply Build_Is1Natural.
+    snapply Build_Is1Natural.
     intros ((h, g), f) ((h', g'), f') ((s,r),q). simpl in s, r, q. simpl.
     destruct q, s, h, r, g, f; reflexivity.
   - (* idl is natural *)
-    intros a b; snrapply Build_Is1Natural.
+    intros a b; snapply Build_Is1Natural.
     intros f f' alpha; destruct alpha, f; reflexivity.
   - (* idr is natural *)
-    intros a b; snrapply Build_Is1Natural.
+    intros a b; snapply Build_Is1Natural.
     intros f f' alpha; destruct alpha, f; reflexivity.
   - (* Pentagon *)
     intros a b c d e p q r s.
     symmetry.
-    lhs nrapply concat_p_pp.
+    lhs snapply concat_p_pp.
     apply pentagon.
   - (* Triangle *)
     intros a b c p q.
