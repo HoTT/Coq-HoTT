@@ -609,7 +609,7 @@ Defined.
 
 Instance isTruncatedBicat_ptype : IsTruncatedBicat pType.
 Proof.
-  snrapply Build_IsTruncatedBicat.
+  snapply Build_IsTruncatedBicat.
   - exact _.
   - exact _.
   - intros A B C D f g h. apply pmap_compose_assoc.
@@ -647,7 +647,7 @@ Instance is3graph_ptype : Is3Graph pType
 
 Instance is1Bifunctor_ptype_comp (A B C : pType): Is1Bifunctor (cat_comp (a:=A) (b:=B) (c:=C)).
 Proof.
-  snrapply Build_Is1Bifunctor''.
+  snapply Build_Is1Bifunctor''.
   - intro g. apply Build_Is1Functor.
     + intros f f' h h' eq_h. simpl. srapply Build_pHomotopy.
       * intro. apply (ap (ap g)). apply eq_h.
@@ -667,7 +667,7 @@ Proof.
       * reflexivity.
       * destruct f as [f f_eq], g as [g g_eq]. simpl in *.
         destruct f_eq, g_eq; reflexivity.
-    + intros g0 g1 g2 alpha beta. simpl. snrapply Build_pHomotopy.
+    + intros g0 g1 g2 alpha beta. simpl. snapply Build_pHomotopy.
       * reflexivity.
       * by pelim f beta alpha g0 g1 g2.
   - intros g g' beta f f' alpha.
@@ -680,7 +680,7 @@ Defined.
 
 Instance isbicat_ptype : IsBicategory pType.
 Proof.
-  snrapply Build_IsBicategory.
+  snapply Build_IsBicategory.
   1-3: exact _.
   - intros; constructor.
     + unfold bicat_assoc_opp; symmetry.
@@ -692,9 +692,9 @@ Proof.
   - intros; constructor; unfold bicat_idr_opp; symmetry.
     + apply (phomotopy_compose_pV).
     + apply (phomotopy_compose_Vp).
-  - intros a b c d. snrapply Build_Is1Natural.
+  - intros a b c d. snapply Build_Is1Natural.
     intros ((h, g), f) ((h',g'),f') ((tau,sigma),rho). simpl in *.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     + simpl. intro x.
       rewrite concat_1p, concat_p1.
       rewrite ap_compose.
@@ -704,19 +704,19 @@ Proof.
       reflexivity.
     + pelim rho f f' sigma g g' tau.
       by pelim h h'.
-  - intros a b; snrapply Build_Is1Natural.
-    intros f f' h; snrapply Build_pHomotopy.
+  - intros a b; snapply Build_Is1Natural.
+    intros f f' h; snapply Build_pHomotopy.
     + intro; simpl; by autorewrite with paths.
     + by pelim h f f'.
-  - intros a b; snrapply Build_Is1Natural.
-    intros f f' h; snrapply Build_pHomotopy.
+  - intros a b; snapply Build_Is1Natural.
+    intros f f' h; snapply Build_pHomotopy.
     + intro; simpl; by autorewrite with paths.
     + by pelim h f f'.
   - intros a b c d e f g h k.
-    snrapply Build_pHomotopy.
+    snapply Build_pHomotopy.
     + reflexivity.
     + by pelim f g h k.
-  - intros a b c f g. snrapply Build_pHomotopy.
+  - intros a b c f g. snapply Build_pHomotopy.
     + reflexivity.
     + by pelim f g.
 Defined.
