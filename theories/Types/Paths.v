@@ -18,7 +18,7 @@ Generalizable Variables A B f x y z.
 - `r` means the right endpoint varies
 - `F` means application of a function to that (varying) endpoint.
 
-Examples of usage can be found in test/Types/Paths.v *)
+Examples of usage can be found in test/Tactics/transport_paths.v *)
 
 (** *** 0 functions *)
 
