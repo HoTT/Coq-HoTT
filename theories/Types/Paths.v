@@ -234,7 +234,13 @@ Tactic Notation "transport_paths" "FFFlr" := transport_paths transport_paths_FFF
 Tactic Notation "transport_paths" "FFlFr" := transport_paths transport_paths_FFlFr.
 Tactic Notation "transport_paths" "FlFFr" := transport_paths transport_paths_FlFFr.
 Tactic Notation "transport_paths" "lFFFr" := transport_paths transport_paths_lFFFr.
-Tactic Notation "transport_paths" "FFFr" := lhs napply transport_paths_FFFr.
+(** Coq is unable to unify the 3 functions appearing here. We therefore help it a bit instead. *)
+(* Tactic Notation "transport_paths" "FFFr" := lhs napply transport_paths_FFFr. *)
+Tactic Notation "transport_paths" "FFFr" :=
+  match goal with
+  | [ |- transport (fun x => ?y = ?h (?gg (?f x))) ?p ?q = ?r ]
+    => lhs exact (transport_paths_FFFr (f:=f) (g:=gg) (h:=h) p q)
+  end.
 
 Tactic Notation "transport_paths" "FFFlFr" := transport_paths transport_paths_FFFlFr.
 Tactic Notation "transport_paths" "FFlFFr" := transport_paths transport_paths_FFlFFr.

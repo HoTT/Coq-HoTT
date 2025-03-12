@@ -176,10 +176,7 @@ Definition transport_paths_FFFr {A B C D : Type}
   (expected : q @ ap h (ap g (ap f p)) = r)
   : transport (fun x => y = h (g (f x))) p q = r.
 Proof.
-  (** TODO: Coq is unable to unify, work out why *)
-  Fail transport_paths FFFr.
-  lhs napply (transport_paths_FFFr (g:=g)).
-  assumption.
+  by transport_paths FFFr.
 Defined.
 
 (** *** 4 functions *)
