@@ -54,7 +54,7 @@ Section FreeProduct.
     induction x as [|x xs].
     1: symmetry; apply app_nil.
     simpl.
-    destruct x; rhs nrapply app_assoc; f_ap.
+    destruct x; rhs napply app_assoc; f_ap.
   Defined.
 
 
@@ -216,8 +216,8 @@ Section FreeProduct.
       DPath P (amal_omega_K x y) (e (x ++ [inr mon_unit] ++ y)) (e (x ++ y)))
     : forall x, P x.
   Proof.
-    snrapply Trunc_ind; [exact _|].
-    snrapply Coeq_ind.
+    snapply Trunc_ind; [exact _|].
+    snapply Coeq_ind.
     1: exact e.
     intro a.
     destruct a as [ [ [ [a | a ] | a] | a ] | a ].
@@ -259,7 +259,7 @@ Section FreeProduct.
     (ok : forall (x y : Words), e (x ++ [inr mon_unit] ++ y) = e (x ++ y))
     : amal_type -> P.
   Proof.
-    snrapply amal_type_ind.
+    snapply amal_type_ind.
     1: exact _.
     1: exact e.
     all: intros; apply dp_const.
@@ -273,7 +273,7 @@ Section FreeProduct.
   (** Now for the group structure *)
 
   (** The group operation is concatenation of the underlying list. Most of the work is spent showing that it respects the path constructors. *)
-  Global Instance sgop_amal_type : SgOp amal_type.
+  #[export] Instance sgop_amal_type : SgOp amal_type.
   Proof.
     intros x y; revert x.
     srapply amal_type_rec; intros x; revert y.
@@ -350,12 +350,12 @@ Section FreeProduct.
   Defined.
 
   (** The identity element is the empty list *)
-  Global Instance monunit_amal_type : MonUnit amal_type.
+  #[export] Instance monunit_amal_type : MonUnit amal_type.
   Proof.
     exact (amal_eta nil).
   Defined.
 
-  Global Instance inverse_amal_type : Inverse amal_type.
+  #[export] Instance inverse_amal_type : Inverse amal_type.
   Proof.
     srapply amal_type_rec.
     { intros w.
@@ -420,27 +420,27 @@ Section FreeProduct.
       apply amal_omega_K. }
   Defined.
 
-  Global Instance associative_sgop_m : Associative sg_op.
+  #[export] Instance associative_sgop_m : Associative sg_op.
   Proof.
     intros x y.
     rapply amal_type_ind_hprop; intro z; revert y.
     rapply amal_type_ind_hprop; intro y; revert x.
     rapply amal_type_ind_hprop; intro x.
-    nrapply (ap amal_eta).
+    napply (ap amal_eta).
     rapply app_assoc.
   Defined.
 
-  Global Instance leftidentity_sgop_amal_type : LeftIdentity sg_op mon_unit.
+  #[export] Instance leftidentity_sgop_amal_type : LeftIdentity sg_op mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     reflexivity.
   Defined.
 
-  Global Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
+  #[export] Instance rightidentity_sgop_amal_type : RightIdentity sg_op mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
-    nrapply (ap amal_eta).
-    nrapply app_nil.
+    napply (ap amal_eta).
+    napply app_nil.
   Defined.
 
   Lemma amal_eta_word_concat_Vw (x : Words) : amal_eta (word_inverse x ++ x) = mon_unit.
@@ -454,14 +454,14 @@ Section FreeProduct.
       refine (amal_mu_H _ _ _ _ @ _).
       rewrite left_inverse.
       rewrite amal_omega_H.
-      apply IHxs.
+      exact IHxs.
     + change (amal_eta (word_inverse ([inr k] ++ xs) ++ [inr k] ++ xs) = mon_unit).
       rewrite word_inverse_ww.
       rewrite <- app_assoc.
       refine (amal_mu_K _ _ _ _ @ _).
       rewrite left_inverse.
       rewrite amal_omega_K.
-      apply IHxs.
+      exact IHxs.
   Defined.
 
   Lemma amal_eta_word_concat_wV (x : Words) : amal_eta (x ++ word_inverse x) = mon_unit.
@@ -505,13 +505,13 @@ Section FreeProduct.
       apply amal_omega_K.
   Defined.
 
-  Global Instance leftinverse_sgop_amal_type : LeftInverse (.*.) (^) mon_unit.
+  #[export] Instance leftinverse_sgop_amal_type : LeftInverse (.*.) (^) mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     apply amal_eta_word_concat_Vw.
   Defined.
 
-  Global Instance rightinverse_sgop_amal_type : RightInverse (.*.) (^) mon_unit.
+  #[export] Instance rightinverse_sgop_amal_type : RightInverse (.*.) (^) mon_unit.
   Proof.
     rapply amal_type_ind_hprop; intro x.
     apply amal_eta_word_concat_wV.
@@ -519,7 +519,7 @@ Section FreeProduct.
 
   Definition AmalgamatedFreeProduct : Group.
   Proof.
-    snrapply (Build_Group amal_type); repeat split; exact _.
+    snapply (Build_Group amal_type); repeat split; exact _.
   Defined.
 
   (** Using foldr. It's important that we use foldr as foldl is near impossible to reason about. *)
@@ -564,7 +564,7 @@ Section FreeProduct.
       rapply left_identity. }
   Defined.
 
-  Global Instance issemigrouppreserving_AmalgamatedFreeProduct_rec'
+  #[export] Instance issemigrouppreserving_AmalgamatedFreeProduct_rec'
     (X : Group) (h : GroupHomomorphism H X) (k : GroupHomomorphism K X)
     (p : h o f == k o g)
     : IsSemiGroupPreserving (AmalgamatedFreeProduct_rec' X h k p).
@@ -589,14 +589,14 @@ Section FreeProduct.
     (p : h $o f $== k $o g)
     : AmalgamatedFreeProduct $-> X.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     1: srapply (AmalgamatedFreeProduct_rec' X h k p).
     exact _.
   Defined.
 
   Definition amal_inl : H $-> AmalgamatedFreeProduct.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     { intro x.
       exact (amal_eta [inl x]). }
     intros x y.
@@ -608,7 +608,7 @@ Section FreeProduct.
 
   Definition amal_inr : K $-> AmalgamatedFreeProduct.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     { intro x.
       exact (amal_eta [inr x]). }
     intros x y.
@@ -627,7 +627,7 @@ Section FreeProduct.
     : {h : GroupHomomorphism H X & {k : GroupHomomorphism K X & h o f == k o g }}
       <~> GroupHomomorphism AmalgamatedFreeProduct X.
   Proof.
-    snrapply equiv_adjointify.
+    snapply equiv_adjointify.
     1: intros [h [k p]]; exact (AmalgamatedFreeProduct_rec X h k p).
     { intros r.
       exists (grp_homo_compose r amal_inl).
@@ -637,13 +637,13 @@ Section FreeProduct.
       simpl.
       rewrite <- (app_nil [inl (f x)]).
       rewrite <- (app_nil [inr (g x)]).
-      apply (amal_tau nil nil x). }
+      exact (amal_tau nil nil x). }
     { intros r.
       apply equiv_path_grouphomomorphism.
       srapply amal_type_ind_hprop.
       intro x.
       induction x as [|a x].
-      1: symmetry; apply (grp_homo_unit r).
+      1: symmetry; exact (grp_homo_unit r).
       simpl in *.
       rewrite IHx.
       destruct a; symmetry;
@@ -685,7 +685,7 @@ Section FreeProduct.
     : k $== k'.
   Proof.
     rapply (amalgamatedfreeproduct_ind_hprop _ l r).
-    intros x y; nrapply grp_homo_op_agree. (* A bit slow, ~0.05s *)
+    intros x y; napply grp_homo_op_agree. (* A bit slow, ~0.05s *)
   Defined. (* A bit slow, ~0.05s *)
 
 End FreeProduct.
@@ -710,9 +710,9 @@ Definition freeproduct_inr {G H : Group} : GroupHomomorphism H (FreeProduct G H)
 Definition FreeProduct_rec {G H K : Group} (f : G $-> K) (g : H $-> K)
   : FreeProduct G H $-> K.
 Proof.
-  snrapply (AmalgamatedFreeProduct_rec _ f g).
+  snapply (AmalgamatedFreeProduct_rec _ f g).
   intros [].
-  refine (grp_homo_unit _ @ (grp_homo_unit _)^).
+  exact (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
 
 Definition freeproduct_ind_hprop {G H} (P : FreeProduct G H -> Type)
@@ -730,8 +730,8 @@ Definition freeproduct_ind_homotopy {G H K : Group}
   : f $== f'.
 Proof.
   rapply (freeproduct_ind_hprop _ l r).
-  intros x y; nrapply grp_homo_op_agree. (* Slow, ~0.2s. *)
-Time Defined. (* Slow, ~0.15s. *)
+  intros x y; napply grp_homo_op_agree. (* Slow, ~0.2s. *)
+Defined. (* Slow, ~0.15s. *)
 
 Definition freeproduct_rec_beta_inl {G H K : Group}
   (f : G $-> K) (g : H $-> K)
@@ -753,14 +753,14 @@ Proof.
   rapply contr_forall.
   intros []; apply contr_inhab_prop.
   apply tr.
-  refine (grp_homo_unit _ @ (grp_homo_unit _)^).
+  exact (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
 
 (** The freeproduct is the coproduct in the category of groups. *)
-Global Instance hasbinarycoproducts : HasBinaryCoproducts Group.
+Instance hasbinarycoproducts : HasBinaryCoproducts Group.
 Proof.
   intros G H.
-  snrapply Build_BinaryCoproduct.
+  snapply Build_BinaryCoproduct.
   - exact (FreeProduct G H).
   - exact freeproduct_inl.
   - exact freeproduct_inr.
@@ -768,5 +768,5 @@ Proof.
   - intros; apply freeproduct_rec_beta_inl.
   - intros; apply freeproduct_rec_beta_inr.
   - intros Z f g p q.
-    by snrapply freeproduct_ind_homotopy.
+    by snapply freeproduct_ind_homotopy.
 Defined.

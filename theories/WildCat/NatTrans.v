@@ -75,30 +75,30 @@ Definition Build_Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
   (isnat : forall a a' (f : a $-> a'), alpha a' $o fmap F f $== fmap G f $o alpha a)
   : Is1Natural F G alpha.
 Proof.
-  snrapply Build_Is1Natural'.
+  snapply Build_Is1Natural'.
   - exact isnat.
   - intros a a' f.
     exact (isnat a a' f)^$.
 Defined.
 
 (** The identity transformation is 1-natural. *)
-Global Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
+Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
   (F : A -> B) `{!Is0Functor F}
   : Is1Natural F F (trans_id F).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros a b f; cbn.
-  refine (cat_idl _ $@ (cat_idr _)^$).
+  exact (cat_idl _ $@ (cat_idr _)^$).
 Defined.
 
 (** The composite of 1-natural transformations is 1-natural. *)
-Global Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
+Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
   {F G K : A -> B} `{!Is0Functor F} `{!Is0Functor G} `{!Is0Functor K}
   (gamma : G $=> K) `{!Is1Natural G K gamma}
   (alpha : F $=> G) `{!Is1Natural F G alpha}
   : Is1Natural F K (trans_comp gamma alpha).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros a b f; unfold trans_comp; cbn.
   refine (cat_assoc _ _ _ $@ (_ $@L isnat alpha f) $@ _).
   refine (cat_assoc_opp _ _ _ $@ (isnat gamma f $@R _) $@ _).
@@ -106,24 +106,24 @@ Proof.
 Defined.
 
 (** Prewhiskering a transformation preserves naturality. *)
-Global Instance is1natural_prewhisker {A B C : Type} {F G : B -> C} (K : A -> B)
+Instance is1natural_prewhisker {A B C : Type} {F G : B -> C} (K : A -> B)
   `{IsGraph A, Is01Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G, !Is0Functor K}
   (gamma : F $=> G) `{L : !Is1Natural F G gamma}
   : Is1Natural (F o K) (G o K) (trans_prewhisker gamma K).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros x y f; unfold trans_prewhisker; cbn.
   exact (isnat gamma _).
 Defined.
 
 (** Postwhiskering a transformation preserves naturality. *)
-Global Instance is1natural_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C)
+Instance is1natural_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C)
   `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G,
     !Is0Functor K, !Is1Functor K}
   (gamma : F $=> G) `{L : !Is1Natural F G gamma}
   : Is1Natural (K o F) (K o G) (trans_postwhisker K gamma).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros x y f; unfold trans_postwhisker; cbn.
   refine (_^$ $@ _ $@ _).
   1,3: rapply fmap_comp.
@@ -138,19 +138,19 @@ Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
   (p : forall a, alpha a $== gamma a)
   : Is1Natural F G alpha.
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros a b f.
   exact ((p b $@R _) $@ isnat gamma f $@ (_ $@L (p a)^$)).
 Defined.
 
 (** The opposite of a natural transformation is natural. *)
-Global Instance is1natural_op A B `{Is01Cat A} `{Is1Cat B}
+Instance is1natural_op A B `{Is01Cat A} `{Is1Cat B}
   (F : A -> B) `{!Is0Functor F} (G : A -> B) `{!Is0Functor G}
   (alpha : F $=> G) `{!Is1Natural F G alpha}
   : Is1Natural (G : A^op -> B^op) (F : A^op -> B^op) (trans_op F G alpha).
 Proof.
   unfold op.
-  snrapply Build_Is1Natural'.
+  snapply Build_Is1Natural'.
   - intros a b.
     exact (isnat_tr alpha).
   - intros a b.
@@ -174,7 +174,7 @@ Arguments NatTrans {A B} {isgraph_A}
 Arguments Build_NatTrans {A B isgraph_A isgraph_B is2graph_B is01cat_B is1cat_B
   F G is0functor_F is0functor_G} alpha isnat_alpha : rename.
 
-Global Existing Instance is1natural_nattrans.
+Existing Instance is1natural_nattrans.
 
 Definition issig_NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
   {ff : Is0Functor F} {fg : Is0Functor G}
@@ -235,8 +235,8 @@ Lemma nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
   : NatEquiv F G -> NatTrans F G.
 Proof.
   intros alpha.
-  nrapply Build_NatTrans.
-  rapply (is1natural_natequiv alpha).
+  napply Build_NatTrans.
+  exact (is1natural_natequiv alpha).
 Defined.
 
 (** Throws a warning, but can probably be ignored. *)
@@ -255,16 +255,16 @@ Definition Build_NatEquiv' {A B : Type} `{IsGraph A} `{HasEquivs B}
   (alpha : NatTrans F G) `{forall a, CatIsEquiv (alpha a)}
   : NatEquiv F G.
 Proof.
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   - intro a.
-    refine (Build_CatEquiv (alpha a)).
-  - snrapply Build_Is1Natural'.
+    exact (Build_CatEquiv (alpha a)).
+  - snapply Build_Is1Natural'.
     + intros a a' f.
       refine ((cate_buildequiv_fun _ $@R _) $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).
-      apply (isnat alpha).
+      exact (isnat alpha _).
     + intros a a' f.
       refine ((_ $@L cate_buildequiv_fun _) $@ _ $@ (cate_buildequiv_fun _ $@R _)^$).
-      apply (isnat_tr alpha).
+      exact (isnat_tr alpha _).
 Defined.
 
 Definition natequiv_id {A B : Type} `{IsGraph A} `{HasEquivs B}
@@ -299,7 +299,7 @@ Lemma natequiv_op {A B : Type} `{Is01Cat A} `{HasEquivs B}
   : NatEquiv F G -> NatEquiv (G : A^op -> B^op) F.
 Proof.
   intros [a n].
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   1: exact a.
   by rapply is1natural_op.
 Defined.
@@ -310,9 +310,9 @@ Definition natequiv_inverse {A B : Type} `{IsGraph A} `{HasEquivs B}
   : NatEquiv F G -> NatEquiv G F.
 Proof.
   intros [alpha I].
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   1: exact (fun a => (alpha a)^-1$).
-  snrapply Build_Is1Natural'.
+  snapply Build_Is1Natural'.
   + intros X Y f.
     apply vinverse, I.
   + intros X Y f.
@@ -326,12 +326,12 @@ Definition natequiv_functor_assoc_ff_f {A B C D : Type}
   `{!Is0Functor F, !Is0Functor G, !Is0Functor K}
   : NatEquiv ((F o G) o K) (F o (G o K)).
 Proof.
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   1: intro; reflexivity.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros X Y f.
   refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).
-  refine (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
+  exact (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).
 Defined.
 
 (** ** Pointed natural transformations *)

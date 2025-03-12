@@ -140,7 +140,7 @@ Proof.
   apply equiv_sigma_contr; intro e.
   rapply contr_inhabited_hprop.
   rapply conn_point_elim.
-  apply (inO_equiv_inO F e^-1).
+  exact (inO_equiv_inO F e^-1).
 Defined.
 
 (** *** Classifying O-local bundles with specified pointed fiber *)

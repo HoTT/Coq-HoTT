@@ -1,6 +1,6 @@
 (** * Impredicative truncations *)
 
-(** In this file, under the assumptions of propositional resizing [PropResizing] and function extensionality [Funext], we define the proposition truncation in any universe. In the main library, these are constructed using HITs. The definitions here are meant to be for illustration. *)
+(** In this file, under the assumptions of propositional resizing [PropResizing] and function extensionality [Funext], we define the propositional truncation in any universe. In the main library, these are constructed using HITs. The definitions here are meant to be for illustration. *)
 
 Require Import HoTT.Basics.
 Require Import Universes.Smallness.
@@ -14,11 +14,11 @@ Definition trm@{i j | } {A : Type@{i}} : A -> Trm@{i j} A
   := fun a P HP f => f a.
 
 (** Here [k] plays the role of [max(i,j+1)]. *)
-Global Instance ishprop_Trm@{i j k | i <= k, j < k} `{Funext} (A : Type@{i})
+Instance ishprop_Trm@{i j k | i <= k, j < k} `{Funext} (A : Type@{i})
   : IsHProp (Trm@{i j} A).
 Proof.
-  nrapply istrunc_forall@{k k k}; intro B.
-  nrapply istrunc_forall@{j k k}; intro ishp.
+  napply istrunc_forall@{k k k}; intro B.
+  napply istrunc_forall@{j k k}; intro ishp.
   apply istrunc_forall@{k j k}.
 Defined.
 

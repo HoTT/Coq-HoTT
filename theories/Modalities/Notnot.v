@@ -8,7 +8,7 @@ Local Open Scope path_scope.
 (** The operation sending [X] to [~~X] is a modality.  This is Exercise 7.12 in the book.  Note that it is (apparently) *not* accessible unless we assume propositional resizing. *)
 Definition NotNot `{Funext} : Modality.
 Proof.
-  snrapply easy_modality.
+  snapply easy_modality.
   - intros X; exact (~~X).
   - exact @not_not_unit.
   - cbn beta; intros A B f z nBz.

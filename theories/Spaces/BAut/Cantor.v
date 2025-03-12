@@ -26,7 +26,7 @@ Section Assumptions.
     apply tr.
     apply path_universe_uncurried.
     refine (equiv_cantor_fold oE _).
-    refine (equiv_path _ _ e +E 1).
+    exact (equiv_path _ _ e +E 1).
   Defined.
 
   (** For the pre-idempotence of [f], the main point is again the existence of the equivalence [fold_cantor]. *)
@@ -36,7 +36,7 @@ Section Assumptions.
     apply path_baut.
     unfold f; simpl.
     refine (_ oE equiv_sum_assoc Z Cantor Cantor).
-    apply (1 +E equiv_cantor_fold).
+    exact (1 +E equiv_cantor_fold).
   Defined.
 
   (** We record how the action of [f] and [f o f] on paths corresponds to an action on equivalences. *)
@@ -134,9 +134,9 @@ Section Assumptions.
   : (ff_flip x = x) <-> (f_flip (I0 x) = I0 x).
   Proof.
     split; intros p.
-    - refine ((I0nat_flip x)^ @ ap I0 p).
+    - exact ((I0nat_flip x)^ @ ap I0 p).
     - apply (equiv_inj I0).
-      refine (I0nat_flip x @ p).
+      exact (I0nat_flip x @ p).
   Defined.
 
   (** Putting it all together, here is the proof of our claim about [I0]. *)

@@ -15,11 +15,11 @@ Notation Topological O := (forall i, IsHProp (acc_ngen O i)).
 
 (** We prove left-exactness by proving that the universe of modal types is modal, using univalence.  It's unclear whether univalence is necessary or not in general; in one special case (open modalities) funext suffices.  But it's plausible that it would be necessary in general, because lex-ness of nullification is a statement about the path-spaces of a HIT, and characterizing those in any way usually requires some amount of univalence. *)
 
-Global Instance lex_topological `{Univalence}
+Instance lex_topological `{Univalence}
        (O : Modality) `{IsAccModality O} `{Topological O}
   : Lex O.
 Proof.
-    snrapply lex_from_inO_typeO; [ exact _ | intros i ].
+    snapply lex_from_inO_typeO; [ exact _ | intros i ].
     apply ((equiv_ooextendable_isequiv _ _)^-1%equiv).
     srapply isequiv_adjointify; cbn.
     - intros B _.
@@ -33,7 +33,7 @@ Proof.
       + intros f. exact (f a).
       + intros b a'. exact (transport B (path_ishprop a a') b).
       + intros b.
-        refine (transport2 B (path_contr _ 1) b).
+        exact (transport2 B (path_contr _ 1) b).
       + intros f. apply path_forall; intros a'.
         exact (apD f _).
     - intros B.
@@ -48,7 +48,7 @@ Proof.
 Defined.
 
 
-Global Instance lex_nullification `{Univalence}
+Instance lex_nullification `{Univalence}
       (S : NullGenerators) `{forall i, IsHProp (S i)}
 : Lex (Nul S).
 Proof.
@@ -119,13 +119,13 @@ Proof.
           intros x; unfold composeD; cbn.
           apply equiv_path_arrow. }
         refine ((isconnected_elim (Nul D) (A := D (inl a)) _ _).1).
-        { rapply isconnected_acc_ngen. }
+        { tapply isconnected_acc_ngen. }
         intros b; cbn in b. strip_truncations.
         assert (bc : IsConnMap (Nul D) (unit_name b)).
         { intros x; unfold hfiber.
           apply (isconnected_equiv (Nul D) (b = x)
                                    (equiv_contr_sigma _)^-1).
-          rapply (isconnected_acc_ngen (Nul D) (inr (a;(b,x)))). }
+          exact (isconnected_acc_ngen (Nul D) (inr (a;(b,x)))). }
         pose (p := conn_map_elim (Nul D) (unit_name b)
                                  (fun u => f b = f u) (fun _ => 1)).
         apply (Build_Contr _ (f b ; p)); intros [x q].

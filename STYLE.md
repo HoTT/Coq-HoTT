@@ -60,7 +60,7 @@
     - [12.2. Approval of pull requests](#122-approval-of-pull-requests)
     - [12.3. Commit messages](#123-commit-messages)
     - [12.4. Creating new files](#124-creating-new-files)
-    - [12.5. Travis](#125-travis)
+    - [12.5. Continuous Integration](#125-continuous-integration)
     - [12.6. Git rebase](#126-git-rebase)
     - [12.7. Timing scripts](#127-timing-scripts)
   - [13. Bugs in Coq](#13-bugs-in-coq)
@@ -111,10 +111,13 @@ corresponding file `Foo.v` that imports everything in the subdirectory.
 
 - There are files in the root `theories/` directory, including
   `EquivGroupoids`, `ExcludedMiddle`, `Factorization`, `HFiber`,
-  `Extensions`, `Projective`, `Idempotents`, `Constant`,
-  `BoundedSearch`, etc.  These contain more advanced results which may
-  depend on files in the whole library.  We try to limit the number of
-  files in the top-level folder, and would like to reduce the number.
+  `Extensions`, `Projective`, `Idempotents`, etc. These contain more
+  advanced results which may depend on files in the whole library.  We
+  try to limit the number of files in the top-level folder, and would
+  like to reduce the number.
+
+- `Misc/*`: Some files don't have a logical home, so they instead live here. We
+  try to limit the number of files living here.
 
 - `WildCat/*`: Files related to wild categories.  They are used
   extensively in the library, so we try to minimize the files they
@@ -427,15 +430,24 @@ Hint Immediate foo : typeclass_instances.
 
 ### 3.4. Local and Global Instances ###
 
-When declaring an `Instance` you should *always* use either the
-`Local` or the `Global` keyword.  The former makes the instance local
-to the current section, module, or file (although its *definition*
-will still be visible globally, it won't be in the instance database
-for typeclass resolution outside its containing section, module or
-file), while the latter puts it in the instance database globally.
-If you write `Instance` without `Local` or `Global`, Coq will
-sometimes make it local and sometimes global, so to avoid confusion it
-is better to always specify explicitly which you intend.
+Each `Instance` declaration has an associated "locality attribute".
+The `Local` attribute makes the instance local to the current section,
+module, or file (although its *definition* will still be visible
+globally, it won't be in the instance database for typeclass
+resolution outside its containing section, module or file). The
+`Global` attribute makes the instance available in any file that
+"loads" this file via the `Require` command, which is a transitive
+relation including all direct and indirect dependencies of the current
+file. The `#[export]` locality uses the module system to manage the
+scope of the typeclass hint, so that the hint is available wherever
+the module is opened using the `Import` keyword, but not transitively
+(analogous to "open" in ML languages).
+
+When declaring an `Instance` you should prefer the `export` locality attribute
+to the `Global` locality attribute. Inside a section, you should
+explicitly annotate instance declarations as `Local` or `#[export]`
+to avoid ambiguity. Outside a section, you may omit the annotation,
+and in this case Coq defaults to the `export` attribute since 8.18.
 
 ### 3.5. Using Typeclasses ###
 
@@ -920,7 +932,7 @@ Here are some acceptable tactics to use in transparent definitions
 - `case`, `elim`, `destruct`, `induction`
 - `apply`, `eapply`, `assumption`, `eassumption`, `exact`
 - `refine`, `nrefine`, `srefine`, `snrefine` (see below for the last three)
-- `rapply`, `nrapply`, `srapply`, `snrapply` (see below)
+- `rapply`, `napply`, `tapply`, `srapply`, `snapply`, `stapply` (see below)
 - `lhs`, `lhs_V`, `rhs`, `rhs_V`
 - `reflexivity`, `symmetry`, `transitivity`, `etransitivity`
 - `by`, `done`
@@ -1185,31 +1197,58 @@ They are described more fully, usually with examples, in the files
 where they are defined.
 
 - `nrefine`, `srefine`, `snrefine`:
-  Defined in `Basics/Overture`, these are shorthands for
+  Defined in `Basics/Tactics`, these are shorthands for
   `notypeclasses refine`, `simple refine`, and `simple notypeclasses refine`.
   It's good to avoid typeclass search if it isn't needed.
 
-- `rapply`, `nrapply`, `srapply`, `snrapply`:
-  Defined in `Basics/Overture`, these tactics use `refine`,
-  `nrefine`, `srefine` and `snrefine`, except that additional holes
-  are added to the function so they behave like `apply` does.
-  The unification algorithm used by `apply` is different and often
-  less powerful than the one used by `refine`, though it is
-  occasionally better at pattern matching.
+- `napply`, `rapply`, `tapply`:
+  Defined in `Basics/Tactics`, each of these is similar to `apply`,
+  except that they use the unification engine of `refine`, which
+  is different and often stronger than that of `apply`.
+  `napply t` computes the type of `t`
+  (possibly with holes, if `t` has holes) and tries to unify the type
+  of `t` with the goal; if this succeeds, it generates goals for each
+  hole in `t` not solved by unification; otherwise, it repeats this
+  process with `t _`, `t _ _ `, and so on until it has the correct
+  number of arguments to unify with the goal.
+  `rapply` is like `napply`, (`rapply` succeeds iff
+  `napply` does) except that after it succeeds in unifying with the
+  goal, it solves all typeclass goals it can. `tapply` is stronger
+  than `rapply`: if Coq cannot compute a type for `t` or successfully
+  unify the type of `t` with the goal, it will elaborate all typeclass
+  holes in `t` that it can, and then try again to compute the type of
+  `t` and unify it with the goal. (Like `rapply`, `tapply` also
+  instantiates typeclass goals after successful unification with the
+  goal as well: if `rapply` succeeds, so does `tapply` and their
+  outcomes are equivalent.) 
+  
+- `snapply`, `srapply`, `stapply`: Sibling tactics to `napply`,
+  `rapply` and `tapply`, except that they use `simple refine` instead
+  of `refine` (beta reduction is not attempted when unifying with the
+  goal, and no new goals are shelved)
  
   Here are some tips:
   - If `apply` fails with a unification error you think it shouldn't
-    have, try `nrapply`.
-  - If you want to use type class resolution as well, try `rapply`.
-    But it's better to use `nrapply` if it works.
+    have, try `napply`, and then `rapply` if `napply` generates
+	typeclass goals.
+  - If you want to use type class resolution as well, try `tapply`.
+    But it's better to use `napply` if it works.
   - You could add a prime to the tactic, to try with many arguments
     first, decreasing the number on each try.
-  - If you don't want Coq to create evars for certain subgoals,
-    add an `s` to the tactic name to make it use `simple refine`.
+  - If you are trying to construct an element of a sum type `sig (A :
+    Type) (P: A->Type)` (or something equivalent, such as a `NatTrans`
+    record consisting of a `Transformation` and a proof that it
+    `Is1Natural`) and you want to manually construct `t : A` first and
+    then prove that `P t` holds for the given `t`, then use the
+    `simple` version of the tactic, like `srapply exist` or `srapply
+    Build_Record`, so that the first goal generated is `A`. If it's
+    more convenient to instantiate `a : A` while proving `P`, then use
+    `rapply exist` - for example, `Goal { x & x = 0 }. rapply exist;
+    reflexivity. Qed.`
 
 - `lhs`, `lhs_V`, `rhs`, `rhs_V`:  Defined in `Basics/Tactics`.
   These are tacticals that apply a specified tactic to one side
-  of an equality.  E.g. `lhs nrapply concat_1p.`
+  of an equality.  E.g. `lhs napply concat_1p.`
 
 - `transparent assert`: Defined in `Basics/Overture`, this tactic is
   like `assert` but produces a transparent subterm rather than an
@@ -1345,18 +1384,23 @@ You will probably also want to add your new file to `HoTT.v`, unless
 it is outside the core (e.g. in `contrib/`) or should not be exported
 for some other reason.
 
-### 12.5. Travis ###
+### 12.5. Continuous Integration ###
 
-We use the [Travis Continuous Integration Platform][travis] to check
-that pull requests do not break anything, and also to automatically
-update various things (such as the documentation and
-dependency graph linked on the [project wiki][wiki]).  Normally you
-shouldn't need to know anything about this; Travis automatically
-checks every pull request made to the central repository.
+We use [GitHub Actions][github-actions] to check the compilation of
+pull requests, do documentation building, and run the testing suite.
 
-[travis]: https://travis-ci.org/
+Documentation shown on the [project wiki][wiki] is built and deployed
+after a pull request is merged.
 
-[wiki]: https://github.com/HoTT/HoTT/wiki
+Normally you shouldn't need to know anything about this; GitHub
+actions will automatically check every pull request made.
+
+The file `.github/workflows/ci.yml` contains the configuration for
+GitHub Actions. This has to be updated very rarely.
+
+[github-actions]: https://github.com/features/actions
+
+[wiki]: https://github.com/HoTT/Coq-HoTT/wiki
 
 ### 12.6. Git rebase ###
 
@@ -1469,17 +1513,9 @@ When it exits, the minimized code producing the bug will be in
 
 Note that sometimes `coqc` and
 `coqtop` can exhibit different behavior, and one may produce a bug
-while the other doesn't.  (One reason for this is that they give
-different names to universe parameters, `Top.1` versus `Filename.1`,
-and this can result in different results from sorting, which can
-affect the output of the universe minimization algorithm, yielding
-different numbers or different ordering of universe parameters for the
-same definitions.  This is [itself a bug][instance bug], but as of
-June 2015 it has not yet been fixed.)  The bug-finder normally uses
+while the other doesn't. The bug-finder normally uses
 both `coqc` and `coqtop`, but you can tell it to "fake" `coqc` using
 `coqtop` by passing the argument `--coqc-as-coqtop` instead of
 `--coqc`.
 
 [coq-tools]: https://github.com/JasonGross/coq-tools
-
-[instance bug]: https://coq.inria.fr/bugs/show_bug.cgi?id=3863

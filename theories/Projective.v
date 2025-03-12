@@ -68,7 +68,7 @@ Notation HasChoice := (HasOChoice purely).
 
 Notation HasTrChoice n := (HasOChoice (Tr n)).
 
-Global Instance hasochoice_sigma
+Instance hasochoice_sigma
   `{Funext} {A : Type} {B : A -> Type} (O : Modality)
   (chA : HasOChoice O A)
   (chB : forall a : A, HasOChoice O (B a))
@@ -124,7 +124,7 @@ Proposition equiv_isoprojective_hasochoice
   : IsOProjective O X <~> HasOChoice O X.
 Proof.
   refine (equiv_iff_hprop_uncurried (iff_isoprojective_hasochoice O X)).
-  apply istrunc_forall.
+  exact istrunc_forall.
 Defined.
 
 Proposition isprojective_unit : IsProjective Unit.

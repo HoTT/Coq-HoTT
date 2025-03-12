@@ -23,7 +23,7 @@ Defined.
 Definition ds_id {A} {P : A -> Type} {a00 b00}
   : DPathSquare P sq_id 1 1 1 1 (a00:=a00) (b00:=b00).
 Proof.
-  apply sq_id.
+  exact sq_id.
 Defined.
 
 Notation "1" := ds_id : dsquare_scope.
@@ -63,7 +63,7 @@ Proof.
   rewrite <- (eissect sq_path s : sq_path^-1 s' = s).
   clearbody s'; clear s.
   destruct s'; cbn.
-  apply sq_path.
+  exact sq_path.
 Defined.
 
 Notation ds_dpath := equiv_ds_dpath.
@@ -123,7 +123,7 @@ Definition equiv_ds_G1 {A} (P : A -> Type) {a00 a10 }
       <~> DPathSquare P (sq_G1 p) qx0 qx1 1 1.
 Proof.
   destruct p, px0.
-  apply sq_G1.
+  exact sq_G1.
 Defined.
 
 Notation ds_G1 := equiv_ds_G1.

@@ -39,7 +39,7 @@ Defined.
 
 (** ** W-types preserve truncation *)
 
-Global Instance istrunc_wtype `{Funext}
+Instance istrunc_wtype `{Funext}
   {A B} {n : trunc_index} `{IsTrunc n.+1 A}
 : IsTrunc n.+1 (W A B) | 100.
 Proof.
@@ -50,5 +50,5 @@ Proof.
   rapply istrunc_sigma.
   cbn; intro p.
   destruct p.
-  apply (istrunc_equiv_istrunc _ (equiv_path_forall _ _)).
+  exact (istrunc_equiv_istrunc _ (equiv_path_forall _ _)).
 Defined.

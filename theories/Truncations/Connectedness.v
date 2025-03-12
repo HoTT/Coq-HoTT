@@ -47,17 +47,17 @@ Proof.
     intros y. apply (allpath_extension_conn_map n); assumption.
     (* m = S m' *)
   - apply istrunc_S.
-    intros e e'. refine (istrunc_isequiv_istrunc _ (path_extension e e')).
-  (* magically infers: paths in extensions = extensions into paths, which by induction is m'-truncated. *)
+    intros e e'. exact (istrunc_isequiv_istrunc _ (path_extension e e')).
+    (* Magically infers: paths in extensions = extensions into paths, which by induction is [m']-truncated. *)
 Defined.
 
 (** ** Connectedness of path spaces *)
 
-Global Instance isconnected_paths `{Univalence} {n A}
+Instance isconnected_paths `{Univalence} {n A}
        `{IsConnected n.+1 A} (x y : A)
   : IsConnected n (x = y).
 Proof.
-  refine (contr_equiv' _ (equiv_path_Tr x y)^-1).
+  exact (contr_equiv' _ (equiv_path_Tr x y)^-1).
 Defined.
 
 (** ** Connectivity of pointed types *)
@@ -66,12 +66,12 @@ Defined.
 
 (** We can't make both of these [Instance]s, as that would result in infinite loops. *)
 
-Global Instance conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
+Instance conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
   `{IsConnMap n _ _ (unit_name a0)}
   : IsConnected n.+1 A | 1000.
 Proof.
   apply isconnected_conn_map_to_unit.
-  apply (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
+  exact (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
 Defined.
 
 Definition conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
@@ -91,9 +91,9 @@ Definition conn_point_elim `{Univalence} (n : trunc_index) {A : pType@{u}} `{IsC
            (P : A -> Type@{u}) `{forall a, IsTrunc n (P a)} (p0 : P (point A))
   : forall a, P a.
 Proof.
-  (** This follows from [conn_point_incl] and [conn_map_elim], but we give a direct proof. *)
+  (* This follows from [conn_point_incl] and [conn_map_elim], but we give a direct proof. *)
   intro a.
-  (** Since [A] is [n+1]-connected, [a0 = a] is [n]-connected, which means that [Tr n (a0 = a)] has an element. *)
+  (* Since [A] is [n+1]-connected, [a0 = a] is [n]-connected, which means that [Tr n (a0 = a)] has an element. *)
   pose proof (p := center (Tr n ((point A) = a))).
   strip_truncations.
   exact (p # p0).
@@ -106,7 +106,7 @@ Definition isconnected_pred n A `{IsConnected n.+1 A}
   : IsConnected n A.
 Proof.
   apply isconnected_from_elim; intros C ? f.
-  refine (isconnected_elim n.+1 C f).
+  exact (isconnected_elim n.+1 C f).
 Defined.
 
 (** A [k]-connected type is [n]-connected, when [k >= n].  We constrain [k] by making it of the form [n +2+ m], which makes the induction go through smoothly. *)
@@ -170,7 +170,7 @@ Proof.
 Defined.
 
 (** The path component of a point [x : X] is connected. *)
-Global Instance is0connected_component {X : Type} (x : X)
+Instance is0connected_component {X : Type} (x : X)
   : IsConnected 0 { z : X & merely (z = x) }.
 Proof.
   apply (Build_Contr _ (tr (x; tr idpath))).
@@ -205,11 +205,11 @@ Proof.
 Defined.
 
 (** 0-connected types are indecomposable *)
-Global Instance indecomposable_0connected `{Univalence}
+Instance indecomposable_0connected `{Univalence}
        (X : Type) `{IsConnected 0 X}
   : Indecomposable X.
 Proof.
-  assert (IsConnected (-1) X) by refine (isconnected_pred (-1) X).
+  assert (IsConnected (-1) X) by exact (isconnected_pred (-1) X).
   constructor.
   - intros A B f.
     assert (z := center (merely X) : merely X); generalize z.
@@ -230,11 +230,11 @@ Proof.
 Defined.
 
 (* Truncation preserves connectedness. Note that this is for different levels. *)
-Global Instance isconnected_trunc {X : Type} (n m : trunc_index) `{IsConnected n X}
+Instance isconnected_trunc {X : Type} (n m : trunc_index) `{IsConnected n X}
   : IsConnected n (Tr m X).
 Proof.
   unfold IsConnected.
-  srapply (contr_equiv' _ (Trunc_swap n m X)^-1).
+  exact (contr_equiv' _ (Trunc_swap n m X)^-1).
 Defined.
 
 Section Wedge_Incl_Conn.
@@ -265,10 +265,10 @@ Proof.
       (fun a => ExtensionAlong (unit_name b0) (P a) (unit_name (f_b0 a)))
       (unit_name (f_a0 ; (unit_name f_a0b0)))).
   - apply (extension_conn_map_elim m).
-    + apply (conn_point_incl a0).
+    + exact (conn_point_incl a0).
     + intros a.
       apply (istrunc_extension_along_conn (n := n)).
-      * apply (conn_point_incl b0).
+      * exact (conn_point_incl b0).
       * apply HP.
   - destruct goal_as_extension as [f_eb name_ea_eab].
     assert (ea_eab := name_ea_eab tt); clear name_ea_eab.
@@ -310,5 +310,5 @@ Definition wedge_incl_elim_uncurried `{Univalence}
   : forall (a : A) (b : B), P a b.
 Proof.
   destruct fs as [f_a0 [f_b0 f_a0b0]].
-  refine (wedge_incl_elim _ _ _ _ _ f_a0b0).
+  exact (wedge_incl_elim _ _ _ _ _ f_a0b0).
 Defined.

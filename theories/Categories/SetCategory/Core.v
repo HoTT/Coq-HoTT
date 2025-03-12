@@ -24,7 +24,7 @@ Definition prop_cat `{Funext} : PreCategory := cat_of HProp.
 Definition set_cat `{Funext} : PreCategory := cat_of HSet.
 
 (** ** [Prop] is a strict category *)
-Global Instance isstrict_prop_cat `{Univalence}
+Instance isstrict_prop_cat `{Univalence}
 : IsStrictCategory prop_cat
   := _.
 

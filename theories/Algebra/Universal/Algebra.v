@@ -43,9 +43,9 @@ Record Signature := Build_Signature
 
 Notation SymbolType σ := (SymbolTypeOf (Sort σ)).
 
-Global Existing Instance hset_sort.
+Existing Instance hset_sort.
 
-Global Existing Instance hset_symbol.
+Existing Instance hset_symbol.
 
 Global Coercion symbol_types : Signature >-> Funclass.
 
@@ -87,7 +87,7 @@ Arguments Algebra : clear implicits.
 
 Arguments Build_Algebra {σ} carriers operations {hset_algebra}.
 
-Global Existing Instance hset_algebra.
+Existing Instance hset_algebra.
 
 Global Coercion carriers : Algebra >-> Funclass.
 

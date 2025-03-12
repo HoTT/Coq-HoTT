@@ -78,12 +78,12 @@ Section Lookup.
 
   Local Instance lookup_l `{!Lookup x va} : Lookup x (merge va vb).
   Proof.
-  exists (inl (lookup x va)). apply lookup_correct.
+  exists (inl (lookup x va)). exact lookup_correct.
   Defined.
 
   Local Instance lookup_r `{!Lookup x vb} : Lookup x (merge va vb).
   Proof.
-  exists (inr (lookup x vb)). apply lookup_correct.
+  exists (inr (lookup x vb)). exact lookup_correct.
   Defined.
 
   Local Instance lookup_single : Lookup x (singleton x).
@@ -204,7 +204,7 @@ Section Quote.
     : Quote v x noVars | 8.
   Proof.
   exists (Var (inl (lookup x v))).
-  apply lookup_correct.
+  exact lookup_correct.
   Defined.
 
   Local Instance quote_new_var (V:Type0) (v: Vars V) x
@@ -281,9 +281,9 @@ Qed.
 End contents.
 
 Module Export Instances.
-  Global Existing Instances lookup_l lookup_r lookup_single quote_zero quote_one quote_plus quote_mult quote_neg eq_quote.
-  Global Existing Instance quote_old_var | 8.
-  Global Existing Instance quote_new_var | 9.
+  Existing Instances lookup_l lookup_r lookup_single quote_zero quote_one quote_plus quote_mult quote_neg eq_quote.
+  Existing Instance quote_old_var | 8.
+  Existing Instance quote_new_var | 9.
 End Instances.
 
 End Quoting.

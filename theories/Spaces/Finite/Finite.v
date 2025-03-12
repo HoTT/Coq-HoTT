@@ -28,13 +28,13 @@ Proof.
 Defined.
 
 (** Note that the sigma over cardinalities is not truncated.  Nevertheless, because canonical finite sets of different cardinalities are not isomorphic, being finite is still an hprop.  (Thus, we could have truncated the sigma and gotten an equivalent definition, but it would be less convenient to reason about.) *)
-Global Instance ishprop_finite X
+Instance ishprop_finite X
 : IsHProp (Finite X).
 Proof.
   refine (istrunc_equiv_istrunc _ (issig_finite X)).
   apply ishprop_sigma_disjoint; intros n m Hn Hm.
   strip_truncations.
-  refine (nat_eq_fin_equiv n m (Hm oE Hn^-1)).
+  exact (nat_eq_fin_equiv n m (Hm oE Hn^-1)).
 Defined.
 
 (** ** Preservation of finiteness by equivalences *)
@@ -77,22 +77,22 @@ Definition fcard_equiv' {X Y} (e : X <~> Y)
 (** ** Simple examples of finite sets *)
 
 (** Canonical finite sets are finite *)
-Global Instance finite_fin n : Finite (Fin n)
+Instance finite_fin n : Finite (Fin n)
   := Build_Finite _ n (tr (equiv_idmap _)).
 
 (** This includes the empty set. *)
-Global Instance finite_empty : Finite Empty
+Instance finite_empty : Finite Empty
   := finite_fin 0.
 
 (** The unit type is finite, since it's equivalent to [Fin 1]. *)
-Global Instance finite_unit : Finite Unit.
+Instance finite_unit : Finite Unit.
 Proof.
   refine (finite_equiv' (Fin 1) _ _); simpl.
   apply sum_empty_l.
 Defined.
 
 (** Thus, any contractible type is finite. *)
-Global Instance finite_contr X `{Contr X} : Finite X
+Instance finite_contr X `{Contr X} : Finite X
   := finite_equiv Unit equiv_contr_unit^-1 _.
 
 (** Any decidable hprop is finite, since it must be equivalent to [Empty] or [Unit]. *)
@@ -109,7 +109,7 @@ Defined.
 Hint Immediate finite_decidable_hprop : typeclass_instances.
 
 (** It follows that the propositional truncation of any finite set is finite. *)
-Global Instance finite_merely X {fX : Finite X}
+Instance finite_merely X {fX : Finite X}
 : Finite (merely X).
 Proof.
   (** As in decidable_finite_hprop, we case on cardinality first to avoid needing funext. *)
@@ -121,7 +121,7 @@ Proof.
 Defined.
 
 (** Finite sets are closed under path-spaces. *)
-Global Instance finite_paths {X} `{Finite X} (x y : X)
+Instance finite_paths {X} `{Finite X} (x y : X)
 : Finite (x = y).
 Proof.
   (** If we assume [Funext], then typeclass inference produces this automatically, since [X] has decidable equality and (hence) is a set, so [x=y] is a decidable hprop.  But we can also deduce it without funext, since [Finite] is an hprop even without funext. *)
@@ -133,7 +133,7 @@ Defined.
 
 (** Finite sets are also closed under successors. *)
 
-Global Instance finite_succ X `{Finite X} : Finite (X + Unit).
+Instance finite_succ X `{Finite X} : Finite (X + Unit).
 Proof.
   refine (Build_Finite _ (fcard X).+1 _).
   pose proof (merely_equiv_fin X).
@@ -148,18 +148,18 @@ Definition fcard_succ X `{Finite X}
 (** ** Decidability *)		
 
 (** Like canonical finite sets, finite sets have decidable equality. *)
-Global Instance decidablepaths_finite `{Funext} X `{Finite X}
+Instance decidablepaths_finite `{Funext} X `{Finite X}
 : DecidablePaths X.
 Proof.
   assert (e := merely_equiv_fin X).
   strip_truncations.
-  refine (decidablepaths_equiv _ e^-1 _).
+  exact (decidablepaths_equiv _ e^-1 _).
 Defined.
 
 (** However, contrary to what you might expect, we cannot assert that "every finite set is decidable"!  That would be claiming a *uniform* way to select an element from every nonempty finite set, which contradicts univalence. *)
 
 (** One thing we can prove is that any finite hprop is decidable. *)
-Global Instance decidable_finite_hprop X `{IsHProp X} {fX : Finite X}
+Instance decidable_finite_hprop X `{IsHProp X} {fX : Finite X}
 : Decidable X.
 Proof.
   (** To avoid having to use [Funext], we case on the cardinality of [X] before stripping the truncation from its equivalence to [Fin n]; if we did things in the other order then we'd have to know that [Decidable X] is an hprop, which requires funext. *)
@@ -171,7 +171,7 @@ Proof.
 Defined.
 
 (** It follows that if [X] is finite, then its propositional truncation is decidable. *)
-Global Instance decidable_merely_finite X {fX : Finite X}
+Instance decidable_merely_finite X {fX : Finite X}
 : Decidable (merely X).
 Proof.
   exact _.
@@ -202,7 +202,7 @@ Proof.
   generalize (fcard X); intros n.
   induction n as [|n IH].
   - exact f0.
-  - refine (transport (P (Fin n.+1)) (path_ishprop _ _) (fs _ _ IH)).
+  - exact (transport (P (Fin n.+1)) (path_ishprop _ _) (fs _ _ IH)).
 Defined.
 
 (** ** The finite axiom of choice, and projectivity *)
@@ -229,7 +229,7 @@ Defined.
 Corollary isprojective_fin_n (n : nat) : IsProjective (Fin n).
 Proof.
   apply (iff_isoprojective_hasochoice _ (Fin n)).
-  rapply finite_choice.
+  exact finite_choice.
 Defined.
 
 (** ** Constructions on finite sets *)
@@ -238,7 +238,7 @@ Defined.
 
 (** *** Binary sums *)
 
-Global Instance finite_sum X Y `{Finite X} `{Finite Y}
+Instance finite_sum X Y `{Finite X} `{Finite Y}
 : Finite (X + Y).
 Proof.
   assert (e := merely_equiv_fin Y).
@@ -246,8 +246,8 @@ Proof.
   refine (finite_equiv _ (functor_sum idmap e^-1) _).
   generalize (fcard Y); intros n.
   induction n as [|n IH].
-  - refine (finite_equiv _ (sum_empty_r X)^-1 _).
-  - refine (finite_equiv _ (equiv_sum_assoc X _ Unit) _).
+  - exact (finite_equiv _ (sum_empty_r X)^-1 _).
+  - exact (finite_equiv _ (equiv_sum_assoc X _ Unit) _).
 Defined.
 
 (** Note that the cardinality function [fcard] actually computes.  The same will be true of all the other proofs in this section, though we don't always verify it. *)
@@ -265,14 +265,14 @@ Proof.
   refine (_ @ ap (fun y => (y + fcard X)) (fcard_equiv e^-1)).
   generalize (fcard Y); intros n.
   induction n as [|n IH].
-  - refine (fcard_equiv (sum_empty_r X)^-1).
+  - exact (fcard_equiv (sum_empty_r X)^-1).
   - refine (fcard_equiv (equiv_sum_assoc _ _ _)^-1 @ _).
     exact (ap S IH).
 Defined.
 
 (** *** Binary products *)
 
-Global Instance finite_prod X Y `{Finite X} `{Finite Y}
+Instance finite_prod X Y `{Finite X} `{Finite Y}
 : Finite (X * Y).
 Proof.
   assert (e := merely_equiv_fin Y).
@@ -300,7 +300,7 @@ Proof.
     simpl.
     refine (_ @ nat_add_comm _ _).
     refine (ap011 nat_add _ _).
-    + apply IH.
+    + exact IH.
     + apply fcard_equiv', prod_unit_l.
   Defined.
 
@@ -308,7 +308,7 @@ Proof.
 
 (** Finite sets are closed under function types, and even dependent function types. *)
 
-Global Instance finite_forall `{Funext} {X} (Y : X -> Type)
+Instance finite_forall `{Funext} {X} (Y : X -> Type)
        `{Finite X} `{forall x, Finite (Y x)}
 : Finite (forall x:X, Y x).
 Proof.
@@ -343,7 +343,7 @@ Proof.
   - reflexivity.
   - refine (fcard_equiv (equiv_sum_ind (fun (_:Fin n.+1) => Y))^-1 @ _).
     refine (fcard_prod _ _ @ _).
-    lhs nrapply nat_mul_comm.
+    lhs napply nat_mul_comm.
     apply (ap011 nat_mul).
     + refine (fcard_equiv (@Unit_ind (fun (_:Unit) => Y))^-1).
     + assumption.
@@ -356,7 +356,7 @@ Abort.
 
 (** *** Automorphism types (i.e. symmetric groups) *)
 
-Global Instance finite_aut `{Funext} X `{Finite X}
+Instance finite_aut `{Funext} X `{Finite X}
 : Finite (X <~> X).
 Proof.
   assert (e := merely_equiv_fin X).
@@ -395,7 +395,7 @@ Abort.
 
 (** Perhaps slightly less obviously, finite sets are also closed under sigmas. *)
 
-Global Instance finite_sigma {X} (Y : X -> Type)
+Instance finite_sigma {X} (Y : X -> Type)
        `{Finite X} `{forall x, Finite (Y x)}
 : Finite { x:X & Y x }.
 Proof.
@@ -409,11 +409,11 @@ Proof.
   assert (forall x, Finite (Y' x)) by exact _; clearbody Y'; clear e.
   generalize dependent (fcard X); intros n Y' ?.
   induction n as [|n IH].
-  - refine (finite_equiv Empty pr1^-1 _).
+  - exact (finite_equiv Empty pr1^-1 _).
   - refine (finite_equiv _ (equiv_sigma_sum (Fin n) Unit Y')^-1 _).
     apply finite_sum.
     + apply IH; exact _.
-    + refine (finite_equiv _ (equiv_contr_sigma _)^-1 _).
+    + exact (finite_equiv _ (equiv_contr_sigma _)^-1 _).
 Defined.
 
 (** Amusingly, this automatically gives us a way to add up a family of natural numbers indexed by any finite set.  (We could of course also define such an operation directly, probably using [merely_ind_hset].) *)
@@ -430,7 +430,7 @@ Proof.
   apply finite_choice in g; [| exact _].
   strip_truncations.
   unfold finadd.
-  refine (fcard_equiv' (equiv_functor_sigma_id g)).
+  exact (fcard_equiv' (equiv_functor_sigma_id g)).
 Defined.
 
 (** The sum of a finite constant family is the product by its cardinality. *)
@@ -455,7 +455,7 @@ Definition fcard_domain {X Y} (f : X -> Y) `{Finite X} `{Finite Y}
 : fcard X = finadd (fun y => fcard (hfiber f y)).
 Proof.
   refine (_ @ fcard_sigma (hfiber f)).
-  refine (fcard_equiv' (equiv_fibration_replacement f)).
+  exact (fcard_equiv' (equiv_fibration_replacement f)).
 Defined.
 
 (** In particular, the image of a map between finite sets is finite. *)
@@ -482,21 +482,21 @@ Proof.
   apply finite_choice in g; [| exact _].
   strip_truncations.
   unfold finmult.
-  refine (fcard_equiv' (equiv_functor_forall' (equiv_idmap X) g)).
+  exact (fcard_equiv' (equiv_functor_forall' (equiv_idmap X) g)).
 Defined.
 
 (** The product of a finite constant family is the exponential by its cardinality. *)
 Definition finmult_const `{Funext} X `{Finite X} n
 : finmult (fun x:X => n) = nat_pow n (fcard X).
 Proof.
-  refine (fcard_arrow X (Fin n)).
+  exact (fcard_arrow X (Fin n)).
 Defined.
 
 
 (** ** Finite subsets *)
 
 (** Closure under sigmas implies that a detachable subset of a finite set is finite. *)
-Global Instance finite_detachable_subset {X} `{Finite X} (P : X -> Type)
+Instance finite_detachable_subset {X} `{Finite X} (P : X -> Type)
        `{forall x, IsHProp (P x)} `{forall x, Decidable (P x)}
 : Finite { x:X & P x }.
 Proof.
@@ -524,7 +524,7 @@ Proof.
   nrefine (decidable_equiv' _ (hfiber_fibration x P)^-1%equiv _).
   nrefine (detachable_image_finite pr1 x).
   1,2: exact _.
-  apply (mapinO_pr1 (Tr (-1))).  (** Why doesn't Coq find this? *)
+  exact (mapinO_pr1 (Tr (-1))).  (** Why doesn't Coq find this? *)
 Defined.
 
 (** ** Quotients *)
@@ -537,7 +537,7 @@ Section DecidableQuotients.
           `{Reflexive _ R} `{Transitive _ R} `{Symmetric _ R}
           {Rd : forall x y, Decidable (R x y)}.
 
-  Global Instance finite_quotient : Finite (Quotient R).
+  #[export] Instance finite_quotient : Finite (Quotient R).
   Proof.
     assert (e := merely_equiv_fin X).
     strip_truncations.
@@ -545,7 +545,7 @@ Section DecidableQuotients.
     assert (is_mere_relation _ R') by exact _.
     assert (Reflexive R') by (intros ?; unfold R'; apply reflexivity).
     assert (Symmetric R') by (intros ? ?; unfold R'; apply symmetry).
-    assert (Transitive R') by (intros ? ? ?; unfold R'; apply transitivity).
+    assert (Transitive R') by (intros ? ? ?; unfold R'; exact transitivity).
     assert (R'd : forall x y, Decidable (R' x y))
       by (intros ? ?; unfold R'; apply Rd).
     srefine (finite_equiv' _ (equiv_quotient_functor R' R e^-1 _) _).
@@ -554,12 +554,12 @@ Section DecidableQuotients.
     generalize dependent (fcard X);
       intros n; induction n as [|n IH]; intros R' ? ? ? ? ?.
     - refine (finite_equiv Empty _^-1 _).
-      refine (Quotient_rec R' _ Empty_rec (fun x _ _ => match x with end)).
+      exact (Quotient_rec R' _ Empty_rec (fun x _ _ => match x with end)).
     - pose (R'' x y := R' (inl x) (inl y)).
       assert (is_mere_relation _ R'') by exact _.
       assert (Reflexive R'') by (intros ?; unfold R''; apply reflexivity).
       assert (Symmetric R'') by (intros ? ?; unfold R''; apply symmetry).
-      assert (Transitive R'') by (intros ? ? ?; unfold R''; apply transitivity).
+      assert (Transitive R'') by (intros ? ? ?; unfold R''; exact transitivity).
       assert (forall x y, Decidable (R'' x y)) by (intros ? ?; unfold R''; apply R'd).
       assert (inlresp := (fun x y => idmap)
                          : forall x y, R'' x y -> R' (inl x) (inl y)).
@@ -660,7 +660,7 @@ Proof.
       rewrite p in q; apply symmetric_neq in q.
       assert (r : h (inl a) = inl b).
       { unfold h; apply moveR_equiv_V; symmetry.
-        refine (fin_transpose_last_with_rest m (g (inr tt)) b q @ p^). }
+        exact (fin_transpose_last_with_rest m (g (inr tt)) b q @ p^). }
       rewrite r; exact tt.
     - assert (q : h (inl a) = g (inr tt)).
       { unfold h; apply moveR_equiv_V; symmetry.

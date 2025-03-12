@@ -13,21 +13,21 @@ Section semiring_order.
   Context `{SemiRingOrder R} `{!IsSemiCRing R}.
 (*   Add Ring R : (stdlib_semiring_theory R). *)
 
-  Global Instance plus_le_embed_l : forall (z : R), OrderEmbedding (+z).
+  #[export] Instance plus_le_embed_l : forall (z : R), OrderEmbedding (+z).
   Proof.
   intro. split.
-  - apply order_preserving_flip.
-  - apply order_reflecting_flip.
+  - exact order_preserving_flip.
+  - exact order_reflecting_flip.
   Qed.
 
-  Global Instance plus_ordered_cancel_l : forall z, LeftCancellation (+) z.
+  #[export] Instance plus_ordered_cancel_l : forall z, LeftCancellation (+) z.
   Proof.
   intros z x y E.
   apply (antisymmetry (≤)); apply (order_reflecting (z+)); apply eq_le;trivial.
   apply symmetry;trivial.
   Qed.
 
-  Global Instance plus_ordered_cancel_r : forall z, RightCancellation (+) z.
+  #[export] Instance plus_ordered_cancel_r : forall z, RightCancellation (+) z.
   Proof.
   intros. apply (right_cancel_from_left (+)).
   Qed.
@@ -97,11 +97,11 @@ Section semiring_order.
   trivial.
   Qed.
 
-  Global Instance nonneg_mult_le_l : forall (z : R), PropHolds (0 ≤ z) ->
+  #[export] Instance nonneg_mult_le_l : forall (z : R), PropHolds (0 ≤ z) ->
     OrderPreserving (z *.).
   Proof.
   intros z E.
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   intros x y F.
   destruct (decompose_le F) as [a [Ea1 Ea2]].
   rewrite Ea2, plus_mult_distr_l.
@@ -109,10 +109,10 @@ Section semiring_order.
   apply nonneg_mult_compat;trivial.
   Qed.
 
-  Global Instance nonneg_mult_le_r : forall (z : R), PropHolds (0 ≤ z) ->
+  #[export] Instance nonneg_mult_le_r : forall (z : R), PropHolds (0 ≤ z) ->
     OrderPreserving (.* z).
   Proof.
-  intros. apply order_preserving_flip.
+  intros. exact order_preserving_flip.
   Qed.
 
   Lemma mult_le_compat x₁ y₁ x₂ y₂ :
@@ -189,11 +189,11 @@ Section strict_semiring_order.
   Context `{IsSemiCRing R} `{!StrictSemiRingOrder Rlt}.
 (*   Add Ring Rs : (stdlib_semiring_theory R). *)
 
-  Global Instance plus_lt_embed : forall (z : R), StrictOrderEmbedding (+z).
+  #[export] Instance plus_lt_embed : forall (z : R), StrictOrderEmbedding (+z).
   Proof.
   intro. split.
-  - apply strictly_order_preserving_flip.
-  - apply strictly_order_reflecting_flip.
+  - exact strictly_order_preserving_flip.
+  - exact strictly_order_reflecting_flip.
   Qed.
 
   Lemma pos_plus_lt_compat_r x z : 0 < z <-> x < x + z.
@@ -257,7 +257,7 @@ Section strict_semiring_order.
   rewrite <-Ez, rings.plus_0_r. trivial.
   Qed.
 
-  Global Instance pos_mult_lt_l : forall (z : R), PropHolds (0 < z) ->
+  #[export] Instance pos_mult_lt_l : forall (z : R), PropHolds (0 < z) ->
     StrictlyOrderPreserving (z *.).
   Proof.
   intros z E x y F.
@@ -267,10 +267,10 @@ Section strict_semiring_order.
   apply pos_mult_compat;trivial.
   Qed.
 
-  Global Instance pos_mult_lt_r : forall (z : R), PropHolds (0 < z) ->
+  #[export] Instance pos_mult_lt_r : forall (z : R), PropHolds (0 < z) ->
     StrictlyOrderPreserving (.* z).
   Proof.
-  intros. apply strictly_order_preserving_flip.
+  intros. exact strictly_order_preserving_flip.
   Qed.
 
   Lemma mult_lt_compat x₁ y₁ x₂ y₂ :
@@ -355,21 +355,21 @@ Section pseudo_semiring_order.
 
   Local Existing Instance pseudo_order_apart.
 
-  Global Instance pseudosrorder_strictsrorder : StrictSemiRingOrder (_ : Lt R).
+  #[export] Instance pseudosrorder_strictsrorder : StrictSemiRingOrder (_ : Lt R).
   Proof.
-  split; try apply _.
+  split; try exact _.
   - intros. apply pseudo_srorder_partial_minus, lt_flip. trivial.
-  - apply pseudo_srorder_pos_mult_compat.
+  - exact pseudo_srorder_pos_mult_compat.
   Qed.
 
-  Global Instance plus_strong_ext : StrongBinaryExtensionality (+).
+  #[export] Instance plus_strong_ext : StrongBinaryExtensionality (+).
   Proof.
   assert (forall z, StrongExtensionality (z +)).
-  - intros. apply pseudo_order_embedding_ext.
-  - apply apartness.strong_binary_setoid_morphism_commutative.
+  - intros. exact pseudo_order_embedding_ext.
+  - exact apartness.strong_binary_setoid_morphism_commutative.
   Qed.
 
-  Global Instance plus_strong_cancel_l
+  #[export] Instance plus_strong_cancel_l
     : forall z, StrongLeftCancellation (+) z.
   Proof.
   intros z x y E.
@@ -377,10 +377,10 @@ Section pseudo_semiring_order.
   destruct E; [left | right]; apply (strictly_order_preserving (z +));trivial.
   Qed.
 
-  Global Instance plus_strong_cancel_r
+  #[export] Instance plus_strong_cancel_r
     : forall z, StrongRightCancellation (+) z.
   Proof.
-  intros. apply (strong_right_cancel_from_left (+)).
+  intros. exact (strong_right_cancel_from_left (+)).
   Qed.
 
   Lemma neg_mult_decompose x y : x * y < 0 -> (x < 0 /\ 0 < y) |_| (0 < x /\ y < 0).
@@ -419,7 +419,7 @@ Section pseudo_semiring_order.
       apply neg_pos_mult;trivial.
   Qed.
 
-  Global Instance pos_mult_reflect_l
+  #[export] Instance pos_mult_reflect_l
     : forall (z : R), PropHolds (0 < z) -> StrictlyOrderReflecting (z *.).
   Proof.
   intros z Ez x y E1.
@@ -430,11 +430,11 @@ Section pseudo_semiring_order.
     apply pseudo_order_lt_apart_flip;trivial.
   Qed.
 
-  Global Instance pos_mult_reflect_r
+  #[export] Instance pos_mult_reflect_r
     : forall (z : R), PropHolds (0 < z) -> StrictlyOrderReflecting (.* z).
   Proof.
   intros.
-  apply strictly_order_reflecting_flip.
+  exact strictly_order_reflecting_flip.
   Qed.
 
   Global  Instance apartzero_mult_strong_cancel_l
@@ -450,23 +450,23 @@ Section pseudo_semiring_order.
   - right. apply (strictly_order_preserving_pos (.*.) z);trivial.
   Qed.
 
-  Global Instance apartzero_mult_strong_cancel_r
+  #[export] Instance apartzero_mult_strong_cancel_r
     : forall z, PropHolds (z ≶ 0) -> StrongRightCancellation (.*.) z.
   Proof.
   intros.
-  apply (strong_right_cancel_from_left (.*.)).
+  exact (strong_right_cancel_from_left (.*.)).
   Qed.
 
-  Global Instance apartzero_mult_cancel_l
+  #[export] Instance apartzero_mult_cancel_l
     : forall z, PropHolds (z ≶ 0) -> LeftCancellation (.*.) z.
   Proof.
-  intros. apply _.
+  intros. exact _.
   Qed.
 
-  Global Instance apartzero_mult_cancel_r
+  #[export] Instance apartzero_mult_cancel_r
     : forall z, PropHolds (z ≶ 0) -> RightCancellation (.*.) z.
   Proof.
-  intros. apply _.
+  intros. exact _.
   Qed.
 
   Lemma square_pos x : x ≶ 0 -> 0 < x * x.
@@ -508,17 +508,17 @@ Section pseudo_semiring_order.
 
   Instance lt_0_2 : PropHolds (0 < 2).
   Proof.
-  apply _.
+  exact _.
   Qed.
 
   Instance lt_0_3 : PropHolds (0 < 3).
   Proof.
-  apply _.
+  exact _.
   Qed.
 
   Instance lt_0_4 : PropHolds (0 < 4).
   Proof.
-  apply _.
+  exact _.
   Qed.
 
   Lemma lt_1_2 : 1 < 2.
@@ -574,21 +574,21 @@ Section full_pseudo_semiring_order.
 
 (*   Add Ring Rf : (stdlib_semiring_theory R). *)
 
-  Global Instance fullpseudosrorder_fullpseudoorder
+  #[export] Instance fullpseudosrorder_fullpseudoorder
     : FullPseudoOrder (_ : Le R) (_ : Lt R).
   Proof.
   split.
-  - apply _.
-  - apply _.
-  - apply full_pseudo_srorder_le_iff_not_lt_flip.
+  - exact _.
+  - exact _.
+  - exact full_pseudo_srorder_le_iff_not_lt_flip.
   Qed.
 
-  Global Instance fullpseudosrorder_srorder : SemiRingOrder (_ : Le R).
+  #[export] Instance fullpseudosrorder_srorder : SemiRingOrder (_ : Le R).
   Proof.
-  split; try apply _.
+  split; try exact _.
   - intros x y E. apply le_iff_not_lt_flip in E.
     apply pseudo_srorder_partial_minus;trivial.
-  - intros z. repeat (split; try apply _).
+  - intros z. repeat (split; try exact _).
     + intros x y E1. apply le_iff_not_lt_flip in E1;apply le_iff_not_lt_flip.
       intros E2. apply E1.
       apply (strictly_order_reflecting (z+)). trivial.
@@ -602,14 +602,14 @@ Section full_pseudo_semiring_order.
     destruct (neg_mult_decompose x y E) as [[? ?]|[? ?]];auto.
   Qed.
 
-  Global Instance : forall (z : R), PropHolds (0 < z) -> OrderReflecting (z *.).
+  #[export] Instance : forall (z : R), PropHolds (0 < z) -> OrderReflecting (z *.).
   Proof.
-  intros z E. apply full_pseudo_order_reflecting.
+  intros z E. exact full_pseudo_order_reflecting.
   Qed.
 
-  Global Instance: forall (z : R), PropHolds (0 < z) -> OrderReflecting (.* z).
+  #[export] Instance: forall (z : R), PropHolds (0 < z) -> OrderReflecting (.* z).
   Proof.
-  intros. apply order_reflecting_flip.
+  intros. exact order_reflecting_flip.
   Qed.
 
   Lemma plus_lt_le_compat x₁ y₁ x₂ y₂ : x₁ < y₁ -> x₂ ≤ y₂ -> x₁ + x₂ < y₁ + y₂.
@@ -724,7 +724,7 @@ Section full_pseudo_semiring_order.
   intros.
   apply ge_1_mult_le_compat_r; trivial.
   transitivity 1.
-  - apply le_0_1.
+  - exact le_0_1.
   - trivial.
   Qed.
 
@@ -734,7 +734,7 @@ Section full_pseudo_semiring_order.
   apply lt_le_trans with x; trivial.
   apply ge_1_mult_le_compat_r;[trivial| |apply reflexivity].
   transitivity 1.
-  - apply le_0_1.
+  - exact le_0_1.
   - apply lt_le;trivial.
   Qed.
 
@@ -772,8 +772,8 @@ Section full_pseudo_semiring_order.
   induction n;simpl.
   - reflexivity.
   - apply nonneg_plus_compat.
-    + apply _.
-    + apply IHn.
+    + exact _.
+    + exact IHn.
   Qed.
 
   Lemma repeat_nat_pos : forall n, 0 < Core.nat_iter (S n) (plus 1) 0.
@@ -786,7 +786,7 @@ Section full_pseudo_semiring_order.
 
   Local Existing Instance pseudo_order_apart.
 
-  Global Instance ordered_characteristic_0 : FieldCharacteristic R 0.
+  #[export] Instance ordered_characteristic_0 : FieldCharacteristic R 0.
   Proof.
   hnf. intros [|n] _;split.
   - intros E'. destruct (E' O). reflexivity.
@@ -822,14 +822,14 @@ Section dec_semiring_order.
 
   Instance dec_pseudo_srorder: PseudoSemiRingOrder (<).
   Proof.
-  split; try apply _.
+  split; try exact _.
   - intros x y E. apply srorder_partial_minus, not_lt_le_flip;trivial.
-  - intros z. repeat (split; try apply _).
+  - intros z. repeat (split; try exact _).
     intros x y E. apply lt_correct in E;apply lt_correct.
     destruct E as [E2a E2b]. split.
     + apply (order_preserving (z+));trivial.
     + intros E3. apply E2b. apply (left_cancellation (+) z);trivial.
-  - apply (apartness.dec_strong_binary_morphism (.*.)).
+  - exact (apartness.dec_strong_binary_morphism (.*.)).
   - intros x y E1 E2.
     apply lt_correct in E1;apply lt_correct in E2;apply lt_correct.
     destruct E1 as [E1a E1b], E2 as [E2a E2b]. split.
@@ -840,8 +840,8 @@ Section dec_semiring_order.
 
   Instance dec_full_pseudo_srorder: FullPseudoSemiRingOrder (≤) (<).
   Proof.
-  split; try apply _.
-  apply le_iff_not_lt_flip.
+  split; try exact _.
+  exact le_iff_not_lt_flip.
   Qed.
 End dec_semiring_order.
 
@@ -855,7 +855,7 @@ Section another_semiring.
       SemiRingOrder R2le.
   Proof.
   intros P. pose proof (projected_partial_order f P).
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   - assumption.
   - red;intros. apply P.
     rewrite 2!(preserves_plus (f:=f)). apply (order_preserving _), P. trivial.
@@ -872,7 +872,7 @@ Section another_semiring.
   Lemma preserving_preserves_nonneg : (forall x, 0 ≤ x -> 0 ≤ f x) -> OrderPreserving f.
   Proof.
   intros E.
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   intros x y F.
   destruct (decompose_le F) as [z [Ez1 Ez2]].
   apply compose_le with (f z).
@@ -911,7 +911,7 @@ Section another_semiring_strict.
     : (forall x, 0 < x -> 0 < f x) -> StrictlyOrderPreserving f.
   Proof.
   intros E.
-  repeat (split; try apply _).
+  repeat (split; try exact _).
   intros x y F.
   destruct (decompose_lt F) as [z [Ez1 Ez2]].
   apply compose_lt with (f z).

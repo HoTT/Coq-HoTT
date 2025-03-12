@@ -44,7 +44,7 @@ Proof.
   destruct b; simpl; auto using idpath with nocore.
 Defined.
 
-Global Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
+Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
 : IsTrunc n (if b then A else B) | 100
   := if b as b return (IsTrunc n (if b then A else B)) then _ else _.
 
@@ -59,7 +59,7 @@ Section BoolDecidable.
   Definition true_ne_false : ~ (true = false)
     := fun H => false_ne_true (symmetry _ _ H).
 
-  Global Instance decidable_paths_bool : DecidablePaths Bool
+  #[export] Instance decidable_paths_bool : DecidablePaths Bool
     := fun x y => match x as x, y as y return ((x = y) + ~(x = y)) with
                     | true, true => inl idpath
                     | false, false => inl idpath
@@ -129,7 +129,7 @@ Definition equiv_bool_rec_uncurried `{Funext} (P : Type) : P * P <~> (Bool -> P)
 (** ** The type [Bool <~> Bool] is equivalent to [Bool]. *)
 
 (** The nonidentity equivalence is negation (the flip). *)
-Global Instance isequiv_negb : IsEquiv negb.
+Instance isequiv_negb : IsEquiv negb.
 Proof.
   refine (@Build_IsEquiv
             _ _

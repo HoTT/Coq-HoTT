@@ -154,7 +154,7 @@ Definition transport_path_prod'
 
 (** This lets us identify the path space of a product type, up to equivalence. *)
 
-Global Instance isequiv_path_prod {A B : Type} {z z' : A * B}
+Instance isequiv_path_prod {A B : Type} {z z' : A * B}
 : IsEquiv (path_prod_uncurried z z') | 0.
 Proof.
   refine (Build_IsEquiv _ _ _
@@ -234,22 +234,19 @@ Defined.
 
 (** ** Equivalences *)
 
-Global Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
+Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
 : IsEquiv (functor_prod f g) | 1000.
 Proof.
-  refine (Build_IsEquiv
-            _ _ (functor_prod f g) (functor_prod f^-1 g^-1)
-            (fun z => path_prod' (eisretr f (fst z)) (eisretr g (snd z))
-                      @ eta_prod z)
-            (fun w => path_prod' (eissect f (fst w)) (eissect g (snd w))
-                      @ eta_prod w)
-            _).
-  intros [a b]; simpl.
-  unfold path_prod'.
-  rewrite !concat_p1.
-  rewrite ap_functor_prod.
-  rewrite !eisadj.
-  reflexivity.
+  snapply Build_IsEquiv.
+  - exact (functor_prod f^-1 g^-1).
+  - intro z.
+    exact (path_prod' (eisretr f _) (eisretr g _)).
+  - intro w.
+    exact (path_prod' (eissect f _) (eissect g _)).
+  - intros [a b]; simpl.
+    lhs napply (ap (fun p => path_prod' p _) (eisadj f _)).
+    rhs napply ap_functor_prod.
+    exact (ap _ (eisadj g _)).
 Defined.
 
 Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
@@ -330,7 +327,7 @@ Defined.
 (** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions.  Moreover, because the product type can expressed both positively and negatively, it has both a left universal property and a right one. *)
 
 (* First the positive universal property. *)
-Global Instance isequiv_prod_ind `(P : A * B -> Type)
+Instance isequiv_prod_ind `(P : A * B -> Type)
 : IsEquiv (prod_ind P) | 0
   := Build_IsEquiv
        _ _
@@ -358,7 +355,7 @@ Definition prod_coind `(f : forall x:X, A x) `(g : forall x:X, B x)
   : forall x, A x * B x
   := prod_coind_uncurried (f, g).
 
-Global Instance isequiv_prod_coind `(A : X -> Type) (B : X -> Type)
+Instance isequiv_prod_coind `(A : X -> Type) (B : X -> Type)
 : IsEquiv (@prod_coind_uncurried X A B) | 0
   := Build_IsEquiv
        _ _
@@ -374,7 +371,7 @@ Definition equiv_prod_coind `(A : X -> Type) (B : X -> Type)
 
 (** ** Products preserve truncation *)
 
-Global Instance istrunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
+Instance istrunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
 Proof.
   generalize dependent B; generalize dependent A.
   simple_induction n n IH; simpl; (intros A ? B ?).
@@ -385,12 +382,12 @@ Proof.
   exact (istrunc_equiv_istrunc _ (equiv_path_prod x y)).
 Defined.
 
-Global Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
+Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
   := istrunc_prod.
 
 (** ** Decidability *)
 
-Global Instance decidable_prod {A B : Type}
+Instance decidable_prod {A B : Type}
        `{Decidable A} `{Decidable B}
 : Decidable@{k} (A * B).
 Proof.
@@ -429,7 +426,7 @@ Proof.
   - intros [[x1 x2] p]. destruct p;cbn. reflexivity.
 Defined.
 
-Global Instance istruncmap_functor_prod (n : trunc_index) {A B C D : Type}
+Instance istruncmap_functor_prod (n : trunc_index) {A B C D : Type}
   (f : A -> B) (g : C -> D) `{!IsTruncMap n f} `{!IsTruncMap n g}
   : IsTruncMap n (Prod.functor_prod f g)
   := fun y => istrunc_equiv_istrunc _ (hfiber_functor_prod _ _ _)^-1.

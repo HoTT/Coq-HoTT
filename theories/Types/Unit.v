@@ -28,7 +28,7 @@ Proof.
   destruct p. destruct z. reflexivity.
 Defined.
 
-Global Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z z') | 0.
+Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z z') | 0.
 Proof.
   refine (Build_IsEquiv _ _ (path_unit_uncurried z z') (fun _ => tt)
     (fun p:z=z' =>
@@ -53,7 +53,7 @@ Definition equiv_path_unit (z z' : Unit) : Unit <~> (z = z')
 (* The positive universal property *)
 Arguments Unit_ind [A] a u : rename.
 
-Global Instance isequiv_unit_ind `{Funext} (A : Unit -> Type)
+Instance isequiv_unit_ind `{Funext} (A : Unit -> Type)
 : IsEquiv (@Unit_ind A) | 0
   := isequiv_adjointify _
   (fun f : forall u:Unit, A u => f tt)
@@ -61,7 +61,7 @@ Global Instance isequiv_unit_ind `{Funext} (A : Unit -> Type)
                                              (fun x => match x with tt => 1 end))
   (fun _ => 1).
 
-Global Instance isequiv_unit_rec `{Funext} (A : Type)
+Instance isequiv_unit_rec `{Funext} (A : Type)
 : IsEquiv (@Unit_ind (fun _ => A)) | 0
   := isequiv_unit_ind (fun _ => A).
 
@@ -75,7 +75,7 @@ Definition equiv_unit_rec `{Funext} (A : Type)
 (* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)
 Notation unit_name x := (fun (_ : Unit) => x).
 
-Global Instance isequiv_unit_name@{i j} `{Funext} (A : Type@{i})
+Instance isequiv_unit_name@{i j} `{Funext} (A : Type@{i})
 : @IsEquiv@{i j} _ (Unit -> _) (fun (a:A) => unit_name a).
 Proof.
   refine (isequiv_adjointify _ (fun f : Unit -> _ => f tt) _ _).
@@ -88,7 +88,7 @@ Defined.
 Definition unit_coind {A : Type} : Unit -> (A -> Unit)
   := fun _ _ => tt.
 
-Global Instance isequiv_unit_coind `{Funext} (A : Type) : IsEquiv (@unit_coind A) | 0.
+Instance isequiv_unit_coind `{Funext} (A : Type) : IsEquiv (@unit_coind A) | 0.
 Proof.
   refine (isequiv_adjointify _ (fun f => tt) _ _).
   - intro f. apply path_forall; intros x; apply path_unit.
@@ -102,7 +102,7 @@ Definition equiv_unit_coind `{Funext} (A : Type)
 (** ** Truncation *)
 
 (* The Unit type is contractible *)
-Global Instance contr_unit : Contr Unit | 0 := Build_Contr _ tt (fun t : Unit => match t with tt => 1 end).
+Instance contr_unit : Contr Unit | 0 := Build_Contr _ tt (fun t : Unit => match t with tt => 1 end).
 
 (** ** Equivalences *)
 

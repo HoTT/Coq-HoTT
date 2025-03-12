@@ -122,7 +122,7 @@ Proof.
   apply equiv_functor_sigma_id; intros K.
   apply equiv_functor_forall_id; intros a; cbn.
   apply equiv_concat_lr.
-  - refine (concat_p1 _ @ ap_idmap (H a)).
+  - exact (concat_p1 _ @ ap_idmap (H a)).
   - symmetry; apply concat_1p.
 Defined.
 
@@ -172,12 +172,12 @@ Definition PreIdempotent (X : Type) := { f : X -> X & IsPreIdempotent f }.
 Definition preidempotent_pr1 {X : Type} : PreIdempotent X -> X -> X := pr1.
 Coercion preidempotent_pr1 : PreIdempotent >-> Funclass.
 
-Global Instance ispreidem_preidem {X : Type} (f : PreIdempotent X)
+Instance ispreidem_preidem {X : Type} (f : PreIdempotent X)
 : IsPreIdempotent f
   := f.2.
 
 (** The identity function has a canonical structure of a pre-idempotent. *)
-Global Instance ispreidem_idmap (X : Type) : @IsPreIdempotent X idmap
+Instance ispreidem_idmap (X : Type) : @IsPreIdempotent X idmap
   := fun _ => 1.
 
 Definition preidem_idmap (X : Type) : PreIdempotent X.
@@ -273,7 +273,7 @@ Proof.
   rewrite !ap_V; apply moveR_Vp.
   rewrite <- ap_compose.
   rewrite isidem2; try exact _.
-  symmetry; refine (concat_Ap (isidem f) (p x)).
+  symmetry; exact (concat_Ap (isidem f) (p x)).
   Close Scope long_path_scope.
 Qed.
 
@@ -281,12 +281,12 @@ Definition QuasiIdempotent (X : Type) := { f : PreIdempotent X & IsQuasiIdempote
 Definition quasiidempotent_pr1 {X : Type} : QuasiIdempotent X -> X -> X := pr1.
 Coercion quasiidempotent_pr1 : QuasiIdempotent >-> Funclass.
 
-Global Instance isqidem_qidem {X : Type} (f : QuasiIdempotent X)
+Instance isqidem_qidem {X : Type} (f : QuasiIdempotent X)
 : IsQuasiIdempotent f
   := f.2.
 
 (** The identity function has a canonical structure of a quasi-idempotent. *)
-Global Instance isqidem_idmap (X : Type) : @IsQuasiIdempotent X idmap _
+Instance isqidem_idmap (X : Type) : @IsQuasiIdempotent X idmap _
   := fun _ => 1.
 
 Definition qidem_idmap (X : Type) : QuasiIdempotent X.
@@ -300,7 +300,7 @@ Defined.
 
 (** First we show that given a retract, the composite [s o r] is quasi-idempotent. *)
 
-Global Instance ispreidem_retract {X : Type} (R : RetractOf X)
+Instance ispreidem_retract {X : Type} (R : RetractOf X)
 : IsPreIdempotent (retract_idem R).
 Proof.
   exact (fun x => ap (retract_sect R) (retract_issect R (retract_retr R x))).
@@ -313,7 +313,7 @@ Definition preidem_retract {X : Type} (R : RetractOf X)
 Arguments ispreidem_retract / .
 Arguments preidem_retract / .
 
-Global Instance isqidem_retract {X : Type} (R : RetractOf X)
+Instance isqidem_retract {X : Type} (R : RetractOf X)
 : IsQuasiIdempotent (retract_idem R).
 Proof.
   destruct R as [A r s H]; intros x; unfold isidem; simpl.
@@ -330,20 +330,20 @@ Definition qidem_retract {X : Type} (R : RetractOf X)
 
 (** In particular, it follows that any split function is quasi-idempotent. *)
 
-Global Instance ispreidem_split {X : Type} (f : X -> X) (S : Splitting f)
+Instance ispreidem_split {X : Type} (f : X -> X) (S : Splitting f)
 : IsPreIdempotent f.
 Proof.
   destruct S as [R p].
-  refine (ispreidem_homotopic _ p); exact _.
+  exact (ispreidem_homotopic _ p).
 Defined.
 
 Arguments ispreidem_split / .
 
-Global Instance isqidem_split {X : Type} (f : X -> X) (S : Splitting f)
+Instance isqidem_split {X : Type} (f : X -> X) (S : Splitting f)
 : @IsQuasiIdempotent X f (ispreidem_split f S).
 Proof.
   destruct S as [R p].
-  refine (isqidem_homotopic _ p); exact _.
+  exact (isqidem_homotopic _ p).
 Defined.
 
 Arguments isqidem_split / .
@@ -571,7 +571,7 @@ Section AlreadySplit.
     simple refine (Build_Equiv _ _ (r o split_idem_sect (s o r))
               (Build_IsEquiv _ _ _ (split_idem_retr (s o r) o s) _ _ _)).
     - intros a; simpl.
-      refine (H _ @ H _).
+      exact (H _ @ H _).
     - intros a; simpl.
       refine (_ @ split_idem_issect (s o r) a).
       apply ap.
@@ -701,7 +701,7 @@ Section RetractOfRetracts.
       unfold hfiber.
       refine (equiv_functor_sigma' (equiv_sigma_assoc _ _)^-1 (fun a => _)); simpl.
       destruct a as [[g I] J]; unfold quasiidempotent_pr1; simpl.
-      apply equiv_idmap.
+      exact equiv_idmap.
     - simpl.  unfold hfiber, Splitting.
       refine (equiv_functor_sigma_id _);
         intros R; simpl.
@@ -727,7 +727,7 @@ Section RetractOfRetracts.
                       retract_retractof_qidem pr1 preidem_retract
                       _ f))
               (Splitting_PreIdempotent f) _).
-    - symmetry; refine (hfiber_fibration f _).
+    - symmetry; exact (hfiber_fibration f _).
     - intros [[g I] J]; simpl.
       refine (path_sigma' _ 1 _); simpl.
       apply path_forall; intros x; apply split_idem_preidem.
@@ -743,7 +743,7 @@ Section RetractOfRetracts.
       apply equiv_functor_forall_id; intros x; simpl.
       unfold isidem.
       apply equiv_concat_l.
-      refine (concat_p1 _ @ concat_1p _).
+      exact (concat_p1 _ @ concat_1p _).
   Defined.
 
 End RetractOfRetracts.
@@ -768,17 +768,17 @@ Section CoherentIdempotents.
   : IsIdempotent f
     := Build_IsIdempotent f (split_idem_split f).
 
-  Global Instance ispreidem_isidem {X : Type} (f : X -> X)
+  #[export] Instance ispreidem_isidem {X : Type} (f : X -> X)
          `{IsIdempotent _ f} : IsPreIdempotent f.
   Proof.
     refine (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).1.
     assumption.
   Defined.
 
-  Global Instance isqidem_isidem {X : Type} (f : X -> X)
+  #[export] Instance isqidem_isidem {X : Type} (f : X -> X)
          `{IsIdempotent _ f} : @IsQuasiIdempotent X f (ispreidem_isidem f).
   Proof.
-    refine (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).2.
+    exact (split_idem_sect (retract_idem (splitting_retractof_isqidem f)) _).2.
   Defined.
 
   Definition Idempotent (X : Type) := { f : X -> X & IsIdempotent f }.
@@ -786,7 +786,7 @@ Section CoherentIdempotents.
   Definition idempotent_pr1 {X : Type} : Idempotent X -> (X -> X) := pr1.
   Coercion idempotent_pr1 : Idempotent >-> Funclass.
 
-  Global Instance isidem_idem (X : Type) (f : Idempotent X) : IsIdempotent f
+  #[export] Instance isidem_idem (X : Type) (f : Idempotent X) : IsIdempotent f
     := f.2.
 
   (** The above definitions depend on [Univalence].  Technically this is the case by their construction, since they are a splitting of a map that we only know to be idempotent in the presence of univalence.  This map could be defined, and hence "split", without univalence; but also only with univalence do we know that they have the right homotopy type.  Thus univalence is used in two places: concluding (meta-theoretically) from HTT 4.4.5.14 that [RetractOf X] has the right homotopy type, and showing (in the next lemma) that it is equivalent to [Idempotent X].  In the absence of univalence, we don't currently have *any* provably-correct definition of the type of coherent idempotents; it ought to involve an infinite tower of coherences as defined in HTT section 4.4.5.   However, there may be some Yoneda-like meta-theoretic argument which would imply that the above-defined types do have the correct homotopy type without univalence (though almost certainly not without funext). *)
@@ -805,7 +805,7 @@ Section CoherentIdempotents.
   Defined.
 
   (** For instance, here is the standard coherent idempotent structure on the identity map. *)
-  Global Instance isidem_idmap (X : Type@{i})
+  #[export] Instance isidem_idmap (X : Type@{i})
   : @IsIdempotent@{i i j} X idmap
     := Build_IsIdempotent idmap (splitting_idmap X).
 
@@ -841,7 +841,7 @@ Proof.
   apply equiv_concat_r.
   refine (cancelR _ _ (ep x) _).
   rewrite <- ap_compose.
-  refine (concat_A1p ep (ep x)).
+  exact (concat_A1p ep (ep x)).
 Qed.
 
 (** Therefore, there is a unique coherentification of the canonical witness [preidem_idmap] of pre-idempotency for the identity.  Hence, to show that not every quasi-idempotent is coherent, it suffices to give a witness of quasi-idempotency extending [preidem_idmap] which is nontrivial (i.e. not equal to [qidem_idmap]).  Such a witness is exactly an element of the 2-center, and we know that some types such as [BAut (BAut Bool)] have nontrivial 2-centers.  In [Spaces.BAut.Bool.IncoherentIdempotent] we use this to construct an explicit counterexample. *)

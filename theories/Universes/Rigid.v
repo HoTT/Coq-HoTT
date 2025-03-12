@@ -13,7 +13,7 @@ Class IsRigid (A : Type) :=
 
 (** Assuming funext, rigidity is equivalent to contractibility of [A <~> A]. *)
 
-Global Instance contr_aut_rigid `{Funext} (A : Type) `{IsRigid A}
+Instance contr_aut_rigid `{Funext} (A : Type) `{IsRigid A}
   : Contr (A <~> A).
 Proof.
   apply (Build_Contr _ equiv_idmap).
@@ -22,14 +22,14 @@ Defined.
 
 (** Assuming univalence, rigidity is equivalent to contractibility of [BAut A]. *)
 
-Global Instance contr_baut_rigid `{Univalence} {A : Type} `{IsRigid A}
+Instance contr_baut_rigid `{Univalence} {A : Type} `{IsRigid A}
   : Contr (BAut A).
 Proof.
   refine (contr_change_center (point (BAut A))).
   refine (contr_trunc_conn (Tr 0)).
   apply istrunc_S.
   intros Z W; baut_reduce.
-  refine (istrunc_equiv_istrunc (n := -1) (A <~> A)
+  exact (istrunc_equiv_istrunc (n := -1) (A <~> A)
                       (path_baut (point (BAut A)) (point (BAut A)))).
 Defined.
 
@@ -44,7 +44,7 @@ Defined.
 
 (** ** HProps are rigid *)
 
-Global Instance rigid_ishprop
+Instance rigid_ishprop
        (A : Type) `{IsHProp A} : IsRigid A.
 Proof.
   intros f g x; apply path_ishprop.
@@ -64,7 +64,7 @@ Proof.
   assert (MS : forall f g, g o f == idmap -> (M g) o (M f) == idmap).
   { intros g f s x.
     transitivity (M (f o g) x).
-    + symmetry. refine (MC g f x).
+    + symmetry. exact (MC g f x).
     + transitivity (M idmap x).
       * apply ap10, ap, path_arrow.
         intros y; apply s.
@@ -96,8 +96,8 @@ Proof.
              (path_baut (baut_prod_r X A Z) (baut_prod_r X A W))
              (fun e => (ap_baut_prod_r X A e)^)).
     refine ((isconnected_elim (Tr (-1)) (A := A) _ _).1).
-    { apply contr_inhabited_hprop;
-        [ exact _ | refine (merely_isconnected n A) ]. }
+    { rapply contr_inhabited_hprop.
+      exact (merely_isconnected n A). }
     intros a0.
     baut_reduce.
     pose (M := fun f:X*A -> X*A => fun x => fst (f (x,a0))).

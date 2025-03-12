@@ -215,7 +215,7 @@ Section GBM.
                              ((codeleft2_y0 yqqu ; codeleft2_q10 yqqu) = (y1; q11)))))) oE _).
           refine ((equiv_O_sigma_O O _)^-1 oE _).
           apply equiv_O_functor.
-          apply equiv_Ocodeleft2plus.
+          exact equiv_Ocodeleft2plus.
         Defined.
 
         (** The next step is to reassociate the resulting double-pushout and "contract" both of them, one after the other, because they are pushouts along equivalences.  In order to do this, we need first of all to know that the resulting map from [codeleft0] to the above pushout factors through [Ocodeleft2b] via an equivalence.  Here's the equivalence: *)
@@ -415,7 +415,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
       refine (_ oE equiv_transport codeleft (transport_paths_r _ _)).
       refine (_ oE codeglue _ q11).
       refine (equiv_transport coderight _).
-      refine (concat_pV_p z (glue q11)).
+      exact (concat_pV_p z (glue q11)).
     Defined.
 
     (** Here's the final definition of [code]. *)
@@ -443,7 +443,7 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
                                   (@codeleft x0) (@coderight x0)
                                   ap_code_glue
                                   x1 y1 q11) @ _).
-      refine (ap10_path_arrow _ _ _ _).
+      exact (ap10_path_arrow _ _ _ _).
     Defined.
 
     (** ** Contractibility of codes *)
@@ -491,12 +491,10 @@ Now we claim that the left-hand map of this span is also an equivalence.  Rather
                                (fun r => to O (hfiber glue r)) _).
       apply ap; unfold hfiber; rewrite transport_sigma'.
       apply ap; rewrite transport_paths_r.
-      (** Finally, we have another terrible-looking thing involving [frobnicate].  However, there are enough identity paths that [frobnicate] evaluates to... something that's almost fully path-general!  So with just a little bit of further work, we can reduce it also to something we can prove with path-induction. *)
+      (** Finally, we have another terrible-looking thing involving [frobnicate].  However, there are enough identity paths that [frobnicate] evaluates to something we can prove with path-induction. *)
       Transparent frobnicate.
-      cbn.
+      simpl.
       Opaque frobnicate.
-      rewrite (transport_compose (fun q => glue q @ (glue q01)^ = 1%path) pr1).
-      unfold path_sigma'; rewrite ap_V, ap_pr1_path_sigma, transport_1.
       destruct (glue q01); reflexivity.
     Qed.
 
@@ -528,7 +526,7 @@ End GBM.
 
 (** ** The classical Blakers-Massey Theorem *)
 
-Global Instance blakers_massey `{Univalence} (m n : trunc_index)
+Instance blakers_massey `{Univalence} (m n : trunc_index)
   {X Y : Type} (Q : X -> Y -> Type)
   `{forall y, IsConnected m.+1 { x : X & Q x y } }
   `{forall x, IsConnected n.+1 { y : Y & Q x y } }
@@ -557,20 +555,20 @@ Definition blakers_massey_po `{Univalence} (m n : trunc_index)
 Proof.
   (** We postcompose our map with an equivalence from the the pullback of the pushout of [f] and [g] to the pullback of an equivalent [SPushout] over a family [Q]. *)
   pose (Q := fun y z => {x : X & f x = y /\ g x = z}).
-  snrapply cancelL_equiv_conn_map.
+  snapply cancelL_equiv_conn_map.
   1: exact (Pullback (spushl Q) (spushr Q)).
-  1: by snrapply (equiv_pullback (equiv_pushout_spushout _ _)).
+  1: by snapply (equiv_pullback (equiv_pushout_spushout _ _)).
   (** Next we precompose with the equivalence from the total space of [Q] to [X]. *)
   rapply (cancelR_conn_map _ (equiv_double_fibration_replacement f g)^-1%equiv).
   (** Next we prove that this composition is homotopic to [spushout_sjoin_map Q]. *)
-  snrapply (conn_map_homotopic _ (spushout_sjoin_map Q)).
+  snapply (conn_map_homotopic _ (spushout_sjoin_map Q)).
   { intros [y [z [x [[] []]]]].
-    snrapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
-    lhs nrapply concat_1p.
-    lhs nrapply concat_p1.
-    lhs nrapply functor_coeq_beta_cglue.
-    lhs nrapply concat_p1.
-    nrapply concat_1p. }
+    snapply (path_sigma' _ 1 (path_sigma' _ 1 _)); simpl; symmetry.
+    lhs napply concat_1p.
+    lhs napply concat_p1.
+    lhs napply functor_coeq_beta_cglue.
+    lhs napply concat_p1.
+    napply concat_1p. }
   rapply blakers_massey_total_map.
   (** What's left is to check that the partial total spaces of [Q] are connected, which we get since [f] and [g] are connected maps. We just have to strip off the irrelevant parts of [Q] to get the hfiber in each case. *)
   - intros z.
@@ -584,7 +582,7 @@ Defined.
 (** ** The Freudenthal Suspension Theorem *)
 
 (** The Freudenthal suspension theorem is a fairly trivial corollary of the Blakers-Massey theorem.  It says that [merid : X -> North = South] is highly connected. *)
-Global Instance freudenthal `{Univalence} (n : trunc_index)
+Instance freudenthal `{Univalence} (n : trunc_index)
            (X : Type@{u}) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (@merid X).
 Proof.

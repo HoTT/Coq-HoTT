@@ -73,7 +73,7 @@ Definition extendable_over_postcompose' (n : nat)
   -> ExtendableAlong_Over n f C E ext.
 Proof.
   revert C ext D E g; simple_induction n n IHn; intros C ext D E g; simpl.
-  1:by apply idmap.
+  1: exact idmap.
   intros ext'.
   split.
   - intros h k.
@@ -189,7 +189,7 @@ Proof.
         refine ((fst (snd (snd (ext 3) _ _) (fun b' => 1)
                           ((fst (snd (ext 2) _ _) (fun a : A => 1)).1)
                 ) _).1 b); intros a.
-        symmetry; refine ((fst (snd (ext 2) _ _) (fun a' => 1)).2 a).
+        symmetry; exact ((fst (snd (ext 2) _ _) (fun a' => 1)).2 a).
       * intros a; simpl.
         refine (_ @
           ap (transport (D (f a)) ((fst (ext n.+1) g).2 a)^) (g' a)
@@ -238,7 +238,7 @@ Proof.
   - intros h k h' k'.
     refine (extendable_over_postcompose' _ _ _ _ _ _
              (fun b c => equiv_cancelL (apD (r b) c) _ _) _).
-    refine (IHn _ _ _ _ _
+    exact (IHn _ _ _ _ _
                 (fun n => snd (ext' n.+1) h k
                               (fun b => r b (h b)) (fun b => s b (k b)))).
 Qed.
@@ -368,10 +368,10 @@ Section LocalTypes.
   : ooExtendableAlong@{a a i k} (f i) (fun _ => X)
     := (lift_ooextendablealong _ _ (Xloc i)).
 
-  Global Instance islocal_loc (X : Type) : IsLocal f (Localize f X)
+  #[export] Instance islocal_loc (X : Type) : IsLocal f (Localize f X)
     := islocal_localize f X.
 
-  Global Instance isequiv_precomp_islocal `{Funext}
+  #[export] Instance isequiv_precomp_islocal `{Funext}
          {X : Type} `{IsLocal f X} i
   : IsEquiv (fun g => g o f i)
   := isequiv_ooextendable (fun _ => X) (f i) (ooextendable_islocal i).
@@ -413,11 +413,11 @@ Arguments local_indpaths_beta : simpl never.
 (** ** Localization and accessibility *)
 
 (** Localization subuniverses are accessible, essentially by definition.  Without the universe annotations, [a] and [i] get collapsed. *)
-Global Instance accrsu_loc@{a i} (f : LocalGenerators@{a}) : IsAccRSU@{a i} (Loc@{a i} f).
+Instance accrsu_loc@{a i} (f : LocalGenerators@{a}) : IsAccRSU@{a i} (Loc@{a i} f).
 Proof.
   unshelve econstructor.
   - exact f.
-  - intros; split; apply idmap.
+  - intros; split; exact idmap.
 Defined.
 
 (** Conversely, if a subuniverse is accessible, then the corresponding localization subuniverse is equivalent to it, and moreover exists at every universe level and satisfies its computation rules judgmentally.  This is called [lift_accrsu] but in fact it works equally well to *lower* the universe level, as long as both levels are no smaller than the size [a] of the generators. *)
@@ -426,7 +426,7 @@ Definition lift_accrsu@{a i j} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
   := Loc@{a j} (acc_lgen O).
 
 (** The lifted universe agrees with the original one, on any universe contained in both [i] and [j] *)
-Global Instance O_eq_lift_accrsu@{a i j k} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
+Instance O_eq_lift_accrsu@{a i j k} (O : Subuniverse@{i}) `{IsAccRSU@{a i} O}
   : O_eq@{i j k} O (lift_accrsu@{a i j} O).
 Proof.
   (** Anyone stepping through this proof should do [Set Printing Universes]. *)
@@ -500,7 +500,7 @@ Definition O_inverts_O_leq'@{a i1 i2}
 Proof.
   assert (oleq := O_leq_lift_accrsu O1 O2).
   assert (e := O_inverts_O_leq (lift_accrsu@{a i1 i2} O1) O2 f); clear oleq.
-  nrapply (O_inverts_O_leq O1 (lift_accrsu@{a i1 i1} O1) f).
+  napply (O_inverts_O_leq O1 (lift_accrsu@{a i1 i1} O1) f).
   1:exact _.
   (** It looks like we can say [exact e], but that would collapse the universes [i1] and [i2].  You can check with [Set Printing Universes. Unset Printing Notations.] that [e] and the goal have different universes.  So instead we do this: *)
   refine (@isequiv_homotopic _ _ _ _ e _).

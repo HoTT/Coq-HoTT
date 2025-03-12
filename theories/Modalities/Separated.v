@@ -27,7 +27,7 @@ Section Diagonal.
   Definition mapinO_diagonal `{MapIn (Sep O) _ _ f} : MapIn O (diagonal f).
   Proof.
     intros p.
-    refine (inO_equiv_inO' _ (hfiber_diagonal f p)^-1).
+    exact (inO_equiv_inO' _ (hfiber_diagonal f p)^-1).
   Defined.
 
   Definition mapinO_from_diagonal `{MapIn O _ _ (diagonal f)} : MapIn (Sep O) f.
@@ -35,7 +35,7 @@ Section Diagonal.
     intros x1 u v.
     destruct v as [x2 p].
     destruct p.
-    refine (inO_equiv_inO' _ (hfiber_diagonal f (u.1; x2; u.2))).
+    exact (inO_equiv_inO' _ (hfiber_diagonal f (u.1; x2; u.2))).
   Defined.
 
 End Diagonal.
@@ -47,7 +47,7 @@ Proof.
   exact (functor_susp (f i)).
 Defined.
 
-Global Instance isaccrsu_sep (O : Subuniverse) `{IsAccRSU O}
+Instance isaccrsu_sep (O : Subuniverse) `{IsAccRSU O}
   : IsAccRSU (Sep O).
 Proof.
   exists (susp_localgen (acc_lgen O)).
@@ -58,14 +58,14 @@ Proof.
     refine (ooextendable_postcompose' _ _ _ _ _).
     2:apply inO_iff_islocal; exact (A_inO x y).
     intros b.
-    apply dp_const. }
+    exact dp_const. }
   { intros x y.
     apply (inO_iff_islocal O); intros i.
     specialize (A_inO i).
     refine (ooextendable_postcompose' _ _ _ _ _).
     2:exact (fst (ooextendable_iff_functor_susp (acc_lgen O i) _) A_inO (x,y)).
     intros b.
-    symmetry; apply dp_const. }
+    symmetry; exact dp_const. }
 Defined.
 
 Definition susp_nullgen (S : NullGenerators@{a}) : NullGenerators@{a}.
@@ -74,7 +74,7 @@ Proof.
   exact (Susp (S i)).
 Defined.
 
-Global Instance isaccmodality_sep (O : Subuniverse) `{IsAccModality O}
+Instance isaccmodality_sep (O : Subuniverse) `{IsAccModality O}
   : IsAccModality (Sep O).
 Proof.
   exists (susp_nullgen (acc_ngen O)).
@@ -87,7 +87,7 @@ Proof.
     refine (ooextendable_postcompose' _ _ _ _ _).
     2:apply inO_iff_isnull; exact (A_inO x y).
     intros b.
-    apply dp_const. }
+    exact dp_const. }
   { intros x y.
     apply (inO_iff_isnull O); intros i.
     specialize (A_inO i).
@@ -99,11 +99,11 @@ Proof.
     cbn in e.
     refine (ooextendable_postcompose' _ _ _ _ e).
     intros b.
-    symmetry; apply dp_const. }
+    symmetry; exact dp_const. }
 Defined.
 
 (** Remark 2.16(1) of CORS *)
-Global Instance O_leq_SepO (O : ReflectiveSubuniverse)
+Instance O_leq_SepO (O : ReflectiveSubuniverse)
   : O <= Sep O.
 Proof.
   intros A ? x y; exact _.
@@ -115,7 +115,7 @@ Definition in_SepO_embedding (O : Subuniverse)
   : In (Sep O) A.
 Proof.
   intros x y.
-  refine (inO_equiv_inO' _ (equiv_ap_isembedding i x y)^-1).
+  exact (inO_equiv_inO' _ (equiv_ap_isembedding i x y)^-1).
 Defined.
 
 (* As a special case, if X embeds into an n-type for n >= -1 then X is an n-type. Note that this doesn't hold for n = -2. *)
@@ -126,7 +126,7 @@ Proof.
   exact (@in_SepO_embedding (Tr n) _ _ i isem istr).
 Defined.
 
-Global Instance in_SepO_hprop (O : ReflectiveSubuniverse)
+Instance in_SepO_hprop (O : ReflectiveSubuniverse)
        {A : Type} `{IsHProp A}
   : In (Sep O) A.
 Proof.
@@ -144,11 +144,11 @@ Proof.
   specialize (A_inO x y).
   pose proof (fun p:x=y => B_inO y (p # u) v).
   pose @inO_sigma.  (* Speed up typeclass search. *)
-  refine (inO_equiv_inO' _ (equiv_path_sigma B _ _)).
+  exact (inO_equiv_inO' _ (equiv_path_sigma B _ _)).
 Defined.
 
 (** Lemma 2.17 of CORS *)
-Global Instance issurjective_to_SepO (O : ReflectiveSubuniverse) (X : Type)
+Instance issurjective_to_SepO (O : ReflectiveSubuniverse) (X : Type)
            `{Reflects (Sep O) X}
   : IsSurjection (to (Sep O) X).
 Proof.
@@ -180,16 +180,16 @@ Proof.
 Defined.
 
 (** Lemma 2.21 of CORS *)
-Global Instance inSepO_sigma (O : ReflectiveSubuniverse)
+Instance inSepO_sigma (O : ReflectiveSubuniverse)
        {X : Type} {P : X -> Type} `{In (Sep O) X} `{forall x, In O (P x)}
   : In (Sep O) (sig P).
 Proof.
   intros u v.
-  refine (inO_equiv_inO' _ (equiv_path_sigma P _ _)).
+  exact (inO_equiv_inO' _ (equiv_path_sigma P _ _)).
 Defined.
 
 (** Proposition 2.22 of CORS (in funext-free form). *)
-Global Instance reflectsD_SepO (O : ReflectiveSubuniverse)
+Instance reflectsD_SepO (O : ReflectiveSubuniverse)
        {X : Type} `{Reflects (Sep O) X}
   : ReflectsD (Sep O) O X.
 Proof.
@@ -221,15 +221,15 @@ Section JoinConstruction.
   Definition jc_factor1@{} : X -> jc_image. Admitted.
   Definition jc_factor2@{} : jc_image -> Y. Admitted.
   Definition jc_factors@{} : jc_factor2 o jc_factor1 == f. Admitted.
-  Global Instance jc_factor1_issurj@{} : IsSurjection jc_factor1. Admitted.
-  Global Instance jc_factor2_isemb : IsEmbedding jc_factor2. Admitted.
+  #[export] Instance jc_factor1_issurj@{} : IsSurjection jc_factor1. Admitted.
+  #[export] Instance jc_factor2_isemb : IsEmbedding jc_factor2. Admitted.
 End JoinConstruction.
 
 (** We'd like to say that the universe of [O]-modal types is [O]-separated, i.e. belongs to [Sep O].  But since a given subuniverse like [Sep O] lives only on a single universe size, trying to say that in the naive way yields a universe inconsistency. *)
 Fail Goal forall (O : ReflectiveSubuniverse), In (Sep O) (Type_ O).
 
 (** Instead, we do as in Lemma 2.19 of CORS and prove the morally-equivalent "descent" property, using Lemma 2.18 and the join construction. *)
-Global Instance SepO_lex_leq `{Univalence}
+Instance SepO_lex_leq `{Univalence}
        (O : ReflectiveSubuniverse) {X : Type} `{Reflects (Sep O) X}
   : Descends (Sep O) O X.
 Proof.

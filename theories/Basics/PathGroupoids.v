@@ -1220,14 +1220,14 @@ Definition whiskerR_p1_1 {A} {x : A} (h : idpath x = idpath x)
 : whiskerR h 1 = h.
 Proof.
   refine (_ @ whiskerR_p1 h); simpl.
-  symmetry; refine (concat_p1 _ @ concat_1p _).
+  symmetry; exact (concat_p1 _ @ concat_1p _).
 Defined.
 
 Definition whiskerL_1p_1 {A} {x : A} (h : idpath x = idpath x)
 : whiskerL 1 h = h.
 Proof.
   refine (_ @ whiskerL_1p h); simpl.
-  symmetry; refine (concat_p1 _ @ concat_1p _).
+  symmetry; exact (concat_p1 _ @ concat_1p _).
 Defined.
 
 Definition cancel2L {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z}
@@ -1237,7 +1237,7 @@ Proof.
   intro r. induction g, p, q.
   refine ((whiskerL_1p h)^ @ _). refine (_ @ (whiskerL_1p k)).
   refine (whiskerR _ _). refine (whiskerL _ _).
-  apply r.
+  exact r.
 Defined.
 
 Definition cancel2R {A : Type} {x y z : A} {p p' : x = y} {q q' : y = z}
@@ -1247,7 +1247,7 @@ Proof.
   intro r. induction k, p, q.
   refine ((whiskerR_p1 g)^ @ _). refine (_ @ (whiskerR_p1 h)).
   refine (whiskerR _ _). refine (whiskerL _ _).
-  apply r.
+  exact r.
 Defined.
 
 

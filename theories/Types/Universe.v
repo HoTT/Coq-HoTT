@@ -24,13 +24,13 @@ Monomorphic Axiom Univalence : Type0.
 Existing Class Univalence.
 
 (** Mark this axiom as a "global axiom", which some of our tactics will automatically handle. *)
-Global Instance is_global_axiom_univalence : IsGlobalAxiom Univalence := {}.
+Instance is_global_axiom_univalence : IsGlobalAxiom Univalence := {}.
 
 Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type@{u}), IsEquiv (equiv_path A B).
-Global Existing Instance isequiv_equiv_path.
+Existing Instance isequiv_equiv_path.
 
 (** A proof that univalence implies function extensionality can be found in the metatheory file [UnivalenceImpliesFunext], but that actual proof can't be used on our dummy typeclasses.  So we assert the following axiomatic instance.  *)
-Global Instance Univalence_implies_Funext `{Univalence} : Funext.
+Instance Univalence_implies_Funext `{Univalence} : Funext.
 Admitted.
 
 Section Univalence.
@@ -95,7 +95,7 @@ Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
   : equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.
 Proof.
   apply path_equiv, path_arrow.
-  nrapply transport_pp.
+  napply transport_pp.
 Defined.
 
 Definition path_universe_compose_uncurried {A B C : Type}
@@ -126,8 +126,8 @@ Proof.
   transitivity (p^).
     2: exact (inverse2 (eisretr (equiv_path_universe A B) p)^).
   transitivity (path_universe_uncurried (equiv_path B A p^)).
-  - by refine (ap _ (equiv_path_V A B p)^).
-  - by refine (eissect (equiv_path B A) p^).
+  - by exact (ap _ (equiv_path_V A B p)^).
+  - by exact (eissect (equiv_path B A) p^).
 Defined.
 
 Definition path_universe_V `(f : A -> B) `{IsEquiv A B f}
@@ -365,8 +365,8 @@ Section PathEquivSimplNever.
       apply concat2.
       + apply whiskerR.
         apply inverse2, symmetry.
-        refine (eisadj (equiv_path A C)^-1 g).
-      + symmetry; refine (eisadj (equiv_path A C)^-1 g).
+        exact (eisadj (equiv_path A C)^-1 g).
+      + symmetry; exact (eisadj (equiv_path A C)^-1 g).
     - generalize (path_universe g).
       intros h. destruct h. cbn.
       rewrite !concat_1p, !concat_p1.
@@ -401,8 +401,8 @@ Section PathEquivSimplNever.
       apply concat2.
       + apply whiskerR.
         apply inverse2, symmetry.
-        refine (eisadj (equiv_path A B)^-1 g).
-      + symmetry; refine (eisadj (equiv_path A B)^-1 g).
+        exact (eisadj (equiv_path A B)^-1 g).
+      + symmetry; exact (eisadj (equiv_path A B)^-1 g).
     - generalize (path_universe g).
       intros h. destruct h. cbn.
       rewrite !concat_p1.
@@ -424,7 +424,7 @@ Proof.
   refine (_ oE equiv_ap (equiv_path_arrow f g) p q).
   refine (_ oE equiv_ap (equiv_path_equiv f g) _ _).
   unfold path2_universe, equiv_path2_universe.
-  simpl. refine (equiv_ap (ap (equiv_path A B)^-1) _ _).
+  simpl. exact (equiv_ap (ap (equiv_path A B)^-1) _ _).
 Defined.
 
 Definition path3_universe
@@ -496,7 +496,7 @@ Proof.
   intros H0 V.
   apply (equiv_ind (equiv_path V U)).
   (* We manually apply [paths_ind_r] to reduce universe levels. *)
-  revert V; rapply paths_ind_r; apply H0.
+  revert V; rapply paths_ind_r; exact H0.
 Defined.
 
 Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
@@ -506,7 +506,7 @@ Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
 
 (** ** Based equivalence types *)
 
-Global Instance contr_basedequiv@{u +} {X : Type@{u}}
+#[export] Instance contr_basedequiv@{u +} {X : Type@{u}}
   : Contr {Y : Type@{u} & X <~> Y}.
 Proof.
   apply (Build_Contr _ (X; equiv_idmap)).
@@ -514,14 +514,14 @@ Proof.
   exact (equiv_induction _ idpath).
 Defined.
 
-Global Instance contr_basedequiv'@{u +} {X : Type@{u}}
+#[export] Instance contr_basedequiv'@{u +} {X : Type@{u}}
   : Contr {Y : Type@{u} & Y <~> X}.
 Proof.
   (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)
   srapply Build_Contr.
   - exact (X; equiv_idmap).
   - intros [Y f]; revert Y f.
-    refine (equiv_induction_inv _ idpath).
+    exact (equiv_induction_inv _ idpath).
 Defined.
 
 (** Any two functions that act like transport along an equivalence, i.e. maps of the type [T : forall X Y, X <~> Y -> S X -> S Y] with a computation rule of type [Trefl : forall X, (T (equiv_idmap X) == idmap)], are homotopic. This can be useful when we want to transport along an equivalence, but [univalent_transport] does not have the computational properties that we want. *)
@@ -541,11 +541,11 @@ Defined.
 (** ** Truncations *)
 
 (** Truncatedness of the universe is a subtle question, but with univalence we can conclude things about truncations of certain of its path-spaces. *)
-Global Instance istrunc_paths_Type
+#[export] Instance istrunc_paths_Type
   {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
   : IsTrunc n.+1 (A = B).
 Proof.
-  refine (istrunc_isequiv_istrunc _ path_universe_uncurried).
+  exact (istrunc_isequiv_istrunc _ path_universe_uncurried).
 Defined.
 
 (** We can also say easily that the universe is not a set. *)

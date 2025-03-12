@@ -56,12 +56,13 @@ Section LexModality.
     := OO_ispullback_connmap_mapino O O p.
 
   (** RSS Theorem 3.1 (viii) *)
-  Global Instance conn_map_functor_hfiber_to_O
+  #[export] Instance
+    conn_map_functor_hfiber_to_O
          {Y X : Type} (f : Y -> X) (x : X)
     : IsConnMap O (functor_hfiber (fun y => (to_O_natural O f y)^) x)
     := OO_conn_map_functor_hfiber_to_O O O f x.
 
-  Global Instance isequiv_O_functor_hfiber
+  #[export] Instance isequiv_O_functor_hfiber
          {A B} (f : A -> B) (b : B)
     : IsEquiv (O_functor_hfiber O f b).
   Proof.
@@ -81,7 +82,7 @@ Section LexModality.
     := Build_Equiv _ _ (O_functor_hfiber O f b) _.
 
   (** RSS Theorem 3.1 (ix) *)
-  Global Instance isequiv_path_O
+  #[export] Instance isequiv_path_O
          {X : Type@{i}} (x y : X)
     : IsEquiv (path_OO O O x y)
     := isequiv_path_OO O O x y.
@@ -98,7 +99,7 @@ Section LexModality.
   Defined.
 
   (** RSS Theorem 3.1 (x).  This justifies the term "left exact". *)
-  Global Instance O_inverts_functor_pullback_to_O
+  #[export] Instance O_inverts_functor_pullback_to_O
          {A B C : Type} (f : B -> A) (g : C -> A)
     : O_inverts O (functor_pullback f g (O_functor O f) (O_functor O g)
                                     (to O A) (to O B) (to O C)
@@ -117,7 +118,7 @@ Section LexModality.
     : IsPullback (O_functor_square O _ _ _ _ (pullback_commsq f g)).
   Proof.
     unfold IsPullback.
-    nrapply (isequiv_homotopic
+    napply (isequiv_homotopic
                (O_rec (functor_pullback _ _ _ _ _ _ _
                                         (to_O_natural O f) (to_O_natural O g)))).
     1: apply isequiv_O_rec_O_inverts; exact _.
@@ -125,24 +126,24 @@ Section LexModality.
     etransitivity.
     1: intro x; apply O_rec_beta.
     symmetry.
-    snrapply pullback_homotopic; intros [b [c e]]; cbn.
+    snapply pullback_homotopic; intros [b [c e]]; cbn.
     all: change (to (modality_subuniv O)) with (to O).
-    - nrapply (to_O_natural O).
-    - nrapply (to_O_natural O).
+    - napply (to_O_natural O).
+    - napply (to_O_natural O).
     - Open Scope long_path_scope.
-      lhs nrapply concat_p_pp.
-      lhs nrapply (concat_p_pp _ _ _ @@ 1).
+      lhs napply concat_p_pp.
+      lhs napply (concat_p_pp _ _ _ @@ 1).
       rewrite to_O_natural_compose.
       unfold O_functor_square.
       rewrite O_functor_homotopy_beta.
       rewrite 6 concat_pp_p.
       do 3 apply whiskerL.
-      rhs_V nrapply concat_pp_p.
+      rhs_V napply concat_pp_p.
       apply moveL_pM.
-      lhs_V nrapply inv_pp.
-      rhs_V nrapply inv_Vp.
+      lhs_V napply inv_pp.
+      rhs_V napply inv_Vp.
       apply (ap inverse).
-      nrapply to_O_natural_compose.
+      napply to_O_natural_compose.
       Close Scope long_path_scope.
   Defined.
 
@@ -166,7 +167,7 @@ Section LexModality.
     := OO_cancelL_conn_map O O f g.
 
   (** RSS Theorem 3.1 (xii) *)
-  Global Instance conn_map_O_inverts
+  #[export] Instance conn_map_O_inverts
          {A B : Type} (f : A -> B) `{O_inverts O f}
     : IsConnMap O f
     := conn_map_OO_inverts O O f.
@@ -180,16 +181,16 @@ Section LexModality.
     pose proof (O_inverts_isconnected O (fun _:A => tt)).
     exists (OO_descend_O_inverts O O (fun _:A => tt) P tt); split.
     - apply OO_descend_O_inverts_inO.
-    - intros; nrapply OO_descend_O_inverts_beta.
+    - intros; napply OO_descend_O_inverts_beta.
   Defined.  
 
   (** RSS Theorem 3.11 (iii): in the accessible case, the universe is modal. *)
-  Global Instance inO_typeO_lex `{Univalence} `{IsAccRSU O}
+  #[export] Instance inO_typeO_lex `{Univalence} `{IsAccRSU O}
     : In (lift_accrsu O) (Type_ O)
     := _.
 
   (** Part of RSS Corollary 3.9: lex modalities preserve [n]-types for all [n].  This is definitely not equivalent to lex-ness, since it is true for the truncation modalities that are not lex.  But it is also not true of all modalities; e.g. the shape modality in a cohesive topos can take 0-types to [oo]-types.  With a little more work, this can probably be proven without [Funext]. *)
-  Global Instance istrunc_O_lex `{Funext}
+  #[export] Instance istrunc_O_lex `{Funext}
          {n : trunc_index} {A : Type} `{IsTrunc n A}
     : IsTrunc n (O A).
   Proof.
@@ -198,7 +199,7 @@ Section LexModality.
     - apply istrunc_S.
       refine (O_ind (fun x => forall y, IsTrunc n (x = y)) _); intros x.
       refine (O_ind (fun y => IsTrunc n (to O A x = y)) _); intros y.
-      refine (istrunc_equiv_istrunc _ (equiv_path_O x y)).
+      exact (istrunc_equiv_istrunc _ (equiv_path_O x y)).
   Defined.
 
 End LexModality.
@@ -229,7 +230,7 @@ Section ImpliesLex.
   Definition lex_from_inO_typeO `{IsAccRSU O} `{In (lift_accrsu O) (Type_ O)}
     : Lex O.
   Proof.
-    apply (O_lex_leq_inO_TypeO O O).
+    exact (O_lex_leq_inO_TypeO O O).
   Defined.
 
   (** RSS Theorem 3.1 (xi) implies lex-ness *)
@@ -308,7 +309,7 @@ Section ImpliesLex.
     apply conn_map_isequiv.
     apply H; [ | exact _ | exact _ ].
     apply isconnected_conn_map_to_unit.
-    apply (cancelR_conn_map O (factor1 (image O f)) (const_tt _)).
+    exact (cancelR_conn_map O (factor1 (image O f)) (const_tt _)).
   Defined.
 
   (** RSS Theorem 3.1 (vii) implies lex-ness *)
@@ -332,7 +333,7 @@ Section ImpliesLex.
                              _ _ pr2 _).
     refine (@isequiv_compose _ _ (equiv_sigma_prod0 Unit B)
                              _ _ snd _).
-    apply (equiv_isequiv (prod_unit_l B)).
+    exact (equiv_isequiv (prod_unit_l B)).
   Defined.
 
 End ImpliesLex.
@@ -406,7 +407,7 @@ Proof.
   assert (wc : forall y z, P y <~> P z).
   { intros y z.
     (** Here we use the hypothesis [lexgen] (typeclass inference finds it automatically). *)
-    refine (pr1 (isconnected_elim O _ (@equiv_transport _ P y z))). }
+    exact (pr1 (isconnected_elim O _ (@equiv_transport _ P y z))). }
   intros x; apply path_TypeO, path_universe_uncurried.
   refine (equiv_adjointify (fun f => f x) (fun u y => wc x y ((wc x x)^-1 u)) _ _).
   - intros u; apply eisretr.
@@ -430,7 +431,7 @@ Definition nsep_iff_trunc_to_O (n : trunc_index) (O : Modality) `{Lex O} (A : Ty
 Proof.
   revert A; induction n as [|n IHn]; intros A; split; intros ?.
   - apply contr_map_isequiv; rapply isequiv_to_O_inO.
-  - apply (inO_equiv_inO (O A) (to O A)^-1).
+  - exact (inO_equiv_inO (O A) (to O A)^-1).
   - apply istruncmap_from_ap; intros x y.
     pose (i := fst (IHn (x = y)) _).
     apply istruncmap_mapinO_tr, (mapinO_homotopic _ _ (equiv_path_O_to_O O x y)).

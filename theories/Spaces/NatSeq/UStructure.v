@@ -12,9 +12,9 @@ Local Open Scope type_scope.
 (** ** [UStructure] defined by [seq_agree_lt] *)
 
 (** Every type of the form [nat -> X] carries a uniform structure defined by the [seq_agree_lt n] relation for every [n : nat]. *)
-Global Instance sequence_type_us' {X : Type} : UStructure (nat -> X) | 10.
+Instance sequence_type_us' {X : Type} : UStructure (nat -> X) | 10.
 Proof.
-  snrapply Build_UStructure.
+  snapply Build_UStructure.
   - exact seq_agree_lt.
   - exact (fun _ _ _ _ => idpath).
   - exact (fun _ _ _ h _ _ => (h _ _)^).
@@ -38,15 +38,15 @@ Definition list_restrict_eq_iff_seq_agree_lt
 Proof.
   constructor.
   - intros h m hm.
-    lhs_V srapply (nth'_list_restrict s ((length_list_restrict _ _)^ # hm)).
-    rhs_V srapply (nth'_list_restrict t ((length_list_restrict _ _)^ # hm)).
+    lhs_V exact (nth'_list_restrict s ((length_list_restrict _ _)^ # hm)).
+    rhs_V exact (nth'_list_restrict t ((length_list_restrict _ _)^ # hm)).
     exact (nth'_path_list h _ _).
   - intro h.
     apply (path_list_nth' _ _
             (length_list_restrict s n @ (length_list_restrict t n)^)).
     intros i Hi.
-    lhs snrapply nth'_list_restrict.
-    rhs snrapply nth'_list_restrict.
+    lhs snapply nth'_list_restrict.
+    rhs snapply nth'_list_restrict.
     exact (h i ((length_list_restrict s n) # Hi)).
 Defined.
 

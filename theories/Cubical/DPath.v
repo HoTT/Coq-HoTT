@@ -13,7 +13,7 @@ Definition DPath {A} (P : A -> Type) {a0 a1} (p : a0 = a1)
 (** This allows DPaths to collapse to paths under cbn *)
 Arguments DPath _ / _ _ _ : simpl nomatch.
 
-Global Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
+Instance istrunc_dp {A : Type} {P : A -> Type} {n : trunc_index}
  {a0 a1} {p : a0 = a1} {b0 : P a0} {b1 : P a1} `{IsTrunc n.+1 (P a0)}
   `{IsTrunc n.+1 (P a1)} : IsTrunc n (DPath P p b0 b1) := _.
 

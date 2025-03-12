@@ -27,7 +27,7 @@ Section cong_quotient.
     (s : Sort σ) (a b : (A/Ψ) s)
     := ∀ (x y : A s), in_class (Ψ s) a x → in_class (Ψ s) b y → Φ s x y.
 
-  Global Instance equivalence_relation_quotient (s : Sort σ)
+  #[export] Instance equivalence_relation_quotient (s : Sort σ)
     : EquivRel (cong_quotient subrel s).
   Proof.
     constructor.
@@ -60,7 +60,7 @@ Section cong_quotient.
       + by apply IHw.
   Qed.
 
-  Global Instance ops_compatible_quotient
+  #[export] Instance ops_compatible_quotient
     : OpsCompatible (A/Ψ) (cong_quotient subrel).
   Proof.
     intros u.
@@ -83,7 +83,7 @@ Section cong_quotient.
       by apply for_all_relation_quotient.
   Defined.
 
-  Global Instance is_congruence_quotient
+  #[export] Instance is_congruence_quotient
     : IsCongruence (A/Ψ) (cong_quotient subrel)
     := BuildIsCongruence (A/Ψ) (cong_quotient subrel).
 
@@ -126,7 +126,7 @@ Section third_isomorphism.
                (β (class_of (Ψ t) x)) (λ a, Qβ (x,a))).
   Defined.
 
- Global Instance is_homomorphism_third_surjection
+ #[export] Instance is_homomorphism_third_surjection
     : IsHomomorphism def_third_surjection.
   Proof.
     intro u.
@@ -136,7 +136,7 @@ Section third_isomorphism.
   Definition hom_third_surjection : Homomorphism (A/Ψ) (A/Φ)
     := BuildHomomorphism def_third_surjection.
 
-  Global Instance surjection_third_surjection (s : Sort σ)
+  #[export] Instance surjection_third_surjection (s : Sort σ)
     : IsSurjection (hom_third_surjection s).
   Proof.
     apply BuildIsSurjection.
@@ -179,7 +179,7 @@ Section third_isomorphism.
     exact _.
   Qed.
 
-  Global Existing Instance is_isomorphism_third_isomorphism.
+  #[export] Existing Instance is_isomorphism_third_isomorphism.
 
   (** The third isomorphism theorem. *)
 

@@ -56,7 +56,7 @@ Section strong_cancellation.
   apply (strong_left_cancellation op z);trivial.
   Qed.
 
-  Global Instance strong_left_cancellation_cancel `{!StrongLeftCancellation op z}
+  #[export] Instance strong_left_cancellation_cancel `{!StrongLeftCancellation op z}
     : LeftCancellation op z | 20.
   Proof.
   intros x y E1.
@@ -64,7 +64,7 @@ Section strong_cancellation.
   apply E1. apply (strong_left_cancellation op);trivial.
   Qed.
 
-  Global Instance strong_right_cancellation_cancel `{!StrongRightCancellation op z}
+  #[export] Instance strong_right_cancellation_cancel `{!StrongRightCancellation op z}
     : RightCancellation op z | 20.
   Proof.
   intros x y E1.
@@ -85,27 +85,27 @@ Section semiring_props.
   apply (no_zero_divisors x); split; eauto.
   Qed.
 
-  Global Instance plus_0_r: RightIdentity (+) 0 := right_identity.
-  Global Instance plus_0_l: LeftIdentity (+) 0 := left_identity.
-  Global Instance mult_1_l: LeftIdentity (.*.) 1 := left_identity.
-  Global Instance mult_1_r: RightIdentity (.*.) 1 := right_identity.
+  #[export] Instance plus_0_r: RightIdentity (+) 0 := right_identity.
+  #[export] Instance plus_0_l: LeftIdentity (+) 0 := left_identity.
+  #[export] Instance mult_1_l: LeftIdentity (.*.) 1 := left_identity.
+  #[export] Instance mult_1_r: RightIdentity (.*.) 1 := right_identity.
 
-  Global Instance plus_assoc: Associative (+) := simple_associativity.
-  Global Instance mult_assoc: Associative (.*.) := simple_associativity.
+  #[export] Instance plus_assoc: Associative (+) := simple_associativity.
+  #[export] Instance mult_assoc: Associative (.*.) := simple_associativity.
 
-  Global Instance plus_comm: Commutative (+) := commutativity.
-  Global Instance mult_comm: Commutative (.*.) := commutativity.
+  #[export] Instance plus_comm: Commutative (+) := commutativity.
+  #[export] Instance mult_comm: Commutative (.*.) := commutativity.
 
-  Global Instance mult_0_l: LeftAbsorb (.*.) 0 := left_absorb.
+  #[export] Instance mult_0_l: LeftAbsorb (.*.) 0 := left_absorb.
 
-  Global Instance mult_0_r: RightAbsorb (.*.) 0.
+  #[export] Instance mult_0_r: RightAbsorb (.*.) 0.
   Proof.
   intro. path_via (0 * x).
   - apply mult_comm.
   - apply left_absorb.
   Qed.
 
-  Global Instance plus_mult_distr_r : RightDistribute (.*.) (+).
+  #[export] Instance plus_mult_distr_r : RightDistribute (.*.) (+).
   Proof.
   intros x y z.
   etransitivity;[|etransitivity].
@@ -116,12 +116,12 @@ Section semiring_props.
 
   Lemma plus_mult_distr_l : LeftDistribute (.*.) (+).
   Proof.
-  apply _.
+  exact _.
   Qed.
 
-  Global Instance: forall r : R, @IsMonoidPreserving R R (+) (+) 0 0 (r *.).
+  #[export] Instance: forall r : R, @IsMonoidPreserving R R (+) (+) 0 0 (r *.).
   Proof.
-  repeat (constructor; try apply _).
+  repeat (constructor; try exact _).
   - red. apply distribute_l.
   - apply right_absorb.
   Qed.
@@ -135,9 +135,9 @@ Section semiringmor_props.
   Context `{IsSemiRingPreserving A B f}.
 
   Lemma preserves_0: f 0 = 0.
-  Proof. apply preserves_mon_unit. Qed.
+  Proof. exact preserves_mon_unit. Qed.
   Lemma preserves_1: f 1 = 1.
-  Proof. apply preserves_mon_unit. Qed.
+  Proof. exact preserves_mon_unit. Qed.
   Lemma preserves_mult: forall x y, f (x * y) = f x * f y.
   Proof.
   intros. apply preserves_sg_op.
@@ -203,9 +203,9 @@ Section cring_props.
   - apply ap. apply right_identity.
   Qed.
 
-  Global Instance CRing_Semi: IsSemiCRing R.
+  #[export] Instance CRing_Semi: IsSemiCRing R.
   Proof.
-  repeat (constructor; try apply _).
+  repeat (constructor; try exact _).
   Qed.
 
 End cring_props.
@@ -214,39 +214,39 @@ End cring_props.
 Section ring_props.
   Context `{IsRing R}.
 
-  Global Instance mult_left_absorb : LeftAbsorb (.*.) 0.
+  #[export] Instance mult_left_absorb : LeftAbsorb (.*.) 0.
   Proof.
     intro y.
     rapply (right_cancellation (+) (0 * y)).
     lhs_V rapply simple_distribute_r.
     rhs rapply left_identity.
-    nrapply (ap (.* y)).
+    napply (ap (.* y)).
     apply left_identity.
   Defined.
 
-  Global Instance mult_right_absorb : RightAbsorb (.*.) 0.
+  #[export] Instance mult_right_absorb : RightAbsorb (.*.) 0.
   Proof.
     intro x.
     rapply (right_cancellation (+) (x * 0)).
     lhs_V rapply simple_distribute_l.
     rhs rapply left_identity.
-    nrapply (ap (x *.)).
+    napply (ap (x *.)).
     apply left_identity.
   Defined.
 
   (** This hint helps other results go through.  We do it in two steps, since if we specify the type [IsGroup R], Coq infers the wrong implicit arguments to [IsGroup]. *)
   Definition isgroup_ring := abgroup_group R.
-  Global Existing Instance isgroup_ring.
+  #[export] Existing Instance isgroup_ring.
 
-  Global Instance negate_involutive : Involutive (-) := inverse_involutive.
+  #[export] Instance negate_involutive : Involutive (-) := inverse_involutive.
   (* alias for convenience *)
 
-  Global Instance plus_negate_r : RightInverse (+) (-) 0.
+  #[export] Instance plus_negate_r : RightInverse (+) (-) 0.
   Proof.
     rapply inverse_r.
   Defined.
 
-  Global Instance plus_negate_l : LeftInverse (+) (-) 0.
+  #[export] Instance plus_negate_l : LeftInverse (+) (-) 0.
   Proof.
     rapply inverse_l.
   Defined.
@@ -265,7 +265,7 @@ Section ring_props.
     apply commutativity.
   Defined.
 
-  Global Instance isinj_ring_neg : IsInjective (-)
+  #[export] Instance isinj_ring_neg : IsInjective (-)
     := groups.isinj_group_inverse.
 
   Lemma negate_plus_distr : forall x y, -(x + y) = -x + -y.
@@ -279,7 +279,7 @@ Section ring_props.
   - path_via (1 * x + (- 1) * x).
     + rhs_V rapply distribute_r.
       symmetry.
-      rhs_V rapply (left_absorb x).
+      rhs_V exact (left_absorb x).
       f_ap.
       rapply inverse_r.
     + apply ap011;try reflexivity.
@@ -292,7 +292,7 @@ Section ring_props.
     transitivity (x * -1 + x * 1).
     - lhs apply left_inverse.
       rhs_V rapply simple_distribute_l.
-      lhs_V rapply (right_absorb x).
+      lhs_V exact (right_absorb x).
       apply (ap (x *.)).
       symmetry.
       rapply inverse_l.
@@ -302,8 +302,8 @@ Section ring_props.
 
   Lemma negate_mult_distr_l x y : -(x * y) = -x * y.
   Proof.
-    lhs nrapply negate_mult_l.
-    lhs rapply (simple_associativity (f := (.*.)) (-1) x y).
+    lhs napply negate_mult_l.
+    lhs exact (simple_associativity (f := (.*.)) (-1) x y).
     apply (ap (.* y)).
     symmetry.
     apply negate_mult_l.
@@ -311,7 +311,7 @@ Section ring_props.
 
   Lemma negate_mult_distr_r x y : -(x * y) = x * -y.
   Proof.
-    lhs nrapply negate_mult_r.
+    lhs napply negate_mult_r.
     lhs_V rapply (simple_associativity (f := (.*.)) x y).
     apply (ap (x *.)).
     symmetry.
@@ -327,7 +327,7 @@ Section ring_props.
   Lemma negate_0: -0 = 0.
   Proof. exact groups.inverse_mon_unit. Qed.
 
-  Global Instance minus_0_r: RightIdentity (fun x y => x - y) 0.
+  #[export] Instance minus_0_r: RightIdentity (fun x y => x - y) 0.
   Proof.
   intro x; rewrite negate_0. apply right_identity.
   Qed.
@@ -380,18 +380,18 @@ Section ring_props.
     2: apply negate_zero_prod_l.
     split.
     - intros E.
-      lhs_V nrapply negate_mult_distr_l.
-      lhs nrapply negate_mult_distr_r.
+      lhs_V napply negate_mult_distr_l.
+      lhs napply negate_mult_distr_r.
       exact E.
     - intros E.
-      lhs_V nrapply negate_mult_distr_r.
-      lhs nrapply negate_mult_distr_l.
+      lhs_V napply negate_mult_distr_r.
+      lhs napply negate_mult_distr_l.
       exact E.
   Defined.
 
   Context `{!NoZeroDivisors R} `{forall x y:R, Stable (x = y)}.
 
-  Global Instance mult_left_cancel:  forall z, PropHolds (z <> 0) ->
+  #[export] Instance mult_left_cancel:  forall z, PropHolds (z <> 0) ->
     LeftCancellation (.*.) z.
   Proof.
   intros z z_nonzero x y E.
@@ -412,13 +412,13 @@ Section ring_props.
   apply (no_zero_divisors x); split; eauto.
   Qed.
 
-  Global Instance mult_right_cancel : forall z, PropHolds (z <> 0) ->
+  #[export] Instance mult_right_cancel : forall z, PropHolds (z <> 0) ->
     RightCancellation (.*.) z.
   Proof.
     intros z ? x y p.
     apply stable.
     intro U.
-    nrapply (mult_ne_0' (x - y) z).
+    napply (mult_ne_0' (x - y) z).
     - exact _.
     - intros r.
       apply U, equal_by_zero_sum, r.
@@ -496,7 +496,7 @@ Section from_another_ring.
   Proof.
   split.
   - apply (groups.projected_ab_group f);assumption.
-  - apply (groups.projected_com_monoid f mult_correct one_correct);assumption.
+  - exact (groups.projected_com_monoid f mult_correct one_correct);assumption.
   - repeat intro; apply (injective f).
     rewrite plus_correct, !mult_correct, plus_correct.
     apply distribute_l.
@@ -538,7 +538,7 @@ Section from_stdlib_ring_theory.
   Qed.
 End from_stdlib_ring_theory. *)
 
-Global Instance id_sr_morphism `{IsSemiCRing A}: IsSemiRingPreserving (@id A) := {}.
+Instance id_sr_morphism `{IsSemiCRing A}: IsSemiRingPreserving (@id A) := {}.
 
 Section morphism_composition.
   Context `{Mult A} `{Plus A} `{One A} `{Zero A}
@@ -549,13 +549,13 @@ Section morphism_composition.
   Instance compose_sr_morphism:
     IsSemiRingPreserving f -> IsSemiRingPreserving g -> IsSemiRingPreserving (g ∘ f).
   Proof.
-  split; apply _.
+  split; exact _.
   Qed.
 
   Instance invert_sr_morphism:
     forall `{!IsEquiv f}, IsSemiRingPreserving f -> IsSemiRingPreserving (f^-1).
   Proof.
-  split; apply _.
+  split; exact _.
   Qed.
 End morphism_composition.
 

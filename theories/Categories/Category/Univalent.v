@@ -17,7 +17,7 @@ Notation isotoid C s d := (@equiv_inv _ _ (@idtoiso C s d) _).
 
 (** *** The objects of a category are a 1-type *)
 
-Global Instance trunc_category `{IsCategory C} : IsTrunc 1 C | 10000.
+Instance trunc_category `{IsCategory C} : IsTrunc 1 C | 10000.
 Proof.
   apply istrunc_S.
   intros ? ?.
@@ -35,4 +35,4 @@ Record Category :=
     iscategory_precategory_of_category :> IsCategory precategory_of_category
   }.
 
-Global Existing Instance iscategory_precategory_of_category.
+Existing Instance iscategory_precategory_of_category.

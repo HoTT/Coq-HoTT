@@ -1,5 +1,5 @@
 (** * Unicode notations for comma categories *)
-Local Set Warnings Append "-notation-overridden".
+Local Set Warnings "-notation-overridden".
 Require Import LaxComma.Core.
 Require Export LaxComma.Notations.
 Require Import Basics.Utf8.

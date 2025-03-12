@@ -6,11 +6,11 @@ Require Import Types.Prod.
 (** * Product categories *)
 
 (** Products preserve (0,1)-categories. *)
-Global Instance isgraph_prod A B `{IsGraph A} `{IsGraph B}
+Instance isgraph_prod A B `{IsGraph A} `{IsGraph B}
   : IsGraph (A * B)
   := Build_IsGraph (A * B) (fun x y => (fst x $-> fst y) * (snd x $-> snd y)).
 
-Global Instance is01cat_prod A B `{Is01Cat A} `{Is01Cat B}
+Instance is01cat_prod A B `{Is01Cat A} `{Is01Cat B}
   : Is01Cat (A * B).
 Proof.
   econstructor.
@@ -19,7 +19,7 @@ Proof.
     exact (f1 $o f2 , g1 $o g2).
 Defined.
 
-Global Instance is0gpd_prod A B `{Is0Gpd A} `{Is0Gpd B}
+Instance is0gpd_prod A B `{Is0Gpd A} `{Is0Gpd B}
  : Is0Gpd (A * B).
 Proof.
   srapply Build_Is0Gpd.
@@ -28,14 +28,14 @@ Proof.
   exact ( (f1^$, f2^$) ).
 Defined.
 
-Global Instance is2graph_prod A B `{Is2Graph A, Is2Graph B}
+Instance is2graph_prod A B `{Is2Graph A, Is2Graph B}
   : Is2Graph (A * B).
 Proof.
   intros [x1 x2] [y1 y2].
   rapply isgraph_prod.
 Defined.
 
-Global Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
+Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
   : Is1Cat (A * B).
 Proof.
   srapply Build_Is1Cat.
@@ -63,7 +63,7 @@ Defined.
 
 (** Product categories inherit equivalences *)
 
-Global Instance hasequivs_prod A B `{HasEquivs A} `{HasEquivs B}
+Instance hasequivs_prod A B `{HasEquivs A} `{HasEquivs B}
   : HasEquivs (A * B).
 Proof.
   srefine (Build_HasEquivs (A * B) _ _ _ _
@@ -85,14 +85,14 @@ Proof.
     + exact (catie_adjointify (snd f) (snd g) (snd r) (snd s)).
 Defined.
 
-Global Instance isequivs_prod A B `{HasEquivs A} `{HasEquivs B}
+Instance isequivs_prod A B `{HasEquivs A} `{HasEquivs B}
        {a1 a2 : A} {b1 b2 : B} {f : a1 $-> a2} {g : b1 $-> b2}
        {ef : CatIsEquiv f} {eg : CatIsEquiv g}
   : @CatIsEquiv (A*B) _ _ _ _ _ (a1,b1) (a2,b2) (f,g) := (ef,eg).
 
 (** ** Product functors *)
 
-Global Instance is0functor_prod_functor {A B C D : Type}
+Instance is0functor_prod_functor {A B C D : Type}
   (F : A -> B) (G : C -> D) `{Is0Functor _ _ F, Is0Functor _ _ G}
   : Is0Functor (functor_prod F G).
 Proof.
@@ -101,7 +101,7 @@ Proof.
   exact (fmap F f , fmap G g).
 Defined.
 
-Global Instance is1functor_prod_functor {A B C D : Type}
+Instance is1functor_prod_functor {A B C D : Type}
   (F : A -> B) (G : C -> D) `{Is1Functor _ _ F, Is1Functor _ _ G}
   : Is1Functor (functor_prod F G).
 Proof.
@@ -114,14 +114,14 @@ Proof.
     exact (fmap_comp F f1 f2 , fmap_comp G g1 g2).
 Defined.
 
-Global Instance is0functor_fst {A B : Type} `{!IsGraph A, !IsGraph B}
+Instance is0functor_fst {A B : Type} `{!IsGraph A, !IsGraph B}
   : Is0Functor (@fst A B).
 Proof.
   apply Build_Is0Functor.
   intros ? ? f; exact (fst f).
 Defined.
 
-Global Instance is0functor_snd {A B : Type} `{!IsGraph A, !IsGraph B}
+Instance is0functor_snd {A B : Type} `{!IsGraph A, !IsGraph B}
   : Is0Functor (@snd A B).
 Proof.
   apply Build_Is0Functor.
@@ -130,18 +130,18 @@ Defined.
 
 (** Swap functor *)
 
-Global Instance is0functor_equiv_prod_symm {A B : Type} `{IsGraph A, IsGraph B}
+Instance is0functor_equiv_prod_symm {A B : Type} `{IsGraph A, IsGraph B}
   : Is0Functor (equiv_prod_symm A B).
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros a b.
   apply equiv_prod_symm.
 Defined.
 
-Global Instance is1functor_equiv_prod_symm {A B : Type} `{Is1Cat A, Is1Cat B}
+Instance is1functor_equiv_prod_symm {A B : Type} `{Is1Cat A, Is1Cat B}
   : Is1Functor (equiv_prod_symm A B).
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros a b f g.
     apply equiv_prod_symm.
   - intros a.
@@ -151,20 +151,20 @@ Defined.
 
 (** Inclusions into a product category are functorial. *)
 
-Global Instance is0functor_prod_include10 {A B : Type} `{IsGraph A, Is01Cat B}
+Instance is0functor_prod_include10 {A B : Type} `{IsGraph A, Is01Cat B}
   (b : B)
   : Is0Functor (fun a : A => (a, b)).
 Proof.
-  nrapply Build_Is0Functor.
+  napply Build_Is0Functor.
   intros a c f.
   exact (f, Id b).
 Defined.
 
-Global Instance is1functor_prod_include10 {A B : Type} `{Is1Cat A, Is1Cat B}
+Instance is1functor_prod_include10 {A B : Type} `{Is1Cat A, Is1Cat B}
   (b : B)
   : Is1Functor (fun a : A => (a, b)).
 Proof.
-  nrapply Build_Is1Functor.
+  napply Build_Is1Functor.
   - intros a c f g p.
     exact (p, Id _).
   - intros a; reflexivity.
@@ -172,20 +172,20 @@ Proof.
     exact (Id _, (cat_idl _)^$).
 Defined.
 
-Global Instance is0functor_prod_include01 {A B : Type} `{Is01Cat A, IsGraph B}
+Instance is0functor_prod_include01 {A B : Type} `{Is01Cat A, IsGraph B}
   (a : A)
   : Is0Functor (fun b : B => (a, b)).
 Proof.
-  nrapply Build_Is0Functor.
+  napply Build_Is0Functor.
   intros b c f.
   exact (Id a, f).
 Defined.
 
-Global Instance is1functor_prod_include01 {A B : Type} `{Is1Cat A, Is1Cat B}
+Instance is1functor_prod_include01 {A B : Type} `{Is1Cat A, Is1Cat B}
   (a : A)
   : Is1Functor (fun b : B => (a, b)).
 Proof.
-  nrapply Build_Is1Functor.
+  napply Build_Is1Functor.
   - intros b c f g p.
     exact (Id _, p).
   - intros b; reflexivity.
@@ -195,25 +195,25 @@ Defined.
 
 (** Functors from a product category are functorial in each argument *)
 
-Global Instance is0functor_functor_uncurried01 {A B C : Type}
+Instance is0functor_functor_uncurried01 {A B C : Type}
   `{Is01Cat A, IsGraph B, IsGraph C}
   (F : A * B -> C) `{!Is0Functor F} (a : A)
   : Is0Functor (fun b => F (a, b))
   := is0functor_compose (fun b => (a, b)) F.
 
-Global Instance is1functor_functor_uncurried01 {A B C : Type}
+Instance is1functor_functor_uncurried01 {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (a : A)
   : Is1Functor (fun b => F (a, b))
   := is1functor_compose (fun b => (a, b)) F.
 
-Global Instance is0functor_functor_uncurried10 {A B C : Type}
+Instance is0functor_functor_uncurried10 {A B C : Type}
   `{IsGraph A, Is01Cat B, IsGraph C}
   (F : A * B -> C) `{!Is0Functor F} (b : B)
   : Is0Functor (fun a => F (a, b))
   := is0functor_compose (fun a => (a, b)) F.
 
-Global Instance is1functor_functor_uncurried10 {A B C : Type}
+Instance is1functor_functor_uncurried10 {A B C : Type}
   `{Is1Cat A, Is1Cat B, Is1Cat C}
   (F : A * B -> C) `{!Is0Functor F, !Is1Functor F} (b : B)
   : Is1Functor (fun a => F (a, b))
@@ -225,7 +225,7 @@ Definition is0functor_prod_is0functor {A B C : Type}
   `{!forall a, Is0Functor (fun b => F (a,b)), !forall b, Is0Functor (fun a => F (a,b))}
   : Is0Functor F.
 Proof.
-  snrapply Build_Is0Functor.
+  snapply Build_Is0Functor.
   intros [a b] [a' b'] [f g].
   exact (fmap (fun a0 => F (a0,b')) f $o fmap (fun b0 => F (a,b0)) g).
 Defined.
@@ -242,7 +242,7 @@ Definition is1functor_prod_is1functor {A B C : Type}
       $== fmap (fun a => F(a,b1)) f $o fmap (fun b => F (a0,b)) g)
   : Is1Functor F.
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros [a b] [a' b'] [f g] [f' g'] [p p']; unfold fst, snd in * |- .
     exact (fmap2 (fun b0 => F (a,b0)) p' $@@ fmap2 (fun a0 => F (a0,b')) p).
   - intros [a b].
@@ -251,7 +251,7 @@ Proof.
     refine ((fmap_comp (fun b0 => F (a,b0)) g g' $@@ fmap_comp (fun a0 => F (a0,b'')) f f') $@ _).
     nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).
     refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).
-    nrapply bifunctor_coh.
+    napply bifunctor_coh.
 Defined.
 Hint Immediate is1functor_prod_is1functor : typeclass_instances.
 

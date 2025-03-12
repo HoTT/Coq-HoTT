@@ -37,7 +37,7 @@ Section Pi1S1.
   Theorem pi1_s1 : Pi 1 (psphere 1) ≅ abgroup_Z.
   Proof.
     etransitivity.
-    2: apply pi1_circle.
+    2: exact pi1_circle.
     apply groupiso_pi_functor.
     apply pequiv_S1_Circle.
   Defined.
@@ -77,7 +77,7 @@ Section PinSn.
     refine (_ $oE groupiso_pi_loops n.+1 (psphere n.+3)).
     refine (IHn $oE _).
     symmetry.
-    snrapply (grp_iso_pi_connmap _ (loop_susp_unit (psphere n.+2))).
+    snapply (grp_iso_pi_connmap _ (loop_susp_unit (psphere n.+2))).
     (* The (n+2)-sphere is (n+1)-connected, so [loop_susp_unit] is [n +2+ n]-connected.  Since [n.+2 <= n +2+ n], we're done, after some [trunc_index] juggling. *)
     apply (isconnmap_pred_add n.-2).
     rewrite 2 trunc_index_add_succ.

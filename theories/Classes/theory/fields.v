@@ -14,7 +14,7 @@ Definition recip' (x : F) (apx : x ≶ 0) : F := //(x;apx).
 (* Add Ring F : (stdlib_ring_theory F). *)
 Lemma recip_inverse' (x : F) (Px : x ≶ 0) : x // (x; Px) = 1.
 Proof.
-  apply (recip_inverse (x;Px)).
+  exact (recip_inverse (x;Px)).
 Qed.
 
 Lemma reciperse_alt (x : F) Px : x // (x;Px) = 1.
@@ -52,9 +52,9 @@ Proof.
 intros ? E. rewrite <-E. trivial.
 Qed.
 
-Global Instance: IsStrongInjective (-).
+#[export] Instance: IsStrongInjective (-).
 Proof.
-repeat (split; try apply _); intros x y E.
+repeat (split; try exact _); intros x y E.
 - apply (strong_extensionality (+ x + y)).
   rewrite simple_associativity, left_inverse, plus_0_l.
   rewrite (commutativity (f:=plus) x y), simple_associativity,
@@ -67,9 +67,9 @@ repeat (split; try apply _); intros x y E.
   apply symmetry;trivial.
 Qed.
 
-Global Instance: IsStrongInjective (//).
+#[export] Instance: IsStrongInjective (//).
 Proof.
-repeat (split; try apply _); intros x y E.
+repeat (split; try exact _); intros x y E.
 - apply (strong_extensionality (x.1 *.)).
   rewrite recip_inverse, (commutativity (f:=mult)).
   apply (strong_extensionality (y.1 *.)).
@@ -82,7 +82,7 @@ repeat (split; try apply _); intros x y E.
   rewrite mult_1_l,mult_1_r. apply symmetry;trivial.
 Qed.
 
-Global Instance: forall z, StrongLeftCancellation (+) z.
+#[export] Instance: forall z, StrongLeftCancellation (+) z.
 Proof.
 intros z x y E. apply (strong_extensionality (+ -z)).
 do 2 rewrite (commutativity (f:=plus) z _),
@@ -90,12 +90,12 @@ do 2 rewrite (commutativity (f:=plus) z _),
 trivial.
 Qed.
 
-Global Instance: forall z, StrongRightCancellation (+) z.
+#[export] Instance: forall z, StrongRightCancellation (+) z.
 Proof.
-intros. apply (strong_right_cancel_from_left (+)).
+intros. exact (strong_right_cancel_from_left (+)).
 Qed.
 
-Global Instance: forall z, PropHolds (z ≶ 0) -> StrongLeftCancellation (.*.) z.
+#[export] Instance: forall z, PropHolds (z ≶ 0) -> StrongLeftCancellation (.*.) z.
 Proof.
 intros z Ez x y E. red in Ez.
 rewrite !(commutativity z).
@@ -104,9 +104,9 @@ rewrite <-!simple_associativity, !reciperse_alt.
 rewrite !mult_1_r;trivial.
 Qed.
 
-Global Instance: forall z, PropHolds (z ≶ 0) -> StrongRightCancellation (.*.) z.
+#[export] Instance: forall z, PropHolds (z ≶ 0) -> StrongRightCancellation (.*.) z.
 Proof.
-intros. apply (strong_right_cancel_from_left (.*.)).
+intros. exact (strong_right_cancel_from_left (.*.)).
 Qed.
 
 Lemma mult_apart_zero_l x y : x * y ≶ 0 -> x ≶ 0.
@@ -142,9 +142,9 @@ assert (~ ~ apart y 0) as Ey.
   apply mult_0_l.
 Qed.
 
-Global Instance : IsIntegralDomain F := {}.
+#[export] Instance : IsIntegralDomain F := {}.
 
-Global Instance apart_0_sig_apart_0: forall (x : ApartZero F), PropHolds (x.1 ≶ 0).
+#[export] Instance apart_0_sig_apart_0: forall (x : ApartZero F), PropHolds (x.1 ≶ 0).
 Proof.
 intros [??];trivial.
 Qed.
@@ -255,7 +255,7 @@ Proof.
   exists (//x).
   apply recip_apart.
 Defined.
-Global Instance recip_involutive: Involutive recip_on_apart.
+#[export] Instance recip_involutive: Involutive recip_on_apart.
 Proof.
   intros [x apx0].
   apply path_sigma_hprop.
@@ -285,7 +285,7 @@ Section morphisms.
 
   Lemma strong_injective_preserves_0 : (forall x, x ≶ 0 -> f x ≶ 0) -> IsStrongInjective f.
   Proof.
-  intros E1. split; try apply _. intros x y E2.
+  intros E1. split; try exact _. intros x y E2.
   apply (strong_extensionality (+ -f y)).
   rewrite plus_negate_r, <-preserves_minus.
   apply E1.
@@ -296,7 +296,7 @@ Section morphisms.
 
   (* We have the following for morphisms to non-trivial strong rings as well.
     However, since we do not have an interface for strong rings, we ignore it. *)
-  Global Instance: IsStrongInjective f.
+  #[export] Instance: IsStrongInjective f.
   Proof.
   apply strong_injective_preserves_0.
   intros x Ex.
@@ -313,6 +313,6 @@ Section morphisms.
   - apply apart_ne;trivial.
   - rewrite <-rings.preserves_mult.
     rewrite !reciperse_alt.
-    apply preserves_1.
+    exact preserves_1.
   Qed.
 End morphisms.

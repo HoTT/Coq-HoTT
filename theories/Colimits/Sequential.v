@@ -32,7 +32,7 @@ Proof.
 Defined.
 
 (** If a sequential colimit has maps homotopic to a constant map then the colimit is contractible. *)
-Global Instance contr_colim_seq_into_prop {funext : Funext} (A : Sequence)
+Instance contr_colim_seq_into_prop {funext : Funext} (A : Sequence)
   (a : forall n, A n) (H : forall n, const (a n.+1) == A _f idpath)
   : Contr (Colimit A).
 Proof.
@@ -149,7 +149,7 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Global Instance isequiv_colim_succ_seq_to_colim_seq A
+Instance isequiv_colim_succ_seq_to_colim_seq A
   : IsEquiv (colim_succ_seq_to_colim_seq A).
 Proof.
   srapply isequiv_adjointify.
@@ -212,18 +212,18 @@ Proof.
   symmetry; apply concat_1p.
 Defined.
 
-Global Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
+Instance isequiv_colim_shift_seq_to_colim_seq `{Funext} A n
   : IsEquiv (colim_shift_seq_to_colim_seq A n).
 Proof.
   induction n as [ | n e]; srapply isequiv_homotopic'.
   - srapply equiv_functor_colimit; srapply Build_diagram_equiv.
     + srapply Build_DiagramMap.
       * exact (fun k => coe (ap A (nat_add_zero_r k))).
-      * intros k l p a; destruct p. srapply (K S (fun n a => a^+) _).
+      * intros k l p a; destruct p. exact (K S (fun n a => a^+) _).
     + exact _.
   - symmetry; srapply seq_colimit_uniq.
     + intros k a; exact (J (nat_add_zero_r k)).
-    + intros k a; rewrite !Colimit_rec_beta_colimp; srapply (L (glue A)).
+    + intros k a; rewrite !Colimit_rec_beta_colimp; exact (L (glue A)).
   - transitivity (Colimit (succ_seq (shift_seq A n))).
     + srapply equiv_functor_colimit; srapply Build_diagram_equiv.
       * srapply Build_DiagramMap.
@@ -237,7 +237,7 @@ Proof.
       rewrite 2(ap_compose' _ _ (glue _ k a)), Colimit_rec_beta_colimp, 2ap_pp.
       rewrite colim_succ_seq_to_colim_seq_ap_inj, colim_shift_seq_to_colim_seq_ap_inj.
       rewrite (colim_succ_seq_to_colim_seq_beta_glue (shift_seq A n)).
-      rewrite colim_shift_seq_to_colim_seq_beta_glue; srapply (L (glue A)).
+      rewrite colim_shift_seq_to_colim_seq_beta_glue; exact (L (glue A)).
 Defined.
 
 Definition equiv_colim_shift_seq_to_colim_seq `{Funext} A n
@@ -319,7 +319,7 @@ Proof.
       - exact (fun x b => K _ _ _ @ (ap _ (p (x^++) b))).
   + intro n; revert x; induction n as [ | n e].
     * exact (fun _ => isequiv_idmap _).
-    * intro x; srapply isequiv_compose.
+    * intro x; exact isequiv_compose.
 Defined.
 
 (** A fibered type sequence defines a type family; Section 4. *)
@@ -336,7 +336,7 @@ Definition fib_seq_to_type_fam_beta_glue `{Univalence} {A} B n a :
   colim_succ_seq_to_colim_seq (fib_seq_to_seq B (n;a)).
 Proof.
   srapply (ap _ (Colimit_rec_beta_colimp _ _ _ _ _ _) @ _).
-  srapply (transport_idmap_path_universe_uncurried _).
+  exact (transport_idmap_path_universe_uncurried _).
 Defined.
 
 Local Definition Delta {X Y} {x1 x2 : X} {F} (p : x1 = x2) (psi : coe (ap Y p) = F) y
@@ -436,7 +436,7 @@ Section SeqColimitSumInd.
       -> transport (fun y => G2 (F y) = Delta p psi y # G1 y) q u1 = u2.
   Proof.
     destruct theta; destruct q; intros u1 u2; rewrite ap_idmap, !concat_p1. simpl.
-    intro s; destruct s; srefine (concat_1p _).
+    intro s; destruct s; exact (concat_1p _).
   Defined.
 
   (** The path case of the nested induction; corresponds to "omega" in the paper. *)
@@ -446,7 +446,7 @@ Section SeqColimitSumInd.
     srapply Colimit_ind.
     - exact (fun k b => idpath).
     - intros k l p b; destruct p.
-      snrapply (Phi (glue A n a) (colim_succ_seq_to_colim_seq_beta_glue _ _ _)).
+      snapply (Phi (glue A n a) (colim_succ_seq_to_colim_seq_beta_glue _ _ _)).
       rewrite (Colimit_ind_beta_colimp _ (fun k => Q k n a) _ _ _ idpath).
       rewrite (Colimit_ind_beta_colimp _ (fun k => Q k n.+1 a^+) _ _ _ idpath).
       rewrite concat_p1, concat_1p; reflexivity.
@@ -457,7 +457,7 @@ Section SeqColimitSumInd.
       forall y, G2 (F y) = Delta p psi y # G1 y.
   Proof.
     destruct p; destruct psi.
-    srefine (transitivity (equiv_path_inverse _ _) (equiv_apD10 _ _ _)).
+    exact (transitivity (equiv_path_inverse _ _) (equiv_apD10 _ _ _)).
   Defined.
 
   (** The alternative induction rule in curried form; corresponds to curried "G" in
@@ -544,7 +544,7 @@ Proof.
 Defined.
 
 (** The canonical map from the sequential colimit of Sigmas to the Sigma of sequential colimits is an equivalence; Theorem 5.1. *)
-Global Instance isequiv_seq_colim_sum_to_sum_seq_colim `{Univalence} {A} (B : FibSequence A)
+Instance isequiv_seq_colim_sum_to_sum_seq_colim `{Univalence} {A} (B : FibSequence A)
   : IsEquiv (seq_colim_sum_to_sum_seq_colim B).
 Proof.
   assert (L : {G : _ & G o seq_colim_sum_to_sum_seq_colim B == idmap}).
@@ -608,24 +608,24 @@ Defined.
 Open Scope trunc_scope.
 
 (** Corollary 7.7.1, second part. *)
-Global Instance trunc_seq_colim `{Univalence} {A : Sequence} k :
+Instance trunc_seq_colim `{Univalence} {A : Sequence} k :
   (forall n, IsTrunc k (A n)) -> IsTrunc k (Colimit A) | 100.
 Proof.
   revert A; induction k as [ | k IHk].
-  - srapply contr_colim_contr_seq.
+  - exact contr_colim_contr_seq.
   - intros A trH; apply istrunc_S; srapply Colimit_ind.
     + intro n; revert trH; revert A; induction n as [ | n IHn].
       * intros A trH a; srapply Colimit_ind.
         { intros m b; revert b; revert a; revert trH; revert A; induction m as [ | m IHm].
           { intros A trH a b.
-            srefine (istrunc_equiv_istrunc _ (equiv_inverse (equiv_path_colim _ a b))). }
+            exact (istrunc_equiv_istrunc _ (equiv_inverse (equiv_path_colim _ a b))). }
           { intros A trH a b.
             srefine (istrunc_equiv_istrunc _ (equiv_inverse (equiv_concat_l (glue A _ a) _))).
             srapply (@istrunc_equiv_istrunc _ _ _ k (IHm (succ_seq A) _ (@arr _ A 0%nat _ 1%path a) b)).
             srapply (equiv_ap (colim_succ_seq_to_colim_seq A)). }}
-        { intros n m p b; snrapply path_ishprop; snrapply ishprop_istrunc; exact _. }
+        { intros n m p b; snapply path_ishprop; snapply ishprop_istrunc; exact _. }
       * intros A trH a; srapply (functor_forall_equiv_pb (colim_succ_seq_to_colim_seq A)).
         intro x; srapply (@istrunc_equiv_istrunc _ _ _ k (IHn (succ_seq A) _ a x)); srapply equiv_ap.
-    + intros n m p a; snrapply path_ishprop; snrapply istrunc_forall.
+    + intros n m p a; snapply path_ishprop; snapply istrunc_forall.
       intro x; srapply ishprop_istrunc.
 Defined.

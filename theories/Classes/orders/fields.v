@@ -15,7 +15,7 @@ Proof.
 apply (strictly_order_reflecting (x *.)).
 rewrite mult_0_r.
 rewrite (recip_inverse' x).
-apply lt_0_1.
+exact lt_0_1.
 Qed.
 
 Lemma neg_recip_compat (x : F) (Px : x < 0) : //(x;negative_apart_zero x Px) < 0.

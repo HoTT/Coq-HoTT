@@ -19,19 +19,19 @@ Record CRing := {
 
 Definition issig_CRing : _ <~> CRing := ltac:(issig).
 
-Global Instance cring_plus {R : CRing} : Plus R := plus_abgroup R.
-Global Instance cring_zero {R : CRing} : Zero R := zero_abgroup R.
-Global Instance cring_negate {R : CRing} : Negate R := negate_abgroup R.
+Instance cring_plus {R : CRing} : Plus R := plus_abgroup R.
+Instance cring_zero {R : CRing} : Zero R := zero_abgroup R.
+Instance cring_negate {R : CRing} : Negate R := negate_abgroup R.
 
 Definition Build_CRing' (R : AbGroup) `(!One R, !Mult R)
   (comm : Commutative (.*.)) (assoc : Associative (.*.))
   (dist_l : LeftDistribute (.*.) (+)) (unit_l : LeftIdentity (.*.) 1)
   : CRing.
 Proof.
-  snrapply Build_CRing.
+  snapply Build_CRing.
   - rapply (Build_Ring R); only 1,2,4: exact _.
     + intros x y z.
-      lhs nrapply comm.
+      lhs napply comm.
       lhs rapply dist_l.
       f_ap.
     + intros x.
@@ -62,8 +62,8 @@ Defined.
 Definition rng_mult_permute_2_3 {R : CRing} (x y z : R)
   : x * y * z = x * z * y.
 Proof.
-  lhs_V nrapply rng_mult_assoc.
-  rhs_V nrapply rng_mult_assoc.
+  lhs_V napply rng_mult_assoc.
+  rhs_V napply rng_mult_assoc.
   apply ap, rng_mult_comm.
 Defined.
 
@@ -84,10 +84,10 @@ Definition isinvertible_cring (R : CRing) (x : R)
   (inv : R) (inv_l : inv * x = 1)
   : IsInvertible R x.
 Proof.
-  snrapply Build_IsInvertible.
+  snapply Build_IsInvertible.
   - exact inv.
   - exact inv_l.
-  - lhs nrapply rng_mult_comm.
+  - lhs napply rng_mult_comm.
     exact inv_l.
 Defined.
 
@@ -147,7 +147,7 @@ Section IdealCRing.
       symmetry.
       apply ideal_product_unit_r. }
     etransitivity.
-    1: rapply (ideal_product_subset_pres_r _ _ _ p).
+    1: exact (ideal_product_subset_pres_r _ _ _ p).
     rapply ideal_product_intersection_sum_subset'.
   Defined.
 
@@ -160,7 +160,7 @@ Section IdealCRing.
     - apply ideal_intersection_subset_product.
       unfold Coprime in p.
       apply symmetry in p.
-      rapply p.
+      exact p.
     - apply ideal_product_subset_intersection.
   Defined.
 
@@ -253,22 +253,22 @@ End IdealCRing.
 
 (** ** Category of commutative rings. *)
 
-Global Instance isgraph_CRing : IsGraph CRing := isgraph_induced cring_ring.
-Global Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
-Global Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
-Global Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.
-Global Instance hasequiv_CRing : HasEquivs CRing := hasequivs_induced cring_ring.
+Instance isgraph_CRing : IsGraph CRing := isgraph_induced cring_ring.
+Instance is01cat_CRing : Is01Cat CRing := is01cat_induced cring_ring.
+Instance is2graph_CRing : Is2Graph CRing := is2graph_induced cring_ring.
+Instance is1cat_CRing : Is1Cat CRing := is1cat_induced cring_ring.
+Instance hasequiv_CRing : HasEquivs CRing := hasequivs_induced cring_ring.
 
 (** ** Quotient rings *)
 
-Global Instance commutative_quotientring_mult (R : CRing) (I : Ideal R)
+Instance commutative_quotientring_mult (R : CRing) (I : Ideal R)
   : Commutative (A:=QuotientRing R I) (.*.).
 Proof.
   intros x; srapply QuotientRing_ind_hprop; intros y; revert x.
   srapply QuotientRing_ind_hprop; intros x; hnf.
-  lhs_V nrapply rng_homo_mult.
-  rhs_V nrapply rng_homo_mult.
-  snrapply ap.
+  lhs_V napply rng_homo_mult.
+  rhs_V napply rng_homo_mult.
+  snapply ap.
   apply commutativity.
 Defined.
 

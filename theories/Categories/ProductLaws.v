@@ -56,11 +56,11 @@ Module Law0.
 
     Variable C : PreCategory.
 
-    Global Instance is_initial_category__product
+    #[export] Instance is_initial_category__product
     : IsInitialCategory (C * 0)
       := fun P c => initial_category_ind P (snd c).
 
-    Global Instance is_initial_category__product'
+    #[export] Instance is_initial_category__product'
     : IsInitialCategory (0 * C)
       := fun P c => initial_category_ind P (fst c).
 

@@ -28,7 +28,7 @@ Class Descends@{i} (O' O : Subuniverse@{i}) (T : Type@{i})
       OO_descend P (to O' T x) <~> P x ;
 }.
 
-Global Existing Instance OO_descend_inO.
+Existing Instance OO_descend_inO.
 Arguments OO_descend O' O {T _ _ _} P {P_inO} x.
 Arguments OO_descend_inO O' O {T _ _ _} P {P_inO} x.
 Arguments OO_descend_beta O' O {T _ _ _} P {P_inO} x.
@@ -37,7 +37,7 @@ Class O_lex_leq (O1 O2 : ReflectiveSubuniverse) `{O1 << O2} :=
   O_lex_leq_descends : forall A, Descends O2 O1 A.
 
 Infix "<<<" := O_lex_leq : subuniverse_scope.
-Global Existing Instance O_lex_leq_descends.
+Existing Instance O_lex_leq_descends.
 
 (** Unfortunately, it seems that generalizing binders don't work on notations: writing [`{O <<< O'}] doesn't automatically add the precondition [O << O'], although writing [`{O_lex_leq O O'}] does. *)
 
@@ -48,9 +48,9 @@ Definition O_lex_leq_eq {O1 O2 O3 : ReflectiveSubuniverse}
 Proof.
   intros A; unshelve econstructor; intros P P_inO1.
   all:pose (P_inO2 := fun x => inO_leq O1 O2 _ (P_inO1 x)).
-  - apply (OO_descend O3 O2 P).
+  - exact (OO_descend O3 O2 P).
   - intros x; apply (inO_leq O2 O1), (OO_descend_inO O3 O2 P).
-  - apply (OO_descend_beta O3 O2 P).
+  - exact (OO_descend_beta O3 O2 P).
 Defined.
 
 (** ** Left exactness properties *)
@@ -92,7 +92,7 @@ Definition OO_inverts_functor_sigma
 Proof.
   srapply isequiv_homotopic'.
   - refine (equiv_O_sigma_O O _ oE _ oE (equiv_O_sigma_O O _)^-1).
-    refine (Build_Equiv _ _ (O_functor O (functor_sigma f (fun x => O_functor O (g x)))) _).
+    exact (Build_Equiv _ _ (O_functor O (functor_sigma f (fun x => O_functor O (g x)))) _).
   - apply O_indpaths. intros [x u]; cbn.
     rewrite !to_O_natural, O_rec_beta; cbn.
     rewrite !to_O_natural, O_rec_beta.
@@ -110,7 +110,7 @@ Proof.
   exact (Q ((O_functor O' f)^-1 (to O' B b))).
 Defined.
 
-Global Instance OO_descend_O_inverts_inO
+#[export] Instance OO_descend_O_inverts_inO
        {A B : Type} (f : A -> B) `{O_inverts O' f}
        (P : A -> Type) {P_inO : forall x, In O (P x)} (b : B)
   : In O (OO_descend_O_inverts f P b)
@@ -141,12 +141,12 @@ Proof.
 Defined.
 
 (** We can also state it in terms of belonging to a subuniverse if we lift [O'] accessibly (an analogue of Theorem 3.11(iii) of RSS). *)
-Global Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}
+#[export] Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}
   : In (lift_accrsu O') (Type_ O)
   := fun i => ooextendable_TypeO_lex_leq (acc_lgen O' i).
 
 (** If [f] is an [O']-equivalence, then [ap f] is an [O]-equivalence. *)
-Global Instance OO_inverts_ap@{}
+#[export] Instance OO_inverts_ap@{}
        {A B : Type@{i}} (f : A -> B) `{O_inverts O' f} (x y : A)
   : O_inverts O (@ap _ _ f x y).
 Proof.
@@ -190,7 +190,7 @@ Definition OO_isconnected_paths
            {A : Type} `{IsConnected O' A} (x y : A)
   : IsConnected O (x = y).
 Proof.
-  rapply (contr_equiv' _ (equiv_O_functor_ap_OO_inverts (const_tt _) x y)^-1).
+  exact (contr_equiv' _ (equiv_O_functor_ap_OO_inverts (const_tt _) x y)^-1).
 Defined.
 
 (** Proposition 2.26 of CORS and Theorem 3.1(ix) of RSS; also generalizes Theorem 7.3.12 of the book.  Here we need to add the extra assumption that [O' <= Sep O], which is satisfied when [O' = Sep O] but also when [O] is lex and [O' = O].  That some such extra hypothesis is necessary can be seen from the fact that [Tr (-2) <<< O'] for any [O'], whereas this statement is certainly not true in that generality. *)
@@ -203,7 +203,7 @@ Proof.
   - exact _.
 Defined.
 
-Global Instance isequiv_path_OO `{O' <= Sep O}
+#[export] Instance isequiv_path_OO `{O' <= Sep O}
        {X : Type@{i}} (x y : X)
   : IsEquiv (path_OO x y).
 Proof.
@@ -218,7 +218,7 @@ Definition equiv_path_OO `{O' <= Sep O}
   := Build_Equiv _ _ (path_OO x y) _.
 
 (** [functor_hfiber] on a pair of [O']-equivalences is an [O]-equivalence. *)
-Global Instance OO_inverts_functor_hfiber
+#[export] Instance OO_inverts_functor_hfiber
        {A B C D : Type} {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
        (p : k o f == g o h) (b : B)
        `{O_inverts O' h, O_inverts O' k}
@@ -233,7 +233,7 @@ Proof.
 Defined.
 
 (** Corollary 2.29 of CORS: [O'] preserves fibers up to [O]-equivalence. *)
-Global Instance OO_inverts_functor_hfiber_to_O
+#[export] Instance OO_inverts_functor_hfiber_to_O
        {Y X : Type} (f : Y -> X) (x : X)
   : O_inverts O (functor_hfiber (fun a => (to_O_natural O' f a)^) x).
 Proof.
@@ -251,7 +251,7 @@ Definition OO_conn_map_isconnected
        {Y X : Type} `{IsConnected O' Y, IsConnected O' X} (f : Y -> X)
   : IsConnMap O f.
 Proof.
-  intros x; rapply (contr_equiv' _ (equiv_OO_functor_hfiber_to_O f x)^-1).
+  intros x; exact (contr_equiv' _ (equiv_OO_functor_hfiber_to_O f x)^-1).
 Defined.
 
 Definition OO_isconnected_hfiber
@@ -282,7 +282,7 @@ Proof.
 Defined.
 
 (** An enhancement of Corollary 2.29 of CORS, corresponding to Theorem 3.1(viii) of RSS: when [O'] is a modality, the map between fibers is not just an O-equivalence but is O-connected. *)
-Global Instance OO_conn_map_functor_hfiber_to_O `{IsModality O'}
+#[export] Instance OO_conn_map_functor_hfiber_to_O `{IsModality O'}
        {Y X : Type} (f : Y -> X) (x : X)
   : IsConnMap O (functor_hfiber (fun y => (to_O_natural O' f y)^) x).
 Proof.
@@ -302,7 +302,7 @@ Proof.
 Defined.
 
 (** [functor_pullback] on a triple of [O']-equivalences is an [O]-equivalence. *)
-Global Instance OO_inverts_functor_pullback
+#[export] Instance OO_inverts_functor_pullback
        {A1 B1 C1 A2 B2 C2 : Type}
        (f1 : B1 -> A1) (g1 : C1 -> A1)
        (f2 : B2 -> A2) (g2 : C2 -> A2)
@@ -327,7 +327,7 @@ Proof.
 Defined.
 
 (** Proposition 2.28 of CORS, and Theorem 3.1(x) of RSS: the functor [O'] preserves pullbacks up to [O]-equivalence. *)
-Global Instance OO_inverts_functor_pullback_to_O
+#[export] Instance OO_inverts_functor_pullback_to_O
        {A B C : Type} (f : B -> A) (g : C -> A)
   : O_inverts O (functor_pullback f g (O_functor O' f) (O_functor O' g)
                                   (to O' A) (to O' B) (to O' C)
@@ -347,9 +347,9 @@ Definition OO_cancelL_conn_map
   : IsConnMap O f.
 Proof.
   apply conn_map_OO_inverts.
-  nrapply (cancelL_isequiv (O_functor O' g)).
+  napply (cancelL_isequiv (O_functor O' g)).
   1:exact _.
-  rapply (isequiv_homotopic _ (O_functor_compose O' f g)).
+  exact (isequiv_homotopic _ (O_functor_compose O' f g)).
 Defined.
 
 End LeftExactness.
@@ -379,7 +379,7 @@ Definition OO_isconnected_from_conn_map
   : IsConnected O' X.
 Proof.
   apply isconnected_conn_map_to_unit.
-  apply (OO_cancelR_conn_map O' O f (const_tt _)).
+  exact (OO_cancelR_conn_map O' O f (const_tt _)).
 Defined.
 
 (** An interesting scholium to Proposition 2.31. *)
@@ -389,10 +389,10 @@ Definition OO_inverts_conn_map_factor_conn_map
        `{IsConnMap O' _ _ (g o f)} `{IsConnMap O _ _ f}
   : O_inverts O' f.
 Proof.
-  nrapply (cancelL_isequiv (O_functor O' g)).
+  napply (cancelL_isequiv (O_functor O' g)).
   - apply O_inverts_conn_map.
-    apply (OO_cancelR_conn_map O' O f g).
-  - rapply (isequiv_homotopic _ (O_functor_compose O' f g)).
+    exact (OO_cancelR_conn_map O' O f g).
+  - exact (isequiv_homotopic _ (O_functor_compose O' f g)).
 Defined.
 
 Definition OO_inverts_conn_map_isconnected_domain
@@ -401,7 +401,7 @@ Definition OO_inverts_conn_map_isconnected_domain
        `{IsConnected O' Y} `{IsConnMap O _ _ f}
   : O_inverts O' f.
 Proof.
-  apply (OO_inverts_conn_map_factor_conn_map O' O f (const_tt _)).
+  exact (OO_inverts_conn_map_factor_conn_map O' O f (const_tt _)).
 Defined.
 
 (** Here is the converse of [ooextendable_TypeO_lex_leq]. *)

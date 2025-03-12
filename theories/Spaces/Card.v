@@ -15,19 +15,19 @@ Definition card A `{IsHSet A} : Card
 Definition sum_card (a b : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (Build_HSet (a + b))).
+  exact (tr (Build_HSet (a + b))).
 Defined.
 
 Definition prod_card (a b : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (Build_HSet (a * b))).
+  exact (tr (Build_HSet (a * b))).
 Defined.
 
 Definition exp_card `{Funext} (b a : Card) : Card.
 Proof.
   strip_truncations.
-  refine (tr (Build_HSet (b -> a))).
+  exact (tr (Build_HSet (b -> a))).
 Defined.
 
 Definition leq_card `{Univalence} : Card -> Card -> HProp.
@@ -41,11 +41,11 @@ Defined.
 Section contents.
   Context `{Univalence}.
 
-  Global Instance plus_card : Plus Card := sum_card.
-  Global Instance mult_card : Mult Card := prod_card.
-  Global Instance zero_card : Zero Card := tr (Build_HSet Empty).
-  Global Instance one_card : One Card := tr (Build_HSet Unit).
-  Global Instance le_card : Le Card := leq_card.
+  #[export] Instance plus_card : Plus Card := sum_card.
+  #[export] Instance mult_card : Mult Card := prod_card.
+  #[export] Instance zero_card : Zero Card := tr (Build_HSet Empty).
+  #[export] Instance one_card : One Card := tr (Build_HSet Unit).
+  #[export] Instance le_card : Le Card := leq_card.
 
   (* Reduce an algebraic equation to an equivalence *)
   Local Ltac reduce :=
@@ -85,9 +85,9 @@ Section contents.
   Instance leftabsorb_card : LeftAbsorb mult_card zero_card.
   Proof. reduce. apply prod_empty_l. Defined.
 
-  Global Instance issemiring_card : IsSemiCRing Card.
+  #[export] Instance issemiring_card : IsSemiCRing Card.
   Proof.
-    repeat split; try apply _.
+    repeat split; try exact _.
     - repeat intro. simpl_ops.
       rewrite (commutativity zero_card _).
       apply rightid_sum.
@@ -125,7 +125,7 @@ Section contents.
   Instance reflexive_card : Reflexive leq_card.
   Proof.
     intro x. strip_truncations.
-    apply tr. exists idmap. refine (fun _ _ => idmap).
+    apply tr. exists idmap. exact (fun _ _ => idmap).
   Defined.
 
   Instance transitive_card : Transitive leq_card.
@@ -136,11 +136,11 @@ Section contents.
     destruct Hbc as [ibc Hbc].
     apply tr. exists (ibc ∘ iab).
     intros x y Hxy.
-    apply Hab. apply Hbc. apply Hxy.
+    apply Hab. apply Hbc. exact Hxy.
   Defined.
 
-  Global Instance preorder_card : PreOrder le_card.
-  Proof. split; apply _. Defined.
+  #[export] Instance preorder_card : PreOrder le_card.
+  Proof. split; exact _. Defined.
 
 End contents.
 
@@ -152,7 +152,7 @@ End contents.
 Definition Injection X Y :=
   { f : X -> Y | IsInjective f }.
 
-Global Instance Injection_refl :
+Instance Injection_refl :
   Reflexive Injection.
 Proof.
   intros X. exists (fun x => x). intros x x'. done.
@@ -168,7 +168,7 @@ Qed.
 Definition InjectsInto X Y :=
   merely (Injection X Y).
 
-Global Instance InjectsInto_refl :
+Instance InjectsInto_refl :
   Reflexive InjectsInto.
 Proof.
   intros X. apply tr. reflexivity.
@@ -178,8 +178,8 @@ Lemma InjectsInto_trans X Y Z :
   InjectsInto X Y -> InjectsInto Y Z -> InjectsInto X Z.
 Proof.
   intros H1 H2.
-  eapply merely_destruct; try apply H1. intros [f Hf].
-  eapply merely_destruct; try apply H2. intros [g Hg].
+  eapply merely_destruct; try exact H1. intros [f Hf].
+  eapply merely_destruct; try exact H2. intros [g Hg].
   apply tr. exists (fun x => g (f x)).
   intros x x' H. by apply Hf, Hg.
 Qed.

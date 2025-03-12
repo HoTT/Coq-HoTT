@@ -108,7 +108,7 @@ Section Reduction.
   Definition equiv_wtype_iwtype `{Funext} (x : I)
     : IW' x <~> IW I A B i j x.
   Proof.
-    snrapply equiv_adjointify.
+    snapply equiv_adjointify.
     { rapply (IW'_ind (fun l _ => IW I A B i j l)).
       intros a b c.
       apply iw_sup.
@@ -230,7 +230,7 @@ Section Paths.
     : IW I' A' B' i' j' (x; (a, b)) <~> a = b.
   Proof.
     change (IW I' A' B' i' j' (x; (a, b)) <~> IWPath (x; (a,b))).
-    snrapply equiv_adjointify.
+    snapply equiv_adjointify.
     { intros y.
       induction y as [e f g].
       apply iwpath_sup.
@@ -376,7 +376,7 @@ End Paths.
 (** ** IW-types preserve truncation *)
 
 (** We can show that if the index map is an embedding then the IW-type is a hprop. *)
-Global Instance ishprop_iwtype `{Funext}
+Instance ishprop_iwtype `{Funext}
   (I : Type) (A : Type) (B : A -> Type)
   (i : A -> I) (j : forall x, B x -> I) {h : IsEmbedding i}
   : forall x, IsHProp (IW I A B i j x).
@@ -406,7 +406,7 @@ Proof.
 Defined.
 
 (** Now by induction on truncation indices we show that IW-types are n.+1 truncated if the index maps are also n.+1 truncated. *)
-Global Instance istrunc_iwtype `{Funext}
+Instance istrunc_iwtype `{Funext}
   (I : Type) (A : Type) (B : A -> Type) (i : A -> I)
   (j : forall x, B x -> I) (n : trunc_index) {h : IsTruncMap n.+1 i} (l : I)
   : IsTrunc n.+1 (IW I A B i j l).
@@ -414,7 +414,7 @@ Proof.
   (** We need a general induction hypothesis *)
   revert n I A B i j h l.
   induction n as [|n IHn].
-  1: apply ishprop_iwtype.
+  1: exact ishprop_iwtype.
   intros I A B i j h l.
   apply istrunc_S.
   intros x y.
@@ -423,7 +423,7 @@ Proof.
   apply IHn.
   intros [k [a b]].
   (** The crucial step is to characterize the fiber of [i'] which was done previously. *)
-  apply (istrunc_equiv_istrunc _
+  exact (istrunc_equiv_istrunc _
     (equiv_path_hfiber_index I A B i j k a b)).
 Defined.
 

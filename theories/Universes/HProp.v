@@ -42,7 +42,7 @@ Proof.
     + exact (ap snd (eisretr d (x,y))).
 Defined.
 
-Global Instance isequiv_diag_ishprop {A} `{IsHProp A}
+Instance isequiv_diag_ishprop {A} `{IsHProp A}
 : IsEquiv (fun (a:A) => (a,a)).
 Proof.
   refine (isequiv_adjointify _ fst _ _).
@@ -80,26 +80,26 @@ Proof.
     + exact (@center _ P).
     + apply @istrunc_succ. exact P.
   - assert (g : A * IsHProp A -> Contr A).
-    + intros [a P]. apply (@contr_inhabited_hprop _ P a).
+    + intros [a P]. exact (@contr_inhabited_hprop _ P a).
     + refine (@equiv_iff_hprop _ _ _ _ f g).
       apply hprop_inhabited_contr; intro p.
       apply @contr_prod.
       * exact (g p).
-      * apply (@contr_inhabited_hprop _ _ (snd p)).
+      * exact (@contr_inhabited_hprop _ _ (snd p)).
 Defined.
 
 Theorem equiv_contr_inhabited_allpath `{Funext} {A}
   : Contr A <~> A * forall (x y : A), x = y.
 Proof.
   transitivity (A * IsHProp A).
-  - apply equiv_contr_inhabited_hprop.
+  - exact equiv_contr_inhabited_hprop.
   - exact (1 *E equiv_hprop_allpath _).
 Defined.
 
 (** ** Logical equivalence of hprops *)
 
 (** Logical equivalence of hprops is not just logically equivalent to equivalence, it is equivalent to it. *)
-Global Instance isequiv_equiv_iff_hprop_uncurried
+Instance isequiv_equiv_iff_hprop_uncurried
        `{Funext} {A B} `{IsHProp A} `{IsHProp B}
 : IsEquiv (@equiv_iff_hprop_uncurried A _ B _) | 0.
 Proof.
@@ -150,7 +150,7 @@ Defined.
 (** Recall that a type [A] is "stable" if [~~A -> A]. *)
 
 (** When [A] is an hprop, so is [Stable A] (by [ishprop_stable_hprop]), so [Stable A * IsHProp A] is an hprop for any [A]. *)
-Global Instance ishprop_stable_ishprop `{Funext} (A : Type) : IsHProp (Stable A * IsHProp A).
+Instance ishprop_stable_ishprop `{Funext} (A : Type) : IsHProp (Stable A * IsHProp A).
 Proof.
   apply istrunc_inhabited_istrunc; intros [stable ishprop].
   exact _.
@@ -184,7 +184,7 @@ Proof.
     exact (stable_equiv eq _, istrunc_equiv_istrunc _ eq).
   - intros [stable ishprop].
     rapply isequiv_iff_hprop.
-    apply stable.
+    exact stable.
 Defined.
 
 (** We can upgrade the previous "iff" result to an equivalence. *)
@@ -195,14 +195,14 @@ Definition equiv_isequiv_not_not_unit_stable_hprop `{Funext} (P : Type)
 (** ** A generalization of [ishprop_decpaths] *)
 
 (** Under [Funext], [ishprop_decpaths] shows that [DecidablePaths A] is an hprop.  More generally, it's also an hprop with the first argument fixed. *)
-Global Instance ishprop_decpaths' `{Funext} {A : Type} (x : A)
+Instance ishprop_decpaths' `{Funext} {A : Type} (x : A)
   : IsHProp (forall (y : A), Decidable (x = y)).
 Proof.
   apply hprop_allpath; intros d d'.
   (* Define [C] to be the component of [A] containing [x]. Since [x = y] is decidable, it is stable, so we can use [~~(x = y)] as an elementary form of propositional truncation. It also works to use [merely] here, but that brings in further dependencies and requires HITs. *)
   pose (C := {y : A & ~~(x = y)}).
   assert (cC : Contr C).
-  { snrapply (Build_Contr C (x; not_not_unit idpath)).
+  { snapply (Build_Contr C (x; not_not_unit idpath)).
     intros [y p].
     srapply path_sigma_hprop; cbn.
     (* [d y] either solves the goal or contradicts [p]. *)

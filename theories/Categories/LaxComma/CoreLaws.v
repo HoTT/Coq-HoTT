@@ -101,7 +101,7 @@ Module Import LaxCommaCategory.
             (m1 : morphism x1 x2) (m2 : morphism x2 x3) (m3 : morphism x3 x4)
       : compose (compose m3 m2) m1 = compose m3 (compose m2 m1).
       Proof.
-        refine (@path_morphism' _ _
+        exact (@path_morphism' _ _
                                 (compose (compose m3 m2) m1)
                                 (compose m3 (compose m2 m1))
                                 (Category.Core.associativity _ _ _ _ _ _ _ _)
@@ -221,7 +221,7 @@ Module Import LaxCommaCategory.
 Lemma left_identity (s d : object) (m : morphism s d)
       : compose (identity _) m = m.
       Proof.
-        refine (@path_morphism' _ _
+        exact (@path_morphism' _ _
                                (compose (identity _) m) m
                                (Category.Core.left_identity _ _ _ _)
                                (Category.Core.left_identity _ _ _ _)
@@ -317,7 +317,7 @@ Lemma left_identity (s d : object) (m : morphism s d)
       Lemma right_identity (s d : object) (m : morphism s d)
       : compose m (identity _) = m.
       Proof.
-        refine (@path_morphism' _ _
+        exact (@path_morphism' _ _
                                (compose m (identity _)) m
                                (Category.Core.right_identity _ _ _ _)
                                (Category.Core.right_identity _ _ _ _)

@@ -57,7 +57,7 @@ Section MappingCylinder.
     (** Rather than adjointifying, we give all parts of the equivalence explicitly, so we can be sure of retaining the computational behavior of [eissect] and [eisretr].  However, it's easier to prove [eisadj] on the other side, so we reverse the equivalence first. *)
     symmetry.
     srapply Build_Equiv.
-    1:apply cyr.
+    1:exact cyr.
     srapply Build_IsEquiv.
     - srapply Cyl_rec.
       + exact f.

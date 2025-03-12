@@ -1,5 +1,6 @@
 Require Import Basics.
 Require Import Types.
+Require Import WildCat.
 Require Import Pointed.Core.
 Require Import Pointed.Loops.
 Require Import Pointed.pTrunc.
@@ -7,7 +8,6 @@ Require Import Pointed.pEquiv.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.BlakersMassey.
 Require Import Truncations.
-Require Import WildCat.
 
 Generalizable Variables X A B f g n.
 
@@ -16,13 +16,13 @@ Local Open Scope pointed_scope.
 
 (** ** Pointedness of [Susp] and path spaces thereof *)
 (** We arbitrarily choose [North] to be the point. *)
-Global Instance ispointed_susp {X : Type} : IsPointed (Susp X) | 0
+Instance ispointed_susp {X : Type} : IsPointed (Susp X) | 0
   := North.
 
-Global Instance ispointed_path_susp `{IsPointed X}
+Instance ispointed_path_susp `{IsPointed X}
   : IsPointed (North = South :> Susp X) | 0 := merid (point X).
 
-Global Instance ispointed_path_susp' `{IsPointed X}
+Instance ispointed_path_susp' `{IsPointed X}
   : IsPointed (South = North :> Susp X) | 0 := (merid (point X))^.
 
 Definition psusp (X : Type) : pType
@@ -32,14 +32,14 @@ Definition psusp (X : Type) : pType
 
 (** [psusp] has a functorial action. *)
 (** TODO: make this a displayed functor *)
-Global Instance is0functor_psusp : Is0Functor psusp
+Instance is0functor_psusp : Is0Functor psusp
   := Build_Is0Functor _ _ _ _ psusp (fun X Y f
       => Build_pMap (psusp X) (psusp Y) (functor_susp f) 1).
 
 (** [psusp] is a 1-functor. *)
-Global Instance is1functor_psusp : Is1Functor psusp.
+Instance is1functor_psusp : Is1Functor psusp.
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   (** Action on 2-cells *)
   - intros X Y f g p.
     pointed_reduce.
@@ -103,10 +103,10 @@ Module Book_Loop_Susp_Adjunction.
     ==* fmap loops g o* loop_susp_adjoint A B f.
   Proof.
     pointed_reduce. (* Very slow for some reason. *)
-    srefine (Build_pHomotopy _ _).
+    exact (Build_pHomotopy _ _).
     - intros a. simpl.
-      refine (_ @ (concat_1p _)^).
-      refine (_ @ (concat_p1 _)^).
+      exact (_ @ (concat_1p _)^).
+      exact (_ @ (concat_p1 _)^).
       rewrite !transport_sigma. simpl.
       rewrite !(transport_arrow_fromconst (B := A)).
       rewrite !transport_paths_Fr.
@@ -129,19 +129,19 @@ Definition loop_susp_unit (X : pType) : X ->* loops (psusp X)
       (fun x => merid x @ (merid (point X))^) (concat_pV _).
 
 (** By Freudenthal, we have that this map is (2n+2)-connected when [X] is (n+1)-connected. *)
-Global Instance conn_map_loop_susp_unit `{Univalence} (n : trunc_index)
+Instance conn_map_loop_susp_unit `{Univalence} (n : trunc_index)
   (X : pType) `{IsConnected n.+1 X}
   : IsConnMap (n +2+ n) (loop_susp_unit X).
 Proof.
-  refine (conn_map_compose _ merid (equiv_concat_r (merid pt)^ _)).
+  exact (conn_map_compose _ merid (equiv_concat_r (merid pt)^ _)).
 Defined.
 
 (** We also have this corollary: *)
 Definition pequiv_ptr_loop_psusp `{Univalence} (X : pType) n `{IsConnected n.+1 X}
   : pTr (n +2+ n) X <~>* pTr (n +2+ n) (loops (psusp X)).
 Proof.
-  snrapply Build_pEquiv.
-  1:rapply (fmap (pTr _) (loop_susp_unit _)).
+  snapply Build_pEquiv.
+  1:exact (fmap (pTr _) (loop_susp_unit _)).
   rapply O_inverts_conn_map.
 Defined.
 
@@ -156,7 +156,7 @@ Proof.
     refine (ap_pp (Susp_rec North South (merid o f))
                   (merid x) (merid (point X))^ @ _).
     refine ((1 @@ ap_V _ _) @ _).
-    refine (Susp_rec_beta_merid _ @@ inverse2 (Susp_rec_beta_merid _)).
+    exact (Susp_rec_beta_merid _ @@ inverse2 (Susp_rec_beta_merid _)).
   - cbn. apply moveL_pV. rewrite !inv_pp, !concat_pp_p, concat_1p; symmetry.
     apply moveL_Vp.
     refine (concat_pV_inverse2 _ _ (Susp_rec_beta_merid (point X)) @ _).
@@ -171,7 +171,7 @@ Proof.
       (fun p' => 1 @ p')
       (concat_pV (merid (point X))) @ _).
     apply ap.
-    refine (ap_compose (ap (Susp_rec North South (merid o f)))
+    exact (ap_compose (ap (Susp_rec North South (merid o f)))
       (fun p' => p' @ 1) _).
 Qed.
 
@@ -192,7 +192,7 @@ Proof.
               (Susp_rec (point Y) (point Y) idmap) (merid p) @ _).
     do 2 rewrite Susp_rec_beta_merid.
     refine (concat_1p _ @ _). f_ap. f_ap. symmetry.
-    refine (Susp_rec_beta_merid _). 
+    exact (Susp_rec_beta_merid _).
   - reflexivity.
 Qed.
 
@@ -242,7 +242,7 @@ Qed.
 Definition loop_susp_adjoint `{Funext} (A B : pType)
   : (psusp A ->** B) <~>* (A ->** loops B).
 Proof.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   - refine (equiv_adjointify
               (fun f => fmap loops f o* loop_susp_unit A)
               (fun g => loop_susp_counit B o* fmap psusp g) _ _).
@@ -262,8 +262,8 @@ Proof.
       apply pmap_precompose_idmap.
   - apply path_pforall.
     unfold equiv_adjointify, equiv_fun.
-    nrapply (pmap_prewhisker _ fmap_loops_pconst @* _).
-    rapply cat_zero_l.
+    napply (pmap_prewhisker _ fmap_loops_pconst @* _).
+    tapply cat_zero_l.
 Defined.
 
 (** And its naturality is easy. *)
@@ -275,7 +275,7 @@ Proof.
   cbn.
   refine (_ @* pmap_compose_assoc _ _ _).
   apply pmap_prewhisker.
-  refine (fmap_comp loops f g).
+  exact (fmap_comp loops f g).
 Defined.
 
 Definition loop_susp_adjoint_nat_l `{Funext} (A A' B : pType)
@@ -288,16 +288,16 @@ Proof.
   exact (fmap_comp psusp g f).
 Defined.
 
-Global Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
+Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
   : Is1Natural (opyon (psusp A)) (opyon A o loops)
       (loop_susp_adjoint A).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros B B' g f.
   refine ( _ @ cat_assoc_strong _ _ _).
   refine (ap (fun x => x o* loop_susp_unit A) _).
   apply path_pforall.
-  rapply (fmap_comp loops).
+  tapply (fmap_comp loops).
 Defined.
 
 Lemma natequiv_loop_susp_adjoint_r `{Funext} (A : pType)

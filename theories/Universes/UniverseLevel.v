@@ -21,7 +21,7 @@ Definition lower2 {A B} (f : forall x : Lift A, Lift (B (lower x))) : forall x :
 (** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreck havok. *)
 #[global] Typeclasses Opaque lift lower lift2 lower2.
 
-Global Instance isequiv_lift T : IsEquiv (@lift T)
+Instance isequiv_lift T : IsEquiv (@lift T)
   := @Build_IsEquiv
        _ _
        (@lift T)
@@ -30,7 +30,7 @@ Global Instance isequiv_lift T : IsEquiv (@lift T)
        (fun _ => idpath)
        (fun _ => idpath).
 
-Global Instance isequiv_lift2 A B : IsEquiv (@lift2 A B)
+Instance isequiv_lift2 A B : IsEquiv (@lift2 A B)
   := @Build_IsEquiv
        _ _
        (@lift2 A B)
@@ -39,7 +39,7 @@ Global Instance isequiv_lift2 A B : IsEquiv (@lift2 A B)
        (fun _ => idpath)
        (fun _ => idpath).
 
-Global Instance lift_isequiv {A B} (f : A -> B) {H : IsEquiv f} : @IsEquiv (Lift A) (Lift B) (lift2 f)
+Instance lift_isequiv {A B} (f : A -> B) {H : IsEquiv f} : @IsEquiv (Lift A) (Lift B) (lift2 f)
   := @Build_IsEquiv
        (Lift A) (Lift B)
        (lift2 f)
@@ -50,7 +50,7 @@ Global Instance lift_isequiv {A B} (f : A -> B) {H : IsEquiv f} : @IsEquiv (Lift
                     @ (ap_compose f lift _)^)
                    @ (@ap_compose A (Lift A) (Lift B) lift (lift2 f) _ _ _)).
 
-Global Instance lower_isequiv {A B} (f : Lift A -> Lift B) {H : IsEquiv f} : @IsEquiv A B (lower2 f)
+Instance lower_isequiv {A B} (f : Lift A -> Lift B) {H : IsEquiv f} : @IsEquiv A B (lower2 f)
   := @Build_IsEquiv
        _ _
        (lower2 f)
@@ -84,7 +84,7 @@ Definition lower'2@{i i' j j'} {A : Type@{i}} {B : A -> Type@{i'}}
 (** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreck havok. *)
 #[global] Typeclasses Opaque lift' lower' lift'2 lower'2.
 
-Global Instance isequiv_lift'@{i j} (T : Type@{i})
+Instance isequiv_lift'@{i j} (T : Type@{i})
   : IsEquiv (@lift'@{i j} T)
   := @Build_IsEquiv
        _ _
@@ -94,7 +94,7 @@ Global Instance isequiv_lift'@{i j} (T : Type@{i})
        (fun _ => idpath)
        (fun _ => idpath).
 
-Global Instance isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{j})
+Instance isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{j})
   : IsEquiv@{e0 e1} (@lift'2@{i i' j j'} A B)
   := @Build_IsEquiv
        _ _
@@ -104,7 +104,7 @@ Global Instance isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -> Type@{
        (fun _ => idpath)
        (fun _ => idpath).
 
-Global Instance lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}}
+Instance lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}}
   (f : A -> B) {H : IsEquiv f}
   : @IsEquiv (Lift'@{i j} A) (Lift'@{i' j'} B) (lift'2 f)
   := @Build_IsEquiv
@@ -117,7 +117,7 @@ Global Instance lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}}
                     @ (ap_compose f lift' _)^)
                    @ (@ap_compose A (Lift' A) (Lift' B) lift' (lift'2 f) _ _ _)).
 
-Global Instance lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}}
+Instance lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}}
   (f : Lift'@{i j} A -> Lift'@{i' j'} B) {H : IsEquiv f}
   : @IsEquiv A B (lower'2 f)
   := @Build_IsEquiv

@@ -19,7 +19,7 @@ Section NaturalTransformations.
          (fun x => initial_category_ind _ x)
          (fun x _ _ => initial_category_ind _ x).
 
-  Global Instance trunc_from_initial
+  #[export] Instance trunc_from_initial
          `{Funext}
          `{@IsInitialCategory zero} (F G : Functor zero C)
   : Contr (NaturalTransformation F G).
@@ -35,7 +35,7 @@ Section NaturalTransformations.
 
   Local Existing Instance Functors.to_initial_category_empty.
 
-  Global Instance trunc_to_initial
+  #[export] Instance trunc_to_initial
          `{Funext}
          `{@IsInitialCategory zero}
          (F G : Functor zero C)
@@ -50,7 +50,7 @@ Section NaturalTransformations.
          (fun x => center _)
          (fun _ _ _ => path_contr _ _).
 
-  Global Instance trunc_to_terminal
+  #[export] Instance trunc_to_terminal
          `{Funext}
          `{@IsTerminalCategory one H1 H2} (F G : Functor C one)
   : Contr (NaturalTransformation F G).

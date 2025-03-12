@@ -59,8 +59,8 @@ Definition nat_choose_diag@{} n : nat_choose n n = 1.
 Proof.
   induction n as [|n IHn]; only 1: reflexivity.
   rewrite_refl nat_choose_succ.
-  rhs_V nrapply nat_add_zero_r.
-  nrapply ap011.
+  rhs_V napply nat_add_zero_r.
+  napply ap011.
   - exact IHn.
   - rapply nat_choose_lt.
 Defined.
@@ -78,8 +78,8 @@ Definition nat_choose_succ_l_diag@{} n : nat_choose n.+1 n = n.+1.
 Proof.
   induction n as [|n IHn]; only 1: reflexivity.
   rewrite_refl nat_choose_succ.
-  rhs_V nrapply (nat_add_comm _ 1).
-  nrapply ap011.
+  rhs_V napply (nat_add_comm _ 1).
+  napply ap011.
   - exact IHn.
   - apply nat_choose_diag.
 Defined.
@@ -96,9 +96,8 @@ Proof.
   (* The case when [m = n]. *)
   { rewrite nat_sub_cancel.
     rewrite nat_mul_one_r.
-    rewrite nat_div_cancel.
-    1: nrapply nat_choose_diag.
-    exact _. }
+    rhs rapply nat_div_cancel.
+    napply nat_choose_diag. }
   (* The case with [n.+1] and [m.+1] with [m < n] and an induction hypothesis. *)
   intros m H IHn.
   rewrite_refl nat_choose_succ.
@@ -116,7 +115,7 @@ Proof.
   rewrite nat_sub_succ_r.
   rewrite <- nat_factorial_pred.
   2: rapply equiv_lt_lt_sub.
-  lhs_V nrapply nat_div_dist.
+  lhs_V napply nat_div_dist.
   - rewrite nat_factorial_succ.
     rewrite <- nat_mul_assoc.
     exact _.

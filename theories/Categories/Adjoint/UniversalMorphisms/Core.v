@@ -4,9 +4,9 @@ Require Import Functor.Identity Functor.Composition.Core.
 Require Import Functor.Dual Category.Dual.
 Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual.
 Require Comma.Core.
-Local Set Warnings Append "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
+Local Set Warnings "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Import Comma.Core.
-Local Set Warnings Append "notation-overridden".
+Local Set Warnings "notation-overridden".
 Require Import UniversalProperties Comma.Dual InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 
 Set Universe Polymorphism.

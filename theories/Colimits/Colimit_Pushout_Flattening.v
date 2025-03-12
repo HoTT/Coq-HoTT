@@ -38,7 +38,7 @@ Section POCase.
       + exact (fun y => p # (g0 x y)).
   Defined.
 
-  Global Instance POCase_HE : Equifibered POCase_E.
+  #[export] Instance POCase_HE : Equifibered POCase_E.
   Proof.
     apply Build_Equifibered.
     intros [[]|[]] [[]|[]] [] x; compute.
@@ -68,10 +68,10 @@ Section POCase.
         all: reflexivity.
       + intros [[]|[]] [[]|[]] []; cbn.
         * intro y. simpl.
-          rhs nrapply concat_1p.
+          rhs napply concat_1p.
           unfold path_universe.
-          lhs nrapply (ap (fun x => x @ _) _^).
-          1: nrapply path_universe_V_uncurried.
+          lhs napply (ap (fun x => x @ _) _^).
+          1: napply path_universe_V_uncurried.
           exact (path_universe_compose (f0 y)^-1 (g0 y))^. 
         * intros; apply concat_Vp.
   Defined.

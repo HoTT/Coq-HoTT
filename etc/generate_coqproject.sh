@@ -15,8 +15,8 @@ fi
 ## Combine untracked and tracked .v files
 printf -v UNSORTED_V_FILES '%s\n%s' "$TRACKED_V_FILES" "$UNTRACKED_V_FILES"
 
-## Sort combined .v files
-SORTED_V_FILES=$(echo "$UNSORTED_V_FILES" | sort)
+## Sort combined .v files, and remove duplicates that can arise during a merge.
+SORTED_V_FILES=$(echo "$UNSORTED_V_FILES" | sort -u)
 
 ## _CoqProject header
 COQPROJECT_HEADER=\
@@ -46,7 +46,7 @@ fi
 ## Store new _CoqProject in a variable
 printf -v NEW_COQPROJECT '%s\n%s' "$COQPROJECT_HEADER" "$SORTED_V_FILES"
 
-## Look for exisitng _CoqProject
+## Look for existing _CoqProject
 if test -f "_CoqProject"; then
   OLD_COQPROJECT=$(cat _CoqProject)
   ## If it is the same don't overwrite

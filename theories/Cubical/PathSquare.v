@@ -51,7 +51,7 @@ Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
 Arguments PathSquare_rec {A} P f {_ _ _ _ _ _ _ _} _.
 
 (* PathSquare_ind is an equivalence, similar to how paths_ind is *)
-Global Instance isequiv_PathSquare_ind `{Funext} {A}
+Instance isequiv_PathSquare_ind `{Funext} {A}
   (P : forall (a00 a10 a01 a11 : A) (p : a00 = a10) (p0 : a01 = a11)
     (p1 : a00 = a01) (p2 : a10 = a11),
     PathSquare p p0 p1 p2 -> Type) : IsEquiv (PathSquare_ind P).
@@ -71,7 +71,7 @@ Definition equiv_sq_path {A} {a00 a10 a01 a11 : A}
   {p0x : a00 = a01} {p1x : a10 = a11}
   : px0 @ p1x = p0x @ px1 <~> PathSquare px0 px1 p0x p1x.
 Proof.
-  snrapply Build_Equiv.
+  snapply Build_Equiv.
   { destruct p0x, p1x.
     intro e.
     generalize (e @ concat_1p _).
@@ -94,7 +94,7 @@ Defined.
 Notation sq_path := equiv_sq_path.
 
 (** Squares in (n+2)-truncated types are n-truncated *)
-Global Instance istrunc_sq n
+Instance istrunc_sq n
   {A} `{!IsTrunc n.+2 A} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
   {p0x : a00 = a01} {p1x : a10 = a11}
@@ -140,7 +140,7 @@ Proof.
   destruct p0x, p1x.
   refine (sq_G1 oE _).
   refine (equiv_path_inverse _ _ oE _).
-  apply sq_G1^-1.
+  exact sq_G1^-1.
 Defined.
 
 Notation sq_flip_h := equiv_sq_flip_h.
@@ -153,7 +153,7 @@ Proof.
   destruct px0, px1.
   refine (sq_1G oE _).
   refine (equiv_path_inverse _ _ oE _).
-  apply sq_1G^-1.
+  exact sq_1G^-1.
 Defined.
 
 Notation sq_flip_v := equiv_sq_flip_v.
@@ -304,7 +304,7 @@ Section MovePaths.
   Proof.
     clear f12. destruct f12''.
     refine (sq_cGcc (concat_1p _) oE _).
-    refine (sq_ccGc (concat_p1 _)^).
+    exact (sq_ccGc (concat_p1 _)^).
   Defined.
 
   Definition equiv_sq_move_14 {f10'' : x00 = x} {f10' : x = x20} 
@@ -312,7 +312,7 @@ Section MovePaths.
   Proof.
     clear f10. destruct f10'.
     refine (sq_cccG (concat_1p _)^ oE _).
-    refine (sq_Gccc (concat_p1 _)).
+    exact (sq_Gccc (concat_p1 _)).
   Defined.
 
   Definition equiv_sq_move_24 {f12'' : x02 = x} {f12' : x22 = x} 
@@ -320,7 +320,7 @@ Section MovePaths.
   Proof.
     clear f12. destruct f12'.
     refine (sq_cccG (concat_p1 _)^ oE _).
-    refine (sq_cGcc (concat_p1 _)).
+    exact (sq_cGcc (concat_p1 _)).
   Defined.
 
   Definition equiv_sq_move_42 {f12'' : x02 = x} {f12' : x = x22} 
@@ -328,7 +328,7 @@ Section MovePaths.
   Proof.
     clear f12. destruct f12'.
     refine (sq_cGcc (concat_p1 _)^ oE _).
-    refine (sq_cccG (concat_p1 _)).
+    exact (sq_cccG (concat_p1 _)).
   Defined.
 
   Definition equiv_sq_move_13 {f10'' : x = x00} {f10' : x = x20} 
@@ -336,7 +336,7 @@ Section MovePaths.
   Proof.
     clear f10. destruct f10''.
     refine (sq_ccGc (concat_1p _)^ oE _).
-    refine (sq_Gccc (concat_1p _)).
+    exact (sq_Gccc (concat_1p _)).
   Defined.
 
   Definition equiv_sq_move_31 {f10'' : x00 = x} {f10' : x = x20} 
@@ -344,7 +344,7 @@ Section MovePaths.
   Proof.
     clear f10. destruct f10''.
     refine (sq_Gccc (concat_1p _)^ oE _).
-    refine (sq_ccGc (concat_1p _)).
+    exact (sq_ccGc (concat_1p _)).
   Defined.
 
 End MovePaths.
@@ -549,12 +549,12 @@ Proof.
   refine (_ oE (equiv_functor_prod' sq_path sq_path)^-1%equiv).
   refine (_ oE equiv_path_prod (_,_) (_,_)).
   srefine (_ oE equiv_ap' _ _ _).
-  3: apply (equiv_path_prod (_,_) (_,_)).
+  3: exact (equiv_path_prod (_,_) (_,_)).
   refine (_ oE equiv_concat_l _^ _).
   2: apply (path_prod_pp (_,_) (_,_) (_,_)).
   refine (_ oE equiv_concat_r _ _).
   2: apply (path_prod_pp (_,_) (_,_) (_,_)).
-  apply sq_path.
+  exact sq_path.
 Defined.
 
 Notation sq_prod := equiv_sq_prod.

@@ -51,16 +51,16 @@ Proof.
   apply abses_pushout_pullback_reorder'.
 Defined.
 
-Global Instance is0bifunctor_abses' `{Univalence}
+Instance is0bifunctor_abses' `{Univalence}
   : Is0Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
   rapply Build_Is0Bifunctor''.
 Defined.
 
-Global Instance is1bifunctor_abses' `{Univalence}
+Instance is1bifunctor_abses' `{Univalence}
   : Is1Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
 Proof.
-  snrapply Build_Is1Bifunctor''.
+  snapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros ? ? g ? ? f E; cbn.
   exact (abses_pushout_pullback_reorder E f g).
@@ -220,29 +220,29 @@ Proof.
 Defined.
 
 (** The Baer sum makes [AbSES B A] into an H-space. (In fact, a coherent H-space, but we leave that for now.) *)
-Global Instance ishspace_abses `{Univalence} {B A : AbGroup}
+Instance ishspace_abses `{Univalence} {B A : AbGroup}
   : IsHSpace (AbSES B A).
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact abses_baer_sum.
   - intro; apply baer_sum_unit_l.
   - intro; apply baer_sum_unit_r.
 Defined.
 
-Global Instance is0bifunctor_abses `{Univalence}
+Instance is0bifunctor_abses `{Univalence}
   : Is0Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
 Proof.
   rapply Build_Is0Bifunctor''.
 Defined.
 
-Global Instance is1bifunctor_abses `{Univalence}
+Instance is1bifunctor_abses `{Univalence}
   : Is1Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
 Proof.
-  snrapply Build_Is1Bifunctor''.
+  snapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros ? ? f ? ? g.
   rapply hspace_phomotopy_from_homotopy.
-  1: apply ishspace_abses.
+  1: exact ishspace_abses.
   intro E; cbn.
   apply abses_pushout_pullback_reorder.
 Defined.

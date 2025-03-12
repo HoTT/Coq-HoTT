@@ -8,7 +8,7 @@ Local Open Scope pointed_scope.
 
 (** ** Pointed fibers *)
 
-Global Instance ispointed_fiber {A B : pType} (f : A ->* B) : IsPointed (hfiber f (point B))
+Instance ispointed_fiber {A B : pType} (f : A ->* B) : IsPointed (hfiber f (point B))
   := (point A; point_eq f).
 
 Definition pfiber {A B : pType} (f : A ->* B) : pType := [hfiber f (point B), _].
@@ -21,7 +21,7 @@ Definition pfiber2_loops {A B : pType} (f : A ->* B)
   : pfiber (pfib f) <~>* loops B.
 Proof.
   pointed_reduce_pmap f.
-  snrapply Build_pEquiv'.
+  snapply Build_pEquiv'.
   1: make_equiv_contr_basedpaths.
   reflexivity.
 Defined.
@@ -61,7 +61,7 @@ Proof.
   induction n.
   1: reflexivity.
   refine (_ o*E pfiber_fmap_loops _ ).
-  rapply (emap loops).
+  tapply (emap loops).
   exact IHn.
 Defined.
 
@@ -71,10 +71,10 @@ Definition functor_pfiber {A B C D}
   : pfiber f ->* pfiber g.
 Proof.
   srapply Build_pMap.
-  + cbn. refine (functor_hfiber2 p (point_eq k)).
+  + cbn. exact (functor_hfiber2 p (point_eq k)).
   + srapply path_hfiber. 
     - apply point_eq.
-    - refine (concat_pp_p _ _ _ @ _). apply moveR_Vp. apply (point_htpy p)^.
+    - refine (concat_pp_p _ _ _ @ _). apply moveR_Vp. exact (point_htpy p)^.
 Defined.
 
 Definition pequiv_pfiber {A B C D}

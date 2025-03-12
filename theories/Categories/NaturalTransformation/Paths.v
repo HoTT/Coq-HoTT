@@ -36,7 +36,7 @@ Section path_natural_transformation.
   Defined.
 
   (** ** The type of natural transformations is an hSet *)
-  Global Instance trunc_natural_transformation
+  #[export] Instance trunc_natural_transformation
   : IsHSet (NaturalTransformation F G).
   Proof.
     eapply istrunc_equiv_istrunc; [ exact equiv_sig_natural_transformation | ].
@@ -55,7 +55,7 @@ Section path_natural_transformation.
       destruct T, U; simpl in *.
       path_induction.
       f_ap;
-        refine (center _).
+        exact (center _).
     Qed.
 
     Lemma path_natural_transformation
@@ -75,14 +75,14 @@ Section path_natural_transformation.
     : path_inv o path_natural_transformation == idmap.
     Proof.
       repeat intro.
-      refine (center _).
+      exact (center _).
     Qed.
 
     Lemma eissect_path_natural_transformation
     : path_natural_transformation o path_inv == idmap.
     Proof.
       repeat intro.
-      refine (center _).
+      exact (center _).
     Qed.
 
     Lemma eisadj_path_natural_transformation
@@ -91,7 +91,7 @@ Section path_natural_transformation.
         = ap path_inv (eissect_path_natural_transformation x).
     Proof.
       repeat intro.
-      refine (center _).
+      exact (center _).
     Qed.
 
     (** ** Equality of natural transformations is equivalent to equality of components *)

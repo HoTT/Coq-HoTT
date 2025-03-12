@@ -133,7 +133,7 @@ Proof.
 Defined.
 
 (* ** The successor autoequivalence. *)
-Global Instance isequiv_binint_succ : IsEquiv binint_succ | 0
+Instance isequiv_binint_succ : IsEquiv binint_succ | 0
   := isequiv_adjointify binint_succ _ binint_succ_pred binint_pred_succ.
 
 Definition equiv_binint_succ : BinInt <~> BinInt

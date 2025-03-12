@@ -11,7 +11,7 @@ Require Import WildCat.ZeroGroupoid.
 
 (** ** Two-variable hom-functors *)
 
-Global Instance is0functor_hom {A} `{Is01Cat A}
+Instance is0functor_hom {A} `{Is01Cat A}
   : @Is0Functor (A^op * A) Type _ _ (uncurry (@Hom A _)).
 Proof.
   apply Build_Is0Functor.
@@ -20,14 +20,14 @@ Proof.
 Defined.
 
 (** This requires morphism extensionality! *)
-Global Instance is1functor_hom {A} `{HasMorExt A}
+Instance is1functor_hom {A} `{HasMorExt A}
   : @Is1Functor (A^op * A) Type _ _ _ _ _ _ _ _ (uncurry (@Hom A _)) _.
 Proof.
   apply Build_Is1Functor.
   - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p1 p2] q;
       unfold fst, snd in *.
     apply path_hom.
-    refine (((p2 $@R q) $@R _) $@ ((g2 $o q) $@L p1)).
+    exact (((p2 $@R q) $@R _) $@ ((g2 $o q) $@L p1)).
   - intros [a1 a2] f; cbn in *.
     apply path_hom.
     exact (cat_idr _ $@ cat_idl f).
@@ -38,22 +38,22 @@ Proof.
     refine (_ $@ cat_assoc_opp _ _ _).
     refine (g2 $@L _).
     refine (_ $@ cat_assoc_opp _ _ _).
-    refine (cat_assoc_opp _ _ _).
+    exact (cat_assoc_opp _ _ _).
 Defined.
 
-Global Instance is0bifunctor_hom {A} `{Is01Cat A}
+Instance is0bifunctor_hom {A} `{Is01Cat A}
   : Is0Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _).
 Proof.
-  nrapply Build_Is0Bifunctor'.
+  napply Build_Is0Bifunctor'.
   1-2: exact _.
   exact is0functor_hom.
 Defined.
 
 (** While it is possible to prove the bifunctor coherence condition from [Is1Cat_Strong], 1-functoriality requires morphism extensionality.*)
-Global Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
+Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
   : Is1Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _).
 Proof.
-  nrapply Build_Is1Bifunctor'.
+  napply Build_Is1Bifunctor'.
   exact is1functor_hom.
 Defined.
 
@@ -69,7 +69,7 @@ Definition opyon {A : Type} `{IsGraph A} (a : A) : A -> Type
   := fun b => (a $-> b).
 
 (** We prove this explicitly instead of using the bifunctor instance above so that we can apply [fmap] in each argument independently without mapping an identity in the other. *)
-Global Instance is0functor_opyon {A : Type} `{Is01Cat A} (a : A)
+Instance is0functor_opyon {A : Type} `{Is01Cat A} (a : A)
   : Is0Functor (opyon a).
 Proof.
   apply Build_Is0Functor.
@@ -77,7 +77,7 @@ Proof.
   exact (f $o g).
 Defined.
 
-Global Instance is1functor_opyon {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A)
+Instance is1functor_opyon {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A)
   : Is1Functor (opyon a).
 Proof.
   rapply Build_Is1Functor.
@@ -137,11 +137,11 @@ Definition un_opyoneda {A : Type} `{Is01Cat A}
   : (opyon a $=> F) -> F a
   := fun alpha => alpha a (Id a).
 
-Global Instance is1natural_opyoneda {A : Type} `{Is1Cat A}
+Instance is1natural_opyoneda {A : Type} `{Is1Cat A}
   (a : A) (F : A -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (opyon a) F (opyoneda a F x).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   unfold opyon, opyoneda; intros b c f g; cbn in *.
   exact (fmap_comp F g f x).
 Defined.
@@ -192,12 +192,12 @@ Definition opyon_cancel {A : Type} `{Is01Cat A} (a b : A)
 
 Definition opyon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A Type.
 Proof.
-  rapply (Build_Fun01 _ _ (opyon a)).
+  exact (Build_Fun01 _ _ (opyon a)).
 Defined.
 
 Definition opyon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A Type.
 Proof.
-  rapply (Build_Fun11 _ _ (opyon a)).
+  exact (Build_Fun11 _ _ (opyon a)).
 Defined.
 
 (** An equivalence between representable functors induces an equivalence between the representing objects. *)
@@ -223,7 +223,7 @@ Definition natequiv_opyon_equiv {A : Type} `{HasEquivs A}
   : (b $<~> a) -> (opyon1 a $<~> opyon1 b).
 Proof.
   intro e.
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   - intros c.
     exact (equiv_precompose_cat_equiv e).
   - rapply is1natural_opyoneda.
@@ -236,19 +236,19 @@ Defined.
 Definition opyon_0gpd {A : Type} `{Is1Cat A} (a : A) : A -> ZeroGpd
   := fun b => Build_ZeroGpd (a $-> b) _ _ _.
 
-Global Instance is0functor_hom_0gpd {A : Type} `{Is1Cat A}
+Instance is0functor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is0Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
 Proof.
-  nrapply Build_Is0Functor.
+  napply Build_Is0Functor.
   intros [a1 a2] [b1 b2] [f1 f2]; unfold op in *; cbn in *.
-  rapply (Build_Morphism_0Gpd (opyon_0gpd a1 a2) (opyon_0gpd b1 b2)
+  rapply (Build_Fun01 (opyon_0gpd a1 a2) (opyon_0gpd b1 b2)
           (cat_postcomp b1 f2 o cat_precomp a2 f1)).
 Defined.
 
-Global Instance is1functor_hom_0gpd {A : Type} `{Is1Cat A}
+Instance is1functor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is1Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).
 Proof.
-  nrapply Build_Is1Functor.
+  napply Build_Is1Functor.
   - intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p q] h.
     exact (h $@L p $@@ q).
   - intros [a1 a2] h.
@@ -260,30 +260,30 @@ Proof.
     exact (cat_assoc_opp _ _ _).
 Defined.
 
-Global Instance is0bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
+Instance is0bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is0Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A)).
 Proof.
-  snrapply Build_Is0Bifunctor'.
+  snapply Build_Is0Bifunctor'.
   1,2: exact _.
   exact is0functor_hom_0gpd.
 Defined.
 
-Global Instance is1bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
+Instance is1bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
   : Is1Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A)).
 Proof.
-  snrapply Build_Is1Bifunctor'.
+  snapply Build_Is1Bifunctor'.
   exact is1functor_hom_0gpd.
 Defined.
 
-Global Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
+Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
   : Is0Functor (opyon_0gpd a).
 Proof.
   apply Build_Is0Functor.
   intros b c f.
-  exact (Build_Morphism_0Gpd (opyon_0gpd a b) (opyon_0gpd a c) (cat_postcomp a f) _).
+  exact (Build_Fun01 (opyon_0gpd a b) (opyon_0gpd a c) (cat_postcomp a f)).
 Defined.
 
-Global Instance is1functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
+Instance is1functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
   : Is1Functor (opyon_0gpd a).
 Proof.
   rapply Build_Is1Functor.
@@ -300,7 +300,7 @@ Definition opyoneda_0gpd {A : Type} `{Is1Cat A} (a : A)
   : F a -> (opyon_0gpd a $=> F).
 Proof.
   intros x b.
-  refine (Build_Morphism_0Gpd (opyon_0gpd a b) (F b) (fun f => fmap F f x) _).
+  refine (Build_Fun01 (opyon_0gpd a b) (F b) (fun f => fmap F f x)).
   rapply Build_Is0Functor.
   intros f1 f2 h.
   exact (fmap2 F h x).
@@ -311,11 +311,11 @@ Definition un_opyoneda_0gpd {A : Type} `{Is1Cat A}
   : (opyon_0gpd a $=> F) -> F a
   := fun alpha => alpha a (Id a).
 
-Global Instance is1natural_opyoneda_0gpd {A : Type} `{Is1Cat A}
+Instance is1natural_opyoneda_0gpd {A : Type} `{Is1Cat A}
   (a : A) (F : A -> ZeroGpd) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (opyon_0gpd a) F (opyoneda_0gpd a F x).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   unfold opyon_0gpd, opyoneda_0gpd; intros b c f g; cbn in *.
   exact (fmap_comp F g f x).
 Defined.
@@ -398,9 +398,9 @@ Definition natequiv_opyon_equiv_0gpd {A : Type} `{HasEquivs A}
   {a b : A} (e : b $<~> a)
   : opyon1_0gpd a $<~> opyon1_0gpd b.
 Proof.
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   - intro c; exact (equiv_precompose_cat_equiv_0gpd e).
-  - rapply is1natural_opyoneda_0gpd.
+  - tapply is1natural_opyoneda_0gpd.
 Defined.
 
 (** ** The contravariant Yoneda lemma *)
@@ -410,11 +410,11 @@ Defined.
 Definition yon {A : Type} `{IsGraph A} (a : A) : A^op -> Type
   := opyon (A:=A^op) a.
 
-Global Instance is0functor_yon {A : Type} `{H : Is01Cat A} (a : A)
+Instance is0functor_yon {A : Type} `{H : Is01Cat A} (a : A)
   : Is0Functor (yon a)
   := is0functor_opyon (A:=A^op) a.
 
-Global Instance is1functor_yon {A : Type} `{H : Is1Cat A} `{!HasMorExt A} (a : A)
+Instance is1functor_yon {A : Type} `{H : Is1Cat A} `{!HasMorExt A} (a : A)
   : Is1Functor (yon a)
   := is1functor_opyon (A:=A^op) a.
 
@@ -428,7 +428,7 @@ Definition un_yoneda {A : Type} `{Is01Cat A} (a : A)
   : (yon a $=> F) -> F a
   := un_opyoneda (A:=A^op) a F.
 
-Global Instance is1natural_yoneda {A : Type} `{Is1Cat A} (a : A)
+Instance is1natural_yoneda {A : Type} `{Is1Cat A} (a : A)
        (F : A^op -> Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (yon a) F (yoneda a F x)
   := is1natural_opyoneda (A:=A^op) a F x.
@@ -484,11 +484,11 @@ Definition natequiv_yon_equiv {A : Type} `{HasEquivs A}
 Definition yon_0gpd {A : Type} `{Is1Cat A} (a : A) : A^op -> ZeroGpd
   := opyon_0gpd (A:=A^op) a.
 
-Global Instance is0functor_yon_0gpd {A : Type} `{Is1Cat A} (a : A)
+Instance is0functor_yon_0gpd {A : Type} `{Is1Cat A} (a : A)
   : Is0Functor (yon_0gpd a)
   := is0functor_opyon_0gpd (A:=A^op) a.
 
-Global Instance is1functor_yon_0gpd {A : Type} `{Is1Cat A} (a : A)
+Instance is1functor_yon_0gpd {A : Type} `{Is1Cat A} (a : A)
   : Is1Functor (yon_0gpd a)
   := is1functor_opyon_0gpd (A:=A^op) a.
 
@@ -502,7 +502,7 @@ Definition un_yoneda_0gpd {A : Type} `{Is1Cat A}
   : (yon_0gpd a $=> F) -> F a
   := un_opyoneda_0gpd (A:=A^op) a F.
 
-Global Instance is1natural_yoneda_0gpd {A : Type} `{Is1Cat A}
+Instance is1natural_yoneda_0gpd {A : Type} `{Is1Cat A}
   (a : A) (F : A^op -> ZeroGpd) `{!Is0Functor F, !Is1Functor F} (x : F a)
   : Is1Natural (yon_0gpd a) F (yoneda_0gpd a F x)
   := is1natural_opyoneda_0gpd (A:=A^op) a F x.

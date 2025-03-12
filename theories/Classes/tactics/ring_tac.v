@@ -60,42 +60,42 @@ Qed.
 
 End content.
 
-Global Instance default_almostneg `{Zero A} : AlmostNegate A | 20
+Instance default_almostneg `{Zero A} : AlmostNegate A | 20
   := fun _ => 0.
 Arguments default_almostneg _ _ _ /.
 
-Global Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
+Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
   := (-).
 Arguments negate_almostneg _ _ _ /.
 
-Global Instance semiring_almostring `{IsSemiCRing A} : AlmostRing A | 10.
+Instance semiring_almostring `{IsSemiCRing A} : AlmostRing A | 10.
 Proof.
-split;try apply _.
+split;try exact _.
 intros. unfold almost_negate;simpl.
 symmetry;apply mult_0_l.
 Qed.
 
-Global Instance ring_almostring `{IsCRing A} : AlmostRing A.
+Instance ring_almostring `{IsCRing A} : AlmostRing A.
 Proof.
-split;try apply _.
+split;try exact _.
 intros. unfold almost_negate;simpl.
 apply negate_mult_l.
 Qed.
 
-Global Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}
+Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}
   : AlmostRingPreserving f | 10.
 Proof.
-split;try apply _.
-unfold almost_negate;simpl. intros _. apply preserves_0.
+split;try exact _.
+unfold almost_negate;simpl. intros _. exact preserves_0.
 Qed.
 
 Section VarSec.
 Context `{IsCRing A} `{IsCRing B} {f : A -> B} `{!IsSemiRingPreserving f}.
 
-Global Instance ring_mor_almostring_mor : AlmostRingPreserving f.
+#[export] Instance ring_mor_almostring_mor : AlmostRingPreserving f.
 Proof.
-split;try apply _.
-unfold almost_negate;simpl. apply preserves_negate.
+split;try exact _.
+unfold almost_negate;simpl. exact preserves_negate.
 Qed.
 
 End VarSec.

@@ -29,7 +29,7 @@ Module Export Trunc.
   Arguments tr {n A} a.
 
   (** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
-  Global Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
+  #[export] Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
     : IsTrunc@{j} n (Trunc@{i} n A).
   Admitted.
 
@@ -55,10 +55,10 @@ Definition Trunc_rec_tr n {A : Type}
 Definition Tr (n : trunc_index) : Modality.
 Proof.
   srapply (Build_Modality (fun A => IsTrunc n A)); cbn.
-  - intros A B ? f ?; rapply (istrunc_isequiv_istrunc A f).
+  - intros A B ? f ?; exact (istrunc_isequiv_istrunc A f).
   - exact (Trunc n).
   - intros; apply istrunc_truncation.
-  - intros A; apply tr.
+  - intros A; exact tr.
   - intros A B ? f oa; cbn in *.
     exact (Trunc_ind B f oa).
   - intros; reflexivity.
@@ -77,7 +77,7 @@ Section TruncationModality.
     : IsTrunc n A <-> IsEquiv (@tr n A)
     := inO_iff_isequiv_to_O (Tr n) A.
 
-  Global Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
+  #[export] Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
     := fst (trunc_iff_isequiv_truncation A) _.
 
   Definition equiv_tr (A : Type) `{IsTrunc n A}
@@ -95,10 +95,10 @@ Section TruncationModality.
     : Tr@{i} n X -> Tr@{j} n Y
     := O_functor@{k k k} (Tr n) f.
 
-  Global Instance is0functor_Tr : Is0Functor (Tr n)
+  #[export] Instance is0functor_Tr : Is0Functor (Tr n)
     := Build_Is0Functor _ _ _ _ (Tr n) (@Trunc_functor).
 
-  Global Instance Trunc_functor_isequiv {X Y : Type}
+  #[export] Instance Trunc_functor_isequiv {X Y : Type}
     (f : X -> Y) `{IsEquiv _ _ f}
     : IsEquiv (Trunc_functor f)
     := isequiv_O_functor (Tr n) f.
@@ -119,18 +119,18 @@ Section TruncationModality.
     : Tr n (X * Y) <~> Tr n X * Tr n Y
     := equiv_O_prod_cmp (Tr n) X Y.
 
-  Global Instance is1functor_Tr : Is1Functor (Tr n).
+  #[export] Instance is1functor_Tr : Is1Functor (Tr n).
   Proof.
     apply Build_Is1Functor.
     - apply @O_functor_homotopy.
-    - apply @Trunc_functor_idmap.
-    - apply @Trunc_functor_compose.
+    - exact @Trunc_functor_idmap.
+    - exact @Trunc_functor_compose.
   Defined.
 
 End TruncationModality.
 
 (** We have to teach Coq to translate back and forth between [IsTrunc n] and [In (Tr n)]. *)
-Global Instance inO_tr_istrunc {n : trunc_index} (A : Type) `{IsTrunc n A}
+Instance inO_tr_istrunc {n : trunc_index} (A : Type) `{IsTrunc n A}
   : In (Tr n) A.
 Proof.
   assumption.
@@ -153,7 +153,7 @@ Hint Extern 1000 (IsTrunc _ _) => simple apply istrunc_inO_tr; solve [ trivial ]
 (** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc].  You can always apply [istrunc_inO_tr] explicitly, but sometimes it also works to just [pose] it into the context. *)
 
 (** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)
-Global Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
+Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
   (f : A -> B) `{IsTruncMap n A B f}
   : MapIn (Tr n) f.
 Proof.
@@ -180,7 +180,7 @@ Proof.
   intros [C ContrC].
   apply equiv_path_sigma_hprop.
   apply path_universe_uncurried.
-  symmetry; apply equiv_contr_unit.
+  symmetry; exact equiv_contr_unit.
 Defined.
 
 (** ** A few special things about the (-1)-truncation *)
@@ -203,7 +203,7 @@ Definition himage {X Y} (f : X -> Y) := image (Tr (-1)) f.
 Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
 Proof.
   refine (@contr_trunc_conn (Tr (-1)) A _ _); try assumption.
-  refine (contr_inhabited_hprop _ ma).
+  exact (contr_inhabited_hprop _ ma).
 Defined.
 
 (** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)
@@ -234,7 +234,7 @@ Lemma iff_merely_issurjection {X : Type} (P : X -> Type)
 Proof.
   refine (iff_compose _ (iff_forall_inO_mapinO_pr1 (Conn _) P)).
   apply iff_functor_forall; intro a.
-  symmetry; apply (iff_contr_hprop (Tr (-1) (P a))).
+  symmetry; exact (iff_contr_hprop (Tr (-1) (P a))).
 Defined.
 
 Lemma equiv_merely_issurjection `{Funext} {X : Type} (P : X -> Type)
@@ -268,7 +268,7 @@ Defined.
 (** ** Embeddings *)
 
 (** For any point in the image of an embedding, the fibers are contractable. *)
-Global Instance contr_hfiber_emb {A B} (a : A) (f : A -> B)
+Instance contr_hfiber_emb {A B} (a : A) (f : A -> B)
   `{IsEmbedding f}
   : Contr (hfiber f (f a)).
 Proof.
@@ -324,10 +324,10 @@ Defined.
 Definition isembedding_paths `{Univalence} {X : Type@{u}} : IsEmbedding (@paths X).
 Proof.
   (* To show that [paths] is an embedding, it suffices to show that [ap paths : x1 = x2 -> (paths x1) = (paths x2)] is an equivalence. *)
-  snrapply isembedding_isequiv_ap.
+  snapply isembedding_isequiv_ap.
   intros x1 x2.
   (* And for that, it suffices to show that [i o (ap paths)] is an equivalence for a well-chosen embedding [i]. *)
-  snrapply (isequiv_isequiv_compose_embedding (ap_paths_inverse x1 x2)).
+  snapply (isequiv_isequiv_compose_embedding (ap_paths_inverse x1 x2)).
   - (* [ap_paths_inverse x1 x2] is an embedding since it is a composite of four equivalences and one embedding.  We can group these into three parts. *)
     unfold ap_paths_inverse.
     nrefine (mapinO_compose (O:=Tr (-1)) _ (equiv_path_inverse x2 x1 oE _)).
@@ -336,7 +336,7 @@ Proof.
     1: exact _. (* The first part is an equivalence, so it's an embedding. *)
     rapply mapinO_functor_forall_id.
     intro y.
-    apply isembedding_equiv_fun.
+    exact isembedding_equiv_fun.
   - (* The composite is an equivalence because it is homotopic to the identity. *)
     simpl.
     srapply (isequiv_homotopic idmap).
@@ -374,8 +374,8 @@ Proof.
   destruct (trunc_index_min_path n m) as [p|q].
   + assert (l := trunc_index_min_leq_right n m).
     destruct p^; clear p.
-    snrapply (Build_Equiv _ _ (Trunc_functor _ tr)).
-    nrapply O_inverts_conn_map.
+    snapply (Build_Equiv _ _ (Trunc_functor _ tr)).
+    napply O_inverts_conn_map.
     rapply (conn_map_O_leq _ (Tr m)).
     rapply O_leq_Tr_leq.
   + assert (l := trunc_index_min_leq_left n m).

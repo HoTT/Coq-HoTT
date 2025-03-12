@@ -87,13 +87,13 @@ Defined.
 (** Note the reversal of the order: [O1 << O2] means that [O2] has dependent eliminators into [O1]. *)
 Class O_strong_leq (O1 O2 : ReflectiveSubuniverse)
   := reflectsD_strong_leq : forall A, ReflectsD O2 O1 A.
-Global Existing Instance reflectsD_strong_leq.
+Existing Instance reflectsD_strong_leq.
 
 Infix "<<" := O_strong_leq : subuniverse_scope.
 Open Scope subuniverse_scope.
 
 (** The strong order implies the weak order. *)
-Global Instance O_leq_strong_leq {O1 O2 : ReflectiveSubuniverse} `{O1 << O2}
+Instance O_leq_strong_leq {O1 O2 : ReflectiveSubuniverse} `{O1 << O2}
   : O1 <= O2.
 Proof.
   intros A A_inO1.
@@ -110,7 +110,7 @@ Proof.
   intros A; constructor; intros B B_inO.
   apply (extendable_to_OO (O := O2)).
   intros x.
-  srapply inO_leq; apply B_inO.
+  srapply inO_leq; exact B_inO.
 Defined.
 
 
@@ -129,7 +129,7 @@ Record Modality@{i} := Build_Modality'
       ReflectsD modality_subuniv modality_subuniv T ;
 }.
 
-Global Existing Instance modality_reflectsD.
+Existing Instance modality_reflectsD.
 (** We don't declare [modality_subuniv] as a coercion or [modality_prereflects] as a global instance, because we want them only to be found by way of the following "unbundling" coercion to reflective subuniverses. *)
 
 Definition modality_to_reflective_subuniverse (O : Modality@{i})
@@ -149,7 +149,7 @@ Coercion modality_to_reflective_subuniverse : Modality >-> ReflectiveSubuniverse
 Hint Extern 0 (In (modality_subuniv _) _) => progress change modality_subuniv with (rsu_subuniv o modality_to_reflective_subuniverse) in * : typeclass_instances.
 
 (** Modalities are precisely the reflective subuniverses that are [<<] themselves.  *)
-Global Instance ismodality_modality (O : Modality) : IsModality O.
+Instance ismodality_modality (O : Modality) : IsModality O.
 Proof.
   intros A; exact _.
 Defined.
@@ -204,7 +204,7 @@ Proof.
   - srapply reflectsD_from_OO_ind. 
     + rapply O_ind'.
     + rapply O_ind_beta'.
-    + rapply inO_paths'.
+    + exact inO_paths'.
 Defined.
 
 (** A tactic that extends [strip_reflections] to modalities. It handles non-dependent elimination for reflective subuniverses and dependent elimination for modalities. [strip_truncations] does the same for truncations, but introduces fewer universe variables, so tends to work better when removing truncations. *)
@@ -224,7 +224,7 @@ Ltac strip_modalities :=
 (** ** Dependent sums *)
 
 (** A dependent elimination of a reflective subuniverse [O'] into [O] implies that the sum of a family of [O]-modal types over an [O']-modal type is [O']-modal.  More specifically, for a particular such sum it suffices for the [O']-reflection of that sum to dependently eliminate into [O]. *)
-Global Instance inO_sigma_reflectsD
+Instance inO_sigma_reflectsD
        {O' : ReflectiveSubuniverse} {O : Subuniverse}
        {A : Type} (B : A -> Type) `{!ReflectsD O' O (sig B)}
        `{In O' A} `{forall a, In O (B a)}
@@ -245,18 +245,18 @@ Proof.
 Defined.
 
 (** Specialized to a modality, this yields the implication (ii) => (i) from Theorem 7.7.4 of the book, and also Corollary 7.7.8, part 2. *)
-Global Instance inO_sigma (O : Modality)
+Instance inO_sigma (O : Modality)
            {A:Type} (B : A -> Type) `{In O A} `{forall a, In O (B a)}
   : In O {x:A & B x}
   := _.
 
 (** This implies that the composite of modal maps is modal. *)
-Global Instance mapinO_compose {O : Modality} {A B C : Type} (f : A -> B) (g : B -> C)
+Instance mapinO_compose {O : Modality} {A B C : Type} (f : A -> B) (g : B -> C)
        `{MapIn O _ _ f} `{MapIn O _ _ g}
   : MapIn O (g o f).
 Proof.
   intros c.
-  refine (inO_equiv_inO' _ (hfiber_compose f g c)^-1).
+  exact (inO_equiv_inO' _ (hfiber_compose f g c)^-1).
 Defined.
 
 (** It also implies Corollary 7.3.10 from the book, generalized to modalities.  (Theorem 7.3.9 is true for any reflective subuniverse; we called it [equiv_O_sigma_O].) *)
@@ -298,7 +298,7 @@ Proof.
   intros n; generalize dependent A.
   induction n as [|n IHn]; intros; [ exact tt | cbn ].
   refine (extension_from_inO_sigma O B , _).
-  intros h k; nrapply IHn.
+  intros h k; napply IHn.
   set (Z := sig B) in *.
   pose (W := sig (fun a => B a * B a)).
   nrefine (inO_equiv_inO' (Pullback (A := W) (fun a:O_reflector O' A => (a;(h a,k a)))
@@ -345,7 +345,7 @@ Defined.
 (** ** Connectedness of the units *)
 
 (** Dependent reflection can also be characterized by connectedness of the unit maps. *)
-Global Instance conn_map_to_O_reflectsD {O' : Subuniverse} (O : ReflectiveSubuniverse)
+Instance conn_map_to_O_reflectsD {O' : Subuniverse} (O : ReflectiveSubuniverse)
        {A : Type} `{ReflectsD O' O A}
   : IsConnMap O (to O' A).
 Proof.       
@@ -362,13 +362,13 @@ Proof.
 Defined.
 
 (** In particular, if [O1 << O2] then every [O2]-unit is [O1]-connected. *)
-Global Instance conn_map_to_O_strong_leq
+Instance conn_map_to_O_strong_leq
        {O1 O2 : ReflectiveSubuniverse} `{O1 << O2} (A : Type)
   : IsConnMap O1 (to O2 A)
   := _.
 
 (** Thus, if [O] is a modality, then every [O]-unit is [O]-connected.  This is Corollary 7.5.8 in the book. *)
-Global Instance conn_map_to_O {O : Modality} (A : Type)
+Instance conn_map_to_O {O : Modality} (A : Type)
   : IsConnMap O (to O A)
   := _.
 
@@ -378,7 +378,7 @@ Proposition conn_map_O_functor_strong_leq {O1 O2 : ReflectiveSubuniverse} (leq :
   : IsConnMap O1 (O_functor O2 f).
 Proof.
   rapply (cancelR_conn_map _ (to O2 _)).
-  nrapply conn_map_homotopic.
+  napply conn_map_homotopic.
   1: symmetry; apply to_O_natural.
   rapply conn_map_compose.
 Defined.
@@ -458,8 +458,8 @@ Section EasyModalities.
     simple refine (isequiv_commsq (to A) (to B) f
              (O_ind_easy A (fun _ => O_reflector B) _ (fun a => to B (f a))) _).
     - intros; apply O_inO_easy.
-    - intros a; refine (O_ind_easy_beta A (fun _ => O_reflector B) _ _ a).
-    - apply A_inO.
+    - intros a; exact (O_ind_easy_beta A (fun _ => O_reflector B) _ _ a).
+    - exact A_inO.
     - simple refine (isequiv_adjointify _
                (O_ind_easy B (fun _ => O_reflector A) _ (fun b => to A (f^-1 b))) _ _);
         intros x.
@@ -478,7 +478,7 @@ Section EasyModalities.
     simple refine (inO_equiv_inO_easy (to A a = to A a') _ _
                                       (@ap _ _ (to A) a a')^-1 _).
     - apply inO_pathsO.
-    - refine (@isequiv_ap _ _ _ A_inO _ _).
+    - exact (@isequiv_ap _ _ _ A_inO _ _).
     - apply isequiv_inverse.
   Defined.
 
@@ -509,11 +509,11 @@ Section ModalFact.
               (functor_sigma idmap (fun b => to O (hfiber f b)))).
   Defined.
 
-  Global Instance conn_map_factor1_image {A B : Type} (f : A -> B)
+  #[export] Instance conn_map_factor1_image {A B : Type} (f : A -> B)
   : IsConnMap O (factor1 (image f))
     := inclass1 (image f).
 
-  Global Instance inO_map_factor1_image {A B : Type} (f : A -> B)
+  #[export] Instance inO_map_factor2_image {A B : Type} (f : A -> B)
   : MapIn O (factor2 (image f))
     := inclass2 (image f).
 
@@ -587,7 +587,7 @@ Section ModalFact.
                           (factor2 fact o factor1 fact)
                           (factor2 fact' o factor1 fact') H
                           (factor2 fact (factor1 fact a)) (a;1))).
-      - refine (to_O_natural O _ _).
+      - exact (to_O_natural O _ _).
       - apply ap.
         simpl.
         apply ap; auto with path_hints.

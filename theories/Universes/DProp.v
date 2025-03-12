@@ -33,8 +33,8 @@ Record DProp :=
 At some point we may want to go that route, but it would be more work.  In particualar, [Instance]s of [Decidable] wouldn't be automatically computed for us, and the characterization of the homotopy type of [DProp] itself would be a lot harder. *)
 
 Coercion dprop_type : DProp >-> Sortclass.
-Global Existing Instance ishprop_dprop.
-Global Existing Instance dec_dprop.
+Existing Instance ishprop_dprop.
+Existing Instance dec_dprop.
 
 (** Sometimes, however, we have decidable props that are hprops without funext, and we want to remember that. *)
 
@@ -44,7 +44,7 @@ Record DHProp :=
   }.
 
 Coercion dhprop_hprop : DHProp >-> HProp.
-Global Existing Instance dec_dhprop.
+Existing Instance dec_dhprop.
 
 Definition dhprop_to_dprop : DHProp -> DProp
   := fun P => Build_DProp P (fun _ => _) _.
@@ -89,7 +89,7 @@ Proof.
             oE _).
   refine (equiv_path_sigma_hprop _ _ oE _); cbn.
   { intros [X hX]; exact _. }
-  refine (equiv_path_sigma_hprop (P;hP) (Q;hQ)).
+  exact (equiv_path_sigma_hprop (P;hP) (Q;hQ)).
 Defined.
 
 Definition path_dprop `{Funext} {P Q : DProp}
@@ -108,7 +108,7 @@ Proof.
   destruct P as [P dP]. destruct Q as [Q dQ].
   refine (((equiv_ap' issig_dhprop^-1 _ _)^-1)
             oE _); cbn.
-  refine ((equiv_path_sigma_hprop (P; dP) (Q; dQ))).
+  exact ((equiv_path_sigma_hprop (P; dP) (Q; dQ))).
 Defined.
 
 Definition equiv_path_dhprop `{Univalence} (P Q : DHProp)
@@ -116,20 +116,20 @@ Definition equiv_path_dhprop `{Univalence} (P Q : DHProp)
 Proof.
   assert (eq_type_hprop : (P = Q :> Type) <~> (P = Q :> HProp)) by apply equiv_path_trunctype'.
   assert (eq_hprop_dhprop : (P = Q :> HProp) <~> (P = Q :> DHProp)) by apply equiv_path_dhprop'.
-  refine (eq_hprop_dhprop oE eq_type_hprop).
+  exact (eq_hprop_dhprop oE eq_type_hprop).
 Defined.
 
 Definition path_dhprop `{Univalence} {P Q : DHProp}
 : (P = Q :> Type) -> (P = Q :> DHProp)
   := equiv_path_dhprop P Q.
 
-Global Instance ishset_dprop `{Univalence} : IsHSet DProp.
+Instance ishset_dprop `{Univalence} : IsHSet DProp.
 Proof.
   apply istrunc_S; intros P Q.
-  refine (istrunc_equiv_istrunc _ (n := -1) (equiv_path_dprop P Q)).
+  exact (istrunc_equiv_istrunc _ (n := -1) (equiv_path_dprop P Q)).
 Defined.
 
-Global Instance isequiv_dprop_to_bool `{Univalence}
+Instance isequiv_dprop_to_bool `{Univalence}
 : IsEquiv dprop_to_bool.
 Proof.
   refine (isequiv_adjointify dprop_to_bool bool_to_dhprop _ _).
@@ -194,64 +194,64 @@ Class IsFalse (P : DProp) :=
 
 (** Note that we are not using [Typeclasses Strict Resolution] for [IsTrue] and [IsFalse]; this enables us to write simply [dprop_istrue] as a proof of some true dprop, and Coq will infer from context what the dprop is that we're proving. *)
 
-Global Instance true_istrue : IsTrue True := tt.
+Instance true_istrue : IsTrue True := tt.
 
-Global Instance false_isfalse : IsFalse False := idmap.
+Instance false_isfalse : IsFalse False := idmap.
 
-Global Instance dand_true_true {P Q} `{IsTrue P} `{IsTrue Q}
+Instance dand_true_true {P Q} `{IsTrue P} `{IsTrue Q}
 : IsTrue (P && Q).
 Proof.
   exact (dprop_istrue, dprop_istrue).
 Defined.
 
-Global Instance dand_false_l {P Q} `{IsFalse P}
+Instance dand_false_l {P Q} `{IsFalse P}
 : IsFalse (P && Q).
 Proof.
   intros [p q].
   exact (dprop_isfalse p).
 Defined.
 
-Global Instance dand_false_r {P Q} `{IsFalse Q}
+Instance dand_false_r {P Q} `{IsFalse Q}
 : IsFalse (P && Q).
 Proof.
   intros [p q].
   exact (dprop_isfalse q).
 Defined.
 
-Global Instance dhand_true_true {P Q : DHProp} `{IsTrue P} `{IsTrue Q}
+Instance dhand_true_true {P Q : DHProp} `{IsTrue P} `{IsTrue Q}
 : IsTrue (P && Q)%dhprop.
 Proof.
   (** We have to give [P] as an explicit argument here.  This is apparently because with two [IsTrue] instances in the context, when we write simply [dprop_istrue], Coq guesses one of them during typeclass resolution, and isn't willing to backtrack once it realizes that that choice fails to be what's needed to solve the goal.  Coq currently seems to consistently guess [Q] rather than [P], so that we don't have to give the argument [Q] to the second call to [dprop_istrue]; but rather than depend on such behavior, we give both arguments explicitly.  (The problem doesn't arise with [dand_true_true] because in that case, unification, which fires before typeclass search, is able to guess that the argument must be [P].) *)
   exact (@dprop_istrue P _, @dprop_istrue Q _).
 Defined.
 
-Global Instance dhand_false_l {P Q : DHProp} `{IsFalse P}
+Instance dhand_false_l {P Q : DHProp} `{IsFalse P}
 : IsFalse (P && Q)%dhprop.
 Proof.
   intros [p q].
   exact (dprop_isfalse p).
 Defined.
 
-Global Instance dhand_false_r {P Q : DHProp} `{IsFalse Q}
+Instance dhand_false_r {P Q : DHProp} `{IsFalse Q}
 : IsFalse (P && Q)%dhprop.
 Proof.
   intros [p q].
   exact (dprop_isfalse q).
 Defined.
 
-Global Instance dor_true_l {P Q} `{IsTrue P}
+Instance dor_true_l {P Q} `{IsTrue P}
 : IsTrue (P || Q).
 Proof.
   exact (tr (inl Q dprop_istrue)).
 Defined.
 
-Global Instance dor_true_r {P Q} `{IsTrue Q}
+Instance dor_true_r {P Q} `{IsTrue Q}
 : IsTrue (P || Q).
 Proof.
   exact (tr (inr P dprop_istrue)).
 Defined.
 
-Global Instance dor_false_false {P Q} `{IsFalse P} `{IsFalse Q}
+Instance dor_false_false {P Q} `{IsFalse P} `{IsFalse Q}
 : IsFalse (P || Q).
 Proof.
   intros pq. strip_truncations. destruct pq as [p|q].
@@ -259,19 +259,19 @@ Proof.
   - exact (dprop_isfalse q).
 Defined.
 
-Global Instance dhor_true_l {P Q : DHProp} `{IsTrue P}
+Instance dhor_true_l {P Q : DHProp} `{IsTrue P}
 : IsTrue (P || Q)%dhprop.
 Proof.
   exact (tr (inl Q dprop_istrue)).
 Defined.
 
-Global Instance dhor_true_r {P Q : DHProp} `{IsTrue Q}
+Instance dhor_true_r {P Q : DHProp} `{IsTrue Q}
 : IsTrue (P || Q)%dhprop.
 Proof.
   exact (tr (inr P dprop_istrue)).
 Defined.
 
-Global Instance dhor_false_false {P Q : DHProp} `{IsFalse P} `{IsFalse Q}
+Instance dhor_false_false {P Q : DHProp} `{IsFalse P} `{IsFalse Q}
 : IsFalse (P || Q)%dhprop.
 Proof.
   intros pq. strip_truncations. destruct pq as [p|q].
@@ -280,31 +280,31 @@ Proof.
   - exact (@dprop_isfalse Q _ q).
 Defined.
 
-Global Instance dneg_true {P} `{IsTrue P}
+Instance dneg_true {P} `{IsTrue P}
 : IsFalse (!! P).
 Proof.
   intros np; exact (np dprop_istrue).
 Defined.
 
-Global Instance dneg_false {P} `{IsFalse P}
+Instance dneg_false {P} `{IsFalse P}
 : IsTrue (!! P).
 Proof.
   exact dprop_isfalse.
 Defined.
 
-Global Instance dimpl_true_r {P Q} `{IsTrue Q}
+Instance dimpl_true_r {P Q} `{IsTrue Q}
 : IsTrue (P -> Q).
 Proof.
   intros p. exact dprop_istrue.
 Defined.
 
-Global Instance dimpl_false_l {P Q} `{IsFalse P}
+Instance dimpl_false_l {P Q} `{IsFalse P}
 : IsTrue (P -> Q).
 Proof.
   intros p. elim (dprop_isfalse p).
 Defined.
 
-Global Instance dimpl_true_false {P Q} `{IsTrue P} `{IsFalse Q}
+Instance dimpl_true_false {P Q} `{IsTrue P} `{IsFalse Q}
 : IsFalse (P -> Q).
 Proof.
   intros f. exact (dprop_isfalse (f dprop_istrue)).

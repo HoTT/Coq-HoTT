@@ -30,7 +30,7 @@ Section Flattening.
     - exact (fun i x => E (i; x)).
     - intros i j g x; cbn.
       symmetry.
-      srapply (path_universe (E_f _ _)).
+      exact (path_universe (E_f _ _)).
   Defined.
 
   (** ** Helper lemmas *)
@@ -134,12 +134,12 @@ Section Flattening.
       funext y.
       set (L := cocone_extends Z (cocone_postcompose cocone_E' f)).
       refine (transport_forall _ _ _ @ _).
-      nrapply (transport_paths_FlFr' (f:=fun y0 => L (_; y0))).
-      lhs nrapply concat_p1.
-      lhs_V nrapply concat_1p.
+      transport_paths (transport_paths_FlFr (f:=fun y0 => L (_; y0))).
+      lhs napply concat_p1.
+      lhs_V napply concat_1p.
       refine (_^ @@ 1).
       lhs rapply (transportD_is_transport E' (fun w => L w = f w)).
-      nrapply transport_paths_FlFr'; apply equiv_p1_1q.
+      transport_paths FlFr; apply equiv_p1_1q.
       rewrite ap_path_sigma.
       rewrite Colimit_ind_beta_colimp.
       rewrite ap10_path_forall.
@@ -164,7 +164,7 @@ Section Flattening.
         etransitivity.
         1: srapply moveL_transport_V_1.
         etransitivity.
-        1: nrapply inverse2; snrapply transport_VpV.
+        1: napply inverse2; snapply transport_VpV.
         symmetry; apply ap_V. }
       rewrite p1eq; clear p1eq p1.
       rewrite <- ap_compose; cbn.
@@ -194,7 +194,7 @@ Section Flattening.
       srefine (_ @ _).
       - refine (ap (transport E' (colimp i j g x)) _).
         refine ((transport_E'_V _ _ _)^ @ _).
-        refine (ap _ (transport_pV _ _ _)).
+        exact (ap _ (transport_pV _ _ _)).
       - f_ap.
         refine (1 @@ _).
         apply transport_VpV.
@@ -210,7 +210,7 @@ Section Flattening.
         apply transport_VpV.
   Defined. (* TODO: a little slow, 0.40s *)
 
-  Global Instance unicocone_cocone_E' : UniversalCocone cocone_E'.
+  #[export] Instance unicocone_cocone_E' : UniversalCocone cocone_E'.
   Proof.
     srapply Build_UniversalCocone.
     intro Z; srapply isequiv_adjointify.
@@ -226,7 +226,7 @@ Section Flattening.
     srapply colimit_unicity.
     3: apply iscolimit_colimit.
     rapply Build_IsColimit.
-    apply unicocone_cocone_E'.
+    exact unicocone_cocone_E'.
   Defined.
 
 End Flattening.

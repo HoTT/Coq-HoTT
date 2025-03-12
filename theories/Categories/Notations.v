@@ -8,7 +8,7 @@ Require NatCategory.
 Export NatCategory.Notations.
 Require Export InitialTerminalCategory.Notations.
 Require Export Profunctor.Notations.
-Local Set Warnings Append "-notation-overridden".
+Local Set Warnings "-notation-overridden".
 Require Export Comma.Notations.
 Require Export Adjoint.Notations.
 Require Export Structure.Notations.

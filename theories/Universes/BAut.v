@@ -1,6 +1,5 @@
-Require Import HoTT.Basics HoTT.Types.
-Require Import Constant.
-Require Import HoTT.Truncations.
+Require Import Basics Types.
+Require Import Truncations.
 Require Import ObjectClassifier Homotopy.ExactSequence Pointed.
 
 Local Open Scope type_scope.
@@ -15,7 +14,7 @@ Definition BAut (X : Type@{u}) := { Z : Type@{u} & merely (Z = X) }.
 
 Coercion BAut_pr1 X : BAut X -> Type := pr1.
 
-Global Instance ispointed_baut {X : Type} : IsPointed (BAut X) := (X; tr 1).
+Instance ispointed_baut {X : Type} : IsPointed (BAut X) := (X; tr 1).
 
 (** We also define a pointed version [pBAut X], since the coercion [BAut_pr1] doesn't work if [BAut X] is a [pType]. *)
 Definition pBAut (X : Type) : pType
@@ -58,7 +57,7 @@ Ltac baut_reduce :=
 (** ** Truncation *)
 
 (** If [X] is an [n.+1]-type, then [BAut X] is an [n.+2]-type. *)
-Global Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
+Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
 : IsTrunc n.+2 (BAut X).
 Proof.
   apply istrunc_S.
@@ -68,7 +67,7 @@ Proof.
 Defined.
 
 (** If [X] is truncated, then so is every element of [BAut X]. *)
-Global Instance trunc_el_baut {n X} `{Funext} `{IsTrunc n X} (Z : BAut X)
+Instance trunc_el_baut {n X} `{Funext} `{IsTrunc n X} (Z : BAut X)
   : IsTrunc n Z
   := ltac:(by baut_reduce).
 
@@ -117,7 +116,7 @@ Proof.
   (** Now we peel away a bunch of contractible types. *)
   refine (equiv_sig_coind _ _ oE _).
   srapply equiv_functor_sigma'.
-  1:apply (equiv_paths_ind_r X (fun x _ => P x)).
+  1:exact (equiv_paths_ind_r X (fun x _ => P x)).
   intros p; cbn.
   refine (equiv_paths_ind_r X _ oE _).
   srapply equiv_functor_forall'.
@@ -192,8 +191,8 @@ Section Center2BAut.
     simple refine (equiv_functor_sigma' _ _).
     { refine (_ oE equiv_path2_universe 1 1).
       apply equiv_concat_lr.
-      - symmetry; apply path_universe_1.
-      - apply path_universe_1. }
+      - symmetry; exact path_universe_1.
+      - exact path_universe_1. }
     intros f.
     apply equiv_functor_forall_id; intros g.
     refine (_ oE equiv_path3_universe _ _).
@@ -258,7 +257,7 @@ Section ClassifyingMaps.
   Proof.
     refine (_ oE equiv_postcompose' equiv_baut_typeO).
     refine (_ oE equiv_sigma_fibration_O).
-    snrapply equiv_functor_sigma_id; intro p.
+    snapply equiv_functor_sigma_id; intro p.
     rapply equiv_functor_forall_id; intro y.
     by apply Trunc_functor_equiv.
   Defined.
@@ -267,7 +266,7 @@ Section ClassifyingMaps.
   Proposition pequiv_pbaut_typeOp@{u v +} `{Univalence} {F : Type@{u}}
     : pBAut@{u v} F <~>* [Type_ (subuniverse_merely_equiv F), (F; tr equiv_idmap)].
   Proof.
-    snrapply Build_pEquiv'; cbn.
+    snapply Build_pEquiv'; cbn.
     1: exact equiv_baut_typeO.
     by apply path_sigma_hprop.
   Defined.
@@ -284,7 +283,7 @@ Section ClassifyingMaps.
     : (Y ->* pBAut F) <~> (Y ->* [Type@{u}, F]).
   Proof.
     refine (_ oE pequiv_pequiv_postcompose pequiv_pbaut_typeOp).
-    rapply equiv_pmap_typeO_type_connected.
+    exact equiv_pmap_typeO_type_connected.
   Defined.
 
   (** When [Y] is connected, [pBAut F] classifies fiber sequences over [Y] with fiber [F]. *)

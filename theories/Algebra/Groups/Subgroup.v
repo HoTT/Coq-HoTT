@@ -20,7 +20,7 @@ Class IsSubgroup {G : Group} (H : G -> Type) := {
   issubgroup_in_inv : forall x, H x -> H x^ ;
 }.
 
-Global Existing Instance issubgroup_predicate.
+Existing Instance issubgroup_predicate.
 
 Definition issig_issubgroup {G : Group} (H : G -> Type) : _ <~> IsSubgroup H
   := ltac:(issig).
@@ -100,7 +100,7 @@ Section IsSubgroupElements.
 End IsSubgroupElements.
 
 (** Given a predicate H on a group G, being a subgroup is a property. *)
-Global Instance ishprop_issubgroup `{F : Funext} {G : Group} {H : G -> Type}
+Instance ishprop_issubgroup `{F : Funext} {G : Group} {H : G -> Type}
   : IsHProp (IsSubgroup H).
 Proof.
   exact (istrunc_equiv_istrunc _ (issig_issubgroup H)).
@@ -112,7 +112,7 @@ Definition issubgroup_equiv {G : Group} {H K : G -> Type}
   : IsSubgroup H -> IsSubgroup K.
 Proof.
   intros H1.
-  snrapply Build_IsSubgroup.
+  snapply Build_IsSubgroup.
   - intros x.
     rapply (istrunc_equiv_istrunc (H x)).
     apply p.
@@ -134,7 +134,7 @@ Record Subgroup (G : Group) := {
 }.
 
 Coercion subgroup_pred : Subgroup >-> Funclass.
-Global Existing Instance subgroup_issubgroup.
+Existing Instance subgroup_issubgroup.
 
 Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
@@ -163,7 +163,7 @@ Section SubgroupElements.
   Definition subgroup_in_op_r : H (x * y) -> H x -> H y := issubgroup_in_op_r x y.
 End SubgroupElements.
 
-Global Instance isequiv_subgroup_in_inv `(H : Subgroup G) (x : G)
+Instance isequiv_subgroup_in_inv `(H : Subgroup G) (x : G)
   : IsEquiv (subgroup_in_inv H x).
 Proof.
   srapply isequiv_iff_hprop.
@@ -197,13 +197,13 @@ Proof.
   exact equiv_path_iff_ishprop.
 Defined.
 
-Global Instance ishset_subgroup `{Univalence} {G : Group} : IsHSet (Subgroup G).
+Instance ishset_subgroup `{Univalence} {G : Group} : IsHSet (Subgroup G).
 Proof.
   nrefine (istrunc_equiv_istrunc _ issig_subgroup).
   nrefine (istrunc_equiv_istrunc _ (equiv_functor_sigma_id _)).
   - intro P; apply issig_issubgroup.
   - nrefine (istrunc_equiv_istrunc _ (equiv_sigma_assoc' _ _)^-1%equiv).
-    nrapply istrunc_sigma.
+    napply istrunc_sigma.
     2: intros []; apply istrunc_hprop.
     nrefine (istrunc_equiv_istrunc
                _ (equiv_sig_coind (fun g:G => Type) (fun g x => IsHProp x))^-1%equiv).
@@ -230,13 +230,13 @@ Coercion subgroup_group : Subgroup >-> Group.
 Definition subgroup_incl {G : Group} (H : Subgroup G)
   : subgroup_group H $-> G.
 Proof.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   1: exact pr1.
   hnf; reflexivity.
 Defined.
 
 (** The inclusion map is an embedding. *)
-Global Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
+Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
   : IsEmbedding (subgroup_incl H)
   := fun _ => istrunc_equiv_istrunc _ (hfiber_fibration _ _).
 
@@ -250,11 +250,11 @@ Definition subgroup_corec {G H : Group} {K : Subgroup H}
   (f : G $-> H) (g : forall x, K (f x))
   : G $-> subgroup_group K.
 Proof.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   - exact (fun x => (f x; g x)).
   - intros x y.
     rapply path_sigma_hprop.
-    snrapply grp_homo_op.
+    snapply grp_homo_op.
 Defined.
 
 (** Corestriction is an equivalence on group homomorphisms. *)
@@ -262,17 +262,17 @@ Definition equiv_subgroup_corec {F : Funext}
   (G : Group) {H : Group} (K : Subgroup H)
   : {f : G $-> H & forall x, K (f x)} <~> (G $-> subgroup_group K).
 Proof.
-  snrapply equiv_adjointify.
+  snapply equiv_adjointify.
   - exact (sig_rec subgroup_corec).
   - intros g.
     exists (subgroup_incl _ $o g).
     intros x.
     exact (g x).2.
   - intros g.
-    by snrapply equiv_path_grouphomomorphism.
+    by snapply equiv_path_grouphomomorphism.
   - intros [f p].
     rapply path_sigma_hprop.
-    by snrapply equiv_path_grouphomomorphism.
+    by snapply equiv_path_grouphomomorphism.
 Defined.
 
 (** Functoriality on subgroups. *)
@@ -286,7 +286,7 @@ Definition grp_iso_subgroup_group {G H : Group@{i}}
   (e : G $<~> H) (f : forall x, J x <-> K (e x))
   : subgroup_group J $<~> subgroup_group K.
 Proof.
-  snrapply cate_adjointify.
+  snapply cate_adjointify.
   - exact (functor_subgroup_group e (fun x => fst (f x))).
   - nrefine (functor_subgroup_group e^-1$ _).
     equiv_intro e x. 
@@ -295,10 +295,10 @@ Proof.
     exact (snd (f x) k).
   - intros x.
     rapply path_sigma_hprop.
-    nrapply eisretr.
+    napply eisretr.
   - intros x.
     rapply path_sigma_hprop.
-    nrapply eissect.
+    napply eissect.
 Defined.
 
 (** ** Cosets of subgroups *)
@@ -321,25 +321,25 @@ Section Cosets.
   Global Arguments in_cosetR /.
 
   (** These are props *)
-  Global Instance ishprop_in_cosetL : is_mere_relation G in_cosetL := _.
-  Global Instance ishprop_in_cosetR : is_mere_relation G in_cosetR := _.
+  #[export] Instance ishprop_in_cosetL : is_mere_relation G in_cosetL := _.
+  #[export] Instance ishprop_in_cosetR : is_mere_relation G in_cosetR := _.
 
   (** In fact, they are both equivalence relations. *)
-  Global Instance reflexive_in_cosetL : Reflexive in_cosetL.
+  #[export] Instance reflexive_in_cosetL : Reflexive in_cosetL.
   Proof.
     intro x; hnf.
     rewrite left_inverse.
-    apply issubgroup_in_unit.
+    exact issubgroup_in_unit.
   Defined.
 
-  Global Instance reflexive_in_cosetR : Reflexive in_cosetR.
+  #[export] Instance reflexive_in_cosetR : Reflexive in_cosetR.
   Proof.
     intro x; hnf.
     rewrite right_inverse.
-    apply issubgroup_in_unit.
+    exact issubgroup_in_unit.
   Defined.
 
-  Global Instance symmetric_in_cosetL : Symmetric in_cosetL.
+  #[export] Instance symmetric_in_cosetL : Symmetric in_cosetL.
   Proof.
     intros x y h; cbn; cbn in h.
     rewrite <- (grp_inv_inv x).
@@ -347,7 +347,7 @@ Section Cosets.
     apply issubgroup_in_inv; assumption.
   Defined.
 
-  Global Instance symmetric_in_cosetR : Symmetric in_cosetR.
+  #[export] Instance symmetric_in_cosetR : Symmetric in_cosetR.
   Proof.
     intros x y h; cbn; cbn in h.
     rewrite <- (grp_inv_inv y).
@@ -355,7 +355,7 @@ Section Cosets.
     apply issubgroup_in_inv; assumption.
   Defined.
 
-  Global Instance transitive_in_cosetL : Transitive in_cosetL.
+  #[export] Instance transitive_in_cosetL : Transitive in_cosetL.
   Proof.
     intros x y z h k; cbn; cbn in h; cbn in k.
     rewrite <- (right_identity x^).
@@ -365,7 +365,7 @@ Section Cosets.
     apply issubgroup_in_op; assumption.
   Defined.
 
-  Global Instance transitive_in_cosetR : Transitive in_cosetR.
+  #[export] Instance transitive_in_cosetR : Transitive in_cosetR.
   Proof.
     intros x y z h k; cbn; cbn in h; cbn in k.
     rewrite <- (right_identity x).
@@ -419,7 +419,7 @@ Defined.
 Definition equiv_sigma_in_cosetL_subgroup (G : Group) (H : Subgroup G) (x : G)
   : sig (in_cosetL H x) <~> sig H.
 Proof.
-  snrapply equiv_functor_sigma'.
+  snapply equiv_functor_sigma'.
   - rapply (Build_Equiv _ _ (x^ *.)).
   - reflexivity.
 Defined.
@@ -428,7 +428,7 @@ Defined.
 Definition equiv_sigma_in_cosetR_subgroup (G : Group) (H : Subgroup G) (x : G)
   : sig (in_cosetR H x) <~> sig H.
 Proof.
-  snrapply equiv_functor_sigma'.
+  snapply equiv_functor_sigma'.
   - rapply (Build_Equiv _ _ (.* x ^)).
   - simpl; intros y.
     apply equiv_subgroup_op_inv.
@@ -448,7 +448,7 @@ Record NormalSubgroup (G : Group) := {
 Arguments Build_NormalSubgroup G N _ : rename.
 
 Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
-Global Existing Instance normalsubgroup_isnormal.
+Existing Instance normalsubgroup_isnormal.
 
 Definition equiv_symmetric_in_normalsubgroup {G : Group}
   (N : Subgroup G) `{!IsNormalSubgroup N}
@@ -456,7 +456,7 @@ Definition equiv_symmetric_in_normalsubgroup {G : Group}
 Proof.
   intros x y.
   rapply equiv_iff_hprop.
-  all: apply isnormal.
+  all: exact isnormal.
 Defined.
 
 (** Our definiiton of normal subgroup implies the usual definition of invariance under conjugation. *)
@@ -482,7 +482,7 @@ Proof.
 Defined.
 
 (** Under funext, being a normal subgroup is a hprop. *)
-Global Instance ishprop_isnormalsubgroup `{Funext} {G : Group} (N : Subgroup G)
+Instance ishprop_isnormalsubgroup `{Funext} {G : Group} (N : Subgroup G)
   : IsHProp (IsNormalSubgroup N).
 Proof. 
   unfold IsNormalSubgroup; exact _.
@@ -496,7 +496,7 @@ Proof.
   - intros is_normal x y.
     rapply isnormal_conj.
   - intros is_normal'.
-    by snrapply Build_IsNormalSubgroup'.
+    by snapply Build_IsNormalSubgroup'.
 Defined.
 
 (** Inner automorphisms of a group [G] restrict to automorphisms of normal subgroups. *)
@@ -504,7 +504,7 @@ Definition grp_iso_normal_conj {G : Group} (N : Subgroup G)
   `{!IsNormalSubgroup N} (x : G)
   : subgroup_group N $<~> subgroup_group N.
 Proof.
-  snrapply grp_iso_subgroup_group.
+  snapply grp_iso_subgroup_group.
   - exact (grp_iso_conj x).
   - intros y.
     rapply isnormal_conj.
@@ -579,12 +579,12 @@ Defined.
 Definition trivial_subgroup_rec {G : Group} (H : Subgroup G)
   : forall x, trivial_subgroup G x -> H x.
 Proof.
-  snrapply paths_ind_r; cbn beta.
-  apply issubgroup_in_unit.
+  napply paths_ind_r; cbn beta.
+  exact issubgroup_in_unit.
 Defined.
 
 (** The trivial subgroup is a normal subgroup. *)
-Global Instance isnormal_trivial_subgroup {G : Group}
+Instance isnormal_trivial_subgroup {G : Group}
   : IsNormalSubgroup (trivial_subgroup G).
 Proof.
   intros x y p; cbn in p |- *.
@@ -596,11 +596,11 @@ Defined.
 Class IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
   istrivialgroup : forall x, H x -> trivial_subgroup G x.
 
-Global Instance ishprop_istrivialgroup `{F : Funext} {G : Group} (H : Subgroup G)
+Instance ishprop_istrivialgroup `{F : Funext} {G : Group} (H : Subgroup G)
   : IsHProp (IsTrivialGroup H)
   := istrunc_forall.
 
-Global Instance istrivial_trivial_subgroup {G : Group}
+Instance istrivial_trivial_subgroup {G : Group}
   : IsTrivialGroup (trivial_subgroup G)
   := fun x => idmap.
 
@@ -610,7 +610,7 @@ Definition istrivial_iff_grp_iso_trivial {G : Group} (H : Subgroup G)
 Proof.
   split.
   - intros triv.
-    snrapply cate_adjointify.
+    snapply cate_adjointify.
     1,2: exact grp_homo_const.
     + by intros [].
     + intros [x Hx]; simpl.
@@ -619,9 +619,9 @@ Proof.
       by apply triv.
   - intros e x Hx.
     change ((x; Hx).1 = (1; idpath).1).
-    snrapply (pr1_path (u:=(_;_)) (v:=(_;_))).
+    snapply (pr1_path (u:=(_;_)) (v:=(_;_))).
     1: apply subgroup_in_unit.
-    rhs_V nrapply (grp_homo_unit e^-1$).
+    rhs_V exact (grp_homo_unit e^-1$).
     apply moveL_equiv_V.
     apply path_contr.
 Defined.
@@ -663,13 +663,13 @@ Add Printing Coercion maximal_subgroup.
 Definition grp_iso_subgroup_group_maximal (G : Group)
   : subgroup_group (maximal_subgroup G) $<~> G.
 Proof.
-  snrapply Build_GroupIsomorphism'.
+  snapply Build_GroupIsomorphism'.
   - rapply equiv_sigma_contr.
   - hnf; reflexivity.
 Defined.
 
 (** The maximal subgroup (the group itself) is a normal subgroup. *)
-Global Instance isnormal_maximal_subgroup {G : Group}
+Instance isnormal_maximal_subgroup {G : Group}
   : IsNormalSubgroup (maximal_subgroup G).
 Proof.
   intros x y p; exact tt.
@@ -679,24 +679,24 @@ Defined.
 Class IsMaximalSubgroup {G : Group} (H : Subgroup G) :=
   ismaximalsubgroup : forall (x : G), H x.
 
-Global Instance ishprop_ismaximalsubgroup `{Funext}
+Instance ishprop_ismaximalsubgroup `{Funext}
   {G : Group} (H : Subgroup G)
   : IsHProp (IsMaximalSubgroup H)
   := istrunc_forall.
 
-Global Instance ismaximalsubgroup_maximalsubgroup {G : Group}
+Instance ismaximalsubgroup_maximalsubgroup {G : Group}
   : IsMaximalSubgroup (maximal_subgroup G)
   := fun g => tt.
 
 (** ** Subgroups in opposite group *)
 
-Global Instance issubgroup_grp_op {G : Group} (H : G -> Type)
+Instance issubgroup_grp_op {G : Group} (H : G -> Type)
   : IsSubgroup H -> IsSubgroup (G:=grp_op G) H.
 Proof.
   intros H1.
-  snrapply Build_IsSubgroup'.
+  snapply Build_IsSubgroup'.
   - exact _.
-  - cbn; apply issubgroup_in_unit.
+  - cbn; exact issubgroup_in_unit.
   - intros x y Hx Hy; cbn.
     by apply issubgroup_in_inv_op.
 Defined.
@@ -706,11 +706,11 @@ Definition subgroup_grp_op {G : Group} (H : Subgroup G)
   : Subgroup (grp_op G)
   := Build_Subgroup (grp_op G) H _.
 
-Global Instance isnormal_subgroup_grp_op {G : Group} (H : Subgroup G)
+Instance isnormal_subgroup_grp_op {G : Group} (H : Subgroup G)
   : IsNormalSubgroup H -> IsNormalSubgroup (subgroup_grp_op H).
 Proof.
   intros n x y; cbn.
-  apply isnormal.
+  exact isnormal.
 Defined.
 
 Definition normalsubgroup_grp_op {G : Group}
@@ -720,14 +720,14 @@ Definition normalsubgroup_grp_op {G : Group}
 (** ** Preimage subgroup *)
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
-Global Instance issubgroup_preimage {G H : Group} (f : G $-> H) (S : H -> Type)
+Instance issubgroup_preimage {G H : Group} (f : G $-> H) (S : H -> Type)
   : IsSubgroup S -> IsSubgroup (S o f).
 Proof.
   intros H1.
-  snrapply Build_IsSubgroup'.
+  snapply Build_IsSubgroup'.
   - hnf; exact _.
   - nrefine (transport S (grp_homo_unit f)^ _).
-    apply issubgroup_in_unit.
+    exact issubgroup_in_unit.
   - hnf; intros x y Sfx Sfy.
     nrefine (transport S (grp_homo_op f _ _)^ _).
     rapply issubgroup_in_op; only 1: assumption.
@@ -740,7 +740,7 @@ Definition subgroup_preimage {G H : Group} (f : G $-> H) (S : Subgroup H)
   := Build_Subgroup G (S o f) _.
 
 (** The preimage of a normal subgroup is again normal. *)
-Global Instance isnormal_subgroup_preimage {G H : Group} (f : G $-> H)
+Instance isnormal_subgroup_preimage {G H : Group} (f : G $-> H)
   (N : Subgroup H) `{!IsNormalSubgroup N}
   : IsNormalSubgroup (subgroup_preimage f N).
 Proof.
@@ -755,7 +755,7 @@ Defined.
 (** Intersection of two subgroups *)
 Definition subgroup_intersection {G : Group} (H K : Subgroup G) : Subgroup G.
 Proof.
-  snrapply Build_Subgroup'.
+  snapply Build_Subgroup'.
   1: exact (fun g => H g /\ K g).
   1: exact _.
   1: split; apply subgroup_in_unit.
@@ -920,13 +920,13 @@ Definition subgroup_product_incl_r {G : Group} (H K : Subgroup G)
   := fun x => tr o sgt_in o inr.
 
 (** A product of normal subgroups is normal. *)
-Global Instance isnormal_subgroup_product {G : Group} (H K : Subgroup G)
+Instance isnormal_subgroup_product {G : Group} (H K : Subgroup G)
   `{!IsNormalSubgroup H, !IsNormalSubgroup K}
   : IsNormalSubgroup (subgroup_product H K).
 Proof.
-  snrapply Build_IsNormalSubgroup'.
+  snapply Build_IsNormalSubgroup'.
   intros x y; revert x.
-  nrapply (functor_subgroup_generated _ _ (grp_conj y)).
+  napply (functor_subgroup_generated _ _ (grp_conj y)).
   intros x.
   apply functor_sum; rapply isnormal_conj.
 Defined.
@@ -940,7 +940,7 @@ Definition functor_subgroup_product {G H : Group}
   (f : G $-> H) (l : forall x, J x -> L (f x)) (r : forall x, K x -> M (f x))
   : forall x, subgroup_product J K x -> subgroup_product L M (f x).
 Proof.
-  snrapply functor_subgroup_generated.
+  snapply functor_subgroup_generated.
   exact (fun x => functor_sum (l x) (r x)).
 Defined.
 
@@ -949,7 +949,7 @@ Definition subgroup_eq_functor_subgroup_product {G H : Group}
   (f : G $<~> H) (l : forall x, J x <-> L (f x)) (r : forall x, K x <-> M (f x))
   : forall x, subgroup_product J K x <-> subgroup_product L M (f x).
 Proof.
-  snrapply subgroup_eq_functor_subgroup_generated.
+  snapply subgroup_eq_functor_subgroup_generated.
   exact (fun x => iff_functor_sum (l x) (r x)).
 Defined.
 
@@ -1006,8 +1006,8 @@ Proof.
   - intros x y p q; strip_truncations; apply tr.
     destruct p as [a p], q as [b q].
     exists (a * b^).
-    lhs nrapply grp_homo_op; f_ap.
-    lhs nrapply grp_homo_inv; f_ap.
+    lhs napply grp_homo_op; f_ap.
+    lhs napply grp_homo_inv; f_ap.
 Defined.
 
 Definition grp_image_in {G H : Group} (f : G $-> H)
@@ -1024,7 +1024,7 @@ Definition grp_homo_image_in {G H : Group} (f : G $-> H)
 Definition grp_image_embedding {G H : Group} (f : G $-> H) `{IsEmbedding f}
   : Subgroup H.
 Proof.
-  snrapply (Build_Subgroup _ (hfiber f)).
+  snapply (Build_Subgroup _ (hfiber f)).
   repeat split.
   - exact _.
   - exact (mon_unit; grp_homo_unit f).
@@ -1039,11 +1039,11 @@ Defined.
 Definition grp_image_in_embedding {G H : Group} (f : G $-> H) `{IsEmbedding f}
   : GroupIsomorphism G (grp_image_embedding f).
 Proof.
-  snrapply Build_GroupIsomorphism.
-  - snrapply (subgroup_corec f).
+  snapply Build_GroupIsomorphism.
+  - snapply (subgroup_corec f).
     exact (fun x => (x; idpath)).
   - apply isequiv_surj_emb.
-    2: apply (cancelL_isembedding (g:=pr1)).
+    2: exact (cancelL_isembedding (g:=pr1)).
     intros [b [a p]]; cbn.
     rapply contr_inhabited_hprop.
     refine (tr (a; _)).
@@ -1054,7 +1054,7 @@ Proof.
 Defined.
 
 (** The image of a surjective group homomorphism is the maximal subgroup. *)
-Global Instance ismaximal_image_issurj {G H : Group}
+Instance ismaximal_image_issurj {G H : Group}
   (f : G $-> H) `{IsSurjection f}
   : IsMaximalSubgroup (grp_image f).
 Proof.
@@ -1107,24 +1107,24 @@ Proof.
   - intros rec x Jx.
     apply rec, tr.
     by exists (x; Jx).
-  - snrapply subgroup_image_rec.
+  - snapply subgroup_image_rec.
 Defined.
 
 (** [subgroup_image] preserves normal subgroups when the group homomorphism is surjective. *)
-Global Instance isnormal_subgroup_image {G H : Group} (f : G $-> H)
+Instance isnormal_subgroup_image {G H : Group} (f : G $-> H)
   (J : Subgroup G) `{!IsNormalSubgroup J} `{!IsSurjection f}
   : IsNormalSubgroup (subgroup_image f J).
 Proof.
-  snrapply Build_IsNormalSubgroup'.
+  snapply Build_IsNormalSubgroup'.
   intros x y; revert x.
   change (subgroup_image f J (y * ?x * y^))
     with (subgroup_preimage (grp_conj y) (subgroup_image f J) x).
-  snrapply subgroup_image_rec.
+  snapply subgroup_image_rec.
   intros x Jx.
   change (subgroup_image f J ((grp_conj y $o f) x)).
   revert y; rapply (conn_map_elim (Tr (-1)) f); intros y.
   rewrite <- grp_homo_conj.
-  nrapply subgroup_image_in.
+  napply subgroup_image_in.
   by rapply isnormal_conj.
 Defined.
 
@@ -1139,7 +1139,7 @@ Definition grp_kernel_corec {A B G : Group} {f : A $-> B}
   (g : G $-> A) (h : f $o g == grp_homo_const)
   : G $-> grp_kernel f.
 Proof.
-  snrapply (subgroup_corec g); exact h.
+  snapply (subgroup_corec g); exact h.
 Defined.
 
 Definition equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
@@ -1147,7 +1147,7 @@ Definition equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
   := equiv_subgroup_corec G (grp_kernel f).
 
 (** The underlying map of a group homomorphism with a trivial kernel is an embedding. *)
-Global Instance isembedding_istrivial_kernel {G H : Group} (f : G $-> H)
+Instance isembedding_istrivial_kernel {G H : Group} (f : G $-> H)
   (triv : IsTrivialGroup (grp_kernel f))
   : IsEmbedding f.
 Proof.
@@ -1157,10 +1157,10 @@ Proof.
   srapply path_sigma_hprop; unfold pr1.
   apply grp_moveL_1M.
   apply triv; simpl.
-  rhs_V nrapply (grp_inv_r h).
-  lhs nrapply grp_homo_op.
-  nrapply (ap011 (.*.) p).
-  lhs nrapply grp_homo_inv.
+  rhs_V exact (grp_inv_r h).
+  lhs napply grp_homo_op.
+  napply (ap011 (.*.) p).
+  lhs napply grp_homo_inv.
   exact (ap (^) q).
 Defined.
 

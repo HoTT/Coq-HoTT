@@ -12,7 +12,7 @@ Context `{IsDecField F} `{forall x y: F, Decidable (x = y)}.
 
 (* Add Ring F : (stdlib_ring_theory F). *)
 
-Global Instance decfield_zero_product : ZeroProduct F.
+#[export] Instance decfield_zero_product : ZeroProduct F.
 Proof.
 intros x y E.
 destruct (dec (x = 0)) as [? | Ex];auto.
@@ -22,9 +22,9 @@ rewrite associativity, (commutativity y), E.
 apply mult_0_l.
 Qed.
 
-Global Instance decfield_integral_domain : IsIntegralDomain F.
+#[export] Instance decfield_integral_domain : IsIntegralDomain F.
 Proof.
-split; try apply _.
+split; try exact _.
 Qed.
 
 Lemma dec_recip_1: / 1 = 1.
@@ -39,7 +39,7 @@ Proof.
 destruct (dec (x = 0)) as [Ex|Ex].
 - rewrite Ex, left_absorb, dec_recip_0. apply symmetry,mult_0_l.
 - destruct (dec (y = 0)) as [Ey|Ey].
-  + rewrite Ey, dec_recip_0, !mult_0_r. apply dec_recip_0.
+  + rewrite Ey, dec_recip_0, !mult_0_r. exact dec_recip_0.
   + assert (x * y <> 0) as Exy by (apply mult_ne_0;trivial).
     apply (left_cancellation_ne_0 (.*.) (x * y)); trivial.
     transitivity (x / x * (y / y)).
@@ -58,7 +58,7 @@ split; intros E.
   destruct (is_ne_0 1).
   rewrite <-(dec_recip_inverse x), E by assumption.
   apply mult_0_r.
-- rewrite E. apply dec_recip_0.
+- rewrite E. exact dec_recip_0.
 Qed.
 
 Lemma dec_recip_ne_0_iff x : / x <> 0 <-> x <> 0.
@@ -85,9 +85,9 @@ destruct (dec (y = 0)) as [Ey|Ey].
   + rewrite dec_recip_inverse;trivial.
 Qed.
 
-Global Instance dec_recip_inj: IsInjective (/).
+#[export] Instance dec_recip_inj: IsInjective (/).
 Proof.
-repeat (split; try apply _).
+repeat (split; try exact _).
 intros x y E.
 destruct (dec (y = 0)) as [Ey|Ey].
 - rewrite Ey in *. rewrite dec_recip_0 in E.
@@ -100,7 +100,7 @@ destruct (dec (y = 0)) as [Ey|Ey].
     apply dec_recip_ne_0. trivial.
 Qed.
 
-Global Instance dec_recip_involutive: Involutive (/).
+#[export] Instance dec_recip_involutive: Involutive (/).
 Proof.
 intros x. destruct (dec (x = 0)) as [Ex|Ex].
 - rewrite Ex, !dec_recip_0. trivial.
@@ -186,15 +186,15 @@ Section is_field.
   Context `{IsDecField F} `{Apart F} `{!TrivialApart F}
     `{Decidable.DecidablePaths F}.
 
-  Global Instance recip_dec_field: Recip F := fun x => / x.1.
+  #[export] Instance recip_dec_field: Recip F := fun x => / x.1.
 
   Local Existing Instance dec_strong_setoid.
 
-  Global Instance decfield_field : IsField F.
+  #[export] Instance decfield_field : IsField F.
   Proof.
-  split; try apply _.
-  - apply (dec_strong_binary_morphism (+)).
-  - apply (dec_strong_binary_morphism (.*.)).
+  split; try exact _.
+  - exact (dec_strong_binary_morphism (+)).
+  - exact (dec_strong_binary_morphism (.*.)).
   - intros [x Px]. rapply (dec_recip_inverse x).
     apply trivial_apart. trivial.
   Qed.
@@ -250,7 +250,7 @@ End from_stdlib_field_theory. *)
 Section morphisms.
   Context  `{IsDecField F} `{TrivialApart F} `{Decidable.DecidablePaths F}.
 
-  Global Instance dec_field_to_domain_inj `{IsIntegralDomain R}
+  #[export] Instance dec_field_to_domain_inj `{IsIntegralDomain R}
     `{!IsSemiRingPreserving (f : F -> R)} : IsInjective f.
   Proof.
   apply injective_preserves_0.
@@ -272,7 +272,7 @@ Section morphisms.
     apply (left_cancellation_ne_0 (.*.) (f x)).
     + apply isinjective_ne_0. trivial.
     + rewrite <-preserves_mult, 2!dec_recip_inverse.
-      * apply preserves_1.
+      * exact preserves_1.
       * apply isinjective_ne_0. trivial.
       * trivial.
   Qed.
@@ -287,6 +287,6 @@ Section morphisms.
   - apply (left_cancellation_ne_0 (.*.) (f x)).
     + apply isinjective_ne_0. trivial.
     + rewrite <-preserves_mult, dec_recip_inverse, reciperse_alt by assumption.
-      apply preserves_1.
+      exact preserves_1.
   Qed.
 End morphisms.

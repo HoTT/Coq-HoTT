@@ -16,7 +16,7 @@ Set Universe Minimization ToSet.
 (** ** Basic Properties *)
 
 (** The order of a group is strictly positive. *)
-Global Instance lt_zero_fcard_grp (G : Group) (fin_G : Finite G) : 0 < fcard G.
+Instance lt_zero_fcard_grp (G : Group) (fin_G : Finite G) : 0 < fcard G.
 Proof.
   pose proof (merely_equiv_fin G) as f.
   strip_truncations.

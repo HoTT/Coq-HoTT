@@ -12,7 +12,7 @@ Definition axiomK A := forall (x : A) (p : x = x), p = idpath x.
 Definition axiomK_hset {A} : IsHSet A -> axiomK A.
 Proof.
   intros H x p.
-  nrapply path_ishprop.
+  napply path_ishprop.
   exact (H x x).
 Defined.
 
@@ -38,9 +38,9 @@ Proof.
     eapply path_ishprop.
 Defined.
 
-Global Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
+Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
 Proof.
-  apply (istrunc_equiv_istrunc _ equiv_hset_axiomK).
+  exact (istrunc_equiv_istrunc _ equiv_hset_axiomK).
 Defined.
 
 Theorem hset_path2 {A} `{IsHSet A} {x y : A} (p q : x = y):
@@ -84,7 +84,7 @@ Proof.
   apply path_ishprop.
 Defined.
 
-Global Instance isequiv_hrel_subpaths
+Instance isequiv_hrel_subpaths
        X R
        `{Reflexive X R}
        `{forall x y, IsHProp (R x y)}
@@ -107,7 +107,7 @@ Definition ismono {X Y} (f : X -> Y)
   := forall (Z : HSet),
      forall g h : Z -> X, f o g = f o h -> g = h.
 
-Global Instance isinj_embedding {A B : Type} (m : A -> B)
+Instance isinj_embedding {A B : Type} (m : A -> B)
   : IsEmbedding m -> IsInjective m.
 Proof.
   intros ise x y p.
@@ -176,5 +176,5 @@ Lemma cancelL_isembedding {A B C : Type} `{IsHSet B} {f : A -> B} {g : B -> C} `
   : IsEmbedding f.
 Proof.
   rapply isembedding_isinj_hset.
-  rapply (isinj_cancelL _ g).
+  exact (isinj_cancelL _ g).
 Defined.

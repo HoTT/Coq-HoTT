@@ -35,10 +35,10 @@ Proof.
   exact (pullback_corec p).
 Defined.
 
-Global Instance isequiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
+Instance isequiv_pullback_corec {A B C D} (k : B -> D) (g : C -> D)
   : IsEquiv (@pullback_corec_uncurried A B C D k g).
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   - intro m.
     exact (pullback_pr1 o m ; pullback_pr2 o m ; (pullback_commsq k g) o m).
   - reflexivity.
@@ -92,7 +92,7 @@ Definition equiv_pullback_unit_prod (A B : Type)
 : Pullback (const_tt A) (const_tt B) <~> A * B.
 Proof.
   refine (equiv_sigma_prod0 A B oE _).
-  snrapply equiv_functor_sigma_id; intro a; cbn.
+  snapply equiv_functor_sigma_id; intro a; cbn.
   rapply equiv_sigma_contr.
 Defined.
 
@@ -100,7 +100,7 @@ Defined.
 Definition equiv_pullback_unit_hfiber {A B : Type} (f : A -> B) (g : Unit -> B)
   : Pullback f g <~> hfiber f (g tt).
 Proof.
-  snrapply equiv_functor_sigma_id; intro a; cbn.
+  snapply equiv_functor_sigma_id; intro a; cbn.
   exact (equiv_contr_sigma (fun c => _ = g c)).
 Defined.
 
@@ -136,7 +136,7 @@ Definition ispullback_symm {A B C D}
   : IsPullback p.
 Proof.
   rapply (cancelL_isequiv (equiv_pullback_symm g k)).
-  apply pb.
+  exact pb.
 Defined.
 
 (** The pullback of the projections [{d:D & P d} -> D <- {d:D & Q d}] is equivalent to [{d:D & P d * Q d}]. *)
@@ -200,13 +200,13 @@ Definition isequiv_functor_hfiber_ispullback {A B C D : Type}
 Proof.
   apply isequiv_from_functor_sigma.
   unfold IsPullback in e.
-  snrapply isequiv_commsq'.
+  snapply isequiv_commsq'.
   4: exact (equiv_fibration_replacement f)^-1%equiv.
   1: exact (Pullback k g).
   1: exact (pullback_corec p).
   { apply (functor_sigma idmap); intro b.
     apply (functor_sigma idmap); intro c.
-    apply inverse. }
+    exact inverse. }
   { intros [x [y q]].
     destruct q.
     apply (path_sigma' _ idpath).
@@ -297,7 +297,7 @@ Section Functor_Pullback.
     refine (equiv_moveR_Vp _ _ _ oE _).
     do 2 refine (equiv_concat_r (concat_pp_p _ _ _) _ oE _).
     refine (equiv_moveL_pM _ _ _ oE _).
-    abstract (rewrite !ap_V, inv_V; refine (equiv_path_inverse _ _)).
+    abstract (rewrite !ap_V, inv_V; exact (equiv_path_inverse _ _)).
   Defined.
 
 End Functor_Pullback.
@@ -315,7 +315,7 @@ Section EquivPullback.
     apply (equiv_functor_sigma' eC); intro c.
     refine (equiv_concat_l (p _) _ oE _).
     refine (equiv_concat_r (q _)^ _ oE _).
-    refine (equiv_ap' eA _ _).
+    exact (equiv_ap' eA _ _).
   Defined.
 
 End EquivPullback.
@@ -358,7 +358,7 @@ Proof.
   cbn.
   rapply (contr_equiv' {p' : f b = g c & p = p'}).
   apply equiv_functor_sigma_id; intros p'.
-  apply sq_1G.
+  exact sq_1G.
 Defined.
 
 (** Maps into pullbacks are determined by their composites with the projections, and a coherence.  This can also be proved directly.  With [Funext], we could also prove an equivalence analogous to [equiv_path_pullback_rec_hset] below.  Not sure of the best name for this version. *)
@@ -460,9 +460,9 @@ Section Pasting.
     intro b.
     pose (e1' := isequiv_functor_hfiber_ispullback _ e1 (i b)).
     pose (e2' := isequiv_functor_hfiber_ispullback _ e2 b).
-    snrapply isequiv_commsq'.
+    snapply isequiv_commsq'.
     7: apply isequiv_idmap.
-    4: apply (functor_hfiber_compose H K b).
+    4: exact (functor_hfiber_compose H K b).
     1,2: exact _.
   Defined.
 
@@ -474,9 +474,9 @@ Section Pasting.
     intro b.
     pose (e1' := isequiv_functor_hfiber_ispullback _ e1 (i b)).
     pose (e2' := isequiv_functor_hfiber_ispullback _ e2 b).
-    snrapply isequiv_commsq'.
+    snapply isequiv_commsq'.
     9: apply isequiv_idmap.
-    4: symmetry; apply (functor_hfiber_compose H K b).
+    4: symmetry; exact (functor_hfiber_compose H K b).
     1,2: exact _.
   Defined.
 

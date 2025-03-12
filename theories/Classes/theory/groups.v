@@ -8,7 +8,7 @@ Section group_props.
   Context `{IsGroup G}.
 
   (** Group inverses are involutive *)
-  Global Instance inverse_involutive : Involutive (^).
+  #[export] Instance inverse_involutive : Involutive (^).
   Proof.
     intros x.
     transitivity (mon_unit * x).
@@ -23,7 +23,7 @@ Section group_props.
     apply symmetry, right_identity.
   Qed.
 
-  Global Instance isinj_group_inverse : IsInjective (^).
+  #[export] Instance isinj_group_inverse : IsInjective (^).
   Proof.
     intros x y E.
     refine ((involutive x)^ @ _ @ involutive y).
@@ -37,20 +37,20 @@ Section group_props.
     apply symmetry, right_identity.
   Qed.
 
-  Global Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.
+  #[export] Instance group_cancelL : forall z : G, LeftCancellation (.*.) z.
   Proof.
     intros z x y E.
     rhs_V rapply left_identity.
-    rhs_V rapply (ap (.* y) (left_inverse z)).
+    rhs_V exact (ap (.* y) (left_inverse z)).
     rhs_V rapply simple_associativity.
     rhs_V rapply (ap (-z *.) E).
     symmetry.
     lhs rapply simple_associativity.
-    lhs rapply (ap (.* x) (left_inverse z)).
+    lhs exact (ap (.* x) (left_inverse z)).
     apply left_identity.
   Defined.
 
-  Global Instance group_cancelR: forall z : G, RightCancellation (.*.) z.
+  #[export] Instance group_cancelR: forall z : G, RightCancellation (.*.) z.
   Proof.
     intros z x y E.
     rewrite <-(right_identity x).
@@ -98,7 +98,7 @@ Section groupmor_props.
     apply (left_cancellation (.*.) (f x)).
     rewrite <-preserves_sg_op.
     rewrite 2!right_inverse.
-    apply preserves_mon_unit.
+    exact preserves_mon_unit.
   Qed.
 
 End groupmor_props.
@@ -113,7 +113,7 @@ Section from_another_sg.
   Lemma projected_sg: IsSemiGroup B.
   Proof.
   split.
-  - apply _.
+  - exact _.
   - repeat intro; apply (injective f).
     rewrite !op_correct. apply associativity.
   Qed.

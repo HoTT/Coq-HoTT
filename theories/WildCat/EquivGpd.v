@@ -23,7 +23,7 @@ Class IsSurjInj {A B : Type} `{Is0Gpd A, Is0Gpd B}
   essinj : forall (x y:A), (F x $== F y) -> (x $== y) ;
 }.
 
-Global Existing Instance esssurj_issurjinj.
+Existing Instance esssurj_issurjinj.
 Arguments essinj {A B _ _ _ _ _ _} F {_ _ x y} f.
 
 Definition surjinj_inv {A B : Type} (F : A -> B) `{IsSurjInj A B F} : B -> A
@@ -33,7 +33,7 @@ Definition surjinj_inv {A B : Type} (F : A -> B) `{IsSurjInj A B F} : B -> A
 
 (** Equivalences have inverses *)
 
-Global Instance is0functor_surjinj_inv
+Instance is0functor_surjinj_inv
        {A B : Type} (F : A -> B) `{IsSurjInj A B F}
   : Is0Functor (surjinj_inv F).
 Proof.
@@ -78,7 +78,7 @@ Definition issurjinj_transf {A B : Type} {F : A -> B} {G : A -> B}
   : IsSurjInj G.
 Proof.
   constructor.
-  - apply (isesssurj_transf alpha).
+  - exact (isesssurj_transf alpha).
   - intros x y f.
     apply (essinj F).
     refine (_ $@ f $@ _).
@@ -92,7 +92,7 @@ Section ComposeAndCancel.
   Context {A B C} `{Is0Gpd A, Is0Gpd B, Is0Gpd C}
        (G : B -> C) (F : A -> B) `{!Is0Functor G, !Is0Functor F}.
 
-  Global Instance isesssurj_compose
+  #[export] Instance isesssurj_compose
          `{!SplEssSurj G, !SplEssSurj F}
     : SplEssSurj (G o F).
   Proof.
@@ -103,7 +103,7 @@ Section ComposeAndCancel.
     apply (esssurj F).
   Defined.
 
-  Global Instance issurjinj_compose
+  #[export] Instance issurjinj_compose
          `{!IsSurjInj G, !IsSurjInj F}
     : IsSurjInj (G o F).
   Proof.
@@ -135,7 +135,7 @@ Section ComposeAndCancel.
     : IsSurjInj F.
   Proof.
     constructor.
-    - apply cancelL_isesssurj.
+    - exact cancelL_isesssurj.
     - intros x y f.
       exact (essinj (G o F) (fmap G f)).
   Defined.
@@ -165,7 +165,7 @@ Section ComposeAndCancel.
     : IsSurjInj G.
   Proof.
     constructor.
-    - apply cancelR_isesssurj.
+    - exact cancelR_isesssurj.
     - intros x y f.
       pose (p := (esssurj F x).2).
       pose (q := (esssurj F y).2).
@@ -196,9 +196,9 @@ Definition isesssurj_iff_commsq {A B C D : Type}
 Proof.
   split; intros ?.
   - srapply (cancelR_isesssurj G H); try exact _.
-    apply (isesssurj_transf (fun a => (p a)^$)).
+    exact (isesssurj_transf (fun a => (p a)^$)).
   - srapply (cancelL_isesssurj K F); try exact _.
-    apply (isesssurj_transf p).
+    exact (isesssurj_transf p).
 Defined.
 
 Definition issurjinj_iff_commsq {A B C D : Type}
@@ -210,9 +210,9 @@ Definition issurjinj_iff_commsq {A B C D : Type}
 Proof.
   split; intros ?.
   - srapply (cancelR_issurjinj G H); try exact _.
-    apply (issurjinj_transf (fun a => (p a)^$)).
+    exact (issurjinj_transf (fun a => (p a)^$)).
   - srapply (cancelL_issurjinj K F); try exact _.
-    apply (issurjinj_transf p).
+    exact (issurjinj_transf p).
 Defined.
 
 (** Equivalences and essential surjectivity are preserved by sigmas (for now, just over constant bases), and essential surjectivity at least is also reflected. *)

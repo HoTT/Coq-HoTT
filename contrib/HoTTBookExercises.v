@@ -25,8 +25,9 @@
 
 From HoTT Require Import Basics Types HProp HSet Projective
      TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
-     BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
-     Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties.
+     Misc.BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
+     Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties
+     Metatheory.ImpredicativeTruncation Spaces.Finite.Fin ExcludedMiddle.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.
@@ -697,7 +698,208 @@ Definition Book_2_16 := @HoTT.Metatheory.FunextVarieties.NaiveFunext_implies_Fun
 (* ================================================== ex:equiv-functor-types *)
 (** Exercise 2.17 *)
 
+Section Book_2_17_prod.
+  Context {A A' B B' : Type} (f : A <~> A') (g : B <~> B').
 
+  Definition Book_2_17_i_prod : A * B <~> A' * B'
+    := HoTT.Types.Prod.equiv_functor_prod' f g.
+
+  Definition Book_2_17_ii_prod `{Univalence} : A * B <~> A' * B'.
+  Proof.
+    apply equiv_path.
+    exact (ap011 prod (path_universe_uncurried f) (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_prod' (p : A = A') (q : B = B')
+    : transport idmap (ap011 prod p q)
+      = functor_prod (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_prod `{Univalence}
+    : Book_2_17_ii_prod = Book_2_17_i_prod.
+  Proof.
+    apply path_equiv; simpl.
+    lhs napply Book_2_17_eq_prod'.
+    snapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - apply transport_idmap_path_universe_uncurried.
+  Qed.
+End Book_2_17_prod.
+
+Section Book_2_17_sigma.
+  Context {A A' : Type} {B : A -> Type} {B' : A' -> Type}
+    (f : A <~> A') (g : forall a, B a <~> B' (f a)).
+
+  Definition Book_2_17_i_sigma : {a : A & B a} <~> {a' : A' & B' a'}
+    := HoTT.Types.Sigma.equiv_functor_sigma' f g.
+
+  Definition Book_2_17_path_fibr_1 (p : A = A')
+    (q : B = B' o (transport idmap p))
+    : (transport (fun A0 => A0 -> Type) p B) = B'
+    := moveR_transport_p _ _ _ _
+        (transport (fun p0 => B = B' o (_ p0)) (inv_V p)^ q
+           @ (transport_arrow_toconst' p^ B')^). 
+
+  Definition Book_2_17_ii_sigma `{Univalence}
+    : {a : A & B a} <~> {a' : A' & B' a'}.
+  Proof.
+    apply equiv_path.
+    snapply ap011D.
+    - exact (path_universe_uncurried f).
+    - apply Book_2_17_path_fibr_1.
+      apply path_arrow; intro a.
+      apply path_universe_uncurried.
+      apply (transport (fun f0 => _ <~> _ (f0 _))
+        (transport_idmap_path_universe_uncurried _)^).
+      apply g.
+  Defined.
+
+  Definition Book_2_17_eq_sigma' (p : A = A')
+    (q : B = B' o (transport idmap p))
+    : transport idmap (ap011D (@sig) p (Book_2_17_path_fibr_1 p q))
+      = functor_sigma (transport idmap p)
+          (fun a => transport idmap (ap10 q a)).
+  Proof.
+    unfold Book_2_17_path_fibr_1; destruct p.
+    change (B = B') in q; destruct q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_sigma `{Univalence}
+    : Book_2_17_ii_sigma = Book_2_17_i_sigma.
+  Proof.
+    apply path_equiv; simpl.
+    lhs napply Book_2_17_eq_sigma'.
+    snapply ap011D.
+    - apply transport_idmap_path_universe_uncurried.
+    - destruct (transport_idmap_path_universe_uncurried f); simpl.
+      apply path_forall; intro a.
+      lhs napply (ap (fun h => _ (h _)) (eisretr _ _)).
+      apply transport_idmap_path_universe_uncurried.
+  Defined.
+End Book_2_17_sigma.
+
+Section Book_2_17_arrow.
+  Context `{Funext} {A A' B B' : Type} (f : A' <~> A) (g : B <~> B').
+
+  Definition Book_2_17_i_arrow : (A -> B) <~> (A' -> B')
+    := HoTT.Types.Arrow.equiv_functor_arrow' f g.
+
+  Definition Book_2_17_ii_arrow `{Univalence} : (A -> B) <~> (A' -> B').
+  Proof.
+    apply equiv_path.
+    exact (ap011 arrow (path_universe_uncurried f)^ (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_arrow' (p : A' = A) (q : B = B')
+    : transport idmap (ap011 arrow p^ q)
+      = functor_arrow (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_arrow `{Univalence}
+    : Book_2_17_ii_arrow = Book_2_17_i_arrow.
+  Proof.
+    apply path_equiv; simpl.
+    lhs napply Book_2_17_eq_arrow'.
+    snapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - exact (ap (fun g0 _ => g0)
+        (transport_idmap_path_universe_uncurried g)).
+  Qed.
+End Book_2_17_arrow.
+
+Section Book_2_17_forall.
+  Context `{Funext} {A A' : Type} {B : A -> Type} {B' : A' -> Type}
+    (f : A' <~> A) (g : forall a', B (f a') <~> B' a').
+
+  Definition Book_2_17_i_forall : (forall a, B a) <~> (forall a', B' a')
+    := HoTT.Types.Forall.equiv_functor_forall' f g.
+
+  Definition Book_2_17_path_fibr_2 (p : A' = A)
+    (q : B o (transport idmap p) = B')
+    : (transport (fun A0 => A0 -> Type) p^ B) = B'
+    := (transport_arrow_toconst' p^ B)
+       @ (transport (fun p0 => B o (_ p0) = B') (inv_V p)^ q).
+
+  Definition Book_2_17_ii_forall `{Univalence}
+    : (forall a, B a) <~> (forall a', B' a').
+  Proof.
+    apply equiv_path.
+    snapply (ap011D (fun A0 B0 => forall a0, B0 a0)).
+    - exact (path_universe_uncurried f)^.
+    - apply Book_2_17_path_fibr_2.
+      apply path_arrow; intro a.
+      apply path_universe_uncurried.
+      napply (transport (fun f0 => B (f0 _) <~> _)
+        (transport_idmap_path_universe_uncurried f)^).
+      apply g.
+  Defined.
+
+  Definition Book_2_17_eq_forall' (p : A' = A)
+    (q : B o (transport idmap p) = B')
+    : transport idmap
+      (ap011D (fun A0 B0 => forall a0, B0 a0) p^ (Book_2_17_path_fibr_2 p q))
+      = functor_forall (transport idmap p)
+          (fun a => transport idmap (ap10 q a)).
+  Proof.
+    unfold Book_2_17_path_fibr_2; destruct p.
+    simpl in q; destruct q.
+    reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_forall `{Univalence}
+    : Book_2_17_ii_forall = Book_2_17_i_forall.
+  Proof.
+    apply path_equiv; simpl.
+    lhs napply Book_2_17_eq_forall'.
+    snapply ap011D.
+    - apply transport_idmap_path_universe_uncurried.
+    - destruct (transport_idmap_path_universe_uncurried f); simpl.
+      apply path_forall; intro a.
+      lhs napply (ap (fun h => _ (h _)) (eisretr _ _)).
+      apply transport_idmap_path_universe_uncurried.
+  Defined.
+End Book_2_17_forall.
+
+Section Book_2_17_sum.
+  Context {A A' B B' : Type} (f : A <~> A') (g : B <~> B').
+
+  Definition Book_2_17_i_sum : A + B <~> A' + B'
+    := HoTT.Types.Sum.equiv_functor_sum' f g.
+
+  Definition Book_2_17_ii_sum `{Univalence} : A + B <~> A' + B'.
+  Proof.
+    apply equiv_path.
+    exact (ap011 sum (path_universe_uncurried f) (path_universe_uncurried g)).
+  Defined.
+
+  Definition Book_2_17_eq_sum' `{Funext} (p : A = A') (q : B = B')
+    : transport idmap (ap011 sum p q)
+      = functor_sum (transport idmap p) (transport idmap q).
+  Proof.
+    clear f g.
+    destruct p, q.
+    apply path_arrow; intros [?|?]; reflexivity.
+  Defined.
+
+  Theorem Book_2_17_eq_sum `{Univalence}
+    : Book_2_17_ii_sum = Book_2_17_i_sum.
+  Proof.
+    apply path_equiv; simpl.
+    lhs napply Book_2_17_eq_sum'.
+    snapply ap011.
+    - apply transport_idmap_path_universe_uncurried.
+    - apply transport_idmap_path_universe_uncurried.
+  Qed.
+End Book_2_17_sum.
 
 (* ================================================== ex:dep-htpy-natural *)
 (** Exercise 2.18 *)
@@ -835,7 +1037,41 @@ Defined.
 (* ================================================== ex:brck-qinv *)
 (** Exercise 3.8 *)
 
+Definition Book_3_8_qinv {A B : Type} (f : A -> B) : Type
+  := {g : B -> A & (f o g == idmap) * (g o f == idmap)}.
 
+Section Book_3_8_ctx.
+  Context {isequiv : forall {A B : Type}, (A -> B) -> Type}
+    {cond_i : forall {A B : Type} (f : A -> B), isequiv f -> Book_3_8_qinv f}
+    {cond_ii : forall {A B : Type} (f : A -> B), Book_3_8_qinv f -> isequiv f}
+    {cond_iii : forall {A B : Type} (f : A -> B), IsHProp (isequiv f)}.
+  
+  Definition Book_3_8_cond_i {A B : Type} (f : A -> B)
+    : Trunc (-1) (Book_3_8_qinv f) -> Book_3_8_qinv f.
+  Proof.
+    refine (cond_i _ _ f o _).  
+    apply Trunc_rec, cond_ii.
+  Defined.
+
+  Definition Book_3_8_cond_ii {A B : Type} (f : A -> B)
+    : Book_3_8_qinv f -> Trunc (-1) (Book_3_8_qinv f)
+    := tr.
+  
+  Definition Book_3_8_cond_iii {A B : Type} (f : A-> B)
+    : IsHProp (Trunc (-1) (Book_3_8_qinv f))
+    := _.
+
+  Definition Book_3_8_equiv {A B : Type} (f : A -> B)
+    : Trunc (-1) (Book_3_8_qinv f) <~> (isequiv _ _ f).
+  Proof.
+    snapply equiv_iff_hprop.
+    - exact _.
+    - apply cond_iii.
+    - apply Trunc_rec, cond_ii.
+    - intro x.
+      apply tr, cond_i, x.
+  Defined.
+End Book_3_8_ctx.
 
 (* ================================================== ex:lem-impl-prop-equiv-bool *)
 (** Exercise 3.9 *)
@@ -870,7 +1106,25 @@ Defined.
 (* ================================================== ex:lem-impred *)
 (** Exercise 3.10 *)
 
+Definition Book_3_10_LEM@{j} := forall A : HProp@{j}, A + ~ A.
 
+Definition Book_3_10_Lift@{i j | i < j} (A : HProp@{i}) : HProp@{j}
+  := Build_HProp A.
+
+Definition Book_3_10_impred@{i j k | i < j, j < k} `{Univalence}
+  (LEM : Book_3_10_LEM@{j})
+  : IsEquiv@{j k} Book_3_10_Lift@{i j}.
+Proof.
+  snapply isequiv_adjointify.
+  { intro A. destruct (LEM A).
+    - exact (Build_HProp Unit).
+    - exact (Build_HProp Empty).
+  }
+  1-2: intro A; destruct (LEM _) as [a|na];
+    apply path_hprop, equiv_inverse; simpl.
+  1,3: exact (if_hprop_then_equiv_Unit A a).
+  1,2: exact (if_not_hprop_then_equiv_Empty A na).
+Defined.
 
 (* ================================================== ex:not-brck-A-impl-A *)
 (** Exercise 3.11 *)
@@ -953,7 +1207,17 @@ Defined.
 (* ================================================== ex:lem-impl-simple-ac *)
 (** Exercise 3.12 *)
 
-
+Definition Book_3_12 (LEM: forall A, IsHProp A -> A + ~ A)
+  : forall A, Trunc (-1) (Trunc (-1) A -> A).
+Proof.
+  intro A.
+  destruct (LEM (Trunc (-1) A) _) as [a|na].
+  - revert a; apply Trunc_rec; intro a.
+    apply tr, (fun a0 => a).
+  - apply tr.
+    intro a0.
+    elim (na a0).
+Defined.
 
 (* ================================================== ex:naive-lem-impl-ac *)
 (** Exercise 3.13 *)
@@ -1048,52 +1312,112 @@ End Book_3_14.
 (* ================================================== ex:impred-brck *)
 (** Exercise 3.15 *)
 
-
+Definition Book_3_15 := @HoTT.Metatheory.ImpredicativeTruncation.resized_Trm_rec_beta.
 
 (* ================================================== ex:lem-impl-dn-commutes *)
 (** Exercise 3.16 *)
 
-
+(** This result holds in general when [Y x] is stable for each [x : X] *)
+Definition Book_3_16 `{Funext} (LEM : forall A : HProp, A + ~ A)
+  (X : HSet) (Y : X -> HProp)
+  : (forall x, ~~ Y x) <~> ~~ (forall x, Y x).
+Proof.
+  rapply equiv_iff_hprop.
+  - intros f g.
+    apply g.
+    intro x.
+    destruct (LEM (Y x)) as [y|ny].
+    + exact y.
+    + elim (f x ny).
+  - intros f x ny.
+    apply f.
+    intro g.
+    exact (ny (g x)).
+Defined.
 
 (* ================================================== ex:prop-trunc-ind *)
 (** Exercise 3.17 *)
 
-
+Definition Book_3_17 {A : Type} {B : Trunc (-1) A -> HProp}
+  : (forall a : A, B (tr a)) -> (forall x : Trunc (-1) A, B x).
+Proof.
+  intros f x.
+  napply (Trunc_rec _ x).
+  - exact _.
+  - intro a.
+    exact (transport B (path_ishprop (tr a) x) (f a)).
+Defined.
 
 (* ================================================== ex:lem-ldn *)
 (** Exercise 3.18 *)
 
-
+Definition Book_3_18_i := @HoTT.ExcludedMiddle.LEM_to_DNE.  
+Definition Book_3_18_ii := @HoTT.ExcludedMiddle.DNE_to_LEM.
 
 (* ================================================== ex:decidable-choice *)
 (** Exercise 3.19 *)
 
-Definition Book_3_19 := @HoTT.BoundedSearch.minimal_n.
+Definition Book_3_19 := @HoTT.Misc.BoundedSearch.minimal_n.
 
 (* ================================================== ex:omit-contr2 *)
 (** Exercise 3.20 *)
 
-
+Definition Book_3_20 := @HoTT.Types.Sigma.equiv_contr_sigma.
 
 (* ================================================== ex:isprop-equiv-equiv-bracket *)
 (** Exercise 3.21 *)
 
-
+Definition Book_3_21 `{Funext} (P : Type) : IsHProp P <~> (P <~> Trunc (-1) P).
+Proof.
+  rapply equiv_iff_hprop.
+  - intro h.
+    (* See also [equiv_to_O]. *)
+    rapply equiv_iff_hprop.
+    + exact tr.
+    + exact (Trunc_rec idmap).
+  - intro e.
+    exact (istrunc_equiv_istrunc _ e^-1%equiv).
+Defined.
 
 (* ================================================== ex:finite-choice *)
 (** Exercise 3.22 *)
 
-
+(** Another form of this statement is proven in the library as [finite_choice] *)
+Definition Book_3_22 {n : nat} {A : Fin n -> HSet}
+  (P : forall (x : Fin n) (a : A x), HProp)
+  : (forall x, Trunc (-1) {a : A x & P x a})
+    -> Trunc (-1) {g : forall x, A x & forall x, P x (g x)}.
+Proof.
+  intro f.
+  induction n as [| m IH].
+  - apply tr.
+    snrefine (_ ; _).
+    1-2: intro bot; elim bot.
+  - assert (cl : Trunc (-1) {g : forall xl : Fin m, A (inl xl)
+      & forall xl : Fin m, P (inl xl) (g xl)}).
+    { apply (IH (A o inl) (fun xl a => P (inl xl) a)).
+      intro xl.
+      apply f.
+    }
+    pose proof (cr := f (inr tt)).
+    strip_truncations.
+    apply tr.
+    snrefine (_ ; _); intros [xl|[]].
+    + apply cl.1.
+    + exact cr.1.
+    + apply cl.2.
+    + exact cr.2.
+Defined.
 
 (* ================================================== ex:decidable-choice-strong *)
 (** Exercise 3.23 *)
 
-
+Definition Book_3_23 := @HoTT.Misc.BoundedSearch.minimal_n.
 
 (* ================================================== ex:n-set *)
 (** Exercise 3.24 *)
 
-
+Definition Book_3_24 := @HoTT.Spaces.Nat.Paths.equiv_path_nat.
 
 (* ================================================== ex:two-sided-adjoint-equivalences *)
 (** Exercise 4.1 *)
@@ -1369,7 +1693,7 @@ Defined.
 Definition Book_4_6_iii (qua1 qua2 : QInv_Univalence_type) : Empty.
 Proof.
   apply (Book_4_6_ii qua1 qua2).
-  nrapply istrunc_succ.
+  napply istrunc_succ.
   apply (Build_Contr _ (fun A => 1)); intros u.
   exact (allqinv_coherent qua2 _ _ (idmap; (idmap; (fun A => 1, u)))).
 Defined.

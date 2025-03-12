@@ -44,12 +44,12 @@ End ClosedModalTypes.
 (** Exercise 7.13(ii): Closed modalities *)
 Definition Cl (U : HProp) : Modality.
 Proof.
-  snrapply Build_Modality.
+  snapply Build_Modality.
   - intros X; exact (U -> Contr X).
   - exact _.
   - intros T B T_inO f feq.
     cbn; intros u; pose (T_inO u).
-    refine (contr_equiv _ f); exact _.
+    exact (contr_equiv _ f).
   - intros ; exact (Join U X).
   - intros T u.
     pose (contr_inhabited_hprop _ u).
@@ -70,7 +70,7 @@ Proof.
 Defined.
 
 (** The closed modality is accessible. *)
-Global Instance accmodality_closed (U : HProp)
+Instance accmodality_closed (U : HProp)
   : IsAccModality (Cl U).
 Proof.
   unshelve econstructor.
@@ -92,7 +92,7 @@ Local Instance topological_closed (U : HProp)
   : Topological (Cl U)
   := _.
 
-Global Instance lex_closed `{Univalence} (U : HProp)
+Instance lex_closed `{Univalence} (U : HProp)
   : Lex (Cl U).
 Proof.
   rapply lex_topological.

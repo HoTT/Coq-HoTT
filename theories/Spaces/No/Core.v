@@ -158,11 +158,11 @@ Module Export Surreals.
     := game_lt_r (game_of o xL) (game_of o xR)
                  (game_of o yL) (game_of o yR) r.
 
-  Global Instance ishprop_No_le {x y : GenNo}
+  #[export] Instance ishprop_No_le {x y : GenNo}
   : IsHProp (x <= y).
   Admitted.
 
-  Global Instance ishprop_No_lt {x y : GenNo}
+  #[export] Instance ishprop_No_lt {x y : GenNo}
   : IsHProp (x < y).
   Admitted.
 
@@ -517,10 +517,10 @@ Proof.
   revert x; refine (No_ind_hprop _ _); intros.
   apply le_lr.
   - intros l. refine (Conway_theorem0_lemma1 (xL l) (IHL l) _ _ _ _ 1).
-  - intros r. refine (Conway_theorem0_lemma2 (xR r) (IHR r) _ _ _ _ 1).
+  - intros r. exact (Conway_theorem0_lemma2 (xR r) (IHR r) _ _ _ _ 1).
 Defined.
 
-Instance reflexive_le `{Funext} : Reflexive le
+#[export] Instance reflexive_le `{Funext} : Reflexive le
   := le_reflexive.
 
 (** Theorem 0 Part (ii), left half *)
@@ -547,7 +547,7 @@ Proof.
   apply le_reflexive.
 Defined.
 
-Global Instance isset_No `{Funext} : IsHSet No.
+#[export] Instance isset_No `{Funext} : IsHSet No.
 Proof.
   refine (@ishset_hrel_subpaths No (fun (x y:No) => (x <= y) * (y <= x)) _ _ _).
   - intros x; split; apply le_reflexive.
@@ -694,11 +694,11 @@ Section NoCodes.
             split; [ intros [h3 h4]; split
                    | intros h3; strip_truncations;
                      destruct h3 as [[l' h3]|[r h3]] ] ;
-            [ intros l; refine (snd (xL_let l).2.2 y z (h3 l) y_le_z)
-            | intros r''; refine (h2 r'' (h3 , h4))
-            | refine (h1 l' h3)
+            [ intros l; exact (snd (xL_let l).2.2 y z (h3 l) y_le_z)
+            | intros r''; exact (h2 r'' (h3 , h4))
+            | exact (h1 l' h3)
             | apply tr, inr; exists r;
-              refine (snd (fst (fst (xR_let r).2.2)) y z h3 y_le_z) ] ).
+              exact (snd (fst (fst (xR_let r).2.2)) y z h3 y_le_z) ] ).
       - abstract (
             cbn;
             intros L' R' ? yL yR ycut x_let_yL x_let_yR y_lt_le;
@@ -797,8 +797,8 @@ Section NoCodes.
           intros L'' R'' ? zL zR zcut zLH zRH; split;
           [ rewrite !inner_cut_le;
             intros y_le_z; split;
-            [ intros l; refine (xL_lt_z l {{ zL | zR // zcut }} y_le_z)
-            | intros r; refine (snd (zRH r) (snd y_le_z r)) ]
+            [ intros l; exact (xL_lt_z l {{ zL | zR // zcut }} y_le_z)
+            | intros r; exact (snd (zRH r) (snd y_le_z r)) ]
           | rewrite !inner_cut_lt;
             intros y_lt_z; strip_truncations;
             destruct y_lt_z as [[l y_le_zL]|[r yR_le_z]];
@@ -922,7 +922,7 @@ Section NoCodes.
     refine (No_ind_hprop _ _); intros L R ? xL xR xcut xHL xHR.
     nrefine (No_ind_hprop _ _).
     (* Coq can find this proof by typeclass search, but helping it out makes this faster. *)
-    { intro x; nrapply istrunc_prod; nrapply istrunc_arrow; exact _. }
+    { intro x; napply istrunc_prod; napply istrunc_arrow; exact _. }
     intros L' R' ? yL yR ycut yHL yHR. split.
     - intros x_le_y.
       rewrite le'_cut in x_le_y.
@@ -962,7 +962,7 @@ Section NoCodes.
     assumption.
   Qed.
 
-  Global Instance trans_le : Transitive le
+  #[export] Instance trans_le : Transitive le
     := @le_le_trans.
 
   Corollary le_lt_trans {x y z : No}
@@ -989,7 +989,7 @@ Section NoCodes.
   : (x < y) -> (y < z) -> (x < z)
     := fun p q => lt_le_trans p (lt_le q).
 
-  Global Instance trans_lt : Transitive lt
+  #[export] Instance trans_lt : Transitive lt
     := @lt_lt_trans.
 
 End NoCodes.
@@ -1002,7 +1002,7 @@ Definition MaxSort : OptionSort := fun _ _ => Unit.
 Definition No : Type := GenNo MaxSort.
 
 (** This instance should be the one found by default, so that cuts live in [No] unless otherwise specified.  Thus, all other global instances of [InSort] should be declared with higher priority. *)
-Global Instance insort_maxsort {L R : Type}
+Instance insort_maxsort {L R : Type}
   : InSort MaxSort L R | 0
   := tt.
 
@@ -1016,7 +1016,7 @@ Section RaiseSort.
     simple refine (No_rec No le lt _ _ _ _ _).
     - intros L R ? xL xR xcut fxL fxR fxcut.
       exact {{ fxL | fxR // fxcut }}.
-    - apply path_No.
+    - exact path_No.
     - intros; apply le_lr; assumption.
     - intros; apply lt_l with l; assumption.
     - intros; apply lt_r with r; assumption.
@@ -1081,7 +1081,7 @@ Section RaiseSort.
     : (No_raise x <  No_raise y) -> (x <  y)
     := snd (No_raise_reflects_lelt x y).
 
-  Global Instance isemb_No_raise : IsEmbedding No_raise.
+  #[export] Instance isemb_No_raise : IsEmbedding No_raise.
   Proof.
     apply isembedding_isinj_hset.
     intros x y e; apply path_No.
@@ -1098,7 +1098,7 @@ End RaiseSort.
 (** The type of "plump ordinals" can be identified with surreal numbers that hereditarily have no right options. *)
 Definition OrdSort : OptionSort := fun L R => ~R.
 Definition POrd := GenNo OrdSort.
-Global Instance insort_ordsort {L : Type}
+Instance insort_ordsort {L : Type}
   : InSort OrdSort L Empty | 100
   := idmap.
 
@@ -1109,13 +1109,13 @@ Definition DecSort : OptionSort
   := fun L R => Decidable L * Decidable R.
 Definition DecNo : Type := GenNo DecSort.
 
-Global Instance insort_decsort {L R : Type}
+Instance insort_decsort {L R : Type}
          {dl : Decidable L} {dr : Decidable R}
   : InSort DecSort L R | 100
   := (dl , dr).
 
 (** Perhaps surprisingly, this is not a restriction at all!  Any surreal number can be presented by a cut in which all the option sorts are hereditarily decidable.  The basic idea is that we can always add a "sufficiently large" right option and a "sufficiently small" left option in order to make both families of options inhabited without changing the value of the cut, but the details are a bit tricky. *)
-Global Instance isequiv_DecNo_raise `{Univalence}
+Instance isequiv_DecNo_raise `{Univalence}
   : IsEquiv (@No_raise DecSort).
 Proof.
   apply isequiv_surj_emb; try exact _.
@@ -1164,7 +1164,7 @@ Proof.
       * unfold y. rewrite (No_raise_cut _ _ _).2.
         apply le_lr; [ intros [] | intros r ].
         rewrite <- (IHR r).2.
-        refine (lt_ropt _ _ _ (inr (inr r))).
+        exact (lt_ropt _ _ _ (inr (inr r))).
     + rewrite (IHL l).2.
       refine (lt_lopt _ _ _ l).
   - intros r.
@@ -1182,7 +1182,7 @@ Proof.
       * apply No_raise_lt.
         refine (lt_lopt _ _ _ tt).
     + rewrite (IHR r).2.
-      refine (lt_ropt _ _ _ r).
+      exact (lt_ropt _ _ _ r).
 Defined.
 
 Definition equiv_DecNo_raise `{Univalence}

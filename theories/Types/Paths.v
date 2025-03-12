@@ -85,9 +85,35 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+Definition transport_paths_lFr {A : Type} {f : A -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = f x1)
+  : transport (fun x => x = f x) p q = p^ @ q @ (ap f p).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
 Definition transport_paths_FFlr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
   (p : x1 = x2) (q : g (f x1) = x1)
   : transport (fun x => g (f x) = x) p q = (ap g (ap f p))^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FFFlr {A B C : Type}
+  {f : A -> B} {g : B -> C} {h : C -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = x1)
+  : transport (fun x => h (g (f x)) = x) p q = (ap h (ap g (ap f p)))^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FFFlFr {A B C D : Type}
+  {f : A -> B} {g : B -> C} {h : C -> D} {k : A -> D} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = k x1)
+  : transport (fun x => h (g (f x)) = k x) p q = (ap h (ap g (ap f p)))^ @ q @ (ap k p).
 Proof.
   destruct p; simpl.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
@@ -128,75 +154,38 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
-(** Variants of the above that do the most common rearranging. We could add similar variants for the others as needed. *)
-Definition transport_paths_Flr' {A : Type} {f : A -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = x1) (r : f x2 = x2)
-  (h : (ap f p) @ r = q @ p)
-  : transport (fun x => f x = x) p q = r.
+(** The above lemmas have some common rearrangements that are useful. Since these all follow the same pattern, we introduce a tactic to apply it. *)
+
+(** The most common rearrangement after applying the [transport_paths_] lemmas on the [lhs]. *)
+Definition moveR_Vp_p_inv {A : Type} {w x y z : A}
+  (p : x = w) (q : x = y) (r : y = z) (s : w = z)
+  (h : p @ s = q @ r)
+  : p^ @ q @ r = s.
 Proof.
-  refine (transport_paths_Flr _ _ @ _).
-  refine (concat_pp_p _ _ _ @ _).
-  apply moveR_Vp.
-  exact h^.
+  lhs napply concat_pp_p.
+  apply moveR_Vp, h^.
 Defined.
 
-Definition transport_paths_FlFr' {A B : Type} {f g : A -> B} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
-  (h : (ap f p) @ r = q @ (ap g p))
-  : transport (fun x => f x = g x) p q = r.
-Proof.
-  refine (transport_paths_FlFr _ _ @ _).
-  refine (concat_pp_p _ _ _ @ _).
-  apply moveR_Vp.
-  exact h^.
-Defined.
+Tactic Notation "transport_paths" uconstr(lemma) :=
+  lhs napply lemma; apply moveR_Vp_p_inv.
 
-Definition transport_paths_FFlr' {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = x1) (r : g (f x2) = x2)
-  (h : (ap g (ap f p)) @ r = q @ p)
-  : transport (fun x => g (f x) = x) p q = r.
-Proof.
-  refine (transport_paths_FFlr _ _ @ _).
-  refine (concat_pp_p _ _ _ @ _).
-  apply moveR_Vp.
-  exact h^.
-Defined.
+Tactic Notation "transport_paths" "Fl" := lhs napply transport_paths_Fl.
+Tactic Notation "transport_paths" "Fr" := lhs napply transport_paths_Fr.
 
-Definition transport_paths_FFlFr' {A B C : Type}
-  {f : A -> B} {g : B -> C} {h : A -> C} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = h x1) (r : g (f x2) = h x2)
-  (h' : (ap g (ap f p)) @ r = q @ (ap h p))
-  : transport (fun x => g (f x) = h x) p q = r.
-Proof.
-  lhs nrapply (transport_paths_FFlFr p q).
-  lhs nrapply concat_pp_p.
-  apply moveR_Vp.
-  exact h'^.
-Defined.
+Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
+Tactic Notation "transport_paths" "lFr" := transport_paths transport_paths_lFr.
 
-Definition transport_paths_FlFFr' {A B C : Type}
-  {f : A -> C} {g : B -> C} {h : A -> B} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = g (h x1)) (r : f x2 = g (h x2))
-  (h' : (ap f p) @ r = q @ (ap g (ap h p)))
-  : transport (fun x => f x = g (h x)) p q = r.
-Proof.
-  lhs nrapply (transport_paths_FlFFr p q).
-  lhs nrapply concat_pp_p.
-  apply moveR_Vp.
-  exact h'^.
-Defined.
+Tactic Notation "transport_paths" "FFlr" := transport_paths transport_paths_FFlr.
+Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
+Tactic Notation "transport_paths" "lFFr" := transport_paths transport_paths_lFFr.
 
-Definition transport_paths_FFlFFr' {A B B' C : Type}
-  {f : A -> B} {f' : A -> B'} {g : B -> C} {g' : B' -> C} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = g' (f' x1)) (r : g (f x2) = g' (f' x2))
-  (h : ap g (ap f p) @ r = q @ ap g' (ap f' p))
-  : transport (fun x => g (f x) = g' (f' x)) p q = r.
-Proof.
-  lhs nrapply (transport_paths_FFlFFr p q).
-  lhs nrapply concat_pp_p.
-  apply moveR_Vp.
-  exact h^.
-Defined.
+Tactic Notation "transport_paths" "FFFlr" := transport_paths transport_paths_FFFlr.
+Tactic Notation "transport_paths" "FFlFr" := transport_paths transport_paths_FFlFr.
+Tactic Notation "transport_paths" "FlFFr" := transport_paths transport_paths_FlFFr.
+Tactic Notation "transport_paths" "lFFFr" := transport_paths transport_paths_lFFr.
+
+Tactic Notation "transport_paths" "FFFlFr" := transport_paths transport_paths_FFFlFr.
+Tactic Notation "transport_paths" "FFlFFr" := transport_paths transport_paths_FFlFFr.
 
 Definition transport011_paths {A B X} (f : A -> X) (g : B -> X)
   {a1 a2 : A} {b1 b2 : B} (p : a1 = a2) (q : b1 = b2)
@@ -205,7 +194,7 @@ Definition transport011_paths {A B X} (f : A -> X) (g : B -> X)
 Proof.
   destruct p, q; cbn.
   symmetry.
-  lhs nrapply concat_p1.
+  lhs napply concat_p1.
   apply concat_1p.
 Defined.
 
@@ -228,7 +217,7 @@ Proof.
   { intros p' q'. destruct q'. reflexivity. }
   transitivity (q @ (concat_p1 1)^ @ (concat_1p 1)^).
   { simpl; exact ((concat_p1 _)^ @ (concat_p1 _)^). }
-  refine (H 1 q).
+  exact (H 1 q).
 Defined.
 
 (** ** Functorial action *)
@@ -241,7 +230,7 @@ Defined.
 
 (** ** Path operations are equivalences *)
 
-Global Instance isequiv_path_inverse {A : Type} (x y : A)
+Instance isequiv_path_inverse {A : Type} (x y : A)
   : IsEquiv (@inverse A x y) | 0.
 Proof.
   refine (Build_IsEquiv _ _ _ (@inverse A y x)
@@ -253,7 +242,7 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   : (x = y) <~> (y = x)
   := Build_Equiv _ _ (@inverse A x y) _.
 
-Global Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
+Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
   : IsEquiv (@transitivity A _ _ x y z p) | 0.
 Proof.
   refine (Build_IsEquiv _ _ _ (concat p^)
@@ -265,7 +254,7 @@ Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   : (y = z) <~> (x = z)
   := Build_Equiv _ _ (concat p) _.
 
-Global Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
+Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
   : IsEquiv (fun q:x=y => q @ p) | 0.
 Proof.
   refine (Build_IsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
@@ -277,7 +266,7 @@ Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
   : (x = y) <~> (x = z)
   := Build_Equiv _ _ (fun q => q @ p) _.
 
-Global Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
+Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : IsEquiv (fun r:x=y => p @ r @ q) | 0
   := @isequiv_compose _ _ (fun r => p @ r) _ _ (fun r => r @ q) _.
 
@@ -293,7 +282,7 @@ Definition equiv_1p_q1 {A : Type} {x y : A} {p q : x = y}
   : p = q <~> 1 @ p = q @ 1
   := equiv_concat_lr (concat_1p p) (concat_p1 q)^.
 
-Global Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
+Instance isequiv_whiskerL {A} {x y z : A} (p : x = y) {q r : y = z}
 : IsEquiv (@whiskerL A x y z p q r).
 Proof.
   simple refine (isequiv_adjointify _ _ _ _).
@@ -323,7 +312,7 @@ Proof.
   change (IsEquiv (equiv_cancelL p q r)); exact _.
 Defined.
 
-Global Instance isequiv_whiskerR {A} {x y z : A} {p q : x = y} (r : y = z)
+Instance isequiv_whiskerR {A} {x y z : A} {p q : x = y} (r : y = z)
 : IsEquiv (fun h => @whiskerR A x y z p q h r).
 Proof.
   simple refine (isequiv_adjointify _ _ _ _).
@@ -359,12 +348,12 @@ In particular, all of the [move] family are equivalences.
 
 (Note: currently, some but not all of these [isequiv_] lemmas have corresponding [equiv_] lemmas.  Also, they do *not* currently contain the computational content that e.g. the inverse of [moveR_Mp] is [moveL_Vp]; perhaps it would be useful if they did? *)
 
-Global Instance isequiv_moveR_Mp
+Instance isequiv_moveR_Mp
  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_Mp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_Mp
@@ -372,12 +361,12 @@ Definition equiv_moveR_Mp
 : (p = r^ @ q) <~> (r @ p = q)
 := Build_Equiv _ _ (moveR_Mp p q r) _.
 
-Global Instance isequiv_moveR_pM
+Instance isequiv_moveR_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pM p q r).
 Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_pM
@@ -385,12 +374,12 @@ Definition equiv_moveR_pM
 : (r = q @ p^) <~> (r @ p = q)
 := Build_Equiv _ _ (moveR_pM p q r) _.
 
-Global Instance isequiv_moveR_Vp
+Instance isequiv_moveR_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveR_Vp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_Vp
@@ -398,12 +387,12 @@ Definition equiv_moveR_Vp
 : (p = r @ q) <~> (r^ @ p = q)
 := Build_Equiv _ _ (moveR_Vp p q r) _.
 
-Global Instance isequiv_moveR_pV
+Instance isequiv_moveR_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pV p q r).
 Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_pV
@@ -411,12 +400,12 @@ Definition equiv_moveR_pV
 : (r = q @ p) <~> (r @ p^ = q)
 := Build_Equiv _ _ (moveR_pV p q r) _.
 
-Global Instance isequiv_moveL_Mp
+Instance isequiv_moveL_Mp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveL_Mp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_Mp
@@ -429,7 +418,7 @@ Definition isequiv_moveL_pM
 : IsEquiv (moveL_pM p q r).
 Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_pM
@@ -437,12 +426,12 @@ Definition equiv_moveL_pM
   q @ p^ = r <~> q = r @ p
   := Build_Equiv _ _ _ (isequiv_moveL_pM p q r).
 
-Global Instance isequiv_moveL_Vp
+Instance isequiv_moveL_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveL_Vp p q r).
 Proof.
   destruct r.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_Vp
@@ -450,12 +439,12 @@ Definition equiv_moveL_Vp
 : r @ q = p <~> q = r^ @ p
 := Build_Equiv _ _ (moveL_Vp p q r) _.
 
-Global Instance isequiv_moveL_pV
+Instance isequiv_moveL_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveL_pV p q r).
 Proof.
   destruct p.
-  apply (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_pV
@@ -493,7 +482,7 @@ Proof.
   destruct p. apply isequiv_concat_r.
 Defined.
 
-Global Instance isequiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
+Instance isequiv_moveR_1M {A : Type} {x y : A} (p q : x = y)
 : IsEquiv (moveR_1M p q).
 Proof.
   destruct p. apply isequiv_concat_r.
@@ -530,7 +519,7 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Global Instance isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
+Instance isequiv_moveR_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_p P p u v).
 Proof.
@@ -560,7 +549,7 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Global Instance isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
+Instance isequiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveR_transport_V P p u v).
 Proof.
@@ -575,7 +564,7 @@ Definition equiv_moveR_transport_V {A : Type} (P : A -> Type) {x y : A}
 : u = transport P p v <~> transport P p^ u = v
 := Build_Equiv _ _ (moveR_transport_V P p u v) _.
 
-Global Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
+Instance isequiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
   (p : x = y) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_V P p u v).
 Proof.
@@ -590,7 +579,7 @@ Definition equiv_moveL_transport_V {A : Type} (P : A -> Type) {x y : A}
 : transport P p u = v <~> u = transport P p^ v
 := Build_Equiv _ _ (moveL_transport_V P p u v) _.
 
-Global Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
+Instance isequiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
   (p : y = x) (u : P x) (v : P y)
 : IsEquiv (moveL_transport_p P p u v).
 Proof.
@@ -605,44 +594,44 @@ Definition equiv_moveL_transport_p {A : Type} (P : A -> Type) {x y : A}
 : transport P p^ u = v <~> u = transport P p v
 := Build_Equiv _ _ (moveL_transport_p P p u v) _.
 
-Global Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveR_equiv_M A B f _ x y).
 Proof.
   unfold moveR_equiv_M.
-  refine (@isequiv_compose _ _ (ap f) _ _ (fun q => q @ eisretr f y) _).
+  exact (@isequiv_compose _ _ (ap f) _ _ (fun q => q @ eisretr f y) _).
 Defined.
 
 Definition equiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
   : (x = f^-1 y) <~> (f x = y)
   := Build_Equiv _ _ (@moveR_equiv_M A B f _ x y) _.
 
-Global Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveR_equiv_V A B f _ x y).
 Proof.
   unfold moveR_equiv_V.
-  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => q @ eissect f y) _).
+  exact (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => q @ eissect f y) _).
 Defined.
 
 Definition equiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
   : (x = f y) <~> (f^-1 x = y)
   := Build_Equiv _ _ (@moveR_equiv_V A B f _ x y) _.
 
-Global Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
+Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveL_equiv_M A B f _ x y).
 Proof.
   unfold moveL_equiv_M.
-  refine (@isequiv_compose _ _ (ap f) _ _ (fun q => (eisretr f y)^ @ q) _).
+  exact (@isequiv_compose _ _ (ap f) _ _ (fun q => (eisretr f y)^ @ q) _).
 Defined.
 
 Definition equiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
   : (f^-1 y = x) <~> (y = f x)
   := Build_Equiv _ _ (@moveL_equiv_M A B f _ x y) _.
 
-Global Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
+Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveL_equiv_V A B f _ x y).
 Proof.
   unfold moveL_equiv_V.
-  refine (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => (eissect f y)^ @ q) _).
+  exact (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => (eissect f y)^ @ q) _).
 Defined.
 
 Definition equiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
@@ -761,7 +750,7 @@ Defined.
 
 (** ** Universal mapping property *)
 
-Global Instance isequiv_paths_ind `{Funext} {A : Type} (a : A)
+Instance isequiv_paths_ind `{Funext} {A : Type} (a : A)
   (P : forall x, (a = x) -> Type)
   : IsEquiv (paths_ind a P) | 0.
 Proof.
@@ -778,7 +767,7 @@ Definition equiv_paths_ind `{Funext} {A : Type} (a : A)
   : P a 1 <~> forall x p, P x p
   := Build_Equiv _ _ (paths_ind a P) _.
 
-Global Instance isequiv_paths_ind_r `{Funext} {A : Type} (a : A)
+Instance isequiv_paths_ind_r `{Funext} {A : Type} (a : A)
   (P : forall x, (x = a) -> Type)
   : IsEquiv (paths_ind_r a P) | 0.
 Proof.

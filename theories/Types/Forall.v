@@ -41,7 +41,7 @@ Definition equiv_apD10 {A : Type} (P : A -> Type) f g
 : (f = g) <~> (f == g)
   := Build_Equiv _ _ (@apD10 A P f g) _.
 
-Global Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
+#[export] Instance isequiv_path_forall `{P : A -> Type} (f g : forall x, P x)
   : IsEquiv (path_forall f g) | 0
   := @isequiv_inverse _ _ (@apD10 A P f g) _.
 
@@ -220,7 +220,7 @@ Definition functor_forall_equiv `{P : A -> Type} `{Q : B -> Type}
     (f0 : A -> B) `{!IsEquiv f0} (f1 : forall a:A, P a -> Q (f0 a))
   : (forall a:A, P a) -> (forall b:B, Q b).
 Proof.
-  nrapply (functor_forall f0^-1).
+  napply (functor_forall f0^-1).
   intros b u.
   refine ((eisretr f0 b) # _).
   exact (f1 _ u).
@@ -243,28 +243,24 @@ Defined.
 (** ** Equivalences *)
 
 (** If *both* maps in [functor_forall] are equivalences, then so is the output. *)
-Global Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
+#[export] Instance isequiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
   `{IsEquiv B A f} `{forall b, @IsEquiv (P (f b)) (Q b) (g b)}
   : IsEquiv (functor_forall f g) | 1000.
 Proof.
-  simple refine (isequiv_adjointify (functor_forall f g)
-    (functor_forall (f^-1)
-      (fun (x:A) (y:Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y
-      )) _ _);
-  intros h.
-  - abstract (
-        apply path_forall; intros b; unfold functor_forall;
-        rewrite eisadj;
-        rewrite <- transport_compose;
-        rewrite ap_transport;
-        rewrite eisretr;
-        apply apD
-      ).
-  - abstract (
-        apply path_forall; intros a; unfold functor_forall;
-        rewrite eissect;
-        apply apD
-      ).
+  snapply isequiv_adjointify.
+  - exact (functor_forall (f^-1)
+      (fun (x : A) (y : Q (f^-1 x)) => eisretr f x # (g (f^-1 x))^-1 y)).
+  - intro h.
+    apply path_forall; intros b; unfold functor_forall.
+    lhs napply (ap (fun p => g b (transport P p _)) (eisadj f b)).
+    lhs_V napply (ap _ (transport_compose _ _ _ _)).
+    lhs napply ap_transport.
+    lhs napply (ap _ (eisretr (g _) _)).
+    apply apD.
+  - intro h.
+    apply path_forall; intros a; unfold functor_forall.
+    lhs napply (ap _ (eissect (g _) _)).
+    apply apD.
 Defined.
 
 Definition equiv_functor_forall `{P : A -> Type} `{Q : B -> Type}
@@ -334,7 +330,7 @@ Definition path_forall11 {A : Type} {B : A -> Type} {P : forall a : A, B a -> Ty
   : (forall x y, f x y = g x y) -> f = g
   := equiv_path_forall11 f g.
 
-Global Instance isequiv_path_forall11 {A : Type} {B : A -> Type} `{P : forall a : A, B a -> Type} (f g : forall a b, P a b)
+#[export] Instance isequiv_path_forall11 {A : Type} {B : A -> Type} `{P : forall a : A, B a -> Type} (f g : forall a b, P a b)
   : IsEquiv (path_forall11 f g) | 0
   := _.
 
@@ -371,7 +367,7 @@ Definition flip `{P : A -> B -> Type}
 
 Arguments flip {A B P} f b a /.
 
-Global Instance isequiv_flip `{P : A -> B -> Type}
+Instance isequiv_flip `{P : A -> B -> Type}
   : IsEquiv (@flip _ _ P) | 0.
 Proof.
   set (flip_P := @flip _ _ P).

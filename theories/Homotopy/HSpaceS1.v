@@ -21,7 +21,7 @@ Section HSpace_S1.
     srapply Susp_ind; hnf.
     { apply moveL_transport_p.
       refine ((transport_pp _ _ _ _)^ @ _).
-      apply p. }
+      exact p. }
     1: reflexivity.
     apply Empty_ind.
   Defined.
@@ -35,7 +35,7 @@ Section HSpace_S1.
     srapply Susp_rec.
     1: exact p.
     1: reflexivity.
-    apply Empty_rec.
+    exact Empty_rec.
   Defined.
 
   Definition Sph1_rec_beta_loop (P : Type) (b : P) (p : b = b)
@@ -55,10 +55,10 @@ Section HSpace_S1.
       by rewrite concat_Vp, concat_1p.
   Defined.
 
-  Global Instance sgop_s1 : SgOp (psphere 1)
+  #[export] Instance sgop_s1 : SgOp (psphere 1)
     := fun x y => Sph1_rec _ y (s1_turn y) x.
 
-  Global Instance leftidentity_s1
+  #[export] Instance leftidentity_s1
     : LeftIdentity sgop_s1 (point (psphere 1)).
   Proof.
     srapply Sph1_ind.
@@ -68,7 +68,7 @@ Section HSpace_S1.
     apply concat_Vp.
   Defined.
 
-  Global Instance rightidentity_s1
+  #[export] Instance rightidentity_s1
     : RightIdentity sgop_s1 (point (psphere 1)).
   Proof.
     srapply Sph1_ind.
@@ -80,14 +80,14 @@ Section HSpace_S1.
     apply concat_Vp.
   Defined.
 
-  Global Instance hspace_s1 : IsHSpace (psphere 1) := {}.
+  #[export] Instance hspace_s1 : IsHSpace (psphere 1) := {}.
 
-  Global Instance iscoherent_s1 : IsCoherent (psphere 1) := idpath.
+  #[export] Instance iscoherent_s1 : IsCoherent (psphere 1) := idpath.
 
   Definition iscohhspace_s1 : IsCohHSpace (psphere 1)
     := Build_IsCohHSpace _ _ _.
 
-  Global Instance associative_sgop_s1
+  #[export] Instance associative_sgop_s1
     : Associative sgop_s1.
   Proof.
     intros x y z.
@@ -103,7 +103,7 @@ Section HSpace_S1.
     apply path_ishprop.
   Defined.
 
-  Global Instance commutative_sgop_s1
+  #[export] Instance commutative_sgop_s1
     : Commutative sgop_s1.
   Proof.
     intros x y.

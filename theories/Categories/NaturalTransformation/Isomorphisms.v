@@ -36,7 +36,7 @@ Section composition.
   Context `{Funext}.
 
   (** ** Natural isomorphism respects composition *)
-  Global Instance isisomorphism_compose
+  #[export] Instance isisomorphism_compose
          `(T' : @NaturalTransformation C D F' F'')
          `(T : @NaturalTransformation C D F F')
          `{@IsIsomorphism (C -> D) F' F'' T'}
@@ -45,7 +45,7 @@ Section composition.
     := @isisomorphism_compose (C -> D) _ _ T' _ _ T _.
 
   (** ** Left whiskering preserves natural isomorphisms *)
-  Global Instance iso_whisker_l C D E
+  #[export] Instance iso_whisker_l C D E
          (F : Functor D E)
          (G G' : Functor C D)
          (T : NaturalTransformation G G')
@@ -57,7 +57,7 @@ Section composition.
   Defined.
 
   (** ** Right whiskering preserves natural isomorphisms *)
-  Global Instance iso_whisker_r C D E
+  #[export] Instance iso_whisker_r C D E
          (F F' : Functor D E)
          (T : NaturalTransformation F F')
          (G : Functor C D)

@@ -22,7 +22,7 @@ Record AbGroup := {
 }.
 
 Coercion abgroup_group : AbGroup >-> Group.
-Global Existing Instance abgroup_commutative.
+Existing Instance abgroup_commutative.
 
 Definition zero_abgroup (A : AbGroup) : Zero A := mon_unit.
 Definition negate_abgroup (A : AbGroup) : Negate A := inv.
@@ -37,7 +37,7 @@ Module Import AdditiveInstances.
   #[export] Hint Immediate plus_abgroup : typeclass_instances.
 End AdditiveInstances.
 
-Global Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
+Instance isabgroup_abgroup {A : AbGroup} : IsAbGroup A.
 Proof.
   split; exact _.
 Defined.
@@ -51,7 +51,7 @@ Definition Build_AbGroup' (G : Type)
   (inv_l : LeftInverse (A:=G) (+) (-) 0)
   : AbGroup.
 Proof.
-  snrapply Build_AbGroup.
+  snapply Build_AbGroup.
   - rapply (Build_Group' G).
   - exact comm.
 Defined.
@@ -60,7 +60,7 @@ Definition issig_abgroup : _ <~> AbGroup := ltac:(issig).
 
 Definition ab_neg_op {A : AbGroup} (x y : A) : - (x + y) = -x - y.
 Proof.
-  lhs nrapply grp_inv_op.
+  lhs napply grp_inv_op.
   apply commutativity.
 Defined.
 
@@ -83,10 +83,10 @@ Definition equiv_path_abgroup_group `{Univalence} {A B : AbGroup}
 Local Hint Immediate canonical_names.inverse_is_negate : typeclass_instances.
 
 (** Subgroups of abelian groups are abelian *)
-Global Instance isabgroup_subgroup (G : AbGroup) (H : Subgroup G)
+Instance isabgroup_subgroup (G : AbGroup) (H : Subgroup G)
   : IsAbGroup H.
 Proof.
-  nrapply Build_IsAbGroup.
+  napply Build_IsAbGroup.
   1: exact _.
   intros x y.
   apply path_sigma_hprop.
@@ -99,7 +99,7 @@ Definition abgroup_subgroup (G : AbGroup) : Subgroup G -> AbGroup
 #[warnings="-uniform-inheritance"]
 Coercion abgroup_subgroup : Subgroup >-> AbGroup.
 
-Global Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
+Instance isnormal_ab_subgroup (G : AbGroup) (H : Subgroup G)
   : IsNormalSubgroup H.
 Proof.
   intros x y h.
@@ -108,10 +108,10 @@ Defined.
 
 (** ** Quotients of abelian groups *)
 
-Global Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
+Instance isabgroup_quotient (G : AbGroup) (H : Subgroup G)
   : IsAbGroup (QuotientGroup' G H (isnormal_ab_subgroup G H)).
 Proof.
-  nrapply Build_IsAbGroup.
+  napply Build_IsAbGroup.
   1: exact _.
   srapply Quotient_ind2_hprop; intros x y.
   apply (ap (class_of _)).
@@ -139,29 +139,29 @@ Defined.
 
 (** ** The wild category of abelian groups *)
 
-Global Instance isgraph_abgroup : IsGraph AbGroup
+Instance isgraph_abgroup : IsGraph AbGroup
   := isgraph_induced abgroup_group.
 
-Global Instance is01cat_abgroup : Is01Cat AbGroup
+Instance is01cat_abgroup : Is01Cat AbGroup
   := is01cat_induced abgroup_group.
 
-Global Instance is01cat_grouphomomorphism {A B : AbGroup} : Is01Cat (A $-> B)
+Instance is01cat_grouphomomorphism {A B : AbGroup} : Is01Cat (A $-> B)
   := is01cat_induced (@grp_homo_map A B).
 
-Global Instance is0gpd_grouphomomorphism {A B : AbGroup} : Is0Gpd (A $-> B)
+Instance is0gpd_grouphomomorphism {A B : AbGroup} : Is0Gpd (A $-> B)
   := is0gpd_induced (@grp_homo_map A B).
 
-Global Instance is2graph_abgroup : Is2Graph AbGroup
+Instance is2graph_abgroup : Is2Graph AbGroup
   := is2graph_induced abgroup_group.
 
 (** AbGroup forms a 1Cat *)
-Global Instance is1cat_abgroup : Is1Cat AbGroup
+Instance is1cat_abgroup : Is1Cat AbGroup
   := is1cat_induced _.
 
-Global Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
+Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
   := hasmorext_induced _.
 
-Global Instance hasequivs_abgroup : HasEquivs AbGroup
+Instance hasequivs_abgroup : HasEquivs AbGroup
   := hasequivs_induced _.
 
 (** Zero object of AbGroup *)
@@ -173,17 +173,17 @@ Proof.
 Defined.
 
 (** AbGroup is a pointed category *)
-Global Instance ispointedcat_abgroup : IsPointedCat AbGroup.
+Instance ispointedcat_abgroup : IsPointedCat AbGroup.
 Proof.
   apply Build_IsPointedCat with abgroup_trivial.
   all: intro A; apply ispointedcat_group.
 Defined.
 
 (** [abgroup_group] is a functor *)
-Global Instance is0functor_abgroup_group : Is0Functor abgroup_group
+Instance is0functor_abgroup_group : Is0Functor abgroup_group
   := is0functor_induced _.
 
-Global Instance is1functor_abgroup_group : Is1Functor abgroup_group
+Instance is1functor_abgroup_group : Is1Functor abgroup_group
   := is1functor_induced _.
 
 (** Image of group homomorphisms between abelian groups *)
@@ -247,8 +247,8 @@ Defined.
 (** The negation automorphism of an abelian group *)
 Definition ab_homo_negation {A : AbGroup} : GroupIsomorphism A A.
 Proof.
-  snrapply Build_GroupIsomorphism.
-  - snrapply Build_GroupHomomorphism.
+  snapply Build_GroupIsomorphism.
+  - snapply Build_GroupHomomorphism.
     + exact (fun a => -a).
     + intros x y.
       refine (grp_inv_op x y @ _).
@@ -261,7 +261,7 @@ Defined.
 (** Multiplication by [n : Int] defines an endomorphism of any abelian group [A]. *)
 Definition ab_mul {A : AbGroup} (n : Int) : GroupHomomorphism A A.
 Proof.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   1: exact (fun a => grp_pow a n).
   intros a b.
   apply grp_pow_mul, commutativity.
@@ -292,7 +292,7 @@ Definition ab_cokernel_embedding_rec {G: Group} {A B : AbGroup} (f : G $-> A) `{
   (h : A $-> B) (p : grp_homo_compose h f $== grp_homo_const)
   : ab_cokernel_embedding f $-> B.
 Proof.
-  snrapply (grp_quotient_rec _ _ h).
+  snapply (grp_quotient_rec _ _ h).
   intros a [g q].
   induction q.
   exact (p g).

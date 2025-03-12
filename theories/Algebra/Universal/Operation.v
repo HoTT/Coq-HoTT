@@ -202,7 +202,7 @@ Proof.
   by rewrite fin_ind_beta_fsucc.
 Qed.
 
-Global Instance isequiv_operation_curry `{Funext} {σ} (A : Carriers σ)
+Instance isequiv_operation_curry `{Funext} {σ} (A : Carriers σ)
   {n : nat} (ss : FinSeq n (Sort σ)) (t : Sort σ)
   : IsEquiv (operation_curry A ss t).
 Proof.

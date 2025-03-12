@@ -8,7 +8,7 @@ Generalizable Variables A.
 Lemma irrefl_neq `{R : Relation A} `{!Irreflexive R}
   : forall x y, R x y -> x <> y.
 Proof.
-intros ?? E e;rewrite e in E. apply (irreflexivity _ _ E).
+intros ?? E e;rewrite e in E. exact (irreflexivity _ _ E).
 Qed.
 
 Lemma le_flip `{Le A} `{!TotalRelation (≤)} x y : ~(y ≤ x) -> x ≤ y.
@@ -141,10 +141,10 @@ Section pseudo_order.
   auto using pseudo_order_lt_apart.
   Qed.
 
-  Global Instance pseudoorder_strictorder : StrictOrder (_ : Lt A).
+  #[export] Instance pseudoorder_strictorder : StrictOrder (_ : Lt A).
   Proof.
   split.
-  - apply _.
+  - exact _.
   - intros x E.
     destruct (pseudo_order_antisym x x); auto.
   - intros x y z E1 E2.
@@ -152,7 +152,7 @@ Section pseudo_order.
     destruct (pseudo_order_antisym y z); auto.
   Qed.
 
-  Global Instance nlt_trans : Transitive (complement (<)).
+  #[export] Instance nlt_trans : Transitive (complement (<)).
   Proof.
   intros x y z.
   intros E1 E2 E3.
@@ -160,7 +160,7 @@ Section pseudo_order.
   intros [?|?]; contradiction.
   Qed.
 
-  Global Instance nlt_antisymm : AntiSymmetric (complement (<)).
+  #[export] Instance nlt_antisymm : AntiSymmetric (complement (<)).
   Proof.
   intros x y H1 H2.
   apply tight_apart. intros nap. apply apart_iff_total_lt in nap.
@@ -173,7 +173,7 @@ Section pseudo_order.
   apply apart_total_lt. assumption.
   Qed.
 
-  Global Instance lt_trichotomy `{!TrivialApart A} `{DecidablePaths A}
+  #[export] Instance lt_trichotomy `{!TrivialApart A} `{DecidablePaths A}
     : Trichotomy (<).
   Proof.
   intros x y.
@@ -191,13 +191,13 @@ Section full_partial_order.
     StrongSetoid is not defined as a substructure of a FullPartialOrder *)
   Instance strict_po_apart_ne x y : PropHolds (x ≶ y) -> PropHolds (x <> y).
   Proof.
-  intros; apply _.
+  intros; exact _.
   Qed.
 
-  Global Instance fullpartialorder_strictorder : StrictOrder (<).
+  #[export] Instance fullpartialorder_strictorder : StrictOrder (<).
   Proof.
-  split; try apply _.
-  - apply strict_po_mere_lt.
+  split; try exact _.
+  - exact strict_po_mere_lt.
   - intros x. red. intros E;apply lt_iff_le_apart in E.
     destruct E as [_ ?].
     apply (irreflexivity (≶) x).
@@ -338,8 +338,8 @@ Section full_pseudo_order.
   Instance fullpseudo_partial : PartialOrder (≤) | 10.
   Proof.
   repeat split.
-  - apply _.
-  - apply _.
+  - exact _.
+  - exact _.
   - intros x. apply not_lt_le_flip, (irreflexivity (<)).
   - intros x y z E1 E2.
     apply le_iff_not_lt_flip;
@@ -355,7 +355,7 @@ Section full_pseudo_order.
 
   Lemma fullpseudo_fullpartial' : FullPartialOrder Ale Alt.
   Proof.
-  split; try apply _.
+  split; try exact _.
   intros x y.
   split.
   - intros E. split.
@@ -365,11 +365,11 @@ Section full_pseudo_order.
     apply le_iff_not_lt_flip. trivial.
   Qed.
 
-  Global Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
+  #[export] Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
     := ltac:(first [exact fullpseudo_fullpartial'@{i i Set Set Set}|
                     exact fullpseudo_fullpartial'@{i i}]).
 
-  Global Instance le_stable : forall x y, Stable (x ≤ y).
+  #[export] Instance le_stable : forall x y, Stable (x ≤ y).
   Proof.
   intros x y. unfold Stable.
   intros dn. apply le_iff_not_lt_flip.
@@ -384,10 +384,10 @@ Section full_pseudo_order.
   - left. apply eq_le;trivial.
   Qed.
 
-  Global Instance le_total `{!TrivialApart A} `{DecidablePaths A}
+  #[export] Instance le_total `{!TrivialApart A} `{DecidablePaths A}
     : TotalOrder (≤).
   Proof.
-  split; try apply _.
+  split; try exact _.
   intros x y.
   destruct (le_or_lt x y); auto.
   right. apply lt_le.
@@ -438,7 +438,7 @@ Section dec_strict_setoid_order.
 
   Instance dec_strict_pseudo_order: PseudoOrder (<).
   Proof.
-  split; try apply _.
+  split; try exact _.
   - intros x y [??].
     destruct (lt_antisym x y); auto.
   - intros x y Exy z.
@@ -463,7 +463,7 @@ Section dec_partial_order.
   Instance dec_order: StrictOrder (<).
   Proof.
   split.
-  - apply _.
+  - exact _.
   - intros x E. apply lt_correct in E. destruct E as [_ []];trivial.
   - intros x y z E1 E2.
     apply lt_correct;
@@ -483,7 +483,7 @@ Section dec_partial_order.
 
   Instance dec_full_partial_order: FullPartialOrder (≤) (<).
   Proof.
-  split;try apply _.
+  split;try exact _.
   intros. transitivity (x <= y /\ x <> y);[|
   split;intros [? ?];split;trivial;apply trivial_apart;trivial].
   apply lt_correct.
@@ -505,7 +505,7 @@ Section dec_partial_order.
 
   Instance dec_full_pseudo_order: FullPseudoOrder (≤) (<).
   Proof.
-  split; try apply _.
+  split; try exact _.
   intros x y.
   split.
   - intros ? E. apply lt_correct in E;destruct E as [? []].
@@ -558,6 +558,6 @@ Section pseudo.
     - destruct (pseudo_order_antisym y z (ltyz , ltzy)).
   Qed.
 
-  Global Existing Instance lt_transitive.
+  Existing Instance lt_transitive.
 
 End pseudo.

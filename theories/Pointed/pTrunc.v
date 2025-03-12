@@ -50,19 +50,19 @@ Definition pequiv_ptr_rec `{Funext} {n} {X Y : pType} `{IsTrunc n Y}
 
 (** ** Functoriality of [pTr] *)
 
-Global Instance is0functor_ptr n : Is0Functor (pTr n).
+Instance is0functor_ptr n : Is0Functor (pTr n).
 Proof.
   apply Build_Is0Functor.
   intros X Y f.
   exact (pTr_rec _ (ptr o* f)).
 Defined.
 
-Global Instance is1functor_ptr n : Is1Functor (pTr n).
+Instance is1functor_ptr n : Is1Functor (pTr n).
 Proof.
   apply Build_Is1Functor.
   - intros X Y f g p.
     srapply pTr_ind; cbn.
-    snrapply Build_pForall.
+    snapply Build_pForall.
     + cbn. exact (fun x => ap tr (p x)).
     + pointed_reduce.
       exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_p1 _))^.
@@ -117,7 +117,7 @@ Proof.
   intros A n.
   cbn; etransitivity.
   1: apply ptr_loops.
-  rapply (emap loops).
+  tapply (emap loops).
   apply IHk.
 Defined.
 
@@ -152,20 +152,20 @@ Defined.
 Definition pequiv_ptr_prod (n : trunc_index) (A B : pType)
   : pTr n (A * B) <~>* pTr n A * pTr n B.
 Proof.
-  snrapply Build_pEquiv'.
-  1: nrapply equiv_Trunc_prod_cmp.
+  snapply Build_pEquiv'.
+  1: napply equiv_Trunc_prod_cmp.
   reflexivity.
 Defined.
 
 (** ** Truncatedness of [pForall] and [pMap] *)
 
-(** Buchholtz-van Doorn-Rijke, Theorem 4.2:  Let [j >= -1] and [n >= -2].  When [X] is [j]-connected and [Y] is a pointed family of [j+k+1]-truncated types, the type of pointed sections is [n]-truncated.  We formalize it with [j] replaced with a trunc index [m], and so there is a shift compared to the informal statement. This version also allows [n] to be one smaller than BvDR allow. *)
+(** Buchholtz-van Doorn-Rijke, Theorem 4.2:  Let [j >= -1] and [n >= -2].  When [X] is [j]-connected and [Y] is a pointed family of [j+n+1]-truncated types, the type of pointed sections is [n]-truncated.  We formalize it with [j] replaced with a trunc index [m.+1] to enforce [j >= -1]. This version also allows [n] to be one smaller than BvDR allow. *)
 Definition istrunc_pforall `{Univalence} {m n : trunc_index}
   (X : pType@{u}) {iscX : IsConnected m.+1 X}
   (Y : pFam@{u v} X) {istY : forall x, IsTrunc (n +2+ m) (Y x)}
   : IsTrunc@{w} n (pForall X Y).
 Proof.
-  nrapply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall@{v w u} Y)).
+  napply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall@{v w u} Y)).
   rapply (istrunc_extension_along_conn (n:=m) _ Y (HP:=istY)).
 Defined.
 
@@ -175,7 +175,7 @@ Definition istrunc_pmap `{Univalence} {m n : trunc_index} (X Y : pType)
   : IsTrunc n (X ->* Y)
   := istrunc_pforall X (pfam_const Y).
 
-(** We can give a different proof of the [n = -1] case (with the conclusion upgraded to contractibility).  This proof works for any reflective subuniverse and avoids univalence.  Is it possible to generalize this to dependent functions while still avoiding univalence and/or keeping [O] a general RSU or modality?  Can [istrunc_pmap] be proven without univalence?  What about [istrunc_pforall]?  If the [n = -2] or [n = -1] cases can be proven without univalence, the rest can be done inductively without univalence. *)
+(** We can give a different proof of the [n = -1] case (with the conclusion upgraded to contractibility).  This proof works with [Tr (m.+1)] replaced with any reflective subuniverse [O] and doesn't require univalence.  Is it possible to generalize this to dependent functions while still avoiding univalence and/or keeping [O] a general RSU or modality?  Can [istrunc_pmap] be proven without univalence?  What about [istrunc_pforall]?  If the [n = -2] or [n = -1] cases can be proven without univalence, the rest can be done inductively without univalence. *)
 Definition contr_pmap_isconnected_inO `{Funext} (O : ReflectiveSubuniverse)
   (X : pType) `{IsConnected O X} (Y : pType) `{In O Y}
   : Contr (X ->* Y).
@@ -185,6 +185,6 @@ Proof.
 Defined.
 
 (** Every pointed type is (-1)-connected. *)
-Global Instance is_minus_one_connected_pointed (X : pType)
+Instance is_minus_one_connected_pointed (X : pType)
   : IsConnected (Tr (-1)) X
   := contr_inhabited_hprop _ (tr pt).

@@ -11,11 +11,11 @@ Local Open Scope mc_add_scope.
 
 Definition Ext (B A : AbGroup@{u}) := pTr 0 (AbSES B A).
 
-Global Instance is0bifunctor_ext `{Univalence}
+Instance is0bifunctor_ext `{Univalence}
   : Is0Bifunctor (Ext : AbGroup^op -> AbGroup -> pType)
   := is0bifunctor_postcompose _ _ (bf:=is0bifunctor_abses).
 
-Global Instance is1bifunctor_ext `{Univalence}
+Instance is1bifunctor_ext `{Univalence}
   : Is1Bifunctor (Ext : AbGroup^op -> AbGroup -> pType)
   := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses).
 
@@ -32,18 +32,18 @@ Defined.
 
 Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES' B A).
 
-Global Instance is0bifunctor_ext' `{Univalence}
+Instance is0bifunctor_ext' `{Univalence}
   : Is0Bifunctor (Ext' : AbGroup^op -> AbGroup -> Type)
   := is0bifunctor_postcompose _ _ (bf:=is0bifunctor_abses').
 
-Global Instance is1bifunctor_ext' `{Univalence}
+Instance is1bifunctor_ext' `{Univalence}
   : Is1Bifunctor (Ext' : AbGroup^op -> AbGroup -> Type)
   := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses').
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
 Definition grp_ext `{Univalence} (B A : AbGroup@{u}) : Group.
 Proof.
-  snrapply (Build_Group (Ext B A)).
+  snapply (Build_Group (Ext B A)).
   - intros E F.
     strip_truncations.
     exact (tr (abses_baer_sum E F)).
@@ -65,18 +65,18 @@ Defined.
 
 Definition ab_ext@{u v|u < v} `{Univalence} (B : AbGroup@{u}^op) (A : AbGroup@{u}) : AbGroup@{v}.
 Proof.
-  snrapply (Build_AbGroup (grp_ext@{u v} B A)).
+  snapply (Build_AbGroup (grp_ext@{u v} B A)).
   intros E F.
   strip_truncations; cbn.
   apply ap.
   apply baer_sum_commutative.
 Defined.
 
-Global Instance is0functor_abext01 `{Univalence} (B : AbGroup^op)
+Instance is0functor_abext01 `{Univalence} (B : AbGroup^op)
   : Is0Functor (ab_ext B).
 Proof.
   srapply Build_Is0Functor; intros ? ? f.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   1: exact (fmap (Ext B) f).
   rapply Trunc_ind; intro E0.
   rapply Trunc_ind; intro E1.
@@ -84,11 +84,11 @@ Proof.
   apply baer_sum_pushout.
 Defined.
 
-Global Instance is0functor_abext10 `{Univalence} (A : AbGroup)
+Instance is0functor_abext10 `{Univalence} (A : AbGroup)
   : Is0Functor (fun B : AbGroup^op => ab_ext B A).
 Proof.
   srapply Build_Is0Functor; intros ? ? f; cbn.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   1: exact (fmap (fun (B : AbGroup^op) => Ext B A) f).
   rapply Trunc_ind; intro E0.
   rapply Trunc_ind; intro E1.
@@ -96,10 +96,10 @@ Proof.
   apply baer_sum_pullback.
 Defined.
 
-Global Instance is1functor_abext01 `{Univalence} (B : AbGroup^op)
+Instance is1functor_abext01 `{Univalence} (B : AbGroup^op)
   : Is1Functor (ab_ext B).
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros A C f g.
     exact (fmap2 (Ext B)).
   - exact (fmap_id (Ext B)).
@@ -107,10 +107,10 @@ Proof.
     exact (fmap_comp (Ext B)).
 Defined.
 
-Global Instance is1functor_abext10 `{Univalence} (A : AbGroup)
+Instance is1functor_abext10 `{Univalence} (A : AbGroup)
   : Is1Functor (fun B : AbGroup^op => ab_ext B A).
 Proof.
-  snrapply Build_Is1Functor.
+  snapply Build_Is1Functor.
   - intros B C f g.
     exact (fmap2 (fun B : AbGroup^op => Ext B A)).
   - exact (fmap_id (fun B : AbGroup^op => Ext B A)).
@@ -118,16 +118,16 @@ Proof.
     exact (fmap_comp (fun B : AbGroup^op => Ext B A)).
 Defined.
 
-Global Instance is0bifunctor_abext `{Univalence}
+Instance is0bifunctor_abext `{Univalence}
   : Is0Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
   rapply Build_Is0Bifunctor''.
 Defined.
 
-Global Instance is1bifunctor_abext `{Univalence}
+Instance is1bifunctor_abext `{Univalence}
   : Is1Bifunctor (A:=AbGroup^op) ab_ext.
 Proof.
-  snrapply Build_Is1Bifunctor''.
+  snapply Build_Is1Bifunctor''.
   1,2: exact _.
   intros A B.
   exact (bifunctor_coh (Ext : AbGroup^op -> AbGroup -> pType)).
@@ -138,10 +138,10 @@ Definition abses_pushout_ext `{Univalence}
   {B A G : AbGroup@{u}} (E : AbSES B A)
   : GroupHomomorphism (ab_hom A G) (ab_ext B G).
 Proof.
-  snrapply Build_GroupHomomorphism.
+  snapply Build_GroupHomomorphism.
   1: exact (fun f => fmap01 (A:=AbGroup^op) Ext' _ f (tr E)).
   intros f g; cbn.
-  nrapply (ap tr).
+  napply (ap tr).
   exact (baer_sum_distributive_pushouts f g).
 Defined.
 
@@ -157,7 +157,7 @@ Proof.
 Defined.
 
 (** It follows that when [P] is projective, [Ext P A] is contractible. *)
-Global Instance contr_abext_projective `{Univalence}
+Instance contr_abext_projective `{Univalence}
   (P : AbGroup) `{IsAbProjective P} {A : AbGroup}
   : Contr (Ext P A).
 Proof.

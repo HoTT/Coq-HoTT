@@ -1,5 +1,6 @@
 Require Import Basics Types Truncations.Core.
 Require Import WildCat.Core HSet.
+Require Import Algebra.Groups.Group.
 Require Export Algebra.Groups.QuotientGroup.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct.
 
@@ -27,7 +28,7 @@ Proof.
   - exact (ab_biprod_rec b c).
   - intros [x y] q; strip_truncations; simpl.
     destruct q as [a q]. cbn in q.
-    lhs_V nrapply (ap (fun '(x, y) => b x + c y) q); cbn.
+    lhs_V exact (ap (fun '(x, y) => b x + c y) q); cbn.
     lhs rapply (ap011 (+) (preserves_inverse _) (p a)^).
     apply left_inverse.
 Defined.
@@ -110,7 +111,7 @@ Proof.
       intro x; simpl.
       lhs exact (ap (fun k => b x + k) (grp_homo_unit c)).
       apply right_identity.
-    + lhs nrapply transport_sigma'.
+    + lhs napply transport_sigma'.
       apply path_sigma_hprop.
       apply equiv_path_grouphomomorphism.
       intro y; simpl.
@@ -123,7 +124,7 @@ Definition path_ab_pushout `{Univalence} {A B C : AbGroup} (f : A $-> B) (g : A 
   : @in_cosetL (ab_biprod B C) (ab_pushout_subgroup f g) bc0 bc1
                <~> (grp_quotient_map bc0 = grp_quotient_map bc1 :> ab_pushout f g).
 Proof.
-  nrapply path_quotient; exact _.
+  napply path_quotient; exact _.
 Defined.
 
 (** The pushout of an embedding is an embedding. *)
@@ -142,7 +143,7 @@ Proof.
     exact (left_inverse 0 @ (grp_homo_unit g)^).
   - apply grp_moveR_M1.
     rhs_V exact (ap fst p); unfold fst; symmetry.
-    rhs_V nrapply grp_inv_unit.
+    rhs_V napply grp_inv_unit.
     apply ap.
     exact (ap f z @ grp_homo_unit f).
 Defined.
@@ -166,7 +167,7 @@ Defined.
 (** ** Properties of pushouts of maps *)
 
 (** The pushout of an epimorphism is an epimorphism. *)
-Global Instance ab_pushout_surjection_inr {A B C : AbGroup}
+Instance ab_pushout_surjection_inr {A B C : AbGroup}
   (f : A $-> B) (g : A $-> C) `{S : IsSurjection f}
   : IsSurjection (ab_pushout_inr (f:=f) (g:=g)).
 Proof.

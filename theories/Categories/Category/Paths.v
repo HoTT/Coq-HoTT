@@ -93,7 +93,7 @@ Section path_category.
     repeat f_ap; apply path_ishprop.
   Defined.
 
-  Global Instance isequiv__path_precategory''_T__of__path_precategory'_T `{fs : Funext} C D
+  #[export] Instance isequiv__path_precategory''_T__of__path_precategory'_T `{fs : Funext} C D
   : IsEquiv (@path_precategory''_T__of__path_precategory'_T fs C D)
     := isequiv_adjointify
          (@path_precategory''_T__of__path_precategory'_T fs C D)
@@ -138,7 +138,7 @@ Section path_category.
     split.
     - refine (_ @ apD (@compose) H'); cbn.
       refine (transport_pp _ _ _ _ @ _).
-      refine ((ap _ (transportD_compose
+      exact ((ap _ (transportD_compose
                        (fun obj => obj -> obj -> Type)
                        (fun obj mor =>
                           forall s d d' : obj, mor d d' -> mor s d -> mor s d') object H'
@@ -150,7 +150,7 @@ Section path_category.
                      (@compose C))).
     - refine (_ @ apD (@identity) H'); cbn.
       refine (transport_pp _ _ _ _ @ _).
-      refine ((ap _ (transportD_compose
+      exact ((ap _ (transportD_compose
                        (fun obj => obj -> obj -> Type)
                        (fun obj mor =>
                           forall x : obj, mor x x) object H'

@@ -12,7 +12,7 @@ intros ap e;revert ap.
 apply tight_apart. assumption.
 Qed.
 
-Global Instance: forall x y : A, Stable (x = y).
+#[export] Instance: forall x y : A, Stable (x = y).
 Proof.
   intros x y. unfold Stable.
   intros dn. apply tight_apart.
@@ -33,8 +33,8 @@ Lemma projected_strong_setoid `{IsApart B} `{Apart A} `{IsHSet A}
     : IsApart A.
 Proof.
 split.
-- apply _.
-- apply _.
+- exact _.
+- exact _.
 - intros x y ap. apply apart_correct, symmetry, apart_correct.
   assumption.
 - intros x y ap z.
@@ -48,13 +48,13 @@ split.
     apply tight_apart. apply eq_correct;assumption.
 Qed.
 
-Global Instance sg_apart_mere `{IsApart A} (P : A -> Type)
+Instance sg_apart_mere `{IsApart A} (P : A -> Type)
   : is_mere_relation (sig P) apart.
 Proof.
-intros. unfold apart,sig_apart. apply _.
+intros. unfold apart,sig_apart. exact _.
 Qed.
 
-Global Instance sig_strong_setoid `{IsApart A} (P: A -> Type) `{forall x, IsHProp (P x)}
+Instance sig_strong_setoid `{IsApart A} (P: A -> Type) `{forall x, IsHProp (P x)}
   : IsApart (sig P).
 Proof.
 apply (projected_strong_setoid (@proj1 _ P)).
@@ -65,7 +65,7 @@ Qed.
 Section morphisms.
   Context `{IsApart A} `{IsApart B} `{IsApart C}.
 
-  Global Instance strong_injective_injective `{!IsStrongInjective (f : A -> B)} :
+  #[export] Instance strong_injective_injective `{!IsStrongInjective (f : A -> B)} :
     IsInjective f.
   Proof.
   pose proof (strong_injective_mor f).
@@ -77,7 +77,7 @@ Section morphisms.
 
   (* If a morphism satisfies the binary strong extensionality property, it is
     strongly extensional in both coordinates. *)
-  Global Instance strong_setoid_morphism_1
+  #[export] Instance strong_setoid_morphism_1
     `{!StrongBinaryExtensionality (f : A -> B -> C)} :
     forall z, StrongExtensionality (f z).
   Proof.
@@ -87,7 +87,7 @@ Section morphisms.
   destruct (irreflexivity (≶) z). assumption.
   Qed.
 
-  Global Instance strong_setoid_morphism_unary_2
+  #[export] Instance strong_setoid_morphism_unary_2
     `{!StrongBinaryExtensionality (f : A -> B -> C)} :
     forall z, StrongExtensionality (fun x => f x z).
   Proof.
@@ -120,7 +120,7 @@ Section more_morphisms.
   Lemma strong_binary_setoid_morphism_commutative {f : A -> A -> B} `{!Commutative f}
     `{forall z, StrongExtensionality (f z)} : StrongBinaryExtensionality f.
   Proof.
-  apply @strong_binary_setoid_morphism_both_coordinates;try apply _.
+  apply @strong_binary_setoid_morphism_both_coordinates;try exact _.
   intros z x y.
   rewrite !(commutativity _ z).
   apply (strong_extensionality (f z)).
@@ -141,7 +141,7 @@ Section default_apart.
   Instance default_apart_trivial : TrivialApart A (Aap:=default_apart).
   Proof.
   split.
-  - unfold apart,default_apart. apply _.
+  - unfold apart,default_apart. exact _.
   - intros x y;unfold apart,default_apart;split.
     + intros E. destruct (dec (x=y)).
       * destruct (false_ne_true E).
@@ -165,11 +165,11 @@ Section dec_setoid.
   assumption.
   Qed.
 
-  Global Instance dec_strong_setoid: IsApart A.
+  #[export] Instance dec_strong_setoid: IsApart A.
   Proof.
   split.
-  - apply _.
-  - apply _.
+  - exact _.
+  - exact _.
   - intros x y ne.
     apply trivial_apart. apply trivial_apart in ne.
     intros e;apply ne,symmetry,e.
@@ -205,7 +205,7 @@ Section dec_setoid_morphisms.
   Instance dec_strong_injective (f : A -> B) `{!IsInjective f} :
     IsStrongInjective f.
   Proof.
-  split; try apply _.
+  split; try exact _.
   intros x y.
   intros ap.
   apply trivial_apart in ap. apply trivial_apart. intros e.

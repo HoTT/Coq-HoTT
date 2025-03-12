@@ -15,7 +15,7 @@ We include universe annotations when they clarify the meaning (e.g. in [IsSmall]
 
 Note that [IsSmall] is defined in Overture.v. *)
 
-Global Instance ishprop_issmall@{i j k | i < k, j <= k}
+Instance ishprop_issmall@{i j k | i < k, j <= k}
   `{Univalence} (X : Type@{j})
   : IsHProp (IsSmall@{i j} X).
 Proof.
@@ -31,7 +31,7 @@ Proof.
 Defined.
 
 (** A type in [Type@{i}] is clearly small. *)
-Global Instance issmall_in@{i j | i <= j} (X : Type@{i}) : IsSmall@{i j} X | 10
+Instance issmall_in@{i j | i <= j} (X : Type@{i}) : IsSmall@{i j} X | 10
   := Build_IsSmall X X equiv_idmap.
 
 (** The small types are closed under equivalence. *)
@@ -50,7 +50,7 @@ Definition sigma_closed_issmall@{i j | } {A : Type@{j}}
   : IsSmall@{i j} { a : A & B a }.
 Proof.
   exists { a : (smalltype A) & (smalltype (B (equiv_smalltype A a))) }.
-  snrapply equiv_functor_sigma'; intros; apply equiv_smalltype.
+  snapply equiv_functor_sigma'; intros; apply equiv_smalltype.
 Defined.
 
 (** If a map has small codomain and fibers, then the domain is small. *)
@@ -60,7 +60,7 @@ Definition issmall_issmall_codomain_fibers@{i j | } {X Y : Type@{j}}
   (sF : forall y : Y, IsSmall@{i j} (hfiber f y))
   : IsSmall@{i j} X.
 Proof.
-  nrapply issmall_equiv_issmall.
+  napply issmall_equiv_issmall.
   - exact (equiv_fibration_replacement f)^-1%equiv.
   - apply sigma_closed_issmall; assumption.
 Defined.
@@ -83,7 +83,7 @@ Proof.
 Defined.
 
 (** If a type [X] is truncated, then so is [smalltype X]. *)
-Global Instance istrunc_smalltype@{i j | } (X : Type@{j}) (n : trunc_index)
+Instance istrunc_smalltype@{i j | } (X : Type@{j}) (n : trunc_index)
   `{IsSmall@{i j} X, IsTrunc n X}
   : IsTrunc n (smalltype X)
   := istrunc_equiv_istrunc X (equiv_smalltype@{i j} X)^-1%equiv.
@@ -100,7 +100,7 @@ Fixpoint IsLocallySmall@{i j k | i < k, j <= k} (n : nat) (X : Type@{j}) : Type@
 Existing Class IsLocallySmall.
 Hint Unfold IsLocallySmall : typeclass_instances.
 
-Global Instance ishprop_islocallysmall@{i j k | i < k, j <= k} `{Univalence}
+Instance ishprop_islocallysmall@{i j k | i < k, j <= k} `{Univalence}
   (n : nat) (X : Type@{j})
   : IsHProp@{k} (IsLocallySmall@{i j k} n X).
 Proof.
@@ -109,7 +109,7 @@ Proof.
 Defined.
 
 (** A small type is n-locally small for all [n]. *)
-Global Instance islocallysmall_in@{i j k | i <= j, j <= k, i < k}
+Instance islocallysmall_in@{i j k | i <= j, j <= k, i < k}
   (n : nat) (X : Type@{i})
   : IsLocallySmall@{i j k} n X.
 Proof.
@@ -131,19 +131,19 @@ Proof.
   simple_induction n n IHn.
   - exact @issmall_equiv_issmall.
   - intros A B e lsA b b'.
-    nrapply IHn.
+    napply IHn.
     * exact (equiv_ap' (e^-1%equiv) b b')^-1%equiv.
     * apply lsA.
 Defined.
 
 (** A small type is n-locally small for all n. *)
-Global Instance islocallysmall_issmall@{i j k | i < k, j <= k} (n : nat)
+Instance islocallysmall_issmall@{i j k | i < k, j <= k} (n : nat)
   (X : Type@{j}) (sX : IsSmall@{i j} X)
   : IsLocallySmall@{i j k} n X
   := islocallysmall_equiv_islocallysmall n (equiv_smalltype X) _.
 
 (** If a type is n-locally small, then it is (n+1)-locally small. *)
-Global Instance islocallysmall_succ@{i j k | i < k, j <= k} (n : nat)
+Instance islocallysmall_succ@{i j k | i < k, j <= k} (n : nat)
   (X : Type@{j}) (lsX : IsLocallySmall@{i j k} n X)
   : IsLocallySmall@{i j k} n.+1 X.
 Proof.
@@ -155,7 +155,7 @@ Proof.
 Defined.
 
 (** The n-locally small types are closed under dependent sums. *)
-Global Instance sigma_closed_islocallysmall@{i j k | i < k, j <= k}
+Instance sigma_closed_islocallysmall@{i j k | i < k, j <= k}
   (n : nat) {A : Type@{j}} (B : A -> Type@{j})
   (lsA : IsLocallySmall@{i j k} n A)
   (lsB : forall a, IsLocallySmall@{i j k} n (B a))
@@ -179,19 +179,19 @@ Definition islocallysmall_islocallysmall_codomain_fibers@{i j k | i < k, j <= k}
   (sF : forall y : Y, IsLocallySmall@{i j k} n (hfiber f y))
   : IsLocallySmall@{i j k} n X.
 Proof.
-  nrapply islocallysmall_equiv_islocallysmall.
+  napply islocallysmall_equiv_islocallysmall.
   - exact (equiv_fibration_replacement f)^-1%equiv.
   - apply sigma_closed_islocallysmall; assumption.
 Defined.
 
 (** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)
-Global Instance islocallysmall_trunc@{i j k | i < k, j <= k} `{PropResizing}
+Instance islocallysmall_trunc@{i j k | i < k, j <= k} `{PropResizing}
   (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)
   : IsLocallySmall@{i j k} (trunc_index_to_nat n) X.
 Proof.
   revert n X T.
   simple_induction n n IHn; cbn.
-  - nrapply issmall_hprop@{i j}.
+  - exact issmall_hprop@{i j}.
   - intros X T x y.
     rapply IHn.
 Defined.

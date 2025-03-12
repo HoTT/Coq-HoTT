@@ -36,7 +36,7 @@ Module Export ClassifyingSpace.
 
     Axiom bloop_pp : forall x y, bloop (x * y) = bloop x @ bloop y.
 
-    Global Instance istrunc_ClassifyingSpace
+    #[export] Instance istrunc_ClassifyingSpace
       : IsTrunc 1 (ClassifyingSpace G).
     Proof. Admitted.
 
@@ -146,7 +146,7 @@ Section Eliminators.
 End Eliminators.
 
 (** The classifying space is 0-connected. *)
-Global Instance isconnected_classifyingspace {G : Group}
+Instance isconnected_classifyingspace {G : Group}
   : IsConnected 0 (ClassifyingSpace G).
 Proof.
   apply (Build_Contr _ (tr bbase)).
@@ -155,7 +155,7 @@ Proof.
 Defined.
 
 (** The classifying space of a group is pointed. *)
-Global Instance ispointed_classifyingspace (G : Group)
+Instance ispointed_classifyingspace (G : Group)
   : IsPointed (ClassifyingSpace G)
   := bbase.
 
@@ -191,7 +191,7 @@ Definition pbloop {G : Group} : G ->* loops (B G).
 Proof.
   srapply Build_pMap.
   1: exact bloop.
-  apply bloop_id.
+  exact bloop_id.
 Defined.
 
 (* This says that [B] is left adjoint to the loop space functor from pointed 1-types to groups. *)
@@ -220,7 +220,7 @@ Section EncodeDecode.
   Local Definition codes : B G -> HSet.
   Proof.
     srapply ClassifyingSpace_rec.
-    + srapply (Build_HSet G).
+    + exact (Build_HSet G).
     + intro x.
       apply path_trunctype.
       exact (Build_Equiv _ _ (fun t => t * x) _).
@@ -265,10 +265,10 @@ Section EncodeDecode.
   Proof.
     intros b p.
     destruct p.
-    apply bloop_id.
+    exact bloop_id.
   Defined.
 
-  Global Instance isequiv_bloop : IsEquiv (@bloop G).
+  #[export] Instance isequiv_bloop : IsEquiv (@bloop G).
   Proof.
     srapply isequiv_adjointify.
     + exact (encode _).
@@ -300,7 +300,7 @@ Section EncodeDecode.
 
   Definition grp_iso_g_loopgroup_bg : GroupIsomorphism G (LoopGroup (B G)).
   Proof.
-    snrapply Build_GroupIsomorphism'.
+    snapply Build_GroupIsomorphism'.
     1: exact equiv_g_loops_bg.
     intros x y.
     apply bloop_pp.
@@ -308,8 +308,8 @@ Section EncodeDecode.
 
   Definition grp_iso_g_pi1_bg : GroupIsomorphism G (Pi1 (B G)).
   Proof.
-    snrapply (transitive_groupisomorphism _ _ _ grp_iso_g_loopgroup_bg).
-    snrapply Build_GroupIsomorphism'.
+    snapply (transitive_groupisomorphism _ _ _ grp_iso_g_loopgroup_bg).
+    snapply Build_GroupIsomorphism'.
     - rapply equiv_tr.
     - intros x y; reflexivity.
   Defined.
@@ -318,11 +318,11 @@ Section EncodeDecode.
   Definition grp_homo_loops {X Y : pType} `{IsTrunc 1 X} `{IsTrunc 1 Y}
     : (X ->** Y) ->* [LoopGroup X $-> LoopGroup Y, grp_homo_const].
   Proof.
-    snrapply Build_pMap.
+    snapply Build_pMap.
     - intro f.
-      snrapply Build_GroupHomomorphism.
+      snapply Build_GroupHomomorphism.
       + exact (fmap loops f).
-      + nrapply fmap_loops_pp.
+      + napply fmap_loops_pp.
     - cbn beta.
       apply equiv_path_grouphomomorphism.
       exact (pointed_htpy fmap_loops_pconst).
@@ -338,12 +338,12 @@ Section HSpace_bg.
   Definition bg_mul : B G -> B G -> B G.
   Proof.
     intro b.
-    snrapply ClassifyingSpace_rec.
+    snapply ClassifyingSpace_rec.
     1: exact _.
     1: exact b.
     { intro x.
       revert b.
-      snrapply ClassifyingSpace_ind_hset.
+      snapply ClassifyingSpace_ind_hset.
       1: exact _.
       1: exact (bloop x).
       cbn; intro y.
@@ -369,16 +369,15 @@ Section HSpace_bg.
       intros x.
       apply sq_dp^-1, sq_1G.
       refine (ap_idmap _ @ _^).
-      nrapply ClassifyingSpace_rec_beta_bloop. }
+      napply ClassifyingSpace_rec_beta_bloop. }
     intros y; revert x.
     simpl.
-    snrapply ClassifyingSpace_ind_hprop.
+    snapply ClassifyingSpace_ind_hprop.
     1: exact _.
     simpl.
-    nrapply (transport_paths_FFlr' (g := idmap)).
+    transport_paths Flr.
     apply equiv_p1_1q.
-    lhs nrapply ap_idmap.
-    nrapply ClassifyingSpace_rec_beta_bloop.
+    napply ClassifyingSpace_rec_beta_bloop.
   Defined.
 
   Definition bg_mul_left_id
@@ -393,7 +392,7 @@ Section HSpace_bg.
     reflexivity.
   Defined.
 
-  Global Instance ishspace_bg : IsHSpace (B G)
+  #[export] Instance ishspace_bg : IsHSpace (B G)
     := Build_IsHSpace _
           bg_mul
           bg_mul_left_id
@@ -403,11 +402,11 @@ End HSpace_bg.
 
 (** Functoriality of B(-) *)
 
-Global Instance is0functor_pclassifyingspace : Is0Functor B.
+Instance is0functor_pclassifyingspace : Is0Functor B.
 Proof.
   apply Build_Is0Functor.
   intros G H f.
-  snrapply pClassifyingSpace_rec.
+  snapply pClassifyingSpace_rec.
   - exact _.
   - exact (bloop o f).
   - intros x y.
@@ -418,7 +417,7 @@ Defined.
 Definition bloop_natural (G H : Group) (f : G $-> H)
   : fmap loops (fmap B f) o bloop == bloop o f.
 Proof.
-  nrapply pClassifyingSpace_rec_beta_bloop.
+  napply pClassifyingSpace_rec_beta_bloop.
 Defined.
 
 Lemma pbloop_natural (G K : Group) (f : G $-> K)
@@ -431,21 +430,21 @@ Defined.
 Definition natequiv_g_loops_bg `{Univalence}
   : NatEquiv ptype_group (loops o B).
 Proof.
-  snrapply Build_NatEquiv.
-  1: intros G; rapply pequiv_g_loops_bg.
-  snrapply Build_Is1Natural.
+  snapply Build_NatEquiv.
+  1: intros G; exact pequiv_g_loops_bg.
+  snapply Build_Is1Natural.
   intros X Y f.
   symmetry.
   apply pbloop_natural.
 Defined.
 
-Global Instance is1functor_pclassifyingspace : Is1Functor B.
+Instance is1functor_pclassifyingspace : Is1Functor B.
 Proof.
   apply Build_Is1Functor.
   (** Action on 2-cells *)
   - intros G H f g p.
-    snrapply Build_pHomotopy.
-    { snrapply ClassifyingSpace_ind_hset.
+    snapply Build_pHomotopy.
+    { snapply ClassifyingSpace_ind_hset.
       1: exact _.
       1: reflexivity.
       intro x.
@@ -458,8 +457,8 @@ Proof.
     reflexivity.
   (** Preservation of identity *)
   - intros G.
-    snrapply Build_pHomotopy.
-    { snrapply ClassifyingSpace_ind_hset.
+    snapply Build_pHomotopy.
+    { snapply ClassifyingSpace_ind_hset.
       1: exact _.
       1: reflexivity.
       intro x.
@@ -472,8 +471,8 @@ Proof.
     reflexivity.
   (** Preservation of composition *)
   - intros G H K g f.
-    snrapply Build_pHomotopy.
-    { snrapply ClassifyingSpace_ind_hset.
+    snapply Build_pHomotopy.
+    { snapply ClassifyingSpace_ind_hset.
       1: exact _.
       1: reflexivity.
       intro x.
@@ -484,25 +483,25 @@ Proof.
       2: refine (ap_compose (ClassifyingSpace_rec _ _ _ (fun x y =>
         ap bloop (grp_homo_op g x y) @ bloop_pp (g x) (g y))) _ (bloop x)
         @ ap _ _ @ _).
-      1-3: nrapply ClassifyingSpace_rec_beta_bloop.
+      1-3: napply ClassifyingSpace_rec_beta_bloop.
       apply sq_1G.
       reflexivity. }
     reflexivity.
 Defined.
 
 (** Interestingly, [fmap B] is an equivalence *)
-Global Instance isequiv_fmap_pclassifyingspace `{U : Univalence} (G H : Group)
+Instance isequiv_fmap_pclassifyingspace `{U : Univalence} (G H : Group)
   : IsEquiv (fmap B (a := G) (b := H)).
 Proof.
-  snrapply isequiv_adjointify.
+  snapply isequiv_adjointify.
   { intros f.
     refine (grp_homo_compose (grp_iso_inverse _) (grp_homo_compose _ _)).
-    1,3: rapply grp_iso_g_loopgroup_bg.
+    1,3: exact grp_iso_g_loopgroup_bg.
     exact (grp_homo_loops f). }
   { intros f.
     rapply equiv_path_pforall.
-    snrapply Build_pHomotopy.
-    { snrapply ClassifyingSpace_ind_hset.
+    snapply Build_pHomotopy.
+    { snapply ClassifyingSpace_ind_hset.
       1: exact _.
       { cbn; symmetry.
         rapply (point_eq f). }
@@ -521,21 +520,21 @@ Proof.
   rapply equiv_path_grouphomomorphism.
   intro x.
   rapply (moveR_equiv_V' equiv_g_loops_bg).
-  nrapply pClassifyingSpace_rec_beta_bloop.
+  napply pClassifyingSpace_rec_beta_bloop.
 Defined.
 
 (** Hence we have that group homomorphisms are equivalent to pointed maps between their deloopings. *)
 Theorem equiv_grp_homo_pmap_bg `{U : Univalence} (G H : Group)
   : (G $-> H) <~> (B G $-> B H).
 Proof.
-  snrapply Build_Equiv.
+  snapply Build_Equiv.
   2: apply isequiv_fmap_pclassifyingspace.
 Defined.
 
-Global Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)
+Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)
   : Is1Natural (opyon G) (opyon (B G) o B) (equiv_grp_homo_pmap_bg G).
 Proof.
-  snrapply Build_Is1Natural.
+  snapply Build_Is1Natural.
   intros K H f h.
   apply path_hom.
   rapply (fmap_comp B h f).
@@ -554,19 +553,19 @@ Theorem pequiv_pclassifyingspace_pi1 `{Univalence}
 Proof.
   (** The pointed map [f] is the adjunct to the inverse of the natural map [loops X -> Pi1 X]. We define it first, to make the later goals easier to read. *)
   transparent assert (f : (B (Pi1 X) ->* X)).
-  { snrapply pClassifyingSpace_rec.
+  { snapply pClassifyingSpace_rec.
     1: exact _.
     1: exact (equiv_tr 0 _)^-1%equiv.
     intros x y.
     strip_truncations.
     reflexivity. }
-  snrapply (Build_pEquiv _ _ f).
+  snapply (Build_pEquiv _ _ f).
   (** [f] is an equivalence since [loops_functor f o bloop == tr^-1], and the other two maps are equivalences. *)
   apply isequiv_is0connected_isequiv_loops.
-  snrapply (cancelR_isequiv bloop).
+  snapply (cancelR_isequiv bloop).
   1: exact _.
   rapply isequiv_homotopic'; symmetry.
-  nrapply pClassifyingSpace_rec_beta_bloop.
+  napply pClassifyingSpace_rec_beta_bloop.
 Defined.
 
 Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}
@@ -579,9 +578,9 @@ Proof.
   { refine (natequiv_prewhisker _ _).
     refine (natequiv_opyon_equiv _^-1$).
     rapply pequiv_pclassifyingspace_pi1. }
-  snrapply Build_NatEquiv.
+  snapply Build_NatEquiv.
   1: intro; exact pequiv_ptr_rec.
-  rapply is1natural_prewhisker.
+  exact (is1natural_prewhisker (G:=opyon X) B (opyoneda _ _ _)).
 Defined.
 
 (** The classifying space functor and the fundamental group functor form an adjunction (pType needs to be restricted to the subcategory of 0-connected pTypes). Note that the full adjunction should also be natural in X, but this was not needed yet. *)

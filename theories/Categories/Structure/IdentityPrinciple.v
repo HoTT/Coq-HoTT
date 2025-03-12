@@ -113,7 +113,7 @@ Section sip.
     exact (pr1_path_sigma_uncurried _).
   Defined.
 
-  Global Instance structure_identity_principle
+  #[export] Instance structure_identity_principle
   : IsCategory (precategory_of_structures P).
   Proof.
     intros xa yb.

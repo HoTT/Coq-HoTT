@@ -17,7 +17,7 @@ Proof.
   - intros; reflexivity.
 Defined.
 
-Global Instance accmodality_purely : IsAccModality purely.
+Instance accmodality_purely : IsAccModality purely.
 Proof.
   unshelve econstructor.
   - econstructor.

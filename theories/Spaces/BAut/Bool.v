@@ -1,6 +1,5 @@
 Require Import HoTT.Basics HoTT.Types.
-Require Import Constant.
-Require Import HoTT.Truncations.Core HoTT.Truncations.Connectedness.
+Require Import Truncations.
 Require Import Universes.BAut.
 Require Import Pointed.Core.
 
@@ -53,7 +52,7 @@ Section AssumeUnivalence.
     refine (_ @ ap (equiv_path_sigma_hprop _ _)
                    (oops @ path_universe_1) @ _).
     - symmetry.
-      refine (eisretr (equiv_path_sigma_hprop Z Z) _).
+      exact (eisretr (equiv_path_sigma_hprop Z Z) _).
     - apply moveR_equiv_M; reflexivity.
   Defined.
 
@@ -72,7 +71,7 @@ Section AssumeUnivalence.
   : (negb_center_baut_bool pt)..1 = path_universe negb.
   Proof.
     apply moveL_equiv_V.
-    apply negb_baut_bool_bool_negb.
+    exact negb_baut_bool_bool_negb.
   Defined.
 
   (** Moreover, we can show that every automorphism of a [Z : BAut Bool] must be either the flip or the identity. *)
@@ -91,7 +90,7 @@ Section AssumeUnivalence.
 
   (** ** Connectedness *)
 
-  Global Instance isminusoneconnected_baut_bool `{Funext} (Z : BAut Bool)
+  #[export] Instance isminusoneconnected_baut_bool `{Funext} (Z : BAut Bool)
   : IsConnected (-1) Z.
   Proof.
     baut_reduce.
@@ -133,7 +132,7 @@ First we define the function that will be the equivalence. *)
   Defined.
 
   (** Now we show that it is an equivalence. *)
-  Global Instance isequiv_inhab_baut_bool_from_bool (t : Bool)
+  #[export] Instance isequiv_inhab_baut_bool_from_bool (t : Bool)
          (Z : BAut Bool) (z : Z)
   : IsEquiv (inhab_baut_bool_from_bool t Z z).
   Proof.
@@ -141,8 +140,8 @@ First we define the function that will be the equivalence. *)
     refine (transport IsEquiv (ap10 (inhab_baut_bool_from_bool_bool t)^ z) _).
     simpl in z; destruct z, t; simpl.
     - refine (isequiv_homotopic idmap _); intros []; reflexivity.
-    - apply isequiv_negb.
-    - apply isequiv_negb.
+    - exact isequiv_negb.
+    - exact isequiv_negb.
     - refine (isequiv_homotopic idmap _); intros []; reflexivity.
   Defined.
 
@@ -170,15 +169,15 @@ First we define the function that will be the equivalence. *)
       refine (ap10 (inhab_baut_bool_from_bool_bool t) (e t) @ _).
       apply path_arrow; intros []; destruct t.
       * reflexivity.
-      * refine (abelian_aut_bool equiv_negb e false).
-      * refine (abelian_aut_bool equiv_negb e true).
+      * exact (abelian_aut_bool equiv_negb e false).
+      * exact (abelian_aut_bool equiv_negb e true).
       * reflexivity.
     + intros z.
       refine (ap10 (ap10 (inhab_baut_bool_from_bool_bool t) z) t @ _).
       destruct t; reflexivity.
   Defined.
 
-  Global Instance isequiv_equiv_inhab_baut_bool_bool
+  #[export] Instance isequiv_equiv_inhab_baut_bool_bool
          (t : Bool) (Z : BAut Bool)
   : IsEquiv (equiv_inhab_baut_bool_bool t Z).
   Proof.
@@ -245,7 +244,7 @@ First we define the function that will be the equivalence. *)
   Definition baut_bool_pairing_ZZ Z : Z ** Z = pt.
   Proof.
     apply symmetry, path_baut_bool_inhab.
-    apply equiv_idmap.            (** A choice!  Could be the flip. *)
+    exact equiv_idmap.            (** A choice!  Could be the flip. *)
   Defined.
 
   (** Associativity is easiest to think about in terms of "curried 2-variable equivalences".  We start with some auxiliary lemmas. *)
@@ -266,7 +265,7 @@ First we define the function that will be the equivalence. *)
       destruct (path_baut_bool_inhab W w).
       destruct (path_baut_bool_inhab Z z).
       simpl.
-      destruct z,w; simpl; refine (ap10_equiv (eisretr e _) _).
+      destruct z,w; simpl; exact (ap10_equiv (eisretr e _) _).
     + intros y.
       destruct (path_baut_bool_inhab Y y).
       destruct (path_baut_bool_inhab Z z).
@@ -335,7 +334,7 @@ First we define the function that will be the equivalence. *)
       refine (Trunc_rec _ (merely_inhab_baut_bool Y)); intros y.
       refine (ap (baut_bool_pairing_ZZ_Z_symm_lemma e _)
                  (path_ishprop _ (tr y)) @ _).
-      simpl. refine (eissect _ _).
+      simpl. exact (eissect _ _).
   Defined.
 
   Definition baut_bool_pairing_ZZ_Z_symm_inv Y Z W
@@ -352,7 +351,7 @@ First we define the function that will be the equivalence. *)
   Definition baut_bool_pairing_ZZ_Z_symm Y Z W
   : Y ** (Z ** W) <~> Z ** (Y ** W).
   Proof.
-    refine (equiv_adjointify
+    exact (equiv_adjointify
               (baut_bool_pairing_ZZ_Z_symm_map Y Z W)
               (baut_bool_pairing_ZZ_Z_symm_map Z Y W)
               (baut_bool_pairing_ZZ_Z_symm_inv Y Z W)
@@ -429,7 +428,7 @@ First we define the function that will be the equivalence. *)
   Proof.
     refine (center2_baut (BAut Bool) _).
     exists negb_center_baut_bool.
-    apply center_baut_bool_central.
+    exact center_baut_bool_central.
   Defined.
 
   Definition nontrivial_negb_center_baut_baut_bool

@@ -84,22 +84,22 @@ Section GrpPullback.
     apply path_ishprop.
   Defined.
 
-  Global Instance isgroup_grp_pullback : IsGroup (Pullback f g) := {}.
+  #[export] Instance isgroup_grp_pullback : IsGroup (Pullback f g) := {}.
 
   Definition grp_pullback : Group
     := Build_Group (Pullback f g) _ _ _ _.
 
   Definition grp_pullback_pr1 : grp_pullback $-> B.
   Proof.
-    snrapply Build_GroupHomomorphism.
-    - apply pullback_pr1.
+    snapply Build_GroupHomomorphism.
+    - exact pullback_pr1.
     - intros x y. reflexivity.
   Defined.
 
   Definition grp_pullback_pr2 : grp_pullback $-> C.
   Proof.
-    snrapply Build_GroupHomomorphism.
-    - apply pullback_pr2.
+    snapply Build_GroupHomomorphism.
+    - exact pullback_pr2.
     - intros x y. reflexivity.
   Defined.
 
@@ -108,7 +108,7 @@ Section GrpPullback.
               (p : f o b == g o c)
     : X $-> grp_pullback.
   Proof.
-    snrapply Build_GroupHomomorphism.
+    snapply Build_GroupHomomorphism.
     - exact (fun x => (b x; c x; p x)).
     - intros x y.
       srapply path_sigma.
@@ -226,7 +226,7 @@ Section IsEquivGrpPullbackCorec.
   Theorem isequiv_grp_pullback_corec (X : Group)
     : IsEquiv (grp_pullback_corec' f g X).
   Proof.
-    snrapply isequiv_adjointify.
+    snapply isequiv_adjointify.
     - intro phi.
       refine (grp_pullback_pr1 f g $o phi; grp_pullback_pr2 f g $o phi; _).
       intro x; exact (pullback_commsq f g (phi x)).

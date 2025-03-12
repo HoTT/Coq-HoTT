@@ -32,7 +32,7 @@ Proof.
 Defined.
 
 (** Every factorial is positive. *)
-Global Instance lt_zero_factorial n : 0 < factorial n.
+Instance lt_zero_factorial n : 0 < factorial n.
 Proof.
   induction n; exact _.
 Defined.
@@ -46,7 +46,7 @@ Proof.
   rapply (nat_mul_r_strictly_monotone _).
 Defined.
 
-Global Instance nat_factorial_strictly_monotone n m
+Instance nat_factorial_strictly_monotone n m
   : 0 < n -> n < m -> factorial n < factorial m.
 Proof.
   intros H1 H2; induction H2.
@@ -58,7 +58,7 @@ Defined.
 (** ** Divisibility *)
 
 (** Any number less than or equal to [n] divides [factorial n]. *)
-Global Instance nat_divides_factorial_factor n m
+Instance nat_divides_factorial_factor n m
   : 0 < n -> n <= m -> (n | factorial m).
 Proof.
   intros [] H2.
@@ -67,18 +67,18 @@ Proof.
 Defined.
 
 (** [factorial] is a monotone function from [nat] to [nat] with respect to [<=] and divides. *)
-Global Instance nat_divides_factorial_lt n m
+Instance nat_divides_factorial_lt n m
   : n <= m -> (factorial n | factorial m).
 Proof.
   intros H; induction H; exact _.
 Defined.
 
 (** A product of factorials divides the factorial of the sum. *)
-Global Instance nat_divides_factorial_mul_factorial_add n m
+Instance nat_divides_factorial_mul_factorial_add n m
   : (factorial n * factorial m | factorial (n + m)).
 Proof.
   remember (n + m) as k eqn:p.
-  revert k n m p; snrapply nat_ind_strong; hnf; intros k IH n m p.
+  revert k n m p; snapply nat_ind_strong; hnf; intros k IH n m p.
   destruct k.
   { apply equiv_nat_add_zero in p.
     destruct p as [p q].
@@ -95,15 +95,15 @@ Proof.
     rapply nat_divides_mul_monotone.
     rapply IH.
     exact (ap nat_pred p').
-  - nrapply nat_divides_add.
+  - napply nat_divides_add.
     + apply helper, p.
     + rewrite nat_mul_comm.
       apply helper.
-      lhs nrapply nat_add_comm; exact p.
+      lhs napply nat_add_comm; exact p.
 Defined.
 
 (** Here is a variant of [nat_divides_factorial_mul_factorial_add] that is more suitable for binomial coefficients. *)
-Global Instance nat_divides_factorial_mul_factorial_add' n m
+Instance nat_divides_factorial_mul_factorial_add' n m
   : m <= n -> (factorial m * factorial (n - m) | factorial n).
 Proof.
   intros H.

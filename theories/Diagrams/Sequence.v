@@ -40,7 +40,7 @@ Proof.
   srapply (Build_diagram_equiv (Build_DiagramMap _ _)); intro n; simpl.
   - apply equiv_fun.
     induction n.
-    + apply H0.
+    + exact H0.
     + exact (Hn n IHn).1.
   - intros m q; destruct q.
     induction n; simpl.

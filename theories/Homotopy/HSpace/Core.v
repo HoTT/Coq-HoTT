@@ -22,21 +22,21 @@ Class IsHSpace (X : pType) := {
 }.
 #[export] Existing Instances hspace_left_identity hspace_right_identity hspace_op.
 
-Global Instance hspace_mon_unit {X : pType} `{IsHSpace X} : MonUnit X := pt.
+#[export] Instance hspace_mon_unit {X : pType} `{IsHSpace X} : MonUnit X := pt.
 
 Definition issig_ishspace {X : pType}
   : { mu : X -> X -> X & prod (forall x, mu pt x = x) (forall x, mu x pt = x) }
       <~> IsHSpace X := ltac:(make_equiv).
 
 (** Left and right multiplication by the base point is always an equivalence. *)
-Global Instance isequiv_hspace_left_op_pt {X : pType} `{IsHSpace X}
+Instance isequiv_hspace_left_op_pt {X : pType} `{IsHSpace X}
   : IsEquiv (pt *.).
 Proof.
   apply (isequiv_homotopic idmap); intro x.
   exact (left_identity x)^.
 Defined.
 
-Global Instance isequiv_hspace_right_op_pt {X : pType} `{IsHSpace X}
+Instance isequiv_hspace_right_op_pt {X : pType} `{IsHSpace X}
   : IsEquiv (.* pt).
 Proof.
   apply (isequiv_homotopic idmap); intro x.
@@ -64,18 +64,18 @@ Definition pequiv_hspace_left_op {X : pType} `{IsHSpace X}
 
 (** For connected H-spaces, left and right multiplication by an element is an equivalence. This is because left and right multiplication by the base point is one, and being an equivalence is a proposition. *)
 
-Global Instance isequiv_hspace_left_op `{Univalence} {A : pType}
+Instance isequiv_hspace_left_op `{Univalence} {A : pType}
   `{IsHSpace A} `{IsConnected 0 A}
   : forall (a : A), IsEquiv (a *.).
 Proof.
-  nrapply conn_point_elim; exact _.
+  napply conn_point_elim; exact _.
 Defined.
 
-Global Instance isequiv_hspace_right_op `{Univalence} {A : pType}
+Instance isequiv_hspace_right_op `{Univalence} {A : pType}
   `{IsHSpace A} `{IsConnected 0 A}
   : forall (a : A), IsEquiv (.* a).
 Proof.
-  nrapply conn_point_elim; exact _.
+  napply conn_point_elim; exact _.
 Defined.
 
 (** ** Left-invertible H-spaces are homogeneous *)
@@ -102,7 +102,7 @@ Definition homogeneous_pt_id_beta' `{Funext} {A : pType} `{IsHomogeneous A}
 Definition ishspace_homogeneous {A : pType} `{IsHomogeneous A}
   : IsHSpace A.
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact (fun a b => homogeneous_pt_id a b).
   - intro a; cbn.
     apply eisretr.
@@ -110,7 +110,7 @@ Proof.
 Defined.
 
 (** Left-invertible H-spaces are homogeneous, giving a logical equivalence between left-invertible H-spaces and homogeneous types. (In fact, the type of homogeneous types with the base point sent to the pointed identity map is equivalent to the type of left-invertible coherent H-spaces, but we don't prove that here.) See [equiv_iscohhspace_ptd_action] for a closely related result. *)
-Global Instance ishomogeneous_hspace {A : pType} `{IsHSpace A}
+Instance ishomogeneous_hspace {A : pType} `{IsHSpace A}
   `{forall a, IsEquiv (a *.)}
   : IsHomogeneous A
   := (fun a => pequiv_hspace_left_op a).
@@ -125,7 +125,7 @@ Definition phomotopy_from_path_arrow {A B : pType}
   (q : m pt == idmap) {f g : B ->* A} (K : pointed_fun f = pointed_fun g)
   : f ==* g.
 Proof.
-  nrapply issig_phomotopy.
+  napply issig_phomotopy.
   destruct f as [f fpt], g as [g gpt]; cbn in *.
   induction K.
   destruct A as [A a0]; cbn in *.
@@ -139,21 +139,21 @@ Definition phomotopy_from_homotopy `{Funext} {A B : pType}
   (m : forall (a : A), (point A) = (point A) -> a = a)
   (q :  m pt == idmap) {f g : B ->* A} (K : f == g)
   : f ==* g
-  := (phomotopy_from_path_arrow m q (path_forall _ _ K)).
+  := phomotopy_from_path_arrow m q (path_forall _ _ K).
 
 (** We specialize to H-spaces. *)
 Definition hspace_phomotopy_from_homotopy `{Funext} {A B : pType}
   `{IsHSpace A} {f g : B ->* A} (K : f == g)
   : f ==* g.
 Proof.
-  snrapply (phomotopy_from_homotopy _ _ K).
+  snapply (phomotopy_from_homotopy _ _ K).
   - intro a.
     exact (fmap loops (pmap_hspace_left_op a o* (pequiv_hspace_left_op pt)^-1*)).
   - lazy beta.
     transitivity (fmap (b:=A) loops pmap_idmap).
-    2: rapply (fmap_id loops).
-    rapply (fmap2 loops).
-    nrapply peisretr.
+    2: tapply (fmap_id loops).
+    tapply (fmap2 loops).
+    napply peisretr.
 Defined.
 
 (** A version with actual paths. *)
@@ -170,24 +170,24 @@ Defined.
 Definition ishspace_equiv_hspace {X Y : pType} `{IsHSpace Y} (f : X <~>* Y)
   : IsHSpace X.
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact (fun a b => f^-1 (f a * f b)).
   - intro b.
-    rhs_V nrapply (eissect f b).
+    rhs_V exact (eissect f b).
     apply ap.
-    lhs nrapply (ap (.* f b) (point_eq f)).
+    lhs exact (ap (.* f b) (point_eq f)).
     apply left_identity.
   - intro a.
-    rhs_V nrapply (eissect f a).
+    rhs_V exact (eissect f a).
     apply ap.
-    lhs nrapply (ap (f a *.) (point_eq f)).
+    lhs exact (ap (f a *.) (point_eq f)).
     apply right_identity.
 Defined.
 
 (** Every loop space is an H-space. Making this an instance breaks CayleyDickson.v because Coq finds this instance rather than the expected one. *)
 Definition ishspace_loops {X : pType} : IsHSpace (loops X).
 Proof.
-  snrapply Build_IsHSpace.
+  snapply Build_IsHSpace.
   - exact concat.
   - exact concat_1p.
   - exact concat_p1.
