@@ -236,7 +236,7 @@ Section Subgroups.
     exact (grouphom_V incl h @ inverse2 p @ inv_pp _ _ @ whiskerR (inv_V _) _).
   Defined.
 
-  Instance transitive_coset : Transitive in_coset.
+  #[export] Instance transitive_coset : Transitive in_coset.
   Proof.
     intros g1 g2 g3 [h1 p1] [h2 p2].
     exists (h1 @ h2).
