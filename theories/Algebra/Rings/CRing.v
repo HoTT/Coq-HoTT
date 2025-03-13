@@ -96,7 +96,7 @@ Defined.
 Section IdealCRing.
   Context {R : CRing}.
   
-  (** The section is meant to complement the IdealLemmas section in Algebra.Rings.Ideal. Since the results here only hold in commutative rings, they have to be kept here. *)
+  (** The section is meant to complement the [IdealLemmas] section in Algebra.Rings.Ideal. Since the results here only hold in commutative rings, they have to be kept here. *)
   
   (** We import ideal notations as used in Algebra.Rings.Ideal but only for this section. Important to note is that [↔] corresponds to equality of ideals. *)
   Import Ideal.Notation.

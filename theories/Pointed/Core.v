@@ -22,7 +22,7 @@ Notation "[ X , x ]" := (Build_pType X x) : pointed_scope.
 (** The unit type is pointed *)
 Instance ispointed_unit : IsPointed Unit := tt.
 
-(** The Unit pType *)
+(** The Unit [pType] *)
 Definition pUnit : pType := [Unit, tt].
 
 (** A sigma type of pointed components is pointed. *)
@@ -74,7 +74,7 @@ Definition Build_pMap (A B : pType) (f : A -> B) (p : f (point A) = point B)
 (** The [&] tells Coq to use the context to infer the later arguments (in this case, all of them). *)
 Arguments Build_pMap & _ _ _ _.
 
-(** Pointed maps perserve the base point *)
+(** Pointed maps preserve the base point *)
 Definition point_eq {A B : pType} (f : A ->* B)
   : f (point A) = point B
   := dpoint_eq f.
@@ -92,7 +92,7 @@ Infix "o*" := pmap_compose : pointed_scope.
 
 (** ** Pointed homotopies *)
 
-(** A pointed homotopy is a homotopy with a proof that the presevation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)
+(** A pointed homotopy is a homotopy with a proof that the preservation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)
 Definition pfam_phomotopy {A : pType} {P : pFam A} (f g : pForall A P) : pFam A
   := Build_pFam (fun x => f x = g x) (dpoint_eq f @ (dpoint_eq g)^).
 
@@ -111,7 +111,7 @@ Coercion pointed_htpy {A : pType} {P : pFam A} {f g : pForall A P} (h : f ==* g)
   : f == g
   := h.
 
-(** This is the form that the underlying proof of a pointed homotopy used to take before we changed it to be defined in terms of pForall. *)
+(** This is the form that the underlying proof of a pointed homotopy used to take before we changed it to be defined in terms of [pForall]. *)
 Definition point_htpy {A : pType} {P : pFam A} {f g : pForall A P}
   (h : f ==* g) : h (point A) @ dpoint_eq g = dpoint_eq f.
 Proof.
@@ -127,11 +127,11 @@ Record pEquiv (A B : pType) := {
   pointed_isequiv : IsEquiv pointed_equiv_fun ;
 }.
 
-(** TODO: It might be better behaved to define pEquiv as an equivalence and a proof that this equivalence is pointed. In pEquiv.v we have another constructor Build_pEquiv' which coq can infer faster than Build_pEquiv. *)
+(** TODO: It might be better behaved to define [pEquiv] as an equivalence and a proof that this equivalence is pointed. In pEquiv.v we have another constructor [Build_pEquiv'] which Coq can infer faster than [Build_pEquiv]. *)
 
 Infix "<~>*" := pEquiv : pointed_scope.
 
-(** Note: because we define pMap as a special case of pForall, we must declare all coercions into pForall, *not* into pMap. *)
+(** Note: because we define [pMap] as a special case of [pForall], we must declare all coercions into [pForall], *not* into [pMap]. *)
 Coercion pointed_equiv_fun : pEquiv >-> pForall.
 Existing Instance pointed_isequiv.
 
@@ -236,7 +236,7 @@ Ltac pointed_reduce_pmap f
     | _ ->* ?Y => let p := fresh in destruct Y as [Y ?], f as [f p]; cbn in *; destruct p; cbn
     end.
 
-(** A general tactic to replace pointedness paths in a pForall with reflexivity.  Because it generalizes [f pt], it can usually only be applied once the function itself is not longer needed.  Compared to [pointed_reduce], an advantage is that the pointed types do not need to be destructed. *)
+(** A general tactic to replace pointedness paths in a [pForall] with reflexivity.  Because it generalizes [f pt], it can usually only be applied once the function itself is not longer needed.  Compared to [pointed_reduce], an advantage is that the pointed types do not need to be destructed. *)
 Ltac pelim f :=
   try match type of f with
     | pEquiv ?X ?Y => destruct f as [f ?iseq]; unfold pointed_fun in *
@@ -257,25 +257,25 @@ Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) c
 
 (** ** Equivalences to sigma-types. *)
 
-(** pType *)
+(** [pType] *)
 Definition issig_ptype : { X : Type & X } <~> pType := ltac:(issig).
 
-(** pForall *)
+(** [pForall] *)
 Definition issig_pforall (A : pType) (P : pFam A)
   : {f : forall x, P x & f (point A) = dpoint P} <~> (pForall A P)
   := ltac:(issig).
 
-(** pMap *)
+(** [pMap] *)
 Definition issig_pmap (A B : pType)
   : {f : A -> B & f (point A) = point B} <~> (A ->* B)
   := ltac:(issig).
 
-(** pHomotopy *)
+(** [pHomotopy] *)
 Definition issig_phomotopy {A : pType} {P : pFam A} (f g : pForall A P)
   : {p : f == g & p (point A) = dpoint_eq f @ (dpoint_eq g)^} <~> (f ==* g)
   := ltac:(issig).
 
-(** pEquiv *)
+(** [pEquiv] *)
 Definition issig_pequiv (A B : pType)
   : {f : A ->* B & IsEquiv f} <~> (A <~>* B)
   := ltac:(issig).
@@ -285,7 +285,7 @@ Definition issig_pequiv' (A B : pType)
   : {f : A <~> B & f (point A) = point B} <~> (A <~>* B)
   := ltac:(make_equiv).
 
-(** pForall can also be described as a type of extensions. *)
+(** [pForall] can also be described as a type of extensions. *)
 Definition equiv_extension_along_pforall `{Funext} {A : pType} (P : pFam A)
   : ExtensionAlong@{Set _ _ _} (unit_name (point A)) P (unit_name (dpoint P)) <~> pForall A P.
 Proof.
@@ -529,24 +529,24 @@ Proof.
   exact (equiv_functor_sigma_pb (equiv_arrow_from_contr A B)^-1%equiv).
 Defined.
 
-(** * pType and pForall as wild categories *)
+(** * [pType] and [pForall] as wild categories *)
 
 (** Note that the definitions for [pForall] are also used for the higher structure in [pType]. *)
 
-(** pType is a graph *)
+(** [pType] is a graph *)
 Instance isgraph_ptype : IsGraph pType
   := Build_IsGraph pType (fun X Y => X ->* Y).
 
-(** pForall is a graph *)
+(** [pForall] is a graph *)
 Instance isgraph_pforall (A : pType) (P : pFam A)
   : IsGraph (pForall A P)
   := Build_IsGraph _ pHomotopy.
 
-(** pType is a 0-coherent 1-category *)
+(** [pType] is a 0-coherent 1-category *)
 Instance is01cat_ptype : Is01Cat pType
   := Build_Is01Cat pType _ (@pmap_idmap) (@pmap_compose).
 
-(** pForall is a 0-coherent 1-category *)
+(** [pForall] is a 0-coherent 1-category *)
 Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P).
 Proof.
   econstructor.
@@ -560,13 +560,13 @@ Instance is2graph_pforall (A : pType) (P : pFam A)
   : Is2Graph (pForall A P)
   := fun f g => _.
 
-(** pForall is a 0-coherent 1-groupoid *)
+(** [pForall] is a 0-coherent 1-groupoid *)
 Instance is0gpd_pforall (A : pType) (P : pFam A) : Is0Gpd (pForall A P).
 Proof.
   srapply Build_Is0Gpd. intros ? ? h. exact h^*.
 Defined.
 
-(** pType is a 1-coherent 1-category *)
+(** [pType] is a 1-coherent 1-category *)
 Instance is1cat_ptype : Is1Cat pType.
 Proof.
   snapply Build_Is1Cat'.
@@ -582,7 +582,7 @@ Proof.
   - intros ? ? f; exact (pmap_precompose_idmap f).
 Defined.
 
-(** pType is a pointed category *)
+(** [pType] is a pointed category *)
 Instance ispointedcat_ptype : IsPointedCat pType.
 Proof.
   snapply Build_IsPointedCat.
@@ -599,7 +599,7 @@ Defined.
 Definition path_zero_morphism_pconst (A B : pType)
   : (@pconst A B) = zero_morphism := idpath.
 
-(** pForall is a 1-category *)
+(** [pForall] is a 1-category *)
 Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.
 Proof.
   snapply Build_Is1Cat'.
@@ -613,7 +613,7 @@ Proof.
   - intros ? ? p; exact (phomotopy_compose_1p p).
 Defined.
 
-(** pForall is a 1-groupoid *)
+(** [pForall] is a 1-groupoid *)
 Instance is1gpd_pforall (A : pType) (P : pFam A) : Is1Gpd (pForall A P) | 10.
 Proof.
   econstructor.
@@ -699,13 +699,13 @@ Proof.
     by pelim f g.
 Defined.
 
-(** The forgetful map from pType to Type is a 0-functor *)
+(** The forgetful map from [pType] to [Type] is a 0-functor *)
 Instance is0functor_pointed_type : Is0Functor pointed_type.
 Proof.
   apply Build_Is0Functor. intros. exact f.
 Defined.
 
-(** The forgetful map from pType to Type is a 1-functor *)
+(** The forgetful map from [pType] to [Type] is a 1-functor *)
 Instance is1functor_pointed_type : Is1Functor pointed_type.
 Proof.
   apply Build_Is1Functor.
@@ -714,7 +714,7 @@ Proof.
   + intros. reflexivity.
 Defined.
 
-(** pType has binary products *)
+(** [pType] has binary products *)
 Instance hasbinaryproducts_ptype : HasBinaryProducts pType.
 Proof.
   intros X Y.
@@ -736,7 +736,7 @@ Proof.
     by pelim p q f g.
 Defined.
 
-(** pType has I-indexed product. *)
+(** [pType] has I-indexed product. *)
 Instance hasallproducts_ptype `{Funext} : HasAllProducts pType.
 Proof.
   intros I x.
@@ -892,7 +892,7 @@ Instance ishprop_phomotopy_hset `{Funext} {X Y : pType} `{IsHSet Y} (f g : X ->*
   : IsHProp (f ==* g)
   := inO_equiv_inO' (O:=Tr (-1)) _ (issig_phomotopy f g).
 
-(** ** Operations on equivalences needed to make pType a wild category with equivalences *)
+(** ** Operations on equivalences needed to make [pType] a wild category with equivalences *)
 
 (** The inverse equivalence of a pointed equivalence is again a pointed equivalence *)
 Definition pequiv_inverse {A B} (f : A <~>* B) : B <~>* A.
@@ -983,7 +983,7 @@ Proof.
   exact K.
 Defined.
 
-(** Under funext, pType has morphism extensionality *)
+(** Under funext, [pType] has morphism extensionality *)
 Instance hasmorext_ptype `{Funext} : HasMorExt pType.
 Proof.
   srapply Build_HasMorExt; intros A B f g.
@@ -991,7 +991,7 @@ Proof.
   intros []; reflexivity.
 Defined.
 
-(** pType has equivalences *)
+(** [pType] has equivalences *)
 Instance hasequivs_ptype : HasEquivs pType.
 Proof.
   stapply (
@@ -1018,7 +1018,7 @@ Proof.
   by intros [].
 Defined.
 
-(** pType is a univalent 1-coherent 1-category *)
+(** [pType] is a univalent 1-coherent 1-category *)
 Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
 Proof.
   srapply Build_IsUnivalent1Cat; intros A B.
@@ -1029,7 +1029,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** The free base point added to a type. This is in fact a functor and left adjoint to the forgetful functor pType to Type. *)
+(** The free base point added to a type. This is in fact a functor and left adjoint to the forgetful functor [pType] to [Type]. *)
 Definition pointify (S : Type) : pType := [S + Unit, inr tt].
 
 Instance is0functor_pointify : Is0Functor pointify.
@@ -1041,7 +1041,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** pointify is left adjoint to forgetting the basepoint in the following sense *)
+(** [pointify] is left adjoint to forgetting the basepoint in the following sense *)
 Theorem equiv_pointify_map `{Funext} (A : Type) (X : pType)
   : (pointify A ->* X) <~> (A -> X).
 Proof.

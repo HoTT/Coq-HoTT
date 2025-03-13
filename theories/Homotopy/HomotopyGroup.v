@@ -15,7 +15,7 @@ Definition HomotopyGroup_type (n : nat) : Type
       | n.+1 => Group
      end.
 
-(* Every homotopy group is, in particular, a pointed type. *)
+(** Every homotopy group is, in particular, a pointed type. *)
 Definition HomotopyGroup_type_ptype (n : nat) : HomotopyGroup_type n -> pType
   := match n return HomotopyGroup_type n -> pType with
      | 0 => fun X => X
@@ -25,7 +25,7 @@ Definition HomotopyGroup_type_ptype (n : nat) : HomotopyGroup_type n -> pType
 
 Coercion HomotopyGroup_type_ptype : HomotopyGroup_type >-> pType.
 
-(** We construct the wildcat structure on HomotopyGroup_type in the obvious way. *)
+(** We construct the wildcat structure on [HomotopyGroup_type] in the obvious way. *)
 Instance isgraph_homotopygroup_type (n : nat)
   : IsGraph (HomotopyGroup_type n) := ltac:(destruct n; exact _).
 Instance is2graph_homotopygroup_type (n : nat)
@@ -57,7 +57,7 @@ Proof.
   (** Inverse *)
   - srapply Trunc_rec; intro x.
     exact (tr x^).
-  (** IsHSet *)
+  (** [IsHSet] *)
   - exact _.
   (** Associativity *)
   - intros x y z.

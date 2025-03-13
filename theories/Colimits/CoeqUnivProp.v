@@ -197,7 +197,7 @@ Section UnivPropNat.
     exact (r o functor_coeq h k p q).
   Defined.
 
-  (** We now have two different ways of mappping from [Coeq_ind_type f' g' P] to [sig (Coeq_ind_data f g (P o functor_coeq h k p q))]. Here we construct a transformation between these two maps.
+  (** We now have two different ways of mapping from [Coeq_ind_type f' g' P] to [sig (Coeq_ind_data f g (P o functor_coeq h k p q))]. Here we construct a transformation between these two maps.
 <<
   Coeq_ind_type f' g' P ---------functor_Coeq_ind_type---> Coeq_ind_type f g (P o functor_coeq h k p q)
         |                                                                   |

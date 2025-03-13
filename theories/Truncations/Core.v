@@ -267,7 +267,7 @@ Defined.
 
 (** ** Embeddings *)
 
-(** For any point in the image of an embedding, the fibers are contractable. *)
+(** For any point in the image of an embedding, the fibers are contractible. *)
 Instance contr_hfiber_emb {A B} (a : A) (f : A -> B)
   `{IsEmbedding f}
   : Contr (hfiber f (f a)).
@@ -307,7 +307,7 @@ Proof.
   exact (ap10 (g0.2 @ g1.2^) y).
 Defined.
 
-(** We next prove that [paths : X -> (X -> Type)] is an embedding. This was proved by Escardo as Lemma 15 in "Injective types in univalent mathematics", but we give an argument similar to the proof of Thm 2.25 of CORS. *)
+(** We next prove that [paths : X -> (X -> Type)] is an embedding. This was proved by Escardó as Lemma 15 in "Injective types in univalent mathematics", but we give an argument similar to the proof of Theorem 2.25 of CORS. *)
 
 (** This will be an inverse to [ap paths].  We'll want to show that it is an embedding, so we'll construct it out of pieces that are clearly equivalences, except for one step, [equiv_fun]. *)
 Definition ap_paths_inverse `{Univalence} {X : Type} (x1 x2 : X)

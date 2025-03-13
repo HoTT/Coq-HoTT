@@ -11,7 +11,7 @@ Set Asymmetric Patterns.
 
 Local Open Scope category_scope.
 
-(** Quoting nCatLab on Kan Exensions:
+(** Quoting nLab on Kan extensions:
 
     ** Idea
 

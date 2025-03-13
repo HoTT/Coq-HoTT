@@ -5,7 +5,7 @@ Require Import Colimits.Colimit Colimits.Sequential.
 
 Local Open Scope nat_scope.
 
-(** * Propositonal truncation as a colimit. *)
+(** * Propositional truncation as a colimit. *)
 
 (** In this file we give an alternative construction of the propositional truncation using colimits. This can serve as a metatheoretic justification that propositional truncations exist. *)
 

@@ -1,4 +1,4 @@
-(** * Extensions and extendible maps *)
+(** * Extensions and extensible maps *)
 
 Require Import HoTT.Basics HoTT.Types.
 Require Import Equiv.PathSplit Homotopy.IdentitySystems.
@@ -113,7 +113,7 @@ Section Extensions.
     - intros ext; split.
       + intros g; exact (lift_extensionalong@{a1 a2 amin b1 b2 bmin p1 p2 pmin m1 m2} _ _ _ (fst ext g)).
       + intros h k. 
-        (** Unles we give the universe explicitly here, [kmin] gets collapsed to [k1]. *)
+        (** Unless we give the universe explicitly here, [kmin] gets collapsed to [k1]. *)
         pose (P' := (fun b => h b = k b) : B -> Type@{pmin}).
         exact (IH P' (snd ext h k)).
   Defined.
@@ -576,7 +576,7 @@ Definition ooextendable_functor_sigma_id
   : ooExtendableAlong (functor_sigma idmap f) C
   := fun n => extendable_functor_sigma_id n f C (fun a => ef a n).
 
-(** Unfortunately, the technology of [ExtensionAlong] seems to be insufficient to state a general, funext-free version of [extension_functor_sigma] with a nonidentity map on the bases; the hypothesis on the fiberwise map would have to be the existence of an extension in a function-type "up to pointwise equality".  With wild oo-groupoids we could probably manage it.  For now, we say something a bit hacky. *)
+(** Unfortunately, the technology of [ExtensionAlong] seems to be insufficient to state a general, funext-free version of [extension_functor_sigma] with a non-identity map on the bases; the hypothesis on the fiberwise map would have to be the existence of an extension in a function-type "up to pointwise equality".  With wild oo-groupoids we could probably manage it.  For now, we say something a bit hacky. *)
 
 Definition HomotopyExtensionAlong {A B} {Q : B -> Type}
            (f : A -> B) (C : sig Q -> Type)

@@ -64,13 +64,13 @@ Proof.
   destruct n; trivial; cbn; apply binint_pos_sub_diag.
 Defined.
 
-(** ** Permutation of neg and pos_succ *)
+(** ** Permutation of [neg] and [pos_succ] *)
 Lemma binint_neg_pos_succ p : neg (pos_succ p) = binint_pred (neg p).
 Proof.
   by destruct p.
 Defined.
 
-(** ** Permutation of pos and pos_succ *)
+(** ** Permutation of [pos] and [pos_succ] *)
 Lemma binint_pos_pos_succ p : pos (pos_succ p) = binint_succ (pos p).
 Proof.
   by destruct p.
@@ -89,7 +89,7 @@ Proof.
   by destruct a.
 Defined.
 
-(** Negation of the doubling of the sucessor of an positive. *)
+(** Negation of the doubling of the successor of an positive. *)
 Lemma binint_negation_succ_double a
   : - (binint_succ_double a) = binint_pred_double (- a).
 Proof.
@@ -110,7 +110,7 @@ Proof.
   all: apply ap, ah.
 Defined.
 
-(** ** binint_succ is a retract of binint_pred *)
+(** ** [binint_succ] is a retract of [binint_pred] *)
 Definition binint_succ_pred : binint_succ o binint_pred == idmap.
 Proof.
   intros [n | | n]; [|trivial|].
@@ -121,7 +121,7 @@ Proof.
   apply pos_succ_pred_double.
 Defined.
 
-(** ** binint_pred is a retract of binint_succ *)
+(** ** [binint_pred] is a retract of [binint_succ] *)
 Definition binint_pred_succ : binint_pred o binint_succ == idmap.
 Proof.
   intros [n | | n]; [|trivial|].
@@ -132,7 +132,7 @@ Proof.
   apply pos_pred_double_succ.
 Defined.
 
-(* ** The successor autoequivalence. *)
+(* ** The successor auto-equivalence. *)
 Instance isequiv_binint_succ : IsEquiv binint_succ | 0
   := isequiv_adjointify binint_succ _ binint_succ_pred binint_pred_succ.
 
@@ -160,7 +160,7 @@ Proof.
   all: by destruct H.
 Defined.
 
-(** ** Subtracting 1 from a sucessor gives the positive integer. *)
+(** ** Subtracting 1 from a successor gives the positive integer. *)
 Lemma binint_pos_sub_succ_l a
   : binint_pos_sub (pos_succ a) 1%pos = pos a.
 Proof.
@@ -168,7 +168,7 @@ Proof.
   cbn; apply ap, pos_pred_double_succ.
 Defined.
 
-(** ** Subtracting a sucessor from 1 gives minus the integer. *)
+(** ** Subtracting a successor from 1 gives minus the integer. *)
 Lemma binint_pos_sub_succ_r a
   : binint_pos_sub 1%pos (pos_succ a) = neg a.
 Proof.
@@ -218,7 +218,7 @@ Proof.
     by destruct (binint_pos_sub a b).
 Defined.
 
-(** ** Subtractions cancel sucessors. *)
+(** ** Subtractions cancel successors. *)
 Lemma binint_pos_sub_succ_succ a b
   : binint_pos_sub (pos_succ a) (pos_succ b) = binint_pos_sub a b.
 Proof.
@@ -239,7 +239,7 @@ Proof.
   apply IHa.
 Defined.
 
-(** ** Predecessor of a subtraction is the subtraction of a sucessor. *)
+(** ** Predecessor of a subtraction is the subtraction of a successor. *)
 Lemma binint_pred_pos_sub_r a b
   : binint_pred (binint_pos_sub a b) = binint_pos_sub a (pos_succ b).
 Proof.
@@ -325,7 +325,7 @@ Proof.
   apply binint_pred_add_r.
 Defined.
 
-(** An auxillary lemma used to prove associativity. *)
+(** An auxiliary lemma used to prove associativity. *)
 Lemma binint_add_assoc_pos p n m : pos p + (n + m) = pos p + n + m.
 Proof.
   destruct n as [n| |n], m as [m| |m]; trivial.

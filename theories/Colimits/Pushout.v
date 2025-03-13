@@ -551,7 +551,7 @@ Section PushoutAssoc.
 
 End PushoutAssoc.
 
-(** ** Pushouts of equvialences are equivalences *)
+(** ** Pushouts of equivalences are equivalences *)
 
 Instance isequiv_pushout_isequiv {A B C} (f : A -> B) (g : A -> C)
        `{IsEquiv _ _ f} : IsEquiv (pushr' f g).

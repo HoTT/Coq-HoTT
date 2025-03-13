@@ -247,7 +247,7 @@ Module Export LaxCommaCoreNotations.
       := tt.
   End tc_notation_boiler_plate.
 
-  (** We really want to use infix [⇓] and [⇑] for lax comma categories, but that's unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [//] of [⇓] and [\\] for [⇑]. *)
+  (** We really want to use infix [⇓] and [⇑] for lax comma categories, but that's Unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [//] of [⇓] and [\\] for [⇑]. *)
   (** Set some notations for printing *)
   Notation "'CAT' // a" := (@lax_slice_category_over _ _ _ a _) : category_scope.
   Notation "a // 'CAT'" := (@lax_coslice_category_over _ _ _ a _) : category_scope.

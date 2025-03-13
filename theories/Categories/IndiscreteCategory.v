@@ -14,7 +14,7 @@ Module Export Core.
       objects. *)
     Variable X : Type.
 
-    (** We define the symmetrized version of associaitivity differently
+    (** We define the symmetrized version of associativity differently
       so that the dual of an indiscrete category is convertible with
       the indiscrete category. *)
 

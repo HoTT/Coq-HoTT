@@ -1,6 +1,6 @@
 Require Export Basics.Utf8 Basics.Overture Basics.Iff.
 
-(** * Just enough Utf8/unicode for the Classes library to build, without depending on everything that HoTT.Utf8 depends on. *)
+(** * Just enough UTF8/Unicode for the Classes library to build, without depending on everything that HoTT.Utf8 depends on. *)
 
 (* Logic *)
 Notation "∀  x .. y , P" := (forall x, .. (forall y, P) ..) : type_scope.

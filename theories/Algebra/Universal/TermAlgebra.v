@@ -71,7 +71,7 @@ Definition ExtendRelTermAlgebra {σ : Signature} {C : Carriers σ}
   : CarriersTermAlgebra C s -> CarriersTermAlgebra C s -> Type
   := ExtendDRelTermAlgebra R.
 
-(** The next section shows, in particular, the following: If [R : forall s, Relation (C s)] is a family of mere equivalence relations, then [@ExtendRelTermAlgebra σ C R] is a family of mere equivalence eqlations. *)
+(** The next section shows, in particular, the following: If [R : forall s, Relation (C s)] is a family of mere equivalence relations, then [@ExtendRelTermAlgebra σ C R] is a family of mere equivalence relations. *)
 
 Section extend_rel_term_algebra.
   Context `{Funext} {σ : Signature} {C : Carriers σ}

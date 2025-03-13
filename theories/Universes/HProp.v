@@ -54,7 +54,7 @@ Proof.
     reflexivity.
 Defined.
 
-(** ** A map is an embedding as soon as its ap's have sections. *)
+(** ** A map is an embedding as soon as its [ap]'s have sections. *)
 
 Definition isembedding_sect_ap {X Y} (f : X -> Y)
            (s : forall x1 x2, (f x1 = f x2) -> (x1 = x2))

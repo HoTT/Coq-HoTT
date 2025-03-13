@@ -8,7 +8,7 @@ Include InitialTerminalCategory.Core.
 Require InitialTerminalCategory.Functors.
 (** ** Natural transformations between functors from initial categories and to terminal categories *)
 Require InitialTerminalCategory.NaturalTransformations.
-(** ** Pseudounctors from initial and terminal categories *)
+(** ** Pseudofunctors from initial and terminal categories *)
 Require InitialTerminalCategory.Pseudofunctors.
 
 

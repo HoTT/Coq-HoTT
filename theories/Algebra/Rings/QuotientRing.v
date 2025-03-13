@@ -102,7 +102,7 @@ Defined.
 
 (** *** Specialized induction principles *)
 
-(** We provide some specialized induction principes for [QuotientRing] that require cleaner hypotheses than the ones given by [Quotient_ind]. *)
+(** We provide some specialized induction principles for [QuotientRing] that require cleaner hypotheses than the ones given by [Quotient_ind]. *)
 Definition QuotientRing_ind {R : Ring} {I : Ideal R} (P : R / I -> Type)
   `{forall x, IsHSet (P x)}
   (c : forall (x : R), P (rng_quotient_map I x))
@@ -168,7 +168,7 @@ Proof.
   1,2: apply ideal_in_zero.
 Defined.
 
-(** We phrase the first ring isomorphism theroem in a slightly differnt way so that it is easier to use. This form specifically asks for a surjective map *)
+(** We phrase the first ring isomorphism theorem in a slightly different way so that it is easier to use. This form specifically asks for a surjective map *)
 Definition rng_first_iso' `{Funext} {A B : Ring} (f : A $-> B)
   (issurj_f : IsSurjection f)
   (I : Ideal A) (p : (I ↔ ideal_kernel f)%ideal)

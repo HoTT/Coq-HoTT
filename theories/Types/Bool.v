@@ -5,7 +5,7 @@ Require Import Types.Equiv.
 
 Local Open Scope path_scope.
 
-(* coq calls it "bool", we call it "Bool" *)
+(* Coq calls it "bool", we call it "Bool" *)
 Local Unset Elimination Schemes.
 Inductive Bool : Type0 :=
   | true : Bool
@@ -128,7 +128,7 @@ Definition equiv_bool_rec_uncurried `{Funext} (P : Type) : P * P <~> (Bool -> P)
 
 (** ** The type [Bool <~> Bool] is equivalent to [Bool]. *)
 
-(** The nonidentity equivalence is negation (the flip). *)
+(** The non-identity equivalence is negation (the flip). *)
 Instance isequiv_negb : IsEquiv negb.
 Proof.
   refine (@Build_IsEquiv

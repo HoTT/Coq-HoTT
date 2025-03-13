@@ -130,7 +130,7 @@ Section Equiv.
       apply Hrefl.
   Defined.
 
-  (** Thm 10.1.8 *)
+  (** Theorem 10.1.8 *)
   Theorem sets_exact : forall x y, (class_of R x = class_of R y) <~> R x y.
     intros ??. apply equiv_iff_hprop.
     - apply classes_eq_related.

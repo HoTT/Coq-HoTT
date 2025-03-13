@@ -80,7 +80,7 @@ Section composition.
     reflexivity.
   Defined.
 
-  (** ** [idtoiso] respsects composition *)
+  (** ** [idtoiso] respects composition *)
   Definition idtoiso_compose C D
          (F F' F'' : Functor C D)
          (T' : F' = F'')

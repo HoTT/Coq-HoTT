@@ -34,7 +34,7 @@ Record Subuniverse@{i} :=
 (** Work around Coq bug that fields of records can't be typeclasses. *)
 Class In (O : Subuniverse) (T : Type) := in_internal : In_internal O T.
 
-(** Being in the subuniverse is a mere predicate (by hypothesis).  We include funext in the hypotheses of hprop_inO so that it doesn't have to be assumed in all definitions of (reflective) subuniverses, since in most examples it is required for this and this only.  Here we redefine it using the replaced [In]. *)
+(** Being in the subuniverse is a mere predicate (by hypothesis).  We include funext in the hypotheses of [hprop_inO] so that it doesn't have to be assumed in all definitions of (reflective) subuniverses, since in most examples it is required for this and this only.  Here we redefine it using the replaced [In]. *)
 Instance hprop_inO `{Funext} (O : Subuniverse) (T : Type)
   : IsHProp (In O T)
   := @hprop_inO_internal _ _ T.
@@ -195,7 +195,7 @@ Coercion rsu_subuniv : ReflectiveSubuniverse >-> Subuniverse.
 Existing Instance rsu_prereflects.
 Existing Instance rsu_reflects.
 
-(** We allow the name of a subuniverse or modality to be used as the name of its reflector.  This means that when defining a particular example, you should generally put the parametrizing family in a wrapper, so that you can notate the subuniverse as parametrized by, rather than identical to, its parameter.  See Modality.v, Truncations.v, and Localization.v for examples. *)
+(** We allow the name of a subuniverse or modality to be used as the name of its reflector.  This means that when defining a particular example, you should generally put the parametrizing family in a wrapper, so that you can notate the subuniverse as parameterized by, rather than identical to, its parameter.  See Modality.v, Truncations.v, and Localization.v for examples. *)
 Definition rsu_reflector (O : ReflectiveSubuniverse) (T : Type) : Type
   := O_reflector O T.
 
@@ -1661,7 +1661,7 @@ Section ConnectedMaps.
     exact istrunc_forall.
   Defined.
 
-  (** Connected maps are orthogonal to modal maps (i.e. familes of modal types). *)
+  (** Connected maps are orthogonal to modal maps (i.e. families of modal types). *)
   Definition conn_map_elim
              {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
              (P : B -> Type) `{forall b:B, In O (P b)}

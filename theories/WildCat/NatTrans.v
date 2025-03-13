@@ -15,7 +15,7 @@ Definition Transformation {A : Type} {B : A -> Type} `{forall x, IsGraph (B x)}
   (F G : forall (x : A), B x)
   := forall (a : A), F a $-> G a.
 
-(** This lets us apply transformations to things. Identity Coercion tells coq that this coercion is in fact definitionally the identity map so it doesn't need to insert it, but merely rewrite definitionally when typechecking. *)
+(** This lets us apply transformations to things. Identity Coercion tells Coq that this coercion is in fact definitionally the identity map so it doesn't need to insert it, but merely rewrite definitionally when typechecking. *)
 Identity Coercion fun_trans : Transformation >-> Funclass.
 
 Notation "F $=> G" := (Transformation F G).
@@ -319,7 +319,7 @@ Proof.
     apply hinverse, I.
 Defined.
 
-(** This lemma might seem unnecessery since as functions ((F o G) o K) and (F o (G o K)) are definitionally equal. But the functor instances of both sides are different. This can be a nasty trap since you cannot see this difference clearly. *)
+(** This lemma might seem unnecessary since as functions ((F o G) o K) and (F o (G o K)) are definitionally equal. But the functor instances of both sides are different. This can be a nasty trap since you cannot see this difference clearly. *)
 Definition natequiv_functor_assoc_ff_f {A B C D : Type}
   `{IsGraph A, HasEquivs B, HasEquivs C, HasEquivs D} 
   (F : C -> D) (G : B -> C) (K : A -> B)

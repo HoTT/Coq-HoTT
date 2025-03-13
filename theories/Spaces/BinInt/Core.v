@@ -126,7 +126,7 @@ Definition binint_pred_double x :=
     | pos p => pos (pos_pred_double p)
   end.
 
-(** ** Subtraction of positive into BinInt *)
+(** ** Subtraction of positive into [BinInt] *)
 
 Fixpoint binint_pos_sub (x y : Pos) {struct y} : BinInt :=
   match x, y with

@@ -22,7 +22,7 @@ Arguments cons {A} _ _.
 Delimit Scope list_scope with list.
 Bind Scope list_scope with list.
 
-(** This messes with Coq's parsing of [] in ltac. Therefore we keep it commented out. It's not difficult to write [nil] instead. *)
+(** This messes with Coq's parsing of [] in Ltac. Therefore we keep it commented out. It's not difficult to write [nil] instead. *)
 (* Notation "[]" := nil : list_scope. *)
 Infix "::" := cons : list_scope.
 

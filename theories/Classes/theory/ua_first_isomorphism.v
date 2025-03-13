@@ -100,7 +100,7 @@ Section in_image_hom.
     := BuildIsSubalgebraPredicate is_closed_under_ops_in_image_hom.
 End in_image_hom.
 
-(** The folowing section proves the first isomorphism theorem,
+(** The following section proves the first isomorphism theorem,
     [isomorphic_first_isomorphism] and the first identification
     theorem [id_first_isomorphism]. *)
 

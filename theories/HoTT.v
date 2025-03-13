@@ -190,6 +190,6 @@ Require Export HoTT.Misc.UStructures.
 
 (** We do _not_ export [UnivalenceAxiom], [FunextAxiom], or any of the files in [Metatheory] from this file.  Thus, importing this file does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)
 
-(** We check that UnivalenceAxiom, FunextAxiom aren't being leaked. This is so that these can be imported seperately. *)
+(** We check that [UnivalenceAxiom], [FunextAxiom] aren't being leaked. This is so that these can be imported separately. *)
 Fail Check HoTT.UnivalenceAxiom.univalence_axiom.
 Fail Check HoTT.FunextAxiom.funext_axiom.

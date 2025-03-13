@@ -81,7 +81,7 @@ Reserved Notation "{ x : A  |  P  & Q }" (at level 0, x at level 99).
 Reserved Notation "{ x : A  & P }" (at level 0, x at level 99).
 Reserved Notation "{ x : A  & P  & Q }" (at level 0, x at level 99).
 
- 
+
 (** Numeric *)
 Reserved Notation "n .+1" (at level 1, left associativity, format "n .+1").
 Reserved Notation "n .+2" (at level 1, left associativity, format "n .+2").
@@ -259,7 +259,7 @@ Reserved Notation "x ^++" (at level 1).
 Reserved Notation "x ^++ k" (at level 1).
 Reserved Notation "b ^+f" (at level 1).
 
-(** Mathclasses *)
+(** Notations for the mathclasses library *)
 Reserved Notation "' x" (at level 20).
 Reserved Notation "// x" (at level 40, no associativity).
 Reserved Infix "?=" (at level 70, no associativity).

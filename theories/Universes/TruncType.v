@@ -119,11 +119,11 @@ Section TruncType.
   Definition Negation_hp `{Funext} (hprop : HProp) : HProp := Build_HProp (~hprop).
   (** We could continue with products etc *)
 
-  (** ** The canonical map from Bool to hProp *)
+  (** ** The canonical map from [Bool] to [HProp] *)
   Definition is_true (b : Bool) : HProp
     := if b then Unit_hp else False_hp.
 
-  (** ** Facts about HProps using univalence *)
+  (** ** Facts about [HProp]s using univalence *)
 
   #[export] Instance trunc_path_IsHProp X Y `{IsHProp Y}
   : IsHProp (X = Y).

@@ -341,7 +341,7 @@ Global Arguments cc_identity_functor' / .
 
 Local Set Warnings "-notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 Module Export CommaCoreNotations.
-  (** We really want to use infix [↓] for comma categories, but that's unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [/] of [↓]. *)
+  (** We really want to use infix [↓] for comma categories, but that's Unicode.  Infix [,] might also be reasonable, but I can't seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [/] of [↓]. *)
   (** Set some notations for printing *)
   Notation "C / a" := (@slice_category_over C a) (only printing) : category_scope.
   Notation "a \ C" := (@coslice_category_over C a) : category_scope.

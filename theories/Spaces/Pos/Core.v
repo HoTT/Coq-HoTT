@@ -5,7 +5,7 @@ Local Set Universe Minimization ToSet.
 
 (** * Binary Positive Integers *)
 
-(** Most of this file has been adapted from the coq standard library for positive binary integers. *)
+(** Most of this file has been adapted from the Coq standard library for positive binary integers. *)
 
 (** Here we define the inductive type of positive binary numbers. *)
 Inductive Pos : Type0 :=
@@ -120,7 +120,7 @@ Proof.
       by apply q, x1_inj.
 Defined.
 
-(** Decidable paths imply Pos is a hSet *)
+(** Decidable paths imply [Pos] is a hSet *)
 Instance ishset_pos : IsHSet Pos := _.
 
 (** * Operations over positive numbers *)

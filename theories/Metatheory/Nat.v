@@ -1,4 +1,4 @@
-(** * Defining the natural numbers from univalence and propresizing. *)
+(** * Defining the natural numbers from univalence and propositional resizing. *)
 Require Import Basics.
 Require Import Types.
 Require Import HProp.
@@ -12,7 +12,7 @@ Local Open Scope path_scope.
 Section AssumeStuff.
   Context {UA:Univalence} {PR:PropResizing}.
 
-  (** The basic idea is that since the universe is closed under coproducts, it is already "infinite", so we can find the "smallest infininte set" N inside it.  To get rid of the automorphisms in the universe coming from univalence and make N a set, instead of the universe of types we consider graphs (we could use posets or many other things too; in fact the graphs we are interested in will be posets). *)
+  (** The basic idea is that since the universe is closed under coproducts, it is already "infinite", so we can find the "smallest infinite set" N inside it.  To get rid of the automorphisms in the universe coming from univalence and make N a set, instead of the universe of types we consider graphs (we could use posets or many other things too; in fact the graphs we are interested in will be posets). *)
 
   (** Here is the readable definition of [Graph]:
 
@@ -388,7 +388,7 @@ Section AssumeStuff.
   idea is the same as always: define partial attempts and show by
   induction that they are uniquely defined.  But we have to be careful
   to phrase it in a way that works without assuming any truncation
-  restritions on the codomain.
+  restrictions on the codomain.
 
   First we need inequality on N, which we define in terms of addition.
   Normally addition is defined *using* recursion, but here we can

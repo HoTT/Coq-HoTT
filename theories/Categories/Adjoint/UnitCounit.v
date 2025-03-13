@@ -83,7 +83,7 @@ Section Adjunction.
 
   (** ** Counit + UMP definition of adjunction *)
   (**
-     Paraphrasing and quoting from Awody's "Category Theory":
+     Paraphrasing and quoting from Awodey's "Category Theory":
 
      An adjunction between categories [C] and [D] consists of functors
 

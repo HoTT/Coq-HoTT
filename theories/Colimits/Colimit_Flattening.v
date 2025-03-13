@@ -219,7 +219,7 @@ Section Flattening.
     - exact (cocone_issect Z).
   Defined.
 
-  (** The flattening lemma follows by colimit unicity. *)
+  (** The flattening lemma follows by colimit uniqueness. *)
 
   Definition flattening_lemma : Colimit (diagram_sigma E) <~> sig E'.
   Proof.

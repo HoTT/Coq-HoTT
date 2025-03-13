@@ -1,4 +1,4 @@
-(** * PreCategories [set_cat] and [prop_cat] *)
+(** * Precategories [set_cat] and [prop_cat] *)
 Require Import Category.Strict.
 Require Import HoTT.Basics HoTT.Types TruncType.
 

@@ -10,7 +10,7 @@ Local Open Scope path_scope.
 
 (** ** Automorphisms of the universe *)
 
-(** See "Parametricity, automorphisms of the universe, and excluded middle" by Booij, Escardo, Lumsdaine, Shulman. *)
+(** See "Parametricity, automorphisms of the universe, and excluded middle" by Booij, Escardó, Lumsdaine, Shulman. *)
 
 (** If two inequivalent types have equivalent automorphism oo-groups, then assuming LEM we can swap them and leave the rest of the universe untouched. *)
 Section SwapTypes.

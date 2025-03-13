@@ -13,7 +13,7 @@ Notation "A <-> B" := (iff A B) : type_scope.
 
 (** ** Basic Properties *)
 
-(** Everything is logically equivlaent to itself. *)
+(** Everything is logically equivalent to itself. *)
 Definition iff_refl {A} : A <-> A
   := (idmap , idmap).
 

@@ -10,7 +10,7 @@ Declare Scope profunctor_scope.
 Delimit Scope profunctor_scope with profunctor.
 
 Section profunctor.
-  (** Quoting nCatLab:
+  (** Quoting nLab:
 
       If [C] and [D] are categories, a profunctor from [C] to [D] is a functor [Dᵒᵖ * C -> Set]. Such a profunctor is usually written as [F : C ⇸ D].
 

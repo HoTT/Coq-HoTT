@@ -1,4 +1,4 @@
-(** * The groupid structure of paths *)
+(** * The groupoid structure of paths *)
 
 Require Import Basics.Overture Basics.Tactics.
 
@@ -49,11 +49,11 @@ Local Open Scope path_scope.
 
    - [moveL_pM] means that we transform [p = q @ r] to [p @ r^ = q]
      because we are moving something to the left-hand side, and we are
-     moving the right argument of concat.
+     moving the right argument of [concat].
 
    - [moveR_Mp] means that we transform [p @ q = r] to [q = p^ @ r]
      because we move to the right-hand side, and we are moving the left
-     argument of concat.
+     argument of [concat].
 
    - [moveR_1M] means that we transform [p = q] (rather than [p = 1 @ q]) to [p @ q^ = 1].
 
@@ -426,7 +426,7 @@ Definition ap_compose {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x 
   :=
   match p with idpath => 1 end.
 
-(* Sometimes we don't have the actual function [compose]. *)
+(** Sometimes we don't have the actual function [compose]. *)
 Definition ap_compose' {A B C : Type} (f : A -> B) (g : B -> C) {x y : A} (p : x = y) :
   ap (fun a => g (f a)) p = ap g (ap f p)
   :=
@@ -446,7 +446,7 @@ Definition concat_Ap {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y 
     | idpath => concat_1p_p1 _
   end.
 
-(* A useful variant of concat_Ap. *)
+(** A useful variant of [concat_Ap]. *)
 Definition ap_homotopic {A B : Type} {f g : A -> B} (p : forall x, f x = g x) {x y : A} (q : x = y)
   : (ap f q) = (p x) @ (ap g q) @ (p y)^.
 Proof.
@@ -462,7 +462,7 @@ Definition concat_A1p {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} 
     | idpath => concat_1p_p1 _
   end.
 
-(* The corresponding variant of concat_A1p. *)
+(** The corresponding variant of [concat_A1p]. *)
 Definition ap_homotopic_id {A : Type} {f : A -> A} (p : forall x, f x = x) {x y : A} (q : x = y)
   : (ap f q) = (p x) @ q @ (p y)^.
 Proof.

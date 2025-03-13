@@ -64,7 +64,7 @@ Section Localization.
 
   along with the condition that this HIT be a set.
 
-  We will implement this HIT by writing it as a set quotient. From now onwards, [loc_frac] will be implemented as [class_of fraction_eq] and [loc_frac_eq] will be implemented as [qglue]. *)
+  We will implement this HIT by writing it as a set quotient. From now on, [loc_frac] will be implemented as [class_of fraction_eq] and [loc_frac_eq] will be implemented as [qglue]. *)
 
   Context (R : CRing) (S : R -> Type) `{!IsMultiplicativeSubset S}.
 
@@ -77,7 +77,7 @@ Section Localization.
     in_mult_subset_denominator : S denominator ;
   }.
 
-  (** We consider two fractions to be equal if we can rearrange the fractions as products and ask for equality upto some scaling factor from the multiplicative subset [S]. *)
+  (** We consider two fractions to be equal if we can rearrange the fractions as products and ask for equality up to some scaling factor from the multiplicative subset [S]. *)
   Definition fraction_eq : Relation Fraction.
   Proof.
     intros [n1 d1 ?] [n2 d2 ?].
@@ -85,7 +85,7 @@ Section Localization.
     exact (x * n1 * d2 = x * n2 * d1).
   Defined.
 
-  (** It is convenient to produce elements of this relation specalized to when the scaling factor is [1]. *)
+  (** It is convenient to produce elements of this relation specialized to when the scaling factor is [1]. *)
   Definition fraction_eq_simple f1 f2
     (p : numerator f1 * denominator f2 = numerator f2 * denominator f1)
     : fraction_eq f1 f2.
@@ -117,7 +117,7 @@ Section Localization.
     fun '(Build_Fraction n1 d1 p1) '(Build_Fraction n2 d2 p2)
       => Build_Fraction (n1 * d2 + n2 * d1) (d1 * d2) (mss_mult p1 p2).
 
-  (** Fraction addition is well-defined upto equality of fractions. *)
+  (** Fraction addition is well-defined up to equality of fractions. *)
 
   (** It is easier to prove well-definedness as a function of both arguments at once. *)
   Definition frac_add_wd (f1 f1' f2 f2' : Fraction)

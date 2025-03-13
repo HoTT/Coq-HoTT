@@ -119,11 +119,11 @@ Definition stable_equiv {A B} (f : A -> B) `{!IsEquiv f}
   Because [vm_compute] evaluates terms in [PROP] eagerly
   and does not remove dead code we
   need the decide_rel hack. Suppose we have [(x = y) =def  (f x = f y)], now:
-     bool_decide (x = y) -> bool_decide (f x = f y) -> ...
+     [bool_decide (x = y) -> bool_decide (f x = f y) -> ...]
   As we see, the dead code [f x] and [f y] is actually evaluated,
   which is of course an utter waste.
-  Therefore we introduce decide_rel and bool_decide_rel.
-     bool_decide_rel (=) x y -> bool_decide_rel (fun a b => f a = f b) x y -> ...
+  Therefore we introduce [decide_rel] and [bool_decide_rel].
+     [bool_decide_rel (=) x y -> bool_decide_rel (fun a b => f a = f b) x y -> ...]
   Now the definition of equality remains under a lambda and
   our problem does not occur anymore!
 *)

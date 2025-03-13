@@ -59,7 +59,7 @@ Arguments base : simpl never.
 Arguments loop : simpl never.
 Arguments Circle_ind_beta_loop : simpl never.
 
-(** The recursion princple or non-dependent eliminator. *)
+(** The recursion principle or non-dependent eliminator. *)
 Definition Circle_rec (P : Type) (b : P) (l : b = b)
   : Circle -> P
   := Circle_ind (fun _ => P) b (transport_const _ _ @ l).
@@ -193,7 +193,7 @@ Defined.
 
 (** ** Iteration of equivalences *)
 
-(** If [P : Circle -> Type] is defined by a type [X] and an autoequivalence [f], then the image of [n : Int] regarded as in [base = base] is [iter_int f n]. *)
+(** If [P : Circle -> Type] is defined by a type [X] and an auto-equivalence [f], then the image of [n : Int] regarded as in [base = base] is [iter_int f n]. *)
 Definition Circle_action_is_iter `{Univalence} X (f : X <~> X) (n : Int) (x : X)
 : transport (Circle_rec Type X (path_universe f)) (equiv_loopCircle_int^-1 n) x
   = int_iter f n x.

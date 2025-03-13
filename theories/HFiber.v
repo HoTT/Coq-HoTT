@@ -77,7 +77,7 @@ Definition equiv_functor_hfiber {A B C D}
   : hfiber f b <~> hfiber g (k b)
   := Build_Equiv _ _ (functor_hfiber p b) _.
 
-(** A version of functor_hfiber which is functorial in both the function and the point *)
+(** A version of [functor_hfiber] which is functorial in both the function and the point *)
 Definition functor_hfiber2 {A B C D}
            {f : A -> B} {g : C -> D} {h : A -> C} {k : B -> D}
            (p : k o f == g o h) {b : B} {b' : D} (q : k b = b')

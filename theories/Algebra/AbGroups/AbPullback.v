@@ -25,6 +25,6 @@ Section AbPullback.
 
   Definition ab_pullback : AbGroup := Build_AbGroup (grp_pullback f g) _.
 
-  (** The corecursion principle is inherited from Groups; use grp_pullback_corec and friends from Groups/GrpPullback.v. *)
+  (** The corecursion principle is inherited from [Group]; use [grp_pullback_corec] and friends from Groups/GrpPullback.v. *)
 
 End AbPullback.

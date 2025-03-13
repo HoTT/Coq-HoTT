@@ -2,7 +2,7 @@ Require Import HoTT.Classes.interfaces.abstract_algebra.
 
 Generalizable Variables A.
 
-(*
+(**
 In this file we describe interfaces for ordered structures. Since we are in a
 constructive setting we use a pseudo order instead of a total order. Therefore
 we also have to include an apartness relation.
@@ -13,10 +13,10 @@ between the usual classical notions and these constructive notions.
 
 On the one hand, if we have an ordinary (total) partial order (≤) with a
 corresponding strict order (<), we will prove that we can construct a
-FullPartialOrder and PseudoPartialOrder, respectively.
+[FullPartialOrder] and [PseudoPartialOrder], respectively.
 
 On the other hand, if equality is decidable, we will prove that we have the
-usual properties like Trichotomy (<) and TotalRelation (≤).
+usual properties like [Trichotomy (<)] and [TotalRelation (≤)].
 *)
 
 Class PartialOrder `(Ale : Le A) :=
@@ -43,7 +43,7 @@ semilattices. Notice that we include a meet operation instead of the
 more common:
   forall x y, exists m, m ≤ x /\ m ≤ y /\ forall z, z ≤ x -> z ≤ y -> m ≤ z
 Our definition is both stronger and more convenient than the above.
-This is needed to prove equavalence with the algebraic definition. We
+This is needed to prove equivalence with the algebraic definition. We
 do this in orders.lattices.
 *)
 Class MeetSemiLatticeOrder `(Ale : Le A) `{Meet A} :=
@@ -71,8 +71,8 @@ Class StrictOrder `(Alt : Lt A) :=
   ; strictorder_trans : Transitive (<) }.
 #[export] Existing Instances strict_order_mere strictorder_irrefl strictorder_trans.
 
-(* The constructive notion of a total strict total order.
-   We will prove that (<) is in fact a StrictOrder. *)
+(** The constructive notion of a total strict total order.
+   We will prove that [(<)] is in fact a [StrictOrder]. *)
 Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=
 { pseudo_order_apart : IsApart A
   ; pseudo_order_mere_lt : is_mere_relation A lt
@@ -81,8 +81,8 @@ Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=
   ; apart_iff_total_lt : forall x y, x ≶ y <-> x < y |_| y < x }.
 #[export] Existing Instances pseudo_order_mere_lt pseudo_order_cotrans.
 
-(* A partial order (≤) with a corresponding (<). We will prove that (<) is in fact
-  a StrictOrder *)
+(** A partial order [(≤)] with a corresponding [(<)]. We will prove that [(<)] is in fact
+  a [StrictOrder] *)
 Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
   { strict_po_apart : IsApart A
   ; strict_po_mere_lt : is_mere_relation A lt
@@ -91,8 +91,8 @@ Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
   ; lt_iff_le_apart : forall x y, x < y <-> x ≤ y /\ x ≶ y }.
 #[export] Existing Instances strict_po_po strict_po_trans.
 
-(* A pseudo order (<) with a corresponding (≤). We will prove that (≤) is in fact
-  a PartialOrder. *)
+(** A pseudo order [(<)] with a corresponding [(≤)]. We will prove that [(≤)] is in fact
+  a [PartialOrder]. *)
 Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
   { fullpseudo_le_hprop : is_mere_relation A Ale
   ; full_pseudo_order_pseudo : PseudoOrder Alt
@@ -132,9 +132,9 @@ Hint Extern 4 (?f _ ≤ ?f _) => apply (order_preserving f) : core.
 #[export]
 Hint Extern 4 (?f _ < ?f _) => apply (strictly_order_preserving f) : core.
 
-(*
+(**
 We define various classes to describe the order on the lower part of the
-algebraic hierarchy. This results in the notion of a PseudoSemiRingOrder, which
+algebraic hierarchy. This results in the notion of a [PseudoSemiRingOrder], which
 specifies the order on the naturals, integers, rationals and reals. This notion
 is quite similar to a strictly linearly ordered unital commutative protoring in
 Davorin Lešnik's PhD thesis.

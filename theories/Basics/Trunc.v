@@ -104,7 +104,7 @@ Definition trunc_index_to_num_int@{} n :=
 Number Notation trunc_index num_int_to_trunc_index trunc_index_to_num_int
   : trunc_scope.
 
-(** Sends a trunc_index [n] to the natural number [n+2]. *)
+(** Sends a [trunc_index] [n] to the natural number [n+2]. *)
 Fixpoint trunc_index_to_nat (n : trunc_index) : nat
   := match n with
     | minus_two => 0%nat

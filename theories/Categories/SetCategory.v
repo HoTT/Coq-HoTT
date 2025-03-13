@@ -1,5 +1,5 @@
 (** * Category of sets *)
-(** ** Definitoins of [set_cat] and [prop_cat] *)
+(** ** Definitions of [set_cat] and [prop_cat] *)
 Require SetCategory.Core.
 (** ** Morphisms in the category of sets *)
 Require SetCategory.Morphisms.

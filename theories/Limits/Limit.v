@@ -159,7 +159,7 @@ End FunctorialityLimit.
 
 (** * Unicity of limits *)
 
-(** A particuliar case of the functoriality result is that all limits of a diagram are equivalent (and hence equal in presence of univalence). *)
+(** A particular case of the functoriality result is that all limits of a diagram are equivalent (and hence equal in presence of univalence). *)
 
 Theorem limit_unicity `{Funext} {G : Graph} {D : Diagram G} {Q1 Q2 : Type}
   (HQ1 : IsLimit D Q1) (HQ2 : IsLimit D Q2)

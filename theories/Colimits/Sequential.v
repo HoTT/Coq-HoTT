@@ -129,7 +129,7 @@ Definition succ_seq (A : Sequence) : Sequence
 Definition shift_seq (A : Sequence) n : Sequence
   := Build_Sequence (fun k => A (k+n)%nat) (fun k a => a^+).
 
-(** The canonical equivalence between the colimit of the succesor sequence and the colimit of the original sequence; Lemma 3.6. *)
+(** The canonical equivalence between the colimit of the successor sequence and the colimit of the original sequence; Lemma 3.6. *)
 Definition colim_succ_seq_to_colim_seq A : Colimit (succ_seq A) -> Colimit A.
 Proof.
   srapply Colimit_rec; srapply Build_Cocone.
@@ -292,7 +292,7 @@ Proof.
   - intros n m p [a b]; destruct p; exact (glue _ n a).
 Defined.
 
-(** Given a sequence fibered over A, aach point x : sig A induces a new type sequence; Section 4. *)
+(** Given a sequence fibered over [A], each point [x : sig A] induces a new type sequence; Section 4. *)
 Definition fib_seq_to_seq {A} (B : FibSequence A) (x : sig A) : Sequence.
 Proof.
   srapply Build_Sequence; intro k; revert x; induction k as [ | k h].

@@ -536,7 +536,7 @@ Defined.
 
 (** ** Removing elements *)
 
-(** These functions allow surgery to be perfomed on a given list. *)
+(** These functions allow surgery to be performed on a given list. *)
 
 (** *** Drop *)
 

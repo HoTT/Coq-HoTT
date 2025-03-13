@@ -144,7 +144,7 @@ Section RightModuleFacts.
   Definition rm_zero_l : (0 : M) *R r = 0
     := lm_zero_r (R:=rng_op R) r.
 
-  (** The right adtion of zero is zero. *)
+  (** The right action of zero is zero. *)
   Definition rm_zero_r : m *R 0 = 0
     := lm_zero_l (R:=rng_op R) m.
 
@@ -685,7 +685,7 @@ Instance hasbinaryproducts_rightmodule {R : Ring}
 
 (** ** Finite Sums *)
 
-(** Left scalar multplication distributes over finite sums of left module elements. *)
+(** Left scalar multiplication distributes over finite sums of left module elements. *)
 Definition lm_sum_dist_l {R : Ring} (M : LeftModule R) (n : nat)
   (f : forall k, (k < n)%nat -> M) (r : R)
   : r *L ab_sum n f = ab_sum n (fun k Hk => r *L f k Hk).

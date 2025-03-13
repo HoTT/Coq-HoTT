@@ -3,7 +3,7 @@ Require Import Types.Forall Types.Sigma Types.Prod Types.WType.
 
 (** In this file we define indexed W-types. We show that indexed W-types can be reduced to W-types whilst still having definitional computation rules. We also characterize the path space of indexed W-types. This allows us to derive sufficient conditions for an indexed W-type to be truncated. *)
 
-(** This is mostly adapted from Jasper Hugunin's formalization in coq: https://github.com/jashug/IWTypes *)
+(** This is mostly adapted from Jasper Hugunin's formalization in Coq: https://github.com/jashug/IWTypes *)
 
 (** On a more meta-theoretic note, this partly justifies the use of indexed inductive types in Coq with respect to homotopy type theory. *)
 
@@ -62,10 +62,10 @@ Defined.
 
 (** * Reduction of indexed W-types to W-types *)
 
-(** Jasper Hugunin found this construction (typecheck unindexed trees) in "Indexed Containers by Thorsten Altenkirch and Peter Morris". http://www.cs.nott.ac.uk/~psztxa/publ/ICont.pdf
+(** Jasper Hugunin found this construction (typecheck un-indexed trees) in "Indexed Containers by Thorsten Altenkirch and Peter Morris". http://www.cs.nott.ac.uk/~psztxa/publ/ICont.pdf
 This references the following:
   * M. Abbott, T. Altenkirch, and N. Ghani. Containers - constructing strictly positive types. Theoretical Computer Science, 342:327, September 2005. Applied Semantics: Selected Topics.
-  * N. Gambino and M. Hyland. Wellfounded trees and dependent polynomial functors. In S. Berardi, M. Coppo, and F. Damiani, editors, types for Proofs and Programs (TYPES 2003), Lecture Notes in Computer Science, 2004
+  * N. Gambino and M. Hyland. Well-founded trees and dependent polynomial functors. In S. Berardi, M. Coppo, and F. Damiani, editors, types for Proofs and Programs (TYPES 2003), Lecture Notes in Computer Science, 2004
 as previous examples of the technique. *)
 
 Section Reduction.
@@ -104,7 +104,7 @@ Section Reduction.
     : IW'_ind P S _ (iw_sup' x y) = S x y (fun c => IW'_ind P S _ (y c))
     := idpath.
 
-  (** Showing that IW-types are equivalent to W-types requries funext. *)
+  (** Showing that IW-types are equivalent to W-types requires funext. *)
   Definition equiv_wtype_iwtype `{Funext} (x : I)
     : IW' x <~> IW I A B i j x.
   Proof.
@@ -256,7 +256,7 @@ Section Paths.
 
   (** ** Characterization of fiber *)
 
-  (** We begin with two auxillary lemmas that will be explained shortly. *)
+  (** We begin with two auxiliary lemmas that will be explained shortly. *)
   Local Definition adjust_hfiber {X Y} {f : X -> Y} {y z}
     : hfiber f y -> y = z -> hfiber f z
     := fun '(x ; p) => match p with idpath => fun q => (x ; q) end.
@@ -267,7 +267,7 @@ Section Paths.
     by destruct xp as [x []].
   Defined.
 
-  (** We wish to show an induction principle coming from the path type of the fiber. However to do this we need to be a bit more general by allowing the elements of the IW-type to differ in label upto equality. This allows us to do prove this induction principle easily, and later we will derive the induction principle where the labels are the same. *)
+  (** We wish to show an induction principle coming from the path type of the fiber. However to do this we need to be a bit more general by allowing the elements of the IW-type to differ in label up to equality. This allows us to do prove this induction principle easily, and later we will derive the induction principle where the labels are the same. *)
   Local Definition path_iw_to_hfiber_ind'
     (P : forall (la lb : I) (le : lb = la) (a : IW I A B i j la) (b : IW I A B i j lb),
       iw_to_hfiber_index la a = adjust_hfiber (iw_to_hfiber_index lb b) le -> Type)
@@ -442,7 +442,7 @@ Proof.
   exact q.
 Defined.
 
-(** IW-types have decidable equality if liftP holds and the fibers of the indexing map have decidable paths. Notably, if B x is finitely enumerable, then liftP holds. *)
+(** IW-types have decidable equality if [liftP] holds and the fibers of the indexing map have decidable paths. Notably, if B x is finitely enumerable, then [liftP] holds. *)
 Section DecidablePaths.
 
   Context `{Funext}

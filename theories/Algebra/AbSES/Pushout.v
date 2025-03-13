@@ -143,7 +143,7 @@ Definition abses_directsum_distributive_pushouts `{Univalence}
     = abses_direct_sum (abses_pushout f E) (abses_pushout g F)
   := abses_pushout_component3_id (abses_directsum_pushout_morphism f g) (fun _ => idpath).
 
-(** Given an AbSESMorphism whose third component is the identity, we know that it induces a path from the pushout of the domain along the first map to the codomain. Conversely, given a path from a pushout, we can deduce that the following square commutes: *)
+(** Given an [AbSESMorphism] whose third component is the identity, we know that it induces a path from the pushout of the domain along the first map to the codomain. Conversely, given a path from a pushout, we can deduce that the following square commutes: *)
 Definition abses_path_pushout_inclusion_commsq `{Univalence} {A A' B : AbGroup}
   (alpha : A $-> A') (E : AbSES B A) (F : AbSES B A')
   (p : abses_pushout alpha E = F)

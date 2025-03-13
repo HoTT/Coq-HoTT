@@ -258,7 +258,7 @@ Notation "x = y" := (x = y :>_) : type_scope.
 Instance reflexive_paths {A} : Reflexive (@paths A) | 0 := @idpath A.
 Arguments reflexive_paths / .
 
-(** Our identity type is the Paulin-Mohring style.  We derive the Martin-Lof eliminator. *)
+(** Our identity type is the Paulin-Mohring style.  We derive the Martin-Löf eliminator. *)
 
 Definition paths_ind' {A : Type} (P : forall (a b : A), (a = b) -> Type)
   : (forall (a : A), P a a idpath) -> forall (a b : A) (p : a = b), P a b p.
@@ -572,7 +572,7 @@ Notation "n .+4" := (n.+1.+3)%trunc : trunc_scope.
 Notation "n .+5" := (n.+1.+4)%trunc : trunc_scope.
 Local Open Scope trunc_scope.
 
-(** We define truncatedness using an inductive type [IsTrunc_internal A n].  We use a notation [IsTrunc n A] simply to swap the orders of arguments, and notations [Contr], [IsHProp] and [IsHSet] which specialize to [n] being [-2], [-1] and [0], respectively.  An alternative is to use a [Fixpoint], and that was done in the past.  The advantages of the inductive approach are:  [IsTrunc_internal] is cumulative; typeclass inherence works smoothly; the library builds faster.  Some disadvantages are that we need to manually apply the constructors when proving that something is truncated, and that the induction principle is awkward to work with. *)
+(** We define truncatedness using an inductive type [IsTrunc_internal A n].  We use a notation [IsTrunc n A] simply to swap the orders of arguments, and notations [Contr], [IsHProp] and [IsHSet] which specialize to [n] being [-2], [-1] and [0], respectively.  An alternative is to use a [Fixpoint], and that was done in the past.  The advantages of the inductive approach are:  [IsTrunc_internal] is cumulative; typeclass inference works smoothly; the library builds faster.  Some disadvantages are that we need to manually apply the constructors when proving that something is truncated, and that the induction principle is awkward to work with. *)
 
 Inductive IsTrunc_internal (A : Type@{u}) : trunc_index -> Type@{u} :=
 | Build_Contr : forall (center : A) (contr : forall y, center = y), IsTrunc_internal A minus_two

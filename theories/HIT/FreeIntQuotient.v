@@ -13,7 +13,7 @@ Section FreeIntAction.
   Context `{Univalence}.
   Context (R : Type) `{IsHSet R}.
 
-  (** A free action by [Int] is the same as a single autoequivalence [f] (the action of [1]) whose iterates are all pointwise distinct. *)
+  (** A free action by [Int] is the same as a single auto-equivalence [f] (the action of [1]) whose iterates are all pointwise distinct. *)
   Context (f : R <~> R)
           (f_free : forall (r : R) (n m : Int),
                       (int_iter f n r = int_iter f m r) -> (n = m)).

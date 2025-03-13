@@ -5,7 +5,7 @@ Require Import Spaces.List.Core.
 
 (** * Path spaces of lists *)
 
-(** This proof was adapted from a proof given in agda/cubical by Evan Cavallo. *)
+(** This proof was adapted from a proof given in Agda/cubical by Evan Cavallo. *)
 
 Section PathList.
   Context {A : Type}.
@@ -95,7 +95,7 @@ Section PathList.
       by destruct r.
   Defined.
 
-  (** Giving us a way of characterising paths in lists. *)
+  (** Giving us a way of characterizing paths in lists. *)
   Definition equiv_path_list {l1 l2}
     : ListEq l1 l2 <~> l1 = l2
     := equiv_adjointify decode encode decode_encode encode_decode.

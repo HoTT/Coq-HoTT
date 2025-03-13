@@ -116,7 +116,7 @@ Proof.
   by apply issurj_isepi.
 Defined.
 
-(** Old-style proof using polymorphic Omega. Needs resizing for the isepi proof to live in the
+(** Old-style proof using polymorphic Omega. Needs resizing for the [isepi] proof to live in the
  same universe as X and Y (the Z quantifier is instantiated with an HSet at a level higher)
 <<
 Lemma isepi_issurj {X Y} (f:X->Y): isepi f -> issurj f.

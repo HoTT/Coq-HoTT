@@ -166,7 +166,7 @@ Proof.
   symmetry; by apply abext_trivial_projective.
 Defined.
 
-(* Converely, if all extensions ending in [P] are trivial, then [P] is projective. *)
+(* Conversely, if all extensions ending in [P] are trivial, then [P] is projective. *)
 Proposition abext_projective_trivial `{Univalence} (P : AbGroup)
   (ext_triv : forall A, forall E : AbSES P A, tr E = point (Ext P A))
   : IsAbProjective P.

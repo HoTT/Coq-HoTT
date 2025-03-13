@@ -380,7 +380,7 @@ Proof.
   - exact (r $@ (cat_idr _)^$).
 Defined.
 
-(** From binary products, all Bool-shaped products can be constructed. This should not be an instance to avoid a cycle with [hasbinaryproducts_hasproductsbool]. *)
+(** From binary products, all [Bool]-shaped products can be constructed. This should not be an instance to avoid a cycle with [hasbinaryproducts_hasproductsbool]. *)
 Definition hasproductsbool_hasbinaryproducts {A : Type} `{HasBinaryProducts A}
   : HasProducts Bool A.
 Proof.
@@ -510,7 +510,7 @@ Proof.
   exact (is1functor01_bifunctor _ x).
 Defined.
 
-(** [cat_binprod_corec] is also functorial in each morphsism. *)
+(** [cat_binprod_corec] is also functorial in each morphism. *)
 
 Instance is0functor_cat_binprod_corec_l {A : Type}
   `{HasBinaryProducts A} {x y z : A} (g : z $-> y)

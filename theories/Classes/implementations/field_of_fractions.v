@@ -14,7 +14,7 @@ Record Frac@{} : Type
   := frac { num: R; den: R; den_ne_0: PropHolds (den <> 0) }.
   (* We used to have [den] and [den_nonzero] bundled,
      which did work relatively nicely with Program, but the
-     extra messyness in proofs etc turned out not to be worth it. *)
+     extra messiness in proofs etc turned out not to be worth it. *)
 
 Lemma Frac_ishset' : IsHSet Frac.
 Proof.

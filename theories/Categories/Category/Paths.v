@@ -128,7 +128,7 @@ Section path_category.
     reflexivity.
   Qed.
 
-  (** ** Equality of precategorys gives rise to an inhabitant of the path-classifying-type *)
+  (** ** Equality of precategories gives rise to an inhabitant of the path-classifying-type *)
   Definition path_precategory_uncurried'_inv (C D : PreCategory)
   : C = D -> path_precategory''_T C D.
   Proof.
@@ -162,7 +162,7 @@ Section path_category.
                      (@identity C))).
   Defined.
 
-  (** ** Classify equality of precategorys up to equivalence *)
+  (** ** Classify equality of precategories up to equivalence *)
   Lemma equiv_path_precategory_uncurried'__eissect `{Funext} (C D : PreCategory)
   : forall x : path_precategory''_T C D,
       path_precategory_uncurried'_inv (path_precategory_uncurried' C D x) = x.

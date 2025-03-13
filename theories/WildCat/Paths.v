@@ -70,7 +70,7 @@ Proof.
   - exact (@concat_Vp A).
 Defined.
 
-(** Any type is a 2-category with higher morphhisms given by paths. *)
+(** Any type is a 2-category with higher morphisms given by paths. *)
 Instance is21cat_paths {A : Type} : Is21Cat A.
 Proof.
   snapply Build_Is21Cat.

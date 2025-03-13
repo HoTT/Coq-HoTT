@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics.
 
-(** * Comutative squares *)
+(** * Commutative squares *)
 
 (** Commutative squares compose vertically.
 
@@ -49,7 +49,7 @@ Proof.
 Defined.
 
 (** Given any commutative square from [f] to [f'] whose verticals
-[wA, wB] are equivalences, the equiv_inv square from [f'] to [f] with verticals [wA ^-1, wB ^-1] also commutes. *)
+[wA, wB] are equivalences, the [equiv_inv] square from [f'] to [f] with verticals [wA ^-1, wB ^-1] also commutes. *)
 Lemma comm_square_inverse
   {A B : Type} {f : A -> B}
   {A' B' : Type} {f' : A' -> B'}
@@ -88,7 +88,7 @@ Proof.
     apply whiskerL, (ap_compose f wB).
 Defined.
 
-(** and similarly, [comm_square_inverse] is a section (aka right equiv_inv). *)
+(** and similarly, [comm_square_inverse] is a section (aka right [equiv_inv]). *)
 Lemma comm_square_inverse_is_retr
   {A B : Type} {f : A -> B}
   {A' B' : Type} {f' : A' -> B'}

@@ -90,7 +90,7 @@ Defined.
 
 (** ** Addition and module structure *)
 
-(** Here we define the abelian group of (n x m)-matrices over a ring. This follows from the abelian group structure of the underlying vectors. We are also able to derive a left module strucutre when the entries come from a left module. *)
+(** Here we define the abelian group of (n x m)-matrices over a ring. This follows from the abelian group structure of the underlying vectors. We are also able to derive a left module structure when the entries come from a left module. *)
 
 Definition abgroup_matrix (A : AbGroup) (m n : nat) : AbGroup
   := abgroup_vector (abgroup_vector A n) m.
@@ -262,7 +262,7 @@ Defined.
 Definition matrix_transpose {R : Type} {m n} : Matrix R m n -> Matrix R n m
   := fun M => Build_Matrix R n m (fun i j H1 H2 => entry M j i).
 
-(** Tranposing a matrix is involutive. *)
+(** Transposing a matrix is involutive. *)
 Definition matrix_transpose_transpose {R : Type} {m n} (M : Matrix R m n)
   : matrix_transpose (matrix_transpose M) = M.
 Proof.
@@ -1032,7 +1032,7 @@ Section MatrixCat.
   #[export] Instance is2graph_matrixcat {R : Ring} : Is2Graph (MatrixCat R)
     := is2graph_paths _.
 
-  (** MatrixCat R forms a strong 1-category. *)
+  (** [MatrixCat R] forms a strong 1-category. *)
   #[export] Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).
   Proof.
     snapply Build_Is1Cat_Strong.
@@ -1044,6 +1044,6 @@ Section MatrixCat.
     - apply left_identity_matrix_mult.
   Defined.
 
-(** TODO: Define HasEquivs for MatrixCat.  *)
+(** TODO: Define [HasEquivs] for [MatrixCat].  *)
 
 End MatrixCat.

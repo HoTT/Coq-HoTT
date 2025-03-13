@@ -18,7 +18,7 @@ Definition lift2 {A B} (f : forall x : A, B x) : forall x : Lift A, Lift (B (low
 Definition lower2 {A B} (f : forall x : Lift A, Lift (B (lower x))) : forall x : A, B x
   := f.
 
-(** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreck havok. *)
+(** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreak havoc. *)
 #[global] Typeclasses Opaque lift lower lift2 lower2.
 
 Instance isequiv_lift T : IsEquiv (@lift T)
@@ -81,7 +81,7 @@ Definition lower'2@{i i' j j'} {A : Type@{i}} {B : A -> Type@{i'}}
   : forall x : A, B x
   := f.
 
-(** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreck havok. *)
+(** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreak havoc. *)
 #[global] Typeclasses Opaque lift' lower' lift'2 lower'2.
 
 Instance isequiv_lift'@{i j} (T : Type@{i})

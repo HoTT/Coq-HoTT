@@ -123,7 +123,7 @@ Section Abel.
     rapply Coeq_ind_beta_cglue.
   Defined.
 
-  (** We also have a recursion princple. *)
+  (** We also have a recursion principle. *)
   Definition Abel_rec (P : Type) `{IsHSet P} (a : G -> P)
     (c : forall x y z, a (x * (y * z)) = a (x * (z * y)))
     : Abel -> P.

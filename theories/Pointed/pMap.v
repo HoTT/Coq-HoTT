@@ -78,7 +78,7 @@ Proof.
   apply H.
 Defined.
 
-(** A alternative constructor to build a pHomotopy between maps into pForall *)
+(** A alternative constructor to build a [pHomotopy] between maps into [pForall] *)
 Definition Build_pHomotopy_pForall `{Funext} {A B : pType} {C : B -> pType}
   {f g : A ->* ppforall b, C b} (p : forall a, f a ==* g a)
   (q : p (point A) ==* phomotopy_path (point_eq f) @* (phomotopy_path (point_eq g))^*)

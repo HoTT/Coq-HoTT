@@ -6,4 +6,4 @@ Require Structure.IdentityPrinciple.
 
 Include Structure.Core.
 Include Structure.IdentityPrinciple.
-(** We don't want to make utf-8 notations the default, so we don't export them. *)
+(** We don't want to make UTF-8 notations the default, so we don't export them. *)

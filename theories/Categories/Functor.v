@@ -34,4 +34,4 @@ Include Functor.Pointwise.Core.
 (** We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)
 Require Functor.Pointwise.
 
-(** We don't want to make utf-8 notations the default, so we don't export them. *)
+(** We don't want to make UTF-8 notations the default, so we don't export them. *)

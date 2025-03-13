@@ -154,7 +154,7 @@ Instance is0gpd_grouphomomorphism {A B : AbGroup} : Is0Gpd (A $-> B)
 Instance is2graph_abgroup : Is2Graph AbGroup
   := is2graph_induced abgroup_group.
 
-(** AbGroup forms a 1Cat *)
+(** [AbGroup] forms a 1Cat *)
 Instance is1cat_abgroup : Is1Cat AbGroup
   := is1cat_induced _.
 
@@ -164,7 +164,7 @@ Instance hasmorext_abgroup `{Funext} : HasMorExt AbGroup
 Instance hasequivs_abgroup : HasEquivs AbGroup
   := hasequivs_induced _.
 
-(** Zero object of AbGroup *)
+(** Zero object of [AbGroup] *)
 
 Definition abgroup_trivial : AbGroup.
 Proof.
@@ -172,7 +172,7 @@ Proof.
   by intros [].
 Defined.
 
-(** AbGroup is a pointed category *)
+(** [AbGroup] is a pointed category *)
 Instance ispointedcat_abgroup : IsPointedCat AbGroup.
 Proof.
   apply Build_IsPointedCat with abgroup_trivial.

@@ -371,7 +371,7 @@ Section Reduction.
       exact (ap _ p).
   Defined.
 
-  (** Now we need to prove that the free group satisifes the unviersal property of the free group. *)
+  (** Now we need to prove that the free group satisfies the universal property of the free group. *)
   (** TODO: remove funext from here and universal property of free group *)
   #[export] Instance isfreegroupon_freegroup `{Funext}
     : IsFreeGroupOn A FreeGroup freegroup_in.

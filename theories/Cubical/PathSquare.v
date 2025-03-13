@@ -19,23 +19,23 @@ Local Unset Elimination Schemes.
         x01-----pi1-----x11
  *)
 
-(* Contents:
+(** Contents:
 
-  * Definition of PathSquare 
-  * Degenerate PathSquares as paths between paths
+  * Definition of [PathSquare]
+  * Degenerate [PathSquare]s as paths between paths
   * Flipping squares horizontally and vertically
-  * PathSquare transpose
-  * PathSquare inverse
-  * PathSquare rotations
+  * [PathSquare] transpose
+  * [PathSquare] inverse
+  * [PathSquare] rotations
   * Edge rewriting
   * Concatenation
   * Kan fillers
-  * natural squares from ap
+  * natural squares from [ap]
 
 *)
 
-(* Definition of PathSquare *)
-(* PathSquare left right up down *)
+(** Definition of [PathSquare] *)
+(** [PathSquare] left right up down *)
 Cumulative Inductive PathSquare {A} : forall a00 {a10 a01 a11 : A},
   a00 = a10 -> a01 = a11 -> a00 = a01 -> a10 = a11 -> Type
   := sq_id : forall {x : A},
@@ -50,7 +50,7 @@ Arguments PathSquare_ind {A} P f {_ _ _ _ _ _ _ _} _.
 Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
 Arguments PathSquare_rec {A} P f {_ _ _ _ _ _ _ _} _.
 
-(* PathSquare_ind is an equivalence, similar to how paths_ind is *)
+(** [PathSquare_ind] is an equivalence, similar to how [paths_ind] is *)
 Instance isequiv_PathSquare_ind `{Funext} {A}
   (P : forall (a00 a10 a01 a11 : A) (p : a00 = a10) (p0 : a01 = a11)
     (p1 : a00 = a01) (p2 : a10 = a11),
@@ -65,7 +65,7 @@ Proof.
   by intros [].
 Defined.
 
-(* PathSquares can be given by 2-dimensional paths *)
+(** [PathSquare]s can be given by 2-dimensional paths *)
 Definition equiv_sq_path {A} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
   {p0x : a00 = a01} {p1x : a10 = a11}
@@ -124,15 +124,15 @@ Notation sq_1G := equiv_sq_1G.
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.
 
-(* PathSquare horizontal reflexivity *)
+(** [PathSquare] horizontal reflexivity *)
 Definition sq_refl_h {A} {a0 a1 : A} (p : a0 = a1)
   : PathSquare p p 1 1 := sq_G1 1.
 
-(* PathSquare vertical reflexivity *)
+(** [PathSquare] vertical reflexivity *)
 Definition sq_refl_v {A} {a0 a1 : A} (p : a0 = a1)
   : PathSquare 1 1 p p := sq_1G 1.
 
-(* Horizontal flip *)
+(** Horizontal flip *)
 Definition equiv_sq_flip_h {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : PathSquare px0 px1 p0x p1x <~> PathSquare px1 px0 p0x^ p1x^.
@@ -145,7 +145,7 @@ Defined.
 
 Notation sq_flip_h := equiv_sq_flip_h.
 
-(* Vertical flip *)
+(** Vertical flip *)
 Definition equiv_sq_flip_v {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : PathSquare px0 px1 p0x p1x <~> PathSquare px0^ px1^ p1x p0x.
@@ -158,7 +158,7 @@ Defined.
 
 Notation sq_flip_v := equiv_sq_flip_v.
 
-(* Transpose of a square *)
+(** Transpose of a square *)
 
 (** We make a local definition that will never get unfolded *)
 Local Definition tr {A : Type} {a00 a10 a01 a11 : A}
@@ -297,7 +297,7 @@ Notation sq_cGGG := equiv_sq_cGGG.
 Section MovePaths.
   Context {A : Type} {x x00 x20 x02 x22 : A}
   {f10 : x00 = x20} {f12 : x02 = x22} {f01 : x00 = x02} {f21 : x20 = x22}.
-  (** Operations to move paths around a square. We define all these operations immediately as equvialences. The naming first number indicates in which argument the path that moves is on the left of the equivalence, and the second number where it is on the right. The equivalences are all set up so that on the right, there is no path inversion. For the [24] and [13] equivalences there is a path inverse on the left. The corresponding equivalences [42] and [31] are the symmetric versions of these, but the path inverse is in another place. *)
+  (** Operations to move paths around a square. We define all these operations immediately as equivalences. The naming first number indicates in which argument the path that moves is on the left of the equivalence, and the second number where it is on the right. The equivalences are all set up so that on the right, there is no path inversion. For the [24] and [13] equivalences there is a path inverse on the left. The corresponding equivalences [42] and [31] are the symmetric versions of these, but the path inverse is in another place. *)
 
   Definition equiv_sq_move_23 {f12'' : x02 = x} {f12' : x = x22} 
     : PathSquare f10 (f12'' @ f12') f01 f21 <~> PathSquare f10 f12' (f01 @ f12'') f21.
@@ -356,7 +356,7 @@ Notation sq_move_42 := equiv_sq_move_42.
 Notation sq_move_13 := equiv_sq_move_13.
 Notation sq_move_31 := equiv_sq_move_31.
 
-(* Depdent path product definition of PathSquare *)
+(* Dependent path product definition of [PathSquare] CoqDoc *)
 Definition equiv_sq_dp_prod {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : DPath (fun xy => fst xy = snd xy) (path_prod' p0x p1x) px0 px1
@@ -444,7 +444,7 @@ Section GroupoidLawsH.
 
 End GroupoidLawsH.
 
-(* PathSquare Kan fillers ~ Every open box has a lid *)
+(** [PathSquare] Kan fillers ~ Every open box has a lid *)
 
 Section Kan.
 
@@ -538,7 +538,7 @@ Proof.
   by destruct p.
 Defined.
 
-(* PathSquares respect products *)
+(** [PathSquare]s respect products *)
 Definition equiv_sq_prod {A B : Type} {a00 a10 a01 a11 : A} {px0 : a00 = a10}
   {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11} {b00 b10 b01 b11 : B}
   {qx0 : b00 = b10} {qx1 : b01 = b11} {q0x : b00 = b01} {q1x : b10 = b11}
@@ -559,28 +559,28 @@ Defined.
 
 Notation sq_prod := equiv_sq_prod.
 
-(* The natural square from an ap *)
+(** The natural square from an [ap] *)
 Definition ap_nat {A B} {f f' : A -> B} (h : f == f') {x y : A} (p : x = y)
   : PathSquare (ap f p) (ap f' p) (h x) (h y).
 Proof.
   by destruct p; apply sq_1G.
 Defined.
 
-(* The transpose of the natural square *)
+(** The transpose of the natural square *)
 Definition ap_nat' {A B} {f f' : A -> B} (h : f == f') {x y : A} (p : x = y)
   : PathSquare (h x) (h y) (ap f p) (ap f' p).
 Proof.
   by destruct p; apply sq_G1.
 Defined.
 
-(* ap_compose fits naturally into a square *)
+(** [ap_compose] fits naturally into a square *)
 Definition ap_compose_sq {A B C} (f : A -> B) (g : B -> C) {x y : A} (p : x = y)
   : PathSquare (ap (g o f) p) (ap g (ap f p)) 1 1 := sq_G1 (ap_compose f g p).
 
 Definition ap_idmap_sq {A} {x y : A} (p : x = y) : PathSquare (ap idmap p) p 1 1
   := sq_G1 (ap_idmap p).
 
-(* A DPath of a certain form can be turned into a square *)
+(** A [DPath] of a certain form can be turned into a square *)
 Definition equiv_sq_dp {A B : Type} {f g : A -> B} {a1 a2 : A} {p : a1 = a2}
   {q1 : f a1 = g a1} {q2 : f a2 = g a2}
   : DPath (fun x => f x = g x) p q1 q2 <~> PathSquare q1 q2 (ap f p) (ap g p).
@@ -591,7 +591,7 @@ Defined.
 
 Notation sq_dp := equiv_sq_dp.
 
-(* ap011 fits into a square *)
+(** [ap011] fits into a square *)
 Definition sq_ap011 {A B C} (f : A -> B -> C)
   {a a' : A} (p : a = a') {b b' : B} (q : b = b')
   : PathSquare (ap (fun x => f x b) p) (ap (fun x => f x b') p)

@@ -14,7 +14,7 @@ Set Asymmetric Patterns.
 Local Open Scope functor_scope.
 Local Open Scope category_scope.
 
-(** We define the precategory Δ of simplexes, or finite non-empty linear
+(** We define the precategory Δ of simplices, or finite non-empty linear
     orders *)
 
 Module Export Core.

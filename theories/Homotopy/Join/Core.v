@@ -134,7 +134,7 @@ Section Join.
     exact (Pushout_rec_beta_pglue _ _ _ _ (a, b)).
   Defined.
 
-  (** If [A] is ipointed, so is [Join A B]. *)
+  (** If [A] is pointed, so is [Join A B]. *)
   Definition pjoin (A : pType) (B : Type) : pType
     := [Join A B, joinl pt].
 
@@ -631,7 +631,7 @@ End FunctorJoin.
 
 (** * Symmetry of Join
 
-  We'll use the recursion equivalence above to prove the symmetry of Join, using the Yoneda lemma.  The idea is that [Join A B -> P] is equivalent (as a 0-groupoid) to [JoinRecData A B P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [JoinRecData B A P].  Going back along the first equivalence gets us to [Join B A -> P].  These equivalences are natural in [P], so the symmetry equivalence follows from the Yoneda lemma.  This is mainly meant as a warmup to proving the associativity of the join. *)
+  We'll use the recursion equivalence above to prove the symmetry of Join, using the Yoneda lemma.  The idea is that [Join A B -> P] is equivalent (as a 0-groupoid) to [JoinRecData A B P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [JoinRecData B A P].  Going back along the first equivalence gets us to [Join B A -> P].  These equivalences are natural in [P], so the symmetry equivalence follows from the Yoneda lemma.  This is mainly meant as a warm-up to proving the associativity of the join. *)
 
 Section JoinSym.
 

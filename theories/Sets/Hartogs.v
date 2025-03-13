@@ -98,7 +98,7 @@ Section Hartogs_Number.
   Infix "⊊" := proper_subtype_inclusion (at level 50) : Hartogs.
   Notation "(⊊)" := proper_subtype_inclusion : Hartogs.
 
-  (* The hartogs number of [A] embeds into the threefold power set of [A].  This preliminary injection also increases the universe level though. *)
+  (* The Hartogs number of [A] embeds into the threefold power set of [A].  This preliminary injection also increases the universe level though. *)
 
   Lemma hartogs_number'_injection
     : exists f : hartogs_number' -> (𝒫 (𝒫 (𝒫 A))), IsInjective f.

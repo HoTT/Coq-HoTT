@@ -665,7 +665,7 @@ End Descent.
 
 (** We saw above that given descent data [Pe] over a parallel pair [f g : B -> A], we obtained a type family [fam_cdescent Pe] over the coequalizer.  The flattening lemma describes the total space [sig (fam_cdescent Pe)] of this type family as a coequalizer of [sig (cd_fam Pe)] by a certain parallel pair.  This follows from the work above, which shows that [sig (fam_cdescent Pe)] has the same universal property as this coequalizer.
 
-The flattening lemma here also follows from the flattening lemma for GraphQuotients, avoiding the need for the material in Section Descent.  However, that material is likely useful in general, so we have given an independent proof of the flattening lemma.  See versions of the library before December 5, 2024 for the proof using the flattening lemma for GraphQuotients. *)
+The flattening lemma here also follows from the flattening lemma for [GraphQuotients], avoiding the need for the material in Section Descent.  However, that material is likely useful in general, so we have given an independent proof of the flattening lemma.  See versions of the library before December 5, 2024 for the proof using the flattening lemma for [GraphQuotients]. *)
 
 Section Flattening.
 

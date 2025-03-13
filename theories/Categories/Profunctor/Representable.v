@@ -10,7 +10,7 @@ Local Open Scope functor_scope.
 Local Open Scope profunctor_scope.
 
 Section representable.
-  (** Quoting nCatLab on profunctors:
+  (** Quoting nLab on profunctors:
 
       Every functor [f : C → D] induces two profunctors [D(1, f) : C ⇸ D] and [D(f, 1) : D ⇸ C], defined by [D(1, f)(d, c) = D(d, f(c))] and [D(f, 1)(c, d) = D(f(c), d)]. These profunctors are called representable (or sometimes one of them is corepresentable). *)
 

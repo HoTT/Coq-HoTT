@@ -27,9 +27,9 @@ Local Open Scope mc_mult_scope.
    | omega_K : forall (x y : list (H + K)),
       amal_eta (x ++ [inr mon_unit] ++ y) = amal_eta (x ++ y).
 
-  We will build this HIT up sucessively out of coequalizers. *)
+  We will build this HIT up successively out of coequalizers. *)
 
-(** We will call M [amal_type] and prefix all the constructors with [amal_] (for amalgmated free product). *)
+(** We will call M [amal_type] and prefix all the constructors with [amal_] (for amalgamated free product). *)
 
 Section FreeProduct.
 
@@ -756,7 +756,7 @@ Proof.
   exact (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
 
-(** The freeproduct is the coproduct in the category of groups. *)
+(** The free product is the coproduct in the category of groups. *)
 Instance hasbinarycoproducts : HasBinaryCoproducts Group.
 Proof.
   intros G H.

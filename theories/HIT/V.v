@@ -221,9 +221,9 @@ Notation "x ⊆ y" := (subset x y) : set_scope.
 
 
 (** ** Bisimulation relation *)
-(** The equality in V lives in Type@{U'}. We define the bisimulation relation which is a U-small resizing of the equality in V: it must live in HProp_U : Type{U'}, hence the codomain is HProp@{U}. We then prove that bisimulation is equality (bisim_equals_id), then use it to prove the key lemma monic_set_present. *)
+(** The equality in [V] lives in [Type@{U'}]. We define the bisimulation relation which is a [U]-small resizing of the equality in [V]: it must live in [HProp_U : Type{U'}], hence the codomain is [HProp@{U}]. We then prove that bisimulation is equality ([bisim_equals_id]), then use it to prove the key lemma [monic_set_present]. *)
 
-(* We define bisimulation by double induction on V. We first fix the first argument as set(A,f) and define bisim_aux : V -> HProp, by induction. This is the inner of the two inductions. *)
+(* We define [bisimulation] by double induction on [V]. We first fix the first argument as set(A,f) and define [bisim_aux : V -> HProp], by induction. This is the inner of the two inductions. *)
 Local Definition bisim_aux (A : Type) (f : A -> V) (H_f : A -> V -> HProp) : V -> HProp.
 Proof.
   apply V_rec' with
@@ -250,7 +250,7 @@ Proof.
         intros [a H3]. exists a. exact (transport (fun x => H_f a x) p^ H3).
 Defined.
 
-(* Then we define bisim : V -> (V -> HProp) by induction again *)
+(* Then we define [bisimulation : V -> (V -> HProp)] by induction again *)
 Definition bisimulation : V@{U' U} -> V@{U' U} -> HProp@{U}.
 Proof.
   refine (V_rec' (V -> HProp) _ bisim_aux _).
@@ -304,7 +304,7 @@ Defined.
 
 (** ** Canonical presentation of V-sets (Lemma 10.5.6) *)
 
-(** Using the regular kernel would lead to a universe inconsistency in the monic_set_present lemma later. *)
+(** Using the regular kernel would lead to a universe inconsistency in the [monic_set_present] lemma later. *)
 Definition ker_bisim {A} (f : A -> V) (x y : A) := (f x ~~ f y).
 
 Definition ker_bisim_is_ker {A} (f : A -> V)
@@ -314,7 +314,7 @@ Proof.
 Defined.
 
 Section MonicSetPresent_Uniqueness.
-(** Given u : V, we want to show that the representation u = @set Au mu, where Au is an hSet and mu is monic, is unique. *)
+(** Given [u : V], we want to show that the representation [u = @set Au mu], where [Au] is an hSet and [mu] is monic, is unique. *)
 
 Context {u : V} {Au Au': Type} {h : IsHSet Au} {h' : IsHSet Au'} {mu : Au -> V} {mono : IsEmbedding mu}
   {mu' : Au' -> V} {mono' : IsEmbedding mu'} {p : u = set mu} {p' : u = set mu'}.

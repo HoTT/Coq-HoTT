@@ -13,7 +13,7 @@ Local Open Scope natural_transformation_scope.
 Section identity.
   Variables C D : PreCategory.
 
-  (** There is an identity natrual transformation.  We create a number
+  (** There is an identity natural transformation.  We create a number
       of variants, for various uses. *)
   Section generalized.
     Variables F G : Functor C D.
