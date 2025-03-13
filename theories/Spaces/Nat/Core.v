@@ -149,7 +149,6 @@ Definition lt n m : Type0 := leq (S n) m.
 Existing Class lt.
 #[export] Hint Unfold lt : typeclass_instances.
 Infix "<" := lt : nat_scope.
-Instance lt_is_leq n m : leq n.+1 m -> lt n m | 100 := idmap.
 
 (** *** Greater than or equal To [>=] *)
 
@@ -157,7 +156,6 @@ Definition geq n m := leq m n.
 Existing Class geq.
 #[export] Hint Unfold geq : typeclass_instances.
 Infix ">=" := geq : nat_scope.
-Instance geq_is_leq n m : leq m n -> geq n m | 100 := idmap.
 
 (*** Greater Than [>] *)
 
@@ -165,7 +163,6 @@ Definition gt n m := lt m n.
 Existing Class gt.
 #[export] Hint Unfold gt : typeclass_instances.
 Infix ">" := gt : nat_scope.
-Instance gt_is_leq n m : leq m.+1 n -> gt n m | 100 := idmap.
 
 (** *** Combined comparison predicates *)
 
@@ -1139,7 +1136,7 @@ Hint Immediate nat_add_monotone : typeclass_instances.
 (** [nat_succ] is strictly monotone. *)
 Instance lt_succ {n m} : n < m -> n.+1 < m.+1 := _.
 
-Instance lt_succ_r {n m} : n < m -> n < m.+1 := _.
+Instance lt_succ_r {n m} : n < m -> n < m.+1 | 100 := _.
 
 (** Addition on the left is strictly monotone. *)
 Definition nat_add_l_strictly_monotone {n m} k

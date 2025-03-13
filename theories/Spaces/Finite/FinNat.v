@@ -72,11 +72,18 @@ Definition is_bounded_fin_to_nat@{} {n} (k : Fin n)
 Proof.
   induction n as [| n IHn].
   - elim k.
-  - destruct k as [k | []]; exact _.
+  - destruct k as [k | []].
+    + rapply lt_succ_r. (* Typeclass search finds a different solution, but we want this one. *)
+    + exact _.
 Defined.
 
 Definition fin_to_finnat {n} (k : Fin n) : FinNat n
   := (fin_to_nat k; is_bounded_fin_to_nat k).
+
+(** Because the proof of [is_bounded_fin_to_nat] was chosen carefully, we have the following definitional equality. *)
+Definition path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat {n} (k : Fin n)
+  : fin_to_finnat (fin_incl k) = incl_finnat (fin_to_finnat k)
+  := idpath.
 
 Fixpoint finnat_to_fin@{} {n : nat} : FinNat n -> Fin n
   := match n with
