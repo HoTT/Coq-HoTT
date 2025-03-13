@@ -724,14 +724,6 @@ Definition freeproduct_inl {G H : Group} : GroupHomomorphism G (FreeProduct G H)
 Definition freeproduct_inr {G H : Group} : GroupHomomorphism H (FreeProduct G H)
   := amal_inr.
 
-Definition FreeProduct_rec {G H K : Group} (f : G $-> K) (g : H $-> K)
-  : FreeProduct G H $-> K.
-Proof.
-  snapply (AmalgamatedFreeProduct_rec _ f g).
-  intros [].
-  exact (grp_homo_unit f @ (grp_homo_unit g)^).
-Defined.
-
 Definition freeproduct_ind_hprop {G H} (P : FreeProduct G H -> Type)
   `{forall x, IsHProp (P x)}
   (l : forall g, P (freeproduct_inl g))
@@ -754,6 +746,14 @@ Definition equiv_freeproduct_ind_homotopy {Funext : Funext} {G H K : Group}
     * (f $o freeproduct_inr $== f' $o freeproduct_inr)
     <~> f $== f'
   := equiv_amalgamatedfreeproduct_ind_homotopy _ _.
+
+Definition FreeProduct_rec {G H K : Group} (f : G $-> K) (g : H $-> K)
+  : FreeProduct G H $-> K.
+Proof.
+  srapply (AmalgamatedFreeProduct_rec _ f g).
+  intros [].
+  exact (grp_homo_unit f @ (grp_homo_unit g)^).
+Defined.
 
 Definition freeproduct_rec_beta_inl {G H K : Group}
   (f : G $-> K) (g : H $-> K)
