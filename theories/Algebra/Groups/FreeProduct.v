@@ -244,7 +244,8 @@ Section FreeProduct.
     (e : forall w, P (amal_eta w))
     : forall x, P x.
   Proof.
-    srapply amal_type_ind.
+    snrapply amal_type_ind.
+    1: exact _.
     1: exact e.
     all: intros; apply path_ishprop.
   Defined.
@@ -274,12 +275,15 @@ Section FreeProduct.
 
   (** Now for the group structure *)
 
+  (** We will frequently need to use that path types in [amal_type] are hprops, and so it speeds things up to create this instance.  It is fast to use [_] here, but when the terms are large below, it becomes slower. *)
+  Local Instance ishprop_paths_amal_type (x y : amal_type) : IsHProp (x = y) := _.
+
   (** The group operation is concatenation of the underlying list. Most of the work is spent showing that it respects the path constructors. *)
   Local Instance sgop_amal_type : SgOp amal_type.
   Proof.
     intros x y; revert x.
-    srapply amal_type_rec; intros x; revert y.
-    { srapply amal_type_rec; intros y.
+    snrapply amal_type_rec; only 1: exact _; intros x; revert y.
+    { snrapply amal_type_rec; only 1: exact _; intros y.
       1: exact (amal_eta (x ++ y)).
       { intros z h1 h2.
         refine (ap amal_eta _ @ _ @ ap amal_eta _^).
@@ -700,7 +704,7 @@ Section FreeProduct.
     - intros p; split; exact (p $@R _).
   Defined.
 
-End FreeProduct.
+End FreeProduct. (* Slow, ~0.1s *)
 
 Arguments amal_eta {G H K f g} x.
 Arguments amal_inl {G H K f g}.
@@ -735,6 +739,7 @@ Definition freeproduct_ind_hprop {G H} (P : FreeProduct G H -> Type)
   (Hop : forall x y, P x -> P y -> P (x * y))
   : forall x, P x
   := amalgamatedfreeproduct_ind_hprop P l r Hop.
+(* The above is slow, ~0.15s. *)
 
 Definition freeproduct_ind_homotopy {G H K : Group}
   {f f' : FreeProduct G H $-> K}

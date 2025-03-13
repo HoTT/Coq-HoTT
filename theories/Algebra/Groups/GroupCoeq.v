@@ -58,14 +58,14 @@ Proof.
   intros h.
   transitivity {b : A $-> C & (b $== h $o f) * (b $== h $o g)}%type.
   { nrefine (equiv_functor_sigma_id (fun b => equiv_sigma_prod0 _ _) oE _).
-    nrefine ((equiv_sigma_assoc' _ _)^-1 oE _).
+    symmetry.
+    nrefine (_ oE (equiv_sigma_assoc' _ _)).
     transitivity {fp' : {f' : A $-> C & f' = h $o f} & fp'.1 $== h $o g}.
-    - refine ((@equiv_contr_sigma _ _ _)^-1 oE _).
-      reflexivity.
     - exact (equiv_functor_sigma_pb
-        (equiv_functor_sigma_id (fun _ => equiv_path_grouphomomorphism))^-1). }
+        (equiv_functor_sigma_id (fun _ => equiv_path_grouphomomorphism))).
+    - exact (@equiv_contr_sigma _ _ (contr_basedpaths' (h $o f))). }
   snrapply equiv_functor_sigma_id.
-  intros h'.
+  intros h'; cbn beta.
   nrefine (equiv_freeproduct_ind_homotopy _ _ oE _).
   snrapply equiv_functor_prod'.
   - snrapply equiv_functor_forall_id; simpl; intros a.
@@ -80,7 +80,8 @@ Definition groupcoeq_ind_hprop {G H : Group} {f g : G $-> H}
   (Hop : forall x y, P x -> P y -> P (x * y))
   : forall x, P x.
 Proof.
-  srapply amalgamatedfreeproduct_ind_hprop.
+  snrapply amalgamatedfreeproduct_ind_hprop.
+  - exact _.
   - intros x.
     rewrite <- (right_identity x).
     refine ((amal_glue (freeproduct_inl x))^ #_).
@@ -88,8 +89,8 @@ Proof.
     rewrite (right_identity (f x)).
     exact (c (f x)).
   - exact c.
-  - exact Hop.
-Defined.
+  - exact Hop. (* Slow, ~0.09s *)
+Defined. (* Slow, ~0.09s *)
 
 Definition groupcoeq_ind_homotopy {G H K : Group} {f g : G $-> H}
   {h h' : GroupCoeq f g $-> K}
