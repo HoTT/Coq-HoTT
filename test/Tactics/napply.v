@@ -13,7 +13,7 @@ Fail Definition test1 : test1_type := ltac:(tapply exist).
 Succeed Definition test1 : test1_type := ltac:(napply exist; exact _).
 
 (** Testing deprecated tactics *)
-Fail Definition test1 : test1_type := ltac:(nrapply exist).
-Fail Definition test1 : test1_type := ltac:(snrapply exist).
-
-
+Fail #[warnings="+deprecated-tactic-notation-since-2025-03-11"]
+Definition test1 : test1_type := ltac:(nrapply exist).
+Fail #[warnings="+deprecated-tactic-notation-since-2025-03-11"]
+Definition test1 : test1_type := ltac:(snrapply exist).
