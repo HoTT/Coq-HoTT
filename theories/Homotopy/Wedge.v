@@ -4,7 +4,7 @@ Require Import Colimits.Pushout.
 Require Import WildCat.
 Require Import Homotopy.Suspension.
 Require Import Truncations.Core Truncations.Connectedness.
-Require Import Modalities.ReflectiveSubuniverse.
+Require Import Extensions Modalities.ReflectiveSubuniverse.
 
 Local Set Universe Minimization ToSet.
 
@@ -124,7 +124,7 @@ Definition wedge_ind_FFlr {X Y Z : pType} (f : X \/ Y -> Z) (g : Z -> X \/ Y)
   (l : g o f o wedge_inl == wedge_inl)
   (r : g o f o wedge_inr == wedge_inr)
   (w : ap g (ap f wglue) @ r pt = l pt @ wglue)
-  : g o f == idmap. 
+  : g o f == idmap.
 Proof.
   napply (wedge_ind _ l r); simpl.
   transport_paths FFlr.
@@ -422,35 +422,18 @@ Defined.
 
 (** ** Connectivity of wedge inclusion *)
 
-Definition conn_map_wedge_incl `{Univalence} {m n : trunc_index} (X Y : pType)
-  `{!IsConnected m.+1 X, !IsConnected n.+1 Y}
-  : IsConnMap (m +2+ n) (wedge_incl X Y).
-Proof.
-  rewrite trunc_index_add_comm.
-  apply conn_map_from_extension_elim.
-  intros P h d.
-  transparent assert (f : (forall x y, P (x, y))). 
-  { intros x y; revert y x.
-    rapply (wedge_incl_elim (n:=m) (m:=n)
-      (point Y) (point X) (fun y x => P (x, y))
-      (d o wedge_inl) (d o wedge_inr)).
-    rhs_V napply (apD d wglue).
-    rhs napply transport_compose.
-    napply (transport2 _ (p:=1) _^).
-    apply wedge_incl_beta_wglue. }
-  transparent assert (p : (forall x : X,
-    prod_ind P f (wedge_incl X Y (wedge_inl x)) = d (wedge_inl x))).
-  1: napply wedge_incl_comp1.
-  transparent assert (q : (forall y : Y,
-    prod_ind P f (wedge_incl X Y (wedge_inr y)) = d (wedge_inr y))).
-  1: napply wedge_incl_comp2.
-  transparent assert (pq
-    : (q pt = p pt @
-      ((transport2 P wedge_incl_beta_wglue^ (d (wedge_inl pt))
+Definition extension_wedge_incl {X Y : pType} (P : X * Y -> Type)
+  (d : forall a : X \/ Y, P (wedge_incl X Y a))
+  (f : forall (x : X) (y : Y), P (x, y))
+  (p : forall (x : X), prod_ind P f (wedge_incl X Y (wedge_inl x)) = d (wedge_inl x))
+  (q : forall (y : Y), prod_ind P f (wedge_incl X Y (wedge_inr y)) = d (wedge_inr y))
+  (pq : q pt
+    = p pt
+      @ ((transport2 P wedge_incl_beta_wglue^ (d (wedge_inl pt))
         @ (transport_compose P (wedge_incl X Y) wglue (d (pushl pt)))^)
-      @ apD d wglue))).
-  1: napply wedge_incl_comp3.
-  clearbody f p q pq.
+        @ apD d wglue))
+  : ExtensionAlong (wedge_incl X Y) P d.
+Proof.
   exists (prod_ind _ f).
   napply (wedge_ind _ p q).
   rhs napply pq.
@@ -479,4 +462,23 @@ Proof.
     rhs napply inv_pp.
     apply whiskerR.
     exact (transport2_V P wedge_incl_beta_wglue _).
+Defined.
+
+Definition conn_map_wedge_incl `{Univalence} {m n : trunc_index} (X Y : pType)
+  `{!IsConnected m.+1 X, !IsConnected n.+1 Y}
+  : IsConnMap (m +2+ n) (wedge_incl X Y).
+Proof.
+  rewrite trunc_index_add_comm.
+  apply conn_map_from_extension_elim.
+  intros P h d.
+  snapply extension_wedge_incl.
+  - intros x y; revert y x.
+    rapply (wedge_incl_elim _ _ (fun y x => P (x, y)) (d o wedge_inl) (d o wedge_inr)).
+    rhs_V napply (apD d wglue).
+    rhs napply transport_compose.
+    napply (transport2 _ (p:=1) _^).
+    apply wedge_incl_beta_wglue.
+  - napply wedge_incl_comp1.
+  - napply wedge_incl_comp2.
+  - napply wedge_incl_comp3.
 Defined.
