@@ -238,8 +238,8 @@ Tactic Notation "transport_paths" "lFFFr" := transport_paths transport_paths_lFF
 (* Tactic Notation "transport_paths" "FFFr" := lhs napply transport_paths_FFFr. *)
 Tactic Notation "transport_paths" "FFFr" :=
   match goal with
-  | [ |- transport (fun x => ?y = ?h (?gg (?f x))) ?p ?q = ?r ]
-    => lhs exact (transport_paths_FFFr (f:=f) (g:=gg) (h:=h) p q)
+  | [ |- transport (fun x => ?y = ?h (?g (?f x))) ?p ?q = ?r ]
+    => lhs exact (transport_paths_FFFr (f:=f) (g:=g) (h:=h) p q)
   end.
 
 Tactic Notation "transport_paths" "FFFlFr" := transport_paths transport_paths_FFFlFr.
