@@ -991,10 +991,10 @@ Proof.
 Defined.
 
 (** [n] divides the least common multiple of [n] and [m]. *) 
-Global Instance nat_divides_r_lcm_l n m : (n | nat_lcm n m) := _.
+Instance nat_divides_r_lcm_l n m : (n | nat_lcm n m) := _.
 
 (** [m] divides the least common multiple of [n] and [m]. *)
-Global Instance nat_divides_r_lcm_r n m : (m | nat_lcm n m).
+Instance nat_divides_r_lcm_r n m : (m | nat_lcm n m).
 Proof.
   unfold nat_lcm.
   rewrite nat_div_mul_l; only 2: exact _.
@@ -1002,7 +1002,7 @@ Proof.
 Defined.
 
 (** The least common multiple of [n] and [m] divides any multiple of [n] and [m]. *)
-Global Instance nat_divides_l_lcm n m k : (n | k) -> (m | k) -> (nat_lcm n m | k).
+Instance nat_divides_l_lcm n m k : (n | k) -> (m | k) -> (nat_lcm n m | k).
 Proof.
   intros H1 H2.
   destruct (equiv_leq_lt_or_eq (n:=0) (m:=n) _) as [lt_n | p];
