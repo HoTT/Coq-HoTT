@@ -8,26 +8,22 @@ Generalizable Variables A B f x y z.
 
 (** ** Path spaces *)
 
-(** The path spaces of a path space are not, of course, determined; they are just the
-    higher-dimensional structure of the original space. *)
+(** The path spaces of a path space are not, of course, determined; they are just the higher-dimensional structure of the original space. *)
 
-(** ** Transporting in path spaces.
+(** ** Transporting in path spaces *)
 
-   There are potentially a lot of these lemmas, so we adopt a uniform naming scheme:
+(* There are potentially a lot of these lemmas, so we adopt a uniform naming scheme:
 
-   - `l` means the left endpoint varies
-   - `r` means the right endpoint varies
-   - `F` means application of a function to that (varying) endpoint.
-*)
+- `l` means the left endpoint varies
+- `r` means the right endpoint varies
+- `F` means application of a function to that (varying) endpoint.
+
+Examples of usage can be found in test/Tactics/transport_paths.v *)
+
+(** *** 0 functions *)
 
 Definition transport_paths_l {A : Type} {x1 x2 y : A} (p : x1 = x2) (q : x1 = y)
   : transport (fun x => x = y) p q = p^ @ q.
-Proof.
-  destruct p, q; reflexivity.
-Defined.
-
-Definition transport_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1)
-  : transport (fun y => x = y) p q = q @ p.
 Proof.
   destruct p, q; reflexivity.
 Defined.
@@ -39,11 +35,35 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+Definition transport_paths_r {A : Type} {x y1 y2 : A} (p : y1 = y2) (q : x = y1)
+  : transport (fun y => x = y) p q = q @ p.
+Proof.
+  destruct p, q; reflexivity.
+Defined.
+
+(** *** 1 function *)
+
 Definition transport_paths_Fl {A B : Type} {f : A -> B} {x1 x2 : A} {y : B}
   (p : x1 = x2) (q : f x1 = y)
   : transport (fun x => f x = y) p q = (ap f p)^ @ q.
 Proof.
   destruct p, q; reflexivity.
+Defined.
+
+Definition transport_paths_Flr {A : Type} {f : A -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = x1)
+  : transport (fun x => f x = x) p q = (ap f p)^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_lFr {A : Type} {f : A -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = f x1)
+  : transport (fun x => x = f x) p q = p^ @ q @ (ap f p).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
 Definition transport_paths_Fr {A B : Type} {g : A -> B} {y1 y2 : A} {x : B}
@@ -53,11 +73,21 @@ Proof.
   destruct p. symmetry; apply concat_p1.
 Defined.
 
+(** *** 2 functions *)
+
 Definition transport_paths_FFl {A B C : Type} {f : A -> B} {g : B -> C}
   {x1 x2 : A} {y : C} (p : x1 = x2) (q : g (f x1) = y)
   : transport (fun x => g (f x) = y) p q = (ap g (ap f p))^ @ q.
 Proof.
   destruct p, q; reflexivity.
+Defined.
+
+Definition transport_paths_FFlr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : g (f x1) = x1)
+  : transport (fun x => g (f x) = x) p q = (ap g (ap f p))^ @ q @ p.
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
 Definition transport_paths_FlFr {A B : Type} {f g : A -> B} {x1 x2 : A}
@@ -77,51 +107,35 @@ Proof.
   exact ((ap_idmap _)^ @ (concat_1p _)^ @ (concat_p1 _)^).
 Defined.
 
-Definition transport_paths_Flr {A : Type} {f : A -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : f x1 = x1)
-  : transport (fun x => f x = x) p q = (ap f p)^ @ q @ p.
+Definition transport_paths_lFFr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = g (f x1))
+  : transport (fun x => x = g (f x)) p q = p^ @ q @ (ap g (ap f p)).
 Proof.
   destruct p; simpl.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
-Definition transport_paths_lFr {A : Type} {f : A -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : x1 = f x1)
-  : transport (fun x => x = f x) p q = p^ @ q @ (ap f p).
+Definition transport_paths_FFr {A B C : Type} {f : A -> B} {g : B -> C}
+  {x1 x2 : A} {y : C} (p : x1 = x2) (q : y = g (f x1))
+  : transport (fun x => y = g (f x)) p q = q @ (ap g (ap f p)).
 Proof.
-  destruct p; simpl.
-  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+  destruct p. symmetry; apply concat_p1.
 Defined.
 
-Definition transport_paths_FFlr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : g (f x1) = x1)
-  : transport (fun x => g (f x) = x) p q = (ap g (ap f p))^ @ q @ p.
+(** *** 3 functions *)
+
+Definition transport_paths_FFFl {A B C D : Type}
+  {f : A -> B} {g : B -> C} {h : C -> D} {x1 x2 : A} {y : D}
+  (p : x1 = x2) (q : h (g (f x1)) = y)
+  : transport (fun x => h (g (f x)) = y) p q = (ap h (ap g (ap f p)))^ @ q.
 Proof.
-  destruct p; simpl.
-  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+  destruct p, q; reflexivity.
 Defined.
 
 Definition transport_paths_FFFlr {A B C : Type}
   {f : A -> B} {g : B -> C} {h : C -> A} {x1 x2 : A}
   (p : x1 = x2) (q : h (g (f x1)) = x1)
   : transport (fun x => h (g (f x)) = x) p q = (ap h (ap g (ap f p)))^ @ q @ p.
-Proof.
-  destruct p; simpl.
-  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
-Defined.
-
-Definition transport_paths_FFFlFr {A B C D : Type}
-  {f : A -> B} {g : B -> C} {h : C -> D} {k : A -> D} {x1 x2 : A}
-  (p : x1 = x2) (q : h (g (f x1)) = k x1)
-  : transport (fun x => h (g (f x)) = k x) p q = (ap h (ap g (ap f p)))^ @ q @ (ap k p).
-Proof.
-  destruct p; simpl.
-  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
-Defined.
-
-Definition transport_paths_lFFr {A B : Type} {f : A -> B} {g : B -> A} {x1 x2 : A}
-  (p : x1 = x2) (q : x1 = g (f x1))
-  : transport (fun x => x = g (f x)) p q = p^ @ q @ (ap g (ap f p)).
 Proof.
   destruct p; simpl.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
@@ -140,6 +154,34 @@ Definition transport_paths_FlFFr {A B C : Type}
   {f : A -> C} {g : B -> C} {h : A -> B} {x1 x2 : A}
   (p : x1 = x2) (q : f x1 = g (h x1))
   : transport (fun x => f x = g (h x)) p q = (ap f p)^ @ q @ (ap g (ap h p)).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_lFFFr {A B C : Type}
+  {f : A -> B} {g : B -> C} {h : C -> A} {x1 x2 : A}
+  (p : x1 = x2) (q : x1 = h (g (f x1)))
+  : transport (fun x => x = h (g (f x))) p q = p^ @ q @ ap h (ap g (ap f p)).
+Proof.
+  destruct p; simpl.
+  exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
+Defined.
+
+Definition transport_paths_FFFr {A B C D : Type}
+  {f : A -> B} {g : B -> C} {h : C -> D} {x1 x2 : A} {y : D}
+  (p : x1 = x2) (q : y = h (g (f x1)))
+  : transport (fun x => y = h (g (f x))) p q = q @ ap h (ap g (ap f p)).
+Proof.
+  destruct p. symmetry; apply concat_p1.
+Defined.
+
+(** *** 4 functions *)
+
+Definition transport_paths_FFFlFr {A B C D : Type}
+  {f : A -> B} {g : B -> C} {h : C -> D} {k : A -> D} {x1 x2 : A}
+  (p : x1 = x2) (q : h (g (f x1)) = k x1)
+  : transport (fun x => h (g (f x)) = k x) p q = (ap h (ap g (ap f p)))^ @ q @ (ap k p).
 Proof.
   destruct p; simpl.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
@@ -169,20 +211,36 @@ Defined.
 Tactic Notation "transport_paths" uconstr(lemma) :=
   lhs napply lemma; apply moveR_Vp_p_inv.
 
-Tactic Notation "transport_paths" "Fl" := lhs napply transport_paths_Fl.
-Tactic Notation "transport_paths" "Fr" := lhs napply transport_paths_Fr.
+Tactic Notation "transport_paths'" uconstr(lemma) :=
+  lhs napply lemma; apply moveR_Vp.
 
+Tactic Notation "transport_paths" "l" := lhs napply transport_paths_l.
+Tactic Notation "transport_paths" "lr" := transport_paths transport_paths_lr.
+Tactic Notation "transport_paths" "r" := lhs napply transport_paths_r.
+
+Tactic Notation "transport_paths" "Fl" := transport_paths' transport_paths_Fl.
 Tactic Notation "transport_paths" "Flr" := transport_paths transport_paths_Flr.
 Tactic Notation "transport_paths" "lFr" := transport_paths transport_paths_lFr.
+Tactic Notation "transport_paths" "Fr" := lhs napply transport_paths_Fr.
 
+Tactic Notation "transport_paths" "FFl" := transport_paths' transport_paths_FFl.
 Tactic Notation "transport_paths" "FFlr" := transport_paths transport_paths_FFlr.
 Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
 Tactic Notation "transport_paths" "lFFr" := transport_paths transport_paths_lFFr.
+Tactic Notation "transport_paths" "FFr" := lhs napply transport_paths_FFr.
 
+Tactic Notation "transport_paths" "FFFl" := transport_paths' transport_paths_FFFl.
 Tactic Notation "transport_paths" "FFFlr" := transport_paths transport_paths_FFFlr.
 Tactic Notation "transport_paths" "FFlFr" := transport_paths transport_paths_FFlFr.
 Tactic Notation "transport_paths" "FlFFr" := transport_paths transport_paths_FlFFr.
-Tactic Notation "transport_paths" "lFFFr" := transport_paths transport_paths_lFFr.
+Tactic Notation "transport_paths" "lFFFr" := transport_paths transport_paths_lFFFr.
+(** Coq is unable to unify the 3 functions appearing here. We therefore help it a bit instead. *)
+(* Tactic Notation "transport_paths" "FFFr" := lhs napply transport_paths_FFFr. *)
+Tactic Notation "transport_paths" "FFFr" :=
+  match goal with
+  | [ |- transport (fun x => ?y = ?h (?g (?f x))) ?p ?q = ?r ]
+    => lhs exact (transport_paths_FFFr (f:=f) (g:=g) (h:=h) p q)
+  end.
 
 Tactic Notation "transport_paths" "FFFlFr" := transport_paths transport_paths_FFFlFr.
 Tactic Notation "transport_paths" "FFlFFr" := transport_paths transport_paths_FFlFFr.
