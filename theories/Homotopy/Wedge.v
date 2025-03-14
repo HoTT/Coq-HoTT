@@ -17,6 +17,9 @@ Definition Wedge (X Y : pType) : pType
 
 Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 
+Definition wglue {X Y : pType}
+  : pushl (point X) = (pushr (point Y)) :> (X \/ Y) := pglue tt.
+
 Definition wedge_inl {X Y} : X $-> X \/ Y.
 Proof.
   snapply Build_pMap.
@@ -29,11 +32,8 @@ Proof.
   snapply Build_pMap.
   - exact (fun x => pushr x).
   - symmetry.
-    by rapply pglue.
+    exact wglue.
 Defined.
-
-Definition wglue {X Y : pType}
-  : pushl (point X) = (pushr (point Y)) :> (X \/ Y) := pglue tt.
 
 (** Wedge recursion into an unpointed type. *)
 Definition wedge_rec' {X Y : pType} {Z : Type}
