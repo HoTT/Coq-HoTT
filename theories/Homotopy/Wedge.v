@@ -95,12 +95,11 @@ Definition wedge_incl_beta_wglue {X Y : pType}
   : ap (@wedge_incl X Y) wglue = 1.
 Proof.
   lhs_V napply eta_path_prod.
-  lhs napply ap011.
-  - lhs_V napply ap_compose.
+  napply (ap011 _ (x':=1) (y':=1)).
+  - lhs_V napply (ap_compose (wedge_incl X Y) _ wglue).
     napply wedge_rec_beta_wglue.
-  - lhs_V napply ap_compose.
+  - lhs_V napply (ap_compose (wedge_incl X Y) _ wglue).
     napply wedge_rec_beta_wglue.
-  - reflexivity.
 Defined.
 
 Definition wedge_ind {X Y : pType} (P : X \/ Y -> Type)
@@ -162,33 +161,21 @@ Proof.
   intros p q.
   snapply Build_pHomotopy.
   - napply (wedge_ind_FlFr p q).
-    lhs napply (whiskerL _ (dpoint_eq q)).
-    rhs napply (whiskerR (dpoint_eq p)).
-    clear p q.
+    lhs napply (1 @@ dpoint_eq q).
+    rhs napply (dpoint_eq p @@ 1).
+    clear p q; simpl.
+    rhs napply (((concat_1p _) @@ ap inverse (concat_1p _)) @@ 1).
     lhs napply concat_p_pp.
-    simpl.
     apply moveR_pV.
-    lhs napply whiskerL.
-    { napply whiskerR.
-      apply ap_V. }
-    lhs napply concat_p_pp.
-    lhs napply whiskerR.
-    1: apply concat_pV.
+    lhs napply (1 @@ (ap_V _ _ @@ 1)).
+    lhs napply concat_p_Vp.
     rhs napply concat_p_pp.
-    apply moveL_pM.
-    lhs_V napply concat_p1.
-    lhs napply concat_pp_p.
-    lhs_V napply whiskerL.
-    1: apply (inv_pp 1).
-    rhs napply whiskerL.
-    2: apply ap_V.
-    apply moveL_pV.
-    reflexivity.
-  - simpl; pelim p q.
-    f_ap.
-    1: apply concat_1p.
-    lhs napply inv_pp.
-    apply concat_p1.
+    rhs napply ((1 @@ ap_V _ _) @@ 1).
+    rhs napply (concat_pp_V _ _ @@ 1).
+    by apply moveL_pM.
+  - simpl.
+    lhs exact (dpoint_eq p); simpl.
+    exact (concat_1p _ @@ ap inverse (concat_1p _)).
 Defined.
 
 Instance hasbinarycoproducts : HasBinaryCoproducts pType.
@@ -215,10 +202,10 @@ Lemma wedge_pr1_inr {X Y} : wedge_pr1 $o (@wedge_inr X Y) $== pconst.
 Proof.
   snapply Build_pHomotopy.
   1: reflexivity.
-  rhs napply concat_p1.
-  rhs napply concat_p1.
-  rhs napply (ap_V _ wglue).
-  exact (inverse2 (wedge_rec_beta_wglue pmap_idmap pconst)^).
+  symmetry; simpl.
+  do 2 lhs napply concat_p1.
+  lhs napply (ap_V _ wglue).
+  exact (inverse2 (wedge_rec_beta_wglue pmap_idmap pconst)).
 Defined.
 
 Lemma wedge_pr2_inl {X Y} : wedge_pr2 $o (@wedge_inl X Y) $== pconst.
@@ -230,10 +217,10 @@ Lemma wedge_pr2_inr {X Y} : wedge_pr2 $o (@wedge_inr X Y) $== pmap_idmap.
 Proof.
   snapply Build_pHomotopy.
   1: reflexivity.
-  rhs napply concat_p1.
-  rhs napply concat_p1.
-  rhs napply (ap_V _ wglue).
-  exact (inverse2 (wedge_rec_beta_wglue pconst pmap_idmap)^).
+  symmetry; simpl.
+  do 2 lhs napply concat_p1.
+  lhs napply (ap_V _ wglue).
+  exact (inverse2 (wedge_rec_beta_wglue pconst pmap_idmap)).
 Defined.
 
 (** Wedge of an indexed family of pointed types *)
