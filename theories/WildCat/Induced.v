@@ -18,7 +18,7 @@ Section Induced_category.
   Local Instance isgraph_induced `{IsGraph B} : IsGraph A.
   Proof.
     napply Build_IsGraph.
-    intros a1 a2.
+    intros a1 a2. 
     exact (f a1 $-> f a2).
   Defined.
 

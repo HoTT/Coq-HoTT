@@ -38,7 +38,7 @@ Proof.
     eapply path_ishprop.
 Defined.
 
-Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
+#[export] Instance axiomK_isprop A : IsHProp (axiomK A) | 0.
 Proof.
   exact (istrunc_equiv_istrunc _ equiv_hset_axiomK).
 Defined.

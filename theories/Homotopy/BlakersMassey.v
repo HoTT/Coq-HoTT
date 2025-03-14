@@ -96,7 +96,7 @@ Section GBM.
 
     (** *** Left-hand codes *)
 
-    (** We enhance the the HFLL and ABFJ theorems by defining a version of code-left that doesn't depend on one map being surjective. *)
+    (** We enhance the HFLL and ABFJ theorems by defining a version of code-left that doesn't depend on one map being surjective. *)
 
     Section CodeLeft.
       Context {x0 x1 : X} (r : left x0 = left x1).

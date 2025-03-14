@@ -437,7 +437,7 @@ Section pseudo_semiring_order.
   exact strictly_order_reflecting_flip.
   Qed.
 
-  Global  Instance apartzero_mult_strong_cancel_l
+  #[export] Instance apartzero_mult_strong_cancel_l
     : forall z, PropHolds (z ≶ 0) -> StrongLeftCancellation (.*.) z.
   Proof.
   intros z Ez x y E. red in Ez.
@@ -602,12 +602,12 @@ Section full_pseudo_semiring_order.
     destruct (neg_mult_decompose x y E) as [[? ?]|[? ?]];auto.
   Qed.
 
-  #[export] Instance : forall (z : R), PropHolds (0 < z) -> OrderReflecting (z *.).
+  #[export] Instance OrderReflecting_left_mult : forall (z : R), PropHolds (0 < z) -> OrderReflecting (z *.).
   Proof.
   intros z E. exact full_pseudo_order_reflecting.
   Qed.
 
-  #[export] Instance: forall (z : R), PropHolds (0 < z) -> OrderReflecting (.* z).
+  #[export] Instance OrderReflecting_right_mult : forall (z : R), PropHolds (0 < z) -> OrderReflecting (.* z).
   Proof.
   intros. exact order_reflecting_flip.
   Qed.

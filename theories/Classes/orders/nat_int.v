@@ -147,7 +147,7 @@ Section another_semiring.
     `{PropHolds ((1 : R2) ≶ 0)}
     `{!IsSemiRingPreserving (f : R -> R2)}.
 
-  Instance: OrderPreserving f.
+  Instance OrderPreserving_SemiRing_Homomorphism : OrderPreserving f.
   Proof.
   repeat (split; try exact _).
   intros x y E. apply nat_int_le_plus in E. destruct E as [z E].
@@ -155,7 +155,7 @@ Section another_semiring.
   apply nonneg_plus_le_compat_r. apply to_semiring_nonneg.
   Qed.
 
-  #[export] Instance StrictlyOrderPreserving_semiring_homomorphism : StrictlyOrderPreserving f | 50.
+  #[export] Instance StrictlyOrderPreserving_SemiRing_Homomorphism : StrictlyOrderPreserving f | 50.
   Proof.
   repeat (split; try exact _).
   intros x y E. apply nat_int_lt_plus in E. destruct E as [z E].

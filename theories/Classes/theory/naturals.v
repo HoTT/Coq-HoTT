@@ -76,7 +76,7 @@ Section retract_is_nat.
   Section for_another_semirings.
     Context `{IsSemiCRing R}.
 
-    Instance: IsSemiRingPreserving (naturals_to_semiring N R ∘ f^-1) := {}.
+    Instance IsSemiRingPreserving_naturals_to_semiring : IsSemiRingPreserving (naturals_to_semiring N R ∘ f^-1) := {}.
 
     Context (h :  SR -> R) `{!IsSemiRingPreserving h}.
 
@@ -158,20 +158,20 @@ Section borrowed_from_nat.
   simpl. first [exact nat_plus_cancel_l@{U i}|exact nat_plus_cancel_l@{U}].
   Qed.
 
-  #[export] Instance: forall z : N, RightCancellation (+) z.
+  #[export] Instance RightCancellation_plus_nat : forall z : N, RightCancellation (+) z.
   Proof. intro. exact (right_cancel_from_left (+)). Qed.
 
-  #[export] Instance: forall z : N, PropHolds (z <> 0) -> LeftCancellation (.*.) z.
+  #[export] Instance LeftCancellation_plus_nat : forall z : N, PropHolds (z <> 0) -> LeftCancellation (.*.) z.
   Proof.
   refine (from_nat_stmt nat (fun s =>
     forall z : s, PropHolds (z <> 0) -> LeftCancellation mult z) _).
   simpl. exact nat_mult_cancel_l.
   Qed.
 
-  #[export] Instance: forall z : N, PropHolds (z <> 0) -> RightCancellation (.*.) z.
+  #[export] Instance RightCancellation_times_nat : forall z : N, PropHolds (z <> 0) -> RightCancellation (.*.) z.
   Proof. intros ? ?. exact (right_cancel_from_left (.*.)). Qed.
 
-  Instance nat_nontrivial: PropHolds ((1:N) <> 0).
+  Instance nat_nontrivial : PropHolds ((1:N) <> 0).
   Proof.
   refine (from_nat_stmt nat (fun s => PropHolds ((1:s) <> 0)) _).
   exact _.
@@ -202,7 +202,7 @@ Section borrowed_from_nat.
     apply S_inj in E. destruct (S_neq_0 _ E).
   Qed.
 
-  #[export] Instance: ZeroProduct N.
+  #[export] Instance ZeroProduct_N : ZeroProduct N.
   Proof.
   refine (from_nat_stmt nat (fun s => ZeroProduct s) _).
   simpl. red. exact mult_eq_zero.

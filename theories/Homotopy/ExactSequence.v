@@ -276,8 +276,8 @@ Proof.
   refine (conn_map_homotopic n (cxfib (cx_isexact)) _ _ _).
   intro u. srapply path_hfiber.
   { reflexivity. }
-  cbn. unfold moveR_equiv_V. rewrite !concat_1p, !concat_p1, ap_pp_p, ap_pp, (ap_pp k _ (eissect k (point Y'))), ap_V, <- !eisadj.
-  rewrite <- !ap_compose, concat_pp_p.
+  cbn. unfold moveR_equiv_V. rewrite !concat_1p, !concat_p1, ap_pp_p, ap_pp, (ap_pp k _ (eissect k (point Y'))), ap_V, <- !eisadj. 
+  rewrite <- !ap_compose, concat_pp_p. 
   rewrite (concat_A1p (eisretr k)), concat_pV_p.
   rewrite (concat_A1p (eisretr k)), concat_V_pp. reflexivity.
 Defined.
@@ -345,7 +345,7 @@ Instance isexact_purely_fiberseq {F X Y : pType} (fs : FiberSeq F X Y)
   : IsExact purely (i_fiberseq fs) fs.1.
 Proof.
   srapply Build_IsExact; [ srapply Build_pHomotopy | ].
-  - intros u; cbn.
+  - intros u; cbn. 
     exact ((fs.2 u).2).
   - apply moveL_pV. cbn.
     refine (concat_p1 _ @ _).
@@ -409,7 +409,7 @@ Instance isexact_ptr `{Univalence} (n : trunc_index)
   : IsExact (Tr n) (fmap (pTr n.+1) i) (fmap (pTr n.+1) f).
 Proof.
   exists (iscomplex_ptr n.+1 i f cx_isexact).
-  srefine (cancelR_conn_map (Tr n) (@tr n.+1 F)
+  srefine (cancelR_conn_map (Tr n) (@tr n.+1 F) 
     (@cxfib _ _ _ (fmap (pTr n.+1) i) (fmap (pTr n.+1) f) _)).
   { intros x; rapply isconnected_pred. }
   napply conn_map_homotopic.
@@ -471,7 +471,7 @@ Proof.
            (pequiv_pfiber _ _ (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))))^-1*)
           (((pfiber2_loops f) o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)))^-1*)
           _ (pfib i)).
-  refine (vinverse
+  refine (vinverse 
             ((loops_inv X) o*E
              (pfiber2_loops (pfib f)) o*E
              (pequiv_pfiber _ _ (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))))

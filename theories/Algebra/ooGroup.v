@@ -218,18 +218,18 @@ Section Subgroups.
   Definition in_coset : G -> G -> Type
     := fun g1 g2 => hfiber incl (g1 @ g2^).
 
-  Instance ishprop_in_coset : is_mere_relation G in_coset.
+  #[export] Instance ishprop_in_coset : is_mere_relation G in_coset.
   Proof.
     exact _.
   Defined.
 
-  Instance reflexive_coset : Reflexive in_coset.
+  #[export] Instance reflexive_coset : Reflexive in_coset.
   Proof.
     intros g.
     exact (1 ; grouphom_1 incl @ (concat_pV g)^).
   Defined.
 
-  Instance symmetric_coset : Symmetric in_coset.
+  #[export] Instance symmetric_coset : Symmetric in_coset.
   Proof.
     intros g1 g2 [h p].
     exists (h^).
