@@ -161,6 +161,7 @@ Require Export HoTT.Homotopy.HSpace.
 Require Export HoTT.Homotopy.ClassifyingSpace.
 Require Export HoTT.Homotopy.CayleyDickson.
 Require Export HoTT.Homotopy.EMSpace.
+Require Export HoTT.Homotopy.ExactSequence.
 Require Export HoTT.Homotopy.HSpaceS1.
 Require Export HoTT.Homotopy.Bouquet.
 Require Export HoTT.Homotopy.EncodeDecode.

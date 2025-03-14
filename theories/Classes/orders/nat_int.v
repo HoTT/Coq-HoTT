@@ -155,7 +155,7 @@ Section another_semiring.
   apply nonneg_plus_le_compat_r. apply to_semiring_nonneg.
   Qed.
 
-  #[export] Instance: StrictlyOrderPreserving f | 50.
+  #[export] Instance StrictlyOrderPreserving_semiring_homomorphism : StrictlyOrderPreserving f | 50.
   Proof.
   repeat (split; try exact _).
   intros x y E. apply nat_int_lt_plus in E. destruct E as [z E].

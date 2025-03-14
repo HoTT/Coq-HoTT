@@ -144,7 +144,7 @@ Section borrowed_from_nat.
   simpl. intros [|x];eauto.
   Qed.
 
-  #[export] Instance: Biinduction N.
+  #[export] Instance biinduction_nat : Biinduction N.
   Proof.
   hnf. intros P E0 ES.
   apply induction;trivial.
