@@ -417,60 +417,45 @@ Defined.
 Definition extension_wedge_incl {X Y : pType} (P : X * Y -> Type)
   (d : forall a : X \/ Y, P (wedge_incl X Y a))
   (f : forall (x : X) (y : Y), P (x, y))
-  (p : forall (x : X), prod_ind P f (wedge_incl X Y (wedge_inl x)) = d (wedge_inl x))
-  (q : forall (y : Y), prod_ind P f (wedge_incl X Y (wedge_inr y)) = d (wedge_inr y))
-  (pq : q pt
-    = p pt
-      @ ((transport2 P wedge_incl_beta_wglue^ (d (wedge_inl pt))
-        @ (transport_compose P (wedge_incl X Y) wglue (d (pushl pt)))^)
-        @ apD d wglue))
+  (p : forall (x : X), f x pt = d (wedge_inl x))
+  (q : forall (y : Y), f pt y = d (wedge_inr y))
+  (pq : p pt
+        = q pt
+            @ ((apD d wglue)^
+                 @ transport_compose_path_ap P (wedge_incl X Y) (wedge_incl_beta_wglue) _))
   : ExtensionAlong (wedge_incl X Y) P d.
 Proof.
   exists (prod_ind _ f).
   napply (wedge_ind _ p q).
-  rhs napply pq.
   lhs napply (transport_paths_FlFr_D wglue).
-  lhs napply concat_pp_p.
+  apply moveR_pM.
   apply moveR_Vp.
-  rhs napply concat_p_pp.
-  rhs napply concat_p_pp.
-  apply whiskerR.
   unshelve lhs napply ap_homotopic_id.
-  { intros x.
-    lhs napply transport_compose.
-    napply (transport2 _ (q:=1)).
-    apply wedge_incl_beta_wglue. }
-  cbn beta.
-  apply concat2.
-  - apply whiskerR.
-    symmetry.
-    lhs napply apD_compose.
-    apply whiskerL.
-    lhs_V napply (apD _ wedge_incl_beta_wglue^).
-    napply moveR_transport_V.
-    rhs napply (transport_paths_Fl wedge_incl_beta_wglue).
-    exact (concat_Vp _)^.
-  - symmetry.
-    rhs napply inv_pp.
-    apply whiskerR.
-    exact (transport2_V P wedge_incl_beta_wglue _).
+  1: exact (transport_compose_path_ap P (wedge_incl X Y) wedge_incl_beta_wglue).
+  change (prod_ind P f (wedge_incl X Y (pushl pt))) with (f pt pt).
+  apply moveR_pV.
+  rhs napply concat_pp_p.
+  rhs napply (1 @@ concat_pp_p _ _ _).
+  nrefine (_ @@ pq).
+  symmetry.
+  lhs napply apD_compose.
+  unfold transport_compose_path_ap.
+  apply whiskerL.
+  lhs napply (apD02 _ wedge_incl_beta_wglue).
+  apply concat_p1.
 Defined.
 
 Definition conn_map_wedge_incl `{Univalence} {m n : trunc_index} (X Y : pType)
   `{!IsConnected m.+1 X, !IsConnected n.+1 Y}
   : IsConnMap (m +2+ n) (wedge_incl X Y).
 Proof.
-  rewrite trunc_index_add_comm.
   apply conn_map_from_extension_elim.
   intros P h d.
   snapply extension_wedge_incl.
-  - intros x y; revert y x.
-    rapply (wedge_incl_elim _ _ (fun y x => P (x, y)) (d o wedge_inl) (d o wedge_inr)).
-    rhs_V napply (apD d wglue).
-    rhs napply transport_compose.
-    napply (transport2 _ (p:=1) _^).
-    apply wedge_incl_beta_wglue.
-  - napply wedge_incl_comp1.
+  - rapply (wedge_incl_elim _ _ (fun x y => P (x, y)) (d o wedge_inr) (d o wedge_inl)).
+    lhs_V exact (apD d wglue).
+    exact (transport_compose_path_ap P (wedge_incl X Y) wedge_incl_beta_wglue _).
   - napply wedge_incl_comp2.
+  - napply wedge_incl_comp1.
   - napply wedge_incl_comp3.
 Defined.
