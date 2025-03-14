@@ -14,7 +14,7 @@ Local Open Scope path_scope.
 
 (** * Classifying spaces of groups *)
 
-(* We define the Classifying space of a group to be the following HIT:
+(** We define the classifying space of a group to be the following HIT:
 
 <<
   HIT ClassifyingSpace (G : Group) : 1-Type
