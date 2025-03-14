@@ -60,6 +60,28 @@ Definition wedge_rec_beta_wglue {X Y Z : pType} (f : X $-> Z) (g : Y $-> Z)
   : ap (wedge_rec f g) wglue = point_eq f @ (point_eq g)^
   := Pushout_rec_beta_pglue _ f g _ tt.
 
+Definition wedge_rec_beta_inl {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
+  : wedge_rec f g o* wedge_inl ==* f.
+Proof.
+  snapply Build_pHomotopy.
+  1: reflexivity.
+  cbn.
+  symmetry; apply concat_pp_V.
+Defined.
+
+Definition wedge_rec_beta_inr {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
+  : wedge_rec f g o* wedge_inr ==* g.
+Proof.
+  snapply Build_pHomotopy.
+  1: reflexivity.
+  cbn -[wedge_rec].
+  rhs napply concat_pp_p.
+  rhs napply (ap_V _ _ @@ 1).
+  apply moveL_Vp.
+  lhs napply concat_p1.
+  napply wedge_rec_beta_wglue.
+Defined.
+
 Definition wedge_pr1 {X Y : pType} : X \/ Y $-> X
   := wedge_rec pmap_idmap pconst.
 
@@ -176,27 +198,10 @@ Proof.
   - exact (X \/ Y).
   - exact wedge_inl.
   - exact wedge_inr.
-  - intros Z f g.
-    by apply wedge_rec.
-  - intros Z f g.
-    snapply Build_pHomotopy.
-    1: reflexivity.
-    symmetry; apply concat_pp_V.
-  - intros Z f g.
-    snapply Build_pHomotopy.
-    1: reflexivity.
-    simpl.
-    apply moveL_pV.
-    apply moveL_pM.
-    refine (_ @ (ap_V _ (pglue tt))^).
-    apply moveR_Mp.
-    apply moveL_pV.
-    apply moveR_Vp.
-    lhs napply wedge_rec_beta_wglue.
-    f_ap; f_ap; symmetry.
-    apply concat_1p.
-  - intros Z f g p q.
-    by apply wedge_up.
+  - exact (@wedge_rec X Y).
+  - exact (@wedge_rec_beta_inl X Y).
+  - exact (@wedge_rec_beta_inr X Y).
+  - exact (wedge_up X Y).
 Defined.
 
 (** *** Lemmas about wedge functions *)
