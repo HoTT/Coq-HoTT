@@ -243,7 +243,7 @@ Section AmalgamatedFreeProduct.
     (e : forall w, P (amal_eta w))
     : forall x, P x.
   Proof.
-    snrapply amal_type_ind.
+    snapply amal_type_ind.
     1: exact _.
     1: exact e.
     all: intros; apply path_ishprop.
@@ -281,8 +281,8 @@ Section AmalgamatedFreeProduct.
   Local Instance sgop_amal_type : SgOp amal_type.
   Proof.
     intros x y; revert x.
-    snrapply amal_type_rec; only 1: exact _; intros x; revert y.
-    { snrapply amal_type_rec; only 1: exact _; intros y.
+    snapply amal_type_rec; only 1: exact _; intros x; revert y.
+    { snapply amal_type_rec; only 1: exact _; intros y.
       1: exact (amal_eta (x ++ y)).
       { intros z h1 h2.
         refine (ap amal_eta _ @ _ @ ap amal_eta _^).

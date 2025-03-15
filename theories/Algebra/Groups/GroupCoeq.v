@@ -13,7 +13,7 @@ Local Open Scope mc_mult_scope.
 
 Definition GroupCoeq {A B : Group} (f g : A $-> B) : Group.
 Proof.
-  nrapply (@AmalgamatedFreeProduct (FreeProduct A A) A B).
+  napply (@AmalgamatedFreeProduct (FreeProduct A A) A B).
   - exact (FreeProduct_rec (Id _) (Id _)).
   - exact (FreeProduct_rec f g).
 Defined.
@@ -28,9 +28,9 @@ Proof.
   intros x; simpl.
   rewrite <- (right_identity (f x)).
   rewrite <- (right_identity (g x)).
-  rhs_V nrapply (amal_glue (freeproduct_inr x)).
+  rhs_V napply (amal_glue (freeproduct_inr x)).
   symmetry.
-  nrapply (amal_glue (freeproduct_inl x)).
+  napply (amal_glue (freeproduct_inl x)).
 Defined.
 
 Definition groupcoeq_rec {A B C : Group} (f g : A $-> B)
@@ -38,7 +38,7 @@ Definition groupcoeq_rec {A B C : Group} (f g : A $-> B)
   : GroupCoeq f g $-> C.
 Proof.
   rapply (AmalgamatedFreeProduct_rec C (h $o f) h).
-  snrapply freeproduct_ind_homotopy.
+  snapply freeproduct_ind_homotopy.
   (** The goals generated are very simple, but we give explicit proofs with wild cat terms to stop Coq from unfolding terms when checking the proof. Note that the category of groups is definitionally associative. *)
   - refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).
     exact ((_ $@L freeproduct_rec_beta_inl _ _) $@ cat_idr _
@@ -54,7 +54,7 @@ Definition equiv_groupcoeq_rec `{Funext} {A B C : Group} (f g : A $-> B)
 Proof.
   nrefine (equiv_amalgamatedfreeproduct_rec C oE _).
   nrefine (equiv_sigma_symm _ oE _).
-  nrapply equiv_functor_sigma_id.
+  napply equiv_functor_sigma_id.
   intros h.
   transitivity {b : A $-> C & (b $== h $o f) * (b $== h $o g)}%type.
   { nrefine (equiv_functor_sigma_id (fun b => equiv_sigma_prod0 _ _) oE _).
@@ -64,13 +64,13 @@ Proof.
     - exact (equiv_functor_sigma_pb
         (equiv_functor_sigma_id (fun _ => equiv_path_grouphomomorphism))).
     - exact (@equiv_contr_sigma _ _ (contr_basedpaths' (h $o f))). }
-  snrapply equiv_functor_sigma_id.
+  snapply equiv_functor_sigma_id.
   intros h'; cbn beta.
   nrefine (equiv_freeproduct_ind_homotopy _ _ oE _).
-  snrapply equiv_functor_prod'.
-  - snrapply equiv_functor_forall_id; simpl; intros a.
+  snapply equiv_functor_prod'.
+  - snapply equiv_functor_forall_id; simpl; intros a.
     by rewrite 2 grp_unit_r.
-  - snrapply equiv_functor_forall_id; simpl; intros a.
+  - snapply equiv_functor_forall_id; simpl; intros a.
     by rewrite 2 grp_unit_r.
 Defined.
 
@@ -80,7 +80,7 @@ Definition groupcoeq_ind_hprop {G H : Group} {f g : G $-> H}
   (Hop : forall x y, P x -> P y -> P (x * y))
   : forall x, P x.
 Proof.
-  snrapply amalgamatedfreeproduct_ind_hprop.
+  snapply amalgamatedfreeproduct_ind_hprop.
   - exact _.
   - intros x.
     rewrite <- (right_identity x).
@@ -98,7 +98,7 @@ Definition groupcoeq_ind_homotopy {G H K : Group} {f g : G $-> H}
   : h $== h'.
 Proof.
   rapply (groupcoeq_ind_hprop _ r).
-  intros x y p q; by nrapply grp_homo_op_agree.
+  intros x y p q; by napply grp_homo_op_agree.
 Defined.
 
 Definition functor_groupcoeq
