@@ -18,10 +18,10 @@ Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 Definition wglue {X Y : pType}
   : pushl (point X) = (pushr (point Y)) :> (X \/ Y) := pglue tt.
 
-Definition wedge_inl {X Y : pType} : X $-> X \/ Y
+Definition wedge_inl {X Y : pType} : X ->* X \/ Y
   := Build_pMap _ _ pushl 1.
 
-Definition wedge_inr {X Y : pType} : Y $-> X \/ Y
+Definition wedge_inr {X Y : pType} : Y ->* X \/ Y
   := Build_pMap _ _ pushr wglue^.
 
 (** Wedge recursion into an unpointed type. *)
@@ -30,15 +30,15 @@ Definition wedge_rec' {X Y : pType} {Z : Type}
   : Wedge X Y -> Z
   := Pushout_rec Z f g (fun _ => w).
 
-Definition wedge_rec {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
-  : X \/ Y $-> Z
+Definition wedge_rec {X Y : pType} {Z : pType} (f : X ->* Z) (g : Y ->* Z)
+  : X \/ Y ->* Z
   := Build_pMap _ _ (wedge_rec' f g (point_eq f @ (point_eq g)^)) (point_eq f).
 
-Definition wedge_rec_beta_wglue {X Y Z : pType} (f : X $-> Z) (g : Y $-> Z)
+Definition wedge_rec_beta_wglue {X Y Z : pType} (f : X ->* Z) (g : Y ->* Z)
   : ap (wedge_rec f g) wglue = point_eq f @ (point_eq g)^
   := Pushout_rec_beta_pglue _ f g _ tt.
 
-Definition wedge_rec_beta_inl {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
+Definition wedge_rec_beta_inl {X Y : pType} {Z : pType} (f : X ->* Z) (g : Y ->* Z)
   : wedge_rec f g o* wedge_inl ==* f.
 Proof.
   snapply Build_pHomotopy.
@@ -47,7 +47,7 @@ Proof.
   exact (concat_pp_V 1 (point_eq f)).
 Defined.
 
-Definition wedge_rec_beta_inr {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
+Definition wedge_rec_beta_inr {X Y : pType} {Z : pType} (f : X ->* Z) (g : Y ->* Z)
   : wedge_rec f g o* wedge_inr ==* g.
 Proof.
   snapply Build_pHomotopy.
@@ -60,13 +60,13 @@ Proof.
   napply wedge_rec_beta_wglue.
 Defined.
 
-Definition wedge_pr1 {X Y : pType} : X \/ Y $-> X
+Definition wedge_pr1 {X Y : pType} : X \/ Y ->* X
   := wedge_rec pmap_idmap pconst.
 
-Definition wedge_pr2 {X Y : pType} : X \/ Y $-> Y
+Definition wedge_pr2 {X Y : pType} : X \/ Y ->* Y
   := wedge_rec pconst pmap_idmap.
 
-Definition wedge_incl (X Y : pType) : X \/ Y $-> X * Y
+Definition wedge_incl (X Y : pType) : X \/ Y ->* X * Y
   := pprod_corec _ wedge_pr1 wedge_pr2.
 
 Definition wedge_incl_beta_wglue {X Y : pType}
@@ -131,10 +131,10 @@ Proof.
 Defined.
 
 (** 1-universal property of wedge. *)
-Lemma wedge_up X Y Z (f g : X \/ Y $-> Z)
-  : f $o wedge_inl $== g $o wedge_inl
-  -> f $o wedge_inr $== g $o wedge_inr
-  -> f $== g.
+Lemma wedge_up X Y Z (f g : X \/ Y ->* Z)
+  : f o* wedge_inl ==* g o* wedge_inl
+  -> f o* wedge_inr ==* g o* wedge_inr
+  -> f ==* g.
 Proof.
   intros p q.
   snapply Build_pHomotopy.
@@ -171,12 +171,12 @@ Defined.
 
 (** *** Lemmas about wedge functions *)
 
-Lemma wedge_pr1_inl {X Y} : wedge_pr1 $o (@wedge_inl X Y) $== pmap_idmap.
+Lemma wedge_pr1_inl {X Y} : wedge_pr1 o* (@wedge_inl X Y) ==* pmap_idmap.
 Proof.
   reflexivity.
 Defined.
 
-Lemma wedge_pr1_inr {X Y} : wedge_pr1 $o (@wedge_inr X Y) $== pconst.
+Lemma wedge_pr1_inr {X Y} : wedge_pr1 o* (@wedge_inr X Y) ==* pconst.
 Proof.
   snapply Build_pHomotopy.
   1: reflexivity.
@@ -186,12 +186,12 @@ Proof.
   exact (inverse2 (wedge_rec_beta_wglue pmap_idmap pconst)).
 Defined.
 
-Lemma wedge_pr2_inl {X Y} : wedge_pr2 $o (@wedge_inl X Y) $== pconst.
+Lemma wedge_pr2_inl {X Y} : wedge_pr2 o* (@wedge_inl X Y) ==* pconst.
 Proof.
   reflexivity.
 Defined.
 
-Lemma wedge_pr2_inr {X Y} : wedge_pr2 $o (@wedge_inr X Y) $== pmap_idmap.
+Lemma wedge_pr2_inr {X Y} : wedge_pr2 o* (@wedge_inr X Y) ==* pmap_idmap.
 Proof.
   snapply Build_pHomotopy.
   1: reflexivity.
@@ -215,18 +215,18 @@ Proof.
 Defined.
 
 Definition fwedge_in' (I : Type) (X : I -> pType)
-  : forall i, X i $-> FamilyWedge I X
+  : forall i, X i ->* FamilyWedge I X
   := fun i => Build_pMap _ _ (fun x => pushl (i; x)) (pglue i).
 
 (** We have an inclusion map [pushl : sig X -> FamilyWedge X].  When [I] is pointed, so is [sig X], and then this inclusion map is pointed. *)
 Definition fwedge_in (I : pType) (X : I -> pType)
-  : psigma (pointed_fam X) $-> FamilyWedge I X
+  : psigma (pointed_fam X) ->* FamilyWedge I X
   := Build_pMap _ _ pushl (pglue pt).
 
 (** Recursion principle for the wedge of an indexed family of pointed types. *)
 Definition fwedge_rec (I : Type) (X : I -> pType) (Z : pType)
-  (f : forall i, X i $-> Z)
-  : FamilyWedge I X $-> Z.
+  (f : forall i, X i ->* Z)
+  : FamilyWedge I X ->* Z.
 Proof.
   snapply Build_pMap.
   - snapply Pushout_rec.
@@ -273,7 +273,7 @@ Defined.
 
 (** Wedge inclusions into the product can be defined if the indexing type has decidable paths. This is because we need to choose which factor a given wedge summand should land in. *)
 Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -> pType)
-  : FamilyWedge I X $-> pproduct X
+  : FamilyWedge I X ->* pproduct X
   := cat_coprod_prod X.
 
 (** ** The pinch map on the suspension *)
@@ -308,7 +308,7 @@ This is the image to keep in mind:
 Note that this is only a conceptual picture as we aren't working with "reduced suspensions". This means we have to track back along [merid pt] making this map a little trickier to imagine. *)
 
 (** The pinch map for a suspension. *)
-Definition psusp_pinch (X : pType) : psusp X $-> psusp X \/ psusp X.
+Definition psusp_pinch (X : pType) : psusp X ->* psusp X \/ psusp X.
 Proof.
   refine (Build_pMap _ _ (Susp_rec pt pt _) idpath).
   intros x.
@@ -327,7 +327,7 @@ Defined.
 
 (** Doing wedge projections on the pinch map gives the identity. *)
 Definition wedge_pr1_psusp_pinch {X}
-  : wedge_pr1 $o psusp_pinch X $== Id (psusp X).
+  : wedge_pr1 o* psusp_pinch X ==* @pmap_idmap (psusp X).
 Proof.
   snapply Build_pHomotopy.
   - snapply Susp_ind_FlFr.
@@ -358,7 +358,7 @@ Proof.
 Defined.
 
 Definition wedge_pr2_psusp_pinch {X}
-  : wedge_pr2 $o psusp_pinch X $== Id (psusp X).
+  : wedge_pr2 o* psusp_pinch X ==* @pmap_idmap (psusp X).
 Proof.
   snapply Build_pHomotopy.
   - snapply Susp_ind_FlFr.
