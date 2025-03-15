@@ -52,7 +52,7 @@ Proof.
 intros ? E. rewrite <-E. trivial.
 Qed.
 
-#[export] Instance: IsStrongInjective (-).
+#[export] Instance IsStrongInjective_FieldNegation: IsStrongInjective (-).
 Proof.
 repeat (split; try exact _); intros x y E.
 - apply (strong_extensionality (+ x + y)).
@@ -67,7 +67,7 @@ repeat (split; try exact _); intros x y E.
   apply symmetry;trivial.
 Qed.
 
-#[export] Instance: IsStrongInjective (//).
+#[export] Instance IsStrongInjective_FieldDivision: IsStrongInjective (//).
 Proof.
 repeat (split; try exact _); intros x y E.
 - apply (strong_extensionality (x.1 *.)).
@@ -82,7 +82,7 @@ repeat (split; try exact _); intros x y E.
   rewrite mult_1_l,mult_1_r. apply symmetry;trivial.
 Qed.
 
-#[export] Instance: forall z, StrongLeftCancellation (+) z.
+#[export] Instance StrongLeftCancellation_plus_field: forall z, StrongLeftCancellation (+) z.
 Proof.
 intros z x y E. apply (strong_extensionality (+ -z)).
 do 2 rewrite (commutativity (f:=plus) z _),
@@ -90,12 +90,12 @@ do 2 rewrite (commutativity (f:=plus) z _),
 trivial.
 Qed.
 
-#[export] Instance: forall z, StrongRightCancellation (+) z.
+#[export] Instance StrongRightCancellation_plus_field : forall z, StrongRightCancellation (+) z.
 Proof.
 intros. exact (strong_right_cancel_from_left (+)).
 Qed.
 
-#[export] Instance: forall z, PropHolds (z ≶ 0) -> StrongLeftCancellation (.*.) z.
+#[export] Instance StrongLeftCancellation_times_field : forall z, PropHolds (z ≶ 0) -> StrongLeftCancellation (.*.) z.
 Proof.
 intros z Ez x y E. red in Ez.
 rewrite !(commutativity z).
@@ -104,7 +104,7 @@ rewrite <-!simple_associativity, !reciperse_alt.
 rewrite !mult_1_r;trivial.
 Qed.
 
-#[export] Instance: forall z, PropHolds (z ≶ 0) -> StrongRightCancellation (.*.) z.
+#[export] Instance StrongRightCancellation_times_field : forall z, PropHolds (z ≶ 0) -> StrongRightCancellation (.*.) z.
 Proof.
 intros. exact (strong_right_cancel_from_left (.*.)).
 Qed.
@@ -130,7 +130,7 @@ rewrite <-simple_associativity, reciperse_alt, mult_1_r, mult_0_l.
 trivial.
 Qed.
 
-Instance: NoZeroDivisors F.
+Instance NoZeroDivisors_Field : NoZeroDivisors F.
 Proof.
 intros x [x_nonzero [y [y_nonzero E]]].
 assert (~ ~ apart y 0) as Ey.
@@ -142,9 +142,9 @@ assert (~ ~ apart y 0) as Ey.
   apply mult_0_l.
 Qed.
 
-#[export] Instance : IsIntegralDomain F := {}.
+#[export] Instance IsIntegralDomain_Field : IsIntegralDomain F := {}.
 
-#[export] Instance apart_0_sig_apart_0: forall (x : ApartZero F), PropHolds (x.1 ≶ 0).
+#[export] Instance apart_0_sig_apart_0 : forall (x : ApartZero F), PropHolds (x.1 ≶ 0).
 Proof.
 intros [??];trivial.
 Qed.
@@ -296,7 +296,7 @@ Section morphisms.
 
   (* We have the following for morphisms to non-trivial strong rings as well.
     However, since we do not have an interface for strong rings, we ignore it. *)
-  #[export] Instance: IsStrongInjective f.
+  #[export] Instance IsStrongInjective_FieldHomomorphism : IsStrongInjective f.
   Proof.
   apply strong_injective_preserves_0.
   intros x Ex.
