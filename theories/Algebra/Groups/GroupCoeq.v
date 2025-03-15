@@ -13,7 +13,7 @@ Local Open Scope mc_mult_scope.
 
 Definition GroupCoeq {A B : Group} (f g : A $-> B) : Group.
 Proof.
-  nrapply (AmalgamatedFreeProduct (FreeProduct A A) A B).
+  nrapply (@AmalgamatedFreeProduct (FreeProduct A A) A B).
   - exact (FreeProduct_rec (Id _) (Id _)).
   - exact (FreeProduct_rec f g).
 Defined.
@@ -52,7 +52,7 @@ Defined.
 Definition equiv_groupcoeq_rec `{Funext} {A B C : Group} (f g : A $-> B)
   : {h : B $-> C & h $o f $== h $o g} <~> (GroupCoeq f g $-> C).
 Proof.
-  nrefine (equiv_amalgamatedfreeproduct_rec _ _ _ _ _ _ oE _).
+  nrefine (equiv_amalgamatedfreeproduct_rec C oE _).
   nrefine (equiv_sigma_symm _ oE _).
   nrapply equiv_functor_sigma_id.
   intros h.
