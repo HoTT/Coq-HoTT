@@ -1,7 +1,7 @@
 Require Import Basics Types.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Colimits.Pushout.
-Require Import WildCat.
+Require Import WildCat.Coproducts WildCat.Products.
 Require Import Homotopy.Suspension.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Extensions Modalities.ReflectiveSubuniverse.
@@ -10,7 +10,7 @@ Require Import Extensions Modalities.ReflectiveSubuniverse.
 
 Local Open Scope pointed_scope.
 
-Definition Wedge@{i j k} (X : pType@{i}) (Y : pType@{j}) : pType@{k}
+Definition Wedge@{i j k | i <= k, j <= k} (X : pType@{i}) (Y : pType@{j}) : pType@{k}
   := [Pushout@{Set i j k} (fun _ : Unit => point X) (fun _ => point Y), pushl (point X)].
 
 Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
@@ -132,11 +132,10 @@ Defined.
 
 (** 1-universal property of wedge. *)
 Lemma wedge_up X Y Z (f g : X \/ Y ->* Z)
-  : f o* wedge_inl ==* g o* wedge_inl
-  -> f o* wedge_inr ==* g o* wedge_inr
-  -> f ==* g.
+  (p : f o* wedge_inl ==* g o* wedge_inl)
+  (q : f o* wedge_inr ==* g o* wedge_inr)
+  : f ==* g.
 Proof.
-  intros p q.
   snapply Build_pHomotopy.
   - napply (wedge_ind_FlFr p q).
     lhs napply (1 @@ dpoint_eq q).
