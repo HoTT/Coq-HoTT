@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.LaxComma.Utf8</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.LaxComma.Utf8</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab849"></a><h1 class="section">Unicode notations for comma categories</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.LaxComma.Core.html#"><span class="id" title="library">LaxComma.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Categories.LaxComma.Notations.html#"><span class="id" title="library">LaxComma.Notations</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Utf8.html#"><span class="id" title="library">Basics.Utf8</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Set some notations for printing 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="66879e1dcdf53649370984f2d4697c39" class="idref" href="#66879e1dcdf53649370984f2d4697c39"><span class="id" title="notation">&quot;</span></a>'CAT' ⇓ a" := (@<a class="idref" href="HoTT.Categories.LaxComma.Core.html#lax_slice_category_over"><span class="id" title="definition">lax_slice_category_over</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">_</span>) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="b109ea0d22101d7167ed1188c2d0ed75" class="idref" href="#b109ea0d22101d7167ed1188c2d0ed75"><span class="id" title="notation">&quot;</span></a>a ⇓ 'CAT'" := (@<a class="idref" href="HoTT.Categories.LaxComma.Core.html#lax_coslice_category_over"><span class="id" title="definition">lax_coslice_category_over</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">_</span>) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="ce7265ab1e0799b55fd06b29254896d8" class="idref" href="#ce7265ab1e0799b55fd06b29254896d8"><span class="id" title="notation">&quot;</span></a>x ⇓ F" := (<a class="idref" href="HoTT.Categories.LaxComma.Core.html#lax_coslice_category"><span class="id" title="definition">lax_coslice_category</span></a> <span class="id" title="var">x</span> <span class="id" title="var">F</span>) (<span class="id" title="var">only</span> <span class="id" title="var">printing</span>) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="ce7265ab1e0799b55fd06b29254896d8" class="idref" href="#ce7265ab1e0799b55fd06b29254896d8"><span class="id" title="notation">&quot;</span></a>F ⇓ x" := (<a class="idref" href="HoTT.Categories.LaxComma.Core.html#lax_slice_category"><span class="id" title="definition">lax_slice_category</span></a> <span class="id" title="var">x</span> <span class="id" title="var">F</span>) (<span class="id" title="var">only</span> <span class="id" title="var">printing</span>) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="ce7265ab1e0799b55fd06b29254896d8" class="idref" href="#ce7265ab1e0799b55fd06b29254896d8"><span class="id" title="notation">&quot;</span></a>S ⇓ T" := (<a class="idref" href="HoTT.Categories.LaxComma.Core.html#lax_comma_category"><span class="id" title="definition">lax_comma_category</span></a> <span class="id" title="var">S</span> <span class="id" title="var">T</span>) (<span class="id" title="var">only</span> <span class="id" title="var">printing</span>) : <span class="id" title="var">category_scope</span>.<br/>
+</div>
+
+<div class="doc">
+Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="ce7265ab1e0799b55fd06b29254896d8" class="idref" href="#ce7265ab1e0799b55fd06b29254896d8"><span class="id" title="notation">&quot;</span></a>S ⇓ T" := (<a class="idref" href="HoTT.Categories.LaxComma.Notations.html#get_LCC"><span class="id" title="definition">get_LCC</span></a> <span class="id" title="var">S</span> <span class="id" title="var">T</span>) : <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="47bfd30a2434a841bcfcd090f81ea208" class="idref" href="#47bfd30a2434a841bcfcd090f81ea208"><span class="id" title="notation">&quot;</span></a>'CAT' ⇑ a" := (@<a class="idref" href="HoTT.Categories.LaxComma.Core.html#oplax_slice_category_over"><span class="id" title="definition">oplax_slice_category_over</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">_</span>) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="fcbc6dca7e624fe768a25697b7b9479c" class="idref" href="#fcbc6dca7e624fe768a25697b7b9479c"><span class="id" title="notation">&quot;</span></a>a ⇑ 'CAT'" := (@<a class="idref" href="HoTT.Categories.LaxComma.Core.html#oplax_coslice_category_over"><span class="id" title="definition">oplax_coslice_category_over</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">_</span>) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="04fe969a1f670c12b65c9f5f3a8247a1" class="idref" href="#04fe969a1f670c12b65c9f5f3a8247a1"><span class="id" title="notation">&quot;</span></a>x ⇑ F" := (<a class="idref" href="HoTT.Categories.LaxComma.Core.html#oplax_coslice_category"><span class="id" title="definition">oplax_coslice_category</span></a> <span class="id" title="var">x</span> <span class="id" title="var">F</span>) (<span class="id" title="var">only</span> <span class="id" title="var">printing</span>) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="04fe969a1f670c12b65c9f5f3a8247a1" class="idref" href="#04fe969a1f670c12b65c9f5f3a8247a1"><span class="id" title="notation">&quot;</span></a>F ⇑ x" := (<a class="idref" href="HoTT.Categories.LaxComma.Core.html#oplax_slice_category"><span class="id" title="definition">oplax_slice_category</span></a> <span class="id" title="var">x</span> <span class="id" title="var">F</span>) (<span class="id" title="var">only</span> <span class="id" title="var">printing</span>) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="04fe969a1f670c12b65c9f5f3a8247a1" class="idref" href="#04fe969a1f670c12b65c9f5f3a8247a1"><span class="id" title="notation">&quot;</span></a>S ⇑ T" := (<a class="idref" href="HoTT.Categories.LaxComma.Core.html#oplax_comma_category"><span class="id" title="definition">oplax_comma_category</span></a> <span class="id" title="var">S</span> <span class="id" title="var">T</span>) (<span class="id" title="var">only</span> <span class="id" title="var">printing</span>) : <span class="id" title="var">category_scope</span>.<br/>
+</div>
+
+<div class="doc">
+Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="04fe969a1f670c12b65c9f5f3a8247a1" class="idref" href="#04fe969a1f670c12b65c9f5f3a8247a1"><span class="id" title="notation">&quot;</span></a>S ⇑ T" := (<a class="idref" href="HoTT.Categories.LaxComma.Notations.html#get_OLCC"><span class="id" title="definition">get_OLCC</span></a> <span class="id" title="var">S</span> <span class="id" title="var">T</span>) : <span class="id" title="var">category_scope</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

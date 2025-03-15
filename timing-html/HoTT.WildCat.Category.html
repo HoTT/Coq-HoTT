@@ -1,0 +1,125 @@
+<html>
+<head>
+<title>Category.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Category.v</h1>
+
+<div class="code" title="File: Category.v
+Line: 1
+Time: 0.019s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture.</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 1
+Time: 0.011s">
+<div class="time" style="width: 57.894736842105%"></div>
+<pre>
+Require Import WildCat.Core WildCat.NatTrans WildCat.FunctorCat.</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Category of categories *)
+
+(** TODO: make into a bicategory *)
+
+(** ** Definition *)
+
+(** A category is a [Type] together with a proof that it is a 1-category. *)</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 10
+Time: 0.001s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Record Category := {
+  category_carrier :&gt; Type;
+  isgraph_category_carrier :: IsGraph category_carrier;
+  is01cat_category_carrier :: Is01Cat category_carrier;
+  is2graph_category_carrier :: Is2Graph category_carrier;
+  is1cat_category_carrier :: Is1Cat category_carrier
+}.</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Morphisms of categories are given by functors. *)</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Instance isgraph_cat : IsGraph Category
+  := { Hom A B := Fun11 A B }.</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** 2-morphisms of categories are given by natural transformations. *)</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is2graph_cat : Is2Graph Category
+  := fun A B =&gt; _.</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** 3-morphisms of categories are given by "wild modifications" - the underlying data of a modification, subject to no coherence conditions. *)</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Instance is3graph_cat : Is3Graph Category
+  := fun A B =&gt; _.</pre>
+</div>
+<div class="code" title="File: Category.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

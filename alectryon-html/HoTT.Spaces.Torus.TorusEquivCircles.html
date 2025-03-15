@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>TorusEquivCircles.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk0"><span class="kn">Require Import</span> Basics Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Cubical.DPath Cubical.PathSquare Cubical.DPathSquare
+  Cubical.PathCube Cubical.DPathCube.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Spaces.Circle Spaces.Torus.Torus.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** In this file we prove that the torus is equivalent to the product of two circles. *)</span>
+
+<span class="sd">(** Here is a cube filler for help with circle recursion into the torus *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk1"><span class="kn">Definition</span> <span class="nf">c2t_square_and_cube</span>
+  : {s : PathSquare loop_a loop_a
+      (ap (Circle_rec _ tbase loop_b) loop)
+      (ap (Circle_rec _ tbase loop_b) loop)
+    &amp;  PathCube s surf hr hr
+       (sq_G1 (Circle_rec_beta_loop _ _ _))
+       (sq_G1 (Circle_rec_beta_loop _ _ _))}.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">{s
+: PathSquare loop_a loop_a
+    (ap (Circle_rec Torus tbase loop_b) loop)
+    (ap (Circle_rec Torus tbase loop_b) loop) &amp;
+PathCube s surf hr hr
+  (sq_G1 (Circle_rec_beta_loop Torus tbase loop_b))
+  (sq_G1 (Circle_rec_beta_loop Torus tbase loop_b))}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">{s
+: PathSquare loop_a loop_a
+    (ap (Circle_rec Torus tbase loop_b) loop)
+    (ap (Circle_rec Torus tbase loop_b) loop) &amp;
+PathCube s surf hr hr
+  (sq_G1 (Circle_rec_beta_loop Torus tbase loop_b))
+  (sq_G1 (Circle_rec_beta_loop Torus tbase loop_b))}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> cu_fill_left.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We define the map from the Torus to the Circles *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk3"><span class="kn">Definition</span> <span class="nf">t2c</span> : Torus -&gt; Circle * Circle.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Torus -&gt; Circle * Circle</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Torus -&gt; Circle * Circle</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk5">snapply Torus_rec.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle * Circle</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nl">?pb</span> = <span class="nl">?pb</span></div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nl">?pb</span> = <span class="nl">?pb</span></div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">PathSquare <span class="nl">?pla</span> <span class="nl">?pla</span> <span class="nl">?plb</span> <span class="nl">?plb</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk6">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle * Circle</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (base, base). <span class="c">(* The point of the torus is taken to (base, base *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk7">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(base, base) = (base, base)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (path_prod&#39; loop <span class="mi">1</span>). <span class="c">(* loop_a is taken to loop in the first *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk8">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(base, base) = (base, base)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (path_prod&#39; <span class="mi">1</span> loop). <span class="c">(* loop_b is taken to loop in the second *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk9">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">PathSquare (path_prod&#39; loop <span class="mi">1</span>) (path_prod&#39; loop <span class="mi">1</span>)
+  (path_prod&#39; <span class="mi">1</span> loop) (path_prod&#39; <span class="mi">1</span> loop)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (sq_prod (hr, vr)). <span class="c">(* The square is the obvious product of squares *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We now define the curried function from the circles to the torus. *)</span>
+<span class="sd">(** TODO: It&#39;s easy to remove [Funext] from this definition by using [intro] and [revert] appropriately, but then the cube algebra in the proof of [c2t&#39;_beta] would need to be updated. See https://github.com/HoTT/Coq-HoTT/pull/1824. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chka"><span class="kn">Definition</span> <span class="nf">c2t&#39;</span> `{Funext} : Circle -&gt; Circle -&gt; Torus.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle -&gt; Circle -&gt; Torus</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chkb"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle -&gt; Circle -&gt; Torus</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chkc">snapply Circle_rec.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle -&gt; Torus</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chkd" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chkd"><hr></label><div class="goal-conclusion"><span class="nl">?b</span> = <span class="nl">?b</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chke">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle -&gt; Torus</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chkf">snapply Circle_rec.     <span class="c">(* Double circle recursion *)</span></label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Torus</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk10" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk10"><hr></label><div class="goal-conclusion"><span class="nl">?b</span> = <span class="nl">?b</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk11">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Torus</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> tbase.      <span class="c">(* The basepoint is sent to the point of the torus *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk12">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">tbase = tbase</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> loop_b.     <span class="c">(* The second loop is sent to loop_b *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk13">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle_rec Torus tbase loop_b =
+Circle_rec Torus tbase loop_b</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk14"><span class="nb">apply</span> path_forall.  <span class="c">(* We use function extensionality here to induct *)</span></label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle_rec Torus tbase loop_b ==
+Circle_rec Torus tbase loop_b</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk15">snapply Circle_ind.  <span class="c">(* Circle induction as a DPath *)</span></label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+ Circle_rec Torus tbase loop_b x =
+ Circle_rec Torus tbase loop_b x) base</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk16" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk16"><hr></label><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+   Circle_rec Torus tbase loop_b x =
+   Circle_rec Torus tbase loop_b x) loop <span class="nl">?b</span> = <span class="nl">?b</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk17">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+ Circle_rec Torus tbase loop_b x =
+ Circle_rec Torus tbase loop_b x) base</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> loop_a.     <span class="c">(* The first loop is sent to loop_a *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk18">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+   Circle_rec Torus tbase loop_b x =
+   Circle_rec Torus tbase loop_b x) loop loop_a =
+loop_a</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk19">srapply sq_dp^-<span class="mi">1</span>. <span class="c">(* This DPath is actually a square *)</span></label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathSquare loop_a loop_a
+  (ap (Circle_rec Torus tbase loop_b) loop)
+  (ap (Circle_rec Torus tbase loop_b) loop)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> (pr1 c2t_square_and_cube). <span class="c">(* We apply the cap we found above *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Here is the uncurried version *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk1a"><span class="kn">Definition</span> <span class="nf">c2t</span> `{Funext} : Circle * Circle -&gt; Torus.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle * Circle -&gt; Torus</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk1b"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle * Circle -&gt; Torus</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> uncurry, c2t&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Computation rules for c2t&#39; as a cube filler *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk1c"><span class="kn">Definition</span> <span class="nf">c2t&#39;_beta</span> `{Funext} :
+  {bl1 : PathSquare (ap (<span class="kr">fun</span> <span class="nv">y</span> =&gt; c2t&#39; base y) loop) loop_b <span class="mi">1</span> <span class="mi">1</span> &amp;
+  {bl2 : PathSquare (ap (<span class="kr">fun</span> <span class="nv">x</span> =&gt; c2t&#39; x base) loop) loop_a <span class="mi">1</span> <span class="mi">1</span> &amp;
+  PathCube (sq_ap011 c2t&#39; loop loop) surf bl2 bl2 bl1 bl1}}.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{bl1
+: PathSquare (ap (<span class="kr">fun</span> <span class="nv">y</span> : Circle =&gt; c2t&#39; base y) loop)
+    loop_b <span class="mi">1</span> <span class="mi">1</span> &amp;
+{bl2
+: PathSquare (ap (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; c2t&#39; x base) loop)
+    loop_a <span class="mi">1</span> <span class="mi">1</span> &amp;
+PathCube (sq_ap011 c2t&#39; loop loop) surf bl2 bl2 bl1
+  bl1}}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk1d"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{bl1
+: PathSquare (ap (<span class="kr">fun</span> <span class="nv">y</span> : Circle =&gt; c2t&#39; base y) loop)
+    loop_b <span class="mi">1</span> <span class="mi">1</span> &amp;
+{bl2
+: PathSquare (ap (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; c2t&#39; x base) loop)
+    loop_a <span class="mi">1</span> <span class="mi">1</span> &amp;
+PathCube (sq_ap011 c2t&#39; loop loop) surf bl2 bl2 bl1
+  bl1}}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk1e">nrefine (_;_;_).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube (sq_ap011 c2t&#39; loop loop) surf <span class="nl">?Goal0</span> <span class="nl">?Goal0</span>
+  <span class="nl">?Goal</span> <span class="nl">?Goal</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk1f"><span class="nb">unfold</span> sq_ap011.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">y</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; c2t&#39; x y) loop) loop))
+  surf <span class="nl">?Goal0</span> <span class="nl">?Goal0</span> <span class="nl">?Goal</span> <span class="nl">?Goal</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* 1. Unfusing ap *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk20">nrefine (cu_concat_lr (cu_ds (dp_apD_nat
+    (<span class="kr">fun</span> <span class="nv">y</span> =&gt; ap_compose _ (<span class="kr">fun</span> <span class="nv">f</span> =&gt; f y) _) _)) _
+    (sji0:=?[X1]) (sji1:=<span class="nl">?X1</span>) (sj0i:=?[Y1]) (sj1i:=<span class="nl">?Y1</span>) (pj11:=<span class="mi">1</span>)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">y</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">f</span> : Circle -&gt; Torus =&gt; f y)
+           (ap c2t&#39; loop)) loop)) surf <span class="nl">?X1</span> <span class="nl">?X1</span> <span class="nl">?Y1</span> 
+  <span class="nl">?Y1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* 2. Reducing c2t&#39; on loop *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk21">nrefine (cu_concat_lr (cu_ds (dp_apD_nat
+    (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap_apply_l _ _ @ apD10 (ap _(Circle_rec_beta_loop _ _ _)) x) _)) _
+    (sji0:=?[X2]) (sji1:=<span class="nl">?X2</span>) (sj0i:=?[Y2]) (sj1i:=<span class="nl">?Y2</span>) (pj11:=<span class="mi">1</span>)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap10
+           (path_forall
+              (Circle_rec Torus tbase loop_b)
+              (Circle_rec Torus tbase loop_b)
+              (Circle_ind
+                 (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+                  Circle_rec Torus tbase loop_b x0 =
+                  Circle_rec Torus tbase loop_b x0)
+                 loop_a
+                 (sq_dp^-<span class="mi">1</span> c2t_square_and_cube.<span class="mi">1</span>))) x)
+        loop)) surf <span class="nl">?X2</span> <span class="nl">?X2</span> <span class="nl">?Y2</span> <span class="nl">?Y2</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* 3. Reducing ap10 on function extensionality *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk22">nrefine (cu_concat_lr (cu_ds (dp_apD_nat (ap10_path_forall _ _ _) _)) _
+    (sji0:=?[X3]) (sji1:=<span class="nl">?X3</span>) (sj0i:=?[Y3]) (sj1i:=<span class="nl">?Y3</span>) (pj11:=<span class="mi">1</span>)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube
+  (sq_dp
+     (apD
+        (Circle_ind
+           (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+            Circle_rec Torus tbase loop_b x =
+            Circle_rec Torus tbase loop_b x) loop_a
+           (sq_dp^-<span class="mi">1</span> c2t_square_and_cube.<span class="mi">1</span>)) loop))
+  surf <span class="nl">?X3</span> <span class="nl">?X3</span> <span class="nl">?Y3</span> <span class="nl">?Y3</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* 4. Reducing Circle_ind on loop *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk23">nrefine (cu_concat_lr (cu_G11 (ap _ (Circle_ind_beta_loop _ _ _))) _
+    (sji0:=?[X4]) (sji1:=<span class="nl">?X4</span>) (sj0i:=?[Y4]) (sj1i:=<span class="nl">?Y4</span>) (pj11:=<span class="mi">1</span>)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube (sq_dp (sq_dp^-<span class="mi">1</span> c2t_square_and_cube.<span class="mi">1</span>)) surf
+  <span class="nl">?X4</span> <span class="nl">?X4</span> <span class="nl">?Y4</span> <span class="nl">?Y4</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* 5. collapsing equivalence *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk24">nrefine (cu_concat_lr (cu_G11 (eisretr _ _)) _
+    (sji0:=?[X5]) (sji1:=<span class="nl">?X5</span>) (sj0i:=?[Y5]) (sj1i:=<span class="nl">?Y5</span>) (pj11:=<span class="mi">1</span>)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube c2t_square_and_cube.<span class="mi">1</span> surf <span class="nl">?X5</span> <span class="nl">?X5</span> <span class="nl">?Y5</span> <span class="nl">?Y5</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* 6. filling the cube *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> c2t_square_and_cube.<span class="mi">2</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> cube_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We now prove that t2c is a section of c2t *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk25"><span class="kn">Definition</span> <span class="nf">t2c2t</span> `{Funext} : c2t o t2c == idmap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">c2t o t2c == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk26"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">c2t o t2c == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* We start with Torus induction *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk27">nrefine (Torus_ind _ <span class="mi">1</span> _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DPathSquare (<span class="kr">fun</span> <span class="nv">x</span> : Torus =&gt; c2t (t2c x) = x) surf
+  <span class="nl">?Goal</span> <span class="nl">?Goal</span> <span class="nl">?Goal0</span> <span class="nl">?Goal0</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* Our DPathSquare is really just a cube *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk28"><span class="nb">apply</span> cu_ds^-<span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube (sq_dp <span class="nl">?Goal</span>) (sq_dp <span class="nl">?Goal</span>) (sq_dp <span class="nl">?Goal0</span>)
+  (sq_dp <span class="nl">?Goal0</span>)
+  (sq_ap (<span class="kr">fun</span> <span class="nv">x</span> : Torus =&gt; c2t (t2c x)) surf)
+  (sq_ap idmap surf)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* We pretend that our sides have sq_dpath o sq_dpath^-1</span>
+<span class="c">    and get rid of them *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk29"><span class="nb">refine</span> (cu_GGGGcc (eisretr _ _)^ (eisretr _ _)^
+    (eisretr _ _)^ (eisretr _ _)^ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube <span class="nl">?Goal</span> <span class="nl">?Goal</span> <span class="nl">?Goal0</span> <span class="nl">?Goal0</span>
+  (sq_ap (<span class="kr">fun</span> <span class="nv">x</span> : Torus =&gt; c2t (t2c x)) surf)
+  (sq_ap idmap surf)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* Apply a symmetry to get the faces on the right side *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk2a"><span class="nb">apply</span> cu_rot_tb_fb.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube (sq_ap (<span class="kr">fun</span> <span class="nv">x</span> : Torus =&gt; c2t (t2c x)) surf)
+  (sq_ap idmap surf) (sq_tr <span class="nl">?Goal</span>) (sq_tr <span class="nl">?Goal</span>)
+  (sq_tr <span class="nl">?Goal0</span>) (sq_tr <span class="nl">?Goal0</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* Clean up other faces *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk2b"><span class="nb">refine</span> (cu_ccGGGG (eisretr _ _)^ (eisretr _ _)^
+    (eisretr _ _)^ (eisretr _ _)^ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube (sq_ap (<span class="kr">fun</span> <span class="nv">x</span> : Torus =&gt; c2t (t2c x)) surf)
+  (sq_ap idmap surf) <span class="nl">?Goal</span> <span class="nl">?Goal</span> <span class="nl">?Goal0</span> <span class="nl">?Goal0</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* Now we finish the proof with the following composition of cubes *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> ((sq_ap_compose t2c c2t surf)
+    @lr (cu_ap c2t (Torus_rec_beta_surf _ _ _ _ _ ))
+    @lr (sq_ap_uncurry _ _ _)
+    @lr (pr2 (pr2 c2t&#39;_beta))
+    @lr (cu_flip_lr (sq_ap_idmap _))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* NOTE: The last step in the previous proof can be done as a sequence of</span>
+<span class="c">   refines however Coq really struggles to unify this. Below is the original</span>
+<span class="c">   way we proved the last statement before making it short and sweet. As can</span>
+<span class="c">   be seen, we need to give refine hints using existential variables which is</span>
+<span class="c">   tedious to write out, and perhaps motivates why we wrote it as one big</span>
+<span class="c">   concatenation. Ideally the way below should be as smooth as the way above,</span>
+<span class="c">   since above is difficult to write directly without having tried below.</span>
+
+<span class="c">  (* Now we decompose the cube with middle sq_ap_compose *)</span>
+<span class="c">  (* Note: coq sucks at unifying this so we have to explicitly give paths *)</span>
+<span class="c">  refine (cu_concat_lr (sq_ap_compose t2c c2t surf) _</span>
+<span class="c">    (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).</span>
+<span class="c">  (* Now we reduce (sq_ap t2c surf) *)</span>
+<span class="c">  refine (cu_concat_lr (cu_ap c2t (Torus_rec_beta_surf _ _ _ _ _ )) _</span>
+<span class="c">    (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).</span>
+<span class="c">  (* We now uncurry c2t inside sq_ap *)</span>
+<span class="c">  refine (cu_concat_lr (sq_ap_uncurry _ _ _) _</span>
+<span class="c">    (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).</span>
+<span class="c">  (* Reduce sq_ap2 c2t&#39; loop loop *)</span>
+<span class="c">  refine (cu_concat_lr (pr2 (pr2 c2t&#39;_beta)) _</span>
+<span class="c">    (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).</span>
+<span class="c">  (* Finally flip and sq_ap idmap *)</span>
+<span class="c">  refine (cu_flip_lr (sq_ap_idmap _)).</span>
+
+<span class="c">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">apcs</span> := (ap_compose_sq _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk2c" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk2c"><span class="kn">Definition</span> <span class="nf">sq_ap011_compose</span> {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="nv">D</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B -&gt; C) (<span class="nv">g</span> : C -&gt; D)
+  {<span class="nv">a</span> <span class="nv">a&#39;</span> : A} (<span class="nv">p</span> : a = a&#39;) {<span class="nv">b</span> <span class="nv">b&#39;</span> : B} (<span class="nv">q</span> : b = b&#39;)
+  : PathCube (sq_ap011 (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> =&gt; g (f x y)) p q) (sq_ap g (sq_ap011 f p q))
+      apcs apcs apcs apcs.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C, D</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B -&gt; C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>a, a'</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>a = a&#39;</span></span></span><br><span><var>b, b'</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>b = b&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube
+  (sq_ap011 (<span class="kr">fun</span> (<span class="nv">x</span> : A) (<span class="nv">y</span> : B) =&gt; g (f x y)) p q)
+  (sq_ap g (sq_ap011 f p q)) apcs apcs apcs apcs</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk2d"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C, D</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B -&gt; C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>a, a'</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>a = a&#39;</span></span></span><br><span><var>b, b'</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>b = b&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube
+  (sq_ap011 (<span class="kr">fun</span> (<span class="nv">x</span> : A) (<span class="nv">y</span> : B) =&gt; g (f x y)) p q)
+  (sq_ap g (sq_ap011 f p q)) apcs apcs apcs apcs</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">destruct</span> p, q.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We now prove t2c is a retraction of c2t *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk2e" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk2e"><span class="kn">Definition</span> <span class="nf">c2t2c</span> `{Funext} : t2c o c2t == idmap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">t2c o c2t == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk2f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">t2c o c2t == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk30" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk30">napply prod_ind.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">fst</span> <span class="nv">snd</span> : Circle,
+t2c (c2t (fst, snd)) = (fst, snd)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* Start with double circle induction *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk31">snrefine (Circle_ind _ (Circle_ind _ <span class="mi">1</span> _) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; t2c (c2t (base, x)) = (base, x))
+  loop <span class="mi">1</span> = <span class="mi">1</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk32" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk32"><hr></label><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+   <span class="kr">forall</span> <span class="nv">snd</span> : Circle, t2c (c2t (x, snd)) = (x, snd))
+  loop
+  (Circle_ind
+     (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+      t2c (c2t (base, x)) = (base, x)) <span class="mi">1</span> <span class="nl">?l</span>) =
+Circle_ind
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; t2c (c2t (base, x)) = (base, x))
+  <span class="mi">1</span> <span class="nl">?l</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* Change the second loop case into a square and shelve *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk33" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk33"><span class="mi">1</span>: <span class="nb">apply</span> sq_dp^-<span class="mi">1</span>, sq_tr^-<span class="mi">1</span>; <span class="nb">shelve</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+   <span class="kr">forall</span> <span class="nv">snd</span> : Circle, t2c (c2t (x, snd)) = (x, snd))
+  loop
+  (Circle_ind
+     (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+      t2c (c2t (base, x)) = (base, x)) <span class="mi">1</span>
+     (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>))) =
+Circle_ind
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; t2c (c2t (base, x)) = (base, x))
+  <span class="mi">1</span> (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* Take the forall out of the DPath *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk34" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk34"><span class="nb">apply</span> dp_forall_domain.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Circle,
+DPath (<span class="kr">fun</span> <span class="nv">t</span> : Circle =&gt; t2c (c2t (t, x)) = (t, x))
+  loop
+  (Circle_ind
+     (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+      t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+     (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+  (Circle_ind
+     (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+      t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+     (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk35" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk35"><span class="nb">intro</span> x; <span class="nb">apply</span> sq_dp^-<span class="mi">1</span>; <span class="nb">revert</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Circle,
+PathSquare
+  (Circle_ind
+     (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+      t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+     (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+  (Circle_ind
+     (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+      t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+     (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+  (ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x))) loop)
+  (ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk36" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk36">snrefine (Circle_ind _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+ PathSquare
+   (Circle_ind
+      (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+       t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+      (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+   (Circle_ind
+      (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+       t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+      (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+   (ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x))) loop)
+   (ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop)) base</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk37" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk37"><hr></label><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+   PathSquare
+     (Circle_ind
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+         t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+        (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+     (Circle_ind
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+         t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+        (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+     (ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x))) loop)
+     (ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop)) loop 
+  <span class="nl">?b</span> = <span class="nl">?b</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk38" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk38"><span class="mi">1</span>: <span class="nb">apply</span> sq_tr^-<span class="mi">1</span>; <span class="nb">shelve</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+   PathSquare
+     (Circle_ind
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+         t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+        (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+     (Circle_ind
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt;
+         t2c (c2t (base, x0)) = (base, x0)) <span class="mi">1</span>
+        (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) x)
+     (ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x))) loop)
+     (ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop)) loop
+  (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>) = sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk39" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk39"><span class="nb">apply</span> dp_cu.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>) (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>)
+  (sq_dp
+     (apD
+        (Circle_ind
+           (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+            t2c (c2t (base, x)) = (base, x)) <span class="mi">1</span>
+           (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>))) loop))
+  (sq_dp
+     (apD
+        (Circle_ind
+           (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+            t2c (c2t (base, x)) = (base, x)) <span class="mi">1</span>
+           (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>))) loop))
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x)))
+           loop) loop))
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop) loop))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk3a" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk3a">nrefine (cu_ccGGcc _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nl">?Goal1</span> =
+sq_dp
+  (apD
+     (Circle_ind
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         t2c (c2t (base, x)) = (base, x)) <span class="mi">1</span>
+        (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>))) loop)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk3b" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk3b"><hr></label><div class="goal-conclusion"><span class="nl">?Goal2</span> =
+sq_dp
+  (apD
+     (Circle_ind
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         t2c (c2t (base, x)) = (base, x)) <span class="mi">1</span>
+        (sq_dp^-<span class="mi">1</span> (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>))) loop)</div></blockquote><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk3c" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk3c"><hr></label><div class="goal-conclusion">PathCube (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>) (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>) <span class="nl">?Goal1</span>
+  <span class="nl">?Goal2</span>
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x)))
+           loop) loop))
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop) loop))</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk3d" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk3d"><span class="mi">1</span>,<span class="mi">2</span>: <span class="bp">exact</span> (ap sq_dp (Circle_ind_beta_loop _ _ _)
+    @ eisretr _ _)^.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>) (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>)
+  (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>) (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x)))
+           loop) loop))
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop) loop))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk3e" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk3e"><span class="nb">apply</span> cu_rot_tb_fb.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x)))
+           loop) loop))
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop) loop))
+  (sq_tr (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>)) (sq_tr (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>))
+  (sq_tr (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)) (sq_tr (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk3f" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk3f">nrefine (cu_ccGGGG _ _ _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nl">?Goal1</span> = sq_tr (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk40" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk40"><hr></label><div class="goal-conclusion"><span class="nl">?Goal2</span> = sq_tr (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal0</span>)</div></blockquote><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk41" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk41"><hr></label><div class="goal-conclusion"><span class="nl">?Goal3</span> = sq_tr (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)</div></blockquote><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk42" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk42"><hr></label><div class="goal-conclusion"><span class="nl">?Goal4</span> = sq_tr (sq_tr^-<span class="mi">1</span> <span class="nl">?Goal</span>)</div></blockquote><input class="alectryon-extra-goal-toggle" id="torusequivcircles-v-chk43" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><label class="goal-separator" for="torusequivcircles-v-chk43"><hr></label><div class="goal-conclusion">PathCube
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x)))
+           loop) loop))
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop) loop))
+  <span class="nl">?Goal1</span> <span class="nl">?Goal2</span> <span class="nl">?Goal3</span> <span class="nl">?Goal4</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="torusequivcircles-v-chk44" style="display: none" type="checkbox"><label class="alectryon-input" for="torusequivcircles-v-chk44"><span class="mi">1</span>,<span class="mi">2</span>,<span class="mi">3</span>,<span class="mi">4</span>: <span class="bp">exact</span> (eisretr _ _)^.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PathCube
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; t2c (c2t (x0, x)))
+           loop) loop))
+  (sq_dp
+     (apD
+        (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt;
+         ap (<span class="kr">fun</span> <span class="nv">x0</span> : Circle =&gt; (x0, x)) loop) loop))
+  <span class="nl">?Goal0</span> <span class="nl">?Goal0</span> <span class="nl">?Goal</span> <span class="nl">?Goal</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> ((sq_ap011_compose c2t&#39; t2c loop loop)
+    @lr (cu_ap t2c (c2t&#39;_beta.<span class="mi">2</span>.<span class="mi">2</span>))
+    @lr (Torus_rec_beta_surf _ _ _ _ _)
+    @lr (cu_flip_lr (sq_ap_idmap _))
+    @lr (sq_ap_uncurry _ _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* refine (cu_concat_lr (sq_ap2_compose c2t&#39; t2c loop loop) _</span>
+<span class="c">    (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).</span>
+<span class="c">  refine (cu_concat_lr (cu_ap t2c (c2t&#39;_beta.2.2)) _</span>
+<span class="c">    (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).</span>
+<span class="c">  refine (cu_concat_lr (Torus_rec_beta_surf _ _ _ _ _) _</span>
+<span class="c">    (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).</span>
+<span class="c">  refine (cu_concat_lr (cu_flip_lr (sq_ap_idmap _)) _</span>
+<span class="c">    (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).</span>
+<span class="c">  apply sq_ap_uncurry. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_torus_prod_Circle</span> `{Funext} : Torus &lt;~&gt; Circle * Circle
+  := equiv_adjointify t2c c2t c2t2c t2c2t.</span></span></pre>
+</div>
+</div></body>
+</html>

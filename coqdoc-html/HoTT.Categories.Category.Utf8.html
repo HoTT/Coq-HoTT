@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Category.Utf8</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Category.Utf8</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab572"></a><h1 class="section">Unicode notations for categories</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a> <a class="idref" href="HoTT.Categories.Category.Dual.html#"><span class="id" title="library">Category.Dual</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#"><span class="id" title="library">Category.Sum</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#"><span class="id" title="library">Category.Pi</span></a>.<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Categories.Category.Notations.html#"><span class="id" title="library">Category.Notations</span></a>.<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "notation-overridden".<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Utf8.html#"><span class="id" title="library">Basics.Utf8</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="0adb75e6a28638f50c01de69a6ebcf44" class="idref" href="#0adb75e6a28638f50c01de69a6ebcf44"><span class="id" title="notation">&quot;</span></a>∘" := <a class="idref" href="HoTT.Categories.Category.Core.html#compose"><span class="id" title="projection">compose</span></a> : <span class="id" title="var">morphism_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="29f923834522dba640c2d056b65d1a36" class="idref" href="#29f923834522dba640c2d056b65d1a36"><span class="id" title="notation">&quot;</span></a>m ⁻¹" := (<a class="idref" href="HoTT.Categories.Category.Morphisms.html#morphism_inverse"><span class="id" title="method">morphism_inverse</span></a> <span class="id" title="var">m</span>) : <span class="id" title="var">morphism_scope</span>.<br/>
+<span class="id" title="keyword">Infix</span> <a id="7804fb3ae35e14d3cf85ff978e4e6aa3" class="idref" href="#7804fb3ae35e14d3cf85ff978e4e6aa3"><span class="id" title="notation">&quot;</span></a>≅" := <a class="idref" href="HoTT.Categories.Category.Morphisms.html#Isomorphic"><span class="id" title="class">Isomorphic</span></a> : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="e4b2f8bac77dc7a86d74a5f9bf19cc75" class="idref" href="#e4b2f8bac77dc7a86d74a5f9bf19cc75"><span class="id" title="notation">&quot;</span></a>x ↠ y" := (<a class="idref" href="HoTT.Categories.Category.Morphisms.html#Epimorphism"><span class="id" title="record">Epimorphism</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="eb027581be1c4a956ebcd6466e147a08" class="idref" href="#eb027581be1c4a956ebcd6466e147a08"><span class="id" title="notation">&quot;</span></a>x ↪ y" := (<a class="idref" href="HoTT.Categories.Category.Morphisms.html#Monomorphism"><span class="id" title="record">Monomorphism</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It would be nice to put <span class="inlinecode">,</span> <span class="inlinecode"><span class="id" title="var">format</span></span> <span class="inlinecode">&quot;<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">'ᵒᵖ'&quot;</span> here, but that makes
+    this notation unparseable. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="20bd8724e684f1b1467e5e9445ff9300" class="idref" href="#20bd8724e684f1b1467e5e9445ff9300"><span class="id" title="notation">&quot;</span></a>C 'ᵒᵖ'" := (<a class="idref" href="HoTT.Categories.Category.Dual.html#opposite"><span class="id" title="definition">opposite</span></a> <span class="id" title="var">C</span>) : <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="a8cb9b72176eae58be6ae64bd12df22a" class="idref" href="#a8cb9b72176eae58be6ae64bd12df22a"><span class="id" title="notation">&quot;</span></a>∀  x .. y , P" := (<a class="idref" href="HoTT.Categories.Category.Pi.html#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">∀</span></a> <a id="x:1" class="idref" href="#x:1"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Categories.Category.Pi.html#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">,</span></a> .. (<a class="idref" href="HoTT.Categories.Category.Pi.html#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">∀</span></a> <a id="y:2" class="idref" href="#y:2"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Categories.Category.Pi.html#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">,</span></a> <span class="id" title="var">P</span>) ..).<br/>
+<span class="id" title="keyword">Notation</span> <a id="e15f3fa8414cf45e36c73a91b3f5f2c2" class="idref" href="#e15f3fa8414cf45e36c73a91b3f5f2c2"><span class="id" title="notation">&quot;</span></a>∀  x .. y , P" := (<a class="idref" href="HoTT.Categories.Category.Pi.html#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">∀</span></a> <a id="x:3" class="idref" href="#x:3"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Categories.Category.Pi.html#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">,</span></a> .. (<a class="idref" href="HoTT.Categories.Category.Pi.html#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">∀</span></a> <a id="y:4" class="idref" href="#y:4"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Categories.Category.Pi.html#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">,</span></a> <span class="id" title="var">P</span>) ..) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="1b2af8503434f96258e5179cd0f4009b" class="idref" href="#1b2af8503434f96258e5179cd0f4009b"><span class="id" title="notation">&quot;</span></a>∀  x .. y , P" := (<a class="idref" href="HoTT.Categories.Category.Pi.html#pi"><span class="id" title="definition">pi</span></a> (<span class="id" title="keyword">fun</span> <a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a> ⇒ .. (<a class="idref" href="HoTT.Categories.Category.Pi.html#pi"><span class="id" title="definition">pi</span></a> (<span class="id" title="keyword">fun</span> <a id="y:6" class="idref" href="#y:6"><span class="id" title="binder">y</span></a> ⇒ <span class="id" title="var">P</span>)) .. )) : <span class="id" title="var">category_scope</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

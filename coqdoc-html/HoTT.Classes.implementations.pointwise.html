@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Classes.implementations.pointwise</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Classes.implementations.pointwise</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">HoTT.Classes.interfaces.abstract_algebra</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> is a (bounded) lattice, then so is <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span>, pointwise.
+    This relies on functional extensionality. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="contents" class="idref" href="#contents"><span class="id" title="section">contents</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="A:2" class="idref" href="#A:2"><span class="id" title="binder">A</span></a> <a id="B:3" class="idref" href="#B:3"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="BJoin:4" class="idref" href="#BJoin:4"><span class="id" title="binder">BJoin</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Join"><span class="id" title="class">Join</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="BMeet:5" class="idref" href="#BMeet:5"><span class="id" title="binder">BMeet</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Meet"><span class="id" title="class">Meet</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="BBottom:6" class="idref" href="#BBottom:6"><span class="id" title="binder">BBottom</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Bottom"><span class="id" title="class">Bottom</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="BTop:7" class="idref" href="#BTop:7"><span class="id" title="binder">BTop</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Top"><span class="id" title="class">Top</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="bot_fun" class="idref" href="#bot_fun"><span class="id" title="instance">bot_fun</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Bottom"><span class="id" title="class">Bottom</span></a> (<a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#503cb5acb5215873d055eac1d7a84211"><span class="id" title="notation">⊥</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="top_fun" class="idref" href="#top_fun"><span class="id" title="instance">top_fun</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Top"><span class="id" title="class">Top</span></a> (<a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6c72c0aca0c53086fd508be8479df70c"><span class="id" title="notation">⊤</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="join_fun" class="idref" href="#join_fun"><span class="id" title="instance">join_fun</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Join"><span class="id" title="class">Join</span></a> (<a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<a id="f:8" class="idref" href="#f:8"><span class="id" title="binder">f</span></a> <a id="g:9" class="idref" href="#g:9"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>) (<a id="a:10" class="idref" href="#a:10"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a>) ⇒ <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f87d00d4a505a45e304e40d252faecbc"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Classes.implementations.pointwise.html#f:8"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#a:10"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f87d00d4a505a45e304e40d252faecbc"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f87d00d4a505a45e304e40d252faecbc"><span class="id" title="notation">⊔</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f87d00d4a505a45e304e40d252faecbc"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Classes.implementations.pointwise.html#g:9"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#a:10"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f87d00d4a505a45e304e40d252faecbc"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="meet_fun" class="idref" href="#meet_fun"><span class="id" title="instance">meet_fun</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Meet"><span class="id" title="class">Meet</span></a> (<a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<a id="f:11" class="idref" href="#f:11"><span class="id" title="binder">f</span></a> <a id="g:12" class="idref" href="#g:12"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>) (<a id="a:13" class="idref" href="#a:13"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a>) ⇒ <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#ab486eadba2e764aaffa24f07fcc4029"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Classes.implementations.pointwise.html#f:11"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#a:13"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#ab486eadba2e764aaffa24f07fcc4029"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#ab486eadba2e764aaffa24f07fcc4029"><span class="id" title="notation">⊓</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#ab486eadba2e764aaffa24f07fcc4029"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Classes.implementations.pointwise.html#g:12"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#a:13"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#ab486eadba2e764aaffa24f07fcc4029"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Try to solve some of the lattice obligations automatically 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Create HintDb</span> <span class="id" title="var">lattice_hints</span>.<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">local</span>]<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">associativity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">absorption</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">commutativity</span> | 1 : <span class="id" title="var">lattice_hints</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Ltac</span> <span class="id" title="var">reduce_fun</span> := <span class="id" title="tactic">compute</span>; <span class="id" title="tactic">intros</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>; <span class="id" title="tactic">intro</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="lattice_fun" class="idref" href="#lattice_fun"><span class="id" title="instance">lattice_fun</span></a> `{<a id="IsLattice0:14" class="idref" href="#IsLattice0:14"><span class="id" title="binder">!</span></a><a id="IsLattice0:14" class="idref" href="#IsLattice0:14"><span class="id" title="binder">IsLattice</span></a> <a id="IsLattice0:14" class="idref" href="#IsLattice0:14"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsLattice"><span class="id" title="class">IsLattice</span></a> (<a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">_</span>; <span class="id" title="var">reduce_fun</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,4: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#associativity"><span class="id" title="definition">associativity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,3: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#commutativity"><span class="id" title="definition">commutativity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#binary_idempotent"><span class="id" title="definition">binary_idempotent</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#absorption"><span class="id" title="definition">absorption</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="boundedjoinsemilattice_fun" class="idref" href="#boundedjoinsemilattice_fun"><span class="id" title="instance">boundedjoinsemilattice_fun</span></a><br/>
+&nbsp;&nbsp;&nbsp;`{<a id="IsBoundedJoinSemiLattice0:15" class="idref" href="#IsBoundedJoinSemiLattice0:15"><span class="id" title="binder">!</span></a><a id="IsBoundedJoinSemiLattice0:15" class="idref" href="#IsBoundedJoinSemiLattice0:15"><span class="id" title="binder">IsBoundedJoinSemiLattice</span></a> <a id="IsBoundedJoinSemiLattice0:15" class="idref" href="#IsBoundedJoinSemiLattice0:15"><span class="id" title="binder">B</span></a>} :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsBoundedJoinSemiLattice"><span class="id" title="class">IsBoundedJoinSemiLattice</span></a> (<a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">_</span>; <span class="id" title="var">reduce_fun</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#associativity"><span class="id" title="definition">associativity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#left_identity"><span class="id" title="definition">left_identity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#right_identity"><span class="id" title="definition">right_identity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#commutativity"><span class="id" title="definition">commutativity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#binary_idempotent"><span class="id" title="definition">binary_idempotent</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="boundedmeetsemilattice_fun" class="idref" href="#boundedmeetsemilattice_fun"><span class="id" title="instance">boundedmeetsemilattice_fun</span></a><br/>
+&nbsp;&nbsp;&nbsp;`{<a id="IsBoundedMeetSemiLattice0:16" class="idref" href="#IsBoundedMeetSemiLattice0:16"><span class="id" title="binder">!</span></a><a id="IsBoundedMeetSemiLattice0:16" class="idref" href="#IsBoundedMeetSemiLattice0:16"><span class="id" title="binder">IsBoundedMeetSemiLattice</span></a> <a id="IsBoundedMeetSemiLattice0:16" class="idref" href="#IsBoundedMeetSemiLattice0:16"><span class="id" title="binder">B</span></a>} :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsBoundedMeetSemiLattice"><span class="id" title="class">IsBoundedMeetSemiLattice</span></a> (<a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">_</span>; <span class="id" title="var">reduce_fun</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#associativity"><span class="id" title="definition">associativity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#left_identity"><span class="id" title="definition">left_identity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#right_identity"><span class="id" title="definition">right_identity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#commutativity"><span class="id" title="definition">commutativity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#binary_idempotent"><span class="id" title="definition">binary_idempotent</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="boundedlattice_fun" class="idref" href="#boundedlattice_fun"><span class="id" title="instance">boundedlattice_fun</span></a><br/>
+&nbsp;&nbsp;&nbsp;`{<a id="IsBoundedLattice0:17" class="idref" href="#IsBoundedLattice0:17"><span class="id" title="binder">!</span></a><a id="IsBoundedLattice0:17" class="idref" href="#IsBoundedLattice0:17"><span class="id" title="binder">IsBoundedLattice</span></a> <a id="IsBoundedLattice0:17" class="idref" href="#IsBoundedLattice0:17"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsBoundedLattice"><span class="id" title="class">IsBoundedLattice</span></a> (<a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents.B"><span class="id" title="variable">B</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">_</span>; <span class="id" title="var">reduce_fun</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#absorption"><span class="id" title="definition">absorption</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Classes.implementations.pointwise.html#contents"><span class="id" title="section">contents</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">associativity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">absorption</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">commutativity</span> | 1 : <span class="id" title="var">lattice_hints</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

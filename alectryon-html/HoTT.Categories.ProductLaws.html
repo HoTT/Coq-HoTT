@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>ProductLaws.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Laws about product categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="productlaws-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="productlaws-v-chk0"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Core Functor.Core InitialTerminalCategory.Core InitialTerminalCategory.Functors Category.Prod Functor.Prod Functor.Composition.Core Functor.Identity Functor.Composition.Laws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">prod_type</span> := Basics.Overture.prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">fst_type</span> := Basics.Overture.fst.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">snd_type</span> := Basics.Overture.snd.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">pair_type</span> := Basics.Overture.pair.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Swap functor [C × D → D × C] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Swap</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">functor</span> (<span class="nv">C</span> <span class="nv">D</span> : PreCategory)
+  : Functor (C * D) (D * C)
+    := Build_Functor (C * D) (D * C)
+                     (<span class="kr">fun</span> <span class="nv">cd</span> =&gt; (snd_type cd, fst_type cd)%core)
+                     (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">m</span> =&gt; (snd_type m, fst_type m)%core)
+                     (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                     (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">law</span> (<span class="nv">C</span> <span class="nv">D</span> : PreCategory)
+  : functor C D o functor D C = <span class="mi">1</span>
+    := idpath.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Swap</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** [A * (B * C) ≅ (A * B) * C] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Associativity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">associativity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">functor</span> : Functor (A * (B * C)) ((A * B) * C)
+      := (fst * (fst o snd)) * (snd o snd).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inverse</span> : Functor ((A * B) * C) (A * (B * C))
+      := (fst o fst) * ((snd o fst) * snd).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">law</span>
+    : functor o inverse = <span class="mi">1</span>
+      /\ inverse o functor = <span class="mi">1</span>
+      := (idpath, idpath)%core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">associativity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Associativity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Laws about the initial category [0] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Law0</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">law0</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{IsInitialCategory zero}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;0&quot;</span> := zero : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">is_initial_category__product</span>
+    : IsInitialCategory (C * <span class="mi">0</span>)
+      := <span class="kr">fun</span> <span class="nv">P</span> <span class="nv">c</span> =&gt; initial_category_ind P (snd c).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">is_initial_category__product&#39;</span>
+    : IsInitialCategory (<span class="mi">0</span> * C)
+      := <span class="kr">fun</span> <span class="nv">P</span> <span class="nv">c</span> =&gt; initial_category_ind P (fst c).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">functor</span> : Functor (C * <span class="mi">0</span>) <span class="mi">0</span> := Functors.from_initial _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">functor&#39;</span> : Functor (<span class="mi">0</span> * C) <span class="mi">0</span> := Functors.from_initial _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inverse</span> : Functor <span class="mi">0</span> (C * <span class="mi">0</span>) := Functors.from_initial _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inverse&#39;</span> : Functor <span class="mi">0</span> (<span class="mi">0</span> * C) := Functors.from_initial _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** *** [C × 0 ≅ 0] *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">law</span>
+    : functor o inverse = <span class="mi">1</span>
+      /\ inverse o functor = <span class="mi">1</span>
+      := center _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** *** [0 × C ≅ 0] *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">law&#39;</span>
+    : functor&#39; o inverse&#39; = <span class="mi">1</span>
+      /\ inverse&#39; o functor&#39; = <span class="mi">1</span>
+      := center _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">law0</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Law0</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Laws about the terminal category [1] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Law1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">law1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{IsTerminalCategory one}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;1&quot;</span> := one : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">functor</span> : Functor (C * <span class="mi">1</span>) C
+      := fst.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">functor&#39;</span> : Functor (<span class="mi">1</span> * C) C
+      := snd.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inverse</span> : Functor C (C * <span class="mi">1</span>)
+      := <span class="mi">1</span> * Functors.to_terminal _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inverse&#39;</span> : Functor C (<span class="mi">1</span> * C)
+      := Functors.to_terminal _ * <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** We could throw this in a [repeat match goal with ... end], but</span>
+<span class="sd">      we know the order, so we hard-code the order to speed it up by a</span>
+<span class="sd">      factor of about 10. *)</span>
+
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">t_prod</span> :=
+      <span class="nb">split</span>;
+      <span class="kp">try</span> <span class="kp">first</span> [ <span class="bp">exact</span> (compose_fst_prod _ _)
+                | <span class="bp">exact</span> (compose_snd_prod _ _) ];
+      [];
+      <span class="nb">apply</span> Functor.Prod.Universal.path_prod;
+      <span class="nb">rewrite</span> &lt;- !Functor.Composition.Laws.associativity <span class="bp">by</span> <span class="bp">assumption</span>;
+      (<span class="nb">rewrite</span> <span class="nl">?compose_fst_prod</span>, <span class="nl">?compose_snd_prod</span>,
+       <span class="nl">?Functor</span>.Composition.Laws.left_identity,
+       <span class="nl">?Functor</span>.Composition.Laws.right_identity
+        <span class="bp">by</span> <span class="bp">assumption</span>);
+      <span class="kp">try</span> (<span class="bp">reflexivity</span> || <span class="bp">exact</span> (center _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** *** [C × 1 ≅ C] *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="productlaws-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="productlaws-v-chk1"><span class="kn">Lemma</span> <span class="nf">law1</span>
+    : functor o inverse = <span class="mi">1</span>
+      /\ inverse o functor = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Contr0</var><span class="hyp-type"><b>: </b><span>Contr <span class="mi">1</span>%category</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : <span class="mi">1</span>%category, Contr (morphism <span class="mi">1</span> s d)</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory <span class="mi">1</span></span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_type (functor o inverse = <span class="mi">1</span>)
+  (inverse o functor = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="productlaws-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="productlaws-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Contr0</var><span class="hyp-type"><b>: </b><span>Contr <span class="mi">1</span>%category</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : <span class="mi">1</span>%category, Contr (morphism <span class="mi">1</span> s d)</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory <span class="mi">1</span></span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_type (functor o inverse = <span class="mi">1</span>)
+  (inverse o functor = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="productlaws-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="productlaws-v-chk3"><span class="nb">unfold</span> functor, inverse.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Contr0</var><span class="hyp-type"><b>: </b><span>Contr <span class="mi">1</span>%category</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : <span class="mi">1</span>%category, Contr (morphism <span class="mi">1</span> s d)</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory <span class="mi">1</span></span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_type (fst o (<span class="mi">1</span> * to_terminal C) = <span class="mi">1</span>)
+  (<span class="mi">1</span> * to_terminal C o fst = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input">t_prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** *** [1 × C ≅ C] *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="productlaws-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="productlaws-v-chk4"><span class="kn">Lemma</span> <span class="nf">law1&#39;</span>
+    : functor&#39; o inverse&#39; = <span class="mi">1</span>
+      /\ inverse&#39; o functor&#39; = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Contr0</var><span class="hyp-type"><b>: </b><span>Contr <span class="mi">1</span>%category</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : <span class="mi">1</span>%category, Contr (morphism <span class="mi">1</span> s d)</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory <span class="mi">1</span></span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_type (functor&#39; o inverse&#39; = <span class="mi">1</span>)
+  (inverse&#39; o functor&#39; = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="productlaws-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="productlaws-v-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Contr0</var><span class="hyp-type"><b>: </b><span>Contr <span class="mi">1</span>%category</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : <span class="mi">1</span>%category, Contr (morphism <span class="mi">1</span> s d)</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory <span class="mi">1</span></span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_type (functor&#39; o inverse&#39; = <span class="mi">1</span>)
+  (inverse&#39; o functor&#39; = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="productlaws-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="productlaws-v-chk6"><span class="nb">unfold</span> functor&#39;, inverse&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Contr0</var><span class="hyp-type"><b>: </b><span>Contr <span class="mi">1</span>%category</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : <span class="mi">1</span>%category, Contr (morphism <span class="mi">1</span> s d)</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory <span class="mi">1</span></span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_type (snd o (to_terminal C * <span class="mi">1</span>) = <span class="mi">1</span>)
+  (to_terminal C * <span class="mi">1</span> o snd = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input">t_prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">law1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Law1</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

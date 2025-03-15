@@ -1,0 +1,1733 @@
+<html>
+<head>
+<title>Notations.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Notations.v</h1>
+
+<div class="code" title="File: Notations.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>(** [type_scope] must be declared and bound early on so that later reserved notations register correctly. *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Declare Scope type_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Bind Scope type_scope with Sortclass.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** To reserve this notation, we must first bootstrap, and preserve the underlying [forall] notation *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Notation "'forall'  x .. y , P" := (forall x , .. (forall y, P) ..) (at level 200, x binder, y binder, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "'exists' x .. y , p"
+  (at level 200, x binder, right associativity,
+   format "'[' 'exists'  '/  ' x  ..  y ,  '/  ' p ']'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+
+(** Work around bug 5569, https://coq.inria.fr/bugs/show_bug.cgi?id=5569, Warning skip-spaces-curly,parsing seems bogus *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Local Set Warnings "-skip-spaces-curly".</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** These are the notations whose level and associativity are imposed by Coq *)
+
+(** Notations for propositional connectives *)
+
+</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "x -&gt; y" (at level 99, right associativity, y at level 200).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt;-&gt; y" (at level 95, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x /\ y" (at level 80, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x \/ y" (at level 85, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x |_| y" (at level 85, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "~ x" (at level 35, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Notations for equality and inequalities *)
+
+</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "x = y  :&gt;  T"
+(at level 70, y at next level, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x = y" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x = y = z"
+(at level 70, no associativity, y at next level).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "x &lt;&gt; y  :&gt;  T"
+(at level 70, y at next level, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt;&gt; y" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "x &lt;= y" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt; y" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &gt;= y" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &gt; y" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "x &lt;= y &lt;= z" (at level 70, y at next level).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt;= y &lt; z" (at level 70, y at next level).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt; y &lt; z" (at level 70, y at next level).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt; y &lt;= z" (at level 70, y at next level).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Arithmetical notations (also used for type constructors) *)
+
+</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "x + y" (at level 50, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x - y" (at level 50, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x * y" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x / y" (at level 40, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "- x" (at level 35, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "/ x" (at level 35, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Notations for booleans *)
+
+</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "x || y" (at level 50, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &amp;&amp; y" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Notations for pairs *)
+
+</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "( x , y , .. , z )" (at level 0).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Notation "{ x }" is reserved and has a special status as component
+    of other notations such as "{ A } + { B }" and "A + { B }" (which
+    are at the same level as "x + y");
+    "{ x }" is at level 0 to factor with "{ x : A | P }" *)
+
+</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "{ x }" (at level 0, x at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Notations for sigma-types or subsets *)
+
+</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "{ x  |  P }" (at level 0, x at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "{ x  |  P  &amp; Q }" (at level 0, x at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "{ x : A  |  P }" (at level 0, x at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "{ x : A  |  P  &amp; Q }" (at level 0, x at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "{ x : A  &amp; P }" (at level 0, x at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "{ x : A  &amp; P  &amp; Q }" (at level 0, x at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+
+(** Numeric *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "n .+1" (at level 1, left associativity, format "n .+1").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "n .+2" (at level 1, left associativity, format "n .+2").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "n .+3" (at level 1, left associativity, format "n .+3").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "n .+4" (at level 1, left associativity, format "n .+4").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "n .+5" (at level 1, left associativity, format "n .+5").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "n '.-1'" (at level 1, left associativity, format "n .-1").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "n '.-2'" (at level 1, left associativity, format "n .-2").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "m +2+ n" (at level 50, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "mod" (at level 40, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p ~ 1" (at level 1, left associativity, format "p '~' '1'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p ~ 0" (at level 1, left associativity, format "p '~' '0'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Pointed *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "@*" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "@@*" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "&lt;~&gt;*" (at level 85).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "-&gt;*" (at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "-&gt;**" (at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "o*" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "==*" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "g ^*'" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f ^*" (at level 1, format "f '^*'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f ^-1*" (at level 1, format "f '^-1*'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "g o*E f" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "'ppforall'  x .. y , P"
+     (at level 200, x binder, y binder, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Sigma type *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "x .1" (at level 1, format "x '.1'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x .2" (at level 1, format "x '.2'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Paths *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "p ^" (at level 1, format "p '^'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p @ q" (at level 20).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p # x" (right associativity, at level 65).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p # x" (right associativity, at level 65).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p @@ q" (at level 20).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p @' q" (at level 21, left associativity,
+  format "'[v' p '/' '@''  q ']'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f == g" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Equivalences *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "A &lt;~&gt; B" (at level 85).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f ^-1" (at level 1, format "f '^-1'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "g 'oE' f" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f *E g" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f +E g" (at level 50, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Categories *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "-|" (at level 60, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "&lt;~=~&gt;" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+#[warnings="-postfix-notation-not-level-1"]
+Reserved Notation "a // 'CAT'" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+#[warnings="-postfix-notation-not-level-1"]
+Reserved Notation "a \\ 'CAT'" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "'CAT' // a" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "'CAT' \\ a" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "C ^op" (at level 1, format "C '^op'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Universal algebra *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "u .# A" (at level 3, format "u '.#' A").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Natural numbers *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "=n" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Wild cat *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "$-&gt;" (at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$&lt;~&gt;" (at level 85).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$o" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$oE" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$==" (at level 70).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$o@" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@L" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@R" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@@" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$=&gt;" (at level 99).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "T ^op" (at level 1, format "T ^op").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f ^-1$" (at level 1, format "f '^-1$'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f ^$" (at level 1, format "f '^$'").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@h" (at level 35).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@v" (at level 35).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@hR" (at level 34).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@hL" (at level 34).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@vR" (at level 34).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@vL" (at level 34).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "s ^h$" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "s ^v$" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Displayed wild cat *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "$o'" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@'" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@L'" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@R'" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$@@'" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "$oE'" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f ^$'" (at level 1, format "f '^$''").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "f ^-1$'" (at level 1, format "f '^-1$''").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Cubical *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "@@h" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "@@v" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "@lr" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x '@Dp' y"  (at level 20).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x '@Dr' y" (at level 20).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x '@Dl' y" (at level 20).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x '^D'" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Lists *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "::" (at level 60, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "++" (right associativity, at level 60).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "[ u ]" (at level 0).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation " [ u , v ] " (at level 0).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Algebra *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "*L" (at level 40).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "*R" (at level 40).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Type Family Extensions *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "P &lt;| j" (at level 40).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "P |&gt; j" (at level 40).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "P &gt;=&gt; R" (at level 55).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Other / Not sorted yet *)
+
+</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Infix "&lt;=&gt;" (at level 70).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "&lt;&lt;" (at level 70).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "&lt;&lt;&lt;" (at level 70).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+
+Reserved Infix "oL" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "oR" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "~~ A" (at level 35, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "a \ C" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "a &lt;=_{ x } b" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "D1 ~d~ D2" (at level 65).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "D '_f' g" (at level 10).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "F '_0' x" (at level 10, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "F '_0' x" (at level 10, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "F '_1' m" (at level 10, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "F ^op" (at level 1, format "F ^op").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "'forall'  x .. y , P" (at level 200, x binder, y binder, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "g 'oD' f" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "g 'o' f" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "m &lt;= n" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "n -Type" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p ..1" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "p ..2" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "!! P" (at level 35, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "u ~~ v" (at level 30).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "! x" (at level 3, format "'!' x").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x \\ F" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x // F" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "{ { xL | xR // xcut } }" (at level 0, xR at level 39, format "{ {  xL  |  xR // xcut  } }").</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "x \ F" (at level 40, left associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt;&gt; y" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x -&gt;&gt; y" (at level 99, right associativity, y at level 200).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x -|-&gt; y" (at level 99, right associativity, y at level 200).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x --&gt; y" (at level 55, right associativity, y at level 55).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x (-&gt; y" (at level 99, right associativity, y at level 200).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt;&gt; y  :&gt;  T" (at level 70, y at next level, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "Z ** W" (at level 30, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "'+N'" (at level 0).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "'+Z'" (at level 0).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "'N3'" (at level 0).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "'Z3'" (at level 0).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Reserved Notation "a ^+" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "a ^+ k" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x ^++" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x ^++ k" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "b ^+f" (at level 1).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** Notations for the mathclasses library *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Reserved Notation "' x" (at level 20).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "// x" (at level 40, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "?=" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "=?" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "&lt;?" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "&lt;=?" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Notation "x &lt; y &lt; z" (at level 70, y at next level).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix "=N=" (at level 70, no associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Reserved Infix ":::" (at level 60, right associativity).</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+(** TODO: move? *)
+(** ** Notation scopes *)
+
+(** We define various scopes and open them in the order we expect to use them. *)</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>Declare Scope core_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Declare Scope function_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Declare Scope equiv_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Declare Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Declare Scope fibration_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Declare Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Declare Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Delimit Scope core_scope with core.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Delimit Scope function_scope with function.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Delimit Scope type_scope with type.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Delimit Scope equiv_scope with equiv.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Delimit Scope function_scope with function.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Delimit Scope path_scope with path.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Delimit Scope fibration_scope with fibration.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Delimit Scope trunc_scope with trunc.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Global Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Global Open Scope equiv_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Global Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Global Open Scope fibration_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Global Open Scope function_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Global Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+Global Open Scope core_scope.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+Bind Scope function_scope with Funclass.</pre>
+</div>
+<div class="code" title="File: Notations.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: -nan%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

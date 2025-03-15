@@ -1,0 +1,7 @@
+N: 3 "divides_fcard_subgroup" [body=yes, kind=cnst, prop=no, path="Finite", ];
+N: 1 "fcard_grp_quotient" [body=yes, kind=cnst, prop=no, path="Finite", ];
+N: 4 "lt_zero_fcard_grp" [body=yes, kind=cnst, prop=no, path="Finite", ];
+N: 2 "subgroup_index_fcard_div" [body=yes, kind=cnst, prop=no, path="Finite", ];
+E: 1 2 [weight=1, ];
+E: 2 3 [weight=2, ];
+E: 2 4 [weight=1, ];

@@ -1,0 +1,774 @@
+<html>
+<head>
+<title>ne_list.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ne_list.v</h1>
+
+<div class="code" title="File: ne_list.v
+Line: 1
+Time: 0.036s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Utf8Minimal
+  HoTT.Spaces.List.Core
+  HoTT.Basics.Overture Basics.Tactics
+  HoTT.Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope ne_list_scope.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Delimit Scope ne_list_scope with ne_list.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Open Scope ne_list_scope.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Nonempty list implementation [ne_list.ne_list]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module ne_list.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section with_type.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {T: Type}.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A nonempty list. Below there is an implicit coercion
+    [ne_list &gt;-&gt; list]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Inductive ne_list : Type
+    := one: T → ne_list | cons: T → ne_list → ne_list.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint app (a b: ne_list): ne_list :=
+    match a with
+    | one x =&gt; cons x b
+    | cons x y =&gt; cons x (app y b)
+    end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint foldr {R} (u: T → R) (f: T → R → R) (a: ne_list): R :=
+    match a with
+    | one x =&gt; u x
+    | cons x y =&gt; f x (foldr u f y)
+    end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint foldr1 (f: T → T → T) (a: ne_list): T :=
+    match a with
+    | one x =&gt; x
+    | cons x y =&gt; f x (foldr1 f y)
+    end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition head (l: ne_list): T
+    := match l with one x =&gt; x | cons x _ =&gt; x end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint to_list (l: ne_list): list T :=
+    match l with
+    | one x =&gt; x :: nil
+    | cons x xs =&gt; x :: to_list xs
+    end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint from_list (x: T) (xs: list T): ne_list :=
+    match xs with
+    | nil =&gt; one x
+    | List.Core.cons h t =&gt; cons x (from_list h t)
+    end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition tail (l: ne_list): list T
+    := match l with one _ =&gt; nil | cons _ x =&gt; to_list x end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma decomp_eq (l: ne_list): l = from_list (head l) (tail l).</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof with auto.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction l...</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct l...</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn in *.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite IHl...</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+  Definition last: ne_list → T := foldr1 (fun x y =&gt; y).</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint replicate_Sn (x: T) (n: nat): ne_list :=
+    match n with
+    | 0 =&gt; one x
+    | S n' =&gt; cons x (replicate_Sn x n')
+    end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint take (n: nat) (l: ne_list): ne_list :=
+    match l, n with
+    | cons x xs, S n' =&gt; take n' xs
+    | _, _ =&gt; one (head l)
+    end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint front (l: ne_list) : list T :=
+    match l with
+    | one _ =&gt; nil
+    | cons x xs =&gt; x :: front xs
+    end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma two_level_rect (P: ne_list → Type)
+    (Pone: ∀ x, P (one x))
+    (Ptwo: ∀ x y, P (cons x (one y)))
+    (Pmore: ∀ x y z, P z → (∀ y', P (cons y' z)) → P (cons x (cons y z)))
+    : ∀ l, P l.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof with auto.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+   cut (∀ l, P l * ∀ x, P (cons x l)).</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+   -</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply X.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+   -</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l...</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     revert t.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     induction l...</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     intros.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     split.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     +</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHl.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     +</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Pmore; intros; apply IHl.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma tail_length (l: ne_list)
+    : S (length (List.Core.tail (to_list l))) = length (to_list l).</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l; reflexivity.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End with_type.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments ne_list : clear implicits.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint tails {T} (l: ne_list T): ne_list (ne_list T) :=
+  match l with
+  | one x =&gt; one (one x)
+  | cons x y =&gt; cons l (tails y)
+  end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma tails_are_shorter {T} (y x: ne_list T):
+  InList x (to_list (tails y)) →
+  leq (length (to_list x)) (length (to_list y)).</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction y; cbn.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[] | C].</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim C.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[] | C].</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply leq_succ_r, IHy.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint map {A B} (f: A → B) (l: ne_list A): ne_list B :=
+  match l with
+  | one x =&gt; one (f x)
+  | cons h t =&gt; cons (f h) (map f t)
+  end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma list_map {A B} (f: A → B) (l: ne_list A)
+  : to_list (map f l) = List.Core.list_map f (to_list l).</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- IHl.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint inits {A} (l: ne_list A): ne_list (ne_list A) :=
+  match l with
+  | one x =&gt; one (one x)
+  | cons h t =&gt; cons (one h) (map (cons h) (inits t))
+  end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 153
+Time: 0.001s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+
+Fixpoint zip {A B: Type} (l: ne_list A) (m: ne_list B)
+  : ne_list (A * B) :=
+  match l with
+  | one a =&gt; one (a, head m)
+  | cons a l =&gt;
+      match m with
+      | one b =&gt; one (a, b)
+      | cons b m =&gt; cons (a, b) (zip l m)
+      end
+  end.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Module notations.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Global Notation ne_list := ne_list.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Global Notation "[: x :]" := (one x) : ne_list_scope.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Global Notation "[: x ; .. ; y ; z :]"
+        := (cons x .. (cons y (one z)) ..) : ne_list_scope.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Global Infix ":::" := cons : ne_list_scope.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End notations.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End ne_list.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Coercion ne_list.to_list : ne_list.ne_list &gt;-&gt; list.</pre>
+</div>
+<div class="code" title="File: ne_list.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+
