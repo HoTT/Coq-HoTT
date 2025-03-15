@@ -6,55 +6,33 @@ Require Import Homotopy.Suspension.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Extensions Modalities.ReflectiveSubuniverse.
 
-Local Set Universe Minimization ToSet.
-
 (** * Wedge sums *)
 
 Local Open Scope pointed_scope.
 
-Definition Wedge (X Y : pType) : pType
-  := [Pushout (fun _ : Unit => point X) (fun _ => point Y), pushl (point X)].
+Definition Wedge@{i j k} (X : pType@{i}) (Y : pType@{j}) : pType@{k}
+  := [Pushout@{Set i j k} (fun _ : Unit => point X) (fun _ => point Y), pushl (point X)].
 
 Notation "X \/ Y" := (Wedge X Y) : pointed_scope.
 
 Definition wglue {X Y : pType}
   : pushl (point X) = (pushr (point Y)) :> (X \/ Y) := pglue tt.
 
-Definition wedge_inl {X Y} : X $-> X \/ Y.
-Proof.
-  snapply Build_pMap.
-  - exact (fun x => pushl x).
-  - reflexivity.
-Defined.
+Definition wedge_inl {X Y : pType} : X $-> X \/ Y
+  := Build_pMap _ _ pushl 1.
 
-Definition wedge_inr {X Y} : Y $-> X \/ Y.
-Proof.
-  snapply Build_pMap.
-  - exact (fun x => pushr x).
-  - symmetry.
-    exact wglue.
-Defined.
+Definition wedge_inr {X Y : pType} : Y $-> X \/ Y
+  := Build_pMap _ _ pushr wglue^.
 
 (** Wedge recursion into an unpointed type. *)
 Definition wedge_rec' {X Y : pType} {Z : Type}
   (f : X -> Z) (g : Y -> Z) (w : f pt = g pt)
-  : Wedge X Y -> Z.
-Proof.
-  snapply Pushout_rec.
-  - exact f.
-  - exact g.
-  - intro.
-    exact w.
-Defined.
+  : Wedge X Y -> Z
+  := Pushout_rec Z f g (fun _ => w).
 
 Definition wedge_rec {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
-  : X \/ Y $-> Z.
-Proof.
-  snapply Build_pMap.
-  - snapply (wedge_rec' f g).
-    exact (point_eq f @ (point_eq g)^).
-  - exact (point_eq f).
-Defined.
+  : X \/ Y $-> Z
+  := Build_pMap _ _ (wedge_rec' f g (point_eq f @ (point_eq g)^)) (point_eq f).
 
 Definition wedge_rec_beta_wglue {X Y Z : pType} (f : X $-> Z) (g : Y $-> Z)
   : ap (wedge_rec f g) wglue = point_eq f @ (point_eq g)^
@@ -65,8 +43,8 @@ Definition wedge_rec_beta_inl {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $->
 Proof.
   snapply Build_pHomotopy.
   1: reflexivity.
-  cbn.
-  symmetry; apply concat_pp_V.
+  cbn beta; symmetry.
+  exact (concat_pp_V 1 (point_eq f)).
 Defined.
 
 Definition wedge_rec_beta_inr {X Y : pType} {Z : pType} (f : X $-> Z) (g : Y $-> Z)
