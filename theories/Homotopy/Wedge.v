@@ -236,8 +236,7 @@ Proof.
   - exact idpath.
 Defined.
 
-(** We specify a universe variable here to prevent minimization to [Set]. *)
-Instance hasallcoproducts_ptype : HasAllCoproducts pType@{u}.
+Instance hasallcoproducts_ptype : HasAllCoproducts pType.
 Proof.
   intros I X.
   snapply Build_Coproduct.
