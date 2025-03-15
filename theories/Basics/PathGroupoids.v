@@ -1060,6 +1060,13 @@ Definition transport_idmap_ap {A} (P : A -> Type) {x y : A} (p : x = y) (u : P x
 : transport P p u = transport idmap (ap P p) u
   := match p with idpath => idpath end.
 
+(** A combination of [transport_compose] with [transport2]. *)
+Definition transport_compose_path_ap {X Y : Type} (P : Y -> Type) (g : X -> Y)
+  {x0 x1 : X} {p : x0 = x1} {r : g x0 = g x1} (s : ap g p = r)
+  (z : P (g x0))
+  : transport (P o g) p z = transport P r z
+  := transport_compose P g p z @ transport2 P s z.
+
 (** Sometimes, it's useful to have the goal be in terms of [ap], so we can use lemmas about [ap].  However, we can't just [rewrite !transport_idmap_ap], as that's likely to loop.  So, instead, we provide a tactic [transport_to_ap], that replaces all [transport P p u] with [transport idmap (ap P p) u] for non-[idmap] [P]. *)
 Ltac transport_to_ap :=
   repeat match goal with
