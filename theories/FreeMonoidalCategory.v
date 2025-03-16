@@ -338,6 +338,22 @@ Fixpoint interp_nfmc {X: Type} (A : FMC X) : NFMC X :=
   | tensor a b => (interp_nfmc a) ++ (interp_nfmc b)
   end.
 
+Fixpoint ieq {X : Type} {a b : FMC X} (f : HomFMC a b)
+  : paths (interp_nfmc a) (interp_nfmc b) :=
+  match f in HomFMC a b return paths (interp_nfmc a) (interp_nfmc b) with
+  | id x => idpath (a:=(interp_nfmc x))
+  | comp x y z g f => ieq f @ ieq g
+  | rev _ _ p => inverse (ieq p)
+  | left_unitor x => idpath
+  | right_unitor x => app_nil (interp_nfmc x)
+  | associator x y z => app_assoc (interp_nfmc x) (interp_nfmc y) (interp_nfmc z)
+  | tensor2 _ _ _ _ f g => ap011 app (ieq f) (ieq g)
+  end.
+
+Instance is0functor_interp_nfmc {X : Type}
+  : Is0Functor (interp_nfmc (X:=X))
+  := Build_Is0Functor _ _ _ _ interp_nfmc (@ieq _ ).
+
 Fixpoint embed_fmc {X : Type} (A : NFMC X) : FMC X :=
   match A with
   | nil => unit
@@ -358,6 +374,8 @@ Fixpoint interp_unit {X : Type} (A : FMC X) : HomFMC A (embed_fmc (interp_nfmc A
      | unit => id unit
      | tensor a b => comp (unit_lemma (interp_nfmc a) (interp_nfmc b)) (tensor2 (interp_unit a) (interp_unit b))
      end.
+
+Theorem interp_unit_natural : Is1Natural interp_unit.
 
 (* Fixpoint interp_append {X: Type} (l1 l2: FMX X) *)
 (*   : Hom_FMC (interp_nfmc (tensor l1 l2)) (interp_nfmc l1) ++ (interp_nfmc l2) *)
