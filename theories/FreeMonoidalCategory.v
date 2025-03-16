@@ -352,18 +352,12 @@ Fixpoint unit_lemma {X : Type} (A B : NFMC X)
          comp (tensor2 (id (el hd)) (unit_lemma tl B)) (rev (associator (el hd) (embed_fmc tl) (embed_fmc B)))
      end.
 
-Fixpoint unit_lemma {X : Type} (A B : NFMC X)
-  : HomFMC (tensor (embed_fmc A) (embed_fmc B)) (embed_fmc (A ++ B))
-  := match A with
-     | nil => _
-     | hd :: tl => _
-     end.
-
-Fixpoint interp_unit {X : Type} (A : FMC X) : Hom_FMC A (embed_fmc (interp_nfmc A))
-  := match A with
-     | el x => id [x]
+Fixpoint interp_unit {X : Type} (A : FMC X) : HomFMC A (embed_fmc (interp_nfmc A))
+  := match A return HomFMC A (embed_fmc (interp_nfmc A)) with
+     | el x => rev (right_unitor (el x))
      | unit => id unit
-     | tensor a b => 
+     | tensor a b => comp (unit_lemma (interp_nfmc a) (interp_nfmc b)) (tensor2 (interp_unit a) (interp_unit b))
+     end.
 
 (* Fixpoint interp_append {X: Type} (l1 l2: FMX X) *)
 (*   : Hom_FMC (interp_nfmc (tensor l1 l2)) (interp_nfmc l1) ++ (interp_nfmc l2) *)
