@@ -210,16 +210,18 @@ Proof.
   exact (is1functor_compose G F).
 Defined.
 
+
 (** ** Functor categories of groupoids *)
 
 Global Instance is0gpd_fun01 (A B : Type) `{IsGraph A} `{Is1Gpd B}
   : Is0Gpd (Fun01 A B).
 Proof.
-  snrapply Build_Is0Gpd.
+  snapply Build_Is0Gpd.
   intros F G p.
-  snrapply Build_NatTrans.
+  snapply Build_NatTrans.
   { intros a.
     exact (p a)^$. }
+  snapply Build_Is1Natural.
   intros x y f.
   rapply Square.vinverse'.
   rapply (isnat p).
@@ -228,7 +230,7 @@ Defined.
 Global Instance is1gpd_fun01 (A B : Type) `{Is1Gpd A} `{Is1Gpd B}
   : Is1Gpd (Fun01 A B).
 Proof.
-  snrapply Build_Is1Gpd.
+  snapply Build_Is1Gpd.
   - intros F G p a.
     apply gpd_issect.
   - intros F G p a.

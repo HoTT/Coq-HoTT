@@ -255,37 +255,7 @@ Definition emap11 {A B C : Type} `{HasEquivs A, HasEquivs B, HasEquivs C}
   : F a0 b0 $<~> F a1 b1
   := Build_CatEquiv (fmap11 F f g).
 
-Definition fmap11_comp {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {a0 a1 a2 : A} (f : a0 $-> a1) (g : a1 $-> a2)
-  {b0 b1 b2 : B} (h : b0 $-> b1) (i : b1 $-> b2)
-  : fmap11 F (g $o f) (i $o h) $== fmap11 F g i $o fmap11 F f h.
-Proof.
-  unfold fmap11.
-  refine ((fmap_comp _ _ _ $@R _) $@ _).
-  refine (cat_assoc _ _ _ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
-  refine ((_ $@L fmap_comp _ _ _) $@ _).
-  refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ cat_assoc _ _ _).
-  exact (bifunctor_isbifunctor F _ _).
-Defined.
-
-Definition fmap11_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {a00 a20 a02 a22 : A} {f10 : a00 $-> a20} {f12 : a02 $-> a22} {f01 : a00 $-> a02} {f21 : a20 $-> a22}
-  {b00 b20 b02 b22 : B} {g10 : b00 $-> b20} {g12 : b02 $-> b22} {g01 : b00 $-> b02} {g21 : b20 $-> b22}
-  (p : Square f01 f21 f10 f12) (q : Square g01 g21 g10 g12)
-  : Square (fmap11 F f01 g01) (fmap11 F f21 g21) (fmap11 F f10 g10) (fmap11 F f12 g12)
-  := (fmap11_comp F _ _ _ _)^$ $@ fmap22 F p q $@ fmap11_comp F _ _ _ _.
-
-(** Any 0-bifunctor [A -> B -> C] can be made into a functor from the product category [A * B -> C] in two ways. *)
-Global Instance is0functor_uncurry_bifunctor {A B C : Type}
-  `{IsGraph A, IsGraph B, Is01Cat C} (F : A -> B -> C) `{!Is0Bifunctor F}
-  : Is0Functor (uncurry F).
-Proof.
-  nrapply Build_Is0Functor.
-  intros a b [f g].
-  exact (fmap11 F f g).
-Defined.
+(** ** Flipping bifunctors *)
 
 Definition is0bifunctor_flip {A B C : Type}
   (F : A -> B -> C) `{Is01Cat A, Is01Cat B, Is01Cat C, !Is0Bifunctor F}
