@@ -35,7 +35,8 @@ Inductive HomFMC {X : Type} : FMC X -> FMC X -> Type :=
 | tensor2 {x x' y y'} : HomFMC x y -> HomFMC x' y' -> HomFMC (tensor x x') (tensor y y')
 .
 
-Inductive Hom2FMC {X : Type} : forall {a b : FMC X}, HomFMC a b -> HomFMC a b -> Type :=
+Inductive Hom2FMC {X : Type} : forall {a b : FMC X},
+    HomFMC a b -> HomFMC a b -> Type :=
 (** Identity 2-morphism *)
 | id2 {x y} (f : HomFMC x y) : Hom2FMC f f
 (** Composition of 2-morphisms *)
@@ -91,7 +92,6 @@ Inductive Hom2FMC {X : Type} : forall {a b : FMC X}, HomFMC a b -> HomFMC a b ->
   : Hom2FMC (comp (associator x' y' z') (tensor2 f (tensor2 g h)))
             (comp (tensor2 (tensor2 f g) h) (associator x y z))
 .
-
 (* | isnat_l_associator w x y z f *)
 (*   : Hom2FMC *)
 (*     (comp (associator y w x) (tensor2 f (id (tensor w x)))) *)
@@ -354,6 +354,58 @@ Instance is0functor_interp_nfmc {X : Type}
   : Is0Functor (interp_nfmc (X:=X))
   := Build_Is0Functor _ _ _ _ interp_nfmc (@ieq _ ).
 
+Definition interp_nfmc_2cells {X : Type}
+  (a b : FMC X) (f g : a $-> b) (s : f $== g)
+  : fmap interp_nfmc f $== fmap interp_nfmc g.
+Proof.
+Abort.
+
+Fixpoint ieq2 {X : Type}
+  {a b : FMC X} {f_ g_ : a $-> b} (s : f_ $== g_)
+  : fmap interp_nfmc f_ $== fmap interp_nfmc g_ :=
+  match s in Hom2FMC f g return paths (fmap interp_nfmc f) (fmap interp_nfmc g)
+  with
+  | id2 _ _ k => idpath
+  | comp2 _ _ _ _ _ beta alpha => ieq2 alpha @ ieq2 beta
+  | rev2 _ _ _ _ alpha => inverse (ieq2 alpha)
+  | wl _ _ _ g f h alpha => whiskerR (ieq2 alpha) (ieq g)
+  | wr _ _ _ f g h alpha => whiskerL (ieq f) (ieq2 alpha)
+  | associator2 w x y z f g h => (concat_p_pp (ieq f) (ieq g) (ieq h))
+  | left_unitor2 _ _ f => (concat_p1 (ieq f))
+  | right_unitor2 _ _ f => (concat_1p (ieq f))
+  | left_invertor2 _ _ f => (concat_pV (ieq f))
+  | right_invertor2 _ _ f => (concat_Vp (ieq f))
+  | triangle _ _ => list_triangle _ _
+  | pentagon h j k l => (list_pentagon _ _ _ _ @ (concat_pp_p _ _ _))
+  | tensor3 _ _ _ _ f g f' g' alpha beta => ap022 app (ieq2 alpha) (ieq2 beta)
+  | tensor2_id _ _ => idpath
+  | tensor2_comp _ _ _ _ _ _ f f' g g' => ap011_pp _ _ _ _ _
+  | isnat_left_unitor  _ _ f =>
+      (whiskerR (ap_idmap (ieq f)) 1 @ concat_p1_1p (ieq f))
+  | isnat_right_unitor _ _ f => concat_A1p (f := fun z => z ++ nil) _ _
+  | isnat_associator _ _ _ _ _ _ _ _ _ => concat_Ap_assoc _ _ _ _ _ _ _ _ _ _ _
+  end.
+
+Instance is1functor_interp_nfmc {X : Type}
+  : Is1Functor (interp_nfmc (X:=X)).
+Proof.
+  apply Build_Is1Functor.
+  {
+    intros a b f g s; induction s as [
+      | ? ? ? ? ? ? beta ? alpha (* comp2 *)
+      | ? ? ? ? ? alpha (* rev2 *)
+      | x y z g | | | | | | | | | | | | | |].
+    - exact idpath.
+    - exact (alpha @ beta).
+    - exact (inverse alpha).
+    - 
+    
+  }
+  - 
+    
+Defined.
+
+
 Fixpoint embed_fmc {X : Type} (A : NFMC X) : FMC X :=
   match A with
   | nil => unit
@@ -375,15 +427,8 @@ Fixpoint interp_unit {X : Type} (A : FMC X) : HomFMC A (embed_fmc (interp_nfmc A
      | tensor a b => comp (unit_lemma (interp_nfmc a) (interp_nfmc b)) (tensor2 (interp_unit a) (interp_unit b))
      end.
 
-Theorem interp_unit_natural : Is1Natural interp_unit.
 
-(* Fixpoint interp_append {X: Type} (l1 l2: FMX X) *)
-(*   : Hom_FMC (interp_nfmc (tensor l1 l2)) (interp_nfmc l1) ++ (interp_nfmc l2) *)
-(*   := match l1 with *)
-(*      | el x => id _ *)
-(*      | unit => id _ *)
-(*      | tensor a b => *)
-(*      end. *)
+Theorem interp_unit_natural : Is1Natural interp_unit.
 
 (* This is equivalent to the functor category as we have groupoids, but it is convenient to use core *)
 Definition NFMC' (X : Type) := Fun11 (NFMC X) (NFMC X).

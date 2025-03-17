@@ -725,7 +725,7 @@ Defined.
 (** All morphisms in 1-groupoids are equivalences. This is not an instance so that it can be used only when needed. *)
 Definition hasequivs_1gpd (A : Type) `{Is1Gpd A} : HasEquivs A.
 Proof.
-  snrapply Build_HasEquivs.
+  snapply Build_HasEquivs.
   - intros x y.
     exact (x $== y).
   - exact (fun _ _ _ => Unit).
