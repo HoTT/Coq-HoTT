@@ -143,6 +143,26 @@ End Join.
 Arguments joinl {A B}%_type_scope _ , [A] B _.
 Arguments joinr {A B}%_type_scope _ , A [B] _.
 
+(** ** Zigzags in joins *)
+
+(** These paths are very common, so we give them names. *)
+Definition zigzag {A B : Type} (a a' : A) (b : B)
+  : joinl a = joinl a'
+  := jglue a b @ (jglue a' b)^.
+
+Definition zagzig {A B : Type} (a : A) (b b' : B)
+  : joinr b = joinr b'
+  := (jglue a b)^ @ jglue a b'.
+
+(** And we give a beta rule for zigzags. *)
+Definition Join_rec_beta_zigzag {A B P : Type} (P_A : A -> P)
+  (P_B : B -> P) (P_g : forall a b, P_A a = P_B b) a a' b
+  : ap (Join_rec P_A P_B P_g) (zigzag a a' b) = P_g a b @ (P_g a' b)^.
+Proof.
+  lhs napply ap_pV.
+  exact (Join_rec_beta_jglue _ _ _ a b @@ inverse2 (Join_rec_beta_jglue _ _ _ a' b)).
+Defined.
+
 (** * [Join_rec] gives an equivalence of 0-groupoids
 
   We now prove many things about [Join_rec], for example, that it is an equivalence of 0-groupoids from the [JoinRecData] that we define next.  The framework we use is a bit elaborate, but it parallels the framework used in TriJoin.v, where careful organization is essential. *)
@@ -448,7 +468,7 @@ Section Triangle.
   Defined.
 
   Definition triangle_h' {a a' : A} (b : B) (p : a = a')
-    : jglue a b @ (jglue a' b)^ = ap joinl p.
+    : zigzag a a' b = ap joinl p.
   Proof.
     destruct p.
     apply concat_pV.
@@ -462,7 +482,7 @@ Section Triangle.
   Defined.
 
   Definition triangle_v' (a : A) {b b' : B} (p : b = b')
-    : (jglue a b)^ @ jglue a b' = ap joinr p.
+    : zagzig a b b' = ap joinr p.
   Proof.
     destruct p.
     apply concat_Vp.
@@ -488,7 +508,7 @@ Section Diamond.
     := PathSquare (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.
 
   Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
-    : jglue a b @ (jglue a' b)^ = jglue a b' @ (jglue a' b')^.
+    : zigzag a a' b = zigzag a a' b'.
   Proof.
     destruct p.
     exact (concat_pV _ @ (concat_pV _)^).
@@ -501,7 +521,7 @@ Section Diamond.
   Defined.
 
   Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
-    : jglue a b @ (jglue a' b)^ = jglue a b' @ (jglue a' b')^.
+    : zigzag a a' b = zigzag a a' b'.
   Proof.
     by destruct p.
   Defined.
@@ -545,6 +565,11 @@ Section FunctorJoin.
     (a : A) (b : B)
     : ap (functor_join f g) (jglue a b) = jglue (f a) (g b)
     := join_rec_beta_jg _ a b.
+
+  Definition functor_join_beta_zigzag {A B C D : Type} (f : A -> C) (g : B -> D)
+    (a a' : A) (b : B)
+    : ap (functor_join f g) (zigzag a a' b) = zigzag (f a) (f a') (g b)
+    := Join_rec_beta_zigzag _ _ _ a a' b.
 
   Definition functor_join_compose {A B C D E F}
     (f : A -> C) (g : B -> D) (h : C -> E) (i : D -> F)
