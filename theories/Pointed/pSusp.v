@@ -172,8 +172,7 @@ Proof.
     (* Finish it off. *)
     symmetry.
     lhs napply concat_pp_p.
-    lhs napply (1 @@ concat_pV_inverse2 _ _ _).
-    napply (ap_pV_concat_pV (functor_susp f) (merid point0)).
+    exact (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid point0)).
 Defined.
 
 Definition loop_susp_counit (X : pType) : psusp (loops X) ->* X
@@ -218,8 +217,7 @@ Proof.
     rhs napply (ap_compose _ (fun q => q @ 1) (concat_pV _)).
     rhs_V napply concat_p1_1.
     apply whiskerL.
-    lhs napply (1 @@ concat_pV_inverse2 _ 1 _).
-    napply (ap_pV_concat_pV _ (merid 1)).
+    exact (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid pt)).
 Defined. (* A bit slow, ~0.9s. *)
 
 Definition loop_susp_triangle2 (X : pType)

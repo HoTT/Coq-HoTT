@@ -1184,6 +1184,17 @@ Proof.
   destruct r, p; reflexivity.
 Defined.
 
+(** Often [ap_pV_concat_pV] is combined with [concat_pV_inverse2] using a beta rule for [ap f p].  This and several above are best read from right-to-left, and the name here reflects the right-hand-side. *)
+Definition ap_ap_concat_pV {A B} (f : A -> B) {x y : A} (p : x = y)
+  (q : f x = f y) (r : ap f p = q)
+  : ap_pV f p p @ ((r @@ inverse2 r) @ concat_pV q) = ap (ap f) (concat_pV p)
+  := (1 @@ concat_pV_inverse2 _ q r) @ ap_pV_concat_pV f p.
+
+Definition ap_ap_concat_Vp {A B} (f : A -> B) {x y : A} (p : x = y)
+  (q : f x = f y) (r : ap f p = q)
+  : ap_Vp f p p @ ((inverse2 r @@ r) @ concat_Vp q) = ap (ap f) (concat_Vp p)
+  := (1 @@ concat_Vp_inverse2 _ q r) @ ap_Vp_concat_Vp f p.
+
 (** *** Whiskering *)
 
 Definition whiskerL {A : Type} {x y z : A} (p : x = y)

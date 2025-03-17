@@ -170,10 +170,7 @@ Proof.
                (ap_compose (fun u => merid u @ (merid North)^) (ap S2_to_TwoSphere)
                            (merid North @ (merid South)^))).
   transport_paths FlFr; symmetry.
-  lhs_V refine (1 @@ ap_pV_concat_pV S2_to_TwoSphere (merid North)).
-  lhs_V refine (1 @@ (1 @@ (concat_pV_inverse2 (ap S2_to_TwoSphere (merid North))
-                              _
-                              (Susp_rec_beta_merid North)))).
+  lhs_V refine (1 @@ ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid North)).
   simpl.
   lhs exact (concat_Ap (fun x => ap_pV S2_to_TwoSphere (merid x) (merid North)
                                   @ ((Susp_rec_beta_merid x
@@ -181,9 +178,7 @@ Proof.
                                        @ 1))
                (merid North @ (merid South)^)).
   f_ap.
-  { rhs_V napply ap_pV_concat_pV.
-    apply whiskerL.
-    napply concat_pV_inverse2. }
+  1: exact (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid North)).
   lhs_V exact (concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec))
                          (fun _ => 1)
                          (merid North @ (merid South)^)).
