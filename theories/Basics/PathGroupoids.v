@@ -1135,6 +1135,16 @@ Definition inverse2 {A : Type} {x y : A} {p q : x = y} (h : p = q)
   : p^ = q^
 := ap inverse h.
 
+(** Two common combinations of [ap_pp] and [ap_V]. *)
+
+Definition ap_pV {A B : Type} (f : A -> B) {a0 a1 a0' : A} (p : a0 = a1) (q : a0' = a1)
+  : ap f (p @ q^) = ap f p @ (ap f q)^
+  := ap_pp f p q^ @ (1 @@ ap_V f q).
+
+Definition ap_Vp {A B : Type} (f : A -> B) {a0 a1 a1' : A} (p : a0 = a1) (q : a0 = a1')
+  : ap f (p^ @ q) = (ap f p)^ @ ap f q
+  := ap_pp f p^ q @ (ap_V f p @@ 1).
+
 (** Some higher coherences *)
 
 Lemma ap_pp_concat_p1 {A B} (f : A -> B) {a b : A} (p : a = b)
@@ -1149,15 +1159,14 @@ Proof.
   destruct p; reflexivity.
 Defined.
 
-Lemma ap_pp_concat_pV {A B} (f : A -> B) {x y : A} (p : x = y)
-: ap_pp f p p^ @ ((1 @@ ap_V f p) @ concat_pV (ap f p))
-  = ap (ap f) (concat_pV p).
+Lemma ap_pV_concat_pV {A B} (f : A -> B) {x y : A} (p : x = y)
+  : ap_pV f p p @ concat_pV (ap f p) = ap (ap f) (concat_pV p).
 Proof.
   destruct p; reflexivity.
 Defined.
 
-Lemma ap_pp_concat_Vp {A B} (f : A -> B) {x y : A} (p : x = y)
-: ap_pp f p^ p @ ((ap_V f p @@ 1) @ concat_Vp (ap f p))
+Lemma ap_Vp_concat_Vp {A B} (f : A -> B) {x y : A} (p : x = y)
+  : ap_Vp f p p @ concat_Vp (ap f p)
   = ap (ap f) (concat_Vp p).
 Proof.
   destruct p; reflexivity.

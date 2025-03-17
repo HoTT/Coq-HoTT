@@ -120,6 +120,14 @@ Proof.
   srapply Pushout_rec_beta_pglue.
 Defined.
 
+Definition Susp_rec_beta_zigzag {X Y : Type}
+  {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x x' : X)
+  : ap (Susp_rec H_N H_S H_merid) (merid x @ (merid x')^) = H_merid x @ (H_merid x')^.
+Proof.
+  lhs napply ap_pV.
+  exact (Susp_rec_beta_merid x @@ inverse2 (Susp_rec_beta_merid x')).
+Defined.
+
 (** ** Eta-rule. *)
 
 (** The eta-rule for suspension states that any function out of a suspension is equal to one defined by [Susp_ind] in the obvious way. We give it first in a weak form, producing just a pointwise equality, and then turn this into an actual equality using [Funext]. *)
