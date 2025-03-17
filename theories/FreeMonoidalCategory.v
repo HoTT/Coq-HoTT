@@ -390,21 +390,10 @@ Instance is1functor_interp_nfmc {X : Type}
   : Is1Functor (interp_nfmc (X:=X)).
 Proof.
   apply Build_Is1Functor.
-  {
-    intros a b f g s; induction s as [
-      | ? ? ? ? ? ? beta ? alpha (* comp2 *)
-      | ? ? ? ? ? alpha (* rev2 *)
-      | x y z g | | | | | | | | | | | | | |].
-    - exact idpath.
-    - exact (alpha @ beta).
-    - exact (inverse alpha).
-    - 
-    
-  }
-  - 
-    
+  - exact (@ieq2 X).
+  - exact (fun _ => idpath).
+  - exact (fun _ _ _ _ _ => idpath).
 Defined.
-
 
 Fixpoint embed_fmc {X : Type} (A : NFMC X) : FMC X :=
   match A with
@@ -412,23 +401,52 @@ Fixpoint embed_fmc {X : Type} (A : NFMC X) : FMC X :=
   | x :: y => tensor (el x) (embed_fmc y)
   end.
 
+Instance is0functor_embed_fmc {X : Type}
+  : Is0Functor (embed_fmc (X:=X))
+  := Build_Is0Functor _ _ _ _ embed_fmc
+       (fun a b f =>
+          match f in @paths _ _ y return @HomFMC _ _ (embed_fmc y) with
+          | @idpath _ _ => id (embed_fmc a)
+          end).
+
+Definition is1functor_embed_fmc {X : Type}
+  : Is1Functor (embed_fmc (X:=X)).
+Proof.
+  apply Build_Is1Functor.
+  - intros a b f g s.
+    destruct s. exact (id2 _).
+  - exact (fun _ => id2 _).
+  - intros a b c f g. simpl.
+    destruct f, g. simpl. apply rev2, left_unitor2.
+Defined.
+
 Fixpoint unit_lemma {X : Type} (A B : NFMC X)
   : HomFMC (tensor (embed_fmc A) (embed_fmc B)) (embed_fmc (A ++ B))
-  := match A return HomFMC (tensor (embed_fmc A) (embed_fmc B)) (embed_fmc (A ++ B)) with
+  := match A return
+           HomFMC (tensor (embed_fmc A) (embed_fmc B)) (embed_fmc (A ++ B)) with
      | nil => left_unitor (embed_fmc B)
      | hd :: tl =>
-         comp (tensor2 (id (el hd)) (unit_lemma tl B)) (rev (associator (el hd) (embed_fmc tl) (embed_fmc B)))
+         comp (tensor2 (id (el hd)) (unit_lemma tl B))
+           (rev (associator (el hd) (embed_fmc tl) (embed_fmc B)))
      end.
 
 Fixpoint interp_unit {X : Type} (A : FMC X) : HomFMC A (embed_fmc (interp_nfmc A))
   := match A return HomFMC A (embed_fmc (interp_nfmc A)) with
      | el x => rev (right_unitor (el x))
      | unit => id unit
-     | tensor a b => comp (unit_lemma (interp_nfmc a) (interp_nfmc b)) (tensor2 (interp_unit a) (interp_unit b))
+     | tensor a b => comp (unit_lemma (interp_nfmc a) (interp_nfmc b))
+                       (tensor2 (interp_unit a) (interp_unit b))
      end.
 
-
-Theorem interp_unit_natural : Is1Natural interp_unit.
+Theorem interp_unit_natural {X: Type}
+  : Is1Natural idmap (fun A => embed_fmc (interp_nfmc A)) (interp_unit (X:=X)).
+Proof.
+  apply Build_Is1Natural.
+  intros a b f.
+  induction f as [| x y z f sigma g tau | | | | |].
+  - exact (comp2 (rev2 left_unitor2) (right_unitor2)).
+  - 
+Defined.
 
 (* This is equivalent to the functor category as we have groupoids, but it is convenient to use core *)
 Definition NFMC' (X : Type) := Fun11 (NFMC X) (NFMC X).
