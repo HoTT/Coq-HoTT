@@ -128,6 +128,31 @@ Proof.
   exact (Susp_rec_beta_merid x @@ inverse2 (Susp_rec_beta_merid x')).
 Defined.
 
+(** A variant of [Susp_ind_FlFr] specifically for two functions both defined using [Susp_rec]. *)
+Definition Susp_rec_homotopic {X Y : Type} (N S N' S' : Y)
+  (f : X -> N = S) (f' : X -> N' = S')
+  (p : N = N') (q : S = S') (H : forall x, f x @ q = p @ f' x)
+  : Susp_rec N S f == Susp_rec N' S' f'.
+Proof.
+  snapply Susp_ind_FlFr.
+  - exact p.
+  - exact q.
+  - intro x.
+    lhs napply (Susp_rec_beta_merid x @@ 1).
+    rhs napply (1 @@ Susp_rec_beta_merid x).
+    apply H.
+Defined.
+
+(** And the special case where the two functions agree definitionally on [North] and [South]. *)
+Definition Susp_rec_homotopic' {X Y : Type} (N S : Y)
+  (f g : X -> N = S) (H : f == g)
+  : Susp_rec N S f == Susp_rec N S g.
+Proof.
+  snapply Susp_rec_homotopic.
+  1, 2: reflexivity.
+  intro x; apply equiv_p1_1q, H.
+Defined.
+
 (** ** Eta-rule. *)
 
 (** The eta-rule for suspension states that any function out of a suspension is equal to one defined by [Susp_ind] in the obvious way. We give it first in a weak form, producing just a pointwise equality, and then turn this into an actual equality using [Funext]. *)

@@ -424,6 +424,22 @@ Proof.
   exact (isnat (join_rec_natequiv A B) g f).
 Defined.
 
+(** We restate the previous two results using [Join_rec] for convenience. *)
+Definition Join_rec_homotopic (A B : Type) {P : Type}
+  (fl  : A -> P) (fr  : B -> P) (fg  : forall a b, fl  a = fr  b)
+  (fl' : A -> P) (fr' : B -> P) (fg' : forall a b, fl' a = fr' b)
+  (hl : forall a, fl a = fl' a)
+  (hr : forall b, fr b = fr' b)
+  (hg : forall a b, fg a b @ hr b = hl a @ fg' a b)
+  : Join_rec fl fr fg == Join_rec fl' fr' fg'
+  := fmap join_rec (Build_JoinRecPath _ _ _
+      {| jl:=fl; jr:=fr; jg:=fg |} {| jl:=fl'; jr:=fr'; jg:=fg' |} hl hr hg).
+
+Definition Join_rec_nat (A B : Type) {P Q : Type} (g : P -> Q)
+  (fl : A -> P) (fr : B -> P) (fg : forall a b, fl a = fr b)
+  : Join_rec (g o fl) (g o fr) (fun a b => ap g (fg a b)) == g o Join_rec fl fr fg
+  := join_rec_nat _ _ g {| jl:=fl; jr:=fr; jg:=fg |}.
+
 (** * Various types of equalities between paths in joins *)
 
 (** Naturality squares for given paths in [A] and [B]. *)
