@@ -90,22 +90,21 @@ Proof.
   - refine (Circle_ind _ 1 _).
     transport_paths FFlr; apply equiv_p1_1q.
     refine (ap _ (Circle_rec_beta_loop _ _ _) @ _).
-    refine (ap_pp _ _ (merid South)^ @ _).
-    refine ((1 @@ ap_V _ _) @ _).
-    refine ((_ @@ (ap inverse _)) @ _). 1, 2: napply Susp_rec_beta_merid.
+    lhs napply Susp_rec_beta_zigzag.
     simpl.
     apply concat_p1.
-  - refine (Susp_ind (fun x => Circle_to_S1 (S1_to_Circle x) = x)
-                     1 (merid South) _); intros x.
-    transport_paths FFlr; symmetry.
+  - snapply Susp_ind_FFlr; simpl.
+    1: reflexivity.
+    1: exact (merid South).
+    intro x.
     unfold S1_to_Circle; rewrite (Susp_rec_beta_merid x).
     revert x. change (Susp Empty) with (Sphere 0).
     apply (equiv_ind (S0_to_Bool ^-1)); intros x.
     case x; simpl.
     2: reflexivity.
-    lhs napply concat_1p.
+    rhs napply concat_1p.
     unfold Circle_to_S1; rewrite Circle_rec_beta_loop.
-    symmetry; apply concat_pV_p.
+    apply concat_pV_p.
 Defined.
 
 Definition equiv_S1_Circle : Sphere 1 <~> Circle
@@ -171,37 +170,23 @@ Proof.
                (ap_compose (fun u => merid u @ (merid North)^) (ap S2_to_TwoSphere)
                            (merid North @ (merid South)^))).
   transport_paths FlFr; symmetry.
-  lhs_V refine (1 @@ ap_pp_concat_pV S2_to_TwoSphere (merid North)).
-  lhs_V refine (1 @@ (1 @@ (1 @@
-                              (concat_pV_inverse2 (ap S2_to_TwoSphere (merid North))
-                                  _
-                                  (Susp_rec_beta_merid North))))).
-  lhs exact (@concat_Ap (Sphere 1) _
-                      (fun x => ap S2_to_TwoSphere (merid x @ (merid North)^))
-                      (fun x => Susp_rec 1 1 
-                                (Susp_rec surf 1 
-                                Empty_rec) x 
-                                @ 1)
-                      (fun x => ap_pp S2_to_TwoSphere (merid x) (merid North)^ 
-                                @ ((1 @@ ap_V S2_to_TwoSphere (merid North)) 
-                                @ ((Susp_rec_beta_merid x 
-                                   @@ inverse2 (Susp_rec_beta_merid North)) 
-                                @ 1)))
-                      North North (merid North @ (merid South)^)). f_ap.
-  { rhs_V refine (ap_pp_concat_pV _ _).
-    exact (1 @@ (1 @@ (concat_pV_inverse2 _ _ _))). }
-  lhs_V exact (concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1
-                                         Empty_rec)) 
-                         (fun _ => 1) 
+  lhs_V refine (1 @@ ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid North)).
+  simpl.
+  lhs exact (concat_Ap (fun x => ap_pV S2_to_TwoSphere (merid x) (merid North)
+                                  @ ((Susp_rec_beta_merid x
+                                        @@ inverse2 (Susp_rec_beta_merid North))
+                                       @ 1))
+               (merid North @ (merid South)^)).
+  f_ap.
+  1: exact (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid North)).
+  lhs_V exact (concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec))
+                         (fun _ => 1)
                          (merid North @ (merid South)^)).
-  lhs refine (ap (fun w => _ @@ w) (ap_const _ _)).
-  lhs rapply whiskerR_p1_1.
-  lhs refine (ap_pp _ (merid North) (merid South)^).
-  rhs_V rapply concat_p1. f_ap.
-  - exact (Susp_rec_beta_merid North).
-  - lhs rapply ap_V. refine (@inverse2 _ _ _ _ 1 _).
-    exact (Susp_rec_beta_merid South).
-Defined.
+  lhs nrefine (ap (fun w => _ @@ w) (ap_const _ _)).
+  lhs napply whiskerR_p1_1.
+  rhs_V napply concat_p1.
+  napply Susp_rec_beta_zigzag.
+Defined. (* A bit slow, ~0.2s. *)
 
 Definition issect_S2_to_TwoSphere : TwoSphere_to_S2 o S2_to_TwoSphere == idmap.
 Proof.

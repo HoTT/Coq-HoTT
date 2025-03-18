@@ -20,8 +20,7 @@ Defined.
 Definition susp_to_join (A : Type) : Susp A -> Join Bool A.
 Proof.
   srapply (Susp_rec (joinl true) (joinl false)).
-  intros a.
-  exact (jglue _ a @ (jglue _ a)^).
+  exact (zigzag true false).
 Defined.
 
 Instance isequiv_join_to_susp (A : Type) : IsEquiv (join_to_susp A).
@@ -33,10 +32,7 @@ Proof.
     transport_paths FFlr.
     apply equiv_p1_1q.
     lhs napply (ap _ _); [napply Susp_rec_beta_merid | ].
-    lhs napply (ap_pp _ _ (jglue false a)^).
-    lhs nrefine (_ @@ _).
-    1: lhs napply ap_V; napply (ap inverse).
-    1,2: napply Join_rec_beta_jglue.
+    lhs napply (Join_rec_beta_zigzag _ _ _ true false a).
     apply concat_p1.
   - srapply (Join_ind_FFlr (join_to_susp A)); cbn beta.
     1: intros [|]; reflexivity.
@@ -45,10 +41,10 @@ Proof.
     lhs nrefine (ap _ _ @@ 1).
     1: napply Join_rec_beta_jglue.
     destruct b.
-    all: rhs napply concat_1p.
-    + lhs nrefine (_ @@ 1); [napply Susp_rec_beta_merid | ].
+    + rhs napply concat_1p.
+      lhs nrefine (_ @@ 1); [napply Susp_rec_beta_merid | ].
       apply concat_pV_p.
-    + apply concat_1p.
+    + reflexivity.
 Defined.
 
 Definition equiv_join_susp (A : Type) : Join Bool A <~> Susp A

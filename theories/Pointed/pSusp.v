@@ -150,30 +150,30 @@ Definition loop_susp_unit_natural {X Y : pType} (f : X ->* Y)
   ==* fmap loops (fmap psusp f) o* loop_susp_unit X.
 Proof.
   pointed_reduce.
-  simple refine (Build_pHomotopy _ _); cbn.
+  snapply Build_pHomotopy; cbn.
   - intros x; symmetry.
-    refine (concat_1p _@ (concat_p1 _ @ _)).
-    refine (ap_pp (Susp_rec North South (merid o f))
-                  (merid x) (merid (point X))^ @ _).
-    refine ((1 @@ ap_V _ _) @ _).
+    lhs napply concat_1p; lhs napply concat_p1.
+    lhs napply (ap_pV _ (merid x) (merid point0)).
     exact (Susp_rec_beta_merid _ @@ inverse2 (Susp_rec_beta_merid _)).
-  - cbn. apply moveL_pV. rewrite !inv_pp, !concat_pp_p, concat_1p; symmetry.
-    apply moveL_Vp.
-    refine (concat_pV_inverse2 _ _ (Susp_rec_beta_merid (point X)) @ _).
-    apply moveL_Vp, moveL_Vp.
-    refine (ap_pp_concat_pV _ _ @ _).
-    apply moveL_Vp, moveL_Vp.
-    rewrite concat_p1_1, concat_1p_1.
-    cbn; symmetry.
-    refine (concat_p1 _ @ _).
-    refine (ap_compose
-      (fun p' => (ap (Susp_rec North South (merid o f))) p' @ 1)
-      (fun p' => 1 @ p')
-      (concat_pV (merid (point X))) @ _).
-    apply ap.
-    exact (ap_compose (ap (Susp_rec North South (merid o f)))
-      (fun p' => p' @ 1) _).
-Qed.
+  - cbn. apply moveL_pV.
+    rhs napply concat_1p.
+    apply moveR_Vp.
+    lhs napply concat_p1.
+    (* Handle the [ap ... (1 @ q)] part. *)
+    lhs napply (ap_compose (fun p => ap _ p @ 1) _ (concat_pV _)).
+    lhs_V napply concat_1p_1.
+    rhs napply concat_pp_p.
+    apply whiskerL.
+    (* Handle the [ap ... (q @ 1)] part. *)
+    lhs napply (ap_compose _ (fun q => q @ 1) (concat_pV _)).
+    lhs_V napply concat_p1_1.
+    rhs napply concat_pp_p.
+    apply whiskerL.
+    (* Finish it off. *)
+    symmetry.
+    lhs napply concat_pp_p.
+    exact (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid point0)).
+Defined.
 
 Definition loop_susp_counit (X : pType) : psusp (loops X) ->* X
   :=  Build_pMap (psusp (loops X)) X (Susp_rec (point X) (point X) idmap) 1.
@@ -202,25 +202,23 @@ Definition loop_susp_triangle1 (X : pType)
   : fmap loops (loop_susp_counit X) o* loop_susp_unit (loops X)
   ==* pmap_idmap.
 Proof.
-  simple refine (Build_pHomotopy _ _).
+  (* This proof has a lot of overlap with [loop_susp_unit_natural]. Can a common lemma be factored out? *)
+  snapply Build_pHomotopy.
   - intros p; cbn.
-    refine (concat_1p _ @ (concat_p1 _ @ _)).
-    refine (ap_pp (Susp_rec (point X) (point X) idmap)
-                  (merid p) (merid (point (point X = point X)))^ @ _).
-    refine ((1 @@ ap_V _ _) @ _).
-    refine ((Susp_rec_beta_merid p
-      @@ inverse2 (Susp_rec_beta_merid (point (loops X)))) @ _).
-    exact (concat_p1 _).
-  - apply moveL_pV. destruct X as [X x]; cbn; unfold point.
-    apply whiskerR.
-    rewrite (concat_pV_inverse2
-               (ap (Susp_rec x x idmap) (merid 1))
-               1 (Susp_rec_beta_merid 1)).
-    rewrite (ap_pp_concat_pV (Susp_rec x x idmap) (merid 1)).
-    rewrite ap_compose, (ap_compose _ (fun p => p @ 1)).
-    rewrite concat_1p_1; apply ap.
-    apply concat_p1_1.
-Qed.
+    lhs napply concat_1p; lhs napply concat_p1.
+    lhs napply (ap_pV _ (merid p) _).
+    lhs napply (Susp_rec_beta_merid _ @@ inverse2 (Susp_rec_beta_merid _)).
+    apply concat_p1.
+  - simpl.
+    do 2 rhs napply concat_p1.
+    rhs napply (ap_compose (fun p => ap _ p @ 1) _ (concat_pV _)).
+    rhs_V napply (concat_1p_1 _ _).
+    apply whiskerL.
+    rhs napply (ap_compose _ (fun q => q @ 1) (concat_pV _)).
+    rhs_V napply concat_p1_1.
+    apply whiskerL.
+    exact (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid pt)).
+Defined. (* A bit slow, ~0.9s. *)
 
 Definition loop_susp_triangle2 (X : pType)
   : loop_susp_counit (psusp X) o* fmap psusp (loop_susp_unit X)
