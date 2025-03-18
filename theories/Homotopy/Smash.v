@@ -181,10 +181,9 @@ Section Smash.
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : X)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel' a b) = Pgl a @ (Pgl b)^.
   Proof.
-    lhs napply ap_pp.
+    lhs napply ap_pV.
     f_ap.
     1: apply Smash_rec_beta_gluel.
-    lhs napply ap_V.
     apply inverse2.
     apply Smash_rec_beta_gluel.
   Defined.
@@ -193,10 +192,9 @@ Section Smash.
     (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : Y)
     : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer' a b) = Pgr a @ (Pgr b)^.
   Proof.
-    lhs napply ap_pp.
+    lhs napply ap_pV.
     f_ap.
     1: apply Smash_rec_beta_gluer.
-    lhs napply ap_V.
     apply inverse2.
     apply Smash_rec_beta_gluer.
   Defined.

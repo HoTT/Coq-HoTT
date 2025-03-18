@@ -338,8 +338,7 @@ Proof.
       change (?t = _) with (t = loop_susp_unit X x).
       lhs napply (ap_compose (psusp_pinch X)).
       lhs napply (ap _ (psusp_pinch_beta_merid x)).
-      lhs napply ap_pp.
-      lhs napply (ap (fun x => _ @ x) (ap_V _ _)).
+      lhs napply ap_pV.
       apply moveR_pV.
       rhs napply (whiskerL _ (wedge_rec_beta_wglue _ _)).
       lhs napply ap_pp.
@@ -369,8 +368,7 @@ Proof.
       change (?t = _) with (t = loop_susp_unit X x).
       lhs napply (ap_compose (psusp_pinch X)).
       lhs napply (ap _ (psusp_pinch_beta_merid x)).
-      lhs napply ap_pp.
-      lhs napply (ap (fun x => _ @ x) (ap_V _ _)).
+      lhs napply ap_pV.
       apply moveR_pV.
       rhs napply (whiskerL _ (wedge_rec_beta_wglue _ _)).
       lhs napply ap_pp.
