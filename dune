@@ -133,17 +133,18 @@
 ; Timing report
 
 (rule
- (alias timing-html-hint)
- (deps (universe) %{bin:lua})
+ (alias timing-hint)
+ (deps (universe) %{bin:lua} %{bin:rsync})
  (action
   (run echo "Generating timing report. This may take a while.")))
 
 (rule
- (alias timing-html)
- (target
+ (alias timing)
+ (targets
+  (dir timing-output)
   (dir timing-html))
  (deps
-  (alias timing-html-hint)
+  (alias timing-hint)
   etc/generate_coqproject.sh
   etc/time2html
   Makefile
@@ -158,6 +159,16 @@
   (setenv
    GENERATE_COQPROJECT_FOR_DUNE
    true
-   (progn
-    (ignore-outputs
-     (run %{bin:make} timing-html))))))
+   (ignore-outputs
+    (progn
+     (run %{bin:make} timing-html)
+     (run %{bin:make} copy-timing-files))))))
+
+(rule
+ (alias timing-report)
+ (deps
+  timing-output
+  (sandbox always)
+  (sandbox preserve_file_kind))
+ (action
+  (run %{bin:tree})))

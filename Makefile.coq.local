@@ -262,3 +262,10 @@ clean::
 	$(HIDE)rm -f $(ALL_DOTFILES)
 	rm -f $(EXTRA_CLEANFILES)
 	find theories contrib test \( -name \*.vo -o -name \*.glob -o -name \*.timing \) -delete
+
+# This rule copies all the .timing files to timing-output/. It is used by dune
+# in order to collect all the timing files in one place.
+copy-timing-files: $(ALL_TIMINGFILES)
+	$(SHOW)'COPY timing files to timing-output/'
+	$(HIDE)mkdir -p timing-output
+	$(HIDE)rsync -R $(ALL_TIMINGFILES) timing-output/
