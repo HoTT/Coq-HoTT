@@ -110,12 +110,14 @@ Inductive Hom2FMC {X : Type} : forall {a b : FMC X},
 (* Square (associator' a b c) (associator' a' b' c') (tensor2 f (tensor2 g h)) (tensor2 (tensor2 f g) h) *)
 Global Instance isgraph_FMC {X : Type} : IsGraph (FMC X)
   := {| Hom := HomFMC; |}.
+Canonical isgraph_FMC.
 
 Global Instance is01cat_FMC {X : Type} : Is01Cat (FMC X)
   := {| Id := @id _; cat_comp := @comp _ |}.
 
 Global Instance is2graph_FMC {X : Type} : Is2Graph (FMC X)
   := fun x y => {| Hom := Hom2FMC |}.
+Canonical is2graph_FMC.
 
 Global Instance is1cat_FMC {X : Type} : Is1Cat (FMC X).
 Proof.
@@ -136,6 +138,14 @@ Proof.
   - revert X.
     exact @right_unitor2.
 Defined.
+
+Instance is01cat_FMC_hom {X:Type} (a b : FMC X)
+  : Is01Cat (HomFMC a b)
+  := is01cat_hom a b.
+
+Instance is01gpd_FMC_hom {X:Type} (a b : FMC X)
+  : Is0Gpd (H0:=is01cat_FMC_hom a b) (HomFMC a b)
+  := is0gpd_hom a b.
 
 Global Instance is0gpd_FMC {X : Type} : Is0Gpd (FMC X).
 Proof.
@@ -250,7 +260,9 @@ Global Instance is2graph_nfmc {X : Type} : Is2Graph (NFMC X) := is2graph_paths _
 Global Instance is1cat_nfmc {X : Type} : Is1Cat (NFMC X) := is1cat_paths.
 Global Instance is0gpd_nfmc {X : Type} : Is0Gpd (NFMC X) := is0gpd_paths _.
 Global Instance is1gpd_nfmc {X : Type} : Is1Gpd (NFMC X) := is1gpd_paths.
-Global Instance hasequivs_nfmc {X : Type} : HasEquivs (NFMC X) := hasequivs_1gpd _.  
+Global Instance hasequivs_nfmc {X : Type} : HasEquivs (NFMC X) := hasequivs_1gpd _.
+
+Canonical isgraph_nfmc.
 
 Global Instance is0bifunctor_app {X : Type} : Is0Bifunctor (@app X).
 Proof.
@@ -354,12 +366,6 @@ Instance is0functor_interp_nfmc {X : Type}
   : Is0Functor (interp_nfmc (X:=X))
   := Build_Is0Functor _ _ _ _ interp_nfmc (@ieq _ ).
 
-Definition interp_nfmc_2cells {X : Type}
-  (a b : FMC X) (f g : a $-> b) (s : f $== g)
-  : fmap interp_nfmc f $== fmap interp_nfmc g.
-Proof.
-Abort.
-
 Fixpoint ieq2 {X : Type}
   {a b : FMC X} {f_ g_ : a $-> b} (s : f_ $== g_)
   : fmap interp_nfmc f_ $== fmap interp_nfmc g_ :=
@@ -405,11 +411,11 @@ Instance is0functor_embed_fmc {X : Type}
   : Is0Functor (embed_fmc (X:=X))
   := Build_Is0Functor _ _ _ _ embed_fmc
        (fun a b f =>
-          match f in @paths _ _ y return @HomFMC _ _ (embed_fmc y) with
+          match f in @paths _ _ y return @HomFMC _ (embed_fmc a) (embed_fmc y) with
           | @idpath _ _ => id (embed_fmc a)
           end).
 
-Definition is1functor_embed_fmc {X : Type}
+Instance is1functor_embed_fmc {X : Type}
   : Is1Functor (embed_fmc (X:=X)).
 Proof.
   apply Build_Is1Functor.
@@ -438,14 +444,59 @@ Fixpoint interp_unit {X : Type} (A : FMC X) : HomFMC A (embed_fmc (interp_nfmc A
                        (tensor2 (interp_unit a) (interp_unit b))
      end.
 
+Lemma embed_cons {X : Type} (x y : NFMC X) (a : X) (p : x = y)
+  : Hom2FMC (tensor2 (id (el a)) (fmap embed_fmc p))
+      (fmap embed_fmc (match p in paths _ y return paths (a :: x) (a :: y) with
+                      | idpath => idpath
+                      end)).
+Proof.
+  destruct p.
+  exact tensor2_id.
+Defined.
+
 Theorem interp_unit_natural {X: Type}
   : Is1Natural idmap (fun A => embed_fmc (interp_nfmc A)) (interp_unit (X:=X)).
 Proof.
   apply Build_Is1Natural.
   intros a b f.
-  induction f as [| x y z f sigma g tau | | | | |].
+  induction f as [| x y z g tau f sigma (* comp *)
+                 | x y f IHf (* rev *)
+                 | | | |].
   - exact (comp2 (rev2 left_unitor2) (right_unitor2)).
+  - refine (hconcat sigma tau $@ (cat_prewhisker _ _ )).
+    symmetry.
+    exact (fmap_comp (embed_fmc o interp_nfmc) f g).
+  - refine (hinverse' IHf $@ _).
+    apply cat_prewhisker.
+    symmetry.
+    exact (gpd_1functor_V (embed_fmc o interp_nfmc) f).
+  - symmetry.
+    exact (left_unitor2 $@ (isnat_left_unitor _ _ (interp_unit x))).
+  - simpl (fmap idmap _); simpl interp_unit.
+    refine ((isnat_right_unitor _ _ (interp_unit x))^$ $@ _).
+    refine (_ $@ cat_assoc (A:= FMC X) _ _ _).
+    rapply (cat_prewhisker (A:=FMC X)); simpl.
+    generalize (interp_nfmc x).
+    clear x; intro y.
+    induction y as [| a y IHy].
+    + exact ((left_unitor_unit_right_unitor_unit tensor unit)^$
+                $@ (left_unitor2)^$).
+    + refine (gpd_moveL_hV ((right_unitor_associator tensor unit
+                (el a) (embed_fmc y))^$) $@ _).
+      simpl unit_lemma.
+      refine (_ $@ cat_assoc _ _ _ ).
+      apply cat_prewhisker.
+      change (Hom2FMC ?a ?b) with (a $== b) in IHy.
+      apply (fmap2 (tensor (el a))) in IHy; refine (IHy $@ _); clear IHy.
+      refine (fmap_comp (tensor (el a)) _ _ $@ _).
+      match goal with
+      | [ |- _ $== ?z $o _] =>
+          change z with (fmap (embed_fmc (X:=X)) (app_nil (a :: y)))
+      end.
+      apply cat_prewhisker.
+      apply embed_cons.
   - 
+  -
 Defined.
 
 (* This is equivalent to the functor category as we have groupoids, but it is convenient to use core *)
