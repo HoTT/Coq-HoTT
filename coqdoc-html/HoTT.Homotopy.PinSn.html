@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Homotopy.PinSn</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Homotopy.PinSn</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.html#"><span class="id" title="library">WildCat</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Pointed.html#"><span class="id" title="library">Pointed</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a> <a class="idref" href="HoTT.Truncations.Connectedness.html#"><span class="id" title="library">Truncations.Connectedness</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#"><span class="id" title="library">Spaces.Circle</span></a> <a class="idref" href="HoTT.Spaces.Spheres.html#"><span class="id" title="library">Spaces.Spheres</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.html#"><span class="id" title="library">Algebra.AbGroups</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#"><span class="id" title="library">Homotopy.HomotopyGroup</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.HSpaceS1.html#"><span class="id" title="library">Homotopy.HSpaceS1</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.Hopf.html#"><span class="id" title="library">Homotopy.Hopf</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1235"></a><h1 class="section">We show that the nth homotopy group of the n-sphere is the integers, for n &gt;= 1.</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">wc_iso_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pointed_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The fundamental group of the 1-sphere / circle. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Pi1S1" class="idref" href="#Pi1S1"><span class="id" title="section">Pi1S1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Univalence</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pointed_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="pi1_circle" class="idref" href="#pi1_circle"><span class="id" title="lemma">pi1_circle</span></a> : <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 <a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">[</span></a><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#44d93ed1077fb87ba02f52390cc2a7bb"><span class="id" title="notation">≅</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+</div>
+
+<div class="doc">
+We give the isomorphism backwards, so we check the operation is preserved coming from the integer side. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_GroupIsomorphism'"><span class="id" title="definition">Build_GroupIsomorphism'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="var">equiv_via</span> (<a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#equiv_tr"><span class="id" title="definition">equiv_tr</span></a> 0 (<a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> <a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">[</span></a><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">]</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Circle.html#equiv_loopCircle_int"><span class="id" title="definition">equiv_loopCircle_int</span></a>. }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Int.html#loopexp_add"><span class="id" title="definition">loopexp_add</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="pi1_s1" class="idref" href="#pi1_s1"><span class="id" title="lemma">pi1_s1</span></a> : <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> 1) <a class="idref" href="HoTT.WildCat.Equiv.html#44d93ed1077fb87ba02f52390cc2a7bb"><span class="id" title="notation">≅</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">etransitivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.PinSn.html#pi1_circle"><span class="id" title="lemma">pi1_circle</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#groupiso_pi_functor"><span class="id" title="definition">groupiso_pi_functor</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Spheres.html#pequiv_S1_Circle"><span class="id" title="definition">pequiv_S1_Circle</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Homotopy.PinSn.html#Pi1S1"><span class="id" title="section">Pi1S1</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The second homotopy group of the 2-sphere is the integers. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Pi2S2" class="idref" href="#Pi2S2"><span class="id" title="section">Pi2S2</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="ptr_loops_s2_s1" class="idref" href="#ptr_loops_s2_s1"><span class="id" title="definition">ptr_loops_s2_s1</span></a> `{<a id="H:2" class="idref" href="#H:2"><span class="id" title="binder">Univalence</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Pointed.pTrunc.html#pTr"><span class="id" title="definition">pTr</span></a> 1 (<a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> 2)) <a class="idref" href="HoTT.Pointed.Core.html#103880150f1b8a9c385f8c09ab3e01b0"><span class="id" title="notation">&lt;~&gt;*</span></a> <a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Pointed.pEquiv.html#6066ff0cc4f085446f9265d383e4aa41"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Homotopy.Hopf.html#licata_finster"><span class="id" title="definition">licata_finster</span></a> (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> 1)<a class="idref" href="HoTT.Pointed.pEquiv.html#6066ff0cc4f085446f9265d383e4aa41"><span class="id" title="notation">)^-1*</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pi2_s2" class="idref" href="#pi2_s2"><span class="id" title="definition">pi2_s2</span></a> `{<a id="H:3" class="idref" href="#H:3"><span class="id" title="binder">Univalence</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 2 (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> 2) <a class="idref" href="HoTT.WildCat.Equiv.html#53abe9e5a667eb1e98048ced5c0b4484"><span class="id" title="notation">$&lt;~&gt;</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Homotopy.PinSn.html#pi1_s1"><span class="id" title="lemma">pi1_s1</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 2 ?<span class="id" title="var">X</span>) <span class="id" title="keyword">with</span> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 (<a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> <span class="id" title="var">X</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.WildCat.Equiv.html#compose_cate"><span class="id" title="definition">compose_cate</span></a> (<span class="id" title="var">b</span>:=<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 (<a class="idref" href="HoTT.Pointed.pTrunc.html#pTr"><span class="id" title="definition">pTr</span></a> 1 (<a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> 2)))) <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Equiv.html#emap"><span class="id" title="definition">emap</span></a> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1) <a class="idref" href="HoTT.Homotopy.PinSn.html#ptr_loops_s2_s1"><span class="id" title="definition">ptr_loops_s2_s1</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#grp_iso_pi_Tr"><span class="id" title="definition">grp_iso_pi_Tr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Homotopy.PinSn.html#Pi2S2"><span class="id" title="section">Pi2S2</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For n &gt;= 1, the nth homotopy group of the n-sphere is the integers. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="PinSn" class="idref" href="#PinSn"><span class="id" title="section">PinSn</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pin_sn" class="idref" href="#pin_sn"><span class="id" title="definition">pin_sn</span></a> `{<a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">Univalence</span></a>} (<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> <a class="idref" href="HoTT.Homotopy.PinSn.html#n:5"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> <a class="idref" href="HoTT.Homotopy.PinSn.html#n:5"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>) <a class="idref" href="HoTT.WildCat.Equiv.html#53abe9e5a667eb1e98048ced5c0b4484"><span class="id" title="notation">$&lt;~&gt;</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.PinSn.html#pi1_s1"><span class="id" title="lemma">pi1_s1</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.PinSn.html#pi2_s2"><span class="id" title="definition">pi2_s2</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">oE</span></a> <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#groupiso_pi_loops"><span class="id" title="definition">groupiso_pi_loops</span></a> <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Nat.html#331a87f8f0f3c9336601c27f1e458dc3"><span class="id" title="notation">.+3</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">IHn</span> <a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#grp_iso_pi_connmap"><span class="id" title="definition">grp_iso_pi_connmap</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Pointed.pSusp.html#loop_susp_unit"><span class="id" title="definition">loop_susp_unit</span></a> (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Nat.html#bc63483175fac06bcd5541a5e9093b18"><span class="id" title="notation">.+2</span></a>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;(n+2)-sphere&nbsp;is&nbsp;(n+1)-connected,&nbsp;so&nbsp;<span class="inlinecode"><span class="id" title="var">loop_susp_unit</span></span>&nbsp;is&nbsp;<span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+2+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>-connected.&nbsp;&nbsp;Since&nbsp;<span class="inlinecode"><span class="id" title="var">n</span>.+2</span> <span class="inlinecode">≤</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+2+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>,&nbsp;we're&nbsp;done,&nbsp;after&nbsp;some&nbsp;<span class="inlinecode"><span class="id" title="var">trunc_index</span></span>&nbsp;juggling.&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Truncations.Connectedness.html#isconnmap_pred_add"><span class="id" title="definition">isconnmap_pred_add</span></a> <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-2'"><span class="id" title="notation">.-2</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_add_succ"><span class="id" title="definition">trunc_index_add_succ</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#IsConnMap"><span class="id" title="class">IsConnMap</span></a> (<a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> (<span class="id" title="var">n</span> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <span class="id" title="var">n</span>)) (<a class="idref" href="HoTT.Pointed.pSusp.html#loop_susp_unit"><span class="id" title="definition">loop_susp_unit</span></a> (<a class="idref" href="HoTT.Spaces.Spheres.html#psphere"><span class="id" title="definition">psphere</span></a> <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Nat.html#bc63483175fac06bcd5541a5e9093b18"><span class="id" title="notation">.+2</span></a>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>. <span class="comment">(*&nbsp;<span class="inlinecode"><span class="id" title="var">conn_map_loop_susp_unit</span></span>&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Homotopy.PinSn.html#PinSn"><span class="id" title="section">PinSn</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

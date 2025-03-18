@@ -1,0 +1,217 @@
+<html>
+<head>
+<title>Notnot.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Notnot.v</h1>
+
+<div class="code" title="File: Notnot.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types Universes.HProp.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 72.972972972973%"></div>
+<pre>
+Require Import Modality.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The double negation modality *)
+
+(** The operation sending [X] to [~~X] is a modality.  This is Exercise 7.12 in the book.  Note that it is (apparently) *not* accessible unless we assume propositional resizing. *)</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition NotNot `{Funext} : Modality.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply easy_modality.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X; exact (~~X).</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact @not_not_unit.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn beta; intros A B f z nBz.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply z; intros a.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 14
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+    exact (f a (transport (fun x =&gt; ~ (B x))
+                          (path_ishprop _ _)
+                          nBz)).</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn beta; intros A B f a.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn beta; intros A z z'.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 20
+Time: 0.004s">
+<div class="time" style="width: 10.810810810811%"></div>
+<pre>
+    refine (isequiv_iff_hprop _ _).</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 21
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+    intros; apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** By definition, the local types for this modality are the types such that [not_not_unit : P -&gt; ~~P] is an equivalence.  These are exactly the stable propositions, i.e. those propositions [P] such that [~~P -&gt; P]. *)</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Definition inO_notnot `{Funext} (P : Type)
+  : In NotNot P &lt;~&gt; (Stable P * IsHProp P)
+  := equiv_isequiv_not_not_unit_stable_hprop P.</pre>
+</div>
+<div class="code" title="File: Notnot.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.CategoryOfSections.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.CategoryOfSections.Core</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab575"></a><h1 class="section">Category of sections</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Strict.html#"><span class="id" title="library">Category.Strict</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="library">Functor.Identity</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Identity.html#"><span class="id" title="library">NaturalTransformation.Identity</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Paths.html#"><span class="id" title="library">NaturalTransformation.Paths</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#"><span class="id" title="library">NaturalTransformation.Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Paths.html#"><span class="id" title="library">Functor.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="FunctorSectionCategory" class="idref" href="#FunctorSectionCategory"><span class="id" title="section">FunctorSectionCategory</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="FunctorSectionCategory.C" class="idref" href="#FunctorSectionCategory.C"><span class="id" title="variable">C</span></a> <a id="FunctorSectionCategory.D" class="idref" href="#FunctorSectionCategory.D"><span class="id" title="variable">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="FunctorSectionCategory.R" class="idref" href="#FunctorSectionCategory.R"><span class="id" title="variable">R</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory.D"><span class="id" title="variable">D</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+There is a category <span class="inlinecode"><span class="id" title="var">Sect</span>(<a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a>)</span> of sections of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab576"></a><h2 class="section">Section of a functor</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Record</span> <a id="SectionOfFunctor" class="idref" href="#SectionOfFunctor"><span class="id" title="definition, record"><span id="SectionOfFunctor_rect" class="id"><span id="SectionOfFunctor_ind" class="id"><span id="SectionOfFunctor_rec" class="id"><span id="SectionOfFunctor_sind" class="id">SectionOfFunctor</span></span></span></span></span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="section_of_functor_morphism" class="idref" href="#section_of_functor_morphism"><span class="id" title="projection">section_of_functor_morphism</span></a> :&gt; <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory.C"><span class="id" title="variable">C</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="section_of_functor_issect" class="idref" href="#section_of_functor_issect"><span class="id" title="projection">section_of_functor_issect</span></a> : <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#section_of_functor_morphism:6"><span class="id" title="method">section_of_functor_morphism</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Notation</span> <a id="section_of_functor_sig" class="idref" href="#section_of_functor_sig"><span class="id" title="abbreviation">section_of_functor_sig</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="section_of_functor_morphism:8" class="idref" href="#section_of_functor_morphism:8"><span class="id" title="binder">section_of_functor_morphism</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory.C"><span class="id" title="variable">C</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#section_of_functor_morphism:8"><span class="id" title="variable">section_of_functor_morphism</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1 <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="section_of_functor_sig'" class="idref" href="#section_of_functor_sig'"><span class="id" title="lemma">section_of_functor_sig'</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#section_of_functor_sig"><span class="id" title="abbreviation">section_of_functor_sig</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#SectionOfFunctor"><span class="id" title="record">SectionOfFunctor</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">issig</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">natural_transformation_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab577"></a><h2 class="section">Definition of category of sections of a functor</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="category_of_sections" class="idref" href="#category_of_sections"><span class="id" title="definition">category_of_sections</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<a class="idref" href="HoTT.Categories.Category.Core.html#Build_PreCategory"><span class="id" title="definition">Build_PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#SectionOfFunctor"><span class="id" title="record">SectionOfFunctor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="F:9" class="idref" href="#F:9"><span class="id" title="binder"><span id="F:14" class="id">F</span></span></a> <a id="G:10" class="idref" href="#G:10"><span class="id" title="binder"><span id="G:15" class="id">G</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#F:9"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#G:10"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="F:11" class="idref" href="#F:11"><span class="id" title="binder"><span id="F:16" class="id">F</span></span></a> ⇒ 1)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a id="T:12" class="idref" href="#T:12"><span class="id" title="binder"><span id="T:17" class="id">T</span></span></a> <a id="U:13" class="idref" href="#U:13"><span class="id" title="binder"><span id="U:18" class="id">U</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#T:12"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#U:13"><span class="id" title="variable">U</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<span class="id" title="var">path_natural_transformation</span>; <span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">morphism</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#FunctorSectionCategory"><span class="id" title="section">FunctorSectionCategory</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isstrict_category_of_sections" class="idref" href="#isstrict_category_of_sections"><span class="id" title="instance">isstrict_category_of_sections</span></a> `{<a id="H:19" class="idref" href="#H:19"><span class="id" title="binder">Funext</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="IsStrictCategory0:21" class="idref" href="#IsStrictCategory0:21"><span class="id" title="binder">IsStrictCategory</span></a> <a id="C:20" class="idref" href="#C:20"><span class="id" title="binder"><span id="IsStrictCategory0:21" class="id">C</span></span></a>, <a id="IsStrictCategory1:23" class="idref" href="#IsStrictCategory1:23"><span class="id" title="binder">IsStrictCategory</span></a> <a id="D:22" class="idref" href="#D:22"><span class="id" title="binder"><span id="IsStrictCategory1:23" class="id">D</span></span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F:24" class="idref" href="#F:24"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#C:20"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#D:22"><span class="id" title="variable">D</span></a>)<br/>
+: <a class="idref" href="HoTT.Categories.Category.Strict.html#IsStrictCategory"><span class="id" title="abbreviation">IsStrictCategory</span></a> (<a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#category_of_sections"><span class="id" title="definition">category_of_sections</span></a> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#F:24"><span class="id" title="variable">F</span></a>) | 20.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_isequiv_istrunc"><span class="id" title="definition">istrunc_isequiv_istrunc</span></a>; [ | <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#section_of_functor_sig'"><span class="id" title="lemma">section_of_functor_sig'</span></a> ].<br/>
+&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

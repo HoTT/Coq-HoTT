@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.NaturalTransformation.Dual</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.NaturalTransformation.Dual</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab900"></a><h1 class="section">Opposite natural transformations</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#"><span class="id" title="library">Category.Dual</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#"><span class="id" title="library">Functor.Dual</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#CategoryDualNotations"><span class="id" title="module">Category.Dual.CategoryDualNotations</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#FunctorDualNotations"><span class="id" title="module">Functor.Dual.FunctorDualNotations</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab901"></a><h2 class="section">Definition of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#T"><span class="id" title="abbreviation">T</span></a>ᵒᵖ</span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="opposite" class="idref" href="#opposite"><span class="id" title="definition">opposite</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="C:1" class="idref" href="#C:1"><span class="id" title="binder">C</span></a> <a id="D:2" class="idref" href="#D:2"><span class="id" title="binder">D</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F:3" class="idref" href="#F:3"><span class="id" title="binder">F</span></a> <a id="G:4" class="idref" href="#G:4"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#C:1"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#D:2"><span class="id" title="variable">D</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="T:5" class="idref" href="#T:5"><span class="id" title="binder">T</span></a> : <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#G:4"><span class="id" title="variable">G</span></a>)<br/>
+: <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#G:4"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#F:3"><span class="id" title="variable">F</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">op</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#Build_NaturalTransformation'"><span class="id" title="constructor">Build_NaturalTransformation'</span></a> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#G:4"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">op</span></a>) (<a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#F:3"><span class="id" title="variable">F</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">op</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#components_of"><span class="id" title="projection">components_of</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#T:5"><span class="id" title="variable">T</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:8" class="idref" href="#s:8"><span class="id" title="binder">s</span></a> <a id="d:9" class="idref" href="#d:9"><span class="id" title="binder">d</span></a> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#commutes_sym"><span class="id" title="projection">commutes_sym</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#T:5"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#d:9"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#s:8"><span class="id" title="variable">s</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:6" class="idref" href="#s:6"><span class="id" title="binder">s</span></a> <a id="d:7" class="idref" href="#d:7"><span class="id" title="binder">d</span></a> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#commutes"><span class="id" title="projection">commutes</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#T:5"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#d:7"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#s:6"><span class="id" title="variable">s</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="ac10e6b7093b551c38a73f15620703a3" class="idref" href="#ac10e6b7093b551c38a73f15620703a3"><span class="id" title="notation">&quot;</span></a>T ^op" := (<a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#opposite"><span class="id" title="definition">opposite</span></a> <span class="id" title="var">T</span>) : <span class="id" title="var">natural_transformation_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab902"></a><h2 class="section"><span class="inlinecode">ᵒᵖ</span> is judgmentally involutive</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">natural_transformation_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="opposite_involutive" class="idref" href="#opposite_involutive"><span class="id" title="definition">opposite_involutive</span></a> <a id="C:10" class="idref" href="#C:10"><span class="id" title="binder">C</span></a> <a id="D:11" class="idref" href="#D:11"><span class="id" title="binder">D</span></a> (<a id="F:12" class="idref" href="#F:12"><span class="id" title="binder">F</span></a> <a id="G:13" class="idref" href="#G:13"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#C:10"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#D:11"><span class="id" title="variable">D</span></a>) (<a id="T:14" class="idref" href="#T:14"><span class="id" title="binder">T</span></a> : <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#F:12"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#G:13"><span class="id" title="variable">G</span></a>)<br/>
+: <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#ac10e6b7093b551c38a73f15620703a3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#T:14"><span class="id" title="variable">T</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#ac10e6b7093b551c38a73f15620703a3"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#ac10e6b7093b551c38a73f15620703a3"><span class="id" title="notation">op</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#ac10e6b7093b551c38a73f15620703a3"><span class="id" title="notation">)^</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#ac10e6b7093b551c38a73f15620703a3"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#T:14"><span class="id" title="variable">T</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="NaturalTransformationDualNotations" class="idref" href="#NaturalTransformationDualNotations"><span class="id" title="module">NaturalTransformationDualNotations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="a0b75bf8b4bbaaad7e25eaba30181001" class="idref" href="#a0b75bf8b4bbaaad7e25eaba30181001"><span class="id" title="notation">&quot;</span></a>T ^op" := (<a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#opposite"><span class="id" title="definition">opposite</span></a> <span class="id" title="var">T</span>) : <span class="id" title="var">natural_transformation_scope</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#NaturalTransformationDualNotations"><span class="id" title="module">NaturalTransformationDualNotations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

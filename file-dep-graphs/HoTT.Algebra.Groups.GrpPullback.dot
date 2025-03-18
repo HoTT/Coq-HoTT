@@ -1,0 +1,63 @@
+digraph HoTT_Algebra_Groups_GrpPullback {
+  graph [ratio=0.5]
+  node [style=filled]
+GrpPullback_isequiv_grp_pullback_corec [label="isequiv_grp_pullback_corec", URL=<GrpPullback.html#isequiv_grp_pullback_corec>, peripheries=3, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_corec_pr2 [label="grp_pullback_corec_pr2", URL=<GrpPullback.html#grp_pullback_corec_pr2>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_corec_pr1 [label="grp_pullback_corec_pr1", URL=<GrpPullback.html#grp_pullback_corec_pr1>, fillcolor="#F070D1"] ;
+GrpPullback_equiv_grp_pullback_compose_r [label="equiv_grp_pullback_compose_r", URL=<GrpPullback.html#equiv_grp_pullback_compose_r>, peripheries=3, fillcolor="#F070D1"] ;
+GrpPullback_equiv_functor_grp_pullback [label="equiv_functor_grp_pullback", URL=<GrpPullback.html#equiv_functor_grp_pullback>, peripheries=3, fillcolor="#F070D1"] ;
+GrpPullback_functor_grp_pullback [label="functor_grp_pullback", URL=<GrpPullback.html#functor_grp_pullback>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_corec_ [label="grp_pullback_corec'", URL=<GrpPullback.html#grp_pullback_corec'>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_corec [label="grp_pullback_corec", URL=<GrpPullback.html#grp_pullback_corec>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_pr2 [label="grp_pullback_pr2", URL=<GrpPullback.html#grp_pullback_pr2>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_pr1 [label="grp_pullback_pr1", URL=<GrpPullback.html#grp_pullback_pr1>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback [label="grp_pullback", URL=<GrpPullback.html#grp_pullback>, fillcolor="#F070D1"] ;
+GrpPullback_isgroup_grp_pullback [label="isgroup_grp_pullback", URL=<GrpPullback.html#isgroup_grp_pullback>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_rightinverse [label="grp_pullback_rightinverse", URL=<GrpPullback.html#grp_pullback_rightinverse>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_leftinverse [label="grp_pullback_leftinverse", URL=<GrpPullback.html#grp_pullback_leftinverse>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_inverse [label="grp_pullback_inverse", URL=<GrpPullback.html#grp_pullback_inverse>, fillcolor="#F070D1"] ;
+GrpPullback_ismonoid_grp_pullback [label="ismonoid_grp_pullback", URL=<GrpPullback.html#ismonoid_grp_pullback>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_rightidentity [label="grp_pullback_rightidentity", URL=<GrpPullback.html#grp_pullback_rightidentity>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_leftidentity [label="grp_pullback_leftidentity", URL=<GrpPullback.html#grp_pullback_leftidentity>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_mon_unit [label="grp_pullback_mon_unit", URL=<GrpPullback.html#grp_pullback_mon_unit>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_issemigroup [label="grp_pullback_issemigroup", URL=<GrpPullback.html#grp_pullback_issemigroup>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_sgop_associative [label="grp_pullback_sgop_associative", URL=<GrpPullback.html#grp_pullback_sgop_associative>, fillcolor="#F070D1"] ;
+GrpPullback_grp_pullback_sgop [label="grp_pullback_sgop", URL=<GrpPullback.html#grp_pullback_sgop>, fillcolor="#F070D1"] ;
+  GrpPullback_isequiv_grp_pullback_corec -> GrpPullback_grp_pullback_corec_pr2 [] ;
+  GrpPullback_isequiv_grp_pullback_corec -> GrpPullback_grp_pullback_corec_pr1 [] ;
+  GrpPullback_isequiv_grp_pullback_corec -> GrpPullback_grp_pullback_corec_ [] ;
+  GrpPullback_grp_pullback_corec_pr2 -> GrpPullback_grp_pullback_corec [] ;
+  GrpPullback_grp_pullback_corec_pr2 -> GrpPullback_grp_pullback_pr2 [] ;
+  GrpPullback_grp_pullback_corec_pr1 -> GrpPullback_grp_pullback_corec [] ;
+  GrpPullback_grp_pullback_corec_pr1 -> GrpPullback_grp_pullback_pr1 [] ;
+  GrpPullback_equiv_grp_pullback_compose_r -> GrpPullback_functor_grp_pullback [] ;
+  GrpPullback_equiv_functor_grp_pullback -> GrpPullback_functor_grp_pullback [] ;
+  GrpPullback_functor_grp_pullback -> GrpPullback_grp_pullback_corec [] ;
+  GrpPullback_functor_grp_pullback -> GrpPullback_grp_pullback_pr2 [] ;
+  GrpPullback_functor_grp_pullback -> GrpPullback_grp_pullback_pr1 [] ;
+  GrpPullback_grp_pullback_corec_ -> GrpPullback_grp_pullback_corec [] ;
+  GrpPullback_grp_pullback_corec -> GrpPullback_grp_pullback [] ;
+  GrpPullback_grp_pullback_pr2 -> GrpPullback_grp_pullback [] ;
+  GrpPullback_grp_pullback_pr1 -> GrpPullback_grp_pullback [] ;
+  GrpPullback_grp_pullback -> GrpPullback_isgroup_grp_pullback [] ;
+  GrpPullback_isgroup_grp_pullback -> GrpPullback_grp_pullback_rightinverse [] ;
+  GrpPullback_isgroup_grp_pullback -> GrpPullback_grp_pullback_leftinverse [] ;
+  GrpPullback_isgroup_grp_pullback -> GrpPullback_ismonoid_grp_pullback [] ;
+  GrpPullback_grp_pullback_rightinverse -> GrpPullback_grp_pullback_inverse [] ;
+  GrpPullback_grp_pullback_rightinverse -> GrpPullback_grp_pullback_mon_unit [] ;
+  GrpPullback_grp_pullback_rightinverse -> GrpPullback_grp_pullback_sgop [] ;
+  GrpPullback_grp_pullback_leftinverse -> GrpPullback_grp_pullback_inverse [] ;
+  GrpPullback_grp_pullback_leftinverse -> GrpPullback_grp_pullback_mon_unit [] ;
+  GrpPullback_grp_pullback_leftinverse -> GrpPullback_grp_pullback_sgop [] ;
+  GrpPullback_ismonoid_grp_pullback -> GrpPullback_grp_pullback_rightidentity [] ;
+  GrpPullback_ismonoid_grp_pullback -> GrpPullback_grp_pullback_leftidentity [] ;
+  GrpPullback_ismonoid_grp_pullback -> GrpPullback_grp_pullback_issemigroup [] ;
+  GrpPullback_grp_pullback_rightidentity -> GrpPullback_grp_pullback_mon_unit [] ;
+  GrpPullback_grp_pullback_rightidentity -> GrpPullback_grp_pullback_sgop [] ;
+  GrpPullback_grp_pullback_leftidentity -> GrpPullback_grp_pullback_mon_unit [] ;
+  GrpPullback_grp_pullback_leftidentity -> GrpPullback_grp_pullback_sgop [] ;
+  GrpPullback_grp_pullback_issemigroup -> GrpPullback_grp_pullback_sgop_associative [] ;
+  GrpPullback_grp_pullback_sgop_associative -> GrpPullback_grp_pullback_sgop [] ;
+subgraph cluster_GrpPullback { label="GrpPullback"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+GrpPullback_grp_pullback_sgop; GrpPullback_grp_pullback_sgop_associative; GrpPullback_grp_pullback_issemigroup; GrpPullback_grp_pullback_mon_unit; GrpPullback_grp_pullback_leftidentity; GrpPullback_grp_pullback_rightidentity; GrpPullback_ismonoid_grp_pullback; GrpPullback_grp_pullback_inverse; GrpPullback_grp_pullback_leftinverse; GrpPullback_grp_pullback_rightinverse; GrpPullback_isgroup_grp_pullback; GrpPullback_grp_pullback; GrpPullback_grp_pullback_pr1; GrpPullback_grp_pullback_pr2; GrpPullback_grp_pullback_corec; GrpPullback_grp_pullback_corec_; GrpPullback_functor_grp_pullback; GrpPullback_equiv_functor_grp_pullback; GrpPullback_equiv_grp_pullback_compose_r; GrpPullback_grp_pullback_corec_pr1; GrpPullback_grp_pullback_corec_pr2; GrpPullback_isequiv_grp_pullback_corec; };
+} /* END */

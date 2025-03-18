@@ -1,0 +1,25 @@
+digraph HoTT_Basics_Iff {
+  graph [ratio=0.5]
+  node [style=filled]
+Iff_iff_contradiction [label="iff_contradiction", URL=<Iff.html#iff_contradiction>, peripheries=3, fillcolor="#F070D1"] ;
+Iff_iff_not_sum [label="iff_not_sum", URL=<Iff.html#iff_not_sum>, peripheries=3, fillcolor="#F070D1"] ;
+Iff_iff_equiv [label="iff_equiv", URL=<Iff.html#iff_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Iff_transitive_iff [label="transitive_iff", URL=<Iff.html#transitive_iff>, peripheries=3, fillcolor="#F070D1"] ;
+Iff_iff_compose [label="iff_compose", URL=<Iff.html#iff_compose>, fillcolor="#F070D1"] ;
+Iff_symmetric_iff [label="symmetric_iff", URL=<Iff.html#symmetric_iff>, peripheries=3, fillcolor="#F070D1"] ;
+Iff_iff_inverse [label="iff_inverse", URL=<Iff.html#iff_inverse>, fillcolor="#F070D1"] ;
+Iff_iff_reflexive [label="iff_reflexive", URL=<Iff.html#iff_reflexive>, peripheries=3, fillcolor="#F070D1"] ;
+Iff_iff_refl [label="iff_refl", URL=<Iff.html#iff_refl>, fillcolor="#F070D1"] ;
+Iff_iff [label="iff", URL=<Iff.html#iff>, fillcolor="#F070D1"] ;
+  Iff_iff_contradiction -> Iff_iff [] ;
+  Iff_iff_not_sum -> Iff_iff [] ;
+  Iff_iff_equiv -> Iff_iff [] ;
+  Iff_transitive_iff -> Iff_iff_compose [] ;
+  Iff_iff_compose -> Iff_iff [] ;
+  Iff_symmetric_iff -> Iff_iff_inverse [] ;
+  Iff_iff_inverse -> Iff_iff [] ;
+  Iff_iff_reflexive -> Iff_iff_refl [] ;
+  Iff_iff_refl -> Iff_iff [] ;
+subgraph cluster_Iff { label="Iff"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Iff_iff; Iff_iff_refl; Iff_iff_reflexive; Iff_iff_inverse; Iff_symmetric_iff; Iff_iff_compose; Iff_transitive_iff; Iff_iff_equiv; Iff_iff_not_sum; Iff_iff_contradiction; };
+} /* END */

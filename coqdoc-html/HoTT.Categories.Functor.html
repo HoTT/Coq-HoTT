@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Functor</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Functor</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab661"></a><h1 class="section">Functors</h1>
+ Since there are only notations in <span class="inlinecode"><span class="id" title="library">Functor.Notations</span></span>, we can just export those. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Categories.Functor.Notations.html#"><span class="id" title="library">Functor.Notations</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab662"></a><h2 class="section">Definition</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab663"></a><h2 class="section">Composition</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab664"></a><h2 class="section">Duals</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Dual.html#"><span class="id" title="library">Functor.Dual</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab665"></a><h2 class="section">Identity</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="library">Functor.Identity</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab666"></a><h2 class="section">Classification of path space</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Paths.html#"><span class="id" title="library">Functor.Paths</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab667"></a><h2 class="section">Product functors</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#"><span class="id" title="library">Functor.Prod.Core</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab668"></a><h2 class="section">Coproduct functors</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Sum.html#"><span class="id" title="library">Functor.Sum</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab669"></a><h2 class="section">Full, Faithful, Fully Faithful</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Attributes.html#"><span class="id" title="library">Functor.Attributes</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab670"></a><h2 class="section">Pointwise functors (functoriality of functor category construction)</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#"><span class="id" title="library">Functor.Pointwise.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="module">Functor.Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="module">Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Dual.html#"><span class="id" title="module">Functor.Dual</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="module">Functor.Identity</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Paths.html#"><span class="id" title="module">Functor.Paths</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#"><span class="id" title="module">Functor.Prod.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Sum.html#"><span class="id" title="module">Functor.Sum</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Attributes.html#"><span class="id" title="module">Functor.Attributes</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#"><span class="id" title="module">Functor.Pointwise.Core</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by <span class="inlinecode"><span class="id" title="var">Including</span></span> into other modules. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.Pointwise.html#"><span class="id" title="library">Functor.Pointwise</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We don't want to make UTF-8 notations the default, so we don't export them. 
+</div>
+<div class="code">
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
