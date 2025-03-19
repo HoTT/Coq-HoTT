@@ -144,6 +144,7 @@
   (dir timing-output)
   (dir timing-html))
  (deps
+  (universe)
   (alias timing-hint)
   etc/generate_coqproject.sh
   etc/time2html
