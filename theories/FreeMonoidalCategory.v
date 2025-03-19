@@ -1,4 +1,4 @@
-Require Import Basics Types.Forall Types.Paths WildCat.
+Require Import Basics Basics.Tactics Types.Forall Types.Paths WildCat.
 Require Import WildCat.Bifunctor WildCat.TwoOneCat.
 Require Import Spaces.List.Theory. (* Classes.implementations.list. *)
 
@@ -50,7 +50,8 @@ Inductive Hom2FMC {X : Type} : forall {a b : FMC X},
 | wr {x y z}  (f : HomFMC x y) {g h : HomFMC y z}
   : Hom2FMC g h -> Hom2FMC (comp g f) (comp h f)
 (** Associativity of composition of morphsisms *)
-| associator2 {w x y z} {f : HomFMC w x} {g : HomFMC x y} (h : HomFMC y z)
+| associator2 {w x y z} {f : HomFMC w x} {g : HomFMC x y}
+    (h : HomFMC y z)
   : Hom2FMC (comp (comp h g) f) (comp h (comp g f))
 (** Left identity for composition of morphisms *)
 | left_unitor2 {x y} {f : HomFMC x y} : Hom2FMC (comp (id _) f) f
@@ -59,7 +60,8 @@ Inductive Hom2FMC {X : Type} : forall {a b : FMC X},
 (** Left inversion law for composition of morphisms *)
 | left_invertor2 {x y} (f : HomFMC x y) : Hom2FMC (comp (rev f) f) (id _)
 (** Right inversion law for composition of morphisms *)
-| right_invertor2 {x y} (f : HomFMC x y) : Hom2FMC (comp f (rev f)) (id _)
+| right_invertor2 {x y} (f : HomFMC x y)
+  : Hom2FMC (comp f (rev f)) (id _)
 (** Triangle identity *)
 | triangle {x y}
   : Hom2FMC
@@ -80,15 +82,19 @@ Inductive Hom2FMC {X : Type} : forall {a b : FMC X},
 (** Tensor functor preserves composition of morphisms *)
 | tensor2_comp {x x' y y' z z'} {f : HomFMC x y} {f' : HomFMC x' y'}
   {g : HomFMC y z} {g' : HomFMC y' z'}
-  : Hom2FMC (tensor2 (comp g f) (comp g' f')) (comp (tensor2 g g') (tensor2 f f'))
+  : Hom2FMC (tensor2 (comp g f) (comp g' f'))
+      (comp (tensor2 g g') (tensor2 f f'))
 (** Naturality of left unitor *)
 | isnat_left_unitor x y f
-  : Hom2FMC (comp (left_unitor y) (tensor2 (id unit) f)) (comp f (left_unitor x))
+  : Hom2FMC (comp (left_unitor y) (tensor2 (id unit) f))
+      (comp f (left_unitor x))
 (** Naturality of right unitor *)
 | isnat_right_unitor x y f
-  : Hom2FMC (comp (right_unitor y) (tensor2 f (id unit))) (comp f (right_unitor x))
+  : Hom2FMC (comp (right_unitor y) (tensor2 f (id unit)))
+      (comp f (right_unitor x))
 (** Naturality of associator in left variable *)
-| isnat_associator x x' y y' z z' (f : HomFMC x x') (g : HomFMC y y') (h : HomFMC z z')
+| isnat_associator x x' y y' z z' (f : HomFMC x x') (g : HomFMC y y')
+    (h : HomFMC z z')
   : Hom2FMC (comp (associator x' y' z') (tensor2 f (tensor2 g h)))
             (comp (tensor2 (tensor2 f g) h) (associator x y z))
 .
@@ -426,15 +432,156 @@ Proof.
     destruct f, g. simpl. apply rev2, left_unitor2.
 Defined.
 
-Fixpoint unit_lemma {X : Type} (A B : NFMC X)
-  : HomFMC (tensor (embed_fmc A) (embed_fmc B)) (embed_fmc (A ++ B))
-  := match A return
-           HomFMC (tensor (embed_fmc A) (embed_fmc B)) (embed_fmc (A ++ B)) with
-     | nil => left_unitor (embed_fmc B)
-     | hd :: tl =>
-         comp (tensor2 (id (el hd)) (unit_lemma tl B))
-           (rev (associator (el hd) (embed_fmc tl) (embed_fmc B)))
-     end.
+(** This lemma is important for arguing about the behavior
+of [fmap embed_fmc] by induction on the length of the list. *)
+Lemma embed_cons {X : Type} (x y : NFMC X) (a : X) (p : x = y)
+  : Hom2FMC (tensor2 (id (el a)) (fmap embed_fmc p))
+      (fmap embed_fmc (ap (cons a) p)).
+Proof.
+  destruct p.
+  exact tensor2_id.
+Defined.
+
+Section embed_FMC_monoidal.
+
+  (** embed_fmc has a lax monoidal cell. *)
+  Fixpoint unit_lemma {X : Type} (A B : NFMC X)
+    : HomFMC (tensor (embed_fmc A) (embed_fmc B)) (embed_fmc (A ++ B))
+    := match A return
+             HomFMC (tensor (embed_fmc A) (embed_fmc B)) (embed_fmc (A ++ B)) with
+       | nil => left_unitor (embed_fmc B)
+       | hd :: tl =>
+           comp (tensor2 (id (el hd)) (unit_lemma tl B))
+             (rev (associator (el hd) (embed_fmc tl) (embed_fmc B)))
+       end.
+  Print Implicit Is1Natural.
+
+  Lemma embed_lax_cell_is1natural {X:Type}:
+    Is1Natural
+        (uncurry (fun A B => tensor (embed_fmc A) (embed_fmc B)))
+        (uncurry (fun A B => (embed_fmc (app A B))))
+        (fun '(A,B) => unit_lemma (X:=X) A B).
+  Proof.
+    apply Build_Is1Natural.
+    intros [A B] [A' B'] [f g]; simpl in *.
+    destruct f, g; simpl.
+    refine (_ $@ right_unitor2 $@ (left_unitor2^$)).
+    apply wl, tensor2_id.
+  Defined.
+
+  Definition embed_fmc_unit {X: Type}
+    : unit (X:=X) $-> embed_fmc nil
+    := id _.
+
+  Theorem embed_fmc_IsMonoidal {X:Type}
+    : IsMonoidalFunctor (embed_fmc (X:=X)).
+  Proof.
+    srapply Build_IsMonoidalFunctor.
+    - exact ({| trans_nattrans := _ ;
+              is1natural_nattrans := embed_lax_cell_is1natural
+                     |}).
+    - exact embed_fmc_unit.
+    - intros x y z; simpl trans_nattrans.
+      induction x.
+      + simpl.
+        repeat change (comp ?a ?b) with (a $o b).
+        refine (_ $@ (cat_assoc _ _ _)^$).
+        refine (_ $@ (wl (unit_lemma y z)
+                        (left_unitor_associator tensor unit _ _))).
+        refine (cat_assoc _ _ _ $@ _).
+        refine (left_unitor2 $@ _).
+        apply isnat_left_unitor.
+      + simpl (unit_lemma (a :: x) (y++z)).
+        refine (cat_assoc _ _ _ $@ _).
+        refine (wl _ (cat_assoc _ _ _) $@ _).
+        set (j := rev _ $o _).
+        srefine (let h := _ :
+                    j $== tensor2 (id (el a))
+                      (tensor2 (id (embed_fmc x)) (unit_lemma y z))
+                      $o rev (associator (el a) (embed_fmc x)
+                                (tensor (embed_fmc y) (embed_fmc z)))
+                 in _).
+        {
+          change (rev ?a) with (a^$); apply gpd_moveL_hV.
+          change (rev ?a) with (a^$) in j; unfold j.
+          refine (cat_assoc _ _ _ $@ _).
+          apply gpd_moveR_Vh; simpl.
+          refine (wr _ (tensor3 tensor2_id^$ (id2 (unit_lemma y z)))
+                    $@ _).
+          symmetry; apply isnat_associator.
+        } 
+        refine (wl _ (wl _ h) $@ _); clear h j.
+        simpl unit_lemma.
+        refine (_ $@ (wr _ (wl _ (fmap10_comp tensor _ _ _)^$))).
+        repeat change (comp ?a ?b) with (a $o b).
+        refine (_ $@ (wr _ (cat_assoc _ _ _))).
+        refine (_ $@ (wr _ (wr _ (cat_assoc _ _ _)^$))).
+        set (j := (rev _) $o _).
+        srefine (let h := _ :
+                     fmap01 tensor (el a) (tensor2 (unit_lemma x y)
+                                             (id (embed_fmc z)))
+                  $o rev (associator (el a)
+                            (tensor (embed_fmc x) (embed_fmc y))
+                            (embed_fmc z)) $== j in _).
+        {
+          unfold j.
+          change (rev ?a) with (a^$); apply gpd_moveR_hV.
+          refine (_ $@ (cat_assoc _ _ _)^$).
+          apply gpd_moveL_Vh.
+          apply isnat_associator.
+        }
+        refine (_ $@ wr _ (wr _ (wl _ h))); unfold j; clear h j.
+        refine (_ $@ (cat_assoc _ _ _)^$).
+        repeat change (comp ?a ?b) with (a $o b).
+        refine (_ $@ (cat_assoc _ _ _)^$).
+        refine (_ $@ wl _ (cat_assoc _ _ _)^$).
+        set (j := rev _ $o (_ $o _)).
+        srefine (let h := _ :
+                     tensor2 (id (el a)) (associator (embed_fmc x)
+                                            (embed_fmc y) (embed_fmc z))
+                       $o rev (associator _ _ _) $== j in _).
+        {
+          change (rev ?a) with (a^$) in *.
+          apply gpd_moveR_hV.
+          refine (_ $@ (cat_assoc _ _ _)^$).
+          apply gpd_moveL_Vh.
+          refine (_ $@ wr _ (wr _
+                               (gpd_1functor_V (flip tensor _) _)^$)).
+          refine (_ $@ (cat_assoc _ _ _)^$).
+          apply gpd_moveL_Vh.
+          symmetry.
+          refine (_ $@ (cat_assoc _ _ _)).
+          apply pentagon.
+        }
+        refine (_ $@ (wl _ (wl _ h))); clear j h.
+        refine (_ $@ (cat_assoc _ _ _)).
+        refine (_ $@ (cat_assoc _ _ _)).
+        refine ((cat_assoc _ _ _)^$ $@ _).
+        refine ((cat_assoc _ _ _)^$ $@ _).
+        apply cat_prewhisker.
+        simpl cat_tensor_associator; unfold Monoidal.associator;
+          simpl cate_fun.
+        refine ((wr _ (wr _
+                         (embed_cons _ _ a (app_assoc x y z))^$)) $@ _).
+        refine (_ $@ wr _ tensor2_comp).
+        refine (_ $@ tensor2_comp).
+        refine (wr _ tensor2_comp^$ $@ _).
+        refine (tensor2_comp^$ $@ _).
+        apply tensor3.
+        1: by apply id2.
+        exact IHx.
+    - simpl; intro a.
+      unfold left_unitor'.
+      unfold embed_fmc_unit.
+      unfold fmap10; simpl.
+      refine (_ $@ wl _ (tensor2_id^$)).
+      refine (_ $@ right_unitor2^$).
+      exact left_unitor2^$.
+    -
+  Defined.
+  
+End embed_FMC_monoidal.
+
 
 Fixpoint interp_unit {X : Type} (A : FMC X) : HomFMC A (embed_fmc (interp_nfmc A))
   := match A return HomFMC A (embed_fmc (interp_nfmc A)) with
@@ -444,16 +591,28 @@ Fixpoint interp_unit {X : Type} (A : FMC X) : HomFMC A (embed_fmc (interp_nfmc A
                        (tensor2 (interp_unit a) (interp_unit b))
      end.
 
-Lemma embed_cons {X : Type} (x y : NFMC X) (a : X) (p : x = y)
-  : Hom2FMC (tensor2 (id (el a)) (fmap embed_fmc p))
-      (fmap embed_fmc (match p in paths _ y return paths (a :: x) (a :: y) with
-                      | idpath => idpath
-                      end)).
-Proof.
-  destruct p.
-  exact tensor2_id.
-Defined.
 
+(* 
+  fmap_tensor_assoc a b c
+    : fmap F (associator a b c)
+        $o fmap_tensor (a, tensorA b c)
+        $o fmap01 tensorB (F a) (fmap_tensor (b, c))
+      $== fmap_tensor (tensorA a b, c)
+        $o fmap10 tensorB (fmap_tensor (a, b)) (F c)
+        $o associator (F a) (F b) (F c);
+*)
+
+(** This establishes that embed_fmc *)
+(* Lemma fmap_embed_fmc_assoc (X : Type) (x y z : NFMC X) : *)
+(*   unit_lemma (x ++ y) z $o tensor2 (unit_lemma x y) (id (embed_fmc z)) *)
+(*     $o associator (embed_fmc x) (embed_fmc y) (embed_fmc z) *)
+(*     $== (fmap embed_fmc (app_assoc x y z) $o unit_lemma x (y ++ z) $o tensor2 (id (embed_fmc x)) (unit_lemma y z)). *)
+(* Proof. *)
+  
+(* Defined. *)
+Axiom IMF: forall X :Type, IsMonoidalFunctor (embed_fmc (X:=X)).
+Existing Instance IMF.
+(** Proving that the map interp_unit is natural *)
 Theorem interp_unit_natural {X: Type}
   : Is1Natural idmap (fun A => embed_fmc (interp_nfmc A)) (interp_unit (X:=X)).
 Proof.
@@ -495,7 +654,56 @@ Proof.
       end.
       apply cat_prewhisker.
       apply embed_cons.
-  - 
+  - simpl (fmap idmap). simpl interp_unit. simpl (idmap _).
+    (* Step 1 : simplify using isnat_associator. *)
+    refine (_ $@ cat_assoc _ _ _).
+    
+    refine (_ $@ wl (fmap (embed_fmc o interp_nfmc) _ $o _)
+             (tensor3 (left_unitor2 (f:= (interp_unit x)))
+                (id2 _) )).
+    refine (_ $@ wl (fmap (embed_fmc o interp_nfmc) _ $o _)
+              (tensor2_comp)^$).
+    refine (_ $@ cat_assoc _ _ _).
+    refine (wr _ (wl _ (
+       (tensor3 (id2 (comp (unit_lemma (interp_nfmc x) _) _))
+          (left_unitor2 (f:=interp_unit z))^$) $@ tensor2_comp))$@ _).
+    refine ( wr _ (cat_assoc _ _ _)^$ $@ _).
+    refine (cat_assoc _ _ _ $@ _).
+    refine ( wl _ (isnat_associator _ _ _ _ _ _ _ _ _)^$ $@ _).
+    refine ((cat_assoc _ _ _)^$ $@ _).
+    apply cat_prewhisker.
+    simpl.
+    set (x':= interp_nfmc x).
+    set (y':= interp_nfmc y).
+    set (z':= interp_nfmc z).
+    clearbody x' y' z'.
+    repeat change (comp ?x ?y) with (x $o y).
+    match goal with
+    | [|- Hom2FMC _ (?z $o _ $o _ )] =>
+        change z with (fmap embed_fmc (app_assoc x' y' z'))
+    end.
+    symmetry.
+    Set Printing All.
+    refine (fmap_tensor_assoc (tensorA := app (A:=X))
+             (tensorB := tensor)
+             (F:= embed_fmc) x' y' z' $@ _).
+    Check (fmap_tensor (IsMonoidalFunctor:=IMF X) embed_fmc (x', y' ++ z')).
+    
+    (fmap embed_fmc (app_assoc x' y' z') $o
+       unit_lemma x' (y' ++ z') $o
+       tensor2 (id (embed_fmc x')) (unit_lemma y' z'))
+
+     fmap embed_fmc (cat_tensor_associator x' y' z') $o
+     fmap_tensor embed_fmc (x', y' ++ z') $o
+     fmap01 tensor (embed_fmc x') (fmap_tensor embed_fmc (y', z'))
+
+     
+    
+             
+             
+    symmetry.
+
+    
   -
 Defined.
 
