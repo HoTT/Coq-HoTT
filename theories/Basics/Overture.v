@@ -484,6 +484,7 @@ Global Opaque eisadj.
 
 (** A record that includes all the data of an adjoint equivalence. *)
 Record Equiv A B := {
+  #[reversible=no]
   equiv_fun :> A -> B ;
   equiv_isequiv :: IsEquiv equiv_fun
 }.
