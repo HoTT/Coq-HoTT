@@ -162,17 +162,17 @@ Defined.
 
 Instance isTruncatedBicat_Type : IsTruncatedBicat Type.
 Proof.
-  snrapply Build_IsTruncatedBicat; intros; cbn.
+  snapply Build_IsTruncatedBicat; intros; cbn.
   1-2: exact _.
   all: reflexivity.
 Defined.
 
 Instance is21cat_type : Is21Cat Type.
 Proof.
-  snrapply Build_Is21Cat; [snrapply Build_IsBicategory | | ].
+  snapply Build_Is21Cat; [snapply Build_IsBicategory | | ].
   1-3, 12-13: exact _.
   1-3: intros; constructor; reflexivity.
-  - intros A B C D. snrapply Build_Is1Natural.
+  - intros A B C D. snapply Build_Is1Natural.
     intros ((h,g),f) ((h',g'),f').
     intros ((gamma,beta),alpha) a; simpl.
     unfold fmap11; simpl.
@@ -183,11 +183,11 @@ Proof.
     rewrite ap_compose.
     rewrite ap_pp.
     reflexivity.
-  - intros A B; snrapply Build_Is1Natural.
+  - intros A B; snapply Build_Is1Natural.
     intros f f' h a; simpl.
     rewrite ap_idmap.
     exact (concat_p1_1p _).
-  - intros A B; snrapply Build_Is1Natural.
+  - intros A B; snapply Build_Is1Natural.
     intros f f' h a. exact (concat_p1_1p _).
   - reflexivity.
   - reflexivity.
