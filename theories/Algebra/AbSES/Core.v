@@ -17,20 +17,15 @@ Local Open Scope mc_add_scope.
 Declare Scope abses_scope.
 Local Open Scope abses_scope.
 
-(** The type of short exact sequences [A -> E -> B] of abelian groups. We decorate it with (') to reserve the undecorated name for the structured version. *)
+(** The type of short exact sequences [A -> E -> B] of abelian groups. We decorate it with (') to reserve the undecorated name for the structured version. Given a short exact sequence [A -> E -> B : AbSES B A], we coerce it to [E]. *)
 Record AbSES' {B A : AbGroup@{u}} := Build_AbSES {
-    middle :  AbGroup@{u};
+    middle :> AbGroup@{u};
     inclusion : A $-> middle;
     projection : middle $-> B;
-    isembedding_inclusion : IsEmbedding inclusion;
-    issurjection_projection : IsSurjection projection;
-    isexact_inclusion_projection : IsExact (Tr (-1)) inclusion projection;
+    isembedding_inclusion :: IsEmbedding inclusion;
+    issurjection_projection :: IsSurjection projection;
+    isexact_inclusion_projection :: IsExact (Tr (-1)) inclusion projection;
   }.
-
-(** Given a short exact sequence [A -> E -> B : AbSES B A], we coerce it to [E]. *)
-Coercion middle : AbSES' >-> AbGroup.
-
-Existing Instances isembedding_inclusion issurjection_projection isexact_inclusion_projection.
 
 Arguments AbSES' B A : clear implicits.
 Arguments Build_AbSES {B A}.
@@ -298,8 +293,7 @@ Defined.
 Instance hasmorext_abses `{Funext} {A B : AbGroup@{u}}
   : HasMorExt (AbSES B A).
 Proof.
-  srapply Build_HasMorExt;
-    intros E F f g.
+  intros E F f g.
   srapply isequiv_homotopic'; cbn.
   1: exact (((equiv_path_groupisomorphism _ _)^-1%equiv)
               oE (equiv_path_sigma_hprop _ _)^-1%equiv).

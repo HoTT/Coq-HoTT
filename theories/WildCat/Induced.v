@@ -70,7 +70,8 @@ Section Induced_category.
 
   Instance hasmorext_induced `{HasMorExt B} : HasMorExt A.
   Proof.
-    constructor. intros_of_type A; cbn. rapply isequiv_Htpy_path.
+    unfold HasMorExt.
+    intros_of_type A; cbn. rapply isequiv_Htpy_path.
   Defined.
 
   Definition hasequivs_induced `{HasEquivs B} : HasEquivs A.

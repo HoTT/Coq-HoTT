@@ -54,20 +54,16 @@ Section is_homomorphism.
   Qed.
 End is_homomorphism.
 
+(** We declare the implicit coercion from [Homomorphism A B] to the family of functions [∀ s, A s → B s]. *)
 Record Homomorphism {σ} {A B : Algebra σ} : Type := BuildHomomorphism
-  { def_hom : ∀ (s : Sort σ), A s → B s
-  ; is_homomorphism_hom : IsHomomorphism def_hom }.
+  { def_hom :> ∀ (s : Sort σ), A s → B s
+  ; is_homomorphism_hom :: IsHomomorphism def_hom }.
 
 Arguments Homomorphism {σ}.
 
 Arguments BuildHomomorphism {σ A B} def_hom {is_homomorphism_hom}.
 
-(** We the implicit coercion from [Homomorphism A B] to the family
-    of functions [∀ s, A s → B s]. *)
 
-Global Coercion def_hom : Homomorphism >-> Funclass.
-
-Existing Instance is_homomorphism_hom.
 
 Lemma apD10_homomorphism {σ} {A B : Algebra σ} {f g : Homomorphism A B}
   : f = g → ∀ s, f s == g s.
@@ -125,9 +121,7 @@ Defined.
 
 Class IsIsomorphism {σ : Signature} {A B : Algebra σ}
   (f : ∀ s, A s → B s) `{!IsHomomorphism f}
-  := isequiv_isomorphism : ∀ (s : Sort σ), IsEquiv (f s).
-
-Existing Instance isequiv_isomorphism.
+  := isequiv_isomorphism :: ∀ (s : Sort σ), IsEquiv (f s).
 
 Definition equiv_isomorphism {σ : Signature} {A B : Algebra σ}
   (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}

@@ -121,19 +121,15 @@ Defined.
 
 (** ** Pointed equivalences *)
 
-(** A pointed equivalence is a pointed map and a proof that it is an equivalence *)
+(** A pointed equivalence is a pointed map and a proof that it is an equivalence. Note: because we define [pMap] as a special case of [pForall], we must declare all coercions into [pForall], *not* into [pMap]. *)
 Record pEquiv (A B : pType) := {
-  pointed_equiv_fun : pForall A (pfam_const B) ;
-  pointed_isequiv : IsEquiv pointed_equiv_fun ;
+  pointed_equiv_fun :> pForall A (pfam_const B) ;
+  pointed_isequiv :: IsEquiv pointed_equiv_fun ;
 }.
 
 (** TODO: It might be better behaved to define [pEquiv] as an equivalence and a proof that this equivalence is pointed. In pEquiv.v we have another constructor [Build_pEquiv'] which Coq can infer faster than [Build_pEquiv]. *)
 
 Infix "<~>*" := pEquiv : pointed_scope.
-
-(** Note: because we define [pMap] as a special case of [pForall], we must declare all coercions into [pForall], *not* into [pMap]. *)
-Coercion pointed_equiv_fun : pEquiv >-> pForall.
-Existing Instance pointed_isequiv.
 
 Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
   : A <~> B := Build_Equiv A B f _.
@@ -986,7 +982,7 @@ Defined.
 (** Under funext, [pType] has morphism extensionality *)
 Instance hasmorext_ptype `{Funext} : HasMorExt pType.
 Proof.
-  srapply Build_HasMorExt; intros A B f g.
+  intros A B f g.
   refine (isequiv_homotopic (equiv_path_pforall f g)^-1%equiv _).
   intros []; reflexivity.
 Defined.
@@ -1021,7 +1017,7 @@ Defined.
 (** [pType] is a univalent 1-coherent 1-category *)
 Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
 Proof.
-  srapply Build_IsUnivalent1Cat; intros A B.
+  intros A B.
   (* [cate_equiv_path] is almost definitionally equal to [pequiv_path].  Both are defined by path induction, sending [idpath A] to [id_cate A] and [pequiv_pmap_idmap A], respectively.  [id_cate A] is almost definitionally equal to [pequiv_pmap_idmap A], except that the former uses [catie_adjointify], so the adjoint law is different. However, the underlying pointed maps are definitionally equal. *)
   refine (isequiv_homotopic pequiv_path _).
   intros [].

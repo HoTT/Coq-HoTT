@@ -37,16 +37,12 @@ Section is_homomorphism.
 End is_homomorphism.
 
 Record Homomorphism {σ} {A B : Algebra σ} : Type := Build_Homomorphism
-  { def_homomorphism : forall (s : Sort σ), A s -> B s
-  ; is_homomorphism : IsHomomorphism def_homomorphism }.
+  { def_homomorphism :> forall (s : Sort σ), A s -> B s
+  ; is_homomorphism :: IsHomomorphism def_homomorphism }.
 
 Arguments Homomorphism {σ}.
 
 Arguments Build_Homomorphism {σ A B} def_homomorphism {is_homomorphism}.
-
-Global Coercion def_homomorphism : Homomorphism >-> Funclass.
-
-Existing Instance is_homomorphism.
 
 Instance isgraph_algebra (σ : Signature) : IsGraph (Algebra σ)
   := Build_IsGraph (Algebra σ) Homomorphism.

@@ -11,9 +11,9 @@ Local Open Scope path_scope.
 (** A decidable proposition is, morally speaking, an HProp that is decidable.  However, we only require that it be an HProp under the additional assumption of [Funext]; this enables decidable propositions to usually be used without [Funext] hypotheses. *)
 
 Record DProp := {
-  dprop_type : Type ;
-  ishprop_dprop : Funext -> IsHProp dprop_type ;
-  dec_dprop : Decidable dprop_type
+  dprop_type :> Type ;
+  ishprop_dprop :: Funext -> IsHProp dprop_type ;
+  dec_dprop :: Decidable dprop_type
 }.
 
 (** A fancier definition, which would have the property that negation is judgmentally involutive, would be
@@ -32,19 +32,12 @@ Record DProp :=
 
 At some point we may want to go that route, but it would be more work.  In particular, [Instance]s of [Decidable] wouldn't be automatically computed for us, and the characterization of the homotopy type of [DProp] itself would be a lot harder. *)
 
-Coercion dprop_type : DProp >-> Sortclass.
-Existing Instance ishprop_dprop.
-Existing Instance dec_dprop.
-
 (** Sometimes, however, we have decidable props that are hprops without funext, and we want to remember that. *)
 
 Record DHProp :=
-  { dhprop_hprop : HProp ;
-    dec_dhprop : Decidable dhprop_hprop
+  { dhprop_hprop :> HProp ;
+    dec_dhprop :: Decidable dhprop_hprop
   }.
-
-Coercion dhprop_hprop : DHProp >-> HProp.
-Existing Instance dec_dhprop.
 
 Definition dhprop_to_dprop : DHProp -> DProp
   := fun P => Build_DProp P (fun _ => _) _.

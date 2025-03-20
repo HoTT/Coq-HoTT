@@ -5,14 +5,10 @@ Require Export HoTT.Classes.interfaces.ua_algebra.
 
 
 Record SetAlgebra {σ : Signature} : Type := BuildSetAlgebra
-  { algebra_setalgebra : Algebra σ
-  ; is_hset_algebra_setalgebra : IsHSetAlgebra algebra_setalgebra }.
+  { algebra_setalgebra :> Algebra σ
+  ; is_hset_algebra_setalgebra :: IsHSetAlgebra algebra_setalgebra }.
 
 Arguments SetAlgebra : clear implicits.
-
-Existing Instance is_hset_algebra_setalgebra.
-
-Global Coercion algebra_setalgebra : SetAlgebra >-> Algebra.
 
 (** To find a path [A = B] between set algebras [A B : SetAlgebra σ],
     it is enough to find a path between the defining algebras,

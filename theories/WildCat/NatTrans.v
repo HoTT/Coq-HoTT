@@ -165,7 +165,7 @@ Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} {F G : A -> B}
   {ff : Is0Functor F} {fg : Is0Functor G} := {
   #[reversible=no]
   trans_nattrans :> F $=> G;
-  is1natural_nattrans : Is1Natural F G trans_nattrans;
+  is1natural_nattrans :: Is1Natural F G trans_nattrans;
 }.
 
 Arguments NatTrans {A B} {isgraph_A}
@@ -173,8 +173,6 @@ Arguments NatTrans {A B} {isgraph_A}
   F G {is0functor_F} {is0functor_G} : rename.
 Arguments Build_NatTrans {A B isgraph_A isgraph_B is2graph_B is01cat_B is1cat_B
   F G is0functor_F is0functor_G} alpha isnat_alpha : rename.
-
-Existing Instance is1natural_nattrans.
 
 Definition issig_NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -> B)
   {ff : Is0Functor F} {fg : Is0Functor G}

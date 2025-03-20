@@ -19,21 +19,20 @@ Definition DDiagram {G : Graph} (D : Diagram G)
 
 (** Given a dependent diagram, we c.an recover a diagram over G by considering the Σ types. *)
 
-  Definition diagram_sigma {G : Graph} {D : Diagram G} (E : DDiagram D)
-    : Diagram G.
-  Proof.
-    srapply Build_Diagram.
-    - intro i.
-      exact {x : D i & E (i; x)}.
-    - intros i j g x. simpl in *.
-      exists (D _f g x.1).
-      exact (@arr _ E (i; x.1) (j; D _f g x.1) (g; idpath) x.2).
-  Defined.
+Definition diagram_sigma {G : Graph} {D : Diagram G} (E : DDiagram D)
+  : Diagram G.
+Proof.
+  srapply Build_Diagram.
+  - intro i.
+    exact {x : D i & E (i; x)}.
+  - intros i j g x. simpl in *.
+    exists (D _f g x.1).
+    exact (@arr _ E (i; x.1) (j; D _f g x.1) (g; idpath) x.2).
+Defined.
 
-  (** A dependent diagram is said equifibered if all its fibers are equivalences. *)
+(** A dependent diagram is said equifibered if all its fibers are equivalences. *)
 
-  Class Equifibered {G : Graph} {D : Diagram G} (E : DDiagram D) := {
+Class Equifibered {G : Graph} {D : Diagram G} (E : DDiagram D) := {
     isequifibered i j (g : G i j) (x : D i)
-      : IsEquiv (@arr _ E (i; x) (j; D _f g x) (g; idpath));
+      :: IsEquiv (@arr _ E (i; x) (j; D _f g x) (g; idpath));
   }.
-  #[export] Existing Instance isequifibered.

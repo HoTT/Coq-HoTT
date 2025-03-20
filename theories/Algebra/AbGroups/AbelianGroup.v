@@ -17,12 +17,9 @@ Local Open Scope mc_add_scope.
 (** Definition of an abelian group *)
 
 Record AbGroup := {
-  abgroup_group : Group;
-  abgroup_commutative : @Commutative abgroup_group _ (+);
+  abgroup_group :> Group;
+  abgroup_commutative :: @Commutative abgroup_group _ (+);
 }.
-
-Coercion abgroup_group : AbGroup >-> Group.
-Existing Instance abgroup_commutative.
 
 Definition zero_abgroup (A : AbGroup) : Zero A := mon_unit.
 Definition negate_abgroup (A : AbGroup) : Negate A := inv.

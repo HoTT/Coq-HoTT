@@ -86,22 +86,7 @@ Record NotionOfStructure (X : PreCategory) :=
                                               -> is_structure_homomorphism (g o f) a c
   }.
 
-(** It would be nice to make this a class, but we can't:
-
-<<
-    Existing Class is_structure_homomorphism.
->>
-
-    gives
-
-<<
-    Toplevel input, characters 0-41:
-    Anomaly: Mismatched instance and context when building universe substitution.
-    Please report.
->>
-
-    When we move to polyproj, it won't anymore. *)
-
+Existing Class is_structure_homomorphism.
 Existing Instance istrunc_is_structure_homomorphism.
 
 Create HintDb structure_homomorphisms discriminated.

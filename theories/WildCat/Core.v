@@ -94,10 +94,10 @@ Existing Instance isgraph_hom | 20.
 (** ** Wild 1-categorical structures *)
 Class Is1Cat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
 {
-  is01cat_hom : forall (a b : A), Is01Cat (a $-> b) ;
-  is0gpd_hom : forall (a b : A), Is0Gpd (a $-> b) ;
-  is0functor_postcomp : forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
-  is0functor_precomp : forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
+  is01cat_hom :: forall (a b : A), Is01Cat (a $-> b) ;
+  is0gpd_hom :: forall (a b : A), Is0Gpd (a $-> b) ;
+  is0functor_postcomp :: forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
+  is0functor_precomp :: forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
   cat_assoc : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
     (h $o g) $o f $== h $o (g $o f);
   cat_assoc_opp : forall (a b c d : A) (f : a $-> b) (g : b $-> c) (h : c $-> d),
@@ -106,10 +106,6 @@ Class Is1Cat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
   cat_idr : forall (a b : A) (f : a $-> b), f $o Id a $== f;
 }.
 
-Existing Instance is01cat_hom.
-Existing Instance is0gpd_hom.
-Existing Instance is0functor_postcomp.
-Existing Instance is0functor_precomp.
 Arguments cat_assoc {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_assoc_opp {_ _ _ _ _ _ _ _ _} f g h.
 Arguments cat_idl {_ _ _ _ _ _ _} f.
@@ -243,11 +239,9 @@ Definition mor_terminal_unique {A : Type} `{Is1Cat A} (x y : A) {h : IsTerminal 
   := (h x).2 f.
 
 (** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
-Class HasMorExt (A : Type) `{Is1Cat A} := {
-  isequiv_Htpy_path : forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
-}.
-
-Existing Instance isequiv_Htpy_path.
+Class HasMorExt (A : Type) `{Is1Cat A} := 
+  isequiv_Htpy_path :: forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
+.
 
 Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g)
   : f = g
@@ -560,8 +554,7 @@ Existing Instance isgraph_hom_hom | 30.
 Class PreservesInitial {A B : Type} (F : A -> B)
   `{Is1Functor A B F} : Type
   := isinitial_preservesinitial
-    : forall (x : A), IsInitial x -> IsInitial (F x).
-Existing Instance isinitial_preservesinitial.
+    :: forall (x : A), IsInitial x -> IsInitial (F x).
 
 (** The initial morphism is preserved by such a functor. *)
 Lemma fmap_initial {A B : Type} (F : A -> B)
@@ -574,8 +567,7 @@ Defined.
 Class PreservesTerminal {A B : Type} (F : A -> B)
   `{Is1Functor A B F} : Type
   := isterminal_preservesterminal
-    : forall (x : A), IsTerminal x -> IsTerminal (F x).
-Existing Instance isterminal_preservesterminal.
+    :: forall (x : A), IsTerminal x -> IsTerminal (F x).
 
 (** The terminal morphism is preserved by such a functor. *)
 Lemma fmap_terminal {A B : Type} (F : A -> B)
@@ -589,18 +581,14 @@ Defined.
 
 Record BasepointPreservingFunctor (B C : Type)
        `{Is01Cat B, Is01Cat C} `{IsPointed B, IsPointed C} := {
-    bp_map : B -> C;
-    bp_is0functor : Is0Functor bp_map;
+    bp_map :> B -> C;
+    bp_is0functor :: Is0Functor bp_map;
     bp_pointed : bp_map (point B) $-> point C
   }.
 
 Arguments bp_pointed {B C}%_type_scope {H H0 H1 H2 H3 H4} b.
 Arguments Build_BasepointPreservingFunctor {B C}%_type_scope {H H0 H1 H2 H3 H4}
   bp_map%_function_scope {bp_is0functor} bp_pointed.
-
-Coercion bp_map : BasepointPreservingFunctor >-> Funclass.
-
-Existing Instance bp_is0functor.
 
 Notation "B -->* C" := (BasepointPreservingFunctor B C) (at level 70).
 

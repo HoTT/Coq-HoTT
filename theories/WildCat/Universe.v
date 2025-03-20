@@ -51,7 +51,6 @@ Defined.
 
 Instance hasmorext_type `{Funext} : HasMorExt Type.
 Proof.
-  srapply Build_HasMorExt.
   intros A B f g; cbn in *.
   refine (isequiv_homotopic (@apD10 A (fun _ => B) f g) _).
   intros p.

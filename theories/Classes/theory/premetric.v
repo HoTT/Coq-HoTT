@@ -38,19 +38,12 @@ Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
       e = d + d' /\ close d u v)))).
 
 Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
-  { premetric_prop : forall e, is_mere_relation A (close e)
-  ; premetric_refl : forall e, Reflexive (close (A:=A) e)
-  ; premetric_symm : forall e, Symmetric (close (A:=A) e)
-  ; premetric_separated : Separated A
-  ; premetric_triangular : Triangular A
-  ; premetric_rounded : Rounded@{i j} A }.
-#[export] Existing Instances
-  premetric_prop
-  premetric_refl
-  premetric_symm
-  premetric_separated
-  premetric_triangular
-  premetric_rounded.
+  { premetric_prop :: forall e, is_mere_relation A (close e)
+  ; premetric_refl :: forall e, Reflexive (close (A:=A) e)
+  ; premetric_symm :: forall e, Symmetric (close (A:=A) e)
+  ; premetric_separated :: Separated A
+  ; premetric_triangular :: Triangular A
+  ; premetric_rounded :: Rounded@{i j} A }.
 
 Instance premetric_hset@{i j} `{Funext}
   {A:Type@{i} } `{PreMetric@{i j} A} : IsHSet A.
@@ -179,12 +172,11 @@ Definition close_prod_rounded@{j} := ltac:(first [exact @close_prod_rounded'@{j 
 Arguments close_prod_rounded {_ _} _ _ _.
 #[export] Existing Instance close_prod_rounded.
 
-Lemma prod_premetric@{j} `{!PreMetric@{UA j} A} `{!PreMetric@{UB j} B}
+#[export] Instance prod_premetric@{j} `{!PreMetric@{UA j} A} `{!PreMetric@{UB j} B}
   : PreMetric@{i j} (A /\ B).
 Proof.
 split;try apply _.
 Qed.
-#[export] Existing Instance prod_premetric.
 
 Context {Alim : Lim A} {Blim : Lim B}.
 
@@ -358,13 +350,12 @@ rewrite <-(pos_unconjugate L e),<-Qpos_mult_assoc.
 apply (lipschitz f L),xi.
 Qed.
 
-Lemma uniform_continuous@{} mu `{!Uniform@{UA UB} f mu} : Continuous f.
+Instance uniform_continuous@{} mu `{!Uniform@{UA UB} f mu} : Continuous f | 5.
 Proof.
 hnf.
 intros u e;apply tr;exists (mu e).
 apply (uniform f mu).
 Qed.
-Existing Instance uniform_continuous | 5.
 
 Definition lipschitz_continuous@{} (L:Q+) `{!Lipschitz f L} : Continuous f
   := _.
@@ -426,13 +417,12 @@ Qed.
   := ltac:(first [exact (lipschitz_compose_nonexpanding_l'@{Ularge} L)|
                   exact (lipschitz_compose_nonexpanding_l'@{} L)]).
 
-Lemma uniform_compose@{} mu {Eg : Uniform g mu} mu' {Ef : Uniform f mu'}
+Instance uniform_compose@{} mu {Eg : Uniform g mu} mu' {Ef : Uniform f mu'}
   : Uniform (Compose g f) (Compose mu' mu).
 Proof.
 intros e u v xi. unfold Compose.
 apply (uniform g _),(uniform f _),xi.
 Qed.
-Existing Instance uniform_compose.
 
 #[export] Instance continuous_compose@{} {Eg : Continuous g} {Ef : Continuous f}
   : Continuous (Compose g f).
@@ -665,7 +655,7 @@ Context `{Closeness A}.
 Arguments Interval_close _ _ _ _ _ /.
 
 (* NB: for some reason this forces UALE <= UA *)
-Lemma Interval_premetric@{i} `{!PreMetric@{UA i} A} a b
+Instance Interval_premetric@{i} `{!PreMetric@{UA i} A} a b
   : PreMetric@{UA i} (Interval a b).
 Proof.
 split.
@@ -684,7 +674,6 @@ split.
   + intros E. unfold close,Interval_close in E. apply (snd (rounded _ _ _)) in E.
     exact E.
 Qed.
-Existing Instance Interval_premetric.
 
 #[export] Instance interval_proj_nonexpanding (a b : A)
   : NonExpanding (interval_proj a b)

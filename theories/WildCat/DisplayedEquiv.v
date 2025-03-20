@@ -529,10 +529,9 @@ Defined.
 
 Class IsDUnivalent1Cat {A} (D : A -> Type) `{DHasEquivs A D} :=
 {
-  isequiv_dcat_equiv_path : forall {a b : A} (p : a = b) a' b',
+  isequiv_dcat_equiv_path :: forall {a b : A} (p : a = b) a' b',
     IsEquiv (dcat_equiv_path p a' b')
 }.
-Existing Instance isequiv_dcat_equiv_path.
 
 Definition dcat_path_equiv {A} {D : A -> Type} `{IsDUnivalent1Cat A D}
   {a b : A} (p : a = b) (a' : D a) (b' : D b)
@@ -551,7 +550,6 @@ Instance isunivalent1cat_total {A} `{IsUnivalent1Cat A} (D : A -> Type)
   `{!IsDUnivalent1Cat D}
   : IsUnivalent1Cat (sig D).
 Proof.
-  snapply Build_IsUnivalent1Cat.
   intros aa' bb'.
   apply (isequiv_homotopic
           (dcat_equiv_path_total _ _ o (path_sigma_uncurried D aa' bb')^-1)).

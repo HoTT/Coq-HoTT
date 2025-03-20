@@ -143,13 +143,11 @@ End RingHomoLaws.
 
 (** Isomorphisms of commutative rings *)
 Record RingIsomorphism (A B : Ring) := {
-  rng_iso_homo : RingHomomorphism A B ;
-  isequiv_rng_iso_homo : IsEquiv rng_iso_homo ;
+  rng_iso_homo :> RingHomomorphism A B ;
+  isequiv_rng_iso_homo :: IsEquiv rng_iso_homo ;
 }.
 
 Arguments rng_iso_homo {_ _ }.
-Coercion rng_iso_homo : RingIsomorphism >-> RingHomomorphism.
-Existing Instance isequiv_rng_iso_homo.
 
 Definition issig_RingIsomorphism {A B : Ring}
   : _ <~> RingIsomorphism A B := ltac:(issig).
@@ -295,7 +293,6 @@ Defined.
 
 Instance hasmorext_ring `{Funext} : HasMorExt Ring.
 Proof.
-  srapply Build_HasMorExt.
   intros A B f g; cbn in *.
   snapply @isequiv_homotopic.
   1: exact (equiv_path_ringhomomorphism^-1%equiv).

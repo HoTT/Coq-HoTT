@@ -124,8 +124,8 @@ Class IsMonoidal (A : Type) `{HasEquivs A}
   (** These all satisfy the following properties: *)
   := {
   (** A [cat_tensor] is a 1-bifunctor. *)
-  is0bifunctor_cat_tensor : Is0Bifunctor cat_tensor;
-  is1bifunctor_cat_tensor : Is1Bifunctor cat_tensor;
+  is0bifunctor_cat_tensor :: Is0Bifunctor cat_tensor | 10;
+  is1bifunctor_cat_tensor :: Is1Bifunctor cat_tensor | 10;
   (** A natural isomorphism [associator] witnessing the associativity of the tensor product. *)
   cat_tensor_associator :: Associator cat_tensor;
   (** A natural isomorphism [left_unitor] witnessing the left unit law. *)
@@ -137,9 +137,6 @@ Class IsMonoidal (A : Type) `{HasEquivs A}
   (** The pentagon identity. *)
   cat_tensor_pentagon_identity :: PentagonIdentity cat_tensor;
 }.
-
-Existing Instance is0bifunctor_cat_tensor | 10.
-Existing Instance is1bifunctor_cat_tensor | 10.
 
 (** TODO: Braided monoidal categories *)
 

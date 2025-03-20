@@ -100,12 +100,12 @@ Coercion intermediate : Factorization >-> Sortclass.
 (** A ("unique" or "orthogonal") factorization system consists of a couple of classes of maps, closed under composition, such that every map admits a unique factorization. *)
 Record FactorizationSystem@{i j k} :=
   { class1 : forall {X Y : Type@{i}}, (X -> Y) -> Type@{j} ;
-    ishprop_class1 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class1 g) ;
+    ishprop_class1 :: forall {X Y : Type@{i}} (g:X->Y), IsHProp (class1 g) ;
     class1_isequiv : forall {X Y : Type@{i}} (g:X->Y) {geq:IsEquiv g}, class1 g ;
     class1_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class1 g -> class1 h -> class1 (h o g) ;
     class2 : forall {X Y : Type@{i}}, (X -> Y) -> Type@{k} ;
-    ishprop_class2 : forall {X Y : Type@{i}} (g:X->Y), IsHProp (class2 g) ;
+    ishprop_class2 :: forall {X Y : Type@{i}} (g:X->Y), IsHProp (class2 g) ;
     class2_isequiv : forall {X Y : Type@{i}} (g:X->Y) {geq:IsEquiv g}, class2 g ;
     class2_compose : forall {X Y Z : Type@{i}} (g:X->Y) (h:Y->Z),
                        class2 g -> class2 h -> class2 (h o g) ;
@@ -116,8 +116,6 @@ Record FactorizationSystem@{i j k} :=
                          (fact' : Factorization@{i} (@class1) (@class2) f),
                     PathFactorization@{i} fact fact'
   }.
-
-Existing Instances ishprop_class1 ishprop_class2.
 
 (** The type of factorizations is, as promised, contractible. *)
 Theorem contr_factor `{Univalence} (factsys : FactorizationSystem)

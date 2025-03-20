@@ -587,12 +587,10 @@ Proof.
 Defined.
 
 (** The classifying space functor and the fundamental group functor form an adjunction ([pType] needs to be restricted to the subcategory of 0-connected pointed types). Note that the full adjunction should also be natural in [X], but this was not needed yet. *)
-Theorem equiv_bg_pi1_adjoint `{Univalence} (X : pType)
+Definition equiv_bg_pi1_adjoint `{Univalence} (X : pType)
   `{IsConnected 0 X} (G : Group)
-  : (Pi 1 X $-> G) <~> (X $-> B G).
-Proof.
-  rapply natequiv_bg_pi1_adjoint.
-Defined.
+  : (Pi 1 X $-> G) <~> (X $-> B G)
+  := natequiv_bg_pi1_adjoint _ _.
 
 Lemma is1natural_equiv_bg_pi1_adjoint_r `{Univalence}
   (X : pType) `{IsConnected 0 X}
