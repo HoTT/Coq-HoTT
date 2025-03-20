@@ -279,7 +279,7 @@ Section meet_semilattice_order.
   - rewrite <-E. apply meet_lb_r.
   Qed.
 
-  #[export] Instance OrderPreserving_left_meet : forall z, OrderPreserving (z ⊓).
+  #[export] Instance orderpreserving_left_meet : forall z, OrderPreserving (z ⊓).
   Proof.
   red;intros.
   apply meet_glb.
@@ -287,7 +287,7 @@ Section meet_semilattice_order.
   - apply  meet_le_compat_l. trivial.
   Qed.
 
-  #[export] Instance OrderPreserving_right_meet: forall z, OrderPreserving (⊓ z).
+  #[export] Instance orderpreserving_right_meet: forall z, OrderPreserving (⊓ z).
   Proof.
   intros. exact maps.order_preserving_flip.
   Qed.
@@ -346,10 +346,10 @@ End meet_semilattice_order.
 Section lattice_order.
   Context `{LatticeOrder L}.
 
-  Instance IsJoinSemilattice_LatticeOrder : IsJoinSemiLattice L := join_sl_order_join_sl.
-  Instance IsMeetSemilattice_LatticeOrder : IsMeetSemiLattice L := meet_sl_order_meet_sl.
+  Instance isjoinsemilattice_latticeorder : IsJoinSemiLattice L := join_sl_order_join_sl.
+  Instance ismeetsemilattice_latticeorder : IsMeetSemiLattice L := meet_sl_order_meet_sl.
 
-  Instance Absorption_join_meet : Absorption (⊓) (⊔).
+  Instance absorption_join_meet : Absorption (⊓) (⊔).
   Proof.
   intros x y. apply (antisymmetry (≤)).
   - apply meet_lb_l.
@@ -358,7 +358,7 @@ Section lattice_order.
    + apply join_ub_l.
   Qed.
 
-  Instance Absorption_meet_join : Absorption (⊔) (⊓).
+  Instance absorption_meet_join : Absorption (⊔) (⊓).
   Proof.
   intros x y. apply (antisymmetry (≤)).
   - apply join_le.

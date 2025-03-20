@@ -12,7 +12,7 @@ intros ap e;revert ap.
 apply tight_apart. assumption.
 Qed.
 
-#[export] Instance apartness_eq_stable: forall x y : A, Stable (x = y).
+#[export] Instance stable_eq_apartness: forall x y : A, Stable (x = y).
 Proof.
   intros x y. unfold Stable.
   intros dn. apply tight_apart.

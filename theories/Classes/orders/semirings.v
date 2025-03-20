@@ -602,12 +602,12 @@ Section full_pseudo_semiring_order.
     destruct (neg_mult_decompose x y E) as [[? ?]|[? ?]];auto.
   Qed.
 
-  #[export] Instance OrderReflecting_left_mult : forall (z : R), PropHolds (0 < z) -> OrderReflecting (z *.).
+  #[export] Instance orderreflecting_left_mult : forall (z : R), PropHolds (0 < z) -> OrderReflecting (z *.).
   Proof.
   intros z E. exact full_pseudo_order_reflecting.
   Qed.
 
-  #[export] Instance OrderReflecting_right_mult : forall (z : R), PropHolds (0 < z) -> OrderReflecting (.* z).
+  #[export] Instance orderreflecting_right_mult : forall (z : R), PropHolds (0 < z) -> OrderReflecting (.* z).
   Proof.
   intros. exact order_reflecting_flip.
   Qed.
