@@ -243,6 +243,8 @@ Class HasMorExt (A : Type) `{Is1Cat A} :=
   isequiv_Htpy_path :: forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
 .
 
+Typeclasses Opaque HasMorExt.
+
 Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g)
   : f = g
   := GpdHom_path^-1 p.

@@ -498,6 +498,8 @@ Defined.
 Class IsUnivalent1Cat (A : Type) `{HasEquivs A}
   := isequiv_cat_equiv_path :: forall a b, IsEquiv (@cat_equiv_path A _ _ _ _ _ a b).
 
+Typeclasses Opaque IsUnivalent1Cat.
+
 Definition cat_path_equiv {A : Type} `{IsUnivalent1Cat A} (a b : A)
   : (a $<~> b) -> (a = b)
   := (cat_equiv_path a b)^-1.
