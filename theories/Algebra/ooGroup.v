@@ -20,10 +20,8 @@ Local Unset Keyed Unification.
 
 Record ooGroup :=
   { classifying_space : pType ;
-    isconn_classifying_space : IsConnected 0 classifying_space
+    isconn_classifying_space :: IsConnected 0 classifying_space
   }.
-
-Existing Instance isconn_classifying_space.
 
 Local Notation B := classifying_space.
 

@@ -8,12 +8,10 @@ Local Open Scope surreal_scope.
 
 (** Addition requires the option sorts to be closed under finite sums. *)
 Class HasAddition (S : OptionSort) :=
-  { empty_options : InSort S Empty Empty
-    ; sum_options : forall L R L' R',
+  { empty_options :: InSort S Empty Empty
+    ; sum_options :: forall L R L' R',
         InSort S L R -> InSort S L' R' -> InSort S (L + L') (R + R')
   }.
-Existing Instance empty_options.
-Existing Instance sum_options.
 
 Instance hasaddition_maxsort : HasAddition MaxSort
   := { empty_options := tt ;

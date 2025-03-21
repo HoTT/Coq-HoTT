@@ -1153,9 +1153,8 @@ Definition FactorsThroughFreeGroup (S : Type) (F_S : Group)
 
 (** Universal property of a free group on a set (type). *)
 Class IsFreeGroupOn (S : Type) (F_S : Group) (i : S -> F_S)
-  := contr_isfreegroupon : forall (A : Group) (g : S -> A),
+  := contr_isfreegroupon :: forall (A : Group) (g : S -> A),
       Contr (FactorsThroughFreeGroup S F_S i A g).
-Existing Instance contr_isfreegroupon.
 
 (** A group is free if there exists a generating type on which it is a free group. *)
 Class IsFreeGroup (F_S : Group)

@@ -124,7 +124,7 @@ Defined.
 (** A pointed equivalence is a pointed map and a proof that it is an equivalence *)
 Record pEquiv (A B : pType) := {
   pointed_equiv_fun : pForall A (pfam_const B) ;
-  pointed_isequiv : IsEquiv pointed_equiv_fun ;
+  pointed_isequiv :: IsEquiv pointed_equiv_fun ;
 }.
 
 (** TODO: It might be better behaved to define [pEquiv] as an equivalence and a proof that this equivalence is pointed. In pEquiv.v we have another constructor [Build_pEquiv'] which Coq can infer faster than [Build_pEquiv]. *)
@@ -133,7 +133,6 @@ Infix "<~>*" := pEquiv : pointed_scope.
 
 (** Note: because we define [pMap] as a special case of [pForall], we must declare all coercions into [pForall], *not* into [pMap]. *)
 Coercion pointed_equiv_fun : pEquiv >-> pForall.
-Existing Instance pointed_isequiv.
 
 Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
   : A <~> B := Build_Equiv A B f _.

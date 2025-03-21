@@ -78,25 +78,24 @@ Arguments dfmap {A B DA _ _ DB _ _} F {_} F' {_ _ _ _ _ _} f'.
 
 Class IsD2Graph {A : Type} `{Is2Graph A}
   (D : A -> Type) `{!IsDGraph D}
-  := isdgraph_hom : forall {a b} {a'} {b'},
+  := isdgraph_hom :: forall {a b} {a'} {b'},
                       IsDGraph (fun (f:a $-> b) => DHom f a' b').
 
-Existing Instance isdgraph_hom.
 #[global] Typeclasses Transparent IsD2Graph.
 
 Class IsD1Cat {A : Type} `{Is1Cat A}
   (D : A -> Type) `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D} :=
 {
-  isd01cat_hom : forall {a b : A} {a' : D a} {b' : D b},
+  isd01cat_hom :: forall {a b : A} {a' : D a} {b' : D b},
                  IsD01Cat (fun f => DHom f a' b');
-  isd0gpd_hom : forall {a b : A} {a' : D a} {b' : D b},
+  isd0gpd_hom :: forall {a b : A} {a' : D a} {b' : D b},
                 IsD0Gpd (fun f => DHom f a' b');
-  isd0functor_postcomp : forall {a b c : A} {g : b $-> c} {a' : D a}
+  isd0functor_postcomp :: forall {a b c : A} {g : b $-> c} {a' : D a}
                          {b' : D b} {c' : D c} (g' : DHom g b' c'),
                          @IsD0Functor _ _ (fun f => DHom f a' b')
                          _ _ (fun gf => DHom gf a' c')
                          _ _ (cat_postcomp a g) _ (dcat_postcomp g');
-  isd0functor_precomp : forall {a b c : A} {f : a $-> b} {a' : D a}
+  isd0functor_precomp :: forall {a b c : A} {f : a $-> b} {a' : D a}
                         {b' : D b} {c' : D c} (f' : DHom f a' b'),
                         @IsD0Functor _ _ (fun g => DHom g b' c')
                         _ _ (fun gf => DHom gf a' c')
@@ -116,11 +115,6 @@ Class IsD1Cat {A : Type} `{Is1Cat A}
   dcat_idr : forall {a b : A} {f : a $-> b} {a' : D a} {b' : D b}
              (f' : DHom f a' b'), DHom (cat_idr f) (f' $o' DId a') f';
 }.
-
-Existing Instance isd01cat_hom.
-Existing Instance isd0gpd_hom.
-Existing Instance isd0functor_postcomp.
-Existing Instance isd0functor_precomp.
 
 Definition dcat_postwhisker {A : Type} {D : A -> Type} `{IsD1Cat A D}
   {a b c : A} {f g : a $-> b} {h : b $-> c} {p : f $== g}
@@ -256,16 +250,16 @@ Class IsD1Cat_Strong {A : Type} `{Is1Cat_Strong A}
   (D : A -> Type)
   `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D} :=
 {
-  isd01cat_hom_strong : forall {a b : A} {a' : D a} {b' : D b},
+  isd01cat_hom_strong :: forall {a b : A} {a' : D a} {b' : D b},
                         IsD01Cat (fun f => DHom f a' b');
-  isd0gpd_hom_strong : forall {a b : A} {a' : D a} {b' : D b},
+  isd0gpd_hom_strong :: forall {a b : A} {a' : D a} {b' : D b},
                        IsD0Gpd (fun f => DHom f a' b');
-  isd0functor_postcomp_strong : forall {a b c : A} {g : b $-> c} {a' : D a}
+  isd0functor_postcomp_strong :: forall {a b c : A} {g : b $-> c} {a' : D a}
                                 {b' : D b} {c' : D c} (g' : DHom g b' c'),
                                 @IsD0Functor _ _ (fun f => DHom f a' b')
                                 _ _ (fun gf => DHom gf a' c')
                                 _ _ (cat_postcomp a g) _ (dcat_postcomp g');
-  isd0functor_precomp_strong : forall {a b c : A} {f : a $-> b} {a' : D a}
+  isd0functor_precomp_strong :: forall {a b c : A} {f : a $-> b} {a' : D a}
                                 {b' : D b} {c' : D c} (f' : DHom f a' b'),
                                 @IsD0Functor _ _ (fun g => DHom g b' c')
                                 _ _ (fun gf => DHom gf a' c')
@@ -289,11 +283,6 @@ Class IsD1Cat_Strong {A : Type} `{Is1Cat_Strong A}
                     (transport (fun k => DHom k a' b') (cat_idr_strong f)
                     (f' $o' DId a')) = f';
 }.
-
-Existing Instance isd01cat_hom_strong.
-Existing Instance isd0gpd_hom_strong.
-Existing Instance isd0functor_postcomp_strong.
-Existing Instance isd0functor_precomp_strong.
 
 (* If in the future we make a [Build_Is1Cat_Strong'] that lets the user omit the second proof of associativity, this shows how it can be recovered from the original proof:
 Definition dcat_assoc_opp_strong {A : Type} {D : A -> Type} `{IsD1Cat_Strong A D}

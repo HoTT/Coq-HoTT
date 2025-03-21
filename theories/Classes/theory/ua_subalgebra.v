@@ -56,7 +56,7 @@ Section subalgebra_predicate.
 
   Class IsSubalgebraPredicate
     := BuildIsSubalgebraPredicate
-    { hprop_subalgebra_predicate : ∀ s x, IsHProp (P s x);
+    { hprop_subalgebra_predicate :: ∀ s x, IsHProp (P s x);
       is_closed_under_ops_subalgebra_predicate : IsClosedUnderOps A P }.
 
   #[export] Instance hprop_is_subalgebra_predicate `{Funext}
@@ -69,8 +69,6 @@ Section subalgebra_predicate.
 End subalgebra_predicate.
 
 Global Arguments BuildIsSubalgebraPredicate {σ A P hprop_subalgebra_predicate}.
-
-Existing Instance hprop_subalgebra_predicate.
 
 (** The next section defines subalgebra. *)
 

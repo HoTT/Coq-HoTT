@@ -71,7 +71,7 @@ Record PreCategory :=
       (** Ask for the double-identity version so that [InitialTerminalCategory.Functors.from_terminal Cᵒᵖ X] and [(InitialTerminalCategory.Functors.from_terminal C X)ᵒᵖ] are convertible. *)
       identity_identity : forall x, identity x o identity x = identity x;
 
-      trunc_morphism : forall s d, IsHSet (morphism s d)
+      trunc_morphism :: forall s d, IsHSet (morphism s d)
     }.
 
 Bind Scope category_scope with PreCategory.
@@ -105,8 +105,6 @@ Definition Build_PreCategory
        left_identity
        right_identity
        (fun _ => left_identity _ _ _).
-
-Existing Instance trunc_morphism.
 
 (** create a hint db for all category theory things *)
 Create HintDb category discriminated.

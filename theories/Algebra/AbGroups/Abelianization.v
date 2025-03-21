@@ -21,9 +21,8 @@ Definition group_precomp {a b} := @cat_precomp Group _ _ a b.
 
 Class IsAbelianization {G : Group} (G_ab : AbGroup)
       (eta : GroupHomomorphism G G_ab)
-  := issurjinj_isabel : forall (A : AbGroup),
+  := issurjinj_isabel :: forall (A : AbGroup),
       IsSurjInj (group_precomp A eta).
-Existing Instance issurjinj_isabel.
 
 Definition isequiv_group_precomp_isabelianization `{Funext}
   {G : Group} {G_ab : AbGroup} (eta : GroupHomomorphism G G_ab)

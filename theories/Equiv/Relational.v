@@ -11,12 +11,10 @@ Generalizable Variables A B f.
 
 Record RelEquiv A B :=
   { equiv_rel : A -> B -> Type;
-    relequiv_contr_f : forall a, Contr { b : B & equiv_rel a b };
-    relequiv_contr_g : forall b, Contr { a : A & equiv_rel a b } }.
+    relequiv_contr_f :: forall a, Contr { b : B & equiv_rel a b };
+    relequiv_contr_g :: forall b, Contr { a : A & equiv_rel a b } }.
 
 Arguments equiv_rel {A B} _ _ _.
-Existing Instance relequiv_contr_f.
-Existing Instance relequiv_contr_g.
 
 Definition issig_relequiv {A B}
   : { equiv_rel : A -> B -> Type
