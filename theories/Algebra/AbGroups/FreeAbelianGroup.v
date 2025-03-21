@@ -13,9 +13,8 @@ Definition FactorsThroughFreeAbGroup (S : Type) (F_S : AbGroup)
 
 (** Universal property of a free abelian group on a set (type). *)
 Class IsFreeAbGroupOn (S : Type) (F_S : AbGroup) (i : S -> F_S)
-  := contr_isfreeabgroupon : forall (A : AbGroup) (g : S -> A),
+  := contr_isfreeabgroupon :: forall (A : AbGroup) (g : S -> A),
       Contr (FactorsThroughFreeAbGroup S F_S i A g).
-Existing Instance contr_isfreeabgroupon.
 
 (** A abelian group is free if there exists a generating type on which it is a free group (a basis). *)
 Class IsFreeAbGroup (F_S : AbGroup)

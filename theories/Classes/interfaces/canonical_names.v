@@ -43,9 +43,8 @@ Notation "(≶ x )" := (fun y => apart y x) (only parsing) : mc_scope.
 (* Even for setoids with decidable equality x <> y does not imply x ≶ y.
 Therefore we introduce the following class. *)
 Class TrivialApart A {Aap : Apart A} :=
-  { trivial_apart_prop : is_mere_relation A apart
+  { trivial_apart_prop :: is_mere_relation A apart
   ; trivial_apart : forall x y, x ≶ y <-> x <> y }.
-#[export] Existing Instance trivial_apart_prop.
 
 Definition sig_apart `{Apart A} (P: A -> Type) : Apart (sig P) := fun x y => x.1 ≶ y.1.
 #[export]
@@ -253,8 +252,7 @@ Class Idempotent `(f: A -> A -> A) (x : A) : Type := idempotency: f x x = x.
 Arguments idempotency {A} _ _ {Idempotent}.
 
 Class UnaryIdempotent {A} (f: A -> A) : Type :=
-  unary_idempotent : Idempotent Compose f.
-#[export] Existing Instances unary_idempotent.
+  unary_idempotent :: Idempotent Compose f.
 
 Lemma unary_idempotency `{UnaryIdempotent A f} x : f (f x) = f x.
 Proof.
@@ -265,8 +263,7 @@ apply idempotency. exact _.
 Qed.
 
 Class BinaryIdempotent `(op: A -> A -> A) : Type
-  := binary_idempotent : forall x, Idempotent op x.
-#[export] Existing Instances binary_idempotent.
+  := binary_idempotent :: forall x, Idempotent op x.
 
 Class LeftIdentity {A B} (op : A -> B -> B) (x : A): Type
   := left_identity: forall y, op x y = y.
@@ -322,8 +319,7 @@ Class HeteroAssociative {A B C AB BC ABC}
   (fAB_C: AB -> C -> ABC) (fAB : A -> B -> AB): Type
   := associativity : forall x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
 Class Associative {A} (f : A -> A -> A)
-  := simple_associativity : HeteroAssociative f f f f.
-#[export] Existing Instances simple_associativity.
+  := simple_associativity :: HeteroAssociative f f f f.
 
 Instance istrunc_associative `{Funext} A n f `{IsTrunc n.+1 A}
   : IsTrunc n (@Associative A f).
@@ -355,10 +351,9 @@ Class CoTransitive `(R : Relation A) : Type := cotransitive
 Arguments cotransitive {A R CoTransitive x y} _ _.
 
 Class EquivRel `(R : Relation A) : Type := Build_EquivRel
-  { EquivRel_Reflexive : Reflexive R ;
-    EquivRel_Symmetric : Symmetric R ;
-    EquivRel_Transitive : Transitive R }.
-#[export] Existing Instances EquivRel_Reflexive EquivRel_Symmetric EquivRel_Transitive.
+  { EquivRel_Reflexive :: Reflexive R ;
+    EquivRel_Symmetric :: Symmetric R ;
+    EquivRel_Transitive :: Transitive R }.
 
 Definition SigEquivRel {A:Type} (R : Relation A) : Type :=
   {_ : Reflexive R | { _ : Symmetric R | Transitive R}}.
@@ -406,12 +401,10 @@ Class RightHeteroDistribute {A B C}
   (f : A -> B -> C) (g_l : A -> A -> A) (g : C -> C -> C) : Type
   := distribute_r: forall a b c, f (g_l a b) c = g (f a c) (f b c).
 Class LeftDistribute {A} (f g: A -> A -> A)
-  := simple_distribute_l : LeftHeteroDistribute f g g.
-#[export] Existing Instances simple_distribute_l.
-Class RightDistribute {A} (f g: A -> A -> A)
-  := simple_distribute_r : RightHeteroDistribute f g g.
-#[export] Existing Instances simple_distribute_r.
+  := simple_distribute_l :: LeftHeteroDistribute f g g.
 
+Class RightDistribute {A} (f g: A -> A -> A)
+  := simple_distribute_r :: RightHeteroDistribute f g g.
 
 Class HeteroSymmetric {A} {T : A -> A -> Type}
   (R : forall {x y}, T x y -> T y x -> Type) : Type
@@ -495,8 +488,8 @@ Class Bind (M : Type -> Type) := bind : forall {A B}, M A -> (A -> M B) -> M B.
 
 Class Enumerable@{i} (A : Type@{i}) :=
   { enumerator : nat -> A
-  ; enumerator_issurj : IsSurjection enumerator }.
-#[export] Existing Instance enumerator_issurj.
+  ; enumerator_issurj :: IsSurjection enumerator }.
+
 Arguments enumerator A {_} _.
 Arguments enumerator_issurj A {_} _.
 

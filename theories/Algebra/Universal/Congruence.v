@@ -53,19 +53,13 @@ Section congruence.
       mere equivalence relations and [OpsCompatible A Φ] holds. *)
 
   Class IsCongruence : Type := Build_IsCongruence
-   { is_mere_relation_cong : forall (s : Sort σ), is_mere_relation (A s) (Φ s)
-   ; equiv_rel_cong : forall (s : Sort σ), EquivRel (Φ s)
-   ; ops_compatible_cong : OpsCompatible }.
+   { is_mere_relation_cong :: forall (s : Sort σ), is_mere_relation (A s) (Φ s)
+   ; equiv_rel_cong :: forall (s : Sort σ), EquivRel (Φ s)
+   ; ops_compatible_cong :: OpsCompatible }.
 
   Global Arguments Build_IsCongruence {is_mere_relation_cong}
                                       {equiv_rel_cong}
                                       {ops_compatible_cong}.
-
-  #[export] Existing Instance is_mere_relation_cong.
-
-  #[export] Existing Instance equiv_rel_cong.
-
-  #[export] Existing Instance ops_compatible_cong.
 
   #[export] Instance hprop_is_congruence `{Funext} : IsHProp IsCongruence.
   Proof.

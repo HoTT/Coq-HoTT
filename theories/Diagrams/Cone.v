@@ -81,11 +81,8 @@ Section Cone.
   (** A cone [C] over [D] from [X] is said universal when for all [Y] the map [cone_precompose] is an equivalence. In particular, given another cone [C'] over [D] from [X'] the inverse of the map allows us to recover a map [h] : [X] -> [X'] such that [C'] is [C] precomposed with [h]. The fact that [cone_precompose] is an equivalence is an elegant way of stating the usual "unique existence" of category theory. *)
 
   Class UniversalCone (C : Cone X D) := {
-    is_universal : forall Y, IsEquiv (@cone_precompose C Y);
+    is_universal :: forall Y, IsEquiv (@cone_precompose C Y);
     }.
-  (* Use :> and remove the two following lines,
-     once Coq 8.16 is the minimum required version. *)
-  #[export] Existing Instance is_universal.
   Coercion is_universal : UniversalCone >-> Funclass.
 
 End Cone.

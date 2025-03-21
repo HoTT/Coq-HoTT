@@ -143,8 +143,5 @@ Class IsEssentiallySurjective A B (F : Functor A B)
     We say [F] is a _weak equivalence_ if it is fully faithful and
     essentially surjective. *)
 Class IsWeakEquivalence `{Funext} A B (F : Functor A B)
-  := { is_fully_faithful__is_weak_equivalence : IsFullyFaithful F;
-       is_essentially_surjective__is_weak_equivalence : IsEssentiallySurjective F }.
-#[export] Existing Instances
-  is_fully_faithful__is_weak_equivalence
-  is_essentially_surjective__is_weak_equivalence.
+  := { is_fully_faithful__is_weak_equivalence :: IsFullyFaithful F;
+       is_essentially_surjective__is_weak_equivalence :: IsEssentiallySurjective F }.

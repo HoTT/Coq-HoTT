@@ -10,12 +10,11 @@ Arguments integers_to_ring A {_} R {_ _ _ _ _ _} _.
 
 Class Integers A {Aap:Apart A} {Aplus Amult Azero Aone Anegate Ale Alt}
   `{U : IntegersToRing A} :=
-  { integers_ring : @IsCRing A Aplus Amult Azero Aone Anegate
-  ; integers_order : FullPseudoSemiRingOrder Ale Alt
-  ; integers_to_ring_mor : forall {B} `{IsCRing B}, IsSemiRingPreserving (integers_to_ring A B)
+  { integers_ring :: @IsCRing A Aplus Amult Azero Aone Anegate
+  ; integers_order :: FullPseudoSemiRingOrder Ale Alt
+  ; integers_to_ring_mor :: forall {B} `{IsCRing B}, IsSemiRingPreserving (integers_to_ring A B)
   ; integers_initial: forall {B} `{IsCRing B} {h : A -> B} `{!IsSemiRingPreserving h} x,
       integers_to_ring A B x = h x}.
-#[export] Existing Instances integers_ring integers_order integers_to_ring_mor.
 
 Section specializable.
   Context (Z N : Type) `{Integers Z} `{Naturals N}.

@@ -20,7 +20,7 @@ Class Descends@{i} (O' O : Subuniverse@{i}) (T : Type@{i})
   OO_descend :
     forall (P : T -> Type@{i}) {P_inO : forall x, In O (P x)},
       O_reflector O' T -> Type@{i} ;
-  OO_descend_inO :
+  OO_descend_inO ::
     forall (P : T -> Type@{i}) {P_inO : forall x, In O (P x)} (x : O_reflector O' T),
       In O (OO_descend P x) ;
   OO_descend_beta :
@@ -28,16 +28,14 @@ Class Descends@{i} (O' O : Subuniverse@{i}) (T : Type@{i})
       OO_descend P (to O' T x) <~> P x ;
 }.
 
-Existing Instance OO_descend_inO.
 Arguments OO_descend O' O {T _ _ _} P {P_inO} x.
 Arguments OO_descend_inO O' O {T _ _ _} P {P_inO} x.
 Arguments OO_descend_beta O' O {T _ _ _} P {P_inO} x.
 
 Class O_lex_leq (O1 O2 : ReflectiveSubuniverse) `{O1 << O2} :=
-  O_lex_leq_descends : forall A, Descends O2 O1 A.
+  O_lex_leq_descends :: forall A, Descends O2 O1 A.
 
 Infix "<<<" := O_lex_leq : subuniverse_scope.
-Existing Instance O_lex_leq_descends.
 
 (** Unfortunately, it seems that generalizing binders don't work on notations: writing [`{O <<< O'}] doesn't automatically add the precondition [O << O'], although writing [`{O_lex_leq O O'}] does. *)
 
