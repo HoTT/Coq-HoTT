@@ -117,7 +117,7 @@ Class CayleyDicksonImaginaroid (A : Type) := {
   cdi_susp_hspace :: IsHSpace (psusp A);
   cdi_susp_factorneg_r :: FactorNegRight (negate_susp A cdi_negate) hspace_op;
   cdi_susp_conjug_left_inv :: LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit;
-  cdi_susp_conjug_distr :: DistrOpp hspace_op (conjugate_susp A cdi_negate)
+  cdi_susp_conjug_distr :: DistrOpp hspace_op (conjugate_susp A cdi_negate);
 }.
 
 Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)
