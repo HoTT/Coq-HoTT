@@ -127,9 +127,11 @@ Defined.
 
 (** The type (set) of subgroups of a group G. *)
 Record Subgroup (G : Group) := {
-  subgroup_pred :> G -> Type ;
+  subgroup_pred : G -> Type ;
   subgroup_issubgroup :: IsSubgroup subgroup_pred ;
 }.
+
+Coercion subgroup_pred : Subgroup >-> Funclass.
 
 Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
@@ -436,11 +438,13 @@ Class IsNormalSubgroup {G : Group} (N : Subgroup G)
   := isnormal : forall {x y}, N (x * y) -> N (y * x).
 
 Record NormalSubgroup (G : Group) := {
-  normalsubgroup_subgroup :> Subgroup G ;
+  normalsubgroup_subgroup : Subgroup G ;
   normalsubgroup_isnormal :: IsNormalSubgroup normalsubgroup_subgroup ;
 }.
 
 Arguments Build_NormalSubgroup G N _ : rename.
+
+Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
 
 Definition equiv_symmetric_in_normalsubgroup {G : Group}
   (N : Subgroup G) `{!IsNormalSubgroup N}

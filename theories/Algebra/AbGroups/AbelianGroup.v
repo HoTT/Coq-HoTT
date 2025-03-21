@@ -19,7 +19,7 @@ Local Open Scope mc_add_scope.
 Record AbGroup := {
   abgroup_group : Group;
   abgroup_commutative :: @Commutative abgroup_group _ (+);
-  }.
+}.
 
 Coercion abgroup_group : AbGroup >-> Group.
 

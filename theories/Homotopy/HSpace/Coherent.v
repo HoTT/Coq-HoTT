@@ -15,7 +15,6 @@ Record IsCohHSpace (A : pType) := {
     iscoherent_cohhspace :: IsCoherent A;
   }.
 
-
 Definition issig_iscohhspace (A : pType)
   : { hspace_op : SgOp A
     & { hspace_left_identity : LeftIdentity hspace_op pt
