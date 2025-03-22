@@ -319,7 +319,7 @@ Defined.
 
 Instance ismonoidal_nfmc {X : Type} : IsMonoidal (NFMC X) (app (A:=X)) nil := {}.
 
-(** Now that we have defined the free monoidal category [FMC X] and the normalized free monoidal category [NFMC X] on a type, we define functors between them: the [interp_nfmc] functor, from [FMC X -> NFMC X], and the [embed_fmc] funtor [NFMC X -> NFMC X].*)
+(** Now that we have defined the free monoidal category [FMC X] and the normalized free monoidal category [NFMC X] on a type, we define functors between them: the [interp_nfmc] functor, from [FMC X -> NFMC X], and the [embed_fmc] functor [NFMC X -> NFMC X]. *)
 Fixpoint interp_nfmc {X: Type} (A : FMC X) : NFMC X :=
   match A with
   | el x => [x]
