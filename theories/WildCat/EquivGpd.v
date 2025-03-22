@@ -19,11 +19,10 @@ Arguments esssurj {A B _ _ _ _ _ _} F {_ _} b.
 Class IsSurjInj {A B : Type} `{Is0Gpd A, Is0Gpd B}
       (F : A -> B) `{!Is0Functor F} :=
 {
-  esssurj_issurjinj : SplEssSurj F ;
+  esssurj_issurjinj :: SplEssSurj F ;
   essinj : forall (x y:A), (F x $== F y) -> (x $== y) ;
 }.
 
-Existing Instance esssurj_issurjinj.
 Arguments essinj {A B _ _ _ _ _ _} F {_ _ x y} f.
 
 Definition surjinj_inv {A B : Type} (F : A -> B) `{IsSurjInj A B F} : B -> A

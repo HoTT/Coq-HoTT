@@ -137,10 +137,8 @@ Instance ishprop_iscomplex_hset `{Funext} {F X Y : pType} `{IsHSet Y}
 Cumulative Class IsExact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y) :=
 {
   cx_isexact : IsComplex i f ;
-  conn_map_isexact : IsConnMap n (cxfib cx_isexact)
+  conn_map_isexact :: IsConnMap n (cxfib cx_isexact)
 }.
-
-Existing Instance conn_map_isexact.
 
 Definition issig_isexact (n : Modality) {F X Y : pType} (i : F ->* X) (f : X ->* Y)
   : _ <~> IsExact n i f := ltac:(issig).
@@ -501,12 +499,11 @@ Record LongExactSequence (k : Modality) (N : SuccStr) : Type :=
 {
   les_carrier : N -> pType;
   les_fn : forall n, les_carrier n.+1 ->* les_carrier n;
-  les_isexact : forall n, IsExact k (les_fn n.+1) (les_fn n)
+  les_isexact :: forall n, IsExact k (les_fn n.+1) (les_fn n)
 }.
 
 Coercion les_carrier : LongExactSequence >-> Funclass.
 Arguments les_fn {k N} S n : rename.
-Existing Instance les_isexact.
 
 (** Long exact sequences are preserved by truncation. *)
 Definition trunc_les `{Univalence} (k : trunc_index) {N : SuccStr}

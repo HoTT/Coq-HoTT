@@ -5,12 +5,9 @@ Require Import WildCat.Equiv.
 (** A wild category is pointed if the initial and terminal object are the same. *)
 Class IsPointedCat (A : Type) `{Is1Cat A} := {
   zero_object : A;
-  isinitial_zero_object : IsInitial zero_object;
-  isterminal_zero_object : IsTerminal zero_object;
+  isinitial_zero_object :: IsInitial zero_object;
+  isterminal_zero_object :: IsTerminal zero_object;
 }.
-
-Existing Instance isinitial_zero_object.
-Existing Instance isterminal_zero_object.
 
 (** The zero morphism between objects [a] and [b] of a pointed category [A] is the unique morphism that factors through the zero object. *)
 Definition zero_morphism {A : Type} `{IsPointedCat A} {a b : A} : a $-> b
@@ -60,10 +57,9 @@ Local Arguments zero_morphism {_ _ _ _ _ _} _ _.
 (** A functor is pointed if it preserves the zero object. *)
 Class IsPointedFunctor {A B : Type} (F : A -> B) `{Is1Functor A B F} :=
 {
-  preservesinitial_pfunctor : PreservesInitial F ;
-  preservesterminal_pfunctor : PreservesTerminal F ;
+  preservesinitial_pfunctor :: PreservesInitial F ;
+  preservesterminal_pfunctor :: PreservesTerminal F ;
 }.
-Existing Instances preservesinitial_pfunctor preservesterminal_pfunctor.
 
 (** Here is an alternative constructor using preservation of the zero object. This requires more structure on the categories however. *)
 Definition Build_IsPointedFunctor' {A B : Type} (F : A -> B)

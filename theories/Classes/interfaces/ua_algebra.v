@@ -171,9 +171,7 @@ Proof.
 Defined.
 
 Class IsTruncAlgebra (n : trunc_index) {σ : Signature} (A : Algebra σ)
-  := trunc_carriers_algebra : ∀ (s : Sort σ), IsTrunc n (A s).
-
-Existing Instance trunc_carriers_algebra.
+  := trunc_carriers_algebra :: ∀ (s : Sort σ), IsTrunc n (A s).
 
 Notation IsHSetAlgebra := (IsTruncAlgebra 0).
 

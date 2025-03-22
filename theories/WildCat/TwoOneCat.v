@@ -6,31 +6,31 @@ Require Import WildCat.NatTrans.
 
 Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=
 {
-  is1cat_hom : forall (a b : A), Is1Cat (a $-> b) ;
-  is1gpd_hom : forall (a b : A), Is1Gpd (a $-> b) ;
-  is1functor_postcomp : forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) ;
-  is1functor_precomp : forall (a b c : A) (f : a $-> b), Is1Functor (cat_precomp c f) ;
+  is1cat_hom :: forall (a b : A), Is1Cat (a $-> b) ;
+  is1gpd_hom :: forall (a b : A), Is1Gpd (a $-> b) ;
+  is1functor_postcomp :: forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) ;
+  is1functor_precomp :: forall (a b c : A) (f : a $-> b), Is1Functor (cat_precomp c f) ;
   bifunctor_coh_comp : forall {a b c : A} {f f' : a $-> b}  {g g' : b $-> c}
     (p : f $== f') (p' : g $== g'),
     (p' $@R f) $@ (g' $@L p) $== (g $@L p) $@ (p' $@R f') ;
 
   (** Naturality of the associator in each variable separately *)
-  is1natural_cat_assoc_l : forall (a b c d : A) (f : a $-> b) (g : b $-> c),
+  is1natural_cat_assoc_l :: forall (a b c d : A) (f : a $-> b) (g : b $-> c),
       Is1Natural (cat_precomp d f o cat_precomp d g) (cat_precomp d (g $o f))
                  (cat_assoc f g);
-  is1natural_cat_assoc_m : forall (a b c d : A) (f : a $-> b) (h : c $-> d),
+  is1natural_cat_assoc_m :: forall (a b c d : A) (f : a $-> b) (h : c $-> d),
       Is1Natural (cat_precomp d f o cat_postcomp b h) (cat_postcomp a h o cat_precomp c f)
                  (fun g => cat_assoc f g h);
-  is1natural_cat_assoc_r : forall (a b c d : A) (g : b $-> c) (h : c $-> d),
+  is1natural_cat_assoc_r :: forall (a b c d : A) (g : b $-> c) (h : c $-> d),
       Is1Natural (cat_postcomp a (h $o g)) (cat_postcomp a h o cat_postcomp a g)
                  (fun f => cat_assoc f g h);
 
   (** Naturality of the unitors *)
-  is1natural_cat_idl : forall (a b : A),
+  is1natural_cat_idl :: forall (a b : A),
       Is1Natural (cat_postcomp a (Id b)) idmap
                  cat_idl ;
 
-  is1natural_cat_idr : forall (a b : A),
+  is1natural_cat_idr :: forall (a b : A),
       Is1Natural (cat_precomp b (Id a)) idmap
                  cat_idr;
 
@@ -43,16 +43,6 @@ Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=
   cat_tril : forall (a b c : A) (f : a $-> b) (g : b $-> c),
       (g $@L cat_idl f) $o (cat_assoc f (Id b) g) $== (cat_idr g $@R f)
 }.
-
-Existing Instance is1cat_hom.
-Existing Instance is1gpd_hom.
-Existing Instance is1functor_precomp.
-Existing Instance is1functor_postcomp.
-Existing Instance is1natural_cat_assoc_l.
-Existing Instance is1natural_cat_assoc_m.
-Existing Instance is1natural_cat_assoc_r.
-Existing Instance is1natural_cat_idl.
-Existing Instance is1natural_cat_idr.
 
 (** *** Whiskering functoriality *)
 

@@ -32,19 +32,14 @@ Hint Rewrite @left_inverse @right_inverse : morphism.
 Class Isomorphic {C : PreCategory} s d :=
   {
     morphism_isomorphic : morphism C s d;
-    isisomorphism_isomorphic : IsIsomorphism morphism_isomorphic
+    isisomorphism_isomorphic :: IsIsomorphism morphism_isomorphic
   }.
 
 (*Coercion Build_Isomorphic : IsIsomorphism >-> Isomorphic.*)
 Coercion morphism_isomorphic : Isomorphic >-> morphism.
-(* Use :> and remove the two following lines,
-   once Coq 8.16 is the minimum required version. *)
-#[export] Existing Instance isisomorphism_isomorphic.
 Coercion isisomorphism_isomorphic : Isomorphic >-> IsIsomorphism.
 
 Local Infix "<~=~>" := Isomorphic : category_scope.
-
-Existing Instance isisomorphism_isomorphic.
 
 (** ** Theorems about isomorphisms *)
 Section iso_contr.
