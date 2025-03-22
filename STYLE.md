@@ -509,22 +509,33 @@ IsTrunc n (P a)`, and similarly for other data types. For instance,
 
 ### 3.7. Coercions and Existing Instances
 
-A "coercion" from `A` to `B` is a function that Coq will insert
-silently if given an `A` when it expects a `B`, and which it doesn't
-display. For example, we have declared `equiv_fun` as a coercion from
-`A <~> B` to `A -> B`, so that we can use an equivalence as a function
-without needing to manually apply the projection `equiv_fun`.
-Coercions can make code easier to read and write, but when used
-carelessly they can have the opposite effect.
+A ["coercion" from `A` to
+`B`](https://rocq-prover.org/refman/addendum/implicit-coercions.html)
+is a function that Coq will insert silently if given an `A` when it
+expects a `B`, and which it doesn't display. For example, we have
+declared `equiv_fun` as a coercion from `A <~> B` to `A -> B`, so that
+we can use an equivalence as a function without needing to manually
+apply the projection `equiv_fun`. Coercions can make code easier to
+read and write, but when used carelessly they can have the opposite
+effect.
 
-When defining a `Record`, Coq allows you to declare a field as a
-coercion by writing its type with `:>` instead of `:`.
-When defining a `Class`, the `:>` notation has a
-different meaning: it declares a field as an `Existing Instance`.
+When making a record field `proj1` into a coercion, we prefer that the
+coercion should not be reversible, because of the additional
+complexity that reversible coercions add to unification problems, and
+we prefer that coercions be conspicuous when reading the source code.
+Therefore, define the coercion on its own line after the record
+declaration as `Coercion proj1 : MyRec >-> FieldType` rather than
+using the reversible coercion syntax `proj1 :> FieldType`.
 
-(In addition, the `:>` notation is used when needed for path types
-to indicate the type in which the paths are taken: `x = y :> A`
-for `x, y : A`.)
+(This library also uses the `:>` notation when needed for path types
+to indicate the type in which the paths are taken: `x = y :> A` for
+`x, y : A`.)
+
+If `proj1` is a record field whose type is a typeclass, then we prefer
+the concise ["substructure"
+notation](https://rocq-prover.org/refman/addendum/type-classes.html#substructures)
+`proj1 :: ClassType` over the separate vernacular command
+`Existing Instance proj1.` after the record declaration.
 
 ## 4. Axioms
 
