@@ -59,7 +59,7 @@ etransitivity.
 - apply pos_ge_1.
 Qed.
 
-#[export] Instance: forall (z : N), PropHolds (z <> 0) -> OrderReflecting (z *.).
+#[export] Instance OrderReflecting_left_mult : forall (z : N), PropHolds (z <> 0) -> OrderReflecting (z *.).
 Proof.
 intros z ?. red. apply (order_reflecting_pos (.*.) z).
 apply nat_ne_0_pos. trivial.
