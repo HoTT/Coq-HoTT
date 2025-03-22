@@ -202,7 +202,7 @@ Section borrowed_from_nat.
     apply S_inj in E. destruct (S_neq_0 _ E).
   Qed.
 
-  #[export] Instance zeroproduct_N : ZeroProduct N.
+  #[export] Instance zeroproduct_nat : ZeroProduct N.
   Proof.
   refine (from_nat_stmt nat (fun s => ZeroProduct s) _).
   simpl. red. exact mult_eq_zero.
