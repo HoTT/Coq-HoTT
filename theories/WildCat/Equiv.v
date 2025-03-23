@@ -496,7 +496,8 @@ Proof.
 Defined.
 
 Class IsUnivalent1Cat (A : Type) `{HasEquivs A}
-  := { isequiv_cat_equiv_path : forall a b, IsEquiv (@cat_equiv_path A _ _ _ _ _ a b) }.
+  := isequiv_cat_equiv_path : forall a b, IsEquiv (@cat_equiv_path A _ _ _ _ _ a b).
+Typeclasses Opaque IsUnivalent1Cat.
 Existing Instance isequiv_cat_equiv_path.
 
 Definition cat_path_equiv {A : Type} `{IsUnivalent1Cat A} (a b : A)
@@ -623,7 +624,6 @@ Instance hasmorext_core {A : Type} `{HasEquivs A, !HasMorExt A}
   `{forall x y (f g : uncore x $<~> uncore y), IsEquiv (ap (x := f) (y := g) cate_fun)}
   : HasMorExt (core A).
 Proof.
-  snapply Build_HasMorExt.
   intros X Y f g; cbn in *.
   snapply isequiv_homotopic.
   - exact (GpdHom_path o (ap (x:=f) (y:=g) cate_fun)).

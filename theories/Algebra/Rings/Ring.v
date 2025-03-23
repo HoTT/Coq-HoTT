@@ -295,7 +295,6 @@ Defined.
 
 Instance hasmorext_ring `{Funext} : HasMorExt Ring.
 Proof.
-  srapply Build_HasMorExt.
   intros A B f g; cbn in *.
   snapply @isequiv_homotopic.
   1: exact (equiv_path_ringhomomorphism^-1%equiv).

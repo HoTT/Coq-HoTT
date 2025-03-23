@@ -551,7 +551,6 @@ Instance isunivalent1cat_total {A} `{IsUnivalent1Cat A} (D : A -> Type)
   `{!IsDUnivalent1Cat D}
   : IsUnivalent1Cat (sig D).
 Proof.
-  snapply Build_IsUnivalent1Cat.
   intros aa' bb'.
   apply (isequiv_homotopic
           (dcat_equiv_path_total _ _ o (path_sigma_uncurried D aa' bb')^-1)).
