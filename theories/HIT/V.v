@@ -277,7 +277,7 @@ Defined.
 
 Notation "u ~~ v" := (bisimulation u v) : set_scope.
 
-Instance reflexive_bisimulation : Reflexive bisimulation.
+#[export] Instance reflexive_bisimulation : Reflexive bisimulation.
 Proof.
   refine (V_ind_hprop _ _ _).
   intros A f H_f. split.
@@ -443,7 +443,7 @@ Defined.
 
 (** ** Two useful lemmas *)
 
-Instance irreflexive_mem : Irreflexive mem.
+#[export] Instance irreflexive_mem : Irreflexive mem.
 Proof.
   assert (forall v, IsHProp (complement (fun x x0 : V => x ∈ x0) v v)). (* https://coq.inria.fr/bugs/show_bug.cgi?id=3854 *)
   { intro.
@@ -478,7 +478,7 @@ Definition V_empty : V := set (Empty_ind (fun _ => V)).
 (** The singleton {u} *)
 Definition V_singleton (u : V) : V@{U' U} := set (Unit_ind u).
 
-Instance isequiv_ap_V_singleton {u v : V}
+#[export] Instance isequiv_ap_V_singleton {u v : V}
 : IsEquiv (@ap _ _ V_singleton u v).
 Proof.
   simple refine (Build_IsEquiv _ _ _ _ _ _ _); try solve [ intro; apply path_ishprop ].

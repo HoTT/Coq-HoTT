@@ -2,4 +2,6 @@
 
 Require Export Nat.Core.
 Require Export Nat.Arithmetic.
+Require Export Nat.Division.
 Require Export Nat.Paths.
+Require Export Nat.Factorial.
