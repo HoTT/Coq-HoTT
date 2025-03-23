@@ -120,7 +120,6 @@ Instance is1functor_op' A B (F : A^op -> B^op)
 Instance hasmorext_op {A : Type} `{H0 : HasMorExt A}
   : HasMorExt A^op.
 Proof.
-  snapply Build_HasMorExt.
   intros a b f g.
   exact (@isequiv_Htpy_path _ _ _ _ _ H0 b a f g).
 Defined.

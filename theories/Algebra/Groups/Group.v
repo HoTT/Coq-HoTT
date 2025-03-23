@@ -817,7 +817,6 @@ Defined.
 (** Under [Funext], the category of groups has morphism extensionality. *)
 Instance hasmorext_group `{Funext} : HasMorExt Group.
 Proof.
-  srapply Build_HasMorExt.
   intros A B f g; cbn in *.
   snapply @isequiv_homotopic.
   1: exact (equiv_path_grouphomomorphism^-1%equiv).
