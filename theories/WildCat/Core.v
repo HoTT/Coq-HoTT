@@ -23,6 +23,7 @@ Class Is01Cat (A : Type) `{IsGraph A} :=
   cat_comp : forall (a b c : A), (b $-> c) -> (a $-> b) -> (a $-> c);
 }.
 
+Arguments Build_Is01Cat A &.
 Arguments cat_comp {A _ _ a b c} _ _.
 Notation "g $o f" := (cat_comp g f).
 
