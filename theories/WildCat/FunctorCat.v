@@ -179,7 +179,8 @@ Instance is0functor_fun01_postcomp {A B C}
 Proof.
   apply Build_Is0Functor.
   intros a b f.
-  rapply nattrans_postwhisker.
+  napply nattrans_postwhisker.
+  1: exact _.
   exact f.
 Defined.
 
