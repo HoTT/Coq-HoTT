@@ -156,7 +156,7 @@ Definition cat_inr {A : Type} `{Is1Cat A} {x y : A} `{!BinaryCoproduct x y}
 
 (** A category with binary coproducts is a category with a binary coproduct for each pair of objects. *)
 Class HasBinaryCoproducts (A : Type) `{Is1Cat A}
-  := binary_coproducts :: forall x y, BinaryCoproduct x y.
+  := binary_coproducts :: forall x y : A, BinaryCoproduct x y.
 
 Instance hasbinarycoproducts_hascoproductsbool {A : Type}
   `{HasCoproducts Bool A}

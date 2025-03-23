@@ -30,7 +30,7 @@ Class DHasEquivs {A : Type} `{HasEquivs A}
     DGpdHom (cate_issect' _ _ f) (dcate_inv' f' $o' dcate_fun f') (DId a');
   dcate_isretr' : forall {a b} {f : a $<~> b} {a'} {b'} (f' : DCatEquiv f a' b'),
     DGpdHom (cate_isretr' _ _ f) (dcate_fun f' $o' dcate_inv' f') (DId b');
-  dcatie_adjointify : forall {a b} {f : a $-> b} {g : b $-> a}
+  dcatie_adjointify : forall {a b : A} {f : a $-> b} {g : b $-> a}
     {r : f $o g $== Id b} {s : g $o f $== Id a} {a'} {b'} (f' : DHom f a' b')
     (g' : DHom g b' a') (r' : DGpdHom r (f' $o' g') (DId b'))
     (s' : DGpdHom s (g' $o' f') (DId a')),
