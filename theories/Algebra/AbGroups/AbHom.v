@@ -207,10 +207,8 @@ Proof.
 Defined.
 
 Instance is0bifunctor_ab_hom `{Funext}
-  : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
-Proof.
-  rapply Build_Is0Bifunctor''.
-Defined.
+  : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup)
+  := Build_Is0Bifunctor'' _.
 
 Instance is1bifunctor_ab_hom `{Funext}
   : Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
