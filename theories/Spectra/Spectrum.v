@@ -21,7 +21,7 @@ Existing Instance is_equiv_glue.
 
 Definition equiv_glue (E : Prespectrum) `{IsSpectrum E}
 : forall n, E n <~>* loops (E n.+1)
-  := fun n => Build_pEquiv _ _ (glue E n) _.
+  := fun n => Build_pEquiv (glue E n) _.
 
 Record Spectrum :=
   { to_prespectrum :> Prespectrum

@@ -47,8 +47,7 @@ Instance is0functor_loops : Is0Functor loops.
 Proof.
   apply Build_Is0Functor.
   intros A B f.
-  refine (Build_pMap (loops A) (loops B)
-            (fun p => (point_eq f)^ @ (ap f p @ point_eq f)) _).
+  refine (Build_pMap (fun p => (point_eq f)^ @ (ap f p @ point_eq f)) _).
   refine (_ @ concat_Vp (point_eq f)).
   apply whiskerL. apply concat_1p.
 Defined.
@@ -180,8 +179,8 @@ Definition equiv_loops_image `{Univalence} n {A B : pType} (f : A ->* B)
   <~> image n (fmap loops f).
 Proof.
   set (C := [image n.+1 f, factor1 (image n.+1 f) (point A)]).
-  pose (g := Build_pMap A C (factor1 (image n.+1 f)) 1).
-  pose (h := Build_pMap C B (factor2 (image n.+1 f)) (point_eq f)).
+  pose (g := @Build_pMap A C (factor1 (image n.+1 f)) 1).
+  pose (h := @Build_pMap C B (factor2 (image n.+1 f)) (point_eq f)).
   transparent assert (I : (Factorization
     (@IsConnMap n) (@MapIn n) (fmap loops f))).
   { refine (@Build_Factorization (@IsConnMap n) (@MapIn n)
@@ -199,7 +198,7 @@ Defined.
 Definition loops_inv (A : pType) : loops A <~>* loops A.
 Proof.
   srapply Build_pEquiv.
-  1: exact (Build_pMap (loops A) (loops A) inverse 1).
+  1: exact (Build_pMap inverse 1).
   apply isequiv_path_inverse.
 Defined.
 
