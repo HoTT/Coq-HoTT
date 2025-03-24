@@ -14,12 +14,9 @@ Generalizable All Variables.
 (** A Limit is the extremity of a cone. *)
 
 Class IsLimit `(D : Diagram G) (Q : Type) := {
-  islimit_cone : Cone Q D;
+  islimit_cone :: Cone Q D;
   islimit_unicone : UniversalCone islimit_cone;
 }.
-(* Use :> and remove the two following lines,
-   once Coq 8.16 is the minimum required version. *)
-#[export] Existing Instance islimit_cone.
 Coercion islimit_cone : IsLimit >-> Cone.
 
 Arguments Build_IsLimit {G D Q} C H : rename.

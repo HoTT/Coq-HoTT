@@ -17,13 +17,10 @@ Generalizable All Variables.
 
 (** A colimit is the extremity of a cocone. *)
 Class IsColimit `(D: Diagram G) (Q: Type) := {
-  iscolimit_cocone : Cocone D Q;
+  iscolimit_cocone :: Cocone D Q;
   iscolimit_unicocone : UniversalCocone iscolimit_cocone;
 }.
 
-(* Use :> and remove the two following lines,
-   once Coq 8.16 is the minimum required version. *)
-#[export] Existing Instance iscolimit_cocone.
 Coercion iscolimit_cocone : IsColimit >-> Cocone.
 
 Arguments Build_IsColimit {G D Q} C H : rename.

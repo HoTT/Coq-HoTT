@@ -6,11 +6,9 @@ Require Export HoTT.Classes.interfaces.ua_algebra.
 
 Record SetAlgebra {σ : Signature} : Type := BuildSetAlgebra
   { algebra_setalgebra : Algebra σ
-  ; is_hset_algebra_setalgebra : IsHSetAlgebra algebra_setalgebra }.
+  ; is_hset_algebra_setalgebra :: IsHSetAlgebra algebra_setalgebra }.
 
 Arguments SetAlgebra : clear implicits.
-
-Existing Instance is_hset_algebra_setalgebra.
 
 Global Coercion algebra_setalgebra : SetAlgebra >-> Algebra.
 

@@ -9,14 +9,10 @@ Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd
 
 Record ZeroGpd := {
   carrier :> Type;
-  isgraph_carrier : IsGraph carrier;
-  is01cat_carrier : Is01Cat carrier;
-  is0gpd_carrier : Is0Gpd carrier;
+  isgraph_carrier :: IsGraph carrier;
+  is01cat_carrier :: Is01Cat carrier;
+  is0gpd_carrier :: Is0Gpd carrier;
 }.
-
-Existing Instance isgraph_carrier.
-Existing Instance is01cat_carrier.
-Existing Instance is0gpd_carrier.
 
 Definition zerogpd_graph (C : ZeroGpd) : Graph := {|
     graph_carrier := carrier C;
