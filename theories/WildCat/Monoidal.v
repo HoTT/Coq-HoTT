@@ -255,7 +255,7 @@ Section SymmetricBraid.
     : F a b $<~> F b a
     := Build_CatEquiv (braid a b).
 
-  Definition moveL_braidL a b c f (g : c $-> _)
+  Definition moveL_braidL (a b c : A) f (g : c $-> _)
     : braid a b $o f $== g -> f $== braid b a $o g.
   Proof.
     intros p.
@@ -266,7 +266,7 @@ Section SymmetricBraid.
     apply braid_braid.
   Defined.
 
-  Definition moveL_braidR a b c f (g : _ $-> c)
+  Definition moveL_braidR (a b c : A) f (g : _ $-> c)
     : f $o braid a b $== g -> f $== g $o braid b a.
   Proof.
     intros p.
@@ -279,13 +279,13 @@ Section SymmetricBraid.
     exact p.
   Defined.
 
-  Definition moveR_braidL a b c f (g : c $-> _)
+  Definition moveR_braidL (a b c : A) f (g : c $-> _)
     : f $== braid b a $o g -> braid a b $o f $== g.
   Proof.
     intros p; symmetry; apply moveL_braidL; symmetry; exact p.
   Defined.
 
-  Definition moveR_braidR a b c f (g : _ $-> c)
+  Definition moveR_braidR (a b c : A) f (g : _ $-> c)
     : f $== g $o braid b a -> f $o braid a b $== g.
   Proof.
     intros p; symmetry; apply moveL_braidR; symmetry; exact p.

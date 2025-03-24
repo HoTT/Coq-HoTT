@@ -2,6 +2,10 @@ Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Groups.Group Groups.QuotientGroup AbelianGroup Biproduct.
 
+(* If Hint A about groups appears before Hint B about Abelian groups appears in the typeclass database,
+   Coq may coerce an Abelian group to a group to apply A, so we position some hints carefully. *)
+Existing Instance is01cat_hom | 0.
+
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
 (** In this file, we use additive notation for the group operation, even though some of the groups we deal with are not assumed to be abelian. *)
@@ -40,7 +44,7 @@ Defined.
 (** ** Coequalizers *)
 
 (** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)
-Definition ab_coeq {A B : AbGroup} (f g : GroupHomomorphism A B)
+Definition ab_coeq {A B : AbGroup} (f g : A $-> B)
   := ab_cokernel ((-f) + g).
 
 Definition ab_coeq_in {A B : AbGroup} {f g : A $-> B} : B $-> ab_coeq f g.
@@ -135,7 +139,7 @@ Proof.
 Defined.
 
 Definition functor_ab_coeq_id {A B : AbGroup} (f g : A $-> B)
-  : functor_ab_coeq (f:=f) (g:=g) (Id _) (Id _) (hrefl _) (hrefl _) $== Id _.
+  : functor_ab_coeq (Id _) (Id _) (hrefl f) (hrefl g) $== Id _.
 Proof.
   snapply ab_coeq_ind_homotopy.
   reflexivity.
@@ -148,13 +152,13 @@ Definition grp_iso_ab_coeq {A B : AbGroup} {f g : A $-> B}
 Proof.
   snapply cate_adjointify.
   - exact (functor_ab_coeq a b p q).
-  - exact (functor_ab_coeq a^-1$ b^-1$ (hinverse _ _ p) (hinverse _ _ q)).
+  - exact (functor_ab_coeq a^-1$ b^-1$ (hinverse a _ p) (hinverse a _ q)).
   - nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
       $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).
-    tapply cate_isretr.
+    exact (cate_isretr b).
   - nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
       $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).
-    tapply cate_issect.
+    exact (cate_issect b).
 Defined.
 
 (** ** The bifunctor [ab_hom] *)
@@ -207,10 +211,8 @@ Proof.
 Defined.
 
 Instance is0bifunctor_ab_hom `{Funext}
-  : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).
-Proof.
-  rapply Build_Is0Bifunctor''.
-Defined.
+  : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup)
+  := Build_Is0Bifunctor'' _.
 
 Instance is1bifunctor_ab_hom `{Funext}
   : Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).

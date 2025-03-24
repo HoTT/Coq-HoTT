@@ -28,7 +28,7 @@ Instance is01cat_paths (A : Type) : Is01Cat A
 
 (** Any type has a 0-groupoid structure with inverse morphisms given by path inversion. *)
 Instance is0gpd_paths (A : Type) : Is0Gpd A
-  := {| gpd_rev := @inverse _ |}.
+  := { gpd_rev := @inverse _ }.
 
 (** Postcomposition is a 0-functor when the 2-cells are paths. *)
 Instance is0functor_cat_postcomp_paths (A : Type) `{Is01Cat A}

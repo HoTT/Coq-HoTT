@@ -473,7 +473,7 @@ Proof.
 Defined. 
 
 (** [ab_tensor_swap] is natural in both arguments. This means that it also acts on tensor functors. *)
-Definition ab_tensor_swap_natural {A B A' B'} (f : A $-> A') (g : B $-> B')
+Definition ab_tensor_swap_natural {A B A' B' : AbGroup} (f : A $-> A') (g : B $-> B')
   : ab_tensor_swap $o functor_ab_tensor_prod f g
     $== functor_ab_tensor_prod g f $o ab_tensor_swap.
 Proof.
@@ -543,7 +543,7 @@ Proof.
 Defined.
 
 (** The twist map is natural in all 3 arguments. This means that the twist map acts on the triple tensor functor in the same way. *)
-Definition ab_tensor_prod_twist_natural {A B C A' B' C'}
+Definition ab_tensor_prod_twist_natural {A B C A' B' C' : AbGroup}
   (f : A $-> A') (g : B $-> B') (h : C $-> C')
   : ab_tensor_prod_twist $o fmap11 ab_tensor_prod f (fmap11 ab_tensor_prod g h)
     $== fmap11 ab_tensor_prod g (fmap11 ab_tensor_prod f h) $o ab_tensor_prod_twist.
@@ -686,7 +686,7 @@ Instance issymmmetricmonoidal_ab_tensor_prod
 (** The tensor product of abelian groups preserves coequalizers, meaning that the coequalizer of two tensored groups is the tensor of the coequalizer. We show this is the case on the left and the right. *)
 
 (** Tensor products preserve coequalizers on the right. *)
-Definition grp_iso_ab_tensor_prod_coeq_l A {B C} (f g : B $-> C)
+Definition grp_iso_ab_tensor_prod_coeq_l A {B C : AbGroup} (f g : B $-> C)
   : ab_coeq (fmap01 ab_tensor_prod A f) (fmap01 ab_tensor_prod A g)
     $<~> ab_tensor_prod A (ab_coeq f g).
 Proof.
@@ -720,7 +720,7 @@ Proof.
 Defined.
 
 (** The equivalence respects the natural maps from [ab_tensor_prod A C]. *)
-Definition ab_tensor_prod_coeq_l_triangle A {B C} (f g : B $-> C)
+Definition ab_tensor_prod_coeq_l_triangle A {B C : AbGroup} (f g : B $-> C)
   : grp_iso_ab_tensor_prod_coeq_l A f g $o ab_coeq_in
     $== fmap01 ab_tensor_prod A ab_coeq_in.
 Proof.
@@ -729,7 +729,7 @@ Proof.
 Defined.
 
 (** Tensor products preserve coequalizers on the left. *)
-Definition grp_iso_ab_tensor_prod_coeq_r {A B} (f g : A $-> B) C
+Definition grp_iso_ab_tensor_prod_coeq_r {A B : AbGroup} (f g : A $-> B) C
   : ab_coeq (fmap10 ab_tensor_prod f C) (fmap10 ab_tensor_prod g C)
     $<~> ab_tensor_prod (ab_coeq f g) C.
 Proof.
@@ -741,7 +741,7 @@ Proof.
 Defined.
 
 (** The equivalence respects the natural maps from [ab_tensor_prod B C]. *)
-Definition ab_tensor_prod_coeq_r_triangle {A B} (f g : A $-> B) C
+Definition ab_tensor_prod_coeq_r_triangle {A B : AbGroup} (f g : A $-> B) C
   : grp_iso_ab_tensor_prod_coeq_r f g C $o ab_coeq_in
     $== fmap10 ab_tensor_prod ab_coeq_in C.
 Proof.

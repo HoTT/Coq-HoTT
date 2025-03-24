@@ -205,7 +205,7 @@ Defined.
 Section MonoidEnriched.
   Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}
     (I : A) `{!IsTerminal I} {x y : A}
-    `{!HasMorExt A} `{forall x y, IsHSet (x $-> y)}.
+    `{!HasMorExt A} `{forall x y : A, IsHSet (x $-> y)}.
   
   Section Monoid.
 
