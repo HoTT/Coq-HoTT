@@ -378,7 +378,7 @@ Definition pmap_abses_const {B' A' B A : AbGroup@{u}} : AbSES B A -->* AbSES B' 
 
 Definition to_pointed `{Univalence} {B' A' B A : AbGroup@{u}}
   : (AbSES B A -->* AbSES B' A') -> (AbSES B A ->* AbSES B' A')
-  := fun f => Build_pMap _ _ f (equiv_path_abses_iso (bp_pointed f)).
+  := fun f => Build_pMap f (equiv_path_abses_iso (bp_pointed f)).
 
 Lemma pmap_abses_const_to_pointed `{Univalence} {B' A' B A : AbGroup@{u}}
   : pconst ==* to_pointed (@pmap_abses_const B' A' B A).

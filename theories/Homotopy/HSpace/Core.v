@@ -52,12 +52,12 @@ Definition equiv_hspace_right_op {X : pType} `{IsHSpace X}
 
 (** Any element of an H-space defines a pointed self-map by left multiplication, in the following sense. *)
 Definition pmap_hspace_left_op {X : pType} `{IsHSpace X} (x : X)
-  : X ->* [X, x] := Build_pMap X [X,x] (x *.) (right_identity x).
+  : X ->* [X, x] := Build_pMap (x *.) (right_identity x).
 
 (** We make [(x *.)] into a pointed equivalence (when possible). In particular, this makes [(pt *.)] into a pointed self-equivalence. We could have also used the left identity to make [(pt *.)] into a pointed self-equivalence, and then we would get a map that's equal to the identity as a pointed map; but without coherence (see Coherent.v) this is not necessarily the case for this map. *)
 Definition pequiv_hspace_left_op {X : pType} `{IsHSpace X}
   (x : X) `{IsEquiv _ _ (x *.)} : X <~>* [X,x]
-  := Build_pEquiv' (B:=[X,x]) (equiv_hspace_left_op x) (right_identity x).
+  := Build_pEquiv' (equiv_hspace_left_op x) (right_identity x).
 
 (** ** Connected H-spaces *)
 

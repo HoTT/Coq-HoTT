@@ -201,7 +201,7 @@ Definition pClassifyingSpace_rec {G : Group} (P : pType) `{IsTrunc 1 P}
            (bloop' : G -> loops P)
            (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
   : B G ->* P
-  := Build_pMap (B G) P (ClassifyingSpace_rec P (point P) bloop' bloop_pp') idpath.
+  := Build_pMap (ClassifyingSpace_rec P (point P) bloop' bloop_pp') idpath.
 
 (** And this is one of the standard facts about adjoint functors: [(R h') o eta = h], where [h : G -> R P], [h' : L G -> P] is the adjunct, and eta ([bloop]) is the unit. *)
 Definition pClassifyingSpace_rec_beta_bloop {G : Group} (P : pType)
@@ -287,7 +287,7 @@ Section EncodeDecode.
 
   (** Pointed version of the defining property. *)
   Definition pequiv_g_loops_bg : G <~>* loops (B G)
-    := Build_pEquiv _ _ pbloop _.
+    := Build_pEquiv pbloop _.
 
   Definition pequiv_loops_bg_g := pequiv_g_loops_bg^-1*%equiv.
 
@@ -562,7 +562,7 @@ Proof.
     intros x y.
     strip_truncations.
     reflexivity. }
-  snapply (Build_pEquiv _ _ f).
+  snapply (Build_pEquiv f).
   (** [f] is an equivalence since [loops_functor f o bloop == tr^-1], and the other two maps are equivalences. *)
   apply isequiv_is0connected_isequiv_loops.
   snapply (cancelR_isequiv bloop).

@@ -67,12 +67,12 @@ Coercion pointed_fun : pForall >-> Funclass.
 (** A pointed map is a map with a proof that it preserves the point. We define it as as a notation for a non-dependent version of [pForall]. *)
 Notation "A ->* B" := (pForall A (pfam_const B)) : pointed_scope.
 
-Definition Build_pMap (A B : pType) (f : A -> B) (p : f (point A) = point B)
+Definition Build_pMap {A B : pType} (f : A -> B) (p : f (point A) = point B)
   : A ->* B
   := Build_pForall A (pfam_const B) f p.
 
-(** The [&] tells Coq to use the context to infer the later arguments (in this case, all of them). *)
-Arguments Build_pMap & _ _ _ _.
+(** The [&] is a bidirectionality hint that tells Coq to unify with the typing context after type checking the arguments to the left.  In practice, this allows Coq to infer [A] and [B] from the context. *)
+Arguments Build_pMap {A B} & f p.
 
 (** Pointed maps preserve the base point *)
 Definition point_eq {A B : pType} (f : A ->* B)
@@ -81,12 +81,12 @@ Definition point_eq {A B : pType} (f : A ->* B)
 
 (** The identity pointed map *)
 Definition pmap_idmap {A : pType} : A ->* A
-  := Build_pMap A A idmap 1.
+  := Build_pMap idmap 1.
 
 (** Composition of pointed maps *)
 Definition pmap_compose {A B C : pType} (g : B ->* C) (f : A ->* B)
   : A ->* C
-  := Build_pMap A C (g o f) (ap g (point_eq f) @ point_eq g).
+  := Build_pMap (g o f) (ap g (point_eq f) @ point_eq g).
 
 Infix "o*" := pmap_compose : pointed_scope.
 
@@ -127,6 +127,8 @@ Record pEquiv (A B : pType) := {
   pointed_isequiv :: IsEquiv pointed_equiv_fun ;
 }.
 
+Arguments Build_pEquiv {A B} & _ _.
+
 (** TODO: It might be better behaved to define [pEquiv] as an equivalence and a proof that this equivalence is pointed. In pEquiv.v we have another constructor [Build_pEquiv'] which Coq can infer faster than [Build_pEquiv]. *)
 
 Infix "<~>*" := pEquiv : pointed_scope.
@@ -139,7 +141,7 @@ Coercion pointed_equiv_equiv {A B} (f : A <~>* B)
 
 (** The pointed identity is a pointed equivalence *)
 Definition pequiv_pmap_idmap {A} : A <~>* A
-  := Build_pEquiv _ _ pmap_idmap _.
+  := Build_pEquiv pmap_idmap _.
 
 (** Pointed sigma types *)
 Definition psigma {A : pType} (P : pFam A) : pType
@@ -174,14 +176,14 @@ Defined.
 
 (** The projections from a pointed product are pointed maps. *)
 Definition pfst {A B : pType} : A * B ->* A
-  := Build_pMap (A * B) A fst idpath.
+  := Build_pMap fst idpath.
 
 Definition psnd {A B : pType} : A * B ->* B
-  := Build_pMap (A * B) B snd idpath.
+  := Build_pMap snd idpath.
 
 Definition pprod_corec {X Y} (Z : pType) (f : Z ->* X) (g : Z ->* Y)
   : Z ->* (X * Y)
-  := Build_pMap Z (X * Y) (fun z => (f z, g z))
+  := Build_pMap (fun z => (f z, g z))
       (path_prod' (point_eq _) (point_eq _)).
 
 Definition pprod_corec_beta_fst {X Y} (Z : pType) (f : Z ->* X) (g : Z ->* Y)
@@ -321,7 +323,7 @@ Defined.
 (** [isequiv_functor_prod] applies, and is an Instance. *)
 Definition equiv_functor_pprod {A A' B B' : pType} (f : A <~>* A') (g : B <~>* B')
   : A * B <~>* A' * B'
-  := Build_pEquiv _ _ (functor_pprod f g) _.
+  := Build_pEquiv (functor_pprod f g) _.
 
 (** ** Various operations with pointed homotopies *)
 
@@ -897,7 +899,7 @@ Instance ishprop_phomotopy_hset `{Funext} {X Y : pType} `{IsHSet Y} (f g : X ->*
 Definition pequiv_inverse {A B} (f : A <~>* B) : B <~>* A.
 Proof.
   snapply Build_pEquiv.
-  1: apply (Build_pMap _ _ f^-1).
+  1: apply (Build_pMap f^-1).
   1: apply moveR_equiv_V; symmetry; apply point_eq.
   exact _.
 Defined.
@@ -998,7 +1000,7 @@ Proof.
   intros A B f; cbn; intros.
   - exact f.
   - exact _.
-  - exact (Build_pEquiv _ _ f _).
+  - exact (Build_pEquiv f _).
   - reflexivity.
   - exact (pequiv_inverse f).
   - apply peissect.

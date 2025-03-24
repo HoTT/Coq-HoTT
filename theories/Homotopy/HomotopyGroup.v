@@ -295,7 +295,7 @@ Defined.
 Definition pequiv_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
   `{!IsConnMap n f}
   : Pi n X <~>* Pi n Y
-  := Build_pEquiv _ _ (fmap (pPi n) f) _.
+  := Build_pEquiv (fmap (pPi n) f) _.
 
 (** For positive [n], it is a group isomorphism. *)
 Definition grp_iso_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
@@ -310,7 +310,7 @@ Definition isequiv_pi_Tr `{Univalence} (n : nat) (X : pType)
 
 Definition pequiv_pi_Tr `{Univalence} (n : nat) (X : pType)
   : Pi n X <~>* Pi n (pTr n X)
-  := Build_pEquiv _ _ (fmap (pPi n) ptr) _.
+  := Build_pEquiv (fmap (pPi n) ptr) _.
 
 (** For positive [n], it is a group isomorphism. *)
 Definition grp_iso_pi_Tr `{Univalence} (n : nat) (X : pType)

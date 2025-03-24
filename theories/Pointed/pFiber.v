@@ -14,7 +14,7 @@ Instance ispointed_fiber {A B : pType} (f : A ->* B) : IsPointed (hfiber f (poin
 Definition pfiber {A B : pType} (f : A ->* B) : pType := [hfiber f (point B), _].
 
 Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A
-  := Build_pMap (pfiber f) A pr1 1.
+  := Build_pMap pr1 1.
 
 (** The double fiber object is equivalent to loops on the base. *)
 Definition pfiber2_loops {A B : pType} (f : A ->* B)
@@ -81,7 +81,7 @@ Definition pequiv_pfiber {A B C D}
            {f : A ->* B} {g : C ->* D} (h : A <~>* C) (k : B <~>* D)
            (p : k o* f ==* g o* h)
   : pfiber f $<~> pfiber g
-  := Build_pEquiv _ _ (functor_pfiber p) _.
+  := Build_pEquiv (functor_pfiber p) _.
 
 Definition square_functor_pfiber {A B C D}
            {f : A ->* B} {g : C ->* D} {h : A ->* C} {k : B ->* D}

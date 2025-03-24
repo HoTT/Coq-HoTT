@@ -76,7 +76,7 @@ Definition group_loops_functor
            {X Y : pType} (f : X ->* Y)
 : ooGroupHom (group_loops X) (group_loops Y).
 Proof.
-  simple refine (Build_pMap _ _ _ _); simpl.
+  snapply Build_pMap; simpl.
   - intros [x p].
     exists (f x).
     strip_truncations; apply tr.
