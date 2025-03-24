@@ -254,7 +254,7 @@ Instance ismonoidpreserving_grp_homo {G H : Group}
 
 (** Group homomorphisms are pointed maps. *)
 Definition pmap_GroupHomomorphism {G H : Group} (f : GroupHomomorphism G H) : G ->* H
-  := Build_pMap G H f (isunitpreserving_grp_homo f).
+  := Build_pMap f (isunitpreserving_grp_homo f).
 Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pForall.
 
 Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
@@ -336,7 +336,7 @@ Coercion equiv_groupisomorphism : GroupIsomorphism >-> Equiv.
 (** The underlying pointed equivalence of a group isomorphism. *)
 Definition pequiv_groupisomorphism {A B : Group}
   : GroupIsomorphism A B -> (A <~>* B)
-  := fun f => Build_pEquiv _ _ f _.
+  := fun f => Build_pEquiv f _.
 Coercion pequiv_groupisomorphism : GroupIsomorphism >-> pEquiv.
 
 (** Funext for group isomorphisms. *)

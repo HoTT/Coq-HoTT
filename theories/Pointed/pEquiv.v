@@ -36,19 +36,20 @@ Notation "g o*E f" := (pequiv_compose f g) : pointed_scope.
 (* Sometimes we wish to construct a pEquiv from an equiv and a proof that it is pointed. *)
 Definition Build_pEquiv' {A B : pType} (f : A <~> B)
   (p : f (point A) = point B)
-  : A <~>* B := Build_pEquiv _ _ (Build_pMap _ _ f p) _.
+  : A <~>* B := Build_pEquiv (Build_pMap f p) _.
 
-Arguments Build_pEquiv' & _ _ _ _.
+(** The [&] is a bidirectionality hint that tells Coq to unify with the typing context after type checking the arguments to the left.  In practice, this allows Coq to infer [A] and [B] from the context. *)
+Arguments Build_pEquiv' {A B} & f p.
 
 (* A version of equiv_adjointify for pointed equivalences where all data is pointed. There is a lot of unnecessary data here but sometimes it is easier to prove equivalences using this. *)
 Definition pequiv_adjointify {A B : pType} (f : A ->* B) (f' : B ->* A)
   (r : f o* f' ==* pmap_idmap) (s : f' o* f == pmap_idmap) : A <~>* B
-  := (Build_pEquiv _ _ f (isequiv_adjointify f f' r s)).
+  := (Build_pEquiv f (isequiv_adjointify f f' r s)).
 
 (* In some situations you want the back and forth maps to be pointed but not the sections. *)
 Definition pequiv_adjointify' {A B : pType} (f : A ->* B) (f' : B ->* A)
   (r : f o f' == idmap) (s : f' o f == idmap) : A <~>* B
-  := (Build_pEquiv _ _ f (isequiv_adjointify f f' r s)).
+  := (Build_pEquiv f (isequiv_adjointify f f' r s)).
 
 (** Pointed versions of [moveR_equiv_M] and friends. *)
 Definition moveR_pequiv_Mf {A B C} (f : B <~>* C) (g : A ->* B) (h : A ->* C)
