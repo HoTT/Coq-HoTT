@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Functor.Dual</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Functor.Dual</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab699"></a><h1 class="section">Opposite functors</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#"><span class="id" title="library">Category.Dual</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#CategoryDualNotations"><span class="id" title="module">Category.Dual.CategoryDualNotations</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab700"></a><h2 class="section">Definition of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>ᵒᵖ</span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="opposite" class="idref" href="#opposite"><span class="id" title="definition">opposite</span></a> <a id="C:1" class="idref" href="#C:1"><span class="id" title="binder">C</span></a> <a id="D:2" class="idref" href="#D:2"><span class="id" title="binder">D</span></a> (<a id="F:3" class="idref" href="#F:3"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#C:1"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#D:2"><span class="id" title="variable">D</span></a>) : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#C:1"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#D:2"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a> (<a class="idref" href="HoTT.Categories.Functor.Dual.html#C:1"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a>) (<a class="idref" href="HoTT.Categories.Functor.Dual.html#D:2"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Functor.Core.html#object_of"><span class="id" title="projection">object_of</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#F:3"><span class="id" title="variable">F</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:9" class="idref" href="#s:9"><span class="id" title="binder">s</span></a> <a id="d:10" class="idref" href="#d:10"><span class="id" title="binder">d</span></a> (<a id="m:11" class="idref" href="#m:11"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#C:1"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#s:9"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#d:10"><span class="id" title="variable">d</span></a>) ⇒ (<a class="idref" href="HoTT.Categories.Functor.Dual.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">_1</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#m:11"><span class="id" title="variable">m</span></a>)%<span class="id" title="var">morphism</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="d':4" class="idref" href="#d':4"><span class="id" title="binder">d'</span></a> <a id="d:5" class="idref" href="#d:5"><span class="id" title="binder">d</span></a> <a id="s:6" class="idref" href="#s:6"><span class="id" title="binder">s</span></a> <a id="m1:7" class="idref" href="#m1:7"><span class="id" title="binder">m1</span></a> <a id="m2:8" class="idref" href="#m2:8"><span class="id" title="binder">m2</span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#s:6"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#d:5"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#d':4"><span class="id" title="variable">d'</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#m2:8"><span class="id" title="variable">m2</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#m1:7"><span class="id" title="variable">m1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Functor.Core.html#identity_of"><span class="id" title="projection">identity_of</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#F:3"><span class="id" title="variable">F</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="54f0ff1163851044bb9ed4c4abf4421f" class="idref" href="#54f0ff1163851044bb9ed4c4abf4421f"><span class="id" title="notation">&quot;</span></a>F ^op" := (<a class="idref" href="HoTT.Categories.Functor.Dual.html#opposite"><span class="id" title="definition">opposite</span></a> <span class="id" title="var">F</span>) : <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab701"></a><h2 class="section"><span class="inlinecode">ᵒᵖ</span> is judgmentally involutive</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="opposite_involutive" class="idref" href="#opposite_involutive"><span class="id" title="definition">opposite_involutive</span></a> <a id="C:12" class="idref" href="#C:12"><span class="id" title="binder">C</span></a> <a id="D:13" class="idref" href="#D:13"><span class="id" title="binder">D</span></a> (<a id="F:14" class="idref" href="#F:14"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#C:12"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#D:13"><span class="id" title="variable">D</span></a>) : <a class="idref" href="HoTT.Categories.Functor.Dual.html#54f0ff1163851044bb9ed4c4abf4421f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#F:14"><span class="id" title="variable">F</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#54f0ff1163851044bb9ed4c4abf4421f"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#54f0ff1163851044bb9ed4c4abf4421f"><span class="id" title="notation">op</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#54f0ff1163851044bb9ed4c4abf4421f"><span class="id" title="notation">)^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#54f0ff1163851044bb9ed4c4abf4421f"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#F:14"><span class="id" title="variable">F</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="FunctorDualNotations" class="idref" href="#FunctorDualNotations"><span class="id" title="module">FunctorDualNotations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="720738f6e2ec0d11c85920c05a0794ea" class="idref" href="#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">&quot;</span></a>F ^op" := (<a class="idref" href="HoTT.Categories.Functor.Dual.html#opposite"><span class="id" title="definition">opposite</span></a> <span class="id" title="var">F</span>) : <span class="id" title="var">functor_scope</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Functor.Dual.html#FunctorDualNotations"><span class="id" title="module">FunctorDualNotations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

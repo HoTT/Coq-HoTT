@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Homotopy.Join.JoinSusp</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Homotopy.Join.JoinSusp</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#"><span class="id" title="library">Join.Core</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#"><span class="id" title="library">Join.JoinAssoc</span></a> <a class="idref" href="HoTT.Homotopy.Suspension.html#"><span class="id" title="library">Suspension</span></a> <a class="idref" href="HoTT.Spaces.Spheres.html#"><span class="id" title="library">Spaces.Spheres</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.html#"><span class="id" title="library">WildCat</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1220"></a><h1 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Homotopy.Join.Core.html#Join"><span class="id" title="definition">Join</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is equivalent to <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.Suspension.html#Susp"><span class="id" title="definition">Susp</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span></h1>
+
+
+<div class="paragraph"> </div>
+
+  We give a direct proof of this fact. It is also possible to give a proof using <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">opyon_equiv_0gpd</span></a></span>; see PR1769. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="join_to_susp" class="idref" href="#join_to_susp"><span class="id" title="definition">join_to_susp</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Homotopy.Join.Core.html#Join"><span class="id" title="definition">Join</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.Suspension.html#Susp"><span class="id" title="definition">Susp</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#A:1"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#Join_rec"><span class="id" title="definition">Join_rec</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <a id="b:2" class="idref" href="#b:2"><span class="id" title="binder"><span id="b:3" class="id">b</span></span></a> ⇒ <span class="id" title="keyword">if</span> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#b:2"><span class="id" title="variable">b</span></a> <span class="id" title="keyword">then</span> <a class="idref" href="HoTT.Homotopy.Suspension.html#North"><span class="id" title="definition">North</span></a> <span class="id" title="keyword">else</span> <a class="idref" href="HoTT.Homotopy.Suspension.html#South"><span class="id" title="definition">South</span></a>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <a id="a:4" class="idref" href="#a:4"><span class="id" title="binder"><span id="a:5" class="id">a</span></span></a> ⇒ <a class="idref" href="HoTT.Homotopy.Suspension.html#South"><span class="id" title="definition">South</span></a>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [|] <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Homotopy.Suspension.html#merid"><span class="id" title="definition">merid</span></a> <span class="id" title="var">a</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="susp_to_join" class="idref" href="#susp_to_join"><span class="id" title="definition">susp_to_join</span></a> (<a id="A:6" class="idref" href="#A:6"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Homotopy.Suspension.html#Susp"><span class="id" title="definition">Susp</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#A:6"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.Join.Core.html#Join"><span class="id" title="definition">Join</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#A:6"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Homotopy.Suspension.html#Susp_rec"><span class="id" title="definition">Susp_rec</span></a> (<a class="idref" href="HoTT.Homotopy.Join.Core.html#joinl"><span class="id" title="definition">joinl</span></a> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a>) (<a class="idref" href="HoTT.Homotopy.Join.Core.html#joinl"><span class="id" title="definition">joinl</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Homotopy.Join.Core.html#zigzag"><span class="id" title="definition">zigzag</span></a> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_join_to_susp" class="idref" href="#isequiv_join_to_susp"><span class="id" title="instance">isequiv_join_to_susp</span></a> (<a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (<a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#join_to_susp"><span class="id" title="definition">join_to_susp</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#A:7"><span class="id" title="variable">A</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#susp_to_join"><span class="id" title="definition">susp_to_join</span></a> <span class="id" title="var">A</span>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.Suspension.html#Susp_ind"><span class="id" title="definition">Susp_ind</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span>; <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">transport_paths</span> <span class="id" title="var">FFlr</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Paths.html#equiv_p1_1q"><span class="id" title="definition">equiv_p1_1q</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>); [<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Homotopy.Suspension.html#Susp_rec_beta_merid"><span class="id" title="definition">Susp_rec_beta_merid</span></a> | ].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Homotopy.Join.Core.html#Join_rec_beta_zigzag"><span class="id" title="definition">Join_rec_beta_zigzag</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a> <span class="id" title="var">a</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p1"><span class="id" title="definition">concat_p1</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Homotopy.Join.Core.html#Join_ind_FFlr"><span class="id" title="definition">Join_ind_FFlr</span></a> (<a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#join_to_susp"><span class="id" title="definition">join_to_susp</span></a> <span class="id" title="var">A</span>)); <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">intros</span> [|]; <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#jglue"><span class="id" title="definition">jglue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span>; <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">nrefine</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#3b607a272444a2e3acbecfa52b796d2a"><span class="id" title="notation">@@</span></a> 1).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#Join_rec_beta_jglue"><span class="id" title="definition">Join_rec_beta_jglue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_1p"><span class="id" title="definition">concat_1p</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">nrefine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#3b607a272444a2e3acbecfa52b796d2a"><span class="id" title="notation">@@</span></a> 1); [<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Homotopy.Suspension.html#Susp_rec_beta_merid"><span class="id" title="definition">Susp_rec_beta_merid</span></a> | ].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_pV_p"><span class="id" title="definition">concat_pV_p</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_join_susp" class="idref" href="#equiv_join_susp"><span class="id" title="definition">equiv_join_susp</span></a> (<a id="A:8" class="idref" href="#A:8"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Homotopy.Join.Core.html#Join"><span class="id" title="definition">Join</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#A:8"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Homotopy.Suspension.html#Susp"><span class="id" title="definition">Susp</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#A:8"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#join_to_susp"><span class="id" title="definition">join_to_susp</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#A:8"><span class="id" title="variable">A</span></a>) <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It follows that the join powers of <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a></span> are spheres.  These are sometimes a convenient alternative to working with spheres, so we give them a name. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="bool_pow" class="idref" href="#bool_pow"><span class="id" title="definition">bool_pow</span></a> (<a id="n:9" class="idref" href="#n:9"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) := <a class="idref" href="HoTT.Homotopy.Join.Core.html#join_power"><span class="id" title="definition">join_power</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#n:9"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_bool_pow_sphere" class="idref" href="#equiv_bool_pow_sphere"><span class="id" title="definition">equiv_bool_pow_sphere</span></a> (<a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>): <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#bool_pow"><span class="id" title="definition">bool_pow</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Spaces.Spheres.html#Sphere"><span class="id" title="definition">Sphere</span></a> (<a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#n:10"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#equiv_join_susp"><span class="id" title="definition">equiv_join_susp</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Equiv.html#emap"><span class="id" title="definition">emap</span></a> <a class="idref" href="HoTT.Homotopy.Suspension.html#Susp"><span class="id" title="definition">Susp</span></a> <span class="id" title="var">IHn</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It follows that joins of spheres are spheres, starting in dimension -1. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="equiv_join_sphere" class="idref" href="#equiv_join_sphere"><span class="id" title="definition">equiv_join_sphere</span></a> (<a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a> <a id="m:12" class="idref" href="#m:12"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.Join.Core.html#Join"><span class="id" title="definition">Join</span></a> (<a class="idref" href="HoTT.Spaces.Spheres.html#Sphere"><span class="id" title="definition">Sphere</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#n:11"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1</span></a>) (<a class="idref" href="HoTT.Spaces.Spheres.html#Sphere"><span class="id" title="definition">Sphere</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#m:12"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Spaces.Spheres.html#Sphere"><span class="id" title="definition">Sphere</span></a> (<a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#n:11"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#m:12"><span class="id" title="variable">m</span></a>)%<span class="id" title="var">nat</span><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <a class="idref" href="HoTT.Homotopy.Join.Core.html#equiv_functor_join"><span class="id" title="definition">equiv_functor_join</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;2,3: <span class="id" title="tactic">symmetry</span>; <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#equiv_bool_pow_sphere"><span class="id" title="definition">equiv_bool_pow_sphere</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Homotopy.Join.JoinSusp.html#equiv_bool_pow_sphere"><span class="id" title="definition">equiv_bool_pow_sphere</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_join_power"><span class="id" title="lemma">join_join_power</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

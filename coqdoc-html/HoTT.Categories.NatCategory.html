@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.NatCategory</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.NatCategory</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab861"></a><h1 class="section">Discrete categories on <span class="inlinecode"><span class="id" title="var">n</span></span> objects</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.DiscreteCategory.html#"><span class="id" title="library">DiscreteCategory</span></a> <a class="idref" href="HoTT.Categories.IndiscreteCategory.html#"><span class="id" title="library">IndiscreteCategory</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.Unit.html#"><span class="id" title="library">Types.Unit</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Trunc</span></a> <a class="idref" href="HoTT.Types.Sum.html#"><span class="id" title="library">Types.Sum</span></a> <a class="idref" href="HoTT.Types.Empty.html#"><span class="id" title="library">Types.Empty</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Nat.html#"><span class="id" title="library">Basics.Nat</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="Core" class="idref" href="#Core"><span class="id" title="module">Core</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab862"></a><h2 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span> types, or <span class="inlinecode"><a class="idref" href="HoTT.Categories.NatCategory.html#Core.CardinalityRepresentative"><span class="id" title="definition">CardinalityRepresentative</span></a></span></h2>
+ We use <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a></span> for <span class="inlinecode">0</span> and <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a></span> for <span class="inlinecode">1</span> so that we get nice judgmental behavior.
+      TODO: this should be unified with <span class="inlinecode"><span class="id" title="library">Spaces.Finite.Fin</span></span>.
+   
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Fixpoint</span> <a id="Core.CardinalityRepresentative" class="idref" href="#Core.CardinalityRepresentative"><span class="id" title="definition">CardinalityRepresentative</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Categories.NatCategory.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n'</span> ⇒ <a class="idref" href="HoTT.Categories.NatCategory.html#CardinalityRepresentative:2"><span class="id" title="definition">CardinalityRepresentative</span></a> <span class="id" title="var">n'</span> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.CardinalityRepresentative"><span class="id" title="definition">CardinalityRepresentative</span></a> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.CardinalityRepresentative"><span class="id" title="definition">:</span></a> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.CardinalityRepresentative"><span class="id" title="definition">nat</span></a> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.CardinalityRepresentative"><span class="id" title="definition">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.CardinalityRepresentative"><span class="id" title="definition">Sortclass</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab863"></a><h2 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span> is an hSet</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="Core.trunc_cardinality_representative" class="idref" href="#Core.trunc_cardinality_representative"><span class="id" title="instance">trunc_cardinality_representative</span></a> (<a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.CardinalityRepresentative"><span class="id" title="definition">CardinalityRepresentative</span></a> <a class="idref" href="HoTT.Categories.NatCategory.html#n:4"><span class="id" title="variable">n</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; [ <span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span> |].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; [ <span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span> |].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span>|<span class="id" title="var">x</span>] [<span class="id" title="var">y</span>|<span class="id" title="var">y</span>];<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab864"></a><h2 class="section">Define the categories <span class="inlinecode"><span class="id" title="var">n</span></span></h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Core.nat_category" class="idref" href="#Core.nat_category"><span class="id" title="definition">nat_category</span></a> (<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Categories.NatCategory.html#n:5"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 ⇒ <a class="idref" href="HoTT.Categories.IndiscreteCategory.html#Core.indiscrete_category"><span class="id" title="definition">indiscrete_category</span></a> 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ <a class="idref" href="HoTT.Categories.IndiscreteCategory.html#Core.indiscrete_category"><span class="id" title="definition">indiscrete_category</span></a> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n'</span>) ⇒ <a class="idref" href="HoTT.Categories.DiscreteCategory.html#Core.discrete_category"><span class="id" title="definition">discrete_category</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n'</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="Core.NatCategoryCoreNotations" class="idref" href="#Core.NatCategoryCoreNotations"><span class="id" title="module">NatCategoryCoreNotations</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'0'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'0'"><span class="id" title="notation">&quot;</span></a>0" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 0) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'1'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'1'"><span class="id" title="notation">&quot;</span></a>1" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 1) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'2'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'2'"><span class="id" title="notation">&quot;</span></a>2" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 2) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'3'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'3'"><span class="id" title="notation">&quot;</span></a>3" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 3) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'4'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'4'"><span class="id" title="notation">&quot;</span></a>4" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 4) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'5'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'5'"><span class="id" title="notation">&quot;</span></a>5" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 5) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'6'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'6'"><span class="id" title="notation">&quot;</span></a>6" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 6) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'7'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'7'"><span class="id" title="notation">&quot;</span></a>7" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 7) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'8'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'8'"><span class="id" title="notation">&quot;</span></a>8" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 8) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.NatCategoryCoreNotations.::category_scope:'9'" class="idref" href="#Core.NatCategoryCoreNotations.::category_scope:'9'"><span class="id" title="notation">&quot;</span></a>9" := (<a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> 9) : <span class="id" title="var">category_scope</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.NatCategoryCoreNotations"><span class="id" title="module">NatCategoryCoreNotations</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Typeclasses</span> <span class="id" title="keyword">Transparent</span> <span class="id" title="var">nat_category</span>.<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>]<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Unfold</span> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> : <span class="id" title="var">core</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.nat_category"><span class="id" title="definition">nat_category</span></a> / .<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.NatCategory.html#Core"><span class="id" title="module">Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="Notations" class="idref" href="#Notations"><span class="id" title="module">Notations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.NatCategory.html#Core.NatCategoryCoreNotations"><span class="id" title="module">Core.NatCategoryCoreNotations</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.NatCategory.html#Notations"><span class="id" title="module">Notations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

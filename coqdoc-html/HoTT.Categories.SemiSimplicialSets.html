@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.SemiSimplicialSets</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.SemiSimplicialSets</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab959"></a><h1 class="section">The category of semisimplicial sets</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#"><span class="id" title="library">Category.Dual</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#"><span class="id" title="library">SetCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.SimplicialSets.html#"><span class="id" title="library">SimplicialSets</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Sigma.OnMorphisms.html#"><span class="id" title="library">Category.Sigma.OnMorphisms</span></a> <a class="idref" href="HoTT.Categories.Category.Subcategory.Wide.html#"><span class="id" title="library">Category.Subcategory.Wide</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="Core" class="idref" href="#Core"><span class="id" title="module">Core</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="Core.semisimplicial_sets" class="idref" href="#Core.semisimplicial_sets"><span class="id" title="section">semisimplicial_sets</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+</div>
+
+<div class="doc">
+Quoting David Spivak:
+
+<div class="paragraph"> </div>
+
+        Consider the subcategory of <span class="inlinecode"><a class="idref" href="HoTT.Categories.SimplicialSets.html#55962ab2243c40029a299cab4819b082"><span class="id" title="abbreviation">Δ</span></a></span> with the same objects (wide)
+        but only injective morphisms.  If we call that <span class="inlinecode"><span class="id" title="var">Γ</span></span> (which is
+        nonstandard), then semi-simplicial sets (also a non-standard
+        term) (sic) are <span class="inlinecode"><span class="id" title="var">Fun</span>(<span class="id" title="var">Γ</span>ᵒᵖ,</span> <span class="inlinecode"><span class="id" title="keyword">Set</span>)</span>. Define the obvious inclusion
+        <span class="inlinecode"><span class="id" title="var">Γ</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.SimplicialSets.html#55962ab2243c40029a299cab4819b082"><span class="id" title="abbreviation">Δ</span></a></span>, which we will use to make simplicial sets without
+        having to worry about "degeneracies". 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Core.semisimplex_category" class="idref" href="#Core.semisimplex_category"><span class="id" title="definition">semisimplex_category</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Category.Subcategory.Wide.html#wide"><span class="id" title="abbreviation">wide</span></a> <a class="idref" href="HoTT.Categories.SimplicialSets.html#Core.simplex_category"><span class="id" title="definition">simplex_category</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.Category.Morphisms.html#IsMonomorphism"><span class="id" title="class">IsMonomorphism</span></a> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Core.semisimplicial_inclusion_functor" class="idref" href="#Core.semisimplicial_inclusion_functor"><span class="id" title="definition">semisimplicial_inclusion_functor</span></a> : <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#Core.semisimplex_category"><span class="id" title="definition">semisimplex_category</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SimplicialSets.html#Core.simplex_category"><span class="id" title="definition">simplex_category</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Category.Sigma.OnMorphisms.html#pr1_mor"><span class="id" title="definition">pr1_mor</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Core.semisimplicial_category" class="idref" href="#Core.semisimplicial_category"><span class="id" title="definition">semisimplicial_category</span></a> (<a id="C:2" class="idref" href="#C:2"><span class="id" title="binder">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#Core.semisimplex_category"><span class="id" title="definition">semisimplex_category</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#C:2"><span class="id" title="variable">C</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Core.semisimplicial_set" class="idref" href="#Core.semisimplicial_set"><span class="id" title="definition">semisimplicial_set</span></a> := <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#Core.semisimplicial_category"><span class="id" title="definition">semisimplicial_category</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#set_cat"><span class="id" title="definition">set_cat</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Core.semisimplicial_prop" class="idref" href="#Core.semisimplicial_prop"><span class="id" title="definition">semisimplicial_prop</span></a> := <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#Core.semisimplicial_category"><span class="id" title="definition">semisimplicial_category</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#prop_cat"><span class="id" title="definition">prop_cat</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#Core.semisimplicial_sets"><span class="id" title="section">semisimplicial_sets</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="Core.semisimplicial_of" class="idref" href="#Core.semisimplicial_of"><span class="id" title="abbreviation">semisimplicial_of</span></a> <span class="id" title="var">obj</span> := (<a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#Core.semisimplicial_category"><span class="id" title="definition">semisimplicial_category</span></a> (<a class="idref" href="HoTT.Categories.SetCategory.Core.html#cat_of"><span class="id" title="abbreviation">cat_of</span></a> <span class="id" title="var">obj</span>)).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#Core"><span class="id" title="module">Core</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

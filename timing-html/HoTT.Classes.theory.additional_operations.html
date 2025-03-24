@@ -1,0 +1,660 @@
+<html>
+<head>
+<title>additional_operations.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for additional_operations.v</h1>
+
+<div class="code" title="File: additional_operations.v
+Line: 1
+Time: 0.061s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Classes.interfaces.canonical_names.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A R.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 5
+Time: 0.004s">
+<div class="time" style="width: 6.5573770491803%"></div>
+<pre>
+
+Instance decide_eqb `{DecidablePaths A} : Eqb A
+  := fun a b =&gt; if decide_rel paths a b then true else false.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma decide_eqb_ok@{i} {A:Type@{i} } `{DecidablePaths A} :
+  forall a b, iff@{Set i i} (eqb a b = true) (a = b).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+unfold eqb,decide_eqb.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 1.6393442622951%"></div>
+<pre>
+intros a b;destruct (decide_rel paths a b) as [E1|E1];split;intros E2;auto.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (false_ne_true E2).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (E1 E2).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma LT_EQ : LT &lt;&gt; EQ.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros E.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+change ((fun r =&gt; match r with LT =&gt; Unit | _ =&gt; Empty end) EQ).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+rewrite &lt;-E.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma LT_GT : LT &lt;&gt; GT.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros E.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+change ((fun r =&gt; match r with LT =&gt; Unit | _ =&gt; Empty end) GT).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+rewrite &lt;-E.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma EQ_LT : EQ &lt;&gt; LT.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply symmetric_neq, LT_EQ.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma EQ_GT : EQ &lt;&gt; GT.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros E.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+change ((fun r =&gt; match r with EQ =&gt; Unit | _ =&gt; Empty end) GT).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+rewrite &lt;-E.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma GT_EQ : GT &lt;&gt; EQ.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply symmetric_neq, EQ_GT.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance compare_eqb `{Compare A} : Eqb A | 2 := fun a b =&gt;
+  match a ?= b with
+  | EQ =&gt; true
+  | _ =&gt; false
+  end.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 54
+Time: 0.002s">
+<div class="time" style="width: 3.2786885245902%"></div>
+<pre>
+
+Lemma compare_eqb_eq `{Compare A} : forall a b : A, a =? b = true -&gt; a ?= b = EQ.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+unfold eqb,compare_eqb;simpl.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros a b.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (a ?= b);trivial;intros E;destruct (false_ne_true E).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 1.6393442622951%"></div>
+<pre>
+
+Instance tricho_compare `{Trichotomy A R} : Compare A | 2
+  := fun a b =&gt;
+  match trichotomy R a b with
+  | inl _ =&gt; LT
+  | inr (inl _) =&gt; EQ
+  | inr (inr _) =&gt; GT
+  end.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma tricho_compare_eq `{Trichotomy A R}
+  : forall a b : A, compare a b = EQ -&gt; a = b.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+unfold compare,tricho_compare.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.6393442622951%"></div>
+<pre>
+intros a b;destruct (trichotomy R a b) as [E|[E|E]];auto.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E1;destruct (LT_EQ E1).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E1;destruct (GT_EQ E1).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma tricho_compare_ok `{Trichotomy A R} `{Irreflexive A R}
+  : forall a b : A, compare a b = EQ &lt;-&gt; a = b.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+unfold compare,tricho_compare.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 1.6393442622951%"></div>
+<pre>
+intros a b;destruct (trichotomy R a b) as [E1|[E1|E1]];split;auto.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E2;destruct (LT_EQ E2).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E2;rewrite E2 in E1.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity R _ E1).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E2;destruct (GT_EQ E2).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E2;rewrite E2 in E1.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity R _ E1).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 1.6393442622951%"></div>
+<pre>
+
+Lemma total_abs_either `{Abs A} `{!TotalRelation le}
+  : forall x : A, (0 &lt;= x /\ abs x = x) |_| (x &lt;= 0 /\ abs x = - x).</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros x.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.6393442622951%"></div>
+<pre>
+destruct (total le 0 x) as [E|E].</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split;trivial.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ((abs_sig x).2);trivial.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split;trivial.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ((abs_sig x).2);trivial.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 1.6393442622951%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: additional_operations.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

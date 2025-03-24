@@ -1,0 +1,31 @@
+digraph HoTT_Equiv_PathSplit {
+  graph [ratio=0.5]
+  node [style=filled]
+PathSplit_equiv_oopathsplit_isequiv [label="equiv_oopathsplit_isequiv", URL=<PathSplit.html#equiv_oopathsplit_isequiv>, peripheries=3, fillcolor="#F070D1"] ;
+PathSplit_ishprop_oopathsplit [label="ishprop_oopathsplit", URL=<PathSplit.html#ishprop_oopathsplit>, fillcolor="#F070D1"] ;
+PathSplit_contr_oopathsplit_isequiv [label="contr_oopathsplit_isequiv", URL=<PathSplit.html#contr_oopathsplit_isequiv>, fillcolor="#F070D1"] ;
+PathSplit_isequiv_oopathsplit [label="isequiv_oopathsplit", URL=<PathSplit.html#isequiv_oopathsplit>, fillcolor="#F070D1"] ;
+PathSplit_ooPathSplit [label="ooPathSplit", URL=<PathSplit.html#ooPathSplit>, fillcolor="#F070D1"] ;
+PathSplit_equiv_functor_pathsplit [label="equiv_functor_pathsplit", URL=<PathSplit.html#equiv_functor_pathsplit>, peripheries=3, fillcolor="#F070D1"] ;
+PathSplit_equiv_pathsplit_isequiv [label="equiv_pathsplit_isequiv", URL=<PathSplit.html#equiv_pathsplit_isequiv>, fillcolor="#F070D1"] ;
+PathSplit_ishprop_pathsplit [label="ishprop_pathsplit", URL=<PathSplit.html#ishprop_pathsplit>, fillcolor="#F070D1"] ;
+PathSplit_contr_pathsplit_isequiv [label="contr_pathsplit_isequiv", URL=<PathSplit.html#contr_pathsplit_isequiv>, fillcolor="#F070D1"] ;
+PathSplit_isequiv_pathsplit [label="isequiv_pathsplit", URL=<PathSplit.html#isequiv_pathsplit>, fillcolor="#F070D1"] ;
+PathSplit_PathSplit [label="PathSplit", URL=<PathSplit.html#PathSplit>, fillcolor="#F070D1"] ;
+  PathSplit_equiv_oopathsplit_isequiv -> PathSplit_ishprop_oopathsplit [] ;
+  PathSplit_ishprop_oopathsplit -> PathSplit_contr_oopathsplit_isequiv [] ;
+  PathSplit_ishprop_oopathsplit -> PathSplit_isequiv_oopathsplit [] ;
+  PathSplit_contr_oopathsplit_isequiv -> PathSplit_ooPathSplit [] ;
+  PathSplit_contr_oopathsplit_isequiv -> PathSplit_contr_pathsplit_isequiv [] ;
+  PathSplit_isequiv_oopathsplit -> PathSplit_ooPathSplit [] ;
+  PathSplit_isequiv_oopathsplit -> PathSplit_isequiv_pathsplit [] ;
+  PathSplit_ooPathSplit -> PathSplit_PathSplit [] ;
+  PathSplit_equiv_functor_pathsplit -> PathSplit_equiv_pathsplit_isequiv [] ;
+  PathSplit_equiv_pathsplit_isequiv -> PathSplit_ishprop_pathsplit [] ;
+  PathSplit_ishprop_pathsplit -> PathSplit_contr_pathsplit_isequiv [] ;
+  PathSplit_ishprop_pathsplit -> PathSplit_isequiv_pathsplit [] ;
+  PathSplit_contr_pathsplit_isequiv -> PathSplit_PathSplit [] ;
+  PathSplit_isequiv_pathsplit -> PathSplit_PathSplit [] ;
+subgraph cluster_PathSplit { label="PathSplit"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+PathSplit_PathSplit; PathSplit_isequiv_pathsplit; PathSplit_contr_pathsplit_isequiv; PathSplit_ishprop_pathsplit; PathSplit_equiv_pathsplit_isequiv; PathSplit_equiv_functor_pathsplit; PathSplit_ooPathSplit; PathSplit_isequiv_oopathsplit; PathSplit_contr_oopathsplit_isequiv; PathSplit_ishprop_oopathsplit; PathSplit_equiv_oopathsplit_isequiv; };
+} /* END */

@@ -1,0 +1,40 @@
+digraph HoTT_Classes_interfaces_ua_congruence {
+  graph [ratio=0.5]
+  node [style=filled]
+ua_congruence_op_compatible_cons [label="op_compatible_cons", URL=<ua_congruence.html#op_compatible_cons>, peripheries=3, fillcolor="#F070D1"] ;
+ua_congruence_hprop_is_congruence [label="hprop_is_congruence", URL=<ua_congruence.html#hprop_is_congruence>, peripheries=3, fillcolor="#F070D1"] ;
+ua_congruence_ops_compatible_cong [label="ops_compatible_cong", URL=<ua_congruence.html#ops_compatible_cong>, peripheries=3, fillcolor="#F070D1"] ;
+ua_congruence_equiv_rel_cong [label="equiv_rel_cong", URL=<ua_congruence.html#equiv_rel_cong>, peripheries=3, fillcolor="#F070D1"] ;
+ua_congruence_is_mere_relation_cong [label="is_mere_relation_cong", URL=<ua_congruence.html#is_mere_relation_cong>, peripheries=3, fillcolor="#F070D1"] ;
+ua_congruence_IsCongruence_sind [label="IsCongruence_sind", URL=<ua_congruence.html#IsCongruence_sind>, peripheries=3, fillcolor="#F070D1"] ;
+ua_congruence_IsCongruence_rec [label="IsCongruence_rec", URL=<ua_congruence.html#IsCongruence_rec>, peripheries=3, fillcolor="#F070D1"] ;
+ua_congruence_IsCongruence_ind [label="IsCongruence_ind", URL=<ua_congruence.html#IsCongruence_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+ua_congruence_IsCongruence_rect [label="IsCongruence_rect", URL=<ua_congruence.html#IsCongruence_rect>, fillcolor="#F070D1"] ;
+ua_congruence_BuildIsCongruence [label="BuildIsCongruence", URL=<ua_congruence.html#BuildIsCongruence>, fillcolor="#7FAAFF"] ;
+ua_congruence_IsCongruence [label="IsCongruence", URL=<ua_congruence.html#IsCongruence>, fillcolor="#E2CDFA"] ;
+ua_congruence_trunc_ops_compatible [label="trunc_ops_compatible", URL=<ua_congruence.html#trunc_ops_compatible>, fillcolor="#F070D1"] ;
+ua_congruence_ops_compatible [label="ops_compatible", URL=<ua_congruence.html#ops_compatible>, peripheries=3, fillcolor="#F070D1"] ;
+ua_congruence_OpsCompatible [label="OpsCompatible", URL=<ua_congruence.html#OpsCompatible>, fillcolor="#F070D1"] ;
+ua_congruence_OpCompatible [label="OpCompatible", URL=<ua_congruence.html#OpCompatible>, fillcolor="#F070D1"] ;
+  ua_congruence_op_compatible_cons -> ua_congruence_IsCongruence [] ;
+  ua_congruence_hprop_is_congruence -> ua_congruence_BuildIsCongruence [] ;
+  ua_congruence_hprop_is_congruence -> ua_congruence_IsCongruence [] ;
+  ua_congruence_hprop_is_congruence -> ua_congruence_trunc_ops_compatible [] ;
+  ua_congruence_ops_compatible_cong -> ua_congruence_IsCongruence [] ;
+  ua_congruence_equiv_rel_cong -> ua_congruence_IsCongruence [] ;
+  ua_congruence_is_mere_relation_cong -> ua_congruence_IsCongruence [] ;
+  ua_congruence_IsCongruence_sind -> ua_congruence_BuildIsCongruence [] ;
+  ua_congruence_IsCongruence_sind -> ua_congruence_IsCongruence [] ;
+  ua_congruence_IsCongruence_rec -> ua_congruence_IsCongruence_rect [] ;
+  ua_congruence_IsCongruence_ind -> ua_congruence_BuildIsCongruence [] ;
+  ua_congruence_IsCongruence_ind -> ua_congruence_IsCongruence [] ;
+  ua_congruence_IsCongruence_rect -> ua_congruence_BuildIsCongruence [] ;
+  ua_congruence_IsCongruence_rect -> ua_congruence_IsCongruence [] ;
+  ua_congruence_BuildIsCongruence -> ua_congruence_OpsCompatible [] ;
+  ua_congruence_IsCongruence -> ua_congruence_OpsCompatible [] ;
+  ua_congruence_trunc_ops_compatible -> ua_congruence_OpsCompatible [] ;
+  ua_congruence_ops_compatible -> ua_congruence_OpsCompatible [] ;
+  ua_congruence_OpsCompatible -> ua_congruence_OpCompatible [] ;
+subgraph cluster_ua_congruence { label="ua_congruence"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ua_congruence_OpCompatible; ua_congruence_OpsCompatible; ua_congruence_ops_compatible; ua_congruence_trunc_ops_compatible; ua_congruence_IsCongruence; ua_congruence_BuildIsCongruence; ua_congruence_IsCongruence_rect; ua_congruence_IsCongruence_ind; ua_congruence_IsCongruence_rec; ua_congruence_IsCongruence_sind; ua_congruence_is_mere_relation_cong; ua_congruence_equiv_rel_cong; ua_congruence_ops_compatible_cong; ua_congruence_hprop_is_congruence; ua_congruence_op_compatible_cons; };
+} /* END */

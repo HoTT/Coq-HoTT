@@ -1,0 +1,739 @@
+<html>
+<head>
+<title>pEquiv.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for pEquiv.v</h1>
+
+<div class="code" title="File: pEquiv.v
+Line: 1
+Time: 0.03s">
+<div class="time" style="width: 73.170731707317%"></div>
+<pre>Require Import Basics.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 1
+Time: 0.009s">
+<div class="time" style="width: 21.951219512195%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 2
+Time: 0.041s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import WildCat.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 3
+Time: 0.02s">
+<div class="time" style="width: 48.780487804878%"></div>
+<pre>
+Require Import Pointed.Core.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Pointed equivalence is a reflexive relation. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance pequiv_reflexive : Reflexive pEquiv.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro; exact pequiv_pmap_idmap.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* We can probably get rid of the following notation, and use ^-1$ instead. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "f ^-1*" := (@cate_inv pType _ _ _ _ hasequivs_ptype _ _ f) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Pointed equivalence is a symmetric relation. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance pequiv_symmetric : Symmetric pEquiv.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ? ?; exact pequiv_inverse.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Pointed equivalences compose. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 20
+Time: 0.003s">
+<div class="time" style="width: 7.3170731707317%"></div>
+<pre>Definition pequiv_compose {A B C : pType} (f : A &lt;~&gt;* B) (g : B &lt;~&gt;* C)
+  : A &lt;~&gt;* C
+  := g $oE f.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Pointed equivalence is a transitive relation. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance pequiv_transitive : Transitive pEquiv.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ? ? ?; exact pequiv_compose.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "g o*E f" := (pequiv_compose f g) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Sometimes we wish to construct a pEquiv from an equiv and a proof that it is pointed. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 31
+Time: 0.003s">
+<div class="time" style="width: 7.3170731707317%"></div>
+<pre>Definition Build_pEquiv' {A B : pType} (f : A &lt;~&gt; B)
+  (p : f (point A) = point B)
+  : A &lt;~&gt;* B := Build_pEquiv _ _ (Build_pMap _ _ f p) _.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_pEquiv' &amp; _ _ _ _.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* A version of equiv_adjointify for pointed equivalences where all data is pointed. There is a lot of unnecessary data here but sometimes it is easier to prove equivalences using this. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>Definition pequiv_adjointify {A B : pType} (f : A -&gt;* B) (f' : B -&gt;* A)
+  (r : f o* f' ==* pmap_idmap) (s : f' o* f == pmap_idmap) : A &lt;~&gt;* B
+  := (Build_pEquiv _ _ f (isequiv_adjointify f f' r s)).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* In some situations you want the back and forth maps to be pointed but not the sections. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 41
+Time: 0.002s">
+<div class="time" style="width: 4.8780487804878%"></div>
+<pre>Definition pequiv_adjointify' {A B : pType} (f : A -&gt;* B) (f' : B -&gt;* A)
+  (r : f o f' == idmap) (s : f' o f == idmap) : A &lt;~&gt;* B
+  := (Build_pEquiv _ _ f (isequiv_adjointify f f' r s)).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed versions of [moveR_equiv_M] and friends. *)</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>Definition moveR_pequiv_Mf {A B C} (f : B &lt;~&gt;* C) (g : A -&gt;* B) (h : A -&gt;* C)
+           (p : g ==* f^-1* o* h)
+  : (f o* g ==* h).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (pmap_postwhisker f p @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((pmap_compose_assoc _ _ _)^* @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (pmap_prewhisker h (peisretr f) @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pmap_postcompose_idmap.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+
+Definition moveL_pequiv_Mf {A B C} (f : B &lt;~&gt;* C) (g : A -&gt;* B) (h : A -&gt;* C)
+           (p : f^-1* o* h ==* g)
+  : (h ==* f o* g).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @* pmap_postwhisker f p).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @* (pmap_compose_assoc _ _ _)).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((pmap_postcompose_idmap _)^* @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pmap_prewhisker.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 62
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+  symmetry; apply peisretr.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+
+Definition moveL_pequiv_Vf {A B C} (f : B &lt;~&gt;* C) (g : A -&gt;* B) (h : A -&gt;* C)
+           (p : f o* g ==* h)
+  : g ==* f^-1* o* h.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @* pmap_postwhisker f^-1* p).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @* (pmap_compose_assoc _ _ _)).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((pmap_postcompose_idmap _)^* @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pmap_prewhisker.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+  symmetry; apply peissect.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+
+Definition moveR_pequiv_Vf {A B C} (f : B &lt;~&gt;* C) (g : A -&gt;* B) (h : A -&gt;* C)
+           (p : h ==* f o* g)
+   : f^-1* o* h ==* g.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (pmap_postwhisker f^-1* p @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((pmap_compose_assoc _ _ _)^* @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (pmap_prewhisker g (peissect f) @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pmap_postcompose_idmap.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+
+Definition moveR_pequiv_fV {A B C} (f : B -&gt;* C) (g : A &lt;~&gt;* B) (h : A -&gt;* C)
+           (p : f o* g ==* h)
+  : (f ==* h o* g^-1*).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @* pmap_prewhisker g^-1* p).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @* (pmap_compose_assoc _ _ _)^*).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((pmap_precompose_idmap _)^* @* _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pmap_postwhisker.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+  symmetry; apply peisretr.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pequiv_pequiv_precompose `{Funext} {A B C : pType} (f : A &lt;~&gt;* B)
+  : (B -&gt;** C) &lt;~&gt;* (A -&gt;** C).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pEquiv'.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 102
+Time: 0.003s">
+<div class="time" style="width: 7.3170731707317%"></div>
+<pre> exact (equiv_precompose_cat_equiv f).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* By using [pelim f], we can avoid [Funext] in this part of the proof. *)
+   </pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>cbn; unfold "o*", point_pforall; cbn.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+    by pelim f.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pequiv_pequiv_postcompose `{Funext} {A B C : pType} (f : B &lt;~&gt;* C)
+  : (A -&gt;** B) &lt;~&gt;* (A -&gt;** C).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pEquiv'.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 112
+Time: 0.003s">
+<div class="time" style="width: 7.3170731707317%"></div>
+<pre> exact (equiv_postcompose_cat_equiv f).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; unfold "o*", point_pforall; cbn.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 113
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+    by pelim f.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition equiv_pequiv_inverse `{Funext} {A B : pType}
+  : (A &lt;~&gt;* B) &lt;~&gt; (B &lt;~&gt;* A).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (issig_pequiv' _ _ oE _ oE (issig_pequiv' A B)^-1).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (equiv_functor_sigma' (equiv_equiv_inverse _ _)); intro e; cbn.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_moveR_equiv_V _ _ oE equiv_path_inverse _ _).</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pEquiv.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

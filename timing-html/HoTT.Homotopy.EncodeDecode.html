@@ -1,0 +1,361 @@
+<html>
+<head>
+<title>EncodeDecode.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for EncodeDecode.v</h1>
+
+<div class="code" title="File: EncodeDecode.v
+Line: 1
+Time: 0.091s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics Pointed.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Encode-decode method of characterizing identity types *)
+
+(** See Homotopy/IdentitySystems.v for a related characterization of identity types. *)
+
+</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 7
+Time: 0.001s">
+<div class="time" style="width: 1.0989010989011%"></div>
+<pre>Definition encode_decode
+  (A : Type) (a0 : A) (code : A -&gt; Type)
+  (c0 : code a0) (decode : forall x, code x -&gt; a0 = x)
+  (s : forall (c : code a0), decode _ c # c0 = c)
+  (r : decode _ c0 = idpath) (a1 : A)
+  : a0 = a1 &lt;~&gt; code a1.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun p =&gt; p # c0).</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply decode.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (decode _ p) in p.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply s.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact r.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Encode-decode for truncated identity-types *)</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 1.0989010989011%"></div>
+<pre>Definition encode_decode_trunc n
+  (A : Type) (a0 : A) (code : A -&gt; Type) `{forall a, IsTrunc n (code a)}
+  (c0 : code a0) (decode : forall x, code x -&gt; Tr n (a0 = x))
+  (s : forall (c : code a0), Trunc_rec (fun p =&gt; p # c0) (decode _ c) = c)
+  (r : decode _ c0 = tr idpath) (a1 : A)
+  : Tr n (a0 = a1) &lt;~&gt; code a1.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Trunc_rec (fun p =&gt; p # c0)).</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply decode.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (decode _ p) as p'.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clearbody p'.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 36
+Time: 0.006s">
+<div class="time" style="width: 6.5934065934066%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p' in p.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply s.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 40
+Time: 0.006s">
+<div class="time" style="width: 6.5934065934066%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact r.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 43
+Time: 0.001s">
+<div class="time" style="width: 1.0989010989011%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Encode-decode for loop spaces *)</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 46
+Time: 0.002s">
+<div class="time" style="width: 2.1978021978022%"></div>
+<pre>Definition encode_decode_loops
+  (A : pType) (code : pFam A)
+  (decode : forall x, code x -&gt; point A = x)
+  (s : forall (c : code (point A)), decode _ c # (dpoint code) = c)
+  (r : decode _ (dpoint code) = idpath)
+  : loops A &lt;~&gt; code (point A)
+  := encode_decode _ _ code (dpoint code) decode s r _.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Encode-decode for truncated loop spaces *)</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 54
+Time: 0.003s">
+<div class="time" style="width: 3.2967032967033%"></div>
+<pre>Definition encode_decode_trunc_loops n
+  (A : pType) (code : pFam A) `{forall a, IsTrunc n (code a)}
+  (decode : forall x, code x -&gt; Tr n (point A = x))
+  (s : forall (c : code (point A)),
+    Trunc_rec (fun (p : loops A) =&gt; p # (dpoint code)) (decode _ c) = c)
+  (r : decode _ (dpoint code) = tr idpath)
+  : pTr n (loops A) &lt;~&gt; code (point A)
+  := encode_decode_trunc _ _ _ code (dpoint code) decode s r _.</pre>
+</div>
+<div class="code" title="File: EncodeDecode.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

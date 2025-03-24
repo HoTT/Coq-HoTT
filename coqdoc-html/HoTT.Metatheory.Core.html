@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Metatheory.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Metatheory.Core</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1273"></a><h1 class="section">Metatheory</h1>
+
+<div class="paragraph"> </div>
+
+ This directory contains files that prove important metatheoretic results about HoTT, but that are not important for internal development of mathematics in HoTT.  Thus, no files in this directory should ever need to be imported by files outside of this directory. 
+<div class="paragraph"> </div>
+
+ Many of these results are about ways to prove univalence and function extensionality (which in the main library we simply assert as axioms, though we track their usage with dummy typeclasses).  For convenience, here we define the types of these two statements. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Funext_type" class="idref" href="#Funext_type"><span class="id" title="definition">Funext_type@</span></a>{<span class="id" title="var">i</span> <span class="id" title="var">j</span> <span class="id" title="var">max</span>} :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}) (<a id="P:2" class="idref" href="#P:2"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Metatheory.Core.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">Type@</span>{<span class="id" title="var">j</span>}) <a id="f:3" class="idref" href="#f:3"><span class="id" title="binder">f</span></a> <a id="g:4" class="idref" href="#g:4"><span class="id" title="binder">g</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (@<a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">apD10@</span></a>{<span class="id" title="var">i</span> <span class="id" title="var">j</span> <span class="id" title="var">max</span>} <a class="idref" href="HoTT.Metatheory.Core.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Metatheory.Core.html#P:2"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Metatheory.Core.html#f:3"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Metatheory.Core.html#g:4"><span class="id" title="variable">g</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Univalence is a property of a single universe; its statement lives in a higher universe 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Univalence_type" class="idref" href="#Univalence_type"><span class="id" title="definition">Univalence_type@</span></a>{<span class="id" title="var">i</span> <span class="id" title="var">iplusone</span>} : <span class="id" title="var">Type@</span>{<span class="id" title="var">iplusone</span>} :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="A:5" class="idref" href="#A:5"><span class="id" title="binder">A</span></a> <a id="B:6" class="idref" href="#B:6"><span class="id" title="binder">B</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (<a class="idref" href="HoTT.Types.Universe.html#equiv_path"><span class="id" title="definition">equiv_path@</span></a><a class="idref" href="HoTT.Types.Universe.html#equiv_path"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Types.Universe.html#equiv_path"><span class="id" title="definition">i</span></a> <a class="idref" href="HoTT.Types.Universe.html#equiv_path"><span class="id" title="definition">iplusone</span></a><a class="idref" href="HoTT.Types.Universe.html#equiv_path"><span class="id" title="definition">}</span></a> <a class="idref" href="HoTT.Metatheory.Core.html#A:5"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Metatheory.Core.html#B:6"><span class="id" title="variable">B</span></a>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

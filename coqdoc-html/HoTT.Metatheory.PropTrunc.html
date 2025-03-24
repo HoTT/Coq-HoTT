@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Metatheory.PropTrunc</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Metatheory.PropTrunc</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Sequence.html#"><span class="id" title="library">Diagrams.Sequence</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#"><span class="id" title="library">Homotopy.Join.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Colimits.Colimit.html#"><span class="id" title="library">Colimits.Colimit</span></a> <a class="idref" href="HoTT.Colimits.Sequential.html#"><span class="id" title="library">Colimits.Sequential</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1281"></a><h1 class="section">Propositional truncation as a colimit.</h1>
+
+<div class="paragraph"> </div>
+
+ In this file we give an alternative construction of the propositional truncation using colimits. This can serve as a metatheoretic justification that propositional truncations exist. 
+<div class="paragraph"> </div>
+
+ The sequence of increasing joins. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Join_seq" class="idref" href="#Join_seq"><span class="id" title="definition">Join_seq</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Diagrams.Sequence.html#Sequence"><span class="id" title="definition">Sequence</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Sequence.html#Build_Sequence"><span class="id" title="definition">Build_Sequence</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Homotopy.Join.Core.html#iterated_join"><span class="id" title="definition">iterated_join</span></a> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#joinr"><span class="id" title="definition">joinr</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Propositional truncation can be defined as the colimit of this sequence. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="PropTrunc" class="idref" href="#PropTrunc"><span class="id" title="definition">PropTrunc</span></a> <a id="A:2" class="idref" href="#A:2"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span> := <a class="idref" href="HoTT.Colimits.Colimit.html#Colimit"><span class="id" title="definition">Colimit</span></a> (<a class="idref" href="HoTT.Metatheory.PropTrunc.html#Join_seq"><span class="id" title="definition">Join_seq</span></a> <a class="idref" href="HoTT.Metatheory.PropTrunc.html#A:2"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The constructor is given by the colimit constructor. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="ptr_in" class="idref" href="#ptr_in"><span class="id" title="definition">ptr_in</span></a> {<a id="A:3" class="idref" href="#A:3"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.Metatheory.PropTrunc.html#A:3"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Metatheory.PropTrunc.html#PropTrunc"><span class="id" title="definition">PropTrunc</span></a> <a class="idref" href="HoTT.Metatheory.PropTrunc.html#A:3"><span class="id" title="variable">A</span></a> := <a class="idref" href="HoTT.Colimits.Colimit.html#colim"><span class="id" title="definition">colim</span></a> (<span class="id" title="var">D</span>:=<a class="idref" href="HoTT.Metatheory.PropTrunc.html#Join_seq"><span class="id" title="definition">Join_seq</span></a> <a class="idref" href="HoTT.Metatheory.PropTrunc.html#A:3"><span class="id" title="variable">A</span></a>) 0.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The sequential colimit of this sequence is the propositional truncation. 
+<div class="paragraph"> </div>
+
+ Universal property of propositional truncation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="equiv_PropTrunc_rec" class="idref" href="#equiv_PropTrunc_rec"><span class="id" title="lemma">equiv_PropTrunc_rec</span></a> `{<a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">Funext</span></a>} (<a id="A:5" class="idref" href="#A:5"><span class="id" title="binder">A</span></a> <a id="P:6" class="idref" href="#P:6"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="IsHProp0:7" class="idref" href="#IsHProp0:7"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:7" class="idref" href="#IsHProp0:7"><span class="id" title="binder">P</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Metatheory.PropTrunc.html#PropTrunc"><span class="id" title="definition">PropTrunc</span></a> <a class="idref" href="HoTT.Metatheory.PropTrunc.html#A:5"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Metatheory.PropTrunc.html#P:6"><span class="id" title="variable">P</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Metatheory.PropTrunc.html#A:5"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Metatheory.PropTrunc.html#P:6"><span class="id" title="variable">P</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <a class="idref" href="HoTT.Colimits.Sequential.html#equiv_colim_seq_rec"><span class="id" title="lemma">equiv_colim_seq_rec</span></a> <span class="id" title="var">_</span> <span class="id" title="var">P</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#equiv_iff_hprop"><span class="id" title="definition">equiv_iff_hprop</span></a>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intros</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">h</span> 0). }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#Join_rec"><span class="id" title="definition">Join_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The propositional truncation is a hprop. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="ishprop_proptrunc" class="idref" href="#ishprop_proptrunc"><span class="id" title="instance">ishprop_proptrunc</span></a> `{<a id="H:8" class="idref" href="#H:8"><span class="id" title="binder">Funext</span></a>} (<a id="A:9" class="idref" href="#A:9"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Metatheory.PropTrunc.html#PropTrunc"><span class="id" title="definition">PropTrunc</span></a> <a class="idref" href="HoTT.Metatheory.PropTrunc.html#A:9"><span class="id" title="variable">A</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#hprop_inhabited_contr"><span class="id" title="instance">hprop_inhabited_contr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Metatheory.PropTrunc.html#equiv_PropTrunc_rec"><span class="id" title="lemma">equiv_PropTrunc_rec</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">)^-1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Sequential.html#contr_colim_seq_into_prop"><span class="id" title="instance">contr_colim_seq_into_prop</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Homotopy.Join.Core.html#joinl"><span class="id" title="definition">joinl</span></a> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#jglue"><span class="id" title="definition">jglue</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>TwoSphere.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk0"><span class="kn">Require Import</span> Basics.Overture Basics.Tactics Basics.PathGroupoids.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Theorems about the 2-sphere [S^2]. *)</span>
+
+<span class="c">(* ** Definition of the 2-sphere. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> TwoSphere.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">Private <span class="kn">Inductive</span> <span class="nf">TwoSphere</span> : Type0 :=
+    | base : TwoSphere.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Axiom</span> <span class="nv">surf</span> : idpath base = idpath base.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">TwoSphere_ind</span> (<span class="nv">P</span> : TwoSphere -&gt; <span class="kt">Type</span>)
+    (<span class="nv">b</span> : P base) (<span class="nv">s</span> : idpath b = transport2 P surf b)
+    : <span class="kr">forall</span> (<span class="nv">x</span> : TwoSphere), P x
+    := <span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">match</span> x <span class="kr">with</span> base =&gt; <span class="kr">fun</span> <span class="nv">_</span> =&gt; b <span class="kr">end</span> s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Axiom</span> <span class="nv">TwoSphere_ind_beta_surf</span> : <span class="kr">forall</span> (<span class="nv">P</span> : TwoSphere -&gt; <span class="kt">Type</span>)
+    (<span class="nv">b</span> : P base) (<span class="nv">s</span> : idpath b = transport2 P surf b),
+    apD02 (TwoSphere_ind P b s) surf = s @ (concat_p1 _)^.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">TwoSphere</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ** The non-dependent eliminator *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">TwoSphere_rec</span> (<span class="nv">P</span> : <span class="kt">Type</span>) (<span class="nv">b</span> : P) (<span class="nv">s</span> : idpath b = idpath b)
+  : TwoSphere -&gt; P
+  := TwoSphere_ind (<span class="kr">fun</span> <span class="nv">_</span> =&gt; P) b (s @ (transport2_const surf b) @ (concat_p1 _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk1"><span class="kn">Definition</span> <span class="nf">TwoSphere_rec_beta_surf</span> (<span class="nv">P</span> : <span class="kt">Type</span>) (<span class="nv">b</span> : P) (<span class="nv">s</span> : idpath b = idpath b)
+  : ap02 (TwoSphere_rec P b s) surf = s.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap02 (TwoSphere_rec P b s) surf = s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap02 (TwoSphere_rec P b s) surf = s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk3"><span class="nb">apply</span> (cancel2L (transport2_const surf b)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport2_const surf b @@
+ap02 (TwoSphere_rec P b s) surf =
+transport2_const surf b @@ s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk4"><span class="nb">apply</span> (cancelL (apD_const (TwoSphere_rec P b s) (idpath base))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+(transport2_const surf b @@
+ ap02 (TwoSphere_rec P b s) surf) =
+apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+(transport2_const surf b @@ s)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk5"><span class="nb">apply</span> (cancelR _ _ (concat_p_pp _ (transport_const _ b) _)^).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+ (transport2_const surf b @@
+  ap02 (TwoSphere_rec P b s) surf)) @
+(concat_p_pp
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+   (transport_const <span class="mi">1</span> b) (ap (TwoSphere_rec P b s) <span class="mi">1</span>))^ =
+(apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+ (transport2_const surf b @@ s)) @
+(concat_p_pp
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+   (transport_const <span class="mi">1</span> b) (ap (TwoSphere_rec P b s) <span class="mi">1</span>))^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk6"><span class="nb">apply</span> (cancelR _ _ (whiskerL (transport2 _ surf b) (apD_const _ _)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+  (transport2_const surf b @@
+   ap02 (TwoSphere_rec P b s) surf)) @
+ (concat_p_pp
+    (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+    (transport_const <span class="mi">1</span> b) (ap (TwoSphere_rec P b s) <span class="mi">1</span>))^) @
+whiskerL (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+  (apD_const (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; b) <span class="mi">1</span>)^ =
+((apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+  (transport2_const surf b @@ s)) @
+ (concat_p_pp
+    (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+    (transport_const <span class="mi">1</span> b) (ap (TwoSphere_rec P b s) <span class="mi">1</span>))^) @
+whiskerL (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+  (apD_const (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; b) <span class="mi">1</span>)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk7"><span class="nb">refine</span> ((apD02_const (TwoSphere_rec P b s) surf)^ @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">apD02 (TwoSphere_rec P b s) surf =
+((apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+  (transport2_const surf b @@ s)) @
+ (concat_p_pp
+    (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+    (transport_const <span class="mi">1</span> b) (ap (TwoSphere_rec P b s) <span class="mi">1</span>))^) @
+whiskerL (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+  (apD_const (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; b) <span class="mi">1</span>)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk8"><span class="nb">refine</span> ((TwoSphere_ind_beta_surf _ _ _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+((apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+  (transport2_const surf b @@ s)) @
+ (concat_p_pp
+    (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+    (transport_const <span class="mi">1</span> b) (ap (TwoSphere_rec P b s) <span class="mi">1</span>))^) @
+whiskerL (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+  (apD_const (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; b) <span class="mi">1</span>)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk9"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ w) 
+                  (triangulator 
+                     (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b) _))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+((apD_const (TwoSphere_rec P b s) <span class="mi">1</span> @
+  (transport2_const surf b @@ s)) @
+ (concat_p_pp
+    (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)
+    (transport_const <span class="mi">1</span> b) (ap (TwoSphere_rec P b s) <span class="mi">1</span>))^) @
+(concat_p_pp
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b) <span class="mi">1</span>
+   (apD
+      (TwoSphere_ind (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) b
+         ((s @ transport2_const surf b) @
+          concat_p1
+            (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf
+               b))) <span class="mi">1</span>) @
+ whiskerR
+   (concat_p1
+      (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))
+   (apD
+      (TwoSphere_ind (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) b
+         ((s @ transport2_const surf b) @
+          concat_p1
+            (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf
+               b))) <span class="mi">1</span>))</div></blockquote></div></div></small><span class="alectryon-wsp"> 
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chka"><span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+((<span class="mi">1</span> @ (transport2_const surf b @@ s)) @
+ <span class="kr">match</span>
+   transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b <span class="kr">as</span> p <span class="kr">in</span>
+   (_ = a) <span class="kr">return</span> (p @ <span class="mi">1</span> = (p @ <span class="mi">1</span>) @ <span class="mi">1</span>)
+ <span class="kr">with</span>
+ | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+ <span class="kr">end</span>^) @
+(<span class="kr">match</span>
+   transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b <span class="kr">as</span> p <span class="kr">in</span>
+   (_ = a) <span class="kr">return</span> (p @ <span class="mi">1</span> = (p @ <span class="mi">1</span>) @ <span class="mi">1</span>)
+ <span class="kr">with</span>
+ | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+ <span class="kr">end</span> @
+ whiskerR
+   (concat_p1
+      (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chkb"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; (w @ _) @ _) (concat_1p _)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+((transport2_const surf b @@ s) @
+ <span class="kr">match</span>
+   transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b <span class="kr">as</span> p <span class="kr">in</span>
+   (_ = a) <span class="kr">return</span> (p @ <span class="mi">1</span> = (p @ <span class="mi">1</span>) @ <span class="mi">1</span>)
+ <span class="kr">with</span>
+ | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+ <span class="kr">end</span>^) @
+(<span class="kr">match</span>
+   transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b <span class="kr">as</span> p <span class="kr">in</span>
+   (_ = a) <span class="kr">return</span> (p @ <span class="mi">1</span> = (p @ <span class="mi">1</span>) @ <span class="mi">1</span>)
+ <span class="kr">with</span>
+ | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+ <span class="kr">end</span> @
+ whiskerR
+   (concat_p1
+      (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chkc"><span class="nb">refine</span> (_ @ (concat_p_pp _ _ _)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+(transport2_const surf b @@ s) @
+(<span class="kr">match</span>
+   transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b <span class="kr">as</span> p <span class="kr">in</span>
+   (_ = a) <span class="kr">return</span> (p @ <span class="mi">1</span> = (p @ <span class="mi">1</span>) @ <span class="mi">1</span>)
+ <span class="kr">with</span>
+ | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+ <span class="kr">end</span>^ @
+ (<span class="kr">match</span>
+    transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b <span class="kr">as</span> p <span class="kr">in</span>
+    (_ = a) <span class="kr">return</span> (p @ <span class="mi">1</span> = (p @ <span class="mi">1</span>) @ <span class="mi">1</span>)
+  <span class="kr">with</span>
+  | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+  <span class="kr">end</span> @
+  whiskerR
+    (concat_p1
+       (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chkd"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ w) (concat_pp_p _ _ _))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+(transport2_const surf b @@ s) @
+((<span class="kr">match</span>
+    transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b <span class="kr">as</span> p <span class="kr">in</span>
+    (_ = a) <span class="kr">return</span> (p @ <span class="mi">1</span> = (p @ <span class="mi">1</span>) @ <span class="mi">1</span>)
+  <span class="kr">with</span>
+  | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+  <span class="kr">end</span>^ @
+  <span class="kr">match</span>
+    transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b <span class="kr">as</span> p <span class="kr">in</span>
+    (_ = a) <span class="kr">return</span> (p @ <span class="mi">1</span> = (p @ <span class="mi">1</span>) @ <span class="mi">1</span>)
+  <span class="kr">with</span>
+  | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+  <span class="kr">end</span>) @
+ whiskerR
+   (concat_p1
+      (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chke"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ (w @ _)) (concat_Vp _)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+(transport2_const surf b @@ s) @
+(<span class="mi">1</span> @
+ whiskerR
+   (concat_p1
+      (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chkf"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ (w @ _)) 
+                  (concat_pV (concat_p1 
+                                (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>))))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+(transport2_const surf b @@ s) @
+((concat_p1
+    (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>) @
+  (concat_p1
+     (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>))^) @
+ whiskerR
+   (concat_p1
+      (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk10"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ w) (concat_p_pp _ _ _))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+(transport2_const surf b @@ s) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>) @
+ ((concat_p1
+     (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>))^ @
+  whiskerR
+    (concat_p1
+       (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk11"><span class="nb">refine</span> (_ @ (concat_pp_p _ _ _)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((s @ transport2_const surf b) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) @
+(concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))^ =
+((transport2_const surf b @@ s) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)) @
+((concat_p1
+    (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>))^ @
+ whiskerR
+   (concat_p1
+      (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk12"><span class="nb">apply</span> moveR_pV.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s @ transport2_const surf b) @
+concat_p1 (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b) =
+(((transport2_const surf b @@ s) @
+  concat_p1
+    (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)) @
+ ((concat_p1
+     (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>))^ @
+  whiskerR
+    (concat_p1
+       (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>)) @
+concat_p1 (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk13"><span class="nb">refine</span> (_ @ (concat_p_pp _ _ _)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s @ transport2_const surf b) @
+concat_p1 (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b) =
+((transport2_const surf b @@ s) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)) @
+(((concat_p1
+     (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>))^ @
+  whiskerR
+    (concat_p1
+       (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)) <span class="mi">1</span>) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk14"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ w) (whiskerR_p1 _)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s @ transport2_const surf b) @
+concat_p1 (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b) =
+((transport2_const surf b @@ s) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)) @
+concat_p1 (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk15">f_ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">s @ transport2_const surf b =
+(transport2_const surf b @@ s) @
+concat_p1
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk16"><span class="nb">refine</span> ((ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; w @ _) (whiskerL_1p_1 _)^) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">whiskerL <span class="mi">1</span> s @ transport2_const surf b =
+(transport2_const surf b @@ s) @
+concat_p1
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk17"><span class="nb">refine</span> ((ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ w) (whiskerR_p1 _)^) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">whiskerL <span class="mi">1</span> s @
+(((concat_p1 (<span class="mi">1</span> @ <span class="mi">1</span>))^ @
+  whiskerR (transport2_const surf b) <span class="mi">1</span>) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)) =
+(transport2_const surf b @@ s) @
+concat_p1
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk18"><span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">whiskerL <span class="mi">1</span> s @
+((<span class="mi">1</span> @ whiskerR (transport2_const surf b) <span class="mi">1</span>) @
+ concat_p1
+   (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)) =
+(transport2_const surf b @@ s) @
+concat_p1
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk19"><span class="nb">refine</span> ((concat_p_pp _ _ _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(whiskerL <span class="mi">1</span> s @
+ (<span class="mi">1</span> @ whiskerR (transport2_const surf b) <span class="mi">1</span>)) @
+concat_p1
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>) =
+(transport2_const surf b @@ s) @
+concat_p1
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk1a">f_ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">whiskerL <span class="mi">1</span> s @
+(<span class="mi">1</span> @ whiskerR (transport2_const surf b) <span class="mi">1</span>) =
+transport2_const surf b @@ s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk1b"><span class="nb">refine</span> ((ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ w) (concat_1p _)) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">whiskerL <span class="mi">1</span> s @ whiskerR (transport2_const surf b) <span class="mi">1</span> =
+transport2_const surf b @@ s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk1c"><span class="nb">refine</span> ((concat_whisker <span class="mi">1</span> _ _ <span class="mi">1</span> (transport2_const surf b) s)^ @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">whiskerR (transport2_const surf b) <span class="mi">1</span> @
+whiskerL
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @
+   transport_const <span class="mi">1</span> b) s =
+transport2_const surf b @@ s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk1d"><span class="nb">symmetry</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport2_const surf b @@ s =
+whiskerR (transport2_const surf b) <span class="mi">1</span> @
+whiskerL
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @
+   transport_const <span class="mi">1</span> b) s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk1e"><span class="nb">refine</span> ((ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; w @@ _) (concat_p1 _)^) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(transport2_const surf b @ <span class="mi">1</span>) @@ s =
+whiskerR (transport2_const surf b) <span class="mi">1</span> @
+whiskerL
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @
+   transport_const <span class="mi">1</span> b) s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk1f"><span class="nb">refine</span> ((ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @@ w) (concat_1p _)^) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(transport2_const surf
+   (transport (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) <span class="mi">1</span> b) @ <span class="mi">1</span>) @@
+(<span class="mi">1</span> @ s) =
+whiskerR (transport2_const surf b) <span class="mi">1</span> @
+whiskerL
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @
+   transport_const <span class="mi">1</span> b) s</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="twosphere-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="twosphere-v-chk20"><span class="nb">refine</span> ((concat_concat2 _ _ _ _)^ @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(transport2_const surf
+   (transport (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) <span class="mi">1</span> b) @@ <span class="mi">1</span>) @
+(<span class="mi">1</span> @@ s) =
+whiskerR (transport2_const surf b) <span class="mi">1</span> @
+whiskerL
+  (transport2 (<span class="kr">fun</span> <span class="nv">_</span> : TwoSphere =&gt; P) surf b @
+   transport_const <span class="mi">1</span> b) s</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">f_ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

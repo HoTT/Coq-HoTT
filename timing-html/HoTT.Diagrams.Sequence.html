@@ -1,0 +1,362 @@
+<html>
+<head>
+<title>Sequence.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Sequence.v</h1>
+
+<div class="code" title="File: Sequence.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Graph.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 2
+Time: 0.012s">
+<div class="time" style="width: 41.379310344828%"></div>
+<pre>
+Require Import Diagrams.Diagram.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Sequence *)
+
+(** A Sequence is a sequence of maps from [X(n)] to [X(n+1)]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sequence_graph : Graph.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (Build_Graph nat).</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n m; exact (S n = m).</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Sequence := Diagram sequence_graph.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Build_Sequence
+  (X : nat -&gt; Type)
+  (f : forall n, X n -&gt; X n.+1)
+  : Sequence.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Diagram.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact X.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ? ? p.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply f.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A useful lemma to show than two sequences are equivalent. *)
+
+</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 32
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>Definition equiv_sequence (D1 D2 : Sequence)
+  (H0 : (D1 0) &lt;~&gt; (D2 0))
+  (Hn: forall n (e: (D1 n) &lt;~&gt; (D2 n)),
+    {e' : (D1 n.+1) &lt;~&gt; (D2 n.+1) &amp; (D2 _f 1) o e == e' o (D1 _f 1)})
+  : D1 ~d~ D2.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  srapply (Build_diagram_equiv (Build_DiagramMap _ _)); intro n; simpl.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_fun.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H0.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Hn n IHn).1.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m q; destruct q.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n; simpl.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Hn 0 H0).2.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple refine (Hn n.+1 _).2.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction n; simpl.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H0.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Hn n _ ).1.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 49
+Time: 0.004s">
+<div class="time" style="width: 13.793103448276%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Sequence.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,59 @@
+digraph HoTT_Universes_TruncType {
+  graph [ratio=0.5]
+  node [style=filled]
+TruncType_equiv_path_iff_hprop [label="equiv_path_iff_hprop", URL=<TruncType.html#equiv_path_iff_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_equiv_path_iff_ishprop [label="equiv_path_iff_ishprop", URL=<TruncType.html#equiv_path_iff_ishprop>, fillcolor="#F070D1"] ;
+TruncType_path_iff_hprop [label="path_iff_hprop", URL=<TruncType.html#path_iff_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_path_iff_ishprop [label="path_iff_ishprop", URL=<TruncType.html#path_iff_ishprop>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_isequiv_path_iff_hprop_uncurried [label="isequiv_path_iff_hprop_uncurried", URL=<TruncType.html#isequiv_path_iff_hprop_uncurried>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_isequiv_path_iff_ishprop_uncurried [label="isequiv_path_iff_ishprop_uncurried", URL=<TruncType.html#isequiv_path_iff_ishprop_uncurried>, fillcolor="#F070D1"] ;
+TruncType_path_iff_hprop_uncurried [label="path_iff_hprop_uncurried", URL=<TruncType.html#path_iff_hprop_uncurried>, fillcolor="#F070D1"] ;
+TruncType_path_iff_ishprop_uncurried [label="path_iff_ishprop_uncurried", URL=<TruncType.html#path_iff_ishprop_uncurried>, fillcolor="#F070D1"] ;
+TruncType_trunc_path_IsHProp [label="trunc_path_IsHProp", URL=<TruncType.html#trunc_path_IsHProp>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_is_true [label="is_true", URL=<TruncType.html#is_true>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_Negation_hp [label="Negation_hp", URL=<TruncType.html#Negation_hp>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_False_hp [label="False_hp", URL=<TruncType.html#False_hp>, fillcolor="#F070D1"] ;
+TruncType_Unit_hp [label="Unit_hp", URL=<TruncType.html#Unit_hp>, fillcolor="#F070D1"] ;
+TruncType_istrunc_sig_istrunc [label="istrunc_sig_istrunc", URL=<TruncType.html#istrunc_sig_istrunc>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_isset_HProp [label="isset_HProp", URL=<TruncType.html#isset_HProp>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_istrunc_trunctype [label="istrunc_trunctype", URL=<TruncType.html#istrunc_trunctype>, fillcolor="#F070D1"] ;
+TruncType_path_hprop [label="path_hprop", URL=<TruncType.html#path_hprop>, fillcolor="#F070D1"] ;
+TruncType_path_hset [label="path_hset", URL=<TruncType.html#path_hset>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_ap_trunctype [label="ap_trunctype", URL=<TruncType.html#ap_trunctype>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_path_trunctype_pp [label="path_trunctype_pp", URL=<TruncType.html#path_trunctype_pp>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_path_trunctype_V [label="path_trunctype_V", URL=<TruncType.html#path_trunctype_V>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_path_trunctype_1 [label="path_trunctype_1", URL=<TruncType.html#path_trunctype_1>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_isequiv_path_trunctype [label="isequiv_path_trunctype", URL=<TruncType.html#isequiv_path_trunctype>, fillcolor="#F070D1"] ;
+TruncType_path_trunctype [label="path_trunctype", URL=<TruncType.html#path_trunctype>, fillcolor="#F070D1"] ;
+TruncType_equiv_path_trunctype [label="equiv_path_trunctype", URL=<TruncType.html#equiv_path_trunctype>, fillcolor="#F070D1"] ;
+TruncType_isequiv_ap_trunctype [label="isequiv_ap_trunctype", URL=<TruncType.html#isequiv_ap_trunctype>, peripheries=3, fillcolor="#F070D1"] ;
+TruncType_equiv_path_trunctype_ [label="equiv_path_trunctype'", URL=<TruncType.html#equiv_path_trunctype'>, fillcolor="#F070D1"] ;
+TruncType_issig_trunctype [label="issig_trunctype", URL=<TruncType.html#issig_trunctype>, fillcolor="#F070D1"] ;
+  TruncType_equiv_path_iff_hprop -> TruncType_equiv_path_iff_ishprop [] ;
+  TruncType_equiv_path_iff_hprop -> TruncType_equiv_path_trunctype_ [] ;
+  TruncType_equiv_path_iff_ishprop -> TruncType_isequiv_path_iff_ishprop_uncurried [] ;
+  TruncType_path_iff_hprop -> TruncType_path_iff_hprop_uncurried [] ;
+  TruncType_path_iff_ishprop -> TruncType_path_iff_ishprop_uncurried [] ;
+  TruncType_isequiv_path_iff_hprop_uncurried -> TruncType_path_iff_hprop_uncurried [] ;
+  TruncType_isequiv_path_iff_hprop_uncurried -> TruncType_isequiv_path_trunctype [] ;
+  TruncType_isequiv_path_iff_ishprop_uncurried -> TruncType_path_iff_ishprop_uncurried [] ;
+  TruncType_path_iff_hprop_uncurried -> TruncType_path_hprop [] ;
+  TruncType_is_true -> TruncType_False_hp [] ;
+  TruncType_is_true -> TruncType_Unit_hp [] ;
+  TruncType_istrunc_sig_istrunc -> TruncType_istrunc_trunctype [] ;
+  TruncType_isset_HProp -> TruncType_istrunc_trunctype [] ;
+  TruncType_istrunc_trunctype -> TruncType_equiv_path_trunctype [] ;
+  TruncType_path_hprop -> TruncType_path_trunctype [] ;
+  TruncType_path_hset -> TruncType_path_trunctype [] ;
+  TruncType_ap_trunctype -> TruncType_path_trunctype [] ;
+  TruncType_path_trunctype_pp -> TruncType_path_trunctype [] ;
+  TruncType_path_trunctype_V -> TruncType_path_trunctype [] ;
+  TruncType_path_trunctype_1 -> TruncType_path_trunctype [] ;
+  TruncType_isequiv_path_trunctype -> TruncType_path_trunctype [] ;
+  TruncType_path_trunctype -> TruncType_equiv_path_trunctype [] ;
+  TruncType_equiv_path_trunctype -> TruncType_equiv_path_trunctype_ [] ;
+  TruncType_isequiv_ap_trunctype -> TruncType_equiv_path_trunctype_ [] ;
+  TruncType_equiv_path_trunctype_ -> TruncType_issig_trunctype [] ;
+subgraph cluster_TruncType { label="TruncType"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+TruncType_issig_trunctype; TruncType_equiv_path_trunctype_; TruncType_isequiv_ap_trunctype; TruncType_equiv_path_trunctype; TruncType_path_trunctype; TruncType_isequiv_path_trunctype; TruncType_path_trunctype_1; TruncType_path_trunctype_V; TruncType_path_trunctype_pp; TruncType_ap_trunctype; TruncType_path_hset; TruncType_path_hprop; TruncType_istrunc_trunctype; TruncType_isset_HProp; TruncType_istrunc_sig_istrunc; TruncType_Unit_hp; TruncType_False_hp; TruncType_Negation_hp; TruncType_is_true; TruncType_trunc_path_IsHProp; TruncType_path_iff_ishprop_uncurried; TruncType_path_iff_hprop_uncurried; TruncType_isequiv_path_iff_ishprop_uncurried; TruncType_isequiv_path_iff_hprop_uncurried; TruncType_path_iff_ishprop; TruncType_path_iff_hprop; TruncType_equiv_path_iff_ishprop; TruncType_equiv_path_iff_hprop; };
+} /* END */
