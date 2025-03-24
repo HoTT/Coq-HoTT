@@ -52,7 +52,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Build HoTT
-      uses: coq-community/docker-coq-action@v1
+      uses: coq-community/docker-coq-action@v1.5.1
       with:
         opam_file: 'coq-hott.opam'
         coq_version: ${{ env.coq-version }}
@@ -83,7 +83,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Build HoTT
-      uses: coq-community/docker-coq-action@v1
+      uses: coq-community/docker-coq-action@v1.5.1
       with:
         coq_version: ${{ env.coq-version }}
         ocaml_version: ${{ env.ocaml-version }}
@@ -123,7 +123,7 @@ jobs:
       with:
         submodules: recursive
     # We use the coq docker so we don't have to build coq
-    - uses: coq-community/docker-coq-action@v1
+    - uses: coq-community/docker-coq-action@v1.5.1
       with:
         coq_version: ${{ env.coq-version }}
         ocaml_version: ${{ env.ocaml-version }}
@@ -195,7 +195,7 @@ jobs:
         #echo "::add-matcher::etc/coq-scripts/github/coqdoc.json" # disabled for now, since they don't have file names
         echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
         #echo "::add-matcher::etc/coq-scripts/github/alectryon-warning.json" # too noisy right now, cf https://github.com/cpitclaudel/alectryon/issues/34 and https://github.com/cpitclaudel/alectryon/issues/33
-    - uses: coq-community/docker-coq-action@v1
+    - uses: coq-community/docker-coq-action@v1.5.1
       with:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
@@ -243,7 +243,7 @@ jobs:
     # Unpack Tar
     - run: tar -xf workspace.tar
     # We use the coq docker so we don't have to build coq
-    - uses: coq-community/docker-coq-action@v1
+    - uses: coq-community/docker-coq-action@v1.5.1
       with:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
@@ -331,7 +331,7 @@ jobs:
     # Unpack Tar
     - run: tar -xf workspace.tar
     # We use the coq docker so we don't have to build coq
-    - uses: coq-community/docker-coq-action@v1
+    - uses: coq-community/docker-coq-action@v1.5.1
       with:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
@@ -374,7 +374,7 @@ jobs:
     # Unpack Tar
     - run: tar -xf workspace.tar
     # We use the coq docker so we don't have to build coq
-    - uses: coq-community/docker-coq-action@v1
+    - uses: coq-community/docker-coq-action@v1.5.1
       with:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
@@ -431,7 +431,7 @@ jobs:
     # Unpack Tar
     - run: tar -xf workspace.tar
     # We use the coq docker so we don't have to build coq
-    - uses: coq-community/docker-coq-action@v1
+    - uses: coq-community/docker-coq-action@v1.5.1
       with:
         coq_version: ${{ env.coq-version }}
         ocaml_version: ${{ env.ocaml-version }}
@@ -476,7 +476,7 @@ jobs:
     # Unpack Tar
     - run: tar -xf workspace.tar
     # We use the coq docker so we don't have to build coq
-    - uses: coq-community/docker-coq-action@v1
+    - uses: coq-community/docker-coq-action@v1.5.1
       with:
         coq_version: ${{ env.coq-version }}
         ocaml_version: ${{ env.ocaml-version }}
