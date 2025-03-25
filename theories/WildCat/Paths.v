@@ -67,9 +67,9 @@ Proof.
   - exact (@concat_1p A).
 Defined.
 
-Instance IsTruncatedBicat_paths (A: Type) : IsTruncatedBicat A.
+Instance Is1Bicat_paths (A: Type) : Is1Bicat A.
 Proof.
-  snapply Build_IsTruncatedBicat.
+  snapply Build_Is1Bicat.
   - exact _.
   - intros a b c. simpl. change concatR with (cat_comp (a:=a) (b:=b) (c:=c)).
     rapply (is0bifunctor_cat_comp_paths A a b c).

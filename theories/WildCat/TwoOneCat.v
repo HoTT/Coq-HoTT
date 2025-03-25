@@ -5,9 +5,8 @@ Require Import WildCat.Prod.
 Require Import WildCat.Bifunctor.
 Require Import WildCat.NatTrans.
 
-(** * A truncated bicategory has the same generating 2-cells as a bicategory but no relations between them.
-      A truncated bicategory where all 2-cells are invertible is the same as a 1-category. *)
-Class IsTruncatedBicat (A: Type) `{Is01Cat A} `{!Is2Graph A} := {
+(** * A 1-truncated bicategory, or 1-bicategory, has the same generating 2-cells as a bicategory but no relations between them. A 1-truncated bicategory where all 2-cells are invertible is the same as a 1-category. *)
+Class Is1Bicat (A: Type) `{Is01Cat A} `{!Is2Graph A} := {
   is01cat_bicat_hom :: forall (a b : A), Is01Cat (a $-> b);
   is0bifunctor_bicat_comp :: forall (a b c : A),
     Is0Bifunctor (cat_comp (a:=a) (b:=b) (c:=c));
@@ -21,14 +20,14 @@ Class IsTruncatedBicat (A: Type) `{Is01Cat A} `{!Is2Graph A} := {
   bicat_idr_opp : forall {a b : A} (f : a $-> b), f $-> f $o Id a;
 }.
 
-Instance Is0Functor_bicat_postcomp `{A: Type} `{IsTruncatedBicat A} (a b c : A) (g : b $->c):
+Instance Is0Functor_bicat_postcomp `{A: Type} `{Is1Bicat A} (a b c : A) (g : b $->c):
   Is0Functor (cat_postcomp a g).
 Proof.
   unfold cat_postcomp.
   exact _.
 Defined.
 
-Instance Is0Functor_bicat_precomp `{A: Type} `{IsTruncatedBicat A} (a b c : A) (f : a $->b):
+Instance Is0Functor_bicat_precomp `{A: Type} `{Is1Bicat A} (a b c : A) (f : a $->b):
   Is0Functor (cat_precomp c f).
 Proof.
   unfold cat_precomp.
@@ -56,7 +55,7 @@ Open Scope twocat_scope.
 Set Typeclasses Dependency Order.
 
 Class IsBicategory (A : Type) `{Is01Cat A} `{!Is2Graph A} `{!Is3Graph A} := {
-  is_truncated_bicat:: IsTruncatedBicat A;
+  is_truncated_bicat:: Is1Bicat A;
   is1cat_2cells:: forall (a b : A), Is1Cat (Hom a b);
   is1bifunctor_bicat_comp :: forall (a b c : A), Is1Bifunctor (cat_comp (a:=a) (b:=b) (c:=c));
   is1functor_bicat_postcomp :: forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) := _;

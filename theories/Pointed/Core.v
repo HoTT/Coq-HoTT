@@ -607,9 +607,9 @@ Proof.
   - by apply pmap_prewhisker.
 Defined.
 
-Instance isTruncatedBicat_ptype : IsTruncatedBicat pType.
+Instance is1Bicat_ptype : Is1Bicat pType.
 Proof.
-  snapply Build_IsTruncatedBicat.
+  snapply Build_Is1Bicat.
   - exact _.
   - exact _.
   - intros A B C D f g h. apply pmap_compose_assoc.

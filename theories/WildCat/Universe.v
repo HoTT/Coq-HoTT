@@ -160,9 +160,9 @@ Proof.
   symmetry; apply concat_Ap.
 Defined.
 
-Instance isTruncatedBicat_Type : IsTruncatedBicat Type.
+Instance is1Bicat_Type : Is1Bicat Type.
 Proof.
-  snapply Build_IsTruncatedBicat; intros; cbn.
+  snapply Build_Is1Bicat; intros; cbn.
   1-2: exact _.
   all: reflexivity.
 Defined.
