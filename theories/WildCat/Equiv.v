@@ -592,7 +592,7 @@ Defined.
 Instance is1gpd_core {A : Type} `{HasEquivs A}
   : Is1Gpd (core A).
 Proof.
-  apply Build_Is1Gpd; cbn ; intros a b f;
+  intros a b f; constructor;
     refine (compose_cate_fun _ _ $@ _ $@ (id_cate_fun _)^$).
   - apply cate_issect.
   - apply cate_isretr.

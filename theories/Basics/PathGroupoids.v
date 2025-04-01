@@ -101,6 +101,26 @@ Definition concat_pp_p {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z =
       match p with idpath => 1
       end end end.
 
+Theorem concat_assoc_inv {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z = t) :
+  concat_p_pp p q r @ concat_pp_p p q r = 1.
+Proof.
+  unfold concat_pp_p, concat_p_pp.
+  refine (match r with idpath => _ end).
+  refine (match q with idpath => _ end).
+  refine (match p with idpath => _ end).
+  exact idpath.
+Defined.
+
+Theorem concat_assoc_inv' {A : Type} {x y z t : A} (p : x = y) (q : y = z) (r : z = t) :
+  concat_pp_p p q r @ concat_p_pp p q r = 1.
+Proof.
+  unfold concat_pp_p, concat_p_pp.
+  refine (match r with idpath => _ end).
+  refine (match q with idpath => _ end).
+  refine (match p with idpath => _ end).
+  exact idpath.
+Defined.
+
 (** The left inverse law. *)
 Definition concat_pV {A : Type} {x y : A} (p : x = y) :
   p @ p^ = 1

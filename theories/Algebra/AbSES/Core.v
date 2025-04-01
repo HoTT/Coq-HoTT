@@ -289,8 +289,7 @@ Defined.
 Instance is1gpd_abses {A B : AbGroup@{u}}
   : Is1Gpd (AbSES B A).
 Proof.
-  rapply Build_Is1Gpd;
-    intros E F p e; cbn.
+  intros E F p; constructor.
   - apply eissect.
   - apply eisretr.
 Defined.
