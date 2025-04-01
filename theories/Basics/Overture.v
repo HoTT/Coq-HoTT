@@ -168,6 +168,9 @@ Notation Type0 := Set.
     or complicate matters with its type. *)
 Notation idmap := (fun x => x).
 
+Instance reflexive_fun : Reflexive (fun A B => A -> B)
+  := fun _ => idmap.
+
 (** *** Constant functions *)
 Definition const {A B} (b : B) := fun x : A => b.
 
@@ -248,6 +251,9 @@ Global Arguments composeD {A B C}%_type_scope (g f)%_function_scope x.
 #[export] Hint Unfold composeD : core.
 
 Notation "g 'oD' f" := (composeD g f) : function_scope.
+
+Instance transitive_fun : Transitive (fun A B => A -> B)
+  := fun _ _ _ f g => g o f.
 
 (** ** The groupoid structure of identity types. *)
 
