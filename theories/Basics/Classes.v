@@ -8,21 +8,24 @@ Section Pointwise.
 
   Context {A : Type} {B : A -> Type} (R : forall a, Relation (B a)).
 
+  Definition relation_pointwise : Relation (forall x, B x)
+    := fun P Q => forall x, R x (P x) (Q x).
+
   Definition reflexive_pointwise `{!forall a, Reflexive (R a)}
-    : Reflexive (fun (P Q : forall x, B x) => forall x, R x (P x) (Q x)).
+    : Reflexive relation_pointwise.
   Proof.
     intros P x; reflexivity.
   Defined.
 
   Definition transitive_pointwise `{!forall a, Transitive (R a)}
-    : Transitive (fun (P Q : forall x, B x) => forall x, R x (P x) (Q x)).
+    : Transitive relation_pointwise.
   Proof.
     intros P Q S x y a.
     by transitivity (Q a).
   Defined.
 
   Definition symmetric_pointwise `{!forall a, Symmetric (R a)}
-    : Symmetric (fun (P Q : forall x, B x) => forall x, R x (P x) (Q x)).
+    : Symmetric relation_pointwise.
   Proof.
     intros P Q x a.
     by symmetry.
