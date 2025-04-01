@@ -25,14 +25,6 @@ Instance transitive_pred_eq {A : Type} : Transitive (@pred_eq A)
 (** [P] is a "subset" of [Q] if [forall x, P x -> Q x]. *)
 Definition pred_subset {A : Type} := relation_pointwise (fun (_ : A) (X Y : Type) => X -> Y).
 
-(** TODO: move *)
-Instance reflexive_fun : Reflexive (fun A B => A -> B)
-  := fun _ => idmap.
-
-(** TODO: move *)
-Instance transitive_fun : Transitive (fun A B => A -> B)
-  := fun _ _ _ f g => g o f.
-
 (** The subset relation is reflexive. *)
 Instance reflexive_pred_subset {A : Type} : Reflexive (@pred_subset A)
   := _.
