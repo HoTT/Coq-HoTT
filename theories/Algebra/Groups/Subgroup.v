@@ -867,7 +867,7 @@ Proof.
   apply pred_subset_antisymm.
   - apply functor_subgroup_generated.
     exact preserves.
-  - apply (pred_subset_moveR_equiv f).
+  - apply (pred_subset_moveR_equiv f^-1).
     apply (functor_subgroup_generated _ _ f^-1$).
     apply (pred_subset_moveL_equiv f).
     apply pred_eq_subset.

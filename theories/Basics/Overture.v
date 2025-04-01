@@ -299,6 +299,13 @@ Proof.
   exact u.
 Defined.
 
+Definition related_reflexive_path {A : Type} (R : Relation A) `{Reflexive A R}
+  {a b : A} (p : a = b)
+  : R a b.
+Proof.
+  destruct p; reflexivity.
+Defined.
+
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
 
 (** We bind [path_scope] to [paths] so that when we are constructing arguments to things like [concat], we automatically are in [path_scope]. *)
