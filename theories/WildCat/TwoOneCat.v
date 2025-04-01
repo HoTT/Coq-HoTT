@@ -37,6 +37,18 @@ Proof.
   - exact (@bicat_idr _ _ _ _ _).
 Defined.
 
+Definition is1bicat_is1cat (A : Type) `{Is1Cat A}
+  : Is1Bicat A.
+Proof.
+  rapply Build_Is1Bicat.
+  - exact (@cat_assoc _ _ _ _ _).
+  - exact (@cat_assoc_opp _ _ _ _ _).
+  - exact (@cat_idl _ _ _ _ _).
+  - intros a b f. symmetry. apply cat_idl.
+  - exact (@cat_idr _ _ _ _ _).
+  - intros a b f. symmetry. apply cat_idr.
+Defined.
+
 Notation "p $@R h" := (fmap (cat_precomp _ h) p) : twocat.
 Notation "h $@L p" := (fmap (cat_postcomp _ h) p) : twocat.
 Notation "a $| b" := (cat_comp (A:=Hom _ _) b a) : twocat.
