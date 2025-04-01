@@ -64,18 +64,8 @@ Proof.
 Defined.
 
 (** Any type is a 1-category with n-morphisms given by paths. *)
-Instance is1cat_paths {A : Type} : Is1Cat A.
-Proof.
-  snapply Build_Is1Cat.
-  - exact _.
-  - exact _.
-  - exact _.
-  - exact _.
-  - exact (@concat_p_pp A).
-  - exact (@concat_pp_p A).
-  - exact (@concat_p1 A).
-  - exact (@concat_1p A).
-Defined.
+Instance is1cat_paths {A : Type} : Is1Cat A
+  := is1cat_is1bicat A _.
 
 (** Any type is a 1-groupoid with morphisms given by paths. *)
 Instance is1gpd_paths {A : Type} : Is1Gpd A.

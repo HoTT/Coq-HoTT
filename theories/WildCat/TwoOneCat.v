@@ -25,6 +25,18 @@ Class Is1Bicat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
   bicat_idr : forall {a b : A} (f : a $-> b), f $o Id a $=> f;
   bicat_idr_opp : forall {a b : A} (f : a $-> b), f $=> f $o Id a;
 }.
+
+Definition is1cat_is1bicat (A : Type) `{Is1Bicat A}
+  (p : forall a b : A, Is0Gpd (Hom a b))
+  : Is1Cat A.
+Proof.
+  rapply Build_Is1Cat.
+  - exact (@bicat_assoc _ _ _ _ _).
+  - exact (@bicat_assoc_opp _ _ _ _ _).
+  - exact (@bicat_idl _ _ _ _ _).
+  - exact (@bicat_idr _ _ _ _ _).
+Defined.
+
 Notation "p $@R h" := (fmap (cat_precomp _ h) p) : twocat.
 Notation "h $@L p" := (fmap (cat_postcomp _ h) p) : twocat.
 Notation "a $| b" := (cat_comp (A:=Hom _ _) b a) : twocat.
