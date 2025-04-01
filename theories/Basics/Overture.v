@@ -135,6 +135,30 @@ Tactic Notation "etransitivity" := etransitivity _.
 (** We redefine [transitivity] to work without needing to include [Setoid] or be using Leibniz equality, and to give proofs that unfold to [concat]. *)
 Tactic Notation "transitivity" constr(x) := etransitivity x.
 
+(** Arguments in a two-variable function can be swapped.  In Types/Forall.v, this is shown to be an equivalence. *)
+
+Definition flip A B `{P : A -> B -> Type}
+  : (forall a b, P a b) -> (forall b a, P a b)
+  := fun f b a => f a b.
+
+Arguments flip {A B P} f b a /.
+
+Definition reflexive_flip {A : Type} (R : Relation A) `{Reflexive _ R}
+  : Reflexive (flip R)
+  := @reflexivity A R _.
+
+Definition transitive_flip {A : Type} (R : Relation A) `{Transitive _ R}
+  : Transitive (flip R)
+  := fun a b c rab rbc => @transitivity A R _ c b a rbc rab.
+
+Definition symmetric_flip {A : Type} (R : Relation A) `{Symmetric _ R}
+  : Symmetric (flip R)
+  := fun a b rab => @symmetry A R _ b a rab.
+
+Hint Immediate reflexive_flip : typeclass_instances.
+Hint Immediate transitive_flip : typeclass_instances.
+Hint Immediate symmetric_flip : typeclass_instances.
+
 (** ** Basic definitions *)
 
 (** Define an alias for [Set], which is really [Type₀], the smallest universe. *)
