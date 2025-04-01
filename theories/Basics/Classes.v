@@ -33,6 +33,10 @@ Section Pointwise.
 
 End Pointwise.
 
+Hint Immediate reflexive_pointwise : typeclass_instances.
+Hint Immediate transitive_pointwise : typeclass_instances.
+Hint Immediate symmetric_pointwise : typeclass_instances.
+
 (** ** Injective Functions *)
 
 Class IsInjective {A B : Type} (f : A -> B)
