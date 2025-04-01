@@ -55,7 +55,7 @@ Definition pred_subset_moveR_equiv {A B : Type} {P : B -> Type} {Q : A -> Type}
   : pred_subset P (Q o f) -> pred_subset (P o f^-1) Q
   := pointwise_moveR_equiv _ f P Q.
 
-(** The subset relation is antisymmetric. Note that this isn't [Antisymmetry] as defined in [Basics.Classes] since we get a [pred_eq] rather than a path. Under being a hprop and univalnce, we would get a path. *)
+(** The subset relation is antisymmetric. Note that this isn't [Antisymmetry] as defined in [Basics.Classes] since we get a [pred_eq] rather than a path. Under being a hprop and univalance, we would get a path. *)
 Definition pred_subset_antisymm {A : Type} {P Q : A -> Type}
   : pred_subset P Q -> pred_subset Q P -> pred_eq P Q.
 Proof.
