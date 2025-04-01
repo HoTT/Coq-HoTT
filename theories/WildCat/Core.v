@@ -382,10 +382,13 @@ Arguments is1functor_compose {A B C}
 (** ** Wild 1-groupoids *)
 
 Class Is1Gpd (A : Type) `{Is1Cat A, !Is0Gpd A} :=
-{
-  gpd_issect : forall {a b : A} (f : a $-> b), f^$ $o f $== Id a ;
-  gpd_isretr : forall {a b : A} (f : a $-> b), f $o f^$ $== Id b ;
-}.
+  is1gpd :: forall {a b : A} (f : a $-> b), AreInverse f f^$.
+
+Definition gpd_issect {A : Type} `{Is1Gpd A} {a b : A} (f : a $-> b) :=
+  inv_issect (f:=f) (g:=f^$).
+
+Definition gpd_isretr {A : Type} `{Is1Gpd A} {a b : A} (f : a $-> b) :=
+  inv_isretr (f:=f) (g:=f^$).
 
 (** Some more convenient equalities for morphisms in a 1-groupoid. The naming scheme is similar to [PathGroupoids.v].*)
 

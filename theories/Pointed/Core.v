@@ -634,9 +634,9 @@ Defined.
 (** [pForall] is a 1-groupoid *)
 Instance is1gpd_pforall (A : pType) (P : pFam A) : Is1Gpd (pForall A P) | 10.
 Proof.
-  econstructor.
-  + intros ? ? p. exact (phomotopy_compose_pV p).
-  + intros ? ? p. exact (phomotopy_compose_Vp p).
+  intros ? ? p; constructor.
+  + exact (phomotopy_compose_pV p).
+  + exact (phomotopy_compose_Vp p).
 Defined.
 
 Instance is3graph_ptype : Is3Graph pType

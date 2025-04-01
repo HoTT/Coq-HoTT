@@ -134,9 +134,9 @@ Defined.
 
 Instance is1gpd_type_hom (A B : Type) : Is1Gpd (A $-> B).
 Proof.
-  repeat unshelve esplit.
-  - intros ? ? ? ?; apply concat_pV.
-  - intros ? ? ? ?; apply concat_Vp.
+  intros ? ? ?; constructor.
+  - intro; apply concat_pV.
+  - intro; apply concat_Vp.
 Defined.
 
 Instance is1functor_cat_postcomp {A B C : Type} (g : B $-> C)

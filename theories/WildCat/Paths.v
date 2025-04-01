@@ -70,9 +70,9 @@ Instance is1cat_paths {A : Type} : Is1Cat A
 (** Any type is a 1-groupoid with morphisms given by paths. *)
 Instance is1gpd_paths {A : Type} : Is1Gpd A.
 Proof.
-  snapply Build_Is1Gpd.
-  - exact (@concat_pV A).
-  - exact (@concat_Vp A).
+  intros a b f; constructor.
+  - exact (@concat_pV A _ _ _).
+  - exact (@concat_Vp A _ _ _).
 Defined.
 
 (** Any type is a 2-category with higher morphisms given by paths. *)
