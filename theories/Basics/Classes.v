@@ -37,6 +37,28 @@ Hint Immediate reflexive_pointwise : typeclass_instances.
 Hint Immediate transitive_pointwise : typeclass_instances.
 Hint Immediate symmetric_pointwise : typeclass_instances.
 
+Definition pointwise_precomp {A' A : Type} {B : A -> Type} (R : forall a, Relation (B a))
+  (f : A' -> A) (P Q : forall x, B x)
+  : relation_pointwise R P Q -> relation_pointwise (R o f) (P o f) (Q o f)
+  := fun r => r o f.
+
+(** This is easiest to state when [B] is a constant type family. *)
+Definition pointwise_moveL_equiv {A A' B : Type} (R : Relation B) `{Reflexive _ R} `{Transitive _ R}
+  (f : A' <~> A) (P : A -> B) (Q : A' -> B)
+  : relation_pointwise (fun _ => R) (P o f) Q -> relation_pointwise (fun _ => R) P (Q o f^-1).
+Proof.
+  intros r a.
+  transitivity (P (f (f^-1 a))).
+  2: apply r.
+  rapply related_reflexive_path.
+  symmetry; apply (ap P), eisretr.
+Defined.
+
+Definition pointwise_moveR_equiv {A A' B : Type} (R : Relation B) `{Reflexive _ R} `{Transitive _ R}
+  (f : A <~> A') (P : A -> B) (Q : A' -> B)
+  : relation_pointwise (fun _ => R) P (Q o f) -> relation_pointwise (fun _ => R) (P o f^-1) Q
+  := pointwise_moveL_equiv (flip R) f Q P.
+
 (** ** Injective Functions *)
 
 Class IsInjective {A B : Type} (f : A -> B)
