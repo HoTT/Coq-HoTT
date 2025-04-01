@@ -14,20 +14,20 @@ Section Pointwise.
   Definition reflexive_pointwise `{!forall a, Reflexive (R a)}
     : Reflexive relation_pointwise.
   Proof.
-    intros P x; reflexivity.
+    intros P a; reflexivity.
   Defined.
 
   Definition transitive_pointwise `{!forall a, Transitive (R a)}
     : Transitive relation_pointwise.
   Proof.
-    intros P Q S x y a.
+    intros P Q S r s a.
     by transitivity (Q a).
   Defined.
 
   Definition symmetric_pointwise `{!forall a, Symmetric (R a)}
     : Symmetric relation_pointwise.
   Proof.
-    intros P Q x a.
+    intros P Q r a.
     by symmetry.
   Defined.
 
@@ -43,21 +43,23 @@ Definition pointwise_precomp {A' A : Type} {B : A -> Type} (R : forall a, Relati
   := fun r => r o f.
 
 (** This is easiest to state when [B] is a constant type family. *)
-Definition pointwise_moveL_equiv {A A' B : Type} (R : Relation B) `{Reflexive _ R} `{Transitive _ R}
-  (f : A' <~> A) (P : A -> B) (Q : A' -> B)
-  : relation_pointwise (fun _ => R) (P o f) Q -> relation_pointwise (fun _ => R) P (Q o f^-1).
+Definition pointwise_moveR_equiv {A A' B : Type} (R : Relation B)
+  `{Reflexive _ R} `{Transitive _ R}
+  (f : A <~> A') (P : A -> B) (Q : A' -> B)
+  : relation_pointwise (fun _ => R) P (Q o f) -> relation_pointwise (fun _ => R) (P o f^-1) Q.
 Proof.
   intros r a.
-  transitivity (P (f (f^-1 a))).
-  2: apply r.
+  transitivity (Q (f (f^-1 a))).
+  1: apply r.
   rapply related_reflexive_path.
-  symmetry; apply (ap P), eisretr.
+  apply (ap Q), eisretr.
 Defined.
 
-Definition pointwise_moveR_equiv {A A' B : Type} (R : Relation B) `{Reflexive _ R} `{Transitive _ R}
-  (f : A <~> A') (P : A -> B) (Q : A' -> B)
-  : relation_pointwise (fun _ => R) P (Q o f) -> relation_pointwise (fun _ => R) (P o f^-1) Q
-  := pointwise_moveL_equiv (flip R) f Q P.
+Definition pointwise_moveL_equiv {A A' B : Type} (R : Relation B)
+  `{Reflexive _ R} `{Transitive _ R}
+  (f : A' <~> A) (P : A -> B) (Q : A' -> B)
+  : relation_pointwise (fun _ => R) (P o f) Q -> relation_pointwise (fun _ => R) P (Q o f^-1)
+  := pointwise_moveR_equiv (flip R) f Q P.
 
 (** ** Injective Functions *)
 
