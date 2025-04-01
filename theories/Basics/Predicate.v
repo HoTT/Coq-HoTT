@@ -12,13 +12,13 @@ Set Universe Minimization ToSet.
 Definition pred_eq {A : Type} := relation_pointwise (fun _ : A => iff).
 
 Instance reflexive_pred_eq {A : Type} : Reflexive (@pred_eq A)
-  := reflexive_pointwise _.
+  := _.
 
 Instance symmetric_pred_eq {A : Type} : Symmetric (@pred_eq A)
-  := symmetric_pointwise _.
+  := _.
 
 Instance transitive_pred_eq {A : Type} : Transitive (@pred_eq A)
-  := transitive_pointwise _.
+  := _.
 
 (** ** Subsets of a predicate *)
 
@@ -35,11 +35,11 @@ Instance transitive_fun : Transitive (fun A B => A -> B)
 
 (** The subset relation is reflexive. *)
 Instance reflexive_pred_subset {A : Type} : Reflexive (@pred_subset A)
-  := reflexive_pointwise _.
+  := _.
 
 (** The subset relation is transitive. *)
 Instance transitive_pred_subset {A : Type} : Transitive (@pred_subset A)
-  := transitive_pointwise _.
+  := _.
 
 Coercion pred_eq_subset {A : Type} (P Q : A -> Type)
   : pred_eq P Q -> pred_subset P Q
