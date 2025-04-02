@@ -226,6 +226,11 @@ Defined.
 
 Coercion subgroup_group : Subgroup >-> Group.
 
+(** Equal subgroups have isomorphic underlying groups. *)
+Definition equiv_subgroup_group {G : Group} (H1 H2 : Subgroup G)
+  : H1 = H2 -> GroupIsomorphism H1 H2
+  := ltac:(intros []; exact grp_iso_id).
+
 (** The underlying group of a subgroup of [G] has an inclusion map into [G]. *) 
 Definition subgroup_incl {G : Group} (H : Subgroup G)
   : subgroup_group H $-> G.
@@ -997,12 +1002,6 @@ Proof.
   - exact K.
   - exact (fun _ => snd (K _)).
 Defined.
-
-(** Equal subgroups have isomorphic underlying groups. *)
-Definition equiv_subgroup_group {G : Group} (H1 H2 : Subgroup G)
-  : H1 = H2 -> GroupIsomorphism H1 H2
-  := ltac:(intros []; exact grp_iso_id).
-
 (** ** Image of a group homomorphism *)
 
 (** The image of a group homomorphism between groups is a subgroup. *)
