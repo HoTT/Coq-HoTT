@@ -45,20 +45,20 @@ Definition pointwise_precomp {A' A : Type} {B : A -> Type} (R : forall a, Relati
 (** This is easiest to state when [B] is a constant type family. *)
 Definition pointwise_moveR_equiv {A A' B : Type} (R : Relation B)
   `{Reflexive _ R} `{Transitive _ R}
-  (f : A <~> A') (P : A -> B) (Q : A' -> B)
-  : relation_pointwise (fun _ => R) P (Q o f) -> relation_pointwise (fun _ => R) (P o f^-1) Q.
+  (f : A' <~> A) (P : A -> B) (Q : A' -> B)
+  : relation_pointwise (fun _ => R) P (Q o f^-1) -> relation_pointwise (fun _ => R) (P o f) Q.
 Proof.
   intros r a.
-  transitivity (Q (f (f^-1 a))).
+  transitivity (Q (f^-1 (f a))).
   1: apply r.
   rapply related_reflexive_path.
-  apply (ap Q), eisretr.
+  apply (ap Q), eissect.
 Defined.
 
 Definition pointwise_moveL_equiv {A A' B : Type} (R : Relation B)
   `{Reflexive _ R} `{Transitive _ R}
-  (f : A' <~> A) (P : A -> B) (Q : A' -> B)
-  : relation_pointwise (fun _ => R) (P o f) Q -> relation_pointwise (fun _ => R) P (Q o f^-1)
+  (f : A <~> A') (P : A -> B) (Q : A' -> B)
+  : relation_pointwise (fun _ => R) (P o f^-1) Q -> relation_pointwise (fun _ => R) P (Q o f)
   := pointwise_moveR_equiv (flip R) f Q P.
 
 (** ** Injective Functions *)
