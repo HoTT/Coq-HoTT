@@ -158,9 +158,9 @@ Defined.
 Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
   : IsHProp (pred_eq I J) := _.
 
-(** *** Left and right ideals are invariant under ideal equality *)
+(** *** Invariance under subgroup equality *)
 
-(** Left ideals are invariant under ideal equality. *)
+(** Being a left ideal is invariant under subgroup equality. *)
 Definition isleftideal_eq {R : Ring} (I J : Subgroup R) (p : pred_eq I J)
   : IsLeftIdeal I -> IsLeftIdeal J.
 Proof.
@@ -170,7 +170,7 @@ Proof.
   by apply i.
 Defined.
 
-(** Right ideals are invariant under ideal equality. *)
+(** Being a right ideal is invariant under subgroup equality. *)
 Definition isrightideal_eq {R : Ring} (I J : Subgroup R) (p : pred_eq I J)
   : IsRightIdeal I -> IsRightIdeal J
   := isleftideal_eq (R := rng_op R) I J p.
@@ -199,7 +199,7 @@ Instance isideal_trivial_subgroup (R : Ring)
   := {}.
 
 (** We call the trivial subgroup the "zero ideal". *)
-Definition ideal_zero (R : Ring) : Ideal R := Build_Ideal R _ _. 
+Definition ideal_zero (R : Ring) : Ideal R := Build_Ideal R (trivial_subgroup R) _.
 
 (** *** The unit ideal *)
 
@@ -335,7 +335,8 @@ Definition ideal_product_type {R : Ring} (I J : Subgroup R) : Subgroup R
 Definition ideal_product_type_op {R : Ring} (I J : Subgroup R)
   : pred_eq (ideal_product_type (R:=R) I J) (ideal_product_type (R:=rng_op R) J I).
 Proof.
-  intros x; split; tapply (functor_subgroup_generated _ _ (Id _)); intros r []; by napply ipn_in.
+  apply (subgroup_eq_functor_subgroup_generated _ _ grp_iso_id).
+  apply pred_subset_antisymm; cbn; intros _ []; by napply ipn_in.
 Defined.
 
 (** The product of left ideals is a left ideal. *)
@@ -791,7 +792,7 @@ End Notation.
 (** The zero ideal is contained in all ideals. *)
 Definition ideal_zero_subset {R : Ring} (I : Subgroup R) : ideal_zero R ⊆ I.
 Proof.
-  intros x p; rewrite p; apply ideal_in_zero.
+  intros x p; destruct p^; apply ideal_in_zero.
 Defined.
 
 (** The unit ideal contains all ideals. *)
@@ -858,7 +859,7 @@ Definition ideal_product_subset_pres_l {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> I ⋅ K ⊆ J ⋅ K.
 Proof.
   intros p.
-  tapply (functor_subgroup_generated _ _ (Id _)).
+  apply (functor_subgroup_generated _ _ grp_iso_id).
   intros _ [].
   apply ipn_in.
   1: apply p.
@@ -870,7 +871,7 @@ Definition ideal_product_subset_pres_r {R : Ring} (I J K : Ideal R)
   : I ⊆ J -> K ⋅ I ⊆ K ⋅ J.
 Proof.
   intros p.
-  tapply (functor_subgroup_generated _ _ (Id _)).
+  apply (functor_subgroup_generated _ _ grp_iso_id).
   intros _ [].
   apply ipn_in.
   2: apply p.
@@ -1134,7 +1135,7 @@ Proof.
   - by rapply isleftideal.
 Defined.
 
-(** If J divides I then the ideal quotient of J by I is trivial. *)
+(** If [J] divides [I] then the ideal quotient of [J] by [I] is trivial. *)
 Definition ideal_quotient_trivial {R : Ring} (I J : Ideal R)
   : I ⊆ J -> J :: I ↔ ideal_unit R.
 Proof.
@@ -1147,7 +1148,7 @@ Proof.
     by apply p.
 Defined.
 
-(** The ideal quotient of I by unit is I. *)
+(** The ideal quotient of [I] by the unit ideal is [I]. *)
 Definition ideal_quotient_unit_bottom {R : Ring} (I : Ideal R)
   : (I :: ideal_unit R) ↔ I.
 Proof.
@@ -1159,7 +1160,7 @@ Proof.
   - apply ideal_quotient_subset.
 Defined.
 
-(** The ideal quotient of unit by I is unit. *)
+(** The ideal quotient of the unit ideal by [I] is the unit ideal. *)
 Definition ideal_quotient_unit_top {R : Ring} (I : Ideal R)
   : (ideal_unit R :: I) ↔ ideal_unit R.
 Proof.
