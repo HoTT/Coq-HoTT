@@ -47,7 +47,8 @@
     - [9.2. Indentation](#92-indentation)
     - [9.3. Line lengths and comments](#93-line-lengths-and-comments)
     - [9.4. Tactic scripts](#94-tactic-scripts)
-    - [9.5. Placement of Arguments and types](#95-placement-of-arguments-and-types)
+    - [9.5. Goal Selectors](#95-goal-selectors)
+    - [9.6. Placement of Arguments and types](#96-placement-of-arguments-and-types)
   - [10. Implicit Arguments](#10-implicit-arguments)
   - [11. Coding Hints](#11-coding-hints)
     - [11.1. Notations](#111-notations)
@@ -1068,12 +1069,61 @@ themselves.  Other lines can contain several short tactic commands
 (separated by either periods or semicolons), if they together
 implement a single idea or finish off a subgoal.
 
+### 9.5. Goal Selectors
+
 For long proofs with multiple significant subgoals, use branching
 constructs such as bullets and braces to clarify the structure.  See
 the section of the Coq Reference Manual entitled "Navigation in the
 proof tree".
 
-### 9.5. Placement of Arguments and types ###
+We typically prefer single bullet uses to braces, since they are
+clearer to read. The preferred bullets are `-`, `+`, and `*`, in that
+order. If the goal structure gets too deep and `--`, `++`, or `**` is
+required, consider breaking up the proof into smaller lemmas, or
+alternatively use curly braces `{` and `}` to restart the bullet
+style.
+
+```coq
+Proof.
+  tactic.
+  tactic_with_subgoals.
+  - tactic.
+    tactic_with_subgoals.
+    + tactic.
+      tactic_with_subgoals.
+      * tactic.
+      * tactic.
+        tactic_with_subgoals.
+        { tactic.
+          tactic_with_subgoals.
+          - foo.
+          - bar. }
+        tactic.
+    + bar.
+  - bar.
+Defined.
+```
+
+Sometimes it can be useful to use numbered goal selectors to avoid
+having to go into bullets. This can be useful if many subgoals are
+solved by the same tactic.
+
+```coq
+Proof.
+  tactic_with_subgoals.
+  1,5: foo.
+  all: bar.
+Defined.
+```
+
+Note that we set
+```coq
+Global Set Default Goal Selector "!".
+```
+in `theories/Basics/Settings.v` which means a goal selector must
+always be used.
+
+### 9.6. Placement of Arguments and types ###
 
 If the entire type of a theorem or definition does not fit on one
 line, then it is better to put the result type (the part after the
