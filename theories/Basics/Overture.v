@@ -16,6 +16,7 @@ Local Unset Elimination Schemes.
 
 (** Notation for non-dependent function types *)
 Notation "A -> B" := (forall (_ : A), B) : type_scope.
+Notation "(->)" := (fun A B : Type => A -> B) : type_scope.
 
 (** *** Option type *)
 
