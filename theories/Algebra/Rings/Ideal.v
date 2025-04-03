@@ -810,6 +810,11 @@ Definition ideal_intersection_subset {R : Ring} (I J K : Ideal R)
   : K ⊆ I -> K ⊆ J -> K ⊆ I ∩ J
   := pred_and_is_meet I J K.
 
+(** Intersections are commutative *)
+Definition ideal_intersection_comm {R : Ring} (I J : Ideal R)
+  : I ∩ J ↔ J ∩ I
+  := pred_and_comm I J.
+
 (** Ideals include into their sum on the left *)
 Definition ideal_sum_subset_l {R : Ring} (I J : Ideal R) : I ⊆ (I + J)
   := subgroup_product_incl_l I J.
