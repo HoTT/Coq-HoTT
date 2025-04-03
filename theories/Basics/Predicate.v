@@ -22,8 +22,8 @@ Instance transitive_pred_eq {A : Type} : Transitive (@pred_eq A)
 
 (** ** Subsets of a predicate *)
 
-(** [P] is a "subset" of [Q] if [forall x, P x -> Q x]. *)
-Definition pred_subset {A : Type} := relation_pointwise (fun (_ : A) (X Y : Type) => X -> Y).
+(** A predicate [P] is a "subset" of a predicate [Q] if [forall a, P a -> Q a]. *)
+Definition pred_subset {A : Type} := relation_pointwise (fun (_ : A) => (->)).
 
 (** The subset relation is reflexive. *)
 Instance reflexive_pred_subset {A : Type} : Reflexive (@pred_subset A)
