@@ -2,10 +2,6 @@ Require Import Basics Types.
 Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Groups.Group Groups.QuotientGroup AbelianGroup Biproduct.
 
-(* If Hint A about groups appears before Hint B about Abelian groups appears in the typeclass database,
-   Coq may coerce an Abelian group to a group to apply A, so we position some hints carefully. *)
-Existing Instance is01cat_hom | 0.
-
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)
 
 (** In this file, we use additive notation for the group operation, even though some of the groups we deal with are not assumed to be abelian. *)
