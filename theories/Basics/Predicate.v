@@ -28,6 +28,13 @@ Definition pred_eq_subset' {A : Type} (P Q : A -> Type)
   : pred_eq P Q -> pred_subset Q P
   := fun p x => snd (p x).
 
+(** The subset relation is antisymmetric. Note that this isn't [Antisymmetry] as defined in [Basics.Classes] since we get a [pred_eq] rather than a path. Under being a hprop and univalance, we would get a path. *)
+Definition pred_subset_antisymm {A : Type} {P Q : A -> Type}
+  : pred_subset P Q -> pred_subset Q P -> pred_eq P Q.
+Proof.
+  intros p q x; specialize (p x); specialize (q x); by split.
+Defined.
+
 Definition pred_subset_precomp {A B : Type} {P Q : B -> Type} (f : A -> B)
   : pred_subset P Q -> pred_subset (P o f) (Q o f)
   := pointwise_precomp _ f P Q.
@@ -41,10 +48,3 @@ Definition pred_subset_moveR_equiv {A B : Type} {P : B -> Type} {Q : A -> Type}
   (f : A <~> B)
   : pred_subset P (Q o f^-1) -> pred_subset (P o f) Q
   := pointwise_moveR_equiv _ f P Q.
-
-(** The subset relation is antisymmetric. Note that this isn't [Antisymmetry] as defined in [Basics.Classes] since we get a [pred_eq] rather than a path. Under being a hprop and univalance, we would get a path. *)
-Definition pred_subset_antisymm {A : Type} {P Q : A -> Type}
-  : pred_subset P Q -> pred_subset Q P -> pred_eq P Q.
-Proof.
-  intros p q x; specialize (p x); specialize (q x); by split.
-Defined.
