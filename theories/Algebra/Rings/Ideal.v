@@ -992,7 +992,7 @@ Defined.
 (** The sum of two opposite ideals is the opposite of their sum. *)
 Definition ideal_sum_op {R : Ring} (I J : Ideal R)
   : ideal_op R I + ideal_op R J ↔ ideal_op R (I + J)
-  := reflexive_pred_eq _.
+  := reflexivity _.
 
 (** Products left distribute over sums. Note that this follows from left adjoints preserving colimits. The product of ideals is a functor whose right adjoint is the quotient ideal. *)
 Definition ideal_dist_l {R : Ring} (I J K : Ideal R)
