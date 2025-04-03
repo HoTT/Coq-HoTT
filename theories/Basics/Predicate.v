@@ -89,6 +89,24 @@ Section OperationsAndIdentities.
     : pred_subset R (pred_and P Q)
     := fun a r => ((p a r), (q a r)).
 
+  Definition pred_and_comm' (P Q : Pred)
+    : pred_subset (pred_and P Q) (pred_and Q P)
+    := fun a pq => (snd pq, fst pq).
+
+  Definition pred_and_comm (P Q : Pred)
+    : pred_eq (pred_and P Q) (pred_and Q P)
+    := pred_subset_antisymm (pred_and_comm' P Q) (pred_and_comm' Q P).
+
+  Definition pred_or_comm' (P Q : Pred)
+    : pred_subset (pred_or P Q) (pred_or Q P)
+    := fun a pq => match pq with
+                 | inl p => inr p
+                 | inr q => inl q end.
+
+  Definition pred_or_comm (P Q : Pred)
+    : pred_eq (pred_or P Q) (pred_or Q P)
+    := pred_subset_antisymm (pred_or_comm' P Q) (pred_or_comm' Q P).
+
   Definition pred_and_unit_l (P : Pred) : pred_eq (pred_and pred_unit P) P.
   Proof.
     apply pred_subset_antisymm.
