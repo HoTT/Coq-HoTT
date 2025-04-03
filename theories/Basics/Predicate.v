@@ -4,11 +4,11 @@ Set Universe Minimization ToSet.
 
 (** * Predicates on types *)
 
-(** We use the words "subset" and "predicate" interchangably. There is no actual set requirement however. *)
+(** We use the words "subset" and "predicate" interchangably to mean something of type [A -> Type]. *)
 
 (** ** Predicate equality *)
 
-(** Two predicates are considered "equal" if they are pointwise logically equivalent: [forall x, P x <-> Q x]. We express this with [relation_pointwise] to ease typeclass search. *)
+(** Two predicates are considered "equal" if they are pointwise logically equivalent: [forall a, P a <-> Q a]. We express this with [relation_pointwise] to ease typeclass search. *)
 Definition pred_eq {A : Type} := relation_pointwise (fun _ : A => iff).
 
 Instance reflexive_pred_eq {A : Type} : Reflexive (@pred_eq A)
