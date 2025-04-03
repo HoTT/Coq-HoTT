@@ -571,8 +571,8 @@ Proof.
   rapply (Build_Subgroup' (fun x => x = 1)).
   1: reflexivity.
   intros x y p q.
-  rewrite p, q.
-  rewrite left_identity.
+  destruct p^%path, q^%path.
+  lhs apply left_identity.
   apply grp_inv_unit.
 Defined.
 
@@ -1263,10 +1263,8 @@ Definition grp_kernel {G H : Group} (f : G $-> H)
 (** Corecursion principle for group kernels *)
 Definition grp_kernel_corec {A B G : Group} {f : A $-> B}
   (g : G $-> A) (h : f $o g == grp_homo_const)
-  : G $-> grp_kernel f.
-Proof.
-  snapply (subgroup_corec g); exact h.
-Defined.
+  : G $-> grp_kernel f
+  := subgroup_corec (K:=grp_kernel f) g h.
 
 Definition equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-> B}
   : {g : G $-> A & f $o g == grp_homo_const} <~> (G $-> grp_kernel f)
