@@ -790,51 +790,33 @@ End Notation.
 (** *** Ideal Lemmas *)
 
 (** The zero ideal is contained in all ideals. *)
-Definition ideal_zero_subset {R : Ring} (I : Subgroup R) : ideal_zero R ⊆ I.
-Proof.
-  intros x p; destruct p^; apply ideal_in_zero.
-Defined.
+Definition ideal_zero_subset {R : Ring} (I : Subgroup R) : ideal_zero R ⊆ I
+  := trivial_subgroup_rec _.
 
 (** The unit ideal contains all ideals. *)
-Definition ideal_unit_subset {R : Ring} (I : Subgroup R) : I ⊆ ideal_unit R.
-Proof.
-  hnf; cbn; trivial.
-Defined.
+Definition ideal_unit_subset {R : Ring} (I : Subgroup R) : I ⊆ ideal_unit R
+  := pred_unit_subset I.
 
 (** Intersection includes into the left *)
-Definition ideal_intersection_subset_l {R : Ring} (I J : Ideal R) : I ∩ J ⊆ I.
-Proof.
-  intro; exact fst.
-Defined.
+Definition ideal_intersection_subset_l {R : Ring} (I J : Ideal R) : I ∩ J ⊆ I
+  := pred_and_subset_l I J.
 
 (** Intersection includes into the right *)
-Definition ideal_intersection_subset_r {R : Ring} (I J : Ideal R) : I ∩ J ⊆ J.
-Proof.
-  intro; exact snd.
-Defined.
+Definition ideal_intersection_subset_r {R : Ring} (I J : Ideal R) : I ∩ J ⊆ J
+  := pred_and_subset_r I J.
 
 (** Subsets of intersections *)
 Definition ideal_intersection_subset {R : Ring} (I J K : Ideal R)
-  : K ⊆ I -> K ⊆ J -> K ⊆ I ∩ J.
-Proof.
-  intros p q x r; specialize (p x r); specialize (q x r); by split.
-Defined.
+  : K ⊆ I -> K ⊆ J -> K ⊆ I ∩ J
+  := pred_and_is_meet I J K.
 
 (** Ideals include into their sum on the left *)
-Definition ideal_sum_subset_l {R : Ring} (I J : Ideal R) : I ⊆ (I + J).
-Proof.
-  intros x p.
-  apply tr, sgt_in.
-  left; exact p.
-Defined.
+Definition ideal_sum_subset_l {R : Ring} (I J : Ideal R) : I ⊆ (I + J)
+  := subgroup_product_incl_l I J.
 
 (** Ideals include into their sum on the right *)
-Definition ideal_sum_subset_r {R : Ring} (I J : Ideal R) : J ⊆ (I + J).
-Proof.
-  intros x p.
-  apply tr, sgt_in.
-  right; exact p.
-Defined.
+Definition ideal_sum_subset_r {R : Ring} (I J : Ideal R) : J ⊆ (I + J)
+  := subgroup_product_incl_r I J.
 
 #[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
 
@@ -929,65 +911,33 @@ Defined.
 
 (** Sums of ideals are the smallest ideal containing the summands. *)
 Definition ideal_sum_smallest {R : Ring} (I J K : Ideal R)
-  : I ⊆ K -> J ⊆ K -> (I + J) ⊆ K.
-Proof.
-  intros p q.
-  refine (ideal_sum_ind I J (fun x _ => K x) p q _ _).
-  1: apply ideal_in_zero.
-  intros y z s t.
-  rapply ideal_in_plus_negate.
-Defined.
+  : I ⊆ K -> J ⊆ K -> (I + J) ⊆ K
+  := subgroup_product_smallest I J K.
 
 (** Ideals absorb themselves under sum. *)
 Definition ideal_sum_self {R : Ring} (I : Ideal R)
-  : I + I ↔ I.
-Proof.
-  apply pred_subset_antisymm.
-  1: by rapply ideal_sum_smallest.
-  rapply ideal_sum_subset_l.
-Defined.
+  : I + I ↔ I
+  := subgroup_product_self I.
 
 (** Sums preserve inclusions in the left summand. *)
 Definition ideal_sum_subset_pres_l {R : Ring} (I J K : Ideal R)
-  : I ⊆ J -> (I + K) ⊆ (J + K).
-Proof.
-  intros p.
-  apply ideal_sum_smallest.
-  { transitivity J.
-    1: exact p.
-    apply ideal_sum_subset_l. }
-  apply ideal_sum_subset_r.
-Defined.
+  : I ⊆ J -> (I + K) ⊆ (J + K)
+  := subgroup_product_subset_pres_l I J K.
 
 (** Sums preserve inclusions in the right summand. *)
 Definition ideal_sum_subset_pres_r {R : Ring} (I J K : Ideal R)
-  : I ⊆ J -> (K + I) ⊆ (K + J).
-Proof.
-  intros p.
-  apply ideal_sum_smallest.
-  1: apply ideal_sum_subset_l.
-  transitivity J.
-  1: exact p.
-  apply ideal_sum_subset_r.
-Defined.
+  : I ⊆ J -> (K + I) ⊆ (K + J)
+  := subgroup_product_subset_pres_r I J K.
 
 (** Sums preserve inclusions in both summands. *)
 Definition ideal_sum_subset_pres {R : Ring} (I J K L : Ideal R)
-  : I ⊆ J -> K ⊆ L -> (I + K) ⊆ (J + L).
-Proof.
-  intros p q.
-  transitivity (J + K).
-  1: by apply ideal_sum_subset_pres_l.
-  by apply ideal_sum_subset_pres_r.
-Defined.
+  : I ⊆ J -> K ⊆ L -> (I + K) ⊆ (J + L)
+  := subgroup_product_subset_pres I J K L.
 
 (** Sums preserve ideal equality in both summands. *)
 Definition ideal_sum_eq {R : Ring} (I J K L : Ideal R)
-  : I ↔ J -> K ↔ L -> (I + K) ↔ (J + L).
-Proof.
-  intros p q.
-  by apply pred_subset_antisymm; apply ideal_sum_subset_pres; apply pred_eq_subset.
-Defined.
+  : I ↔ J -> K ↔ L -> (I + K) ↔ (J + L)
+  := subgroup_product_eq I J K L.
 
 (** The sum of two opposite ideals is the opposite of their sum. *)
 Definition ideal_sum_op {R : Ring} (I J : Ideal R)
@@ -1043,32 +993,16 @@ Proof.
 Defined.
 
 (** Ideal sums are commutative *)
-Definition ideal_sum_comm {R : Ring} (I J : Ideal R) : I + J ↔ J + I.
-Proof.
-  apply pred_subset_antisymm; apply ideal_sum_smallest.
-  1,3: apply ideal_sum_subset_r.
-  1,2: apply ideal_sum_subset_l.
-Defined.
+Definition ideal_sum_comm {R : Ring} (I J : Ideal R) : I + J ↔ J + I
+  := subgroup_product_comm I J.
 
 (** Zero ideal is left additive identity. *) 
-Definition ideal_sum_zero_l {R : Ring} I : ideal_zero R + I ↔ I.
-Proof.
-  apply pred_subset_antisymm.
-  1: apply ideal_sum_smallest.
-  1: apply ideal_zero_subset.
-  1: reflexivity.
-  apply ideal_sum_subset_r.
-Defined.
+Definition ideal_sum_zero_l {R : Ring} I : ideal_zero R + I ↔ I
+  := subgroup_product_trivial_l I.
 
 (** Zero ideal is right additive identity. *)
-Definition ideal_sum_zero_r {R : Ring} I : I + ideal_zero R ↔ I.
-Proof.
-  apply pred_subset_antisymm.
-  1: apply ideal_sum_smallest.
-  1: reflexivity.
-  1: apply ideal_zero_subset.
-  apply ideal_sum_subset_l.
-Defined.
+Definition ideal_sum_zero_r {R : Ring} I : I + ideal_zero R ↔ I
+  := subgroup_product_trivial_r I.
 
 (** Unit ideal is left multiplicative identity. *)
 Definition ideal_product_unit_l {R : Ring} I : ideal_unit R ⋅ I ↔ I.
@@ -1091,24 +1025,12 @@ Proof.
 Defined.
 
 (** Intersecting with unit ideal on the left does nothing. *)
-Definition ideal_intresection_unit_l {R : Ring} I : ideal_unit R ∩ I ↔ I.
-Proof.
-  apply pred_subset_antisymm.
-  1: apply ideal_intersection_subset_r.
-  apply ideal_intersection_subset.
-  1: apply ideal_unit_subset.
-  reflexivity.
-Defined.
+Definition ideal_intresection_unit_l {R : Ring} I : ideal_unit R ∩ I ↔ I
+  := pred_and_unit_l I.
 
 (** Intersecting with unit ideal on right does nothing. *)
-Definition ideal_intersection_unit_r {R : Ring} I : I ∩ ideal_unit R ↔ I.
-Proof.
-  apply pred_subset_antisymm.
-  1: apply ideal_intersection_subset_l.
-  apply ideal_intersection_subset.
-  1: reflexivity.
-  apply ideal_unit_subset.
-Defined.
+Definition ideal_intersection_unit_r {R : Ring} I : I ∩ ideal_unit R ↔ I
+  := pred_and_unit_r I.
 
 (** Product of intersection and sum is subset of sum of products *)
 Definition ideal_product_intersection_sum_subset {R : Ring} (I J : Ideal R)

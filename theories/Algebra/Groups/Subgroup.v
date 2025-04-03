@@ -986,6 +986,96 @@ Definition subgroup_product_incl_r {G : Group} (H K : Subgroup G)
   : pred_subset K (subgroup_product H K)
   := fun x => subgroup_generated_in _ o inr.
 
+(** The product subgroup is the smallest subgroup containing the factors. *)
+Definition subgroup_product_smallest {G : Group} (H K L : Subgroup G)
+  : pred_subset H L -> pred_subset K L -> pred_subset (subgroup_product H K) L.
+Proof.
+  intros p q.
+  refine (subgroup_product_ind H K (fun x _ => L x) p q _ _).
+  - apply subgroup_in_unit.
+  - intros y z s t.
+    apply subgroup_in_op_inv.
+  - exact _.
+Defined.
+
+(** Subgroup products are commutative *)
+Definition subgroup_product_comm {G : Group} (H K : Subgroup G)
+  : pred_eq (subgroup_product H K) (subgroup_product K H).
+Proof.
+  apply pred_subset_antisymm; apply subgroup_product_smallest.
+  1,3: apply subgroup_product_incl_r.
+  1,2: apply subgroup_product_incl_l.
+Defined.
+
+(** The trivial subgroup is a left identity. *)
+Definition subgroup_product_trivial_l {G : Group} (H : Subgroup G)
+  : pred_eq (subgroup_product (trivial_subgroup G) H) H.
+Proof.
+  apply pred_subset_antisymm.
+  { apply subgroup_product_smallest.
+    - napply trivial_subgroup_rec.
+    - reflexivity. }
+  apply subgroup_product_incl_r.
+Defined.
+
+(** The trivial subgroup is a right identity. *)
+Definition subgroup_product_trivial_r {G : Group} (H : Subgroup G)
+  : pred_eq (subgroup_product H (trivial_subgroup G)) H.
+Proof.
+  apply pred_subset_antisymm.
+  { apply subgroup_product_smallest.
+    - reflexivity.
+    - napply trivial_subgroup_rec. }
+  apply subgroup_product_incl_l.
+Defined.
+
+(** Subgroups absorb themselves under products. *)
+Definition subgroup_product_self {G : Group} (H : Subgroup G)
+  : pred_eq (subgroup_product H H) H.
+Proof.
+  apply pred_subset_antisymm.
+  1: by rapply subgroup_product_smallest.
+  apply subgroup_product_incl_l.
+Defined.
+
+(** Products preserve inclusions in the left summand. *)
+Definition subgroup_product_subset_pres_l {G : Group} (H K L : Subgroup G)
+  : pred_subset H K -> pred_subset (subgroup_product H L) (subgroup_product K L).
+Proof.
+  intros p.
+  apply subgroup_product_smallest.
+  1: exact (transitivity p (subgroup_product_incl_l K L)).
+  apply subgroup_product_incl_r.
+Defined.
+
+(** Products preserve inclusions in the right summand. *)
+Definition subgroup_product_subset_pres_r {G : Group} (H K L : Subgroup G)
+  : pred_subset H K -> pred_subset (subgroup_product L H) (subgroup_product L K).
+Proof.
+  intros p.
+  apply subgroup_product_smallest.
+  1: apply subgroup_product_incl_l.
+  1: exact (transitivity p (subgroup_product_incl_r L K)).
+Defined.
+
+(** Products preserve inclusions in both summands. *)
+Definition subgroup_product_subset_pres {G : Group} (H K L M : Subgroup G)
+  (p : pred_subset H K) (q : pred_subset L M)
+  : pred_subset (subgroup_product H L) (subgroup_product K M).
+Proof.
+  transitivity (subgroup_product K L).
+  1: by apply subgroup_product_subset_pres_l.
+  by apply subgroup_product_subset_pres_r.
+Defined.
+
+(** Products preserve subgroup equality in both summands. *)
+Definition subgroup_product_eq {G : Group} (H K L M : Subgroup G)
+  (p : pred_eq H K) (q : pred_eq L M)
+  : pred_eq (subgroup_product H L) (subgroup_product K M).
+Proof.
+  by apply pred_subset_antisymm; apply subgroup_product_subset_pres; apply pred_eq_subset.
+Defined.
+
 (** A product of normal subgroups is normal. *)
 Instance isnormal_subgroup_product {G : Group} (H K : Subgroup G)
   `{!IsNormalSubgroup H, !IsNormalSubgroup K}

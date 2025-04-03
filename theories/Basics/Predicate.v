@@ -4,7 +4,7 @@ Set Universe Minimization ToSet.
 
 (** * Predicates on types *)
 
-(** We use the words "subset" and "predicate" interchangably to mean something of type [A -> Type]. *)
+(** We use the words "predicate" and "(type) family" interchangably to mean something of type [A -> Type]. *)
 
 (** ** Predicate equality *)
 
@@ -48,3 +48,63 @@ Definition pred_subset_moveR_equiv {A B : Type} {P : B -> Type} {Q : A -> Type}
   (f : A <~> B)
   : pred_subset P (Q o f^-1) -> pred_subset (P o f) Q
   := pointwise_moveR_equiv _ f P Q.
+
+Section OperationsAndIdentities.
+
+(** ** Operations on predicates *)
+
+  Context {A : Type}.
+  Local Notation Pred := (A -> Type).
+
+  Definition pred_and (P Q : Pred) : Pred
+    := fun a => P a /\ Q a.
+
+  Definition pred_or (P Q : Pred) : Pred
+    := fun a => P a + Q a.
+
+  (** ** True and false predicates *)
+
+  Definition pred_unit : Pred
+    := fun _ => Unit.
+
+  Definition pred_empty : Pred
+    := fun _ => Empty.
+
+  (** ** Relationships between predicates *)
+
+  Definition pred_empty_subset (P : Pred) : pred_subset pred_empty P
+    := fun _ => Empty_rec _.
+
+  Definition pred_unit_subset (P : Pred) : pred_subset P pred_unit
+    := fun _ _ => tt.
+
+  Definition pred_and_subset_l (P Q : Pred) : pred_subset (pred_and P Q) P
+    := fun _ => fst.
+
+  Definition pred_and_subset_r (P Q : Pred) : pred_subset (pred_and P Q) Q
+    := fun _ => snd.
+
+  Definition pred_and_is_meet (P Q R : Pred)
+    (p : pred_subset R P) (q : pred_subset R Q)
+    : pred_subset R (pred_and P Q)
+    := fun a r => ((p a r), (q a r)).
+
+  Definition pred_and_unit_l (P : Pred) : pred_eq (pred_and pred_unit P) P.
+  Proof.
+    apply pred_subset_antisymm.
+    1: apply pred_and_subset_r.
+    apply pred_and_is_meet.
+    - apply pred_unit_subset.
+    - reflexivity.
+  Defined.
+
+  Definition pred_and_unit_r (P : Pred) : pred_eq (pred_and P pred_unit) P.
+  Proof.
+    apply pred_subset_antisymm.
+    1: apply pred_and_subset_l.
+    apply pred_and_is_meet.
+    - reflexivity.
+    - apply pred_unit_subset.
+  Defined.
+
+End OperationsAndIdentities.
