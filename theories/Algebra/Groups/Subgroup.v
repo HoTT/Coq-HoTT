@@ -991,11 +991,10 @@ Definition subgroup_product_smallest {G : Group} (H K L : Subgroup G)
   : pred_subset H L -> pred_subset K L -> pred_subset (subgroup_product H K) L.
 Proof.
   intros p q.
-  refine (subgroup_product_ind H K (fun x _ => L x) p q _ _).
-  - apply subgroup_in_unit.
-  - intros y z s t.
-    apply subgroup_in_op_inv.
-  - exact _.
+  napply subgroup_generated_rec.
+  intros x [h | k].
+  - by apply p.
+  - by apply q.
 Defined.
 
 (** Subgroup products are commutative *)

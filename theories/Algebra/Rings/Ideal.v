@@ -267,21 +267,13 @@ Instance isleftideal_subgroup_product (R : Ring) (I J : Subgroup R)
   : IsLeftIdeal (subgroup_product I J).
 Proof.
   intros r.
-  napply subgroup_product_ind.
+  napply (subgroup_product_smallest I J
+            (subgroup_preimage (grp_homo_rng_left_mult r) (subgroup_product I J))).
+  all: cbn -[subgroup_generated].
   - intros x p.
-    apply tr, sgt_in.
-    left; by apply isleftideal.
+    by apply subgroup_product_incl_l, isleftideal.
   - intros x p.
-    apply tr, sgt_in.
-    right; by apply isleftideal.
-  - apply tr, sgt_in.
-    left; apply isleftideal.
-    apply ideal_in_zero.
-  - intros x y p q IHp IHq; cbn beta.
-    rewrite rng_dist_l.
-    rewrite rng_mult_negate_r.
-    by apply subgroup_in_op_inv.
-  - exact _.
+    by apply subgroup_product_incl_r, isleftideal.
 Defined.
 
 (** The subgroup product of right ideals is again an ideal. *)
@@ -956,24 +948,18 @@ Proof.
   (** We split into two directions. *)
   apply pred_subset_antisymm.
   (** We deal with the difficult inclusion first. The proof comes down to breaking down the definition and reassembling into the right. *)
-  { intros r p.
-    strip_truncations.
-    induction p as [ r i | | r s p1 IHp1 p2 IHp2].
-    - destruct i as [r s p q].
-      strip_truncations.
-      induction q as [ t k | | t k p1 IHp1 p2 IHp2 ].
-      + apply tr, sgt_in.
-        destruct k as [j | k].
-        * left; by apply tr, sgt_in, ipn_in.
-        * right; by apply tr, sgt_in, ipn_in.
-      + apply tr, sgt_in; left.
-        rewrite rng_mult_zero_r.
-        apply ideal_in_zero.
-      + rewrite rng_dist_l.
-        rewrite rng_mult_negate_r.
-        by apply ideal_in_plus_negate.
-    - apply ideal_in_zero.
-    - by apply ideal_in_plus_negate. }
+  { apply subgroup_generated_rec.
+    intros _ [r s p q].
+    revert s q.
+    napply (subgroup_product_smallest J K
+              (subgroup_preimage (grp_homo_rng_left_mult r) (I ⋅ J + I ⋅ K))).
+    all: cbn -[subgroup_generated ideal_product].
+    - intros x j.
+      apply subgroup_product_incl_l.
+      by apply tr, sgt_in, ipn_in.
+    - intros x k.
+      apply subgroup_product_incl_r.
+      by apply tr, sgt_in, ipn_in. }
   (** This is the easy direction which can use previous lemmas. *)
   apply ideal_sum_smallest.
   1,2: apply ideal_product_subset_pres_r.
