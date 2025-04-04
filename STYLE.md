@@ -531,7 +531,8 @@ using the reversible coercion syntax `proj1 :> FieldType`.
 to indicate the type in which the paths are taken: `x = y :> A` for
 `x, y : A`.)
 
-If `proj1` is a record field whose type is a typeclass and we'd like to add this field as a typeclass instance, then we prefer
+If `proj1` is a record field whose type is a typeclass and we'd
+like to add this field as a typeclass instance, then we prefer
 the concise ["substructure"
 notation](https://rocq-prover.org/refman/addendum/type-classes.html#substructures)
 `proj1 :: ClassType` over the separate vernacular command
