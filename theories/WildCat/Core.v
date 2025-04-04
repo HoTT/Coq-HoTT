@@ -23,6 +23,8 @@ Class Is01Cat (A : Type) `{IsGraph A} :=
   cat_comp : forall (a b c : A), (b $-> c) -> (a $-> b) -> (a $-> c);
 }.
 
+(** The [&] symbol here is a "bidirectionality hint". It directs Rocq to typecheck the application of [Build_Is01Cat] to the argument [A] before computing the type of the full term and trying to unify it with the goal, and only afterwards to typecheck the remaining arguments; it will be easier for Rocq to elaborate and typecheck the later arguments [Id] and [cat_comp] if [A] is already known. *)
+Arguments Build_Is01Cat A &.
 Arguments cat_comp {A _ _ a b c} _ _.
 Notation "g $o f" := (cat_comp g f).
 
@@ -244,7 +246,7 @@ Definition mor_terminal_unique {A : Type} `{Is1Cat A} (x y : A) {h : IsTerminal 
 
 (** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
 Class HasMorExt (A : Type) `{Is1Cat A} := {
-  isequiv_Htpy_path : forall a b f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
+  isequiv_Htpy_path : forall (a b : A) f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g)
 }.
 
 Existing Instance isequiv_Htpy_path.

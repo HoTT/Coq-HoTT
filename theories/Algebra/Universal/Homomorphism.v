@@ -120,7 +120,7 @@ Section homomorphism_compose.
 End homomorphism_compose.
 
 Instance is01cat_algebra (σ : Signature) : Is01Cat (Algebra σ)
-  := Build_Is01Cat (Algebra σ) _
+  := Build_Is01Cat _ _
       (fun _ => homomorphism_id) (fun _ _ _ => homomorphism_compose).
 
 Lemma assoc_homomorphism_compose `{Funext} {σ}

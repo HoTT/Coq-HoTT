@@ -52,10 +52,8 @@ Proof.
 Defined.
 
 Instance is0bifunctor_abses' `{Univalence}
-  : Is0Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
-Proof.
-  rapply Build_Is0Bifunctor''.
-Defined.
+  : Is0Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type)
+  := Build_Is0Bifunctor'' _.
 
 Instance is1bifunctor_abses' `{Univalence}
   : Is1Bifunctor (AbSES' : AbGroup^op -> AbGroup -> Type).
@@ -230,10 +228,8 @@ Proof.
 Defined.
 
 Instance is0bifunctor_abses `{Univalence}
-  : Is0Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
-Proof.
-  rapply Build_Is0Bifunctor''.
-Defined.
+  : Is0Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType)
+  := Build_Is0Bifunctor'' _.
 
 Instance is1bifunctor_abses `{Univalence}
   : Is1Bifunctor (AbSES : AbGroup^op -> AbGroup -> pType).
