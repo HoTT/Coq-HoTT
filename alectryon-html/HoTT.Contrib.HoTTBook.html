@@ -1,0 +1,2392 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>HoTTBook.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** The HoTT Book formalization. *)</span>
+
+<span class="sd">(** This file links the results of the HoTT Book with their formalizations</span>
+<span class="sd">    in the HoTT library. You can lookup definitions and theorems by their</span>
+<span class="sd">    number in the HoTT Book. *)</span>
+
+<span class="c">(*  IMPORTANT NOTE FOR THE HoTT DEVELOPERS:</span>
+
+<span class="c">    This files is processed automagically by the etc/Book.py script. The</span>
+<span class="c">    script parses the file according to the markers present in it (the</span>
+<span class="c">    comment lines with many = signs followed by a LaTeX label). It</span>
+<span class="c">    reorders the entries according to entry number X.Y.Z and inserts</span>
+<span class="c">    missing entries. You must therefore obey the following rules:</span>
+
+<span class="c">    0. Read the description below of what the correct procedure is.</span>
+
+<span class="c">    1. Do not mess with the markers and do not insert new entries by hand.</span>
+<span class="c">       If a LaTeX label has been renamed you may rename the corresponding</span>
+<span class="c">       marker, but for addition of new entries you have to use the</span>
+<span class="c">       etc/Book.py script, as described below.</span>
+
+<span class="c">    2. If a theorem is gone, you may delete the corresponding entry,</span>
+<span class="c">       but make sure first that it was not just moved elsewhere.</span>
+
+<span class="c">    3. Make entries independent of other entries, as they may get</span>
+<span class="c">       reordered or deleted.</span>
+
+<span class="c">    4. If you need to import anything, do it before the first entry.</span>
+
+<span class="c">    5. Each entry should define Book_X_Y_Z, but you can also</span>
+<span class="c">       put in auxiliary definitions and lemmas (keep it short please).</span>
+<span class="c">       The script renames the Book_X_Y_Z to whatever the correct number</span>
+<span class="c">       is, so initially you can use whatever number you like.</span>
+
+<span class="c">       If you are formalizing a Lemma with several part, use</span>
+<span class="c">       Book_X_Y_Z_item_i, Book_X_Y_Z_item_ii, or some such.</span>
+
+<span class="c">    6. If there is a corresponding HoTT library theorem or definition,</span>
+<span class="c">       please use that one, even if it is not exactly the same.</span>
+
+
+<span class="c">   PROCEDURE FOR UPDATING THE FILE:</span>
+
+<span class="c">   1. Compile the latest version of the HoTT Book to update the LaTeX</span>
+<span class="c">      labels. Do not forget to pull in changes from HoTT/HoTT.</span>
+
+<span class="c">   2. Run `cat ../book/*.aux | etc/Book.py contrib/HoTTBook.v`.</span>
+<span class="c">      If it complains, fix things.</span>
+
+<span class="c">   3. Add contents to new entries.</span>
+
+<span class="c">   4. Run `etc/Book.py` again to make sure it is happy.</span>
+
+<span class="c">   5. Compile this file with `make contrib` or `make contrib/HoTTBook.vo`.</span>
+
+<span class="c">   6. Do the git thing to submit your changes.</span>
+
+<span class="c">*)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk0"><span class="kn">From</span> HoTT <span class="kn">Require Import</span> Basics Truncations.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT <span class="kn">Require</span> Idempotents Spaces.No Spaces.Nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT <span class="kn">Require</span> HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple Homotopy.Hopf.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT <span class="kn">Require</span> Categories.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT <span class="kn">Require</span> Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT <span class="kn">Require</span> Classes.theory.premetric.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+<span class="c">(* END OF PREAMBLE *)</span>
+<span class="c">(* ================================================== lem:opp *)</span>
+<span class="sd">(** Lemma 2.1.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_1</span> := @HoTT.Basics.Overture.inverse.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:concat *)</span>
+<span class="sd">(** Lemma 2.1.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_2</span> := @HoTT.Basics.Overture.transitive_paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:omg *)</span>
+<span class="sd">(** Lemma 2.1.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_4_item_i</span> := @HoTT.Basics.PathGroupoids.concat_p1.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_4_item_i&#39;</span> := @HoTT.Basics.PathGroupoids.concat_1p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_4_item_ii</span> := @HoTT.Basics.PathGroupoids.concat_Vp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_4_item_ii&#39;</span> := @HoTT.Basics.PathGroupoids.concat_pV.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_4_item_iii</span> := @HoTT.Basics.PathGroupoids.inv_V.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_4_item_iv</span> := @HoTT.Basics.PathGroupoids.concat_p_pp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:EckmannHilton *)</span>
+<span class="sd">(** Theorem 2.1.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_6</span> := @HoTT.Basics.PathGroupoids.eckmann_hilton.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== def:pointedtype *)</span>
+<span class="sd">(** Definition 2.1.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_7</span> := @HoTT.Basics.Overture.pType.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== def:loopspace *)</span>
+<span class="sd">(** Definition 2.1.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_1_8</span> := @HoTT.Pointed.Loops.iterated_loops.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:map *)</span>
+<span class="sd">(** Lemma 2.2.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_2_1</span> := @HoTT.Basics.Overture.ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:ap-functor *)</span>
+<span class="sd">(** Lemma 2.2.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_2_2_item_i</span>   := @HoTT.Basics.PathGroupoids.ap_pp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_2_2_item_ii</span>  := @HoTT.Basics.PathGroupoids.inverse_ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_2_2_item_iii</span> := @HoTT.Basics.PathGroupoids.ap_compose.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_2_2_item_iv</span>  := @HoTT.Basics.PathGroupoids.ap_idmap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:transport *)</span>
+<span class="sd">(** Lemma 2.3.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_3_1</span> := @HoTT.Basics.Overture.transport.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:path-lifting *)</span>
+<span class="sd">(** Lemma 2.3.2 *)</span>
+
+<span class="c">(* special case of *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_3_2</span> := @HoTT.Types.Sigma.equiv_path_sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:mapdep *)</span>
+<span class="sd">(** Lemma 2.3.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_3_4</span> := @HoTT.Basics.Overture.apD.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:trans-trivial *)</span>
+<span class="sd">(** Lemma 2.3.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_3_5</span> := @HoTT.Basics.PathGroupoids.transport_const.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:apd-const *)</span>
+<span class="sd">(** Lemma 2.3.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_3_8</span> := @HoTT.Basics.PathGroupoids.apD_const.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:transport-concat *)</span>
+<span class="sd">(** Lemma 2.3.9 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_3_9</span> := @HoTT.Basics.PathGroupoids.transport_compose.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:transport-compose *)</span>
+<span class="sd">(** Lemma 2.3.10 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_3_10</span> := @HoTT.Basics.PathGroupoids.ap_transport.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:ap-transport *)</span>
+<span class="sd">(** Lemma 2.3.11 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_3_11</span> := @HoTT.Basics.PathGroupoids.transport_pp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:homotopy *)</span>
+<span class="sd">(** Definition 2.4.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_1</span> := @HoTT.Basics.Overture.pointwise_paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:homotopy-props *)</span>
+<span class="sd">(** Lemma 2.4.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_2</span> := @HoTT.Basics.Overture.pointwise_paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:htpy-natural *)</span>
+<span class="sd">(** Lemma 2.4.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_3</span> := @HoTT.Basics.PathGroupoids.concat_Ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== cor:hom-fg *)</span>
+<span class="sd">(** Corollary 2.4.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_4</span> := @HoTT.Basics.PathGroupoids.concat_A1p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:quasi-inverse *)</span>
+<span class="sd">(** Definition 2.4.6 *)</span>
+
+<span class="sd">(** Quasi-inverses do not occur explicitly in the library since</span>
+<span class="sd">    they are `not good&#39;. They do only occur implicitly as input to</span>
+<span class="sd">    isequiv_adjointify : IsEquiv f. Therefore we link to the half</span>
+<span class="sd">    adjoint equivalence extending the quasi-inverse *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_6</span> := @HoTT.Basics.Equivalences.isequiv_adjointify.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== eg:idequiv *)</span>
+<span class="sd">(** Example 2.4.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_7</span> := @HoTT.Basics.Equivalences.equiv_idmap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== eg:concatequiv *)</span>
+<span class="sd">(** Example 2.4.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_8_i</span> := @HoTT.Types.Paths.isequiv_concat_l.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_8_ii</span> := @HoTT.Types.Paths.isequiv_concat_r.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:transportequiv *)</span>
+<span class="sd">(** Example 2.4.9 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_9</span> := @HoTT.Basics.Equivalences.isequiv_transport.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:equiv-eqrel *)</span>
+<span class="sd">(** Lemma 2.4.12 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_12_item_i</span>   := @HoTT.Basics.Equivalences.reflexive_equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_12_item_ii</span>  := @HoTT.Basics.Equivalences.symmetric_equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_4_12_item_iii</span> := @HoTT.Basics.Equivalences.transitive_equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:path-prod *)</span>
+<span class="sd">(** Theorem 2.6.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_6_2</span> := @HoTT.Types.Prod.equiv_path_prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:trans-prod *)</span>
+<span class="sd">(** Theorem 2.6.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_6_4</span> := @HoTT.Types.Prod.transport_prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:ap-prod *)</span>
+<span class="sd">(** Theorem 2.6.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_6_5</span> := @HoTT.Types.Prod.ap_functor_prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:path-sigma *)</span>
+<span class="sd">(** Theorem 2.7.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_7_2</span> := @HoTT.Types.Sigma.equiv_path_sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:eta-sigma *)</span>
+<span class="sd">(** Corollary 2.7.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_7_3</span> := @HoTT.Types.Sigma.eta_sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== transport-Sigma *)</span>
+<span class="sd">(** Theorem 2.7.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_7_4</span> := @HoTT.Types.Sigma.transportD_is_transport.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:path-unit *)</span>
+<span class="sd">(** Theorem 2.8.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_8_1</span> := @HoTT.Types.Unit.equiv_path_unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== axiom:funext *)</span>
+<span class="sd">(** Axiom 2.9.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_9_3</span> := @HoTT.Basics.Overture.path_forall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:dpath-arrow *)</span>
+<span class="sd">(** Lemma 2.9.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_9_6</span> := @HoTT.Types.Arrow.dpath_arrow.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:dpath-forall *)</span>
+<span class="sd">(** Lemma 2.9.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_9_7</span> := @HoTT.Types.Forall.dpath_forall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:idtoeqv *)</span>
+<span class="sd">(** Lemma 2.10.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_10_1</span> := @HoTT.Types.<span class="kn">Universe</span>.equiv_path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== axiom:univalence *)</span>
+<span class="sd">(** Axiom 2.10.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_10_3</span> := @HoTT.Types.<span class="kn">Universe</span>.isequiv_equiv_path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:transport-is-ap *)</span>
+<span class="sd">(** Lemma 2.10.5 *)</span>
+
+<span class="sd">(** Lemma 2.10.5 is a special case of Lemma 2.3.10, but also of: *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_10_5</span> := @HoTT.Types.<span class="kn">Universe</span>.transport_path_universe&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:paths-respects-equiv *)</span>
+<span class="sd">(** Theorem 2.11.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_11_1</span> := @HoTT.Basics.Equivalences.isequiv_ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== cor:transport-path-prepost *)</span>
+<span class="sd">(** Lemma 2.11.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_11_2_item_1</span> := @HoTT.Types.Paths.transport_paths_l.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_11_2_item_2</span> := @HoTT.Types.Paths.transport_paths_r.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_11_2_item_3</span> := @HoTT.Types.Paths.transport_paths_lr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:transport-path *)</span>
+<span class="sd">(** Theorem 2.11.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_11_3</span> := @HoTT.Types.Paths.transport_paths_FlFr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:transport-path2 *)</span>
+<span class="sd">(** Theorem 2.11.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_11_4</span> := @HoTT.Types.Paths.transport_paths_FlFr_D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:dpath-path *)</span>
+<span class="sd">(** Theorem 2.11.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_11_5</span> := @HoTT.Types.Paths.dpath_path_lr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:path-coprod *)</span>
+<span class="sd">(** Theorem 2.12.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_12_5</span> := @HoTT.Types.Sum.equiv_path_sum.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:path-nat *)</span>
+<span class="sd">(** Theorem 2.13.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_13_1</span> := @HoTT.Spaces.Nat.Paths.equiv_path_nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:prod-ump *)</span>
+<span class="sd">(** Theorem 2.15.2 *)</span>
+
+<span class="sd">(** non-dependent as special case of dependent, Theorem 2.15.5 *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_15_2</span> := @HoTT.Types.Prod.isequiv_prod_coind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:prod-umpd *)</span>
+<span class="sd">(** Theorem 2.15.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_15_5</span> := @HoTT.Types.Prod.isequiv_prod_coind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:ttac *)</span>
+<span class="sd">(** Theorem 2.15.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_2_15_7</span> := @HoTT.Types.Sigma.isequiv_sig_coind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:set *)</span>
+<span class="sd">(** Definition 3.1.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_1</span> := <span class="kr">fun</span> <span class="nv">A</span> =&gt; @HoTT.Basics.Overture.IsTrunc <span class="mi">0</span> A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== eg:isset-unit *)</span>
+<span class="sd">(** Example 3.1.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_2</span> := @HoTT.Types.Unit.contr_unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== eg:isset-empty *)</span>
+<span class="sd">(** Example 3.1.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_3</span> := @HoTT.Types.Empty.istrunc_Empty (-<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:nat-set *)</span>
+<span class="sd">(** Example 3.1.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_4</span> := @HoTT.Spaces.Nat.Core.ishset_nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isset-prod *)</span>
+<span class="sd">(** Example 3.1.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_5</span> := @HoTT.Types.Prod.istrunc_prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isset-forall *)</span>
+<span class="sd">(** Example 3.1.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_6</span> `{Funext} A P := @HoTT.Basics.Trunc.istrunc_forall _ A P <span class="mi">0</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:1type *)</span>
+<span class="sd">(** Definition 3.1.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_7</span> := <span class="kr">fun</span> <span class="nv">A</span> =&gt; @HoTT.Basics.Overture.IsTrunc <span class="mi">1</span> A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isset-is1type *)</span>
+<span class="sd">(** Lemma 3.1.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_8</span> := @HoTT.Basics.Trunc.istrunc_succ <span class="mi">0</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:type-is-not-a-set *)</span>
+<span class="sd">(** Example 3.1.9 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_1_9</span> := @HoTT.Types.<span class="kn">Universe</span>.not_hset_Type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:not-dneg *)</span>
+<span class="sd">(** Theorem 3.2.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:not-lem *)</span>
+<span class="sd">(** Corollary 3.2.7 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:isprop *)</span>
+<span class="sd">(** Definition 3.3.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_3_1</span> := <span class="kr">fun</span> <span class="nv">A</span> =&gt; @HoTT.Basics.Overture.IsTrunc (-<span class="mi">1</span>) A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:inhabprop-eqvunit *)</span>
+<span class="sd">(** Lemma 3.3.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_3_2</span> := @HoTT.Universes.HProp.if_hprop_then_equiv_Unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:equiv-iff-hprop *)</span>
+<span class="sd">(** Lemma 3.3.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_3_3</span> := @HoTT.Basics.Trunc.equiv_iff_hprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:prop-set *)</span>
+<span class="sd">(** Lemma 3.3.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_3_4</span> := @HoTT.Basics.Trunc.istrunc_succ (-<span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isprop-isset *)</span>
+<span class="sd">(** Lemma 3.3.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_3_5_i</span> := @HoTT.Basics.Trunc.ishprop_istrunc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isprop-isprop *)</span>
+<span class="sd">(** Lemma 3.3.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_3_5_ii</span> := @HoTT.Basics.Trunc.ishprop_istrunc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:decidable-equality *)</span>
+<span class="sd">(** Definition 3.4.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_4_3_part_i</span>   := @HoTT.Basics.Decidable.Decidable.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** Definition Book_3_4_3_part_ii  :=  *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_4_3_part_iii</span> := @HoTT.Basics.Decidable.DecidablePaths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:setof *)</span>
+<span class="sd">(** Lemma 3.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:path-subset *)</span>
+<span class="sd">(** Lemma 3.5.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_5_1</span> := @HoTT.Types.Sigma.path_sigma_hprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isprop-forall *)</span>
+<span class="sd">(** Example 3.6.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_6_2</span> `{Funext} (A : <span class="kt">Type</span>) (B : A -&gt; <span class="kt">Type</span>)
+  := @HoTT.Basics.Trunc.istrunc_forall _ A B (-<span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:logical-notation *)</span>
+<span class="sd">(** Definition 3.7.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ac-epis-split *)</span>
+<span class="sd">(** Lemma 3.8.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:no-higher-ac *)</span>
+<span class="sd">(** Lemma 3.8.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:prop-equiv-trunc *)</span>
+<span class="sd">(** Lemma 3.9.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_9_1</span> := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_to_O_inO (Tr (-<span class="mi">1</span>)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== cor:UC *)</span>
+<span class="sd">(** Corollary 3.9.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_9_2</span> := @HoTT.HIT.unique_choice.unique_choice.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:contractible *)</span>
+<span class="sd">(** Definition 3.11.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_1</span> := <span class="kr">fun</span> <span class="nv">A</span> =&gt; @HoTT.Basics.Overture.IsTrunc (-<span class="mi">2</span>) A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:contr-unit *)</span>
+<span class="sd">(** Lemma 3.11.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_3</span> := @HoTT.Types.Unit.contr_unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isprop-iscontr *)</span>
+<span class="sd">(** Lemma 3.11.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_4</span> := @HoTT.Basics.Trunc.ishprop_istrunc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:contr-contr *)</span>
+<span class="sd">(** Corollary 3.11.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_5</span> `{Funext} := @HoTT.Basics.Trunc.contr_istrunc _ (-<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:contr-forall *)</span>
+<span class="sd">(** Lemma 3.11.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_6</span> `{Funext} A P := @HoTT.Basics.Trunc.istrunc_forall _ A P (-<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:retract-contr *)</span>
+<span class="sd">(** Lemma 3.11.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_7a</span> := @HoTT.Idempotents.contr_retracttype.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_7</span> := @HoTT.Modalities.ReflectiveSubuniverse.inO_to_O_retract (Tr (-<span class="mi">2</span>)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:contr-paths *)</span>
+<span class="sd">(** Lemma 3.11.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_8</span> := @HoTT.Basics.Contractible.contr_basedpaths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:omit-contr *)</span>
+<span class="sd">(** Lemma 3.11.9 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_9_part_i</span>  := @HoTT.Types.Sigma.equiv_sigma_contr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_9_part_ii</span> := @HoTT.Types.Sigma.equiv_contr_sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:prop-minusonetype *)</span>
+<span class="sd">(** Lemma 3.11.10 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_10_if</span>     := @HoTT.Basics.Trunc.path_ishprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_3_11_10_onlyif</span> := @HoTT.Basics.Trunc.hprop_allpath.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:qinv-autohtpy *)</span>
+<span class="sd">(** Lemma 4.1.1 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:autohtpy *)</span>
+<span class="sd">(** Lemma 4.1.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:qinv-notprop *)</span>
+<span class="sd">(** Theorem 4.1.3 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:ishae *)</span>
+<span class="sd">(** Definition 4.2.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_1</span> := @HoTT.Basics.Overture.IsEquiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:coh-equiv *)</span>
+<span class="sd">(** Lemma 4.2.2 *)</span>
+
+<span class="c">(* The proof of Lemma 4.2.2 is embedded in the proof of isequiv_inverse. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_2</span> := <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) (<span class="nv">f</span> : A -&gt; B) (<span class="nv">feq</span> : IsEquiv f) (<span class="nv">y</span> : B) =&gt;
+  @HoTT.Basics.Overture.eisadj B A f^-<span class="mi">1</span>
+    (@HoTT.Basics.Equivalences.isequiv_inverse A B f feq) y.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:equiv-iso-adj *)</span>
+<span class="sd">(** Theorem 4.2.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_3</span> := @HoTT.Basics.Equivalences.isequiv_adjointify.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:homotopy-fiber *)</span>
+<span class="sd">(** Definition 4.2.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_4</span> := @HoTT.Basics.Overture.hfiber.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:hfib *)</span>
+<span class="sd">(** Lemma 4.2.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_5</span> := @HoTT.HFiber.equiv_path_hfiber.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:contr-hae *)</span>
+<span class="sd">(** Theorem 4.2.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_6</span> := @HoTT.Types.Equiv.contr_map_isequiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:linv-rinv *)</span>
+<span class="sd">(** Definition 4.2.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_7_i</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : A -&gt; B) := {g : B -&gt; A &amp; g o f == idmap }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_7_ii</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : A -&gt; B) := {g : B -&gt; A &amp; f o g == idmap }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:equiv-compose-equiv *)</span>
+<span class="sd">(** Lemma 4.2.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_8_i</span>  := @HoTT.Basics.Equivalences.isequiv_postcompose.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_8_ii</span> := @HoTT.Basics.Equivalences.isequiv_precompose.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:inv-hprop *)</span>
+<span class="sd">(** Lemma 4.2.9 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_9_i</span>  := @HoTT.Types.Equiv.contr_sect_equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_9_ii</span> := @HoTT.Types.Equiv.contr_retr_equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:lcoh-rcoh *)</span>
+<span class="sd">(** Definition 4.2.10 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:coh-hfib *)</span>
+<span class="sd">(** Lemma 4.2.11 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:coh-hprop *)</span>
+<span class="sd">(** Lemma 4.2.12 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:hae-hprop *)</span>
+<span class="sd">(** Theorem 4.2.13 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_2_13</span> := @HoTT.Types.Equiv.hprop_isequiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:biinv *)</span>
+<span class="sd">(** Definition 4.3.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_3_1</span>  := @HoTT.Equiv.BiInv.BiInv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isprop-biinv *)</span>
+<span class="sd">(** Theorem 4.3.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_3_2</span>  := @HoTT.Equiv.BiInv.ishprop_biinv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:equiv-biinv-isequiv *)</span>
+<span class="sd">(** Corollary 4.3.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_3_3</span>  := @HoTT.Equiv.BiInv.equiv_biinv_isequiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:equivalence *)</span>
+<span class="sd">(** Definition 4.4.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_4_1</span> := @HoTT.Basics.Trunc.IsTruncMap (-<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:lequiv-contr-hae *)</span>
+<span class="sd">(** Theorem 4.4.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_4_3</span> := @HoTT.Types.Equiv.isequiv_contr_map.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:contr-hprop *)</span>
+<span class="sd">(** Lemma 4.4.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_4_4</span> := @HoTT.Basics.Trunc.ishprop_istrunc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:equiv-contr-hae *)</span>
+<span class="sd">(** Theorem 4.4.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_4_5</span> := @HoTT.Types.Equiv.equiv_contr_map_isequiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:equiv-inhabcod *)</span>
+<span class="sd">(** Corollary 4.4.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_4_6</span> := @HoTT.Types.Equiv.isequiv_inhab_codomain.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:surj-emb *)</span>
+<span class="sd">(** Definition 4.6.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_6_1</span> := @HoTT.Basics.Trunc.IsTruncMap (-<span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:mono-surj-equiv *)</span>
+<span class="sd">(** Theorem 4.6.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_6_3</span> := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_conn_ino_map.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:two-out-of-three *)</span>
+<span class="sd">(** Theorem 4.7.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_7_1_part_i</span>   := @HoTT.Basics.Equivalences.isequiv_compose.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_7_1_part_ii</span>  := @HoTT.Basics.Equivalences.cancelR_isequiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_7_1_part_iii</span> := @HoTT.Basics.Equivalences.cancelL_isequiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:retract *)</span>
+<span class="sd">(** Definition 4.7.2 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:func_retract_to_fiber_retract *)</span>
+<span class="sd">(** Lemma 4.7.3 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:retract-equiv *)</span>
+<span class="sd">(** Theorem 4.7.4 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:total-map *)</span>
+<span class="sd">(** Definition 4.7.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_7_5</span> := @HoTT.Types.Sigma.functor_sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== fibwise-fiber-total-fiber-equiv *)</span>
+<span class="sd">(** Theorem 4.7.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_7_6</span> := @HoTT.Types.Sigma.hfiber_functor_sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:total-fiber-equiv *)</span>
+<span class="sd">(** Theorem 4.7.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_7_7</span> := @HoTT.Types.Equiv.equiv_total_iff_equiv_fiberwise.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:fiber-of-a-fibration *)</span>
+<span class="sd">(** Lemma 4.8.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_8_1</span> := @HoTT.HFiber.hfiber_fibration.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:total-space-of-the-fibers *)</span>
+<span class="sd">(** Lemma 4.8.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_8_2</span> := @HoTT.HFiber.equiv_fibration_replacement.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:nobject-classifier-appetizer *)</span>
+<span class="sd">(** Theorem 4.8.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_8_3</span> := @HoTT.Universes.ObjectClassifier.equiv_sigma_fibration.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:object-classifier *)</span>
+<span class="sd">(** Theorem 4.8.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_8_4</span> := @HoTT.Universes.ObjectClassifier.ispullback_objectclassifier_square.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== weakfunext *)</span>
+<span class="sd">(** Definition 4.9.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_9_1</span> := @HoTT.Metatheory.FunextVarieties.WeakFunext.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== UA-eqv-hom-eqv *)</span>
+<span class="sd">(** Lemma 4.9.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_9_2</span> := @HoTT.Metatheory.UnivalenceImpliesFunext.univalence_isequiv_postcompose.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== contrfamtotalpostcompequiv *)</span>
+<span class="sd">(** Corollary 4.9.3 *)</span>
+
+
+
+<span class="c">(* ================================================== uatowfe *)</span>
+<span class="sd">(** Theorem 4.9.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_9_4</span> := @HoTT.Metatheory.UnivalenceImpliesFunext.Univalence_implies_WeakFunext.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== wfetofe *)</span>
+<span class="sd">(** Theorem 4.9.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_4_9_5</span> := @HoTT.Metatheory.FunextVarieties.WeakFunext_implies_Funext.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:nat-uniq *)</span>
+<span class="sd">(** Theorem 5.1.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:w-uniq *)</span>
+<span class="sd">(** Theorem 5.3.1 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:nalg *)</span>
+<span class="sd">(** Definition 5.4.1 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:nhom *)</span>
+<span class="sd">(** Definition 5.4.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:nat-hinitial *)</span>
+<span class="sd">(** Theorem 5.4.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:w-hinit *)</span>
+<span class="sd">(** Theorem 5.4.7 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:homotopy-induction-times-3 *)</span>
+<span class="sd">(** Lemma 5.5.4 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:identity-systems *)</span>
+<span class="sd">(** Definition 5.8.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:identity-systems *)</span>
+<span class="sd">(** Theorem 5.8.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_5_8_2_i_implies_ii</span> := @HoTT.Homotopy.IdentitySystems.homocontr_pfammap_identitysystem.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_5_8_2_ii_implies_iii</span> := @HoTT.Homotopy.IdentitySystems.equiv_path_homocontr_pfammap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_5_8_2_iii_implies_iv</span> := @HoTT.Homotopy.IdentitySystems.contr_sigma_equiv_path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_5_8_2_iv_implies_i</span> := @HoTT.Homotopy.IdentitySystems.identitysystem_contr_sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:ML-identity-systems *)</span>
+<span class="sd">(** Theorem 5.8.4 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:equiv-induction *)</span>
+<span class="sd">(** Corollary 5.8.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_5_8_5</span> := @HoTT.Types.<span class="kn">Universe</span>.equiv_induction&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_5_8_5_comp</span> := @HoTT.Types.<span class="kn">Universe</span>.equiv_induction&#39;_comp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:htpy-induction *)</span>
+<span class="sd">(** Corollary 5.8.6 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:S1rec *)</span>
+<span class="sd">(** Lemma 6.2.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_2_5</span> := @HoTT.Spaces.Circle.Circle_rec.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:uniqueness-for-functions-on-S1 *)</span>
+<span class="sd">(** Lemma 6.2.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:S1ump *)</span>
+<span class="sd">(** Lemma 6.2.9 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_2_9</span> := @HoTT.Spaces.Circle.isequiv_Circle_rec_uncurried.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:contr-interval *)</span>
+<span class="sd">(** Lemma 6.3.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_3_1</span> := @HoTT.HIT.Interval.contr_interval.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:interval-funext *)</span>
+<span class="sd">(** Lemma 6.3.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_3_2</span> := @HoTT.Metatheory.IntervalImpliesFunext.funext_type_from_interval.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:loop-nontrivial *)</span>
+<span class="sd">(** Lemma 6.4.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:S1-autohtpy *)</span>
+<span class="sd">(** Lemma 6.4.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ap2 *)</span>
+<span class="sd">(** Lemma 6.4.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_4_4</span> := @HoTT.Basics.PathGroupoids.ap02.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:transport2 *)</span>
+<span class="sd">(** Lemma 6.4.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_4_5</span> := @HoTT.Basics.PathGroupoids.transport2.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:apd2 *)</span>
+<span class="sd">(** Lemma 6.4.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_4_6</span> := @HoTT.Basics.PathGroupoids.apD02.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:suspbool *)</span>
+<span class="sd">(** Lemma 6.5.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_5_1</span> := @HoTT.Spaces.Spheres.isequiv_S1_to_Circle.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:susp-loop-adj *)</span>
+<span class="sd">(** Lemma 6.5.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_5_4</span> := @HoTT.Pointed.pSusp.loop_susp_adjoint.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:cocone *)</span>
+<span class="sd">(** Definition 6.8.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:pushout-ump *)</span>
+<span class="sd">(** Lemma 6.8.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:trunc0-ind *)</span>
+<span class="sd">(** Lemma 6.9.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_9_1</span> := @HoTT.Truncations.Core.Trunc.Trunc_ind <span class="mi">0</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:trunc0-lump *)</span>
+<span class="sd">(** Lemma 6.9.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_9_2</span> := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_o_to_O.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:set-pushout *)</span>
+<span class="sd">(** Lemma 6.9.3 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:quotient-surjective *)</span>
+<span class="sd">(** Lemma 6.10.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_10_2</span> := @HoTT.HIT.quotient.quotient_surjective.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:quotient-ump *)</span>
+<span class="sd">(** Lemma 6.10.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_10_3</span> := @HoTT.HIT.quotient.quotient_ump.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== def:VVquotient *)</span>
+<span class="sd">(** Definition 6.10.5 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:quotient-when-canonical-representatives *)</span>
+<span class="sd">(** Lemma 6.10.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:retraction-quotient *)</span>
+<span class="sd">(** Corollary 6.10.10 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:sign-induction *)</span>
+<span class="sd">(** Lemma 6.10.12 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:looptothe *)</span>
+<span class="sd">(** Corollary 6.10.13 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:homotopy-groups *)</span>
+<span class="sd">(** Example 6.11.4 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:free-monoid *)</span>
+<span class="sd">(** Lemma 6.11.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:transport-is-given *)</span>
+<span class="sd">(** Lemma 6.12.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_12_1</span> := @HoTT.Types.<span class="kn">Universe</span>.transport_path_universe&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:flattening *)</span>
+<span class="sd">(** Lemma 6.12.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_12_2</span> := @HoTT.HIT.Flattening.equiv_flattening.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:flattening-cp *)</span>
+<span class="sd">(** Lemma 6.12.3 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:flattening-rect *)</span>
+<span class="sd">(** Lemma 6.12.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_12_4</span> := @HoTT.HIT.Flattening.sWtil_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:flattening-rectnd *)</span>
+<span class="sd">(** Lemma 6.12.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_12_5</span> := @HoTT.HIT.Flattening.sWtil_rec.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:ap-sigma-rect-path-pair *)</span>
+<span class="sd">(** Lemma 6.12.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_12_7</span> := @HoTT.Types.Sigma.ap_sig_rec_path_sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:flattening-rectnd-beta-ppt *)</span>
+<span class="sd">(** Lemma 6.12.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_6_12_8</span> := @HoTT.HIT.Flattening.sWtil_rec_beta_ppt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== eg:unnatural-hit *)</span>
+<span class="sd">(** Example 6.13.1 *)</span>
+
+
+
+<span class="c">(* ================================================== def:hlevel *)</span>
+<span class="sd">(** Definition 7.1.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:h-level-retracts *)</span>
+<span class="sd">(** Theorem 7.1.4 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:preservation-hlevels-weq *)</span>
+<span class="sd">(** Corollary 7.1.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:isntype-mono *)</span>
+<span class="sd">(** Theorem 7.1.6 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:hlevel-cumulative *)</span>
+<span class="sd">(** Theorem 7.1.7 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ntypes-sigma *)</span>
+<span class="sd">(** Theorem 7.1.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:hlevel-prod *)</span>
+<span class="sd">(** Theorem 7.1.9 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_7_1_9</span> := @HoTT.Basics.Trunc.istrunc_forall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:isaprop-isofhlevel *)</span>
+<span class="sd">(** Theorem 7.1.10 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:hleveln-of-hlevelSn *)</span>
+<span class="sd">(** Theorem 7.1.11 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book7_1_11</span> := @HoTT.Universes.TruncType.istrunc_trunctype.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:h-set-uip-K *)</span>
+<span class="sd">(** Theorem 7.2.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:h-set-refrel-in-paths-sets *)</span>
+<span class="sd">(** Theorem 7.2.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_7_2_2</span> := @HoTT.Universes.HSet.ishset_hrel_subpaths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== notnotstable-equality-to-set *)</span>
+<span class="sd">(** Corollary 7.2.3 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:hedberg-helper *)</span>
+<span class="sd">(** Lemma 7.2.4 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:hedberg *)</span>
+<span class="sd">(** Theorem 7.2.5 *)</span>
+
+
+
+<span class="c">(* ================================================== prop:nat-is-set *)</span>
+<span class="sd">(** Theorem 7.2.6 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:hlevel-loops *)</span>
+<span class="sd">(** Theorem 7.2.7 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:hlevel-if-inhab-hlevel *)</span>
+<span class="sd">(** Lemma 7.2.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ntype-nloop *)</span>
+<span class="sd">(** Theorem 7.2.9 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:truncn-ind *)</span>
+<span class="sd">(** Theorem 7.3.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:trunc-reflective *)</span>
+<span class="sd">(** Lemma 7.3.3 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:trunc-htpy *)</span>
+<span class="sd">(** Lemma 7.3.5 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:trunc-prod *)</span>
+<span class="sd">(** Theorem 7.3.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:trunc-in-truncated-sigma *)</span>
+<span class="sd">(** Theorem 7.3.9 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:refl-over-ntype-base *)</span>
+<span class="sd">(** Corollary 7.3.10 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:path-truncation *)</span>
+<span class="sd">(** Theorem 7.3.12 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_7_3_12</span> := @HoTT.Truncations.SeparatedTrunc.equiv_path_Tr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:truncation-le *)</span>
+<span class="sd">(** Lemma 7.3.15 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:conemap-funct *)</span>
+<span class="sd">(** Lemma 7.4.10 *)</span>
+
+
+
+<span class="c">(* ================================================== reflectcommutespushout *)</span>
+<span class="sd">(** Theorem 7.4.12 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:minusoneconn-surjective *)</span>
+<span class="sd">(** Lemma 7.5.2 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:nconnected_postcomp *)</span>
+<span class="sd">(** Lemma 7.5.6 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:totrunc-is-connected *)</span>
+<span class="sd">(** Corollary 7.5.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_7_5_8</span> := @HoTT.Modalities.Modality.conn_map_to_O.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:nconn-to-ntype-const *)</span>
+<span class="sd">(** Corollary 7.5.9 *)</span>
+
+
+
+<span class="c">(* ================================================== connectedtotruncated *)</span>
+<span class="sd">(** Corollary 7.5.9 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:nconnected_to_leveln_to_equiv *)</span>
+<span class="sd">(** Lemma 7.5.10 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:connected-pointed *)</span>
+<span class="sd">(** Lemma 7.5.11 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:nconnected_postcomp_variation *)</span>
+<span class="sd">(** Lemma 7.5.12 *)</span>
+
+
+
+<span class="c">(* ================================================== prop:nconn_fiber_to_total *)</span>
+<span class="sd">(** Lemma 7.5.13 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:connected-map-equiv-truncation *)</span>
+<span class="sd">(** Lemma 7.5.14 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:modal-mono *)</span>
+<span class="sd">(** Lemma 7.6.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_7_6_2</span> := @HoTT.HFiber.equiv_istruncmap_ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:modal-image *)</span>
+<span class="sd">(** Definition 7.6.3 *)</span>
+
+
+
+<span class="c">(* ================================================== prop:to_image_is_connected *)</span>
+<span class="sd">(** Lemma 7.6.4 *)</span>
+
+
+
+<span class="c">(* ================================================== prop:factor_equiv_fiber *)</span>
+<span class="sd">(** Lemma 7.6.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:orth-fact *)</span>
+<span class="sd">(** Theorem 7.6.6 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:hfiber_wrt_pullback *)</span>
+<span class="sd">(** Lemma 7.6.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:stable-images *)</span>
+<span class="sd">(** Theorem 7.6.9 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:reflective-subuniverse *)</span>
+<span class="sd">(** Definition 7.7.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:reflsubunv-forall *)</span>
+<span class="sd">(** Theorem 7.7.2 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:trunc_prod *)</span>
+<span class="sd">(** Corollary 7.7.3 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:modal-char *)</span>
+<span class="sd">(** Theorem 7.7.4 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:modality *)</span>
+<span class="sd">(** Definition 7.7.5 *)</span>
+
+
+
+<span class="c">(* ================================================== prop:lv_n_deptype_sec_equiv_by_precomp *)</span>
+<span class="sd">(** Theorem 7.7.7 *)</span>
+
+
+
+<span class="c">(* ================================================== def-of-homotopy-groups *)</span>
+<span class="sd">(** Definition 8.0.1 *)</span>
+
+
+
+<span class="c">(* ================================================== S1-universal-cover *)</span>
+<span class="sd">(** Definition 8.1.1 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:transport-s1-code *)</span>
+<span class="sd">(** Lemma 8.1.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:pi1s1-decode *)</span>
+<span class="sd">(** Definition 8.1.6 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:s1-decode-encode *)</span>
+<span class="sd">(** Lemma 8.1.7 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:s1-encode-decode *)</span>
+<span class="sd">(** Lemma 8.1.8 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:omega-s1 *)</span>
+<span class="sd">(** Corollary 8.1.10 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:pi1s1 *)</span>
+<span class="sd">(** Corollary 8.1.11 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:iscontr-s1cover *)</span>
+<span class="sd">(** Lemma 8.1.12 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:encode-total-equiv *)</span>
+<span class="sd">(** Corollary 8.1.13 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:suspension-increases-connectedness *)</span>
+<span class="sd">(** Theorem 8.2.1 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:sn-connected *)</span>
+<span class="sd">(** Corollary 8.2.2 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:pik-nconnected *)</span>
+<span class="sd">(** Lemma 8.3.2 *)</span>
+
+
+
+<span class="c">(* ================================================== def:pointedmap *)</span>
+<span class="sd">(** Definition 8.4.1 *)</span>
+
+
+
+<span class="c">(* ================================================== def:loopfunctor *)</span>
+<span class="sd">(** Definition 8.4.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:fiber-of-the-fiber *)</span>
+<span class="sd">(** Lemma 8.4.4 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:les *)</span>
+<span class="sd">(** Theorem 8.4.6 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ses *)</span>
+<span class="sd">(** Lemma 8.4.7 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:conn-pik *)</span>
+<span class="sd">(** Corollary 8.4.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:hopf-fibration *)</span>
+<span class="sd">(** Theorem 8.5.1 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:pis2-hopf *)</span>
+<span class="sd">(** Corollary 8.5.2 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:fibration-over-pushout *)</span>
+<span class="sd">(** Lemma 8.5.3 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:hopf-construction *)</span>
+<span class="sd">(** Lemma 8.5.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_8_5_6</span> := @HoTT.Homotopy.Hopf.hopf_construction.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_8_5_7</span> := @HoTT.Homotopy.Hopf.pequiv_hopf_total_join.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:hspace-S1 *)</span>
+<span class="sd">(** Lemma 8.5.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:conn-trunc-variable-ind *)</span>
+<span class="sd">(** Lemma 8.6.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:wedge-connectivity *)</span>
+<span class="sd">(** Lemma 8.6.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:freudenthal *)</span>
+<span class="sd">(** Theorem 8.6.4 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:freudcode *)</span>
+<span class="sd">(** Definition 8.6.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:freudlemma *)</span>
+<span class="sd">(** Lemma 8.6.10 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:freudenthal-equiv *)</span>
+<span class="sd">(** Corollary 8.6.14 *)</span>
+
+
+
+<span class="c">(* ================================================== cor:stability-spheres *)</span>
+<span class="sd">(** Corollary 8.6.15 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:pinsn *)</span>
+<span class="sd">(** Theorem 8.6.17 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:pi3s2 *)</span>
+<span class="sd">(** Corollary 8.6.19 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:naive-van-kampen *)</span>
+<span class="sd">(** Theorem 8.7.4 *)</span>
+
+
+
+<span class="c">(* ================================================== eg:circle *)</span>
+<span class="sd">(** Example 8.7.6 *)</span>
+
+
+
+<span class="c">(* ================================================== eg:suspension *)</span>
+<span class="sd">(** Example 8.7.7 *)</span>
+
+
+
+<span class="c">(* ================================================== eg:wedge *)</span>
+<span class="sd">(** Example 8.7.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:kbar *)</span>
+<span class="sd">(** Lemma 8.7.9 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:van-Kampen *)</span>
+<span class="sd">(** Theorem 8.7.12 *)</span>
+
+
+
+<span class="c">(* ================================================== eg:clvk *)</span>
+<span class="sd">(** Example 8.7.13 *)</span>
+
+
+
+<span class="c">(* ================================================== eg:cofiber *)</span>
+<span class="sd">(** Example 8.7.14 *)</span>
+
+
+
+<span class="c">(* ================================================== eg:torus *)</span>
+<span class="sd">(** Example 8.7.15 *)</span>
+
+
+
+<span class="c">(* ================================================== eg:kg1 *)</span>
+<span class="sd">(** Example 8.7.17 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:whitehead0 *)</span>
+<span class="sd">(** Theorem 8.8.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_8_8_1</span> := @HoTT.Homotopy.WhiteheadsPrinciple.isequiv_issurj_tr0_isequiv_ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:whitehead1 *)</span>
+<span class="sd">(** Corollary 8.8.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_8_8_2</span> := @HoTT.Homotopy.WhiteheadsPrinciple.isequiv_isbij_tr0_isequiv_loops.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:whiteheadn *)</span>
+<span class="sd">(** Theorem 8.8.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_8_8_3</span> := @HoTT.Homotopy.WhiteheadsPrinciple.whiteheads_principle.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:whitehead-contr *)</span>
+<span class="sd">(** Corollary 8.8.4 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:pik-conn *)</span>
+<span class="sd">(** Corollary 8.8.5 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:encode-decode-loop *)</span>
+<span class="sd">(** Lemma 8.9.1 *)</span>
+
+
+
+<span class="c">(* ================================================== Blakers-Massey *)</span>
+<span class="sd">(** Theorem 8.10.2 *)</span>
+
+
+
+<span class="c">(* ================================================== Eilenberg-Mac-Lane-Spaces *)</span>
+<span class="sd">(** Theorem 8.10.3 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:covering-spaces *)</span>
+<span class="sd">(** Theorem 8.10.4 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:precategory *)</span>
+<span class="sd">(** Definition 9.1.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_1</span> := @HoTT.Categories.Category.Core.PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:isomorphism *)</span>
+<span class="sd">(** Definition 9.1.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_2</span> := @HoTT.Categories.Category.Morphisms.Isomorphic.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:isoprop *)</span>
+<span class="sd">(** Lemma 9.1.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_3</span> := @HoTT.Categories.Category.Morphisms.istrunc_isisomorphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:idtoiso *)</span>
+<span class="sd">(** Lemma 9.1.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_4</span> := @HoTT.Categories.Category.Morphisms.idtoiso.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:precatset *)</span>
+<span class="sd">(** Example 9.1.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_5</span> := @HoTT.Categories.SetCategory.Core.set_cat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:category *)</span>
+<span class="sd">(** Definition 9.1.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_6</span> <span class="nv">C</span> := (HoTT.Categories.Category.Univalent.IsCategory C).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:eg:set *)</span>
+<span class="sd">(** Example 9.1.7 *)</span>
+
+<span class="sd">(** Once this is proven, we will have</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">Definition Book_9_1_7 := @HoTT.Categories.SetCategory.Morphisms.iscategory_set_cat.</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">*)</span>
+
+<span class="c">(* ================================================== ct:obj-1type *)</span>
+<span class="sd">(** Lemma 9.1.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_8</span> := @HoTT.Categories.Category.Univalent.trunc_category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:idtoiso-trans *)</span>
+<span class="sd">(** Lemma 9.1.9 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:orders *)</span>
+<span class="sd">(** Example 9.1.14 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:gaunt *)</span>
+<span class="sd">(** Example 9.1.15 *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk1"><span class="kn">Definition</span> <span class="nf">Book_9_1_15</span> <span class="nv">A</span> `{H : HoTT.Categories.Category.Univalent.IsCategory A}
+: IsHSet (HoTT.Categories.Category.Core.object A)
+  &lt;-&gt; (<span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span>, IsHProp (@HoTT.Categories.Category.Morphisms.Isomorphic A a b)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet (Core.object A) &lt;-&gt;
+is_mere_relation (Core.object A) Morphisms.Isomorphic</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet (Core.object A) &lt;-&gt;
+is_mere_relation (Core.object A) Morphisms.Isomorphic</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk3"><span class="nb">split</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet (Core.object A) -&gt;
+is_mere_relation (Core.object A) Morphisms.Isomorphic</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="hottbook-v-chk4" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br></div><label class="goal-separator" for="hottbook-v-chk4"><hr></label><div class="goal-conclusion">is_mere_relation (Core.object A) Morphisms.Isomorphic -&gt;
+IsHSet (Core.object A)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk5">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet (Core.object A) -&gt;
+is_mere_relation (Core.object A) Morphisms.Isomorphic</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk6"><span class="nb">intros</span> H&#39; a b.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsHSet (Core.object A)</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (Morphisms.Isomorphic a b)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk7"><span class="nb">eapply</span> istrunc_isequiv_istrunc.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsHSet (Core.object A)</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp <span class="nl">?A</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="hottbook-v-chk8" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsHSet (Core.object A)</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><label class="goal-separator" for="hottbook-v-chk8"><hr></label><div class="goal-conclusion">IsEquiv <span class="nl">?f</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk9">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsHSet (Core.object A)</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp <span class="nl">?A</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (H&#39; a b).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chka">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsHSet (Core.object A)</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv <span class="nl">?f</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> H.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chkb">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">is_mere_relation (Core.object A) Morphisms.Isomorphic -&gt;
+IsHSet (Core.object A)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chkc"><span class="nb">intros</span> H&#39;; <span class="nb">apply</span> istrunc_S; <span class="nb">intros</span> a b.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>is_mere_relation (Core.object A)
+  Morphisms.Isomorphic</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (a = b)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chkd"><span class="nb">eapply</span> istrunc_isequiv_istrunc.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>is_mere_relation (Core.object A)
+  Morphisms.Isomorphic</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp <span class="nl">?A</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="hottbook-v-chke" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>is_mere_relation (Core.object A)
+  Morphisms.Isomorphic</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><label class="goal-separator" for="hottbook-v-chke"><hr></label><div class="goal-conclusion">IsEquiv <span class="nl">?f</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chkf">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>is_mere_relation (Core.object A)
+  Morphisms.Isomorphic</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp <span class="nl">?A</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> (H&#39; a b).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="hottbook-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="hottbook-v-chk10">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>Core.PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : Core.object A,
+IsEquiv (Category.Morphisms.idtoiso A (y:=d))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>is_mere_relation (Core.object A)
+  Morphisms.Isomorphic</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>Core.object A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv <span class="nl">?f</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> (@isequiv_inverse _ _ _ (H _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:discrete *)</span>
+<span class="sd">(** Example 9.1.16 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_16</span> := @HoTT.Categories.GroupoidCategory.Core.groupoid_category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:fundgpd *)</span>
+<span class="sd">(** Example 9.1.17 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_17</span> := @HoTT.Categories.FundamentalPreGroupoidCategory.fundamental_pregroupoid_category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:hoprecat *)</span>
+<span class="sd">(** Example 9.1.18 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_1_18</span> := @HoTT.Categories.HomotopyPreCategory.homotopy_precategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:rel *)</span>
+<span class="sd">(** Example 9.1.19 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:functor *)</span>
+<span class="sd">(** Definition 9.2.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_1</span> := @HoTT.Categories.Functor.Core.Functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:nattrans *)</span>
+<span class="sd">(** Definition 9.2.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_2</span> := @HoTT.Categories.NaturalTransformation.Core.NaturalTransformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:functor-precat *)</span>
+<span class="sd">(** Definition 9.2.3 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_3</span> := @HoTT.Categories.FunctorCategory.Core.functor_category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:natiso *)</span>
+<span class="sd">(** Lemma 9.2.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_4</span> := @HoTT.Categories.FunctorCategory.Morphisms.isisomorphism_natural_transformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:functor-cat *)</span>
+<span class="sd">(** Theorem 9.2.5 *)</span>
+
+<span class="sd">(** When this is done, it will be</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">Definition Book_9_2_5 := @HoTT.Categories.FunctorCategory.Morphisms.iscategory_functor_category.</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">*)</span>
+
+<span class="c">(* ================================================== ct:functor-composition *)</span>
+<span class="sd">(** Definition 9.2.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_6</span> := @HoTT.Categories.Functor.Composition.Core.compose.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:whisker *)</span>
+<span class="sd">(** Definition 9.2.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_7_l</span> := @HoTT.Categories.NaturalTransformation.Composition.Core.whisker_l.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_7_r</span> := @HoTT.Categories.NaturalTransformation.Composition.Core.whisker_r.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:interchange *)</span>
+<span class="sd">(** Lemma 9.2.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_8</span> := @HoTT.Categories.NaturalTransformation.Composition.Laws.exchange_whisker.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:functor-assoc *)</span>
+<span class="sd">(** Lemma 9.2.9 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_9</span> := @HoTT.Categories.Functor.Composition.Laws.associativity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:pentagon *)</span>
+<span class="sd">(** Lemma 9.2.10 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:units *)</span>
+<span class="sd">(** Lemma 9.2.11 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_11_l</span> := @HoTT.Categories.Functor.Composition.Laws.left_identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_11_r</span> := @HoTT.Categories.Functor.Composition.Laws.right_identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_2_11</span> := @HoTT.Categories.Functor.Composition.Laws.triangle.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:adjoints *)</span>
+<span class="sd">(** Definition 9.3.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_3_1</span> := @HoTT.Categories.Adjoint.UnitCounit.AdjunctionUnitCounit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:adjprop *)</span>
+<span class="sd">(** Lemma 9.3.2 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:equiv *)</span>
+<span class="sd">(** Definition 9.4.1 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:adjointification *)</span>
+<span class="sd">(** Lemma 9.4.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_4_2a</span> := @HoTT.Categories.Functor.Attributes.IsFaithful.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_4_2b</span> := @HoTT.Categories.Functor.Attributes.IsFull.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_4_2c</span> := @HoTT.Categories.Functor.Attributes.IsFullyFaithful.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:full-faithful *)</span>
+<span class="sd">(** Definition 9.4.3 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:split-essentially-surjective *)</span>
+<span class="sd">(** Definition 9.4.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_4_4</span> := @HoTT.Categories.Functor.Attributes.IsSplitEssentiallySurjective.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:ffeso *)</span>
+<span class="sd">(** Lemma 9.4.5 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:essentially-surjective *)</span>
+<span class="sd">(** Definition 9.4.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_4_6_ess</span> := @HoTT.Categories.Functor.Attributes.IsEssentiallySurjective.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_4_6_weq</span> := @HoTT.Categories.Functor.Attributes.IsWeakEquivalence.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:catweq *)</span>
+<span class="sd">(** Lemma 9.4.7 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:isocat *)</span>
+<span class="sd">(** Definition 9.4.8 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:isoprecat *)</span>
+<span class="sd">(** Lemma 9.4.9 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:chaotic *)</span>
+<span class="sd">(** Example 9.4.13 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_4_13</span> := @HoTT.Categories.IndiscreteCategory.Core.indiscrete_category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:eqv-levelwise *)</span>
+<span class="sd">(** Lemma 9.4.14 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:cat-eq-iso *)</span>
+<span class="sd">(** Lemma 9.4.15 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:cat-2cat *)</span>
+<span class="sd">(** Theorem 9.4.16 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:opposite-category *)</span>
+<span class="sd">(** Definition 9.5.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_5_1</span> := @HoTT.Categories.Category.Dual.opposite.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:prod-cat *)</span>
+<span class="sd">(** Definition 9.5.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_5_2</span> := @HoTT.Categories.Category.Prod.prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:functorexpadj *)</span>
+<span class="sd">(** Lemma 9.5.3 *)</span>
+
+<span class="sd">(** When we prove it, this should be mapped to the law, not the functor. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_5_3</span> := @HoTT.Categories.ExponentialLaws.Law4.Functors.functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:yoneda *)</span>
+<span class="sd">(** Theorem 9.5.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_5_4</span> := @HoTT.Categories.Yoneda.yoneda_lemma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:yoneda-embedding *)</span>
+<span class="sd">(** Corollary 9.5.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_5_6</span> := @HoTT.Categories.Yoneda.yoneda_embedding.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:yoneda-mono *)</span>
+<span class="sd">(** Corollary 9.5.7 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:representable *)</span>
+<span class="sd">(** Definition 9.5.8 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:representable-prop *)</span>
+<span class="sd">(** Theorem 9.5.9 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:adj-repr *)</span>
+<span class="sd">(** Lemma 9.5.10 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:adjprop2 *)</span>
+<span class="sd">(** Corollary 9.5.11 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:strict-category *)</span>
+<span class="sd">(** Definition 9.6.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_6_1</span> <span class="nv">C</span> := HoTT.Categories.Category.Strict.IsStrictCategory C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:mono-cat *)</span>
+<span class="sd">(** Example 9.6.2 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:galois *)</span>
+<span class="sd">(** Example 9.6.3 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:dagger-precategory *)</span>
+<span class="sd">(** Definition 9.7.1 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:unitary *)</span>
+<span class="sd">(** Definition 9.7.2 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:idtounitary *)</span>
+<span class="sd">(** Lemma 9.7.3 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:dagger-category *)</span>
+<span class="sd">(** Definition 9.7.4 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:rel-dagger-cat *)</span>
+<span class="sd">(** Example 9.7.5 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:groupoid-dagger-cat *)</span>
+<span class="sd">(** Example 9.7.6 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:hilb *)</span>
+<span class="sd">(** Example 9.7.7 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:sig *)</span>
+<span class="sd">(** Definition 9.8.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_8_1</span> := @HoTT.Categories.<span class="kn">Structure</span>.Core.NotionOfStructure.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:sip *)</span>
+<span class="sd">(** Theorem 9.8.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_9_8_2</span> := @HoTT.Categories.<span class="kn">Structure</span>.IdentityPrinciple.structure_identity_principle.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== ct:sip-functor-cat *)</span>
+<span class="sd">(** Example 9.8.3 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:fo-notion-of-structure *)</span>
+<span class="sd">(** Definition 9.8.4 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:esosurj-postcomp-faithful *)</span>
+<span class="sd">(** Lemma 9.9.1 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:esofull-precomp-ff *)</span>
+<span class="sd">(** Lemma 9.9.2 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:cat-weq-eq *)</span>
+<span class="sd">(** Theorem 9.9.4 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:rezk-completion *)</span>
+<span class="sd">(** Theorem 9.9.5 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:rezk-fundgpd-trunc1 *)</span>
+<span class="sd">(** Example 9.9.6 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:hocat *)</span>
+<span class="sd">(** Example 9.9.7 *)</span>
+
+
+
+<span class="c">(* ================================================== ct:weq-iso-precat-cat *)</span>
+<span class="sd">(** Theorem 9.9.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:mono *)</span>
+<span class="sd">(** Lemma 10.1.1 *)</span>
+
+<span class="sd">(** The third notion in the book is called embedding. No complete equivalence yet, but see:*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_1_1_iii</span> := @HSet.isinj_embedding.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:inj-mono *)</span>
+<span class="sd">(** Lemma 10.1.2 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_1_2rl</span> := @HSet.isinj_ismono.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_1_2lr</span> := @HSet.ismono_isinj.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="c">(* This one is not in the book, but close to 10.1.2:</span>
+<span class="c"> HSet.isembedding_isinj_hset*)</span>
+
+<span class="c">(* ================================================== epis-surj *)</span>
+<span class="sd">(** Lemma 10.1.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_1_4_i_iii</span> := @HIT.epi.isepi_issurj.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_1_4_i_ii</span> := @HIT.epi.isepi&#39;_contr_cone.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_1_4_iii_i</span> := @HIT.epi.issurj_isepi.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:images_are_coequalizers *)</span>
+<span class="sd">(** Theorem 10.1.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:set_regular *)</span>
+<span class="sd">(** Theorem 10.1.5 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:pb_of_coeq_is_coeq *)</span>
+<span class="sd">(** Lemma 10.1.6 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:sets_exact *)</span>
+<span class="sd">(** Lemma 10.1.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_1_8</span> := @HIT.quotient.sets_exact.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== prop:kernels_are_effective *)</span>
+<span class="sd">(** Theorem 10.1.9 *)</span>
+
+<span class="c">(* See: HIT.unique_choice.unique_choice</span>
+<span class="c">theories.ObjectClassifier.PowisoPFam</span>
+<span class="c">Apparently closure under Pi and Sigma are still missing ? *)</span>
+
+<span class="c">(* ================================================== thm:settopos *)</span>
+<span class="sd">(** Theorem 10.1.12 *)</span>
+
+
+
+<span class="c">(* ================================================== prop:trunc_of_prop_is_set *)</span>
+<span class="sd">(** Lemma 10.1.13 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:1surj_to_surj_to_pem *)</span>
+<span class="sd">(** Theorem 10.1.14 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ETCS *)</span>
+<span class="sd">(** Theorem 10.1.15 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:card *)</span>
+<span class="sd">(** Definition 10.2.1 *)</span>
+
+
+
+<span class="c">(* ================================================== card:semiring *)</span>
+<span class="sd">(** Lemma 10.2.4 *)</span>
+
+
+
+<span class="c">(* ================================================== card:exp *)</span>
+<span class="sd">(** Lemma 10.2.6 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:injsurj *)</span>
+<span class="sd">(** Lemma 10.2.9 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:accessibility *)</span>
+<span class="sd">(** Definition 10.3.1 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:nat-wf *)</span>
+<span class="sd">(** Example 10.3.5 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:wtype-wf *)</span>
+<span class="sd">(** Example 10.3.6 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:wfrec *)</span>
+<span class="sd">(** Lemma 10.3.7 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:wfmin *)</span>
+<span class="sd">(** Lemma 10.3.8 *)</span>
+
+
+
+<span class="c">(* ================================================== def:simulation *)</span>
+<span class="sd">(** Definition 10.3.11 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:wfcat *)</span>
+<span class="sd">(** Corollary 10.3.15 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ordord *)</span>
+<span class="sd">(** Theorem 10.3.20 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ordsucc *)</span>
+<span class="sd">(** Lemma 10.3.21 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:ordunion *)</span>
+<span class="sd">(** Lemma 10.3.22 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:wellorder *)</span>
+<span class="sd">(** Theorem 10.4.3 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:wop *)</span>
+<span class="sd">(** Theorem 10.4.4 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:V *)</span>
+<span class="sd">(** Definition 10.5.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_1</span> := @HoTT.HIT.V.CumulativeHierarchy.V.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== def:bisimulation *)</span>
+<span class="sd">(** Definition 10.5.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_4</span> := @HoTT.HIT.V.bisimulation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:BisimEqualsId *)</span>
+<span class="sd">(** Lemma 10.5.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_5</span> := @HoTT.HIT.V.bisimulation_equiv_id.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== lem:MonicSetPresent *)</span>
+<span class="sd">(** Lemma 10.5.6 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_6</span> := @HoTT.HIT.V.monic_set_present.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== def:TypeOfElements *)</span>
+<span class="sd">(** Definition 10.5.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_7</span> := @HoTT.HIT.V.type_of_members.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:VisCST *)</span>
+<span class="sd">(** Theorem 10.5.8 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_i</span> := @HoTT.HIT.V.extensionality.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_ii</span> := @HoTT.HIT.V.not_mem_Vempty.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_iii</span> := @HoTT.HIT.V.pairing.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_iv</span> := @HoTT.HIT.V.infinity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_v</span> := @HoTT.HIT.V.union.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_vi</span> := @HoTT.HIT.V.function.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_vii</span> := @HoTT.HIT.V.mem_induction.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_viii</span> := @HoTT.HIT.V.replacement.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_10_5_8_item_ix</span> := @HoTT.HIT.V.separation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== cor:Delta0sep *)</span>
+<span class="sd">(** Corollary 10.5.9 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:fullsep *)</span>
+<span class="sd">(** Lemma 10.5.10 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:zfc *)</span>
+<span class="sd">(** Theorem 10.5.11 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:dedekind-reals *)</span>
+<span class="sd">(** Definition 11.2.1 *)</span>
+
+
+
+<span class="c">(* ================================================== dedekind-in-cut-as-le *)</span>
+<span class="sd">(** Lemma 11.2.2 *)</span>
+
+
+
+<span class="c">(* ================================================== RD-inverse-apart-0 *)</span>
+<span class="sd">(** Theorem 11.2.4 *)</span>
+
+
+
+<span class="c">(* ================================================== RD-archimedean *)</span>
+<span class="sd">(** Theorem 11.2.6 *)</span>
+
+
+
+<span class="c">(* ================================================== ordered-field *)</span>
+<span class="sd">(** Definition 11.2.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_2_7</span> := @HoTT.Classes.interfaces.abstract_algebra.IsField.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_2_7&#39;</span> := @HoTT.Classes.interfaces.orders.FullPseudoSemiRingOrder.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== RD-archimedean-ordered-field *)</span>
+<span class="sd">(** Theorem 11.2.8 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:cauchy-approximation *)</span>
+<span class="sd">(** Definition 11.2.10 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_2_10</span> := @HoTT.Classes.theory.premetric.Approximation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== RD-cauchy-complete *)</span>
+<span class="sd">(** Theorem 11.2.12 *)</span>
+
+
+
+<span class="c">(* ================================================== RD-final-field *)</span>
+<span class="sd">(** Theorem 11.2.14 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:cuts-preserve-admissibility *)</span>
+<span class="sd">(** Lemma 11.2.15 *)</span>
+
+
+
+<span class="c">(* ================================================== RD-dedekind-complete *)</span>
+<span class="sd">(** Corollary 11.2.16 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:cauchy-reals *)</span>
+<span class="sd">(** Definition 11.3.2 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:close-reflexive *)</span>
+<span class="sd">(** Lemma 11.3.8 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:Cauchy-reals-are-a-set *)</span>
+<span class="sd">(** Theorem 11.3.9 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-lim-onto *)</span>
+<span class="sd">(** Lemma 11.3.10 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-lim-factor *)</span>
+<span class="sd">(** Lemma 11.3.11 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:RCsim-symmetric *)</span>
+<span class="sd">(** Lemma 11.3.12 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:lipschitz *)</span>
+<span class="sd">(** Definition 11.3.14 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_3_14</span> := @HoTT.Classes.theory.premetric.Lipschitz.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== RC-extend-Q-Lipschitz *)</span>
+<span class="sd">(** Lemma 11.3.15 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:RC-approx *)</span>
+<span class="sd">(** Theorem 11.3.16 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:RC-sim-characterization *)</span>
+<span class="sd">(** Theorem 11.3.32 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:RC-sim-lim *)</span>
+<span class="sd">(** Lemma 11.3.36 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:RC-sim-lim-term *)</span>
+<span class="sd">(** Lemma 11.3.37 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-continuous-eq *)</span>
+<span class="sd">(** Lemma 11.3.39 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-binary-nonexpanding-extension *)</span>
+<span class="sd">(** Lemma 11.3.40 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-archimedean *)</span>
+<span class="sd">(** Theorem 11.3.41 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:RC-le-grow *)</span>
+<span class="sd">(** Lemma 11.3.42 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:RC-lt-open *)</span>
+<span class="sd">(** Lemma 11.3.43 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-sim-eqv-le *)</span>
+<span class="sd">(** Theorem 11.3.44 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-squaring *)</span>
+<span class="sd">(** Theorem 11.3.46 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-archimedean-ordered-field *)</span>
+<span class="sd">(** Theorem 11.3.48 *)</span>
+
+
+
+<span class="c">(* ================================================== RC-initial-Cauchy-complete *)</span>
+<span class="sd">(** Theorem 11.3.50 *)</span>
+
+
+
+<span class="c">(* ================================================== lem:untruncated-linearity-reals-coincide *)</span>
+<span class="sd">(** Lemma 11.4.1 *)</span>
+
+
+
+<span class="c">(* ================================================== when-reals-coincide *)</span>
+<span class="sd">(** Corollary 11.4.3 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:metric-space *)</span>
+<span class="sd">(** Definition 11.5.1 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:complete-metric-space *)</span>
+<span class="sd">(** Definition 11.5.2 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:total-bounded-metric-space *)</span>
+<span class="sd">(** Definition 11.5.3 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:uniformly-continuous *)</span>
+<span class="sd">(** Definition 11.5.5 *)</span>
+
+
+
+<span class="c">(* ================================================== analysis-interval-ctb *)</span>
+<span class="sd">(** Theorem 11.5.6 *)</span>
+
+
+
+<span class="c">(* ================================================== ctb-uniformly-continuous-sup *)</span>
+<span class="sd">(** Theorem 11.5.7 *)</span>
+
+
+
+<span class="c">(* ================================================== analysis-bw-lpo *)</span>
+<span class="sd">(** Theorem 11.5.9 *)</span>
+
+
+
+<span class="c">(* ================================================== classical-Heine-Borel *)</span>
+<span class="sd">(** Theorem 11.5.11 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:inductive-cover *)</span>
+<span class="sd">(** Definition 11.5.13 *)</span>
+
+
+
+<span class="c">(* ================================================== reals-formal-topology-locally-compact *)</span>
+<span class="sd">(** Lemma 11.5.14 *)</span>
+
+
+
+<span class="c">(* ================================================== interval-Heine-Borel *)</span>
+<span class="sd">(** Corollary 11.5.15 *)</span>
+
+
+
+<span class="c">(* ================================================== inductive-cover-classical *)</span>
+<span class="sd">(** Theorem 11.5.16 *)</span>
+
+
+
+<span class="c">(* ================================================== defn:surreals *)</span>
+<span class="sd">(** Definition 11.6.1 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_1</span> := @HoTT.Spaces.No.Core.No.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:NO-simplicity *)</span>
+<span class="sd">(** Theorem 11.6.2 *)</span>
+
+
+
+<span class="c">(* ================================================== thm:NO-refl-opt *)</span>
+<span class="sd">(** Theorem 11.6.4 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_4_i</span> := @HoTT.Spaces.No.Core.le_reflexive.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_4_ii_l</span> := @HoTT.Spaces.No.Core.lt_lopt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_4_ii_r</span> := @HoTT.Spaces.No.Core.lt_ropt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:NO-set *)</span>
+<span class="sd">(** Corollary 11.6.5 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_5</span> := @HoTT.Spaces.No.Core.isset_No.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== defn:No-codes *)</span>
+<span class="sd">(** Theorem 11.6.7 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_7</span> := @HoTT.Spaces.No.Core.No_codes_package.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:NO-encode-decode *)</span>
+<span class="sd">(** Theorem 11.6.16 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_16_i</span> := @HoTT.Spaces.No.Core.No_encode_le_lt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_16_ii</span> := @HoTT.Spaces.No.Core.No_decode_le_lt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== thm:NO-unstrict-transitive *)</span>
+<span class="sd">(** Corollary 11.6.17 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_17_i</span> := @HoTT.Spaces.No.Core.lt_le.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_17_ii</span> := @HoTT.Spaces.No.Core.le_le_trans.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_17_iii</span> := @HoTT.Spaces.No.Core.le_lt_trans.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_17_iv</span> := @HoTT.Spaces.No.Core.lt_le_trans.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* ================================================== eg:surreal-addition *)</span>
+<span class="sd">(** Example 11.6.18 *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Book_11_6_18</span> := @HoTT.Spaces.No.Addition.plus.</span></span></pre>
+</div>
+</div></body>
+</html>

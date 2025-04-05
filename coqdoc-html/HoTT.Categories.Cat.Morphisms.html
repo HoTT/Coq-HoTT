@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Cat.Morphisms</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Cat.Morphisms</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab463"></a><h1 class="section">Morphisms in cat</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab464"></a><h2 class="section">Lemmas relationship between transporting the action of functors on objects, and <span class="inlinecode"><a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#idtoiso"><span class="id" title="definition">idtoiso</span></a></span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="iso_lemmas" class="idref" href="#iso_lemmas"><span class="id" title="section">iso_lemmas</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="iso_lemmas.C" class="idref" href="#iso_lemmas.C"><span class="id" title="variable">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="iso_lemmas.s" class="idref" href="#iso_lemmas.s"><span class="id" title="variable">s</span></a> <a id="iso_lemmas.d" class="idref" href="#iso_lemmas.d"><span class="id" title="variable">d</span></a> : <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.C"><span class="id" title="variable">C</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="iso_lemmas.m1" class="idref" href="#iso_lemmas.m1"><span class="id" title="variable">m1</span></a> <a id="iso_lemmas.m2" class="idref" href="#iso_lemmas.m2"><span class="id" title="variable">m2</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.s"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.d"><span class="id" title="variable">d</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="iso_lemmas.p" class="idref" href="#iso_lemmas.p"><span class="id" title="variable">p</span></a> : <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.m1"><span class="id" title="variable">m1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.m2"><span class="id" title="variable">m2</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="iso_lemmas.Fs" class="idref" href="#iso_lemmas.Fs"><span class="id" title="variable">Fs</span></a> <a id="iso_lemmas.Fd" class="idref" href="#iso_lemmas.Fd"><span class="id" title="variable">Fd</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="iso_lemmas.Fm" class="idref" href="#iso_lemmas.Fm"><span class="id" title="variable">Fm</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.s"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.d"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.Fs"><span class="id" title="variable">Fs</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.Fd"><span class="id" title="variable">Fd</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="transport_Fc_to_idtoiso" class="idref" href="#transport_Fc_to_idtoiso"><span class="id" title="lemma">transport_Fc_to_idtoiso</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="s':11" class="idref" href="#s':11"><span class="id" title="binder">s'</span></a> <a id="d':12" class="idref" href="#d':12"><span class="id" title="binder">d'</span></a> <a id="u:13" class="idref" href="#u:13"><span class="id" title="binder">u</span></a><br/>
+&nbsp;&nbsp;: @<a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> <a id="m:14" class="idref" href="#m:14"><span class="id" title="binder">m</span></a> ⇒ <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.Fm"><span class="id" title="variable">Fm</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#m:14"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#s':11"><span class="id" title="variable">s'</span></a>) <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#d':12"><span class="id" title="variable">d'</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.p"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#u:13"><span class="id" title="variable">u</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#u:13"><span class="id" title="variable">u</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#components_of"><span class="id" title="projection">components_of</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#2170248a3ff84d7d3e1276c5b6c2e93b"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Category.Morphisms.html#idtoiso"><span class="id" title="definition">Category.Morphisms.idtoiso</span></a> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">_</span>) (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.Fm"><span class="id" title="variable">Fm</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.p"><span class="id" title="variable">p</span></a>) : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Categories.Category.Morphisms.html#2170248a3ff84d7d3e1276c5b6c2e93b"><span class="id" title="notation">)^-1</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#s':11"><span class="id" title="variable">s'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">case</span> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.p"><span class="id" title="variable">p</span></a>; <span class="id" title="tactic">clear</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">autorewrite</span> <span class="id" title="keyword">with</span> <span class="id" title="var">morphism</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="transport_cF_to_idtoiso" class="idref" href="#transport_cF_to_idtoiso"><span class="id" title="lemma">transport_cF_to_idtoiso</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="s':15" class="idref" href="#s':15"><span class="id" title="binder">s'</span></a> <a id="d':16" class="idref" href="#d':16"><span class="id" title="binder">d'</span></a> <a id="u:17" class="idref" href="#u:17"><span class="id" title="binder">u</span></a><br/>
+&nbsp;&nbsp;: @<a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> <a id="m:18" class="idref" href="#m:18"><span class="id" title="binder">m</span></a> ⇒ <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#s':15"><span class="id" title="variable">s'</span></a> (<a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.Fm"><span class="id" title="variable">Fm</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#m:18"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#d':16"><span class="id" title="variable">d'</span></a>)) <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.p"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#u:17"><span class="id" title="variable">u</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#components_of"><span class="id" title="projection">components_of</span></a> (<a class="idref" href="HoTT.Categories.Category.Morphisms.html#idtoiso"><span class="id" title="definition">Category.Morphisms.idtoiso</span></a> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">_</span>) (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.Fm"><span class="id" title="variable">Fm</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.p"><span class="id" title="variable">p</span></a>) : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>) <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#d':16"><span class="id" title="variable">d'</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#u:17"><span class="id" title="variable">u</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">case</span> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas.p"><span class="id" title="variable">p</span></a>; <span class="id" title="tactic">clear</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">autorewrite</span> <span class="id" title="keyword">with</span> <span class="id" title="var">morphism</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Cat.Morphisms.html#iso_lemmas"><span class="id" title="section">iso_lemmas</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

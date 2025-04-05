@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Functor.Composition.Functorial.Attributes</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Functor.Composition.Functorial.Attributes</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab687"></a><h1 class="section">Attributes of Functoriality of functor composition</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Core.html#"><span class="id" title="library">Functor.Composition.Functorial.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#"><span class="id" title="library">NaturalTransformation.Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Isomorphisms.html#"><span class="id" title="library">NaturalTransformation.Isomorphisms</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Attributes.html#"><span class="id" title="library">Functor.Attributes</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Paths.html#"><span class="id" title="library">NaturalTransformation.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">HoTT.Truncations.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">natural_transformation_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab688"></a><h2 class="section">Precomposition with an essentially surjective functor is faithful</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="faithfull_precomposition_essential_surjective" class="idref" href="#faithfull_precomposition_essential_surjective"><span class="id" title="section">faithfull_precomposition_essential_surjective</span></a>.<br/>
+</div>
+
+<div class="doc">
+Quoting the HoTT Book:
+
+<div class="paragraph"> </div>
+
+  Lemma. If <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>, <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span>, <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> are precategories and <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> is an
+  essentially surjective functor, then <span class="inlinecode">(–</span> <span class="inlinecode">∘</span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a>)</span> <span class="inlinecode">:</span> <span class="inlinecode">(<a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a>)</span>
+  is faithful. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="fs:1" class="idref" href="#fs:1"><span class="id" title="binder">fs</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="class">Funext</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="faithfull_precomposition_essential_surjective.A" class="idref" href="#faithfull_precomposition_essential_surjective.A"><span class="id" title="variable">A</span></a> <a id="faithfull_precomposition_essential_surjective.B" class="idref" href="#faithfull_precomposition_essential_surjective.B"><span class="id" title="variable">B</span></a> <a id="faithfull_precomposition_essential_surjective.C" class="idref" href="#faithfull_precomposition_essential_surjective.C"><span class="id" title="variable">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="faithfull_precomposition_essential_surjective.H" class="idref" href="#faithfull_precomposition_essential_surjective.H"><span class="id" title="variable">H</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.B"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H_is_essentially_surjective:6" class="idref" href="#H_is_essentially_surjective:6"><span class="id" title="binder">H_is_essentially_surjective</span></a> : <a class="idref" href="HoTT.Categories.Functor.Attributes.html#IsEssentiallySurjective"><span class="id" title="class">IsEssentiallySurjective</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.H"><span class="id" title="variable">H</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="isfaithful_precomposition_essentially_surjective_helper" class="idref" href="#isfaithful_precomposition_essentially_surjective_helper"><span class="id" title="lemma">isfaithful_precomposition_essentially_surjective_helper</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F:7" class="idref" href="#F:7"><span class="id" title="binder">F</span></a> <a id="G:8" class="idref" href="#G:8"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.C"><span class="id" title="variable">C</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="T:9" class="idref" href="#T:9"><span class="id" title="binder">T</span></a> <a id="U:10" class="idref" href="#U:10"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#F:7"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#G:8"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="a:11" class="idref" href="#a:11"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.A"><span class="id" title="variable">A</span></a>) (<a id="b:12" class="idref" href="#b:12"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.B"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="f:13" class="idref" href="#f:13"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.H"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#a:11"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#6afdcecda8be90e87489115d7021bd5e"><span class="id" title="notation">&lt;~=~&gt;</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#b:12"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="H':14" class="idref" href="#H':14"><span class="id" title="binder">H'</span></a> : <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#T:9"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oR'_x"><span class="id" title="notation">oR</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.H"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#U:10"><span class="id" title="variable">U</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oR'_x"><span class="id" title="notation">oR</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.H"><span class="id" title="variable">H</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#T:9"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#b:12"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#U:10"><span class="id" title="variable">U</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#b:12"><span class="id" title="variable">b</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#components_of"><span class="id" title="projection">components_of</span></a>) <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">apD10</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>; <span class="id" title="tactic">hnf</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>; <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- !(<a class="idref" href="HoTT.Categories.NaturalTransformation.Isomorphisms.html#path_components_of_isomorphic'"><span class="id" title="definition">path_components_of_isomorphic'</span></a> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isfaithful_precomposition_essentially_surjective" class="idref" href="#isfaithful_precomposition_essentially_surjective"><span class="id" title="instance">isfaithful_precomposition_essentially_surjective</span></a><br/>
+&nbsp;&nbsp;: @<a class="idref" href="HoTT.Categories.Functor.Attributes.html#IsFaithful"><span class="id" title="class">IsFaithful</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.C"><span class="id" title="variable">C</span></a>) (<a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.C"><span class="id" title="variable">C</span></a>) (<a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Core.html#compose_functor"><span class="id" title="definition">compose_functor</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective.H"><span class="id" title="variable">H</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#isfaithful_precomposition_essentially_surjective_helper"><span class="id" title="lemma">isfaithful_precomposition_essentially_surjective_helper</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eassumption</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">intro</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">progress</span> <span class="id" title="tactic">hnf</span> <span class="id" title="tactic">in</span> ×<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">progress</span> <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> ×<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">progress</span> <span class="id" title="var">strip_truncations</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ <span class="id" title="var">H</span> : <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ] ⇒ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap10"><span class="id" title="definition">ap10</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">progress</span> <span class="id" title="var">path_natural_transformation</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ <span class="id" title="var">H</span> : <a class="idref" href="HoTT.Basics.Overture.html#sig"><span class="id" title="record">sig</span></a> <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ] ⇒ <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ <span class="id" title="var">H</span> : <span class="id" title="var">_</span>, <span class="id" title="var">t</span> : <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> (<span class="id" title="var">H</span> <span class="id" title="var">t</span>); <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Attributes.html#faithfull_precomposition_essential_surjective"><span class="id" title="section">faithfull_precomposition_essential_surjective</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.SetCategory.Functors.SetProp</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.SetCategory.Functors.SetProp</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab967"></a><h1 class="section">Functors between <span class="inlinecode"><a class="idref" href="HoTT.Categories.SetCategory.Core.html#set_cat"><span class="id" title="definition">set_cat</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Categories.SetCategory.Core.html#prop_cat"><span class="id" title="definition">prop_cat</span></a></span></h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#"><span class="id" title="library">SetCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="set_coercions_definitions" class="idref" href="#set_coercions_definitions"><span class="id" title="section">set_coercions_definitions</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="set_coercions_definitions.C" class="idref" href="#set_coercions_definitions.C"><span class="id" title="variable">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="to_prop" class="idref" href="#to_prop"><span class="id" title="definition">to_prop</span></a> := <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions_definitions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#prop_cat"><span class="id" title="definition">prop_cat</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="to_set" class="idref" href="#to_set"><span class="id" title="definition">to_set</span></a> := <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions_definitions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#set_cat"><span class="id" title="definition">set_cat</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="from_prop" class="idref" href="#from_prop"><span class="id" title="definition">from_prop</span></a> := <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#prop_cat"><span class="id" title="definition">prop_cat</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions_definitions.C"><span class="id" title="variable">C</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="from_set" class="idref" href="#from_set"><span class="id" title="definition">from_set</span></a> := <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#set_cat"><span class="id" title="definition">set_cat</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions_definitions.C"><span class="id" title="variable">C</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions_definitions"><span class="id" title="section">set_coercions_definitions</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Identity</span> <span class="id" title="keyword">Coercion</span> <span class="id" title="var">to_prop_id</span> : <span class="id" title="var">to_prop</span> &gt;-&gt; <span class="id" title="var">Functor</span>.<br/>
+<span class="id" title="keyword">Identity</span> <span class="id" title="keyword">Coercion</span> <span class="id" title="var">to_set_id</span> : <span class="id" title="var">to_set</span> &gt;-&gt; <span class="id" title="var">Functor</span>.<br/>
+<span class="id" title="keyword">Identity</span> <span class="id" title="keyword">Coercion</span> <span class="id" title="var">from_prop_id</span> : <span class="id" title="var">from_prop</span> &gt;-&gt; <span class="id" title="var">Functor</span>.<br/>
+<span class="id" title="keyword">Identity</span> <span class="id" title="keyword">Coercion</span> <span class="id" title="var">from_set_id</span> : <span class="id" title="var">from_set</span> &gt;-&gt; <span class="id" title="var">Functor</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="set_coercions" class="idref" href="#set_coercions"><span class="id" title="section">set_coercions</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:3" class="idref" href="#H:3"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="set_coercions.C" class="idref" href="#set_coercions.C"><span class="id" title="variable">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab968"></a><h2 class="section">Functors to <span class="inlinecode"><a class="idref" href="HoTT.Categories.SetCategory.Core.html#prop_cat"><span class="id" title="definition">prop_cat</span></a></span> give rise to functors to <span class="inlinecode"><a class="idref" href="HoTT.Categories.SetCategory.Core.html#set_cat"><span class="id" title="definition">set_cat</span></a></span></h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="to_prop2set" class="idref" href="#to_prop2set"><span class="id" title="definition">to_prop2set</span></a> (<a id="F:5" class="idref" href="#F:5"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#to_prop"><span class="id" title="definition">to_prop</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions.C"><span class="id" title="variable">C</span></a>) : <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#to_set"><span class="id" title="definition">to_set</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions.C"><span class="id" title="variable">C</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#set_cat"><span class="id" title="definition">set_cat</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:15" class="idref" href="#x:15"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> (<a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#F:5"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#x:15"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:12" class="idref" href="#s:12"><span class="id" title="binder">s</span></a> <a id="d:13" class="idref" href="#d:13"><span class="id" title="binder">d</span></a> <a id="m:14" class="idref" href="#m:14"><span class="id" title="binder">m</span></a> ⇒ (<a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#F:5"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">_1</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#m:14"><span class="id" title="variable">m</span></a>)%<span class="id" title="var">morphism</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:7" class="idref" href="#s:7"><span class="id" title="binder">s</span></a> <a id="d:8" class="idref" href="#d:8"><span class="id" title="binder">d</span></a> <a id="d':9" class="idref" href="#d':9"><span class="id" title="binder">d'</span></a> <a id="m:10" class="idref" href="#m:10"><span class="id" title="binder">m</span></a> <a id="m':11" class="idref" href="#m':11"><span class="id" title="binder">m'</span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#F:5"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#s:7"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#d:8"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#d':9"><span class="id" title="variable">d'</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#m:10"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#m':11"><span class="id" title="variable">m'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:6" class="idref" href="#x:6"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Core.html#identity_of"><span class="id" title="projection">identity_of</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#F:5"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#x:6"><span class="id" title="variable">x</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab969"></a><h2 class="section">Functors from <span class="inlinecode"><a class="idref" href="HoTT.Categories.SetCategory.Core.html#set_cat"><span class="id" title="definition">set_cat</span></a></span> give rise to functors to <span class="inlinecode"><a class="idref" href="HoTT.Categories.SetCategory.Core.html#prop_cat"><span class="id" title="definition">prop_cat</span></a></span></h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="from_set2prop" class="idref" href="#from_set2prop"><span class="id" title="definition">from_set2prop</span></a> (<a id="F:16" class="idref" href="#F:16"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#from_set"><span class="id" title="definition">from_set</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions.C"><span class="id" title="variable">C</span></a>) : <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#from_prop"><span class="id" title="definition">from_prop</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions.C"><span class="id" title="variable">C</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#prop_cat"><span class="id" title="definition">prop_cat</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions.C"><span class="id" title="variable">C</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:26" class="idref" href="#x:26"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#F:16"><span class="id" title="variable">F</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#x:26"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:23" class="idref" href="#s:23"><span class="id" title="binder">s</span></a> <a id="d:24" class="idref" href="#d:24"><span class="id" title="binder">d</span></a> <a id="m:25" class="idref" href="#m:25"><span class="id" title="binder">m</span></a> ⇒ (<a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#F:16"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">_1</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#m:25"><span class="id" title="variable">m</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.SetCategory.Core.html#set_cat"><span class="id" title="definition">set_cat</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#s:23"><span class="id" title="variable">s</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#d:24"><span class="id" title="variable">d</span></a>)<a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">)</span></a>)%<span class="id" title="var">morphism</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:18" class="idref" href="#s:18"><span class="id" title="binder">s</span></a> <a id="d:19" class="idref" href="#d:19"><span class="id" title="binder">d</span></a> <a id="d':20" class="idref" href="#d':20"><span class="id" title="binder">d'</span></a> <a id="m:21" class="idref" href="#m:21"><span class="id" title="binder">m</span></a> <a id="m':22" class="idref" href="#m':22"><span class="id" title="binder">m'</span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#F:16"><span class="id" title="variable">F</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#s:18"><span class="id" title="variable">s</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#d:19"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#d':20"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#m:21"><span class="id" title="variable">m</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#m':22"><span class="id" title="variable">m'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:17" class="idref" href="#x:17"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Core.html#identity_of"><span class="id" title="projection">identity_of</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#F:16"><span class="id" title="variable">F</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#x:17"><span class="id" title="variable">x</span></a>)).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.SetCategory.Functors.SetProp.html#set_coercions"><span class="id" title="section">set_coercions</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

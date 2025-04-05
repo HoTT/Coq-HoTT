@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.HIT.SetCone</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.HIT.SetCone</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.Unit.html#"><span class="id" title="library">Types.Unit</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Colimits.Pushout.html#"><span class="id" title="library">Colimits.Pushout</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1127"></a><h1 class="section">Cones of HSets</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="SetCone" class="idref" href="#SetCone"><span class="id" title="section">SetCone</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> <a id="B:2" class="idref" href="#B:2"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HSet"><span class="id" title="abbreviation">HSet</span></a>} (<a id="f:3" class="idref" href="#f:3"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.HIT.SetCone.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.HIT.SetCone.html#B:2"><span class="id" title="variable">B</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="setcone" class="idref" href="#setcone"><span class="id" title="definition">setcone</span></a> := <a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> 0 (<a class="idref" href="HoTT.Colimits.Pushout.html#Pushout"><span class="id" title="definition">Pushout@</span></a><a class="idref" href="HoTT.Colimits.Pushout.html#Pushout"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Colimits.Pushout.html#Pushout"><span class="id" title="definition">_</span></a> <a class="idref" href="HoTT.Colimits.Pushout.html#Pushout"><span class="id" title="definition">_</span></a> <a class="idref" href="HoTT.Colimits.Pushout.html#Pushout"><span class="id" title="definition">Set</span></a> <a class="idref" href="HoTT.Colimits.Pushout.html#Pushout"><span class="id" title="definition">_</span></a><a class="idref" href="HoTT.Colimits.Pushout.html#Pushout"><span class="id" title="definition">}</span></a> <a class="idref" href="HoTT.HIT.SetCone.html#SetCone.f"><span class="id" title="variable">f</span></a> (<a class="idref" href="HoTT.Types.Unit.html#const_tt"><span class="id" title="definition">const_tt</span></a> <a class="idref" href="HoTT.HIT.SetCone.html#SetCone.A"><span class="id" title="variable">A</span></a>)).<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="istrunc_setcone" class="idref" href="#istrunc_setcone"><span class="id" title="instance">istrunc_setcone</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <a class="idref" href="HoTT.HIT.SetCone.html#setcone"><span class="id" title="definition">setcone</span></a> := <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="setcone_point" class="idref" href="#setcone_point"><span class="id" title="definition">setcone_point</span></a> : <a class="idref" href="HoTT.HIT.SetCone.html#setcone"><span class="id" title="definition">setcone</span></a> := <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Colimits.Pushout.html#push"><span class="id" title="definition">push</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>)).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.HIT.SetCone.html#SetCone"><span class="id" title="section">SetCone</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

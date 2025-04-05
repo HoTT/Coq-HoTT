@@ -1,0 +1,14 @@
+N: 3 "iscolimit_sigma" [body=yes, kind=cnst, prop=no, path="Colimit_Sigma", ];
+N: 4 "sigma_cocone" [body=yes, kind=cnst, prop=no, path="Colimit_Sigma", ];
+N: 1 "sigma_diag_functor_equiv" [body=yes, kind=cnst, prop=no, path="Colimit_Sigma", ];
+N: 6 "sigma_diagram" [body=yes, kind=cnst, prop=no, path="Colimit_Sigma", ];
+N: 2 "sigma_diagram_functor" [body=yes, kind=cnst, prop=no, path="Colimit_Sigma", ];
+N: 5 "sigma_diagram_map" [body=yes, kind=cnst, prop=no, path="Colimit_Sigma", ];
+E: 1 2 [weight=1, ];
+E: 1 6 [weight=4, ];
+E: 2 6 [weight=8, ];
+E: 3 4 [weight=1, ];
+E: 3 5 [weight=18, ];
+E: 3 6 [weight=141, ];
+E: 4 6 [weight=12, ];
+E: 5 6 [weight=3, ];

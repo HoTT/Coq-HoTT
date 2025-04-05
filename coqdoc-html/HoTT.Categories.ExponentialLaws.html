@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.ExponentialLaws</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.ExponentialLaws</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab611"></a><h1 class="section">Exponential Laws</h1>
+ We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by <span class="inlinecode"><span class="id" title="var">Including</span></span> into other modules. <a id="lab612"></a><h2 class="section">Laws about the initial category</h2>
+<a id="lab613"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">x⁰</span></span> <span class="inlinecode">≅</span> <span class="inlinecode">1</span></h3>
+<a id="lab614"></a><h3 class="section"><span class="inlinecode">0ˣ</span> <span class="inlinecode">≅</span> <span class="inlinecode">0</span> if <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">≠</span> <span class="inlinecode">0</span></h3>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law0.html#"><span class="id" title="library">ExponentialLaws.Law0</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab615"></a><h2 class="section">Laws about the terminal category</h2>
+<a id="lab616"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">x¹</span></span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span></h3>
+<a id="lab617"></a><h3 class="section"><span class="inlinecode">1ˣ</span> <span class="inlinecode">≅</span> <span class="inlinecode">1</span></h3>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law1.html#"><span class="id" title="library">ExponentialLaws.Law1</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab618"></a><h2 class="section">The law that a sum in an exponent is a product</h2>
+<a id="lab619"></a><h3 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>ⁿ<span class="id" title="var">⁺</span>ᵐ</span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>ⁿ</span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>ᵐ</span></h3>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law2.html#"><span class="id" title="library">ExponentialLaws.Law2</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab620"></a><h2 class="section">The law that exponentiation distributes over product</h2>
+<a id="lab621"></a><h3 class="section"><span class="inlinecode">(<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">z</span>)ⁿ</span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>ⁿ</span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">z</span>ⁿ</span></h3>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law3.html#"><span class="id" title="library">ExponentialLaws.Law3</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab622"></a><h2 class="section">Currying</h2>
+<a id="lab623"></a><h3 class="section"><span class="inlinecode">(<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>ⁿ)ᵐ</span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>ⁿᵐ</span></h3>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.html#"><span class="id" title="library">ExponentialLaws.Law4</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Tactics.html#"><span class="id" title="library">ExponentialLaws.Tactics</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Tactics.html#"><span class="id" title="module">ExponentialLaws.Tactics</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

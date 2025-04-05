@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>FinInduction.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk0"><span class="kn">Require Import</span>
+  HoTT.Basics
+  HoTT.Types
+  HoTT.Universes.HSet
+  HoTT.Spaces.Nat.Core
+  HoTT.Spaces.Finite.FinNat
+  HoTT.Spaces.Finite.Fin.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk1"><span class="kn">Definition</span> <span class="nf">fin_ind</span> (<span class="nv">P</span> : <span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span>)
+  (<span class="nv">z</span> : <span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero)
+  (<span class="nv">s</span> : <span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n), P n k -&gt; P n.+<span class="mi">1</span> (fsucc k))
+  {<span class="nv">n</span> : nat} (<span class="nv">k</span> : Fin n)
+  : P n k.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P n k</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P n k</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk3"><span class="nb">refine</span> (transport (P n) (path_fin_to_finnat_to_fin k) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P n (finnat_to_fin (fin_to_finnat k))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk4"><span class="nb">refine</span> (finnat_ind (<span class="kr">fun</span> <span class="nv">n</span> <span class="nv">u</span> =&gt; P n (finnat_to_fin u)) _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> (finnat_to_fin (zero_finnat n))</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="fininduction-v-chk5" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><label class="goal-separator" for="fininduction-v-chk5"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n),
+P n (finnat_to_fin u) -&gt;
+P n.+<span class="mi">1</span> (finnat_to_fin (succ_finnat u))</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk6">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> (finnat_to_fin (zero_finnat n))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk7"><span class="nb">intro</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>n0</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P n0.+<span class="mi">1</span> (finnat_to_fin (zero_finnat n0))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> z.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk8">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n),
+P n (finnat_to_fin u) -&gt;
+P n.+<span class="mi">1</span> (finnat_to_fin (succ_finnat u))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk9"><span class="nb">intros</span> n&#39; u c.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>FinNat n&#39;</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>P n&#39; (finnat_to_fin u)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P n&#39;.+<span class="mi">1</span> (finnat_to_fin (succ_finnat u))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chka"><span class="nb">refine</span> ((path_finnat_to_fin_succ _)^ # _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>FinNat n&#39;</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>P n&#39; (finnat_to_fin u)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P n&#39;.+<span class="mi">1</span> (fsucc (finnat_to_fin u))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">apply</span> s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chkb"><span class="kn">Lemma</span> <span class="nf">fin_ind_beta_zero</span> (<span class="nv">P</span> : <span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span>)
+  (<span class="nv">z</span> : <span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero)
+  (<span class="nv">s</span> : <span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n), P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)) (<span class="nv">n</span> : nat)
+  : fin_ind P z s fin_zero = z n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_ind P z s fin_zero = z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chkc"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_ind P z s fin_zero = z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chkd"><span class="nb">unfold</span> fin_ind.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (P n.+<span class="mi">1</span>)
+  (path_fin_to_finnat_to_fin fin_zero)
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c))
+     (fin_to_finnat fin_zero)) = z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chke"><span class="nb">generalize</span> (path_fin_to_finnat_to_fin (@fin_zero n)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">p</span> : finnat_to_fin (fin_to_finnat fin_zero) = fin_zero,
+transport (P n.+<span class="mi">1</span>) p
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c))
+     (fin_to_finnat fin_zero)) = z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chkf"><span class="nb">induction</span> (path_fin_to_finnat_fin_zero n)^.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">p</span> : finnat_to_fin (zero_finnat n) = fin_zero,
+transport (P n.+<span class="mi">1</span>) p
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c)) (zero_finnat n)) =
+z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk10"><span class="nb">intro</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>finnat_to_fin (zero_finnat n) = fin_zero</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (P n.+<span class="mi">1</span>) p
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c)) (zero_finnat n)) =
+z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk11"><span class="nb">destruct</span> (hset_path2 <span class="mi">1</span> p).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (P n.+<span class="mi">1</span>) <span class="mi">1</span>
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c)) (zero_finnat n)) =
+z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk12">lhs napply transport_1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">finnat_ind
+  (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+   P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+  (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+     (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+   transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+     (s n&#39; (finnat_to_fin u) c)) (zero_finnat n) = 
+z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">napply finnat_ind_beta_zero.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk13"><span class="kn">Lemma</span> <span class="nf">fin_ind_beta_fsucc</span> (<span class="nv">P</span> : <span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span>)
+  (<span class="nv">z</span> : <span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero)
+  (<span class="nv">s</span> : <span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n), P n k -&gt; P n.+<span class="mi">1</span> (fsucc k))
+  {<span class="nv">n</span> : nat} (<span class="nv">k</span> : Fin n)
+  : fin_ind P z s (fsucc k) = s n k (fin_ind P z s k).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_ind P z s (fsucc k) = s n k (fin_ind P z s k)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk14"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_ind P z s (fsucc k) = s n k (fin_ind P z s k)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk15"><span class="nb">unfold</span> fin_ind.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (P n.+<span class="mi">1</span>)
+  (path_fin_to_finnat_to_fin (fsucc k))
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c))
+     (fin_to_finnat (fsucc k))) =
+s n k
+  (transport (P n) (path_fin_to_finnat_to_fin k)
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk16"><span class="nb">generalize</span> (path_fin_to_finnat_to_fin (fsucc k)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">p</span> : finnat_to_fin (fin_to_finnat (fsucc k)) = fsucc k,
+transport (P n.+<span class="mi">1</span>) p
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c))
+     (fin_to_finnat (fsucc k))) =
+s n k
+  (transport (P n) (path_fin_to_finnat_to_fin k)
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk17"><span class="nb">induction</span> (path_fin_to_finnat_fsucc k)^.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">p</span> : finnat_to_fin (succ_finnat (fin_to_finnat k)) =
+    fsucc k,
+transport (P n.+<span class="mi">1</span>) p
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c))
+     (succ_finnat (fin_to_finnat k))) =
+s n k
+  (transport (P n) (path_fin_to_finnat_to_fin k)
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk18"><span class="nb">intro</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>finnat_to_fin (succ_finnat (fin_to_finnat k)) =
+fsucc k</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (P n.+<span class="mi">1</span>) p
+  (finnat_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+      P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+        (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+      transport (P n&#39;.+<span class="mi">1</span>) (path_finnat_to_fin_succ u)^
+        (s n&#39; (finnat_to_fin u) c))
+     (succ_finnat (fin_to_finnat k))) =
+s n k
+  (transport (P n) (path_fin_to_finnat_to_fin k)
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk19"><span class="nb">refine</span> (ap (transport (P n.+<span class="mi">1</span>) p) (finnat_ind_beta_succ _ _ _ _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>finnat_to_fin (succ_finnat (fin_to_finnat k)) =
+fsucc k</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (P n.+<span class="mi">1</span>) p
+  (transport (P n.+<span class="mi">1</span>)
+     (path_finnat_to_fin_succ (fin_to_finnat k))^
+     (s n (finnat_to_fin (fin_to_finnat k))
+        (finnat_ind
+           (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+            P n (finnat_to_fin u))
+           (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+           (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+              (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+            transport (P n&#39;.+<span class="mi">1</span>)
+              (path_finnat_to_fin_succ u)^
+              (s n&#39; (finnat_to_fin u) c))
+           (fin_to_finnat k)))) =
+s n k
+  (transport (P n) (path_fin_to_finnat_to_fin k)
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk1a"><span class="nb">generalize dependent</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">p</span> : finnat_to_fin (succ_finnat (fin_to_finnat k)) =
+    fsucc k,
+transport (P n.+<span class="mi">1</span>) p
+  (transport (P n.+<span class="mi">1</span>)
+     (path_finnat_to_fin_succ (fin_to_finnat k))^
+     (s n (finnat_to_fin (fin_to_finnat k))
+        (finnat_ind
+           (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+            P n (finnat_to_fin u))
+           (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+           (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+              (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+            transport (P n&#39;.+<span class="mi">1</span>)
+              (path_finnat_to_fin_succ u)^
+              (s n&#39; (finnat_to_fin u) c))
+           (fin_to_finnat k)))) =
+s n k
+  (transport (P n) (path_fin_to_finnat_to_fin k)
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk1b"><span class="nb">induction</span> (path_fin_to_finnat_to_fin k).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">p</span> : finnat_to_fin
+      (succ_finnat
+         (fin_to_finnat
+            (finnat_to_fin (fin_to_finnat k)))) =
+    fsucc (finnat_to_fin (fin_to_finnat k)),
+transport (P n.+<span class="mi">1</span>) p
+  (transport (P n.+<span class="mi">1</span>)
+     (path_finnat_to_fin_succ
+        (fin_to_finnat
+           (finnat_to_fin (fin_to_finnat k))))^
+     (s n
+        (finnat_to_fin
+           (fin_to_finnat
+              (finnat_to_fin (fin_to_finnat k))))
+        (finnat_ind
+           (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+            P n (finnat_to_fin u))
+           (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+           (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+              (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+            transport (P n&#39;.+<span class="mi">1</span>)
+              (path_finnat_to_fin_succ u)^
+              (s n&#39; (finnat_to_fin u) c))
+           (fin_to_finnat
+              (finnat_to_fin (fin_to_finnat k)))))) =
+s n (finnat_to_fin (fin_to_finnat k))
+  (transport (P n) <span class="mi">1</span>
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk1c"><span class="nb">induction</span> (path_fin_to_finnat_to_fin k)^.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">p</span> : finnat_to_fin (succ_finnat (fin_to_finnat k)) =
+    fsucc (finnat_to_fin (fin_to_finnat k)),
+transport (P n.+<span class="mi">1</span>) p
+  (transport (P n.+<span class="mi">1</span>)
+     (path_finnat_to_fin_succ (fin_to_finnat k))^
+     (s n (finnat_to_fin (fin_to_finnat k))
+        (finnat_ind
+           (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+            P n (finnat_to_fin u))
+           (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+           (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+              (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+            transport (P n&#39;.+<span class="mi">1</span>)
+              (path_finnat_to_fin_succ u)^
+              (s n&#39; (finnat_to_fin u) c))
+           (fin_to_finnat k)))) =
+s n (finnat_to_fin (fin_to_finnat k))
+  (transport (P n) <span class="mi">1</span>
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk1d"><span class="nb">intro</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>finnat_to_fin (succ_finnat (fin_to_finnat k)) =
+fsucc (finnat_to_fin (fin_to_finnat k))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (P n.+<span class="mi">1</span>) p
+  (transport (P n.+<span class="mi">1</span>)
+     (path_finnat_to_fin_succ (fin_to_finnat k))^
+     (s n (finnat_to_fin (fin_to_finnat k))
+        (finnat_ind
+           (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+            P n (finnat_to_fin u))
+           (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+           (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+              (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+            transport (P n&#39;.+<span class="mi">1</span>)
+              (path_finnat_to_fin_succ u)^
+              (s n&#39; (finnat_to_fin u) c))
+           (fin_to_finnat k)))) =
+s n (finnat_to_fin (fin_to_finnat k))
+  (transport (P n) <span class="mi">1</span>
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk1e"><span class="nb">induction</span> (hset_path2 p (path_finnat_to_fin_succ (fin_to_finnat k))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, P n.+<span class="mi">1</span> fin_zero</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n),
+P n k -&gt; P n.+<span class="mi">1</span> (fsucc k)</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>finnat_to_fin (succ_finnat (fin_to_finnat k)) =
+fsucc (finnat_to_fin (fin_to_finnat k))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (P n.+<span class="mi">1</span>) p
+  (transport (P n.+<span class="mi">1</span>) p^
+     (s n (finnat_to_fin (fin_to_finnat k))
+        (finnat_ind
+           (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+            P n (finnat_to_fin u))
+           (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+           (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+              (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+            transport (P n&#39;.+<span class="mi">1</span>)
+              (path_finnat_to_fin_succ u)^
+              (s n&#39; (finnat_to_fin u) c))
+           (fin_to_finnat k)))) =
+s n (finnat_to_fin (fin_to_finnat k))
+  (transport (P n) <span class="mi">1</span>
+     (finnat_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">u</span> : FinNat n) =&gt;
+         P n (finnat_to_fin u)) (<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; z n0)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">u</span> : FinNat n&#39;)
+           (<span class="nv">c</span> : P n&#39; (finnat_to_fin u)) =&gt;
+         transport (P n&#39;.+<span class="mi">1</span>)
+           (path_finnat_to_fin_succ u)^
+           (s n&#39; (finnat_to_fin u) c))
+        (fin_to_finnat k)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> transport_pV.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">fin_rec</span> (<span class="nv">B</span> : nat -&gt; <span class="kt">Type</span>)
+  : (<span class="kr">forall</span> <span class="nv">n</span> : nat, B n.+<span class="mi">1</span>) -&gt; (<span class="kr">forall</span> (<span class="nv">n</span> : nat), Fin n -&gt; B n -&gt; B n.+<span class="mi">1</span>) -&gt;
+    <span class="kr">forall</span> {<span class="nv">n</span> : nat}, Fin n -&gt; B n
+  := fin_ind (<span class="kr">fun</span> <span class="nv">n</span> <span class="nv">_</span> =&gt; B n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk1f"><span class="kn">Lemma</span> <span class="nf">fin_rec_beta_zero</span> (<span class="nv">B</span> : nat -&gt; <span class="kt">Type</span>)
+  (<span class="nv">z</span> : <span class="kr">forall</span> <span class="nv">n</span> : nat, B n.+<span class="mi">1</span>)
+  (<span class="nv">s</span> : <span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n), B n -&gt; B n.+<span class="mi">1</span>) (<span class="nv">n</span> : nat)
+  : fin_rec B z s fin_zero = z n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>B</var><span class="hyp-type"><b>: </b><span>nat -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, B n.+<span class="mi">1</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; B n -&gt; B n.+<span class="mi">1</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_rec B z s fin_zero = z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk20"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>B</var><span class="hyp-type"><b>: </b><span>nat -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, B n.+<span class="mi">1</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; B n -&gt; B n.+<span class="mi">1</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_rec B z s fin_zero = z n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> (fin_ind_beta_zero (<span class="kr">fun</span> <span class="nv">n</span> <span class="nv">_</span> =&gt; B n)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk21"><span class="kn">Lemma</span> <span class="nf">fin_rec_beta_fsucc</span> (<span class="nv">B</span> : nat -&gt; <span class="kt">Type</span>)
+  (<span class="nv">z</span> : <span class="kr">forall</span> <span class="nv">n</span> : nat, B n.+<span class="mi">1</span>)
+  (<span class="nv">s</span> : <span class="kr">forall</span> (<span class="nv">n</span> : nat) (<span class="nv">k</span> : Fin n), B n -&gt; B n.+<span class="mi">1</span>)
+  {<span class="nv">n</span> : nat} (<span class="nv">k</span> : Fin n)
+  : fin_rec B z s (fsucc k) = s n k (fin_rec B z s k).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>B</var><span class="hyp-type"><b>: </b><span>nat -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, B n.+<span class="mi">1</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; B n -&gt; B n.+<span class="mi">1</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_rec B z s (fsucc k) = s n k (fin_rec B z s k)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fininduction-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="fininduction-v-chk22"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>B</var><span class="hyp-type"><b>: </b><span>nat -&gt; <span class="kt">Type</span></span></span></span><br><span><var>z</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, B n.+<span class="mi">1</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">n</span> : nat, Fin n -&gt; B n -&gt; B n.+<span class="mi">1</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_rec B z s (fsucc k) = s n k (fin_rec B z s k)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> (fin_ind_beta_fsucc (<span class="kr">fun</span> <span class="nv">n</span> <span class="nv">_</span> =&gt; B n)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

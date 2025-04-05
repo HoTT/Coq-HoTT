@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Basics.Iff</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Basics.Iff</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab287"></a><h1 class="section">If and only if</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab288"></a><h2 class="section">Definition</h2>
+
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><a class="idref" href="HoTT.Basics.Iff.html#iff"><span class="id" title="definition">iff</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span>, written <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">↔</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span>, expresses the logical equivalence of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="iff" class="idref" href="#iff"><span class="id" title="definition">iff</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> <a id="B:2" class="idref" href="#B:2"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>) := <a class="idref" href="HoTT.Basics.Overture.html#prod"><span class="id" title="record">prod</span></a> (<a class="idref" href="HoTT.Basics.Iff.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Iff.html#B:2"><span class="id" title="variable">B</span></a>) (<a class="idref" href="HoTT.Basics.Iff.html#B:2"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Iff.html#A:1"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="::type_scope:x_'&lt;-&gt;'_x" class="idref" href="#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">&quot;</span></a>A &lt;-&gt; B" := (<a class="idref" href="HoTT.Basics.Iff.html#iff"><span class="id" title="definition">iff</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="var">type_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab289"></a><h2 class="section">Basic Properties</h2>
+
+<div class="paragraph"> </div>
+
+ Everything is logically equivalent to itself. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="iff_refl" class="idref" href="#iff_refl"><span class="id" title="definition">iff_refl</span></a> {<a id="A:3" class="idref" href="#A:3"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.Basics.Iff.html#A:3"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Iff.html#A:3"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Iff.html#iff"><span class="id" title="definition">iff</span></a></span> is a reflexive relation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="iff_reflexive" class="idref" href="#iff_reflexive"><span class="id" title="instance">iff_reflexive</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Reflexive"><span class="id" title="class">Reflexive</span></a> <a class="idref" href="HoTT.Basics.Iff.html#iff"><span class="id" title="definition">iff</span></a> | 1<br/>
+&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Basics.Iff.html#iff_refl"><span class="id" title="definition">iff_refl</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Logical equivalences can be inverted. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="iff_inverse" class="idref" href="#iff_inverse"><span class="id" title="definition">iff_inverse</span></a> {<a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> <a id="B:5" class="idref" href="#B:5"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Iff.html#A:4"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Iff.html#B:5"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Iff.html#B:5"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Iff.html#A:4"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:=  <span class="id" title="keyword">fun</span> <a id="f:6" class="idref" href="#f:6"><span class="id" title="binder">f</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Basics.Iff.html#f:6"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Basics.Iff.html#f:6"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Iff.html#iff"><span class="id" title="definition">iff</span></a></span> is a symmetric relation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="symmetric_iff" class="idref" href="#symmetric_iff"><span class="id" title="instance">symmetric_iff</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Symmetric"><span class="id" title="class">Symmetric</span></a> <a class="idref" href="HoTT.Basics.Iff.html#iff"><span class="id" title="definition">iff</span></a> | 1<br/>
+&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Basics.Iff.html#iff_inverse"><span class="id" title="definition">iff_inverse</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Logical equivalences can be composed. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="iff_compose" class="idref" href="#iff_compose"><span class="id" title="definition">iff_compose</span></a> {<a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> <a id="B:8" class="idref" href="#B:8"><span class="id" title="binder">B</span></a> <a id="C:9" class="idref" href="#C:9"><span class="id" title="binder">C</span></a>} (<a id="f:10" class="idref" href="#f:10"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Iff.html#A:7"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Iff.html#B:8"><span class="id" title="variable">B</span></a>) (<a id="g:11" class="idref" href="#g:11"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Basics.Iff.html#B:8"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Iff.html#C:9"><span class="id" title="variable">C</span></a>) : <a class="idref" href="HoTT.Basics.Iff.html#A:7"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Iff.html#C:9"><span class="id" title="variable">C</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Basics.Iff.html#g:11"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Basics.Iff.html#f:10"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Basics.Iff.html#f:10"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Basics.Iff.html#g:11"><span class="id" title="variable">g</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Iff.html#iff"><span class="id" title="definition">iff</span></a></span> is a transitive relation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="transitive_iff" class="idref" href="#transitive_iff"><span class="id" title="instance">transitive_iff</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Transitive"><span class="id" title="class">Transitive</span></a> <a class="idref" href="HoTT.Basics.Iff.html#iff"><span class="id" title="definition">iff</span></a> | 1<br/>
+&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Basics.Iff.html#iff_compose"><span class="id" title="definition">iff_compose</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any equivalence can be considered a logical equivalence by discarding everything but the maps. We make this a coercion so that equivalences can be used in place of logical equivalences. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Coercion</span> <a id="iff_equiv" class="idref" href="#iff_equiv"><span class="id" title="definition">iff_equiv</span></a> {<a id="A:12" class="idref" href="#A:12"><span class="id" title="binder">A</span></a> <a id="B:13" class="idref" href="#B:13"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:14" class="idref" href="#f:14"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Iff.html#A:12"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Iff.html#B:13"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Iff.html#A:12"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Iff.html#B:13"><span class="id" title="variable">B</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#equiv_fun"><span class="id" title="projection">equiv_fun</span></a> <a class="idref" href="HoTT.Basics.Iff.html#f:14"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Iff.html#f:14"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab290"></a><h2 class="section">Logical Laws</h2>
+
+<div class="paragraph"> </div>
+
+ One of De Morgan's Laws.  The dual statement about negating a product appears in Decidable.v due to decidability requirements. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="iff_not_sum" class="idref" href="#iff_not_sum"><span class="id" title="definition">iff_not_sum</span></a> <a id="A:15" class="idref" href="#A:15"><span class="id" title="binder">A</span></a> <a id="B:16" class="idref" href="#B:16"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Iff.html#A:15"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Iff.html#B:16"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Iff.html#A:15"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Iff.html#B:16"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">ns</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">ns</span> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">ns</span> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">by</span> <span class="id" title="tactic">intros</span> []; <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Basics.Overture.html#sum_ind"><span class="id" title="definition">sum_ind</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="iff_contradiction" class="idref" href="#iff_contradiction"><span class="id" title="definition">iff_contradiction</span></a> <a id="A:17" class="idref" href="#A:17"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Basics.Iff.html#A:17"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><a class="idref" href="HoTT.Basics.Iff.html#A:17"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span> <span class="id" title="var">na</span>]; <span class="id" title="tactic">exact</span> (<span class="id" title="var">na</span> <span class="id" title="var">a</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">e</span>; <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#Empty_rec"><span class="id" title="definition">Empty_rec</span></a> <span class="id" title="var">_</span> <span class="id" title="var">e</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

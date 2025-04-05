@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Basics.Settings</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Basics.Settings</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab334"></a><h1 class="section">General Settings</h1>
+
+<div class="paragraph"> </div>
+
+ This file contains all the tweaks and settings we make to Coq. 
+<div class="paragraph"> </div>
+
+<a id="lab335"></a><h2 class="section">Warnings</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab336"></a><h2 class="section">Plugins</h2>
+
+<div class="paragraph"> </div>
+
+ Load the Ltac plugin. This is the tactic language we use for proofs. 
+</div>
+<div class="code">
+<span class="id" title="var">Declare</span> <span class="id" title="var">ML</span> <span class="id" title="keyword">Module</span> "ltac_plugin:coq-core.plugins.ltac".<br/>
+</div>
+
+<div class="doc">
+Load the number string notation plugin. Allowing us to write numbers like <span class="inlinecode">1234</span>. 
+</div>
+<div class="code">
+<span class="id" title="var">Declare</span> <span class="id" title="var">ML</span> <span class="id" title="keyword">Module</span> "number_string_notation_plugin:coq-core.plugins.number_string_notation".<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab337"></a><h2 class="section">Proofs</h2>
+
+<div class="paragraph"> </div>
+
+ Activate the Ltac tactics language for proofs. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Default</span> <span class="id" title="keyword">Proof</span> <span class="id" title="var">Mode</span> "Classic".<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Force use of bullets in proofs. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Default</span> <span class="id" title="keyword">Goal</span> <span class="id" title="var">Selector</span> "!".<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab338"></a><h2 class="section">Universes</h2>
+
+<div class="paragraph"> </div>
+
+ Activate universe polymorphism everywhere. This means that whenever you see a <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, it's actually a <span class="inlinecode"><span class="id" title="var">Type@</span>{<a class="idref" href="HoTT.Classes.theory.ua_second_isomorphism.html#i"><span class="id" title="abbreviation">i</span></a>}</span> for some universe level <span class="inlinecode"><a class="idref" href="HoTT.Classes.theory.ua_second_isomorphism.html#i"><span class="id" title="abbreviation">i</span></a></span>. This allows us to reuse definitions for each universe level without having to redefine them. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Tests.bugs.github1759.html#foo"><span class="id" title="definition">foo</span></a></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">Type@</span>{<a class="idref" href="HoTT.Classes.theory.ua_second_isomorphism.html#i"><span class="id" title="abbreviation">i</span></a>}.</span>, you must instead say <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> <span class="inlinecode"><span class="id" title="var">foo@</span>{<a class="idref" href="HoTT.Classes.theory.ua_second_isomorphism.html#i"><span class="id" title="abbreviation">i</span></a>}</span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">Type@</span>{<a class="idref" href="HoTT.Classes.theory.ua_second_isomorphism.html#i"><span class="id" title="abbreviation">i</span></a>}.</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Unset</span> <span class="id" title="keyword">Strict</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Declaration</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This command makes it so that when we say something like <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span> we get <span class="inlinecode"><span class="id" title="var">IsHSet@</span>{<a class="idref" href="HoTT.Classes.theory.ua_second_isomorphism.html#i"><span class="id" title="abbreviation">i</span></a>}</span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span> instead of <span class="inlinecode"><span class="id" title="var">IsHSet@</span>{<span class="id" title="keyword">Set</span>}</span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Unset</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab339"></a><h2 class="section">Primitive Projections</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Primitive</span> <span class="id" title="var">Projections</span>.<br/>
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Nonrecursive</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Currently Coq doesn't print equivalences correctly (8.6). This fixes that. See https://github.com/HoTT/HoTT/issues/1000 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="keyword">Printing</span> <span class="id" title="var">Primitive</span> <span class="id" title="var">Projection</span> <span class="id" title="keyword">Parameters</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab340"></a><h2 class="section">Pattern Matching</h2>
+
+<div class="paragraph"> </div>
+
+ This flag removes parameters from constructors in patterns that appear in a match statement. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab341"></a><h2 class="section">Unification</h2>
+
+<div class="paragraph"> </div>
+
+ This command changes Coq's subterm selection to always use full conversion after finding a subterm whose head/key matches the key of the term we're looking for.  This applies to <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> and higher-order unification in <span class="inlinecode"><span class="id" title="tactic">apply</span></span>/<span class="inlinecode"><span class="id" title="tactic">elim</span></span>/<span class="inlinecode"><span class="id" title="tactic">destruct</span></span>.  Again, if you don't know what that means, ignore it. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Keyed</span> <span class="id" title="var">Unification</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab342"></a><h2 class="section">Typeclasses and Hint settings</h2>
+
+<div class="paragraph"> </div>
+
+ This tells Coq that when we <span class="inlinecode"><span class="id" title="keyword">Require</span></span> a module without <span class="inlinecode"><span class="id" title="keyword">Import</span></span>ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of <span class="inlinecode"><span class="id" title="keyword">Require</span></span> without <span class="inlinecode"><span class="id" title="keyword">Import</span></span> is to make qualified names available. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Global</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Loose</span> <span class="id" title="keyword">Hint</span> <span class="id" title="var">Behavior</span> "Strict".<br/>
+
+<br/>
+<span class="id" title="keyword">Create HintDb</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">discriminated</span>.<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Variables</span> <span class="id" title="keyword">Opaque</span> : <span class="id" title="tactic">rewrite</span>.<br/>
+<span class="id" title="keyword">Create HintDb</span> <span class="id" title="var">typeclass_instances</span> <span class="id" title="var">discriminated</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab343"></a><h2 class="section">Reversible Coercions</h2>
+
+<div class="paragraph"> </div>
+
+ Coercions in Coq since 8.16 have the ability to be reversible. These are coercions that are not regular functions but rely on some meta-procedure like typeclass resolution to fill in missing pieces. Examples include marking fields of a record with <span class="inlinecode">:&gt;</span> which allows Coq to elaborate the projected term to the original term.
+
+<div class="paragraph"> </div>
+
+This behaviour can have some surprising effects in some places, where you might not expect a term to be elaborated. When inspecting proofs with <span class="inlinecode"><span class="id" title="keyword">Set</span></span> <span class="inlinecode"><span class="id" title="keyword">Printing</span></span> <span class="inlinecode"><span class="id" title="keyword">All</span></span> you will not be able to see the reversible coercion. In order to help with inspecting such situations, Coq exposes a register for a dummy term called <span class="inlinecode"><a class="idref" href="HoTT.Basics.Settings.html#reverse_coercion"><span class="id" title="definition">reverse_coercion</span></a></span> which gets inserted during an application of a reversible coercion. This way you can see the application clearly in a proof term.
+
+<div class="paragraph"> </div>
+
+We register this here. This is standard from the Coq Stdlib prelude.
+</div>
+<div class="code">
+#[<span class="id" title="var">universes</span>(<span class="id" title="var">polymorphic</span>=<span class="id" title="var">yes</span>)] <span class="id" title="keyword">Definition</span> <a id="ReverseCoercionSource" class="idref" href="#ReverseCoercionSource"><span class="id" title="definition">ReverseCoercionSource</span></a> (<a id="T:1" class="idref" href="#T:1"><span class="id" title="binder">T</span></a> : <span class="id" title="keyword">Type</span>) := <a class="idref" href="HoTT.Basics.Settings.html#T:1"><span class="id" title="variable">T</span></a>.<br/>
+#[<span class="id" title="var">universes</span>(<span class="id" title="var">polymorphic</span>=<span class="id" title="var">yes</span>)] <span class="id" title="keyword">Definition</span> <a id="ReverseCoercionTarget" class="idref" href="#ReverseCoercionTarget"><span class="id" title="definition">ReverseCoercionTarget</span></a> (<a id="T:2" class="idref" href="#T:2"><span class="id" title="binder">T</span></a> : <span class="id" title="keyword">Type</span>) := <a class="idref" href="HoTT.Basics.Settings.html#T:2"><span class="id" title="variable">T</span></a>.<br/>
+#[<span class="id" title="var">warning</span>="-uniform-inheritance", <span class="id" title="var">reversible</span>=<span class="id" title="keyword">no</span>, <span class="id" title="var">universes</span>(<span class="id" title="var">polymorphic</span>=<span class="id" title="var">yes</span>)]<br/>
+<span class="id" title="keyword">Coercion</span> <a id="reverse_coercion" class="idref" href="#reverse_coercion"><span class="id" title="definition">reverse_coercion</span></a> {<a id="T':3" class="idref" href="#T':3"><span class="id" title="binder">T'</span></a> <a id="T:4" class="idref" href="#T:4"><span class="id" title="binder">T</span></a>} (<a id="x':5" class="idref" href="#x':5"><span class="id" title="binder">x'</span></a> : <a class="idref" href="HoTT.Basics.Settings.html#T':3"><span class="id" title="variable">T'</span></a>) (<a id="x:6" class="idref" href="#x:6"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Basics.Settings.html#ReverseCoercionSource"><span class="id" title="definition">ReverseCoercionSource</span></a> <a class="idref" href="HoTT.Basics.Settings.html#T:4"><span class="id" title="variable">T</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Settings.html#ReverseCoercionTarget"><span class="id" title="definition">ReverseCoercionTarget</span></a> <a class="idref" href="HoTT.Basics.Settings.html#T':3"><span class="id" title="variable">T'</span></a> := <a class="idref" href="HoTT.Basics.Settings.html#x':5"><span class="id" title="variable">x'</span></a>.<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">reverse_coercion</span> <span class="id" title="keyword">as</span> <span class="id" title="var">core.coercion.reverse_coercion</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab344"></a><h2 class="section">Search Settings</h2>
+
+<div class="paragraph"> </div>
+
+ Keywords for blacklisting from search function 
+</div>
+<div class="code">
+<span class="id" title="keyword">Add</span> <span class="id" title="keyword">Search</span> <span class="id" title="var">Blacklist</span> "_admitted" "_subproof" "Private_".<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Category</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Category</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab465"></a><h1 class="section">Categories</h1>
+ We collect here all of the files about categories.  Since there are only notations in <span class="inlinecode"><span class="id" title="library">Category.Notations</span></span>, we can just export those. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Categories.Category.Notations.html#"><span class="id" title="library">Category.Notations</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab466"></a><h2 class="section">Definition of precategories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab467"></a><h2 class="section">Opposite precategories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#"><span class="id" title="library">Category.Dual</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab468"></a><h2 class="section">Morphisms in precategories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab469"></a><h2 class="section">Classification of path space</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Paths.html#"><span class="id" title="library">Category.Paths</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab470"></a><h2 class="section">Universal objects</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#"><span class="id" title="library">Category.Objects</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab471"></a><h2 class="section">Product precategories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Prod.html#"><span class="id" title="library">Category.Prod</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab472"></a><h2 class="section">Dependent product precategories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Pi.html#"><span class="id" title="library">Category.Pi</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab473"></a><h2 class="section">∑-precategories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Sigma.html#"><span class="id" title="library">Category.Sigma</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab474"></a><h2 class="section">Strict categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Strict.html#"><span class="id" title="library">Category.Strict</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab475"></a><h2 class="section">Coproduct precategories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#"><span class="id" title="library">Category.Sum</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab476"></a><h2 class="section">Categories (univalent or saturated)</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Univalent.html#"><span class="id" title="library">Category.Univalent</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="module">Category.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#"><span class="id" title="module">Category.Dual</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="module">Category.Morphisms</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Paths.html#"><span class="id" title="module">Category.Paths</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#"><span class="id" title="module">Category.Objects</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Prod.html#"><span class="id" title="module">Category.Prod</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Pi.html#"><span class="id" title="module">Category.Pi</span></a>.<br/>
+</div>
+
+<div class="doc">
+We use the <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Sigma.html#Sigma"><span class="id" title="section">Sigma</span></a></span> folder only to allow us to split up the various files and group conceptually similar lemmas, but not for namespacing.  So we include the main file in it. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Sigma.html#"><span class="id" title="module">Category.Sigma</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Strict.html#"><span class="id" title="module">Category.Strict</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#"><span class="id" title="module">Category.Sum</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Univalent.html#"><span class="id" title="module">Category.Univalent</span></a>.<br/>
+</div>
+
+<div class="doc">
+We don't want to make UTF-8 notations the default, so we don't export them. 
+<div class="paragraph"> </div>
+
+<a id="lab477"></a><h2 class="section">Subcategories</h2>
+ For the subfolders, we need to re-create the module structure.  Alas, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by <span class="inlinecode"><span class="id" title="var">Including</span></span> into other modules. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.Subcategory.html#"><span class="id" title="library">Category.Subcategory</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,930 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Spheres.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk0"><span class="kn">Require Import</span> Basics Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> WildCat.Equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Homotopy.NullHomotopy.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Homotopy.Suspension.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Pointed.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Truncations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Spaces.Circle Spaces.TwoSphere.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * The spheres, in all dimensions. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> pointed_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable Variables</span> <span class="nf">X</span> A B f g n.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Definition, by iterated suspension. *)</span>
+
+<span class="sd">(** To match the usual indexing for spheres, we have to pad the sequence with a dummy term [Sphere -2]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">Sphere</span> (<span class="nv">n</span> : trunc_index)
+  := <span class="kr">match</span> n <span class="kr">return</span> <span class="kt">Type</span> <span class="kr">with</span>
+       | -<span class="mi">2</span> =&gt; Empty
+       | -<span class="mi">1</span> =&gt; Empty
+       | n&#39;.+<span class="mi">1</span> =&gt; Susp (Sphere n&#39;)
+     <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Pointed sphere for non-negative dimensions. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">psphere</span> (<span class="nv">n</span> : nat) : pType := [Sphere n, _].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> Sphere : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> psphere : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Explicit equivalences in low dimensions  *)</span>
+
+<span class="sd">(** *** [Sphere 0] *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk1"><span class="kn">Definition</span> <span class="nf">S0_to_Bool</span> : (Sphere <span class="mi">0</span>) -&gt; Bool.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Sphere <span class="mi">0</span> -&gt; Bool</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Sphere <span class="mi">0</span> -&gt; Bool</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk3"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Sphere <span class="mi">0</span> -&gt; Bool</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk4"><span class="nb">apply</span> (Susp_rec true false).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty -&gt; true = false</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk5"><span class="kn">Definition</span> <span class="nf">Bool_to_S0</span> : Bool -&gt; (Sphere <span class="mi">0</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Bool -&gt; Sphere <span class="mi">0</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Bool -&gt; Sphere <span class="mi">0</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">b</span> =&gt; <span class="kr">if</span> b <span class="kr">then</span> North <span class="kr">else</span> South).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk7"><span class="kn">Instance</span> <span class="nf">isequiv_S0_to_Bool</span> : IsEquiv (S0_to_Bool) | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv S0_to_Bool</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk8"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv S0_to_Bool</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk9"><span class="nb">apply</span> isequiv_adjointify <span class="kr">with</span> Bool_to_S0.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Bool =&gt; S0_to_Bool (Bool_to_S0 x)) == idmap</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">0</span> =&gt; Bool_to_S0 (S0_to_Bool x)) ==
+idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Bool =&gt; S0_to_Bool (Bool_to_S0 x)) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [ | ]; <span class="bp">exact</span> <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkb">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">0</span> =&gt; Bool_to_S0 (S0_to_Bool x)) ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkc"><span class="nb">refine</span> (Susp_ind _ <span class="mi">1</span> <span class="mi">1</span> _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Empty,
+transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : Susp Empty =&gt; Bool_to_S0 (S0_to_Bool y) = y)
+  (merid x) <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_S0_Bool</span> : Sphere <span class="mi">0</span> &lt;~&gt; Bool
+  := Build_Equiv _ _ _ isequiv_S0_to_Bool.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">ispointed_bool</span> : IsPointed Bool := true.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pBool</span> := [Bool, true].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pequiv_S0_Bool</span> : psphere <span class="mi">0</span> &lt;~&gt;* pBool
+  := @Build_pEquiv&#39; (psphere <span class="mi">0</span>) pBool equiv_S0_Bool <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** In [pmap_from_psphere_iterated_loops] below, we&#39;ll use this universal property of [pBool]. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkd"><span class="kn">Definition</span> <span class="nf">pmap_from_bool</span> `{Funext} (X : pType)
+  : (pBool -&gt;** X) &lt;~&gt;* X.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(pBool -&gt;** X) &lt;~&gt;* X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chke"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(pBool -&gt;** X) &lt;~&gt;* X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkf">snapply Build_pEquiv&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(pBool -&gt;** X) &lt;~&gt; X</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spheres-v-chk10" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><label class="goal-separator" for="spheres-v-chk10"><hr></label><div class="goal-conclusion"><span class="nl">?f</span> pt = pt</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk11">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(pBool -&gt;** X) &lt;~&gt; X</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk12"><span class="nb">refine</span> (_ oE (issig_pmap _ _)^-<span class="mi">1</span>%equiv).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : pBool -&gt; X &amp; f pt = pt} &lt;~&gt; X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk13"><span class="nb">refine</span> (_ oE (equiv_functor_sigma_pb (equiv_bool_rec_uncurried X))^-<span class="mi">1</span>%equiv); <span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{x : X * X &amp; snd x = pt} &lt;~&gt; X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">make_equiv_contr_basedpaths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk14">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((equiv_adjointify
+    (<span class="kr">fun</span> <span class="nv">H0</span> : {x : X * X &amp; snd x = pt} =&gt;
+     (<span class="kr">fun</span> <span class="nv">H1</span> : X * X =&gt;
+      (<span class="kr">fun</span> (<span class="nv">H2</span> <span class="nv">H3</span> : X) (<span class="nv">_</span> : snd (H2, H3) = pt) =&gt;
+       H2 : X) (fst H1) (snd H1)) H0.<span class="mi">1</span> H0.<span class="mi">2</span>)
+    (<span class="kr">fun</span> <span class="nv">H0</span> : X =&gt;
+     ((H0 : X, <span class="kr">let</span> <span class="nv">H1</span> := pt <span class="kr">in</span> H1) : X * X;
+     <span class="mi">1</span>%path
+     :
+     snd ((H0 : X, <span class="kr">let</span> <span class="nv">H1</span> := pt <span class="kr">in</span> H1) : X * X) = pt)
+     :
+     {x : X * X &amp; snd x = pt})
+    ((<span class="kr">fun</span> <span class="nv">H0</span> : X =&gt; <span class="mi">1</span>%path)
+     :
+     (<span class="kr">fun</span> <span class="nv">H0</span> : {x : X * X &amp; snd x = pt} =&gt;
+      (<span class="kr">fun</span> <span class="nv">H1</span> : X * X =&gt;
+       (<span class="kr">fun</span> (<span class="nv">H2</span> <span class="nv">H3</span> : X) (<span class="nv">_</span> : snd (H2, H3) = pt) =&gt;
+        H2 : X) (fst H1) (snd H1)) H0.<span class="mi">1</span> H0.<span class="mi">2</span>)
+     o (<span class="kr">fun</span> <span class="nv">H0</span> : X =&gt;
+        ((H0 : X, <span class="kr">let</span> <span class="nv">H1</span> := pt <span class="kr">in</span> H1) : X * X;
+        <span class="mi">1</span>%path
+        :
+        snd ((H0 : X, <span class="kr">let</span> <span class="nv">H1</span> := pt <span class="kr">in</span> H1) : X * X) =
+        pt)
+        :
+        {x : X * X &amp; snd x = pt}) == idmap)
+    ((<span class="kr">fun</span> <span class="nv">H0</span> : {x : X * X &amp; snd x = pt} =&gt;
+      (<span class="kr">fun</span> <span class="nv">H1</span> : X * X =&gt;
+       (<span class="kr">fun</span> (<span class="nv">H2</span> <span class="nv">H3</span> : X) (<span class="nv">H4</span> : snd (H2, H3) = pt) =&gt;
+        paths_ind_r pt
+          (<span class="kr">fun</span> (<span class="nv">y</span> : X) (<span class="nv">p</span> : y = pt) =&gt;
+           ((H2, <span class="kr">let</span> <span class="nv">H5</span> := pt <span class="kr">in</span> H5); <span class="mi">1</span>%path) =
+           ((H2, y); p)) <span class="mi">1</span>%path H3 H4) (fst H1)
+         (snd H1)) H0.<span class="mi">1</span> H0.<span class="mi">2</span>)
+     :
+     (<span class="kr">fun</span> <span class="nv">H0</span> : X =&gt;
+      ((H0 : X, <span class="kr">let</span> <span class="nv">H1</span> := pt <span class="kr">in</span> H1) : X * X;
+      <span class="mi">1</span>%path
+      :
+      snd ((H0 : X, <span class="kr">let</span> <span class="nv">H1</span> := pt <span class="kr">in</span> H1) : X * X) = pt)
+      :
+      {x : X * X &amp; snd x = pt})
+     o (<span class="kr">fun</span> <span class="nv">H0</span> : {x : X * X &amp; snd x = pt} =&gt;
+        (<span class="kr">fun</span> <span class="nv">H1</span> : X * X =&gt;
+         (<span class="kr">fun</span> (<span class="nv">H2</span> <span class="nv">H3</span> : X) (<span class="nv">_</span> : snd (H2, H3) = pt) =&gt;
+          H2 : X) (fst H1) (snd H1)) H0.<span class="mi">1</span> H0.<span class="mi">2</span>) ==
+     idmap)
+  :
+  {x : X * X &amp; equiv_bool_rec_uncurried X x pt = pt} &lt;~&gt;
+  X)
+ oE (equiv_functor_sigma_pb
+       (equiv_bool_rec_uncurried X))^-<span class="mi">1</span>
+ oE (issig_pmap pBool X)^-<span class="mi">1</span>) pt = pt</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** [Sphere 1] *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk15"><span class="kn">Definition</span> <span class="nf">S1_to_Circle</span> : (Sphere <span class="mi">1</span>) -&gt; Circle.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Sphere <span class="mi">1</span> -&gt; Circle</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk16"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Sphere <span class="mi">1</span> -&gt; Circle</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk17"><span class="nb">apply</span> (Susp_rec Circle.base Circle.base).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Susp Empty -&gt; Circle.base = Circle.base</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">if</span> (S0_to_Bool x) <span class="kr">then</span> loop <span class="kr">else</span> <span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk18"><span class="kn">Definition</span> <span class="nf">Circle_to_S1</span> : Circle -&gt; (Sphere <span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle -&gt; Sphere <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk19"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Circle -&gt; Sphere <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk1a"><span class="nb">apply</span> (Circle_rec _ North).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">North = North</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (merid North @ (merid South)^).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk1b"><span class="kn">Instance</span> <span class="nf">isequiv_S1_to_Circle</span> : IsEquiv (S1_to_Circle) | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv S1_to_Circle</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk1c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv S1_to_Circle</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk1d"><span class="nb">apply</span> isequiv_adjointify <span class="kr">with</span> Circle_to_S1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; S1_to_Circle (Circle_to_S1 x)) ==
+idmap</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">1</span> =&gt; Circle_to_S1 (S1_to_Circle x)) ==
+idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk1e">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; S1_to_Circle (Circle_to_S1 x)) ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk1f"><span class="nb">refine</span> (Circle_ind _ <span class="mi">1</span> _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : Circle =&gt; S1_to_Circle (Circle_to_S1 x) = x)
+  loop <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk20">transport_paths FFlr; <span class="nb">apply</span> equiv_p1_1q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap S1_to_Circle (ap Circle_to_S1 loop) = loop</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk21"><span class="nb">refine</span> (ap _ (Circle_rec_beta_loop _ _ _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap S1_to_Circle (merid North @ (merid South)^) = loop</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk22">lhs napply Susp_rec_beta_zigzag.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">if</span> S0_to_Bool North <span class="kr">then</span> loop <span class="kr">else</span> <span class="mi">1</span>) @
+(<span class="kr">if</span> S0_to_Bool South <span class="kr">then</span> loop <span class="kr">else</span> <span class="mi">1</span>)^ = loop</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk23"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">loop @ <span class="mi">1</span> = loop</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> concat_p1.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk24">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">1</span> =&gt; Circle_to_S1 (S1_to_Circle x)) ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk25">snapply Susp_ind_FFlr; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">North = North</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">North = South</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp Empty,
+ap Circle_to_S1 (ap S1_to_Circle (merid x)) @ <span class="nl">?Goal0</span> =
+<span class="nl">?Goal</span> @ merid x</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk26"><span class="mi">1</span>: <span class="bp">reflexivity</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">North = South</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp Empty,
+ap Circle_to_S1 (ap S1_to_Circle (merid x)) @ <span class="nl">?Goal</span> =
+<span class="mi">1</span> @ merid x</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk27"><span class="mi">1</span>: <span class="bp">exact</span> (merid South).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp Empty,
+ap Circle_to_S1 (ap S1_to_Circle (merid x)) @
+merid South = <span class="mi">1</span> @ merid x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk28"><span class="nb">intro</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Circle_to_S1 (ap S1_to_Circle (merid x)) @
+merid South = <span class="mi">1</span> @ merid x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk29"><span class="nb">unfold</span> S1_to_Circle; <span class="nb">rewrite</span> (Susp_rec_beta_merid x).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Circle_to_S1 (<span class="kr">if</span> S0_to_Bool x <span class="kr">then</span> loop <span class="kr">else</span> <span class="mi">1</span>) @
+merid South = <span class="mi">1</span> @ merid x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk2a"><span class="nb">revert</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp Empty,
+ap Circle_to_S1 (<span class="kr">if</span> S0_to_Bool x <span class="kr">then</span> loop <span class="kr">else</span> <span class="mi">1</span>) @
+merid South = <span class="mi">1</span> @ merid x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk2b"><span class="nb">change</span> (Susp Empty) <span class="kr">with</span> (Sphere <span class="mi">0</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Sphere <span class="mi">0</span>,
+ap Circle_to_S1 (<span class="kr">if</span> S0_to_Bool x <span class="kr">then</span> loop <span class="kr">else</span> <span class="mi">1</span>) @
+merid South = <span class="mi">1</span> @ merid x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk2c" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk2c"><span class="nb">apply</span> (equiv_ind (S0_to_Bool ^-<span class="mi">1</span>)); <span class="nb">intros</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Bool</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Circle_to_S1
+  (<span class="kr">if</span> S0_to_Bool (S0_to_Bool^-<span class="mi">1</span> x) <span class="kr">then</span> loop <span class="kr">else</span> <span class="mi">1</span>) @
+merid South = <span class="mi">1</span> @ merid (S0_to_Bool^-<span class="mi">1</span> x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk2d"><span class="nb">case</span> x; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Bool</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Circle_to_S1 loop @ merid South = <span class="mi">1</span> @ merid North</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spheres-v-chk2e" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Bool</span></span></span><br></div><label class="goal-separator" for="spheres-v-chk2e"><hr></label><div class="goal-conclusion"><span class="mi">1</span> @ merid South = <span class="mi">1</span> @ merid South</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk2f"><span class="mi">2</span>: <span class="bp">reflexivity</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Bool</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Circle_to_S1 loop @ merid South = <span class="mi">1</span> @ merid North</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk30" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk30">rhs napply concat_1p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Bool</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Circle_to_S1 loop @ merid South = merid North</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk31"><span class="nb">unfold</span> Circle_to_S1; <span class="nb">rewrite</span> Circle_rec_beta_loop.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Bool</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(merid North @ (merid South)^) @ merid South =
+merid North</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> concat_pV_p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_S1_Circle</span> : Sphere <span class="mi">1</span> &lt;~&gt; Circle
+  := Build_Equiv _ _ _ isequiv_S1_to_Circle.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk32" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk32"><span class="kn">Definition</span> <span class="nf">pequiv_S1_Circle</span> : psphere <span class="mi">1</span> &lt;~&gt;* [Circle, _].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">psphere <span class="mi">1</span> &lt;~&gt;* [Circle, ispointed_Circle]</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk33" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk33"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">psphere <span class="mi">1</span> &lt;~&gt;* [Circle, ispointed_Circle]</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk34" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk34">srapply Build_pEquiv&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">psphere <span class="mi">1</span> &lt;~&gt; [Circle, ispointed_Circle]</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nl">?f</span> pt = pt</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk35" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk35"><span class="mi">1</span>: <span class="bp">exact</span> equiv_S1_Circle.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">equiv_S1_Circle pt = pt</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** [Sphere 2] *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk36" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk36"><span class="kn">Definition</span> <span class="nf">S2_to_TwoSphere</span> : (Sphere <span class="mi">2</span>) -&gt; TwoSphere.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Sphere <span class="mi">2</span> -&gt; TwoSphere</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk37" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk37"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Sphere <span class="mi">2</span> -&gt; TwoSphere</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk38" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk38"><span class="nb">apply</span> (Susp_rec base base).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Susp (Susp Empty) -&gt; base = base</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk39" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk39"><span class="nb">apply</span> (Susp_rec (idpath base) (idpath base)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Susp Empty -&gt; <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk3a" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk3a"><span class="nb">apply</span> (Susp_rec surf (idpath (idpath base))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty -&gt; surf = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> Empty_rec.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk3b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk3b"><span class="kn">Definition</span> <span class="nf">TwoSphere_to_S2</span> : TwoSphere -&gt; (Sphere <span class="mi">2</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">TwoSphere -&gt; Sphere <span class="mi">2</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk3c" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk3c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">TwoSphere -&gt; Sphere <span class="mi">2</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk3d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk3d"><span class="nb">apply</span> (TwoSphere_rec (Sphere <span class="mi">2</span>) North).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk3e" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk3e"><span class="nb">refine</span> (transport (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x = x) (concat_pV (merid North)) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">merid North @ (merid North)^ =
+merid North @ (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (((ap (<span class="kr">fun</span> <span class="nv">u</span> =&gt; merid u @ (merid North)^) 
+               (merid North @ (merid South)^)))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk3f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk3f"><span class="kn">Definition</span> <span class="nf">issect_TwoSphere_to_S2</span> : S2_to_TwoSphere o TwoSphere_to_S2 == idmap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">S2_to_TwoSphere o TwoSphere_to_S2 == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk40" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk40"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">S2_to_TwoSphere o TwoSphere_to_S2 == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk41" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk41"><span class="nb">refine</span> (TwoSphere_ind _ <span class="mi">1</span> _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> =
+transport2
+  (<span class="kr">fun</span> <span class="nv">x</span> : TwoSphere =&gt;
+   S2_to_TwoSphere (TwoSphere_to_S2 x) = x) surf <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> 
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk42" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk42">rhs_V rapply concat_p1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> =
+transport2
+  (<span class="kr">fun</span> <span class="nv">x</span> : TwoSphere =&gt;
+   S2_to_TwoSphere (TwoSphere_to_S2 x) = x) surf <span class="mi">1</span> @ <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk43" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk43">rhs <span class="bp">exact</span> (@concat_Ap (base = base) _ _
+                          (<span class="kr">fun</span> <span class="nv">p</span> =&gt; (p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))^)
+                          (<span class="kr">fun</span> <span class="nv">x</span> =&gt;
+                             (transport_paths_FFlr x <span class="mi">1</span>) 
+                               @ ap (<span class="kr">fun</span> <span class="nv">u</span> =&gt; u @ x) (concat_p1 _)
+                               @ ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @ w) (inv_V x)^ 
+                               @ (inv_pp _ _)^) 
+                          <span class="mi">1</span> <span class="mi">1</span> surf).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> =
+(((transport_paths_FFlr <span class="mi">1</span> <span class="mi">1</span> @
+   ap
+     (<span class="kr">fun</span>
+        <span class="nv">u</span> : S2_to_TwoSphere (TwoSphere_to_S2 base) =
+            base =&gt; u @ <span class="mi">1</span>)
+     (concat_p1
+        (ap S2_to_TwoSphere (ap TwoSphere_to_S2 <span class="mi">1</span>))^)) @
+  ap
+    (<span class="kr">fun</span> <span class="nv">w</span> : base = base =&gt;
+     (ap S2_to_TwoSphere (ap TwoSphere_to_S2 <span class="mi">1</span>))^ @ w)
+    (inv_V <span class="mi">1</span>)^) @
+ (inv_pp <span class="mi">1</span>^
+    (ap S2_to_TwoSphere (ap TwoSphere_to_S2 <span class="mi">1</span>)))^) @
+ap
+  (<span class="kr">fun</span> <span class="nv">p</span> : base = base =&gt;
+   (p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))^)
+  surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk44" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk44">rhs rapply concat_1p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> =
+ap
+  (<span class="kr">fun</span> <span class="nv">p</span> : base = base =&gt;
+   (p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))^)
+  surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk45" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk45">rhs <span class="bp">exact</span> (ap_compose (<span class="kr">fun</span> <span class="nv">p</span> =&gt; p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))
+                          inverse
+                          surf).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> =
+ap inverse
+  (ap
+     (<span class="kr">fun</span> <span class="nv">p</span> : base = base =&gt;
+      p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))
+     surf)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk46" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk46"><span class="nb">refine</span> (@ap _ _ (ap inverse) <span class="mi">1</span> _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> =
+ap
+  (<span class="kr">fun</span> <span class="nv">p</span> : base = base =&gt;
+   p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))
+  surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk47" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk47">rhs_V rapply concat2_ap_ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> =
+ap inverse surf @@
+ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : base = base =&gt;
+   ap S2_to_TwoSphere (ap TwoSphere_to_S2 u)) surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk48" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk48">rhs <span class="bp">exact</span> (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; inverse2 surf @@ w)
+                  (ap_compose (ap TwoSphere_to_S2) (ap S2_to_TwoSphere) surf)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> =
+inverse2 surf @@
+ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk49" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk49">lhs_V <span class="bp">exact</span> (concat_Vp_inverse2 _ _ surf).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(inverse2 surf @@ surf) @ concat_Vp <span class="mi">1</span> =
+inverse2 surf @@
+ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk4a" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk4a">lhs rapply concat_p1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">inverse2 surf @@ surf =
+inverse2 surf @@
+ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk4b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk4b"><span class="nb">refine</span> (ap (<span class="kr">fun</span> <span class="nv">p</span> : <span class="mi">1</span> = <span class="mi">1</span> =&gt; inverse2 surf @@ p) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">surf =
+ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk4c" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk4c"><span class="nb">symmetry</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf) =
+surf</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk4d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk4d">lhs <span class="nb">refine</span> ((ap (ap (ap S2_to_TwoSphere))
+                        (TwoSphere_rec_beta_surf (Sphere <span class="mi">2</span>) North _))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (ap S2_to_TwoSphere)
+  (transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+     (concat_pV (merid North))
+     (ap
+        (<span class="kr">fun</span> <span class="nv">u</span> : Susp (Susp Empty) =&gt;
+         merid u @ (merid North)^)
+        (merid North @ (merid South)^))) = surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk4e" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk4e">lhs <span class="nb">refine</span> (ap_transport (concat_pV (merid North))
+                        (<span class="kr">fun</span> <span class="nv">z</span> =&gt; @ap _ _ _ z z) 
+                        (ap (<span class="kr">fun</span> <span class="nv">u</span> =&gt; merid u @ (merid North)^)
+                            (merid North @ (merid South)^))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">z</span> : North = North =&gt;
+   ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)
+  (concat_pV (merid North))
+  (ap (ap S2_to_TwoSphere)
+     (ap
+        (<span class="kr">fun</span> <span class="nv">u</span> : Susp (Susp Empty) =&gt;
+         merid u @ (merid North)^)
+        (merid North @ (merid South)^))) = surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk4f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk4f">lhs_V <span class="bp">exact</span> (ap (transport (<span class="kr">fun</span> <span class="nv">z</span> =&gt; ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)
+                      (concat_pV (merid North)))
+               (ap_compose (<span class="kr">fun</span> <span class="nv">u</span> =&gt; merid u @ (merid North)^) (ap S2_to_TwoSphere)
+                           (merid North @ (merid South)^))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">z</span> : North = North =&gt;
+   ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)
+  (concat_pV (merid North))
+  (ap
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      ap S2_to_TwoSphere (merid x @ (merid North)^))
+     (merid North @ (merid South)^)) = surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk50" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk50">transport_paths FlFr; <span class="nb">symmetry</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap S2_to_TwoSphere (merid x @ (merid North)^))
+  (merid North @ (merid South)^) @
+ap (ap S2_to_TwoSphere) (concat_pV (merid North)) =
+ap (ap S2_to_TwoSphere) (concat_pV (merid North)) @
+surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk51" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk51">lhs_V <span class="nb">refine</span> (<span class="mi">1</span> @@ ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid North)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap S2_to_TwoSphere (merid x @ (merid North)^))
+  (merid North @ (merid South)^) @
+(ap_pV
+   (Susp_rec base base
+      (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec)))
+   (merid North) (merid North) @
+ ((Susp_rec_beta_merid North @@
+   inverse2 (Susp_rec_beta_merid North)) @
+  concat_pV
+    (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) North))) =
+ap (ap S2_to_TwoSphere) (concat_pV (merid North)) @
+surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk52" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk52"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap S2_to_TwoSphere (merid x @ (merid North)^))
+  (merid North @ (merid South)^) @
+(ap_pV
+   (Susp_rec base base
+      (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec)))
+   (merid North) (merid North) @
+ ((Susp_rec_beta_merid North @@
+   inverse2 (Susp_rec_beta_merid North)) @ <span class="mi">1</span>)) =
+ap (ap S2_to_TwoSphere) (concat_pV (merid North)) @
+surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk53" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk53">lhs <span class="bp">exact</span> (concat_Ap (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap_pV S2_to_TwoSphere (merid x) (merid North)
+                                  @ ((Susp_rec_beta_merid x
+                                        @@ inverse2 (Susp_rec_beta_merid North))
+                                       @ <span class="mi">1</span>))
+               (merid North @ (merid South)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(ap_pV S2_to_TwoSphere (merid North) (merid North) @
+ ((Susp_rec_beta_merid North @@
+   inverse2 (Susp_rec_beta_merid North)) @ <span class="mi">1</span>)) @
+ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x @
+   (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) North)^)
+  (merid North @ (merid South)^) =
+ap (ap S2_to_TwoSphere) (concat_pV (merid North)) @
+surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk54" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk54">f_ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap_pV S2_to_TwoSphere (merid North) (merid North) @
+((Susp_rec_beta_merid North @@
+  inverse2 (Susp_rec_beta_merid North)) @ <span class="mi">1</span>) =
+ap (ap S2_to_TwoSphere) (concat_pV (merid North))</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x @
+   (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) North)^)
+  (merid North @ (merid South)^) = surf</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk55" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk55"><span class="mi">1</span>: <span class="bp">exact</span> (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid North)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x @
+   (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) North)^)
+  (merid North @ (merid South)^) = surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk56" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk56">lhs_V <span class="bp">exact</span> (concat2_ap_ap (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec))
+                         (<span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="mi">1</span>)
+                         (merid North @ (merid South)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec))
+  (merid North @ (merid South)^) @@
+ap (<span class="kr">fun</span> <span class="nv">_</span> : Susp (Susp Empty) =&gt; <span class="mi">1</span>)
+  (merid North @ (merid South)^) = surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk57" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk57">lhs nrefine (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; _ @@ w) (ap_const _ _)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec))
+  (merid North @ (merid South)^) @@ <span class="mi">1</span> = surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk58" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk58">lhs napply whiskerR_p1_1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec))
+  (merid North @ (merid South)^) = surf</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk59" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk59">rhs_V napply concat_p1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec))
+  (merid North @ (merid South)^) = surf @ <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">napply Susp_rec_beta_zigzag.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>. <span class="c">(* A bit slow, ~0.2s. *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk5a" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk5a"><span class="kn">Definition</span> <span class="nf">issect_S2_to_TwoSphere</span> : TwoSphere_to_S2 o S2_to_TwoSphere == idmap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">TwoSphere_to_S2 o S2_to_TwoSphere == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk5b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk5b"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">TwoSphere_to_S2 o S2_to_TwoSphere == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk5c" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk5c"><span class="nb">intro</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Sphere <span class="mi">2</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">TwoSphere_to_S2 (S2_to_TwoSphere x) = x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk5d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk5d"><span class="nb">refine</span> ((Susp_rec_eta_homotopic (TwoSphere_to_S2 o S2_to_TwoSphere) x) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Sphere <span class="mi">2</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+  (TwoSphere_to_S2 (S2_to_TwoSphere South))
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap
+     (<span class="kr">fun</span> <span class="nv">x0</span> : Sphere <span class="mi">2</span> =&gt;
+      TwoSphere_to_S2 (S2_to_TwoSphere x0)) (merid x))
+  x = x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk5e" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk5e"><span class="nb">symmetry</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Sphere <span class="mi">2</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">x =
+Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+  (TwoSphere_to_S2 (S2_to_TwoSphere South))
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap
+     (<span class="kr">fun</span> <span class="nv">x0</span> : Sphere <span class="mi">2</span> =&gt;
+      TwoSphere_to_S2 (S2_to_TwoSphere x0)) (merid x))
+  x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk5f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk5f"><span class="nb">generalize dependent</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Sphere <span class="mi">2</span>,
+x =
+Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+  (TwoSphere_to_S2 (S2_to_TwoSphere South))
+  (<span class="kr">fun</span> <span class="nv">x0</span> : Susp (Susp Empty) =&gt;
+   ap
+     (<span class="kr">fun</span> <span class="nv">x1</span> : Sphere <span class="mi">2</span> =&gt;
+      TwoSphere_to_S2 (S2_to_TwoSphere x1)) (merid x0))
+  x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk60" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk60"><span class="nb">refine</span> (Susp_ind _ <span class="mi">1</span> (merid North)^ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp (Susp Empty),
+transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : Susp (Susp (Susp Empty)) =&gt;
+   y =
+   Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+     (TwoSphere_to_S2 (S2_to_TwoSphere South))
+     (<span class="kr">fun</span> <span class="nv">x0</span> : Susp (Susp Empty) =&gt;
+      ap
+        (<span class="kr">fun</span> <span class="nv">x1</span> : Sphere <span class="mi">2</span> =&gt;
+         TwoSphere_to_S2 (S2_to_TwoSphere x1))
+        (merid x0)) y) (merid x) <span class="mi">1</span> = (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk61" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk61"><span class="nb">intro</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : Susp (Susp (Susp Empty)) =&gt;
+   y =
+   Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+     (TwoSphere_to_S2 (S2_to_TwoSphere South))
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      ap
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Sphere <span class="mi">2</span> =&gt;
+         TwoSphere_to_S2 (S2_to_TwoSphere x0))
+        (merid x)) y) (merid x) <span class="mi">1</span> = (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk62" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk62"><span class="nb">refine</span> ((transport_paths_FlFr (f := <span class="kr">fun</span> <span class="nv">y</span> =&gt; y) _ _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((ap idmap (merid x))^ @ <span class="mi">1</span>) @
+ap
+  (Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+     (TwoSphere_to_S2 (S2_to_TwoSphere South))
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      ap
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Sphere <span class="mi">2</span> =&gt;
+         TwoSphere_to_S2 (S2_to_TwoSphere x0))
+        (merid x))) (merid x) = (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk63" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk63">rewrite_moveR_Vp_p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> @
+ap
+  (Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+     (TwoSphere_to_S2 (S2_to_TwoSphere South))
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      ap
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Sphere <span class="mi">2</span> =&gt;
+         TwoSphere_to_S2 (S2_to_TwoSphere x0))
+        (merid x))) (merid x) =
+ap idmap (merid x) @ (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk64" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk64"><span class="nb">refine</span> ((concat_1p _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+     (TwoSphere_to_S2 (S2_to_TwoSphere South))
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      ap
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Sphere <span class="mi">2</span> =&gt;
+         TwoSphere_to_S2 (S2_to_TwoSphere x0))
+        (merid x))) (merid x) =
+ap idmap (merid x) @ (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk65" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk65"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; w @ _) (ap_idmap _)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))
+     (TwoSphere_to_S2 (S2_to_TwoSphere South))
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      ap
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Sphere <span class="mi">2</span> =&gt;
+         TwoSphere_to_S2 (S2_to_TwoSphere x0))
+        (merid x))) (merid x) =
+merid x @ (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk66" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk66"><span class="nb">refine</span> ((Susp_rec_beta_merid _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">2</span> =&gt;
+   TwoSphere_to_S2 (S2_to_TwoSphere x)) (merid x) =
+merid x @ (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk67" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk67">path_via (ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">2</span> =&gt;
+   TwoSphere_to_S2 (S2_to_TwoSphere x)) (merid x) =
+ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x))</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spheres-v-chk68" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><label class="goal-separator" for="spheres-v-chk68"><hr></label><div class="goal-conclusion">ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x)) =
+merid x @ (merid North)^</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk69" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk69">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">2</span> =&gt;
+   TwoSphere_to_S2 (S2_to_TwoSphere x)) (merid x) =
+ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (ap_compose S2_to_TwoSphere TwoSphere_to_S2 (merid x)).</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk6a" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk6a">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x)) =
+merid x @ (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk6b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk6b">path_via (ap TwoSphere_to_S2 
+               (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x)) =
+ap TwoSphere_to_S2
+  (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spheres-v-chk6c" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><label class="goal-separator" for="spheres-v-chk6c"><hr></label><div class="goal-conclusion">ap TwoSphere_to_S2
+  (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x) =
+merid x @ (merid North)^</div></blockquote></div></div></div></small><span class="alectryon-wsp"> 
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk6d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk6d">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x)) =
+ap TwoSphere_to_S2
+  (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk6e" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk6e"><span class="kp">repeat</span> f_ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap S2_to_TwoSphere (merid x) =
+Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> Susp_rec_beta_merid.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk6f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk6f">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap TwoSphere_to_S2
+  (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x) =
+merid x @ (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk70" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk70"><span class="nb">symmetry</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp (Susp Empty)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">merid x @ (merid North)^ =
+ap TwoSphere_to_S2
+  (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk71" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk71"><span class="nb">generalize dependent</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp (Susp Empty),
+merid x @ (merid North)^ =
+ap TwoSphere_to_S2
+  (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x)</div></blockquote></div></div></small><span class="alectryon-wsp"> 
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk72" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk72"><span class="nb">simple refine</span> (Susp_ind _ (concat_pV (merid North)) _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">y</span> : Susp (Susp Empty) =&gt;
+ merid y @ (merid North)^ =
+ ap TwoSphere_to_S2
+   (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) y)) South</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp Empty,
+transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : Susp (Susp Empty) =&gt;
+   merid y @ (merid North)^ =
+   ap TwoSphere_to_S2
+     (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) y))
+  (merid x) (concat_pV (merid North)) = <span class="nl">?H_S</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk73" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk73">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">y</span> : Susp (Susp Empty) =&gt;
+ merid y @ (merid North)^ =
+ ap TwoSphere_to_S2
+   (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) y)) South</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk74" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk74"><span class="nb">refine</span> (_ @ (concat_pV (merid North))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">merid South @ (merid North)^ =
+merid North @ (merid North)^</div></blockquote></div></div></small><span class="alectryon-wsp"> 
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; merid w @ (merid North)^) (merid South)^).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk75" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk75">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp Empty,
+transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : Susp (Susp Empty) =&gt;
+   merid y @ (merid North)^ =
+   ap TwoSphere_to_S2
+     (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) y))
+  (merid x) (concat_pV (merid North)) =
+ap
+  (<span class="kr">fun</span> <span class="nv">w</span> : Susp (Susp Empty) =&gt;
+   merid w @ (merid North)^) (merid South)^ @
+concat_pV (merid North)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk76" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk76"><span class="nb">intro</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : Susp (Susp Empty) =&gt;
+   merid y @ (merid North)^ =
+   ap TwoSphere_to_S2
+     (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) y))
+  (merid x) (concat_pV (merid North)) =
+ap
+  (<span class="kr">fun</span> <span class="nv">w</span> : Susp (Susp Empty) =&gt;
+   merid w @ (merid North)^) (merid South)^ @
+concat_pV (merid North)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk77" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk77"><span class="nb">refine</span> ((transport_paths_FlFr (merid x) (concat_pV (merid North))) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((ap
+    (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+     merid x @ (merid North)^) (merid x))^ @
+ concat_pV (merid North)) @
+ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap TwoSphere_to_S2
+     (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x))
+  (merid x) =
+ap
+  (<span class="kr">fun</span> <span class="nv">w</span> : Susp (Susp Empty) =&gt;
+   merid w @ (merid North)^) (merid South)^ @
+concat_pV (merid North)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk78" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk78">rewrite_moveR_Vp_p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">concat_pV (merid North) @
+ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap TwoSphere_to_S2
+     (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x))
+  (merid x) =
+(ap
+   (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+    merid x @ (merid North)^) (merid x) @
+ ap
+   (<span class="kr">fun</span> <span class="nv">w</span> : Susp (Susp Empty) =&gt;
+    merid w @ (merid North)^) (merid South)^) @
+concat_pV (merid North)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk79" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk79"><span class="nb">symmetry</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(ap
+   (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+    merid x @ (merid North)^) (merid x) @
+ ap
+   (<span class="kr">fun</span> <span class="nv">w</span> : Susp (Susp Empty) =&gt;
+    merid w @ (merid North)^) (merid South)^) @
+concat_pV (merid North) =
+concat_pV (merid North) @
+ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap TwoSphere_to_S2
+     (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x))
+  (merid x)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk7a" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk7a"><span class="nb">refine</span> ((dpath_path_lr _ _ _)^-<span class="mi">1</span> _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+  (concat_pV (merid North))
+  (ap
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      merid x @ (merid North)^) (merid x) @
+   ap
+     (<span class="kr">fun</span> <span class="nv">w</span> : Susp (Susp Empty) =&gt;
+      merid w @ (merid North)^) (merid South)^) =
+ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap TwoSphere_to_S2
+     (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x))
+  (merid x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk7b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk7b"><span class="nb">refine</span> ((ap (transport _ _) (ap_pp _ (merid x) (merid South)^)^) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+  (concat_pV (merid North))
+  (ap
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      merid x @ (merid North)^)
+     (merid x @ (merid South)^)) =
+ap
+  (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+   ap TwoSphere_to_S2
+     (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec) x))
+  (merid x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk7c" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk7c"><span class="nb">refine</span> (_ @ (ap_compose (Susp_rec <span class="mi">1</span> <span class="mi">1</span> 
+                              (Susp_rec surf <span class="mi">1</span> 
+                                Empty_rec)) 
+                            (ap TwoSphere_to_S2) (merid x))^).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+  (concat_pV (merid North))
+  (ap
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      merid x @ (merid North)^)
+     (merid x @ (merid South)^)) =
+ap (ap TwoSphere_to_S2)
+  (ap (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec))
+     (merid x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk7d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk7d"><span class="nb">refine</span> (_ @ (ap (ap02 TwoSphere_to_S2) (Susp_rec_beta_merid _)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+  (concat_pV (merid North))
+  (ap
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      merid x @ (merid North)^)
+     (merid x @ (merid South)^)) =
+ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk7e" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk7e"><span class="nb">symmetry</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>x</var><span class="hyp-type"><b>: </b><span>Susp Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec x) =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+  (concat_pV (merid North))
+  (ap
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      merid x @ (merid North)^)
+     (merid x @ (merid South)^))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk7f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk7f"><span class="nb">generalize dependent</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Susp Empty,
+ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec x) =
+transport (<span class="kr">fun</span> <span class="nv">x0</span> : North = North =&gt; x0 = x0)
+  (concat_pV (merid North))
+  (ap
+     (<span class="kr">fun</span> <span class="nv">x0</span> : Susp (Susp Empty) =&gt;
+      merid x0 @ (merid North)^)
+     (merid x @ (merid South)^))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk80" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk80"><span class="nb">simple refine</span> (Susp_ind _ _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">y</span> : Susp Empty =&gt;
+ ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec y) =
+ transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+   (concat_pV (merid North))
+   (ap
+      (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+       merid x @ (merid North)^)
+      (merid y @ (merid South)^))) North</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">y</span> : Susp Empty =&gt;
+ ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec y) =
+ transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+   (concat_pV (merid North))
+   (ap
+      (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+       merid x @ (merid North)^)
+      (merid y @ (merid South)^))) South</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Empty,
+transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : Susp Empty =&gt;
+   ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec y) =
+   transport (<span class="kr">fun</span> <span class="nv">x0</span> : North = North =&gt; x0 = x0)
+     (concat_pV (merid North))
+     (ap
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Susp (Susp Empty) =&gt;
+         merid x0 @ (merid North)^)
+        (merid y @ (merid South)^))) (merid x) <span class="nl">?H_N</span> =
+<span class="nl">?H_S</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk81" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk81">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">y</span> : Susp Empty =&gt;
+ ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec y) =
+ transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+   (concat_pV (merid North))
+   (ap
+      (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+       merid x @ (merid North)^)
+      (merid y @ (merid South)^))) North</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (TwoSphere_rec_beta_surf _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk82" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk82">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">y</span> : Susp Empty =&gt;
+ ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec y) =
+ transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+   (concat_pV (merid North))
+   (ap
+      (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+       merid x @ (merid North)^)
+      (merid y @ (merid South)^))) South</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk83" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk83"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; transport _ _ (ap _ w))
+                      (concat_pV (merid South))^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec South) =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : North = North =&gt; x = x)
+  (concat_pV (merid North))
+  (ap
+     (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+      merid x @ (merid North)^) <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk84" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk84"><span class="nb">refine</span> (_ @ (transport_paths_lr _ _)^).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec South) =
+((concat_pV (merid North))^ @
+ ap
+   (<span class="kr">fun</span> <span class="nv">x</span> : Susp (Susp Empty) =&gt;
+    merid x @ (merid North)^) <span class="mi">1</span>) @
+concat_pV (merid North)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk85" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk85"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">w</span> =&gt; w @ _) (concat_p1 _)^)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec South) =
+(concat_pV (merid North))^ @ concat_pV (merid North)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (concat_Vp _)^.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk86" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk86">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Empty,
+transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : Susp Empty =&gt;
+   ap02 TwoSphere_to_S2 (Susp_rec surf <span class="mi">1</span> Empty_rec y) =
+   transport (<span class="kr">fun</span> <span class="nv">x0</span> : North = North =&gt; x0 = x0)
+     (concat_pV (merid North))
+     (ap
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Susp (Susp Empty) =&gt;
+         merid x0 @ (merid North)^)
+        (merid y @ (merid South)^))) (merid x)
+  (TwoSphere_rec_beta_surf (Sphere <span class="mi">2</span>) North
+     (transport (<span class="kr">fun</span> <span class="nv">x0</span> : North = North =&gt; x0 = x0)
+        (concat_pV (merid North))
+        (ap
+           (<span class="kr">fun</span> <span class="nv">u</span> : Susp (Susp Empty) =&gt;
+            merid u @ (merid North)^)
+           (merid North @ (merid South)^)))) =
+(((concat_Vp (concat_pV (merid North)))^ @
+  ap
+    (<span class="kr">fun</span>
+       <span class="nv">w</span> : ap TwoSphere_to_S2
+             (Susp_rec <span class="mi">1</span> <span class="mi">1</span> (Susp_rec surf <span class="mi">1</span> Empty_rec)
+                North) = merid North @ (merid North)^
+     =&gt; w @ concat_pV (merid North))
+    (concat_p1 (concat_pV (merid North))^)^) @
+ (transport_paths_lr (concat_pV (merid North))
+    (ap
+       (<span class="kr">fun</span> <span class="nv">x0</span> : Susp (Susp Empty) =&gt;
+        merid x0 @ (merid North)^) <span class="mi">1</span>))^) @
+ap
+  (<span class="kr">fun</span> <span class="nv">w</span> : North = North =&gt;
+   transport (<span class="kr">fun</span> <span class="nv">x0</span> : North = North =&gt; x0 = x0)
+     (concat_pV (merid North))
+     (ap
+        (<span class="kr">fun</span> <span class="nv">x0</span> : Susp (Susp Empty) =&gt;
+         merid x0 @ (merid North)^) w))
+  (concat_pV (merid South))^</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> Empty_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk87" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk87"><span class="kn">Instance</span> <span class="nf">isequiv_S2_to_TwoSphere</span> : IsEquiv (S2_to_TwoSphere) | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv S2_to_TwoSphere</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk88" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk88"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv S2_to_TwoSphere</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk89" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk89"><span class="nb">apply</span> isequiv_adjointify <span class="kr">with</span> TwoSphere_to_S2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : TwoSphere =&gt;
+ S2_to_TwoSphere (TwoSphere_to_S2 x)) == idmap</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">2</span> =&gt;
+ TwoSphere_to_S2 (S2_to_TwoSphere x)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk8a" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk8a">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : TwoSphere =&gt;
+ S2_to_TwoSphere (TwoSphere_to_S2 x)) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> issect_TwoSphere_to_S2.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk8b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk8b">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Sphere <span class="mi">2</span> =&gt;
+ TwoSphere_to_S2 (S2_to_TwoSphere x)) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> issect_S2_to_TwoSphere.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_S2_TwoSphere</span> : Sphere <span class="mi">2</span> &lt;~&gt; TwoSphere
+  := Build_Equiv _ _ _ isequiv_S2_to_TwoSphere.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Truncation and connectedness of spheres. *)</span>
+
+<span class="sd">(** S0 is 0-truncated. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk8c" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk8c"><span class="kn">Instance</span> <span class="nf">istrunc_s0</span> : IsHSet (Sphere <span class="mi">0</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet (Sphere <span class="mi">0</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk8d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk8d"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet (Sphere <span class="mi">0</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (istrunc_isequiv_istrunc _ S0_to_Bool^-<span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** S1 is 1-truncated. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk8e" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk8e"><span class="kn">Instance</span> <span class="nf">istrunc_s1</span> `{Univalence} : IsTrunc <span class="mi">1</span> (Sphere <span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc <span class="mi">1</span> (Sphere <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk8f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk8f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc <span class="mi">1</span> (Sphere <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">srapply (istrunc_isequiv_istrunc _ S1_to_Circle^-<span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk90" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk90"><span class="kn">Instance</span> <span class="nf">isconnected_sn</span> <span class="nv">n</span> : IsConnected n.+<span class="mi">1</span> (Sphere n.+<span class="mi">2</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsConnected (Tr n.+<span class="mi">1</span>) (Sphere n.+<span class="mi">2</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk91" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk91"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsConnected (Tr n.+<span class="mi">1</span>) (Sphere n.+<span class="mi">2</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk92" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk92"><span class="nb">induction</span> n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsConnected (Tr (-<span class="mi">1</span>)) (Sphere <span class="mi">0</span>)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spheres-v-chk93" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>IsConnected (Tr n.+<span class="mi">1</span>) (Sphere n.+<span class="mi">2</span>)</span></span></span><br></div><label class="goal-separator" for="spheres-v-chk93"><hr></label><div class="goal-conclusion">IsConnected (Tr n.+<span class="mi">2</span>) (Sphere n.+<span class="mi">3</span>)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk94" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk94">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsConnected (Tr (-<span class="mi">1</span>)) (Sphere <span class="mi">0</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk95" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk95">srapply contr_inhabited_hprop.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Tr (-<span class="mi">1</span>) (Sphere <span class="mi">0</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> tr, North.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk96" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk96">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>IsConnected (Tr n.+<span class="mi">1</span>) (Sphere n.+<span class="mi">2</span>)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsConnected (Tr n.+<span class="mi">2</span>) (Sphere n.+<span class="mi">3</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> isconnected_susp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Truncatedness via spheres  *)</span>
+
+<span class="sd">(** We show here that a type is n-truncated if and only if every map from the (n+1)-sphere into it is null-homotopic.  (One direction of this is of course the assertion that the (n+1)-sphere is n-connected.) *)</span>
+
+<span class="sd">(** TODO: re-type these lemmas in terms of truncation. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk97" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk97"><span class="kn">Fixpoint</span> <span class="nf">allnullhomot_trunc</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">X</span> : <span class="kt">Type</span>} `{IsTrunc n X}
+  (f : Sphere n.+<span class="mi">1</span> -&gt; X) {<span class="kr">struct</span> n}
+: NullHomotopy f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>allnullhomot_trunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+IsTrunc n X -&gt;
+<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">1</span> -&gt; X,
+NullHomotopy f</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere n.+<span class="mi">1</span> -&gt; X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullHomotopy f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk98" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk98"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>allnullhomot_trunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+IsTrunc n X -&gt;
+<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">1</span> -&gt; X,
+NullHomotopy f</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere n.+<span class="mi">1</span> -&gt; X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullHomotopy f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk99" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk99"><span class="nb">destruct</span> n <span class="kr">as</span> [ | n&#39;].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>allnullhomot_trunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+IsTrunc n X -&gt;
+<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">1</span> -&gt; X,
+NullHomotopy f</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>Contr X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere (-<span class="mi">1</span>) -&gt; X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullHomotopy f</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spheres-v-chk9a" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>allnullhomot_trunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+IsTrunc n X -&gt;
+<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">1</span> -&gt; X,
+NullHomotopy f</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n&#39;.+<span class="mi">1</span> X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere n&#39;.+<span class="mi">2</span> -&gt; X</span></span></span><br></div><label class="goal-separator" for="spheres-v-chk9a"><hr></label><div class="goal-conclusion">NullHomotopy f</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk9b" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk9b">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>allnullhomot_trunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+IsTrunc n X -&gt;
+<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">1</span> -&gt; X,
+NullHomotopy f</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>Contr X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere (-<span class="mi">1</span>) -&gt; X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullHomotopy f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk9c" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk9c"><span class="kr">exists</span> (<span class="nv">center</span> <span class="nv">X</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>allnullhomot_trunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+IsTrunc n X -&gt;
+<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">1</span> -&gt; X,
+NullHomotopy f</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>Contr X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere (-<span class="mi">1</span>) -&gt; X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Sphere (-<span class="mi">1</span>), f x = center X</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk9d" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk9d">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>allnullhomot_trunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+IsTrunc n X -&gt;
+<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">1</span> -&gt; X,
+NullHomotopy f</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n&#39;.+<span class="mi">1</span> X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere n&#39;.+<span class="mi">2</span> -&gt; X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullHomotopy f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk9e" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk9e"><span class="nb">apply</span> nullhomot_susp_from_paths.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>allnullhomot_trunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+IsTrunc n X -&gt;
+<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">1</span> -&gt; X,
+NullHomotopy f</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n&#39;.+<span class="mi">1</span> X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere n&#39;.+<span class="mi">2</span> -&gt; X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullHomotopy
+  (<span class="kr">fun</span>
+     <span class="nv">x</span> : <span class="kr">match</span> n&#39; <span class="kr">with</span>
+         | -<span class="mi">2</span> =&gt; Empty
+         | _.+<span class="mi">1</span> =&gt;
+             Susp
+               ((<span class="kr">fix</span> Sphere 
+                 (n : trunc_index) : <span class="kt">Type</span> :=
+                 <span class="kr">match</span> n <span class="kr">with</span>
+                 | (_.+<span class="mi">1</span> <span class="kr">as</span> n&#39;).+<span class="mi">1</span> =&gt; Susp (Sphere n&#39;)
+                 | _ =&gt; Empty
+                 <span class="kr">end</span>) n&#39;)
+         <span class="kr">end</span> =&gt; ap f (merid x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">rapply allnullhomot_trunc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chk9f" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chk9f"><span class="kn">Fixpoint</span> <span class="nf">istrunc_allnullhomot</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">X</span> : <span class="kt">Type</span>}
+  (<span class="nv">HX</span> : <span class="kr">forall</span> (<span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X), NullHomotopy f) {<span class="nv">struct</span> <span class="nv">n</span>}
+: IsTrunc n.+<span class="mi">1</span> X.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X, NullHomotopy f</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n.+<span class="mi">1</span> X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka0" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka0"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X, NullHomotopy f</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n.+<span class="mi">1</span> X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka1" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka1"><span class="nb">destruct</span> n <span class="kr">as</span> [ | n&#39;].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere <span class="mi">0</span> -&gt; X, NullHomotopy f</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp X</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spheres-v-chka2" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere n&#39;.+<span class="mi">3</span> -&gt; X, NullHomotopy f</span></span></span><br></div><label class="goal-separator" for="spheres-v-chka2"><hr></label><div class="goal-conclusion">IsTrunc n&#39;.+<span class="mi">2</span> X</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka3" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka3">- <span class="c">(* n = -2 *)</span></label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere <span class="mi">0</span> -&gt; X, NullHomotopy f</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp X</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka4" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka4"><span class="nb">apply</span> hprop_allpath.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere <span class="mi">0</span> -&gt; X, NullHomotopy f</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : X, x = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka5" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka5"><span class="nb">intros</span> x0 x1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere <span class="mi">0</span> -&gt; X, NullHomotopy f</span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">x0 = x1</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka6" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka6"><span class="nb">set</span> (f := (<span class="kr">fun</span> <span class="nv">b</span> =&gt; <span class="kr">if</span> (S0_to_Bool b) <span class="kr">then</span> x0 <span class="kr">else</span> x1)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere <span class="mi">0</span> -&gt; X, NullHomotopy f</span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br><span><var>f</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">b</span> : Sphere <span class="mi">0</span> =&gt; <span class="kr">if</span> S0_to_Bool b <span class="kr">then</span> x0 <span class="kr">else</span> x1</span></span><span class="hyp-type"><b>: </b><span>Sphere <span class="mi">0</span> -&gt; X</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">x0 = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka7" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka7"><span class="nb">set</span> (n := HX f).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere <span class="mi">0</span> -&gt; X, NullHomotopy f</span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br><span><var>f</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">b</span> : Sphere <span class="mi">0</span> =&gt; <span class="kr">if</span> S0_to_Bool b <span class="kr">then</span> x0 <span class="kr">else</span> x1</span></span><span class="hyp-type"><b>: </b><span>Sphere <span class="mi">0</span> -&gt; X</span></span></span></span><br><span><var>n</var><span><span class="hyp-body"><b>:= </b><span>HX f</span></span><span class="hyp-type"><b>: </b><span>NullHomotopy f</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">x0 = x1</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (n.<span class="mi">2</span> North @ (n.<span class="mi">2</span> South)^).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka8" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka8">- <span class="c">(* n ≥ -1 *)</span></label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere n&#39;.+<span class="mi">3</span> -&gt; X, NullHomotopy f</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n&#39;.+<span class="mi">2</span> X</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chka9" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chka9"><span class="nb">apply</span> istrunc_S; <span class="nb">intros</span> x0 x1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere n&#39;.+<span class="mi">3</span> -&gt; X, NullHomotopy f</span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n&#39;.+<span class="mi">1</span> (x0 = x1)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkaa" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkaa"><span class="nb">apply</span> (istrunc_allnullhomot n&#39;).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere n&#39;.+<span class="mi">3</span> -&gt; X, NullHomotopy f</span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">f</span> : Sphere n&#39;.+<span class="mi">2</span> -&gt; x0 = x1, NullHomotopy f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkab" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkab"><span class="nb">intro</span> f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>istrunc_allnullhomot</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">n</span> : trunc_index)
+(<span class="nv">X</span> : <span class="kt">Type</span>),
+(<span class="kr">forall</span> <span class="nv">f</span> : Sphere n.+<span class="mi">2</span> -&gt; X,
+ NullHomotopy f) -&gt;
+IsTrunc n.+<span class="mi">1</span> X</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>HX</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">f</span> : Sphere n&#39;.+<span class="mi">3</span> -&gt; X, NullHomotopy f</span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Sphere n&#39;.+<span class="mi">2</span> -&gt; x0 = x1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullHomotopy f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> nullhomot_paths_from_susp, HX.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Iterated loop spaces can be described using pointed maps from spheres.  The [n = 0] case of this is stated using [Bool] in [pmap_from_bool] above, and the [n = 1] case of this is stated using [Circle] in [pmap_from_circle_loops] in Circle.v. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkac" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkac"><span class="kn">Definition</span> <span class="nf">pmap_from_psphere_iterated_loops</span> `{Funext} (n : nat) (X : pType)
+  : (psphere n -&gt;** X) &lt;~&gt;* iterated_loops n X.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(psphere n -&gt;** X) &lt;~&gt;* iterated_loops n X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkad" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkad"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(psphere n -&gt;** X) &lt;~&gt;* iterated_loops n X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkae" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkae"><span class="nb">induction</span> n <span class="kr">as</span> [|n IHn]; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(psphere <span class="mi">0</span> -&gt;** X) &lt;~&gt;* X</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spheres-v-chkaf" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>(psphere n -&gt;** X) &lt;~&gt;* iterated_loops n X</span></span></span><br></div><label class="goal-separator" for="spheres-v-chkaf"><hr></label><div class="goal-conclusion">(psphere n.+<span class="mi">1</span> -&gt;** X) &lt;~&gt;* loops (iterated_loops n X)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkb0" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkb0">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(psphere <span class="mi">0</span> -&gt;** X) &lt;~&gt;* X</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (pmap_from_bool X o*E pequiv_pequiv_precompose pequiv_S0_Bool^-<span class="mi">1</span>* ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkb1" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkb1">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>(psphere n -&gt;** X) &lt;~&gt;* iterated_loops n X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(psphere n.+<span class="mi">1</span> -&gt;** X) &lt;~&gt;* loops (iterated_loops n X)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkb2" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkb2"><span class="nb">refine</span> (emap loops IHn o*E _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>(psphere n -&gt;** X) &lt;~&gt;* iterated_loops n X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(psphere n.+<span class="mi">1</span> -&gt;** X) &lt;~&gt;* loops (psphere n -&gt;** X)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spheres-v-chkb3" style="display: none" type="checkbox"><label class="alectryon-input" for="spheres-v-chkb3"><span class="nb">refine</span> (_ o*E loop_susp_adjoint (psphere n) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>pType</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>(psphere n -&gt;** X) &lt;~&gt;* iterated_loops n X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(psphere n -&gt;** loops X) &lt;~&gt;* loops (psphere n -&gt;** X)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">symmetry</span>; <span class="nb">apply</span> equiv_loops_ppforall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

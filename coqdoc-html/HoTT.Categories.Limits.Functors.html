@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Limits.Functors</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Limits.Functors</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab858"></a><h1 class="section">(co)limits assemble into functors</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.KanExtensions.Functors.html#"><span class="id" title="library">KanExtensions.Functors</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Limits.Core.html#"><span class="id" title="library">Limits.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#"><span class="id" title="library">Adjoint.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.NatCategory.html#"><span class="id" title="library">NatCategory</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+(co)limits assemble into functors 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="functors" class="idref" href="#functors"><span class="id" title="section">functors</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="functors.C" class="idref" href="#functors.C"><span class="id" title="variable">C</span></a> <a id="functors.D" class="idref" href="#functors.D"><span class="id" title="variable">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab859"></a><h2 class="section">Colimit functor, which is left adjoint to Δ</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="functors.colimit" class="idref" href="#functors.colimit"><span class="id" title="section">colimit</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `(<a id="has_colimits:6" class="idref" href="#has_colimits:6"><span class="id" title="binder">has_colimits</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="F:4" class="idref" href="#F:4"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.C"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@<a class="idref" href="HoTT.Categories.Limits.Core.html#IsColimit"><span class="id" title="definition">IsColimit</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#F:4"><span class="id" title="variable">F</span></a> (<a id="colimits:5" class="idref" href="#colimits:5"><span class="id" title="binder">colimits</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#F:4"><span class="id" title="variable">F</span></a>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO(jgross): We'll probably want to compose this with the
+        functor from <span class="inlinecode">1</span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span>, and then compose the adjunctions
+        similarly.  This will require turning the equality in the
+        exponential laws into an adjunction. Probably not very
+        hard. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="colimit_functor" class="idref" href="#colimit_functor"><span class="id" title="definition">colimit_functor</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.C"><span class="id" title="variable">C</span></a>) (1 <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.C"><span class="id" title="variable">C</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.KanExtensions.Functors.html#left_kan_extension_functor"><span class="id" title="definition">left_kan_extension_functor</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.colimit.has_colimits"><span class="id" title="variable">has_colimits</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="colimit_adjunction" class="idref" href="#colimit_adjunction"><span class="id" title="definition">colimit_adjunction</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Limits.Functors.html#colimit_functor"><span class="id" title="definition">colimit_functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Limits.Core.html#diagonal_functor"><span class="id" title="definition">diagonal_functor</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.KanExtensions.Functors.html#left_kan_extension_adjunction"><span class="id" title="definition">left_kan_extension_adjunction</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.colimit.has_colimits"><span class="id" title="variable">has_colimits</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.colimit"><span class="id" title="section">colimit</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="functors.limit" class="idref" href="#functors.limit"><span class="id" title="section">limit</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `(<a id="has_limits:9" class="idref" href="#has_limits:9"><span class="id" title="binder">has_limits</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="F:7" class="idref" href="#F:7"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.C"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@<a class="idref" href="HoTT.Categories.Limits.Core.html#IsLimit"><span class="id" title="definition">IsLimit</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#F:7"><span class="id" title="variable">F</span></a> (<a id="limits:8" class="idref" href="#limits:8"><span class="id" title="binder">limits</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#F:7"><span class="id" title="variable">F</span></a>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO(jgross): We'll probably want to compose this with the
+        functor from <span class="inlinecode">1</span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span>, and then compose the adjunctions
+        similarly.  This will require turning the equality in the
+        exponential laws into an adjunction. Probably not very
+        hard. 
+<div class="paragraph"> </div>
+
+<a id="lab860"></a><h2 class="section">Limit functor, which is right adjoint to Δ</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="limit_functor" class="idref" href="#limit_functor"><span class="id" title="definition">limit_functor</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.C"><span class="id" title="variable">C</span></a>) (1 <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.C"><span class="id" title="variable">C</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.KanExtensions.Functors.html#right_kan_extension_functor"><span class="id" title="definition">right_kan_extension_functor</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.limit.has_limits"><span class="id" title="variable">has_limits</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="limit_adjunction" class="idref" href="#limit_adjunction"><span class="id" title="definition">limit_adjunction</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Limits.Core.html#diagonal_functor"><span class="id" title="definition">diagonal_functor</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#limit_functor"><span class="id" title="definition">limit_functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.KanExtensions.Functors.html#right_kan_extension_adjunction"><span class="id" title="definition">right_kan_extension_adjunction</span></a> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.limit.has_limits"><span class="id" title="variable">has_limits</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors.limit"><span class="id" title="section">limit</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Limits.Functors.html#functors"><span class="id" title="section">functors</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

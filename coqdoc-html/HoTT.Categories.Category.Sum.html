@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Category.Sum</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Category.Sum</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab568"></a><h1 class="section">The coproduct of categories</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab569"></a><h2 class="section">Definition of <span class="inlinecode">+</span> for categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="internals" class="idref" href="#internals"><span class="id" title="section">internals</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="internals.C" class="idref" href="#internals.C"><span class="id" title="variable">C</span></a> <a id="internals.D" class="idref" href="#internals.D"><span class="id" title="variable">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="sum_morphism" class="idref" href="#sum_morphism"><span class="id" title="definition">sum_morphism</span></a> (<a id="s:3" class="idref" href="#s:3"><span class="id" title="binder">s</span></a> <a id="d:4" class="idref" href="#d:4"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Categories.Category.Sum.html#internals.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#internals.D"><span class="id" title="variable">D</span></a>) : <span class="id" title="keyword">Type</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#s:3"><span class="id" title="variable">s</span></a>, <a class="idref" href="HoTT.Categories.Category.Sum.html#d:4"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">s</span>, <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#internals.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#s:3"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#d:4"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">s</span>, <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#internals.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#s:3"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#d:4"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#sum_morphism"><span class="id" title="definition">sum_morphism</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> / .<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="sum_identity" class="idref" href="#sum_identity"><span class="id" title="definition">sum_identity</span></a> (<a id="x:7" class="idref" href="#x:7"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Categories.Category.Sum.html#internals.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#internals.D"><span class="id" title="variable">D</span></a>) : <a class="idref" href="HoTT.Categories.Category.Sum.html#sum_morphism"><span class="id" title="definition">sum_morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#x:7"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#x:7"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#x:7"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">x</span> ⇒ <a class="idref" href="HoTT.Categories.Category.Core.html#identity"><span class="id" title="projection">identity</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#x:7"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">x</span> ⇒ <a class="idref" href="HoTT.Categories.Category.Core.html#identity"><span class="id" title="projection">identity</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#x:7"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#sum_identity"><span class="id" title="definition">sum_identity</span></a> <span class="id" title="var">_</span> / .<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="sum_compose" class="idref" href="#sum_compose"><span class="id" title="definition">sum_compose</span></a> (<a id="s:9" class="idref" href="#s:9"><span class="id" title="binder">s</span></a> <a id="d:10" class="idref" href="#d:10"><span class="id" title="binder">d</span></a> <a id="d':11" class="idref" href="#d':11"><span class="id" title="binder">d'</span></a> : <a class="idref" href="HoTT.Categories.Category.Sum.html#internals.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#internals.D"><span class="id" title="variable">D</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="m1:12" class="idref" href="#m1:12"><span class="id" title="binder">m1</span></a> : <a class="idref" href="HoTT.Categories.Category.Sum.html#sum_morphism"><span class="id" title="definition">sum_morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#d:10"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#d':11"><span class="id" title="variable">d'</span></a>) (<a id="m2:13" class="idref" href="#m2:13"><span class="id" title="binder">m2</span></a> : <a class="idref" href="HoTT.Categories.Category.Sum.html#sum_morphism"><span class="id" title="definition">sum_morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#s:9"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#d:10"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Sum.html#sum_morphism"><span class="id" title="definition">sum_morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#s:9"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Category.Sum.html#d':11"><span class="id" title="variable">d'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">case</span> <span class="id" title="var">s</span>, <span class="id" title="var">d</span>, <span class="id" title="var">d'</span>; <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> *;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">solve</span> [ <span class="id" title="tactic">case</span> <span class="id" title="var">m1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">case</span> <span class="id" title="var">m2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Categories.Category.Core.html#compose"><span class="id" title="projection">compose</span></a>; <span class="id" title="var">eassumption</span> ].<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#sum_compose"><span class="id" title="definition">sum_compose</span></a> [<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>] <span class="id" title="var">_</span> <span class="id" title="var">_</span> / .<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#internals"><span class="id" title="section">internals</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="sum" class="idref" href="#sum"><span class="id" title="definition">sum</span></a> (<a id="C:14" class="idref" href="#C:14"><span class="id" title="binder">C</span></a> <a id="D:15" class="idref" href="#D:15"><span class="id" title="binder">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<a class="idref" href="HoTT.Categories.Category.Core.html#Build_PreCategory"><span class="id" title="definition">Build_PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">C</span> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <span class="id" title="var">D</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Category.Sum.html#sum_morphism"><span class="id" title="definition">sum_morphism</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Category.Sum.html#sum_identity"><span class="id" title="definition">sum_identity</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Category.Sum.html#sum_compose"><span class="id" title="definition">sum_compose</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">simpl</span> || <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a> || <span class="id" title="tactic">intros</span> [] || <span class="id" title="tactic">intro</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">morphism</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="CategorySumNotations" class="idref" href="#CategorySumNotations"><span class="id" title="module">CategorySumNotations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Infix</span> <a id="da240289f20cf2a7902a75899d6b13af" class="idref" href="#da240289f20cf2a7902a75899d6b13af"><span class="id" title="notation">&quot;</span></a>+" := <a class="idref" href="HoTT.Categories.Category.Sum.html#sum"><span class="id" title="definition">sum</span></a> : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Category.Sum.html#CategorySumNotations"><span class="id" title="module">CategorySumNotations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

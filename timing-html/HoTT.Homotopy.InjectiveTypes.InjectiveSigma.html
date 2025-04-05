@@ -1,0 +1,1045 @@
+<html>
+<head>
+<title>InjectiveSigma.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for InjectiveSigma.v</h1>
+
+<div class="code" title="File: InjectiveSigma.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Injectivity of Sigma types *)
+
+(** Here we characterize the condition for which a sigma type over an injective type is itself injective, and we also provide some examples.
+
+Many proofs guided by original Agda formalization in the Type Topology Library which can be found at: https://martinescardo.github.io/TypeTopology/InjectiveTypes.Sigma and InjectiveTypes.MathematicalStructuresMoreGeneral. *)
+
+</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 6
+Time: 0.031s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 6
+Time: 0.004s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+Require Import Types.Forall Types.Sigma Types.Universe.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 7
+Time: 0.024s">
+<div class="time" style="width: 77.41935483871%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 8
+Time: 0.006s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 9
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Require Import InjectiveTypes.InjectiveTypes InjectiveTypes.TypeFamKanExt.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section AlgFlabSigma.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {X : Type} (A : X -&gt; Type) (Xaf : IsAlgebraicFlabbyType X).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The condition for a sigma type over an algebraically flabby type to be algebraically flabby can be described as the existence of a section to the following map for every [P] and [f]. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_map (P : HProp) (f : P -&gt; X)
+    : (A (center_af f)) -&gt; (forall h, A (f h))
+    := fun a h =&gt; contr_af f h # a.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Here is the condition.  (It would in fact be enough to assume that [s] is section up to homotopies in its domain.) *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_sigma_condition
+    := forall P f, {s : _ &amp; alg_flab_map P f o s == idmap}.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A sigma type over an algebraically flabby type is also algebraically flabby, and thus algebraically injective, when the above condition holds. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_sigma (cond : alg_flab_sigma_condition)
+    : IsAlgebraicFlabbyType {x : X &amp; A x}.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_IsAlgebraicFlabbyType; intros P f.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: pose (C := cond P (pr1 o f)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* We need to give a point in [{x : X * A x}].  Since [X] is algebraically flabby, we get a point in [X]: *)
+     </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>exists (center_af (pr1 o f)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* For the point in [A (above)], we use the section component of [cond P (pr1 o f)]: *)
+     </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>exact (C.1 (pr2 o f)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h; cbn.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (cond P (fun x : P =&gt; (f x).1)) with C.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* We need to show that the point we gave is equal to [f h]. *)
+     </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply path_sigma; cbn.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply contr_af.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (apD10 (C.2 (pr2 o f)) h).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 39
+Time: 0.002s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition alg_inj_sigma (cond : alg_flab_sigma_condition)
+    : IsAlgebraicInjectiveType {x : X &amp; A x}
+    := alg_inj_alg_flab (alg_flab_sigma cond).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 44
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+End AlgFlabSigma.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Taking our algebraically flabby type [X] to be [Type], we introduce our primary examples (the types of pointed types, monoids, etc.), and give a few simplifying lemmas. *)</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AlgFlabUniverse.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** [T] is a version of transport in the type family [A].  It could be defined to be transport combined with univalence, but we allow the user to choose different "implementations" of transport that might be more convenient. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context (A : Type -&gt; Type) (T : forall {X Y}, X &lt;~&gt; Y -&gt; A X -&gt; A Y)
+    (Trefl : forall X, (T (equiv_idmap X) == idmap)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Arguments T {X Y} _ _.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* This is needed, despite the braces above. *)
+
+  (** When studying the sigma type [{X : Type &amp; A X}], the map [alg_flab_map] can be exchanged for either of these simpler maps.  This first one will turn out to be homotopic to [alg_flab_map] when [Type] is given its "forall" flabbiness structure. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_map_forall `{Funext}
+    (P : HProp) (f : P -&gt; Type)
+    : A (forall h, f h) -&gt; (forall h, A (f h)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a h.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srefine (T _ a).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (@equiv_contr_forall _ _ (contr_inhabited_hprop _ _)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And this one is homotopic to [alg_flab_map] when [Type] is given its "sigma" flabbiness structure. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_map_sigma
+    (P : HProp) (f : P -&gt; Type)
+    : A {h : P &amp; f h} -&gt; (forall h, A (f h)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a h.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srefine (T _ a).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (@equiv_contr_sigma _ _ (contr_inhabited_hprop _ _)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The following conditions can be thought of as closure conditions under pi or sigma types for the type family [A]. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_sigma_condition_forall `{Funext}
+    := forall P f, {s : _ &amp; alg_flab_map_forall P f o s == idmap}.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition alg_flab_sigma_condition_sigma
+    := forall P f, {s : _ &amp; alg_flab_map_sigma P f o s == idmap}.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition homotopic_alg_flab_map_alg_flab_map_forall `{Univalence}
+    (P : HProp) (f : P -&gt; Type)
+    : alg_flab_map_forall P f == alg_flab_map A alg_flab_Type_forall P f.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext h.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    srefine (homotopic_trequiv A (@T) (@univalent_transport H A) Trefl _ _ a).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply univalent_transport_idequiv.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition homotopic_alg_flab_map_alg_flab_map_sigma `{Univalence}
+    (P : HProp) (f : P -&gt; Type)
+    : alg_flab_map_sigma P f == alg_flab_map A alg_flab_Type_sigma P f.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros s.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext h.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    srefine (homotopic_trequiv A (@T) (@univalent_transport H A) Trefl _ _ s).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply univalent_transport_idequiv.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The original [sigma_condition] is implied by our reformulated conditions [alg_flab_sigma_condition_forall] and [alg_flab_sigma_condition_sigma]. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sigma_condition_sigma_condition_forall `{Univalence}
+    (condf : alg_flab_sigma_condition_forall)
+    : alg_flab_sigma_condition A _.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros P f.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (condf _ f) as [s J].</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists s.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro g.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V napply (homotopic_alg_flab_map_alg_flab_map_forall P f (s g)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply J.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition alg_flab_sigma_forall `{Univalence} (condf : alg_flab_sigma_condition_forall)
+    : IsAlgebraicFlabbyType {X : Type &amp; A X}.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply alg_flab_sigma.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (sigma_condition_sigma_condition_forall condf).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sigma_condition_sigma_condition_sigma `{Univalence}
+    (condf : alg_flab_sigma_condition_sigma)
+    : alg_flab_sigma_condition A alg_flab_Type_sigma.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros P f.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (condf _ f) as [s J].</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists s.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro g.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V napply (homotopic_alg_flab_map_alg_flab_map_sigma P f (s g)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply J.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition alg_flab_sigma_sigma `{Univalence} (conds : alg_flab_sigma_condition_sigma)
+    : IsAlgebraicFlabbyType {X : Type &amp; A X}.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply alg_flab_sigma.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (sigma_condition_sigma_condition_sigma conds).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+End AlgFlabUniverse.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The type of pointed types is algebraically flabby. *)</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_pType `{Univalence}
+  : IsAlgebraicFlabbyType {X : Type &amp; X}.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  rapply (alg_flab_sigma_forall _ (@equiv_fun)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P f.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists idmap.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following results are adapted from section 7 of Injective Types in Univalent Mathematics by Martín Escardó, using the above results. *)
+
+(** For a subuniverse, the flabbiness condition is equivalent to closure under proposition indexed pi types (or sigma types), so using this we can state a simpler theorem for proving flabbiness of subuniverses. *)</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_subuniverse_forall `{Univalence} (O : Subuniverse)
+  (condForall : forall (P : HProp) A, (forall h : P, In O (A h)) -&gt; In O (forall h : P, A h))
+  : IsAlgebraicFlabbyType@{u su} (Type_ O).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 155
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  rapply (alg_flab_sigma_forall _ (fun X Y f H =&gt; @inO_equiv_inO' O X Y H f)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X A.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P A.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists _.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros s.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition alg_flab_subuniverse_sigma `{Univalence} (O : Subuniverse)
+  (condSigma : forall (P : HProp) A, (forall h : P, In O (A h)) -&gt; In O {h : P &amp; A h})
+  : IsAlgebraicFlabbyType@{u su} (Type_ O).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  rapply (alg_flab_sigma_sigma _ (fun X Y f H =&gt; @inO_equiv_inO' O X Y H f)).</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X A.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P A.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists _.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros s.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 171
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 171
+Time: 0.001s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As an immediate corollary, we get that reflective subuniverses are algebraically flabby. *)</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 174
+Time: 0.002s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>Definition alg_flab_reflective_subuniverse `{Univalence} (O : ReflectiveSubuniverse)
+  : IsAlgebraicFlabbyType@{u su} (Type_ O)
+  := alg_flab_subuniverse_forall _ _.</pre>
+</div>
+<div class="code" title="File: InjectiveSigma.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

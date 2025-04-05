@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>ConstantDiagram.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk0"><span class="kn">Require Import</span> Basics Types.Paths.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Cone.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Cocone.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Diagram.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Diagrams.Graph.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Constant diagram *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">ConstantDiagram</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">G</span> : Graph}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk1"><span class="kn">Definition</span> <span class="nf">diagram_const</span> (<span class="nv">C</span> : <span class="kt">Type</span>) : Diagram G.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Diagram G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Diagram G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk3">srapply Build_Diagram.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">G -&gt; <span class="kt">Type</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk4" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk4"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span> : G, G i j -&gt; <span class="nl">?obj</span> i -&gt; <span class="nl">?obj</span> j</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk5"><span class="mi">1</span>: <span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">_</span> =&gt; C).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span> : G,
+G i j -&gt; (<span class="kr">fun</span> <span class="nv">_</span> : G =&gt; C) i -&gt; (<span class="kr">fun</span> <span class="nv">_</span> : G =&gt; C) j</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk6"><span class="nb">intros</span> i j k.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">_</span> : G =&gt; C) i -&gt; (<span class="kr">fun</span> <span class="nv">_</span> : G =&gt; C) j</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> idmap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk7"><span class="kn">Definition</span> <span class="nf">diagram_const_functor</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B)
+    : DiagramMap (diagram_const A) (diagram_const B).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap (diagram_const A) (diagram_const B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk8"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap (diagram_const A) (diagram_const B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk9">srapply Build_DiagramMap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G, diagram_const A i -&gt; diagram_const B i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chka" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chka"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : diagram_const A i),
+((diagram_const B) _f g) (<span class="nl">?DiagramMap_obj</span> i x) =
+<span class="nl">?DiagramMap_obj</span> j (((diagram_const A) _f g) x)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chkb"><span class="mi">1</span>: <span class="nb">intro</span> i; <span class="bp">exact</span> f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : diagram_const A i),
+((diagram_const B) _f g) ((<span class="kr">fun</span> <span class="nv">_</span> : G =&gt; f) i x) =
+(<span class="kr">fun</span> <span class="nv">_</span> : G =&gt; f) j (((diagram_const A) _f g) x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">diagram_const_functor_comp</span> {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : <span class="kt">Type</span>}
+    (<span class="nv">f</span> : A -&gt; B) (<span class="nv">g</span> : B -&gt; C)
+    : diagram_const_functor (g o f)
+      = diagram_comp (diagram_const_functor g) (diagram_const_functor f)
+    := idpath.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">diagram_const_functor_idmap</span> {<span class="nv">A</span> : <span class="kt">Type</span>}
+    : diagram_const_functor (idmap : A -&gt; A) = diagram_idmap (diagram_const A)
+    := idpath.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chkc"><span class="kn">Definition</span> <span class="nf">equiv_diagram_const_cocone</span> `{Funext} (D : Diagram G) (X : <span class="kt">Type</span>)
+    : DiagramMap D (diagram_const X) &lt;~&gt; Cocone D X.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap D (diagram_const X) &lt;~&gt; Cocone D X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chkd"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap D (diagram_const X) &lt;~&gt; Cocone D X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chke">srapply equiv_adjointify.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap D (diagram_const X) -&gt; Cocone D X</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chkf" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chkf"><hr></label><div class="goal-conclusion">Cocone D X -&gt; DiagramMap D (diagram_const X)</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk10" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk10"><hr></label><div class="goal-conclusion"><span class="nl">?f</span> o <span class="nl">?g</span> == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk11" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk11"><hr></label><div class="goal-conclusion"><span class="nl">?g</span> o <span class="nl">?f</span> == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="c">(* The two functions are defined in parallel: *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk12"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">intros</span> [? w]; <span class="nb">econstructor</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g) (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; <span class="nl">?legs</span> j ((D _f g) x)) == <span class="nl">?legs</span> i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk13" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) == legs i</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk13"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g) (<span class="nl">?DiagramMap_obj</span> i x) =
+<span class="nl">?DiagramMap_obj</span> j ((D _f g) x)</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk14" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk14"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap D (diagram_const X) =&gt;
+ (<span class="kr">fun</span>
+    (<span class="nv">DiagramMap_obj</span> : 
+     <span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; diagram_const X i)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+         (<span class="nv">g</span> : G i j) 
+         (<span class="nv">x</span> : D i),
+         ((diagram_const X) _f g) (DiagramMap_obj i x) =
+         DiagramMap_obj j ((D _f g) x)) =&gt;
+  {| legs := <span class="nl">?legs</span>; legs_comm := <span class="nl">?Goal</span> |}) X0
+   (DiagramMap_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : Cocone D X =&gt;
+   (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+           (<span class="nv">g</span> : G i j),
+           (<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+           legs i) =&gt;
+    {|
+      DiagramMap_obj := <span class="nl">?DiagramMap_obj</span>;
+      DiagramMap_comm := <span class="nl">?Goal0</span>
+    |}) X0 (legs_comm X0)) == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk15" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk15"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : Cocone D X =&gt;
+ (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+         (<span class="nv">g</span> : G i j),
+         (<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+         legs i) =&gt;
+  {|
+    DiagramMap_obj := <span class="nl">?DiagramMap_obj</span>;
+    DiagramMap_comm := <span class="nl">?Goal0</span>
+  |}) X0 (legs_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap D (diagram_const X) =&gt;
+   (<span class="kr">fun</span>
+      (<span class="nv">DiagramMap_obj</span> : 
+       <span class="kr">forall</span> <span class="nv">i</span> : G, 
+       D i -&gt; diagram_const X i)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+           (<span class="nv">g</span> : G i j) 
+           (<span class="nv">x</span> : D i),
+           ((diagram_const X) _f g)
+             (DiagramMap_obj i x) =
+           DiagramMap_obj j ((D _f g) x)) =&gt;
+    {| legs := <span class="nl">?legs</span>; legs_comm := <span class="nl">?Goal</span> |}) X0
+     (DiagramMap_comm X0)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="c">(* This reversal is a defect in the definition of [Cocone]. *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk16"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">intros</span> x y z z&#39;; <span class="nb">symmetry</span>; <span class="nb">revert</span> x y z z&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g) (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) (<span class="nv">z&#39;</span> : D x),
+<span class="nl">?legs</span> x z&#39; = <span class="nl">?legs</span> y ((D _f z) z&#39;)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk17" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) == legs i</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk17"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) 
+(<span class="nv">z&#39;</span> : D x),
+<span class="nl">?DiagramMap_obj</span> y ((D _f z) z&#39;) =
+((diagram_const X) _f z) (<span class="nl">?DiagramMap_obj</span> x z&#39;)</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk18" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk18"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap D (diagram_const X) =&gt;
+ (<span class="kr">fun</span>
+    (<span class="nv">DiagramMap_obj</span> : 
+     <span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; diagram_const X i)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+         (<span class="nv">g</span> : G i j) 
+         (<span class="nv">x</span> : D i),
+         ((diagram_const X) _f g) (DiagramMap_obj i x) =
+         DiagramMap_obj j ((D _f g) x)) =&gt;
+  {|
+    legs := <span class="nl">?legs</span>;
+    legs_comm :=
+      <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) =&gt;
+      (<span class="kr">fun</span> <span class="nv">z&#39;</span> : D x =&gt; (<span class="nl">?Goal</span> x y z z&#39;)^)
+      :
+      (<span class="kr">fun</span> <span class="nv">x0</span> : D x =&gt; <span class="nl">?legs</span> y ((D _f z) x0)) ==
+      <span class="nl">?legs</span> x
+  |}) X0 (DiagramMap_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : Cocone D X =&gt;
+   (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+           (<span class="nv">g</span> : G i j),
+           (<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+           legs i) =&gt;
+    {|
+      DiagramMap_obj := <span class="nl">?DiagramMap_obj</span>;
+      DiagramMap_comm :=
+        <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) (<span class="nv">z&#39;</span> : D x) =&gt;
+        (<span class="nl">?Goal0</span> x y z z&#39;)^
+    |}) X0 (legs_comm X0)) == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk19" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk19"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : Cocone D X =&gt;
+ (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+         (<span class="nv">g</span> : G i j),
+         (<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+         legs i) =&gt;
+  {|
+    DiagramMap_obj := <span class="nl">?DiagramMap_obj</span>;
+    DiagramMap_comm :=
+      <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) (<span class="nv">z&#39;</span> : D x) =&gt;
+      (<span class="nl">?Goal0</span> x y z z&#39;)^
+  |}) X0 (legs_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap D (diagram_const X) =&gt;
+   (<span class="kr">fun</span>
+      (<span class="nv">DiagramMap_obj</span> : 
+       <span class="kr">forall</span> <span class="nv">i</span> : G, 
+       D i -&gt; diagram_const X i)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+           (<span class="nv">g</span> : G i j) 
+           (<span class="nv">x</span> : D i),
+           ((diagram_const X) _f g)
+             (DiagramMap_obj i x) =
+           DiagramMap_obj j ((D _f g) x)) =&gt;
+    {|
+      legs := <span class="nl">?legs</span>;
+      legs_comm :=
+        <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) =&gt;
+        (<span class="kr">fun</span> <span class="nv">z&#39;</span> : D x =&gt; (<span class="nl">?Goal</span> x y z z&#39;)^)
+        :
+        (<span class="kr">fun</span> <span class="nv">x0</span> : D x =&gt; <span class="nl">?legs</span> y ((D _f z) x0)) ==
+        <span class="nl">?legs</span> x
+    |}) X0 (DiagramMap_comm X0)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk1a"><span class="mi">1</span>,<span class="mi">2</span>: <span class="bp">exact</span> w.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap D (diagram_const X) =&gt;
+ (<span class="kr">fun</span>
+    (<span class="nv">DiagramMap_obj</span> : <span class="kr">forall</span> <span class="nv">i</span> : G,
+                      D i -&gt; diagram_const X i)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D i),
+         ((diagram_const X) _f g) (DiagramMap_obj i x) =
+         DiagramMap_obj j ((D _f g) x)) =&gt;
+  {|
+    legs := DiagramMap_obj;
+    legs_comm :=
+      <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) =&gt;
+      (<span class="kr">fun</span> <span class="nv">z&#39;</span> : D x =&gt; (w x y z z&#39;)^)
+      :
+      (<span class="kr">fun</span> <span class="nv">x0</span> : D x =&gt; DiagramMap_obj y ((D _f z) x0)) ==
+      DiagramMap_obj x
+  |}) X0 (DiagramMap_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : Cocone D X =&gt;
+   (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+           (<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+           legs i) =&gt;
+    {|
+      DiagramMap_obj := legs;
+      DiagramMap_comm :=
+        <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) (<span class="nv">z&#39;</span> : D x) =&gt;
+        (w x y z z&#39;)^
+    |}) X0 (legs_comm X0)) == idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk1b" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk1b"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : Cocone D X =&gt;
+ (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+         (<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+         legs i) =&gt;
+  {|
+    DiagramMap_obj := legs;
+    DiagramMap_comm :=
+      <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) (<span class="nv">z&#39;</span> : D x) =&gt;
+      (w x y z z&#39;)^
+  |}) X0 (legs_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap D (diagram_const X) =&gt;
+   (<span class="kr">fun</span>
+      (<span class="nv">DiagramMap_obj</span> : <span class="kr">forall</span> <span class="nv">i</span> : G,
+                        D i -&gt; diagram_const X i)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D i),
+           ((diagram_const X) _f g)
+             (DiagramMap_obj i x) =
+           DiagramMap_obj j ((D _f g) x)) =&gt;
+    {|
+      legs := DiagramMap_obj;
+      legs_comm :=
+        <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) =&gt;
+        (<span class="kr">fun</span> <span class="nv">z&#39;</span> : D x =&gt; (w x y z z&#39;)^)
+        :
+        (<span class="kr">fun</span> <span class="nv">x0</span> : D x =&gt;
+         DiagramMap_obj y ((D _f z) x0)) ==
+        DiagramMap_obj x
+    |}) X0 (DiagramMap_comm X0)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="c">(* The two homotopies are proved in parallel: *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk1c"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">intros</span> [].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+legs i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  legs := legs;
+  legs_comm :=
+    <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) (<span class="nv">z&#39;</span> : D x) =&gt;
+    ((legs_comm x y z z&#39;)^)^
+|} = {| legs := legs; legs_comm := legs_comm |}</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk1d" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g)
+  (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk1d"><hr></label><div class="goal-conclusion">{|
+  DiagramMap_obj := DiagramMap_obj;
+  DiagramMap_comm :=
+    <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) (<span class="nv">z&#39;</span> : D x) =&gt;
+    ((DiagramMap_comm x y z z&#39;)^)^
+|} =
+{|
+  DiagramMap_obj := DiagramMap_obj;
+  DiagramMap_comm := DiagramMap_comm
+|}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk1e"><span class="mi">1</span>: srapply path_cocone; <span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+legs i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G, legs i == legs i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk1f" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+legs i</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk1f"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D i),
+((legs_comm i j g x)^)^ @ <span class="nl">?Goal0</span> i x =
+<span class="nl">?Goal0</span> j ((D _f g) x) @ legs_comm i j g x</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk20" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g)
+  (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk20"><hr></label><div class="goal-conclusion">{|
+  DiagramMap_obj := DiagramMap_obj;
+  DiagramMap_comm :=
+    <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : G) (<span class="nv">z</span> : G x y) (<span class="nv">z&#39;</span> : D x) =&gt;
+    ((DiagramMap_comm x y z z&#39;)^)^
+|} =
+{|
+  DiagramMap_obj := DiagramMap_obj;
+  DiagramMap_comm := DiagramMap_comm
+|}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk21"><span class="mi">3</span>: srapply path_DiagramMap; snrefine (_; _); <span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+legs i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G, legs i == legs i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk22" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+legs i</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk22"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D i),
+((legs_comm i j g x)^)^ @ <span class="nl">?Goal</span> i x =
+<span class="nl">?Goal</span> j ((D _f g) x) @ legs_comm i j g x</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk23" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g)
+  (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk23"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G, DiagramMap_obj i == DiagramMap_obj i</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk24" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g)
+  (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk24"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D i),
+((DiagramMap_comm i j g x)^)^ @ <span class="nl">?Goal1</span> j ((D _f g) x) =
+ap idmap (<span class="nl">?Goal1</span> i x) @ DiagramMap_comm i j g x</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk25"><span class="mi">1</span>,<span class="mi">3</span>: <span class="bp">reflexivity</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+legs i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D i),
+((legs_comm i j g x)^)^ @
+(<span class="kr">fun</span> (<span class="nv">i0</span> : G) (<span class="nv">x0</span> : D i0) =&gt; <span class="mi">1</span>) i x =
+(<span class="kr">fun</span> (<span class="nv">i0</span> : G) (<span class="nv">x0</span> : D i0) =&gt; <span class="mi">1</span>) j ((D _f g) x) @
+legs_comm i j g x</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk26" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g)
+  (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk26"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D i),
+((DiagramMap_comm i j g x)^)^ @
+(<span class="kr">fun</span> (<span class="nv">i0</span> : G) (<span class="nv">x0</span> : D i0) =&gt; <span class="mi">1</span>) j ((D _f g) x) =
+ap idmap ((<span class="kr">fun</span> (<span class="nv">i0</span> : G) (<span class="nv">x0</span> : D i0) =&gt; <span class="mi">1</span>) i x) @
+DiagramMap_comm i j g x</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk27"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">intros</span>; <span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+legs i</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((legs_comm i j g x)^)^ @ <span class="mi">1</span> = <span class="mi">1</span> @ legs_comm i j g x</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk28" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g)
+  (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D i</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk28"><hr></label><div class="goal-conclusion">((DiagramMap_comm i j g x)^)^ @ <span class="mi">1</span> =
+<span class="mi">1</span> @ DiagramMap_comm i j g x</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk29"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">apply</span> equiv_p1_1q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D i -&gt; X</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : D i =&gt; legs j ((D _f g) x)) ==
+legs i</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((legs_comm i j g x)^)^ = legs_comm i j g x</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk2a" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+D i -&gt; diagram_const X i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : D i),
+((diagram_const X) _f g)
+  (DiagramMap_obj i x) =
+DiagramMap_obj j ((D _f g) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D i</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk2a"><hr></label><div class="goal-conclusion">((DiagramMap_comm i j g x)^)^ =
+DiagramMap_comm i j g x</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">apply</span> inv_V.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk2b"><span class="kn">Definition</span> <span class="nf">equiv_diagram_const_cone</span> `{Funext} (X : <span class="kt">Type</span>) (D : Diagram G)
+    : DiagramMap (diagram_const X) D &lt;~&gt; Cone X D.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap (diagram_const X) D &lt;~&gt; Cone X D</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk2c" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk2c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap (diagram_const X) D &lt;~&gt; Cone X D</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk2d">srapply equiv_adjointify.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap (diagram_const X) D -&gt; Cone X D</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk2e" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk2e"><hr></label><div class="goal-conclusion">Cone X D -&gt; DiagramMap (diagram_const X) D</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk2f" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk2f"><hr></label><div class="goal-conclusion"><span class="nl">?f</span> o <span class="nl">?g</span> == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk30" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk30"><hr></label><div class="goal-conclusion"><span class="nl">?g</span> o <span class="nl">?f</span> == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk31"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">intros</span> [? w]; <span class="nb">econstructor</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+diagram_const X i -&gt; D i</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : diagram_const X i),
+(D _f g) (DiagramMap_obj i x) =
+DiagramMap_obj j (((diagram_const X) _f g) x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (<span class="nl">?legs</span> i x)) == <span class="nl">?legs</span> j</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk32" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) == legs j</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk32"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : diagram_const X i),
+(D _f g) (<span class="nl">?DiagramMap_obj</span> i x) =
+<span class="nl">?DiagramMap_obj</span> j (((diagram_const X) _f g) x)</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk33" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk33"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap (diagram_const X) D =&gt;
+ (<span class="kr">fun</span>
+    (<span class="nv">DiagramMap_obj</span> : 
+     <span class="kr">forall</span> <span class="nv">i</span> : G, diagram_const X i -&gt; D i)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+         (<span class="nv">g</span> : G i j) 
+         (<span class="nv">x</span> : diagram_const X i),
+         (D _f g) (DiagramMap_obj i x) =
+         DiagramMap_obj j (((diagram_const X) _f g) x))
+  =&gt; {| Cone.legs := <span class="nl">?legs</span>; Cone.legs_comm := <span class="nl">?Goal</span> |})
+   X0 (DiagramMap_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : Cone X D =&gt;
+   (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+           (<span class="nv">g</span> : G i j),
+           (<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) ==
+           legs j) =&gt;
+    {|
+      DiagramMap_obj := <span class="nl">?DiagramMap_obj</span>;
+      DiagramMap_comm := <span class="nl">?Goal0</span>
+    |}) X0 (Cone.legs_comm X0)) == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk34" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk34"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : Cone X D =&gt;
+ (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+         (<span class="nv">g</span> : G i j),
+         (<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) == legs j)
+  =&gt;
+  {|
+    DiagramMap_obj := <span class="nl">?DiagramMap_obj</span>;
+    DiagramMap_comm := <span class="nl">?Goal0</span>
+  |}) X0 (Cone.legs_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap (diagram_const X) D =&gt;
+   (<span class="kr">fun</span>
+      (<span class="nv">DiagramMap_obj</span> : 
+       <span class="kr">forall</span> <span class="nv">i</span> : G, 
+       diagram_const X i -&gt; D i)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) 
+           (<span class="nv">g</span> : G i j) 
+           (<span class="nv">x</span> : diagram_const X i),
+           (D _f g) (DiagramMap_obj i x) =
+           DiagramMap_obj j
+             (((diagram_const X) _f g) x)) =&gt;
+    {| Cone.legs := <span class="nl">?legs</span>; Cone.legs_comm := <span class="nl">?Goal</span> |})
+     X0 (DiagramMap_comm X0)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk35" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk35"><span class="mi">1</span>,<span class="mi">2</span>: <span class="bp">exact</span> w.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap (diagram_const X) D =&gt;
+ (<span class="kr">fun</span>
+    (<span class="nv">DiagramMap_obj</span> : <span class="kr">forall</span> <span class="nv">i</span> : G,
+                      diagram_const X i -&gt; D i)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+         (<span class="nv">x</span> : diagram_const X i),
+         (D _f g) (DiagramMap_obj i x) =
+         DiagramMap_obj j (((diagram_const X) _f g) x))
+  =&gt;
+  {|
+    Cone.legs := DiagramMap_obj; Cone.legs_comm := w
+  |}) X0 (DiagramMap_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : Cone X D =&gt;
+   (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+           (<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) ==
+           legs j) =&gt;
+    {| DiagramMap_obj := legs; DiagramMap_comm := w |})
+     X0 (Cone.legs_comm X0)) == idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk36" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk36"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">X0</span> : Cone X D =&gt;
+ (<span class="kr">fun</span> (<span class="nv">legs</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i)
+    (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+         (<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) == legs j)
+  =&gt;
+  {| DiagramMap_obj := legs; DiagramMap_comm := w |})
+   X0 (Cone.legs_comm X0))
+o (<span class="kr">fun</span> <span class="nv">X0</span> : DiagramMap (diagram_const X) D =&gt;
+   (<span class="kr">fun</span>
+      (<span class="nv">DiagramMap_obj</span> : <span class="kr">forall</span> <span class="nv">i</span> : G,
+                        diagram_const X i -&gt; D i)
+      (<span class="nv">w</span> : <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+           (<span class="nv">x</span> : diagram_const X i),
+           (D _f g) (DiagramMap_obj i x) =
+           DiagramMap_obj j
+             (((diagram_const X) _f g) x)) =&gt;
+    {|
+      Cone.legs := DiagramMap_obj; Cone.legs_comm := w
+    |}) X0 (DiagramMap_comm X0)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk37" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk37"><span class="mi">1</span>,<span class="mi">2</span>: <span class="nb">intros</span>[].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) ==
+legs j</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{| Cone.legs := legs; Cone.legs_comm := legs_comm |} =
+{| Cone.legs := legs; Cone.legs_comm := legs_comm |}</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk38" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+diagram_const X i -&gt; D i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : diagram_const X i),
+(D _f g) (DiagramMap_obj i x) =
+DiagramMap_obj j
+  (((diagram_const X) _f g) x)</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk38"><hr></label><div class="goal-conclusion">{|
+  DiagramMap_obj := DiagramMap_obj;
+  DiagramMap_comm := DiagramMap_comm
+|} =
+{|
+  DiagramMap_obj := DiagramMap_obj;
+  DiagramMap_comm := DiagramMap_comm
+|}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk39" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk39"><span class="mi">1</span>: srapply path_cone.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) ==
+legs j</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G,
+{| Cone.legs := legs; Cone.legs_comm := legs_comm |} i ==
+{| Cone.legs := legs; Cone.legs_comm := legs_comm |} i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk3a" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) ==
+legs j</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk3a"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : X),
+Cone.legs_comm
+  {| Cone.legs := legs; Cone.legs_comm := legs_comm |}
+  i j g x @ <span class="nl">?path_legs</span> j x =
+ap (D _f g) (<span class="nl">?path_legs</span> i x) @
+Cone.legs_comm
+  {| Cone.legs := legs; Cone.legs_comm := legs_comm |}
+  i j g x</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk3b" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+diagram_const X i -&gt; D i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : diagram_const X i),
+(D _f g) (DiagramMap_obj i x) =
+DiagramMap_obj j
+  (((diagram_const X) _f g) x)</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk3b"><hr></label><div class="goal-conclusion">{|
+  DiagramMap_obj := DiagramMap_obj;
+  DiagramMap_comm := DiagramMap_comm
+|} =
+{|
+  DiagramMap_obj := DiagramMap_obj;
+  DiagramMap_comm := DiagramMap_comm
+|}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk3c" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk3c"><span class="mi">3</span>: srapply path_DiagramMap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) ==
+legs j</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G,
+{| Cone.legs := legs; Cone.legs_comm := legs_comm |} i ==
+{| Cone.legs := legs; Cone.legs_comm := legs_comm |} i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk3d" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) ==
+legs j</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk3d"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : X),
+Cone.legs_comm
+  {| Cone.legs := legs; Cone.legs_comm := legs_comm |}
+  i j g x @ <span class="nl">?path_legs</span> j x =
+ap (D _f g) (<span class="nl">?path_legs</span> i x) @
+Cone.legs_comm
+  {| Cone.legs := legs; Cone.legs_comm := legs_comm |}
+  i j g x</div></blockquote><input class="alectryon-extra-goal-toggle" id="constantdiagram-v-chk3e" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>DiagramMap_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+diagram_const X i -&gt; D i</span></span></span><br><span><var>DiagramMap_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j)
+(<span class="nv">x</span> : diagram_const X i),
+(D _f g) (DiagramMap_obj i x) =
+DiagramMap_obj j
+  (((diagram_const X) _f g) x)</span></span></span><br></div><label class="goal-separator" for="constantdiagram-v-chk3e"><hr></label><div class="goal-conclusion">DiagramMap_homotopy
+  {|
+    DiagramMap_obj := DiagramMap_obj;
+    DiagramMap_comm := DiagramMap_comm
+  |}
+  {|
+    DiagramMap_obj := DiagramMap_obj;
+    DiagramMap_comm := DiagramMap_comm
+  |}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="constantdiagram-v-chk3f" style="display: none" type="checkbox"><label class="alectryon-input" for="constantdiagram-v-chk3f"><span class="mi">1</span>,<span class="mi">3</span>: <span class="bp">reflexivity</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>legs</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, X -&gt; D i</span></span></span><br><span><var>legs_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j),
+(<span class="kr">fun</span> <span class="nv">x</span> : X =&gt; (D _f g) (legs i x)) ==
+legs j</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : X),
+Cone.legs_comm
+  {| Cone.legs := legs; Cone.legs_comm := legs_comm |}
+  i j g x @ (<span class="kr">fun</span> (<span class="nv">i0</span> : G) (<span class="nv">x0</span> : X) =&gt; <span class="mi">1</span>) j x =
+ap (D _f g) ((<span class="kr">fun</span> (<span class="nv">i0</span> : G) (<span class="nv">x0</span> : X) =&gt; <span class="mi">1</span>) i x) @
+Cone.legs_comm
+  {| Cone.legs := legs; Cone.legs_comm := legs_comm |}
+  i j g x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">all</span>: <span class="nb">cbn</span>; <span class="nb">intros</span>; hott_simpl.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">ConstantDiagram</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

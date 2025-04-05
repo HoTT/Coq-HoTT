@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.Algebra.Rings.Expressions</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.Algebra.Rings.Expressions</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#"><span class="id" title="library">Algebra.Rings.Ring</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In this file, we test various aspects of writing group expressions. These kinds of expressions appear throughout the library, but since mathclasses is quite sensitive to subtle changes, we keep this file to document and enforce certain behaviours.
+
+<div class="paragraph"> </div>
+
+We use the <span class="inlinecode"><span class="id" title="keyword">Type</span></span> vernacular command which is like <span class="inlinecode"><span class="id" title="keyword">Check</span></span> but doesn't allow for evars. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Rings" class="idref" href="#Rings"><span class="id" title="section">Rings</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="R:1" class="idref" href="#R:1"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring@</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">{</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Set</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">}</span></a>} (<a id="x:2" class="idref" href="#x:2"><span class="id" title="binder">x</span></a> <a id="y:3" class="idref" href="#y:3"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#R:1"><span class="id" title="variable">R</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">mc_scope</span></span> is appropriate for rings. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.R"><span class="id" title="variable">R</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.R"><span class="id" title="variable">R</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.y"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.R"><span class="id" title="variable">R</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.R"><span class="id" title="variable">R</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings.R"><span class="id" title="variable">R</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Tests.Algebra.Rings.Expressions.html#Rings"><span class="id" title="section">Rings</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.KanExtensions.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.KanExtensions.Core</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab830"></a><h1 class="section">Kan Extensions</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Core.html#"><span class="id" title="library">Functor.Composition.Functorial.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.UniversalProperties.html#"><span class="id" title="library">UniversalProperties</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Quoting nLab on Kan extensions:
+
+<div class="paragraph"> </div>
+
+<a id="lab831"></a><h2 class="section">Idea</h2>
+
+
+<div class="paragraph"> </div>
+
+    The Kan extension of a functor <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span> with respect to a
+    functor
+
+<div class="paragraph"> </div>
+
+<pre>
+    C
+    |
+    | p
+    ↓
+    C'
+</pre>
+
+<div class="paragraph"> </div>
+
+    is, if it exists, a kind of best approximation to the problem of
+    finding a functor <span class="inlinecode"><a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span> such that
+
+<div class="paragraph"> </div>
+
+<pre>
+        F
+    C -----&gt; D
+    |       ↗
+    | p   /
+    |   /
+    ↓ /
+    C'
+</pre>
+
+<div class="paragraph"> </div>
+
+    hence to extending the domain of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> through <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a></span> from <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span>.
+
+<div class="paragraph"> </div>
+
+    More generally, this makes sense not only in Cat but in any
+    2-category.
+
+<div class="paragraph"> </div>
+
+    Similarly, a Kan lift is the best approximation to lifting a
+    morphism <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span> through a morphism
+
+<div class="paragraph"> </div>
+
+<pre>
+    D'
+    |
+    ↓
+    D
+</pre>
+
+<div class="paragraph"> </div>
+
+    to a morphism <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>̂</span>
+
+<div class="paragraph"> </div>
+
+<pre>
+                D'
+              ↗ |
+            /   |
+        F̂ /     |
+        /       |
+      /   F     ↓
+    C --------&gt; D
+</pre>
+
+<div class="paragraph"> </div>
+
+    Kan extensions are ubiquitous. See the discussion at Examples
+    below.
+
+<div class="paragraph"> </div>
+
+<a id="lab832"></a><h2 class="section">Definitions</h2>
+
+
+<div class="paragraph"> </div>
+
+    There are various slight variants of the definition of Kan
+    extension. In good cases they all exist and all coincide, but in
+    some cases only some of these will actually exist.
+
+<div class="paragraph"> </div>
+
+    We (have to) distinguish the following cases:
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> “ordinary” or “weak” Kan extensions
+
+<div class="paragraph"> </div>
+
+      These define the extension of an entire functor, by an
+      adjointness relation.
+
+<div class="paragraph"> </div>
+
+      Here we (have to) distinguish further between
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> global Kan extensions,
+
+<div class="paragraph"> </div>
+
+        which define extensions of all possible functors of given
+        domain and codomain (if all of them indeed exist);
+
+<div class="paragraph"> </div>
+
+
+</li>
+<li> local Kan extensions,
+
+<div class="paragraph"> </div>
+
+        which define extensions of single functors only, which may
+        exist even if not every functor has an extension.
+
+<div class="paragraph"> </div>
+
+
+</li>
+</ul>
+
+</li>
+<li> “pointwise” or “strong” Kan extensions
+
+<div class="paragraph"> </div>
+
+      These define the value of an extended functor on each object
+      (each “point”) by a weighted (co)limit.
+
+<div class="paragraph"> </div>
+
+      Furthermore, a pointwise Kan extension can be “absolute”.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    If the pointwise version exists, then it coincides with the
+    “ordinary” or “weak” version, but the former may exist without the
+    pointwise version existing. See below for more.
+
+<div class="paragraph"> </div>
+
+    Some authors (such as Kelly) assert that only pointwise Kan
+    extensions deserve the name “Kan extension,” and use the term as
+    “weak Kan extension” for a functor equipped with a universal
+    natural transformation. It is certainly true that most Kan
+    extensions which arise in practice are pointwise. This distinction
+    is even more important in enriched category theory. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="kan_extensions" class="idref" href="#kan_extensions"><span class="id" title="section">kan_extensions</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab833"></a><h2 class="section">Ordinary or weak Kan extensions</h2>
+
+
+<div class="paragraph"> </div>
+
+<a id="lab834"></a><h3 class="section">Global Kan extensions</h3>
+
+
+<div class="paragraph"> </div>
+
+      Let <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> be a functor. For <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span> any other category, write
+      <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a>×</span> <span class="inlinecode">:</span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> for the induced functor on the functor
+      categories: this sends a functor <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span> to the composite functor
+
+<div class="paragraph"> </div>
+
+<pre>
+                p      h
+      p* h : C --&gt; C' --&gt; D
+</pre>
+   
+<div class="paragraph"> </div>
+
+<a id="lab835"></a><h3 class="section">Pullback-along functor</h3>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="kan_extensions.C" class="idref" href="#kan_extensions.C"><span class="id" title="variable">C</span></a> <a id="kan_extensions.C'" class="idref" href="#kan_extensions.C'"><span class="id" title="variable">C'</span></a> <a id="kan_extensions.D" class="idref" href="#kan_extensions.D"><span class="id" title="variable">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="kan_extensions.pullback_along" class="idref" href="#kan_extensions.pullback_along"><span class="id" title="section">pullback_along</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pullback_along_functor" class="idref" href="#pullback_along_functor"><span class="id" title="definition">pullback_along_functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C'"><span class="id" title="variable">C'</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C'"><span class="id" title="variable">C'</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.D"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.D"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.Core.html#compose_functor"><span class="id" title="definition">Functor.Composition.Functorial.Core.compose_functor</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pullback_along" class="idref" href="#pullback_along"><span class="id" title="definition">pullback_along</span></a> (<a id="p:5" class="idref" href="#p:5"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C'"><span class="id" title="variable">C'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C'"><span class="id" title="variable">C'</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.D"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.D"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">Eval</span> <span class="id" title="tactic">hnf</span> <span class="id" title="tactic">in</span> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#pullback_along_functor"><span class="id" title="definition">pullback_along_functor</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#p:5"><span class="id" title="variable">p</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.pullback_along"><span class="id" title="section">pullback_along</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definition. If <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a>×</span> has a left adjoint, typically denoted <span class="inlinecode"><span class="id" title="var">p_</span>!</span> <span class="inlinecode">:</span>
+      <span class="inlinecode">(<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> or <span class="inlinecode"><span class="id" title="var">Lan_p</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> then this
+      left adjoint is called the (ordinary or weak) left Kan extension
+      operation along <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a></span>. For <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a></span> <span class="inlinecode">∈</span> <span class="inlinecode">(<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> we call <span class="inlinecode"><span class="id" title="var">p_</span>!</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a></span> the left
+      Kan extension of <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a></span> along <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a></span>.
+
+<div class="paragraph"> </div>
+
+      Similarly, if <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a>×</span> has a right adjoint, this right adjoint is
+      called the right Kan extension operation along <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a></span>. It is
+      typically denoted <span class="inlinecode"><span class="id" title="var">p_</span>×</span> <span class="inlinecode">:</span> <span class="inlinecode">(<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> or <span class="inlinecode"><span class="id" title="var">Ran</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">Ran_p</span></span> <span class="inlinecode">:</span>
+      <span class="inlinecode">(<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span>.
+
+<div class="paragraph"> </div>
+
+      The analogous definition clearly makes sense as stated in other
+      contexts, such as in enriched category theory.
+
+<div class="paragraph"> </div>
+
+      Observation. If <span class="inlinecode"><a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode">1</span> is the terminal category, then
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> the left Kan extension operation forms the colimit of a functor;
+
+<div class="paragraph"> </div>
+
+
+</li>
+<li> the right Kan extension operation forms the limit of a functor. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a id="lab836"></a><h3 class="section">Left Kan extensions</h3>
+ Colimits are initial morphisms. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="IsLeftKanExtensionAlong" class="idref" href="#IsLeftKanExtensionAlong"><span class="id" title="definition">IsLeftKanExtensionAlong</span></a> (<a id="p:6" class="idref" href="#p:6"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C'"><span class="id" title="variable">C'</span></a>) (<a id="h:7" class="idref" href="#h:7"><span class="id" title="binder">h</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.D"><span class="id" title="variable">D</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Categories.UniversalProperties.html#IsInitialMorphism"><span class="id" title="definition">IsInitialMorphism</span></a> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">_</span>) <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#h:7"><span class="id" title="variable">h</span></a> (<a class="idref" href="HoTT.Categories.KanExtensions.Core.html#pullback_along"><span class="id" title="definition">pullback_along</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#p:6"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab837"></a><h3 class="section">Right Kan extensions</h3>
+ Limits are terminal morphisms 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="IsRightKanExtensionAlong" class="idref" href="#IsRightKanExtensionAlong"><span class="id" title="definition">IsRightKanExtensionAlong</span></a> (<a id="p:8" class="idref" href="#p:8"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C'"><span class="id" title="variable">C'</span></a>) (<a id="h:9" class="idref" href="#h:9"><span class="id" title="binder">h</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions.D"><span class="id" title="variable">D</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Categories.UniversalProperties.html#IsTerminalMorphism"><span class="id" title="definition">IsTerminalMorphism</span></a> <span class="id" title="var">_</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">_</span>) (<a class="idref" href="HoTT.Categories.KanExtensions.Core.html#pullback_along"><span class="id" title="definition">pullback_along</span></a> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#p:8"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#h:9"><span class="id" title="variable">h</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#kan_extensions"><span class="id" title="section">kan_extensions</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

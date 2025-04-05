@@ -1,0 +1,223 @@
+<html>
+<head>
+<title>ParallelPair.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ParallelPair.v</h1>
+
+<div class="code" title="File: ParallelPair.v
+Line: 1
+Time: 0.03s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 1
+Time: 0.009s">
+<div class="time" style="width: 30%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Graph.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 3
+Time: 0.009s">
+<div class="time" style="width: 30%"></div>
+<pre>
+Require Import Diagrams.Diagram.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Cocone.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Parallel pairs *)
+
+</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition parallel_pair_graph : Graph.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (Build_Graph Bool).</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (if i then if j then Empty else Bool else Empty).</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Parallel pair diagram *)
+
+</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition parallel_pair {A B : Type} (f g : A -&gt; B)
+  : Diagram parallel_pair_graph.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Diagram.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros []; [exact A | exact B].</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [] [] []; [exact f | exact g].</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Cones on [parallel_pair]s *)
+
+</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_parallel_pair_cocone {A B Q} {f g : B -&gt; A}
+  `(q: A -&gt; Q) (Hq: q o g == q o f)
+  : Cocone (parallel_pair f g) Q.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Cocone.</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros []; [exact (q o f) | exact q].</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 30
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  intros [] [] []; [reflexivity | exact Hq].</pre>
+</div>
+<div class="code" title="File: ParallelPair.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+</body>
+</html>
+
