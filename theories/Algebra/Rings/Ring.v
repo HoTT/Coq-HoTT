@@ -33,7 +33,6 @@ Record Ring := Build_Ring' {
   ring_mult_assoc_opp : forall z y x, (x * y) * z = x * (y * z);
 }.
 
-
 Arguments ring_mult {R} : rename.
 Arguments ring_one {R} : rename.
 Arguments ring_isring {R} : rename.
@@ -144,12 +143,11 @@ End RingHomoLaws.
 (** Isomorphisms of commutative rings *)
 Record RingIsomorphism (A B : Ring) := {
   rng_iso_homo : RingHomomorphism A B ;
-  isequiv_rng_iso_homo : IsEquiv rng_iso_homo ;
+  isequiv_rng_iso_homo :: IsEquiv rng_iso_homo ;
 }.
 
 Arguments rng_iso_homo {_ _ }.
 Coercion rng_iso_homo : RingIsomorphism >-> RingHomomorphism.
-Existing Instance isequiv_rng_iso_homo.
 
 Definition issig_RingIsomorphism {A B : Ring}
   : _ <~> RingIsomorphism A B := ltac:(issig).

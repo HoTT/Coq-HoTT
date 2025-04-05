@@ -38,19 +38,12 @@ Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
       e = d + d' /\ close d u v)))).
 
 Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
-  { premetric_prop : forall e, is_mere_relation A (close e)
-  ; premetric_refl : forall e, Reflexive (close (A:=A) e)
-  ; premetric_symm : forall e, Symmetric (close (A:=A) e)
-  ; premetric_separated : Separated A
-  ; premetric_triangular : Triangular A
-  ; premetric_rounded : Rounded@{i j} A }.
-#[export] Existing Instances
-  premetric_prop
-  premetric_refl
-  premetric_symm
-  premetric_separated
-  premetric_triangular
-  premetric_rounded.
+  { premetric_prop :: forall e, is_mere_relation A (close e)
+  ; premetric_refl :: forall e, Reflexive (close (A:=A) e)
+  ; premetric_symm :: forall e, Symmetric (close (A:=A) e)
+  ; premetric_separated :: Separated A
+  ; premetric_triangular :: Triangular A
+  ; premetric_rounded :: Rounded@{i j} A }.
 
 Instance premetric_hset@{i j} `{Funext}
   {A:Type@{i} } `{PreMetric@{i j} A} : IsHSet A.

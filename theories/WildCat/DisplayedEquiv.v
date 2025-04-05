@@ -529,10 +529,9 @@ Defined.
 
 Class IsDUnivalent1Cat {A} (D : A -> Type) `{DHasEquivs A D} :=
 {
-  isequiv_dcat_equiv_path : forall {a b : A} (p : a = b) a' b',
+  isequiv_dcat_equiv_path :: forall {a b : A} (p : a = b) a' b',
     IsEquiv (dcat_equiv_path p a' b')
 }.
-Existing Instance isequiv_dcat_equiv_path.
 
 Definition dcat_path_equiv {A} {D : A -> Type} `{IsDUnivalent1Cat A D}
   {a b : A} (p : a = b) (a' : D a) (b' : D b)

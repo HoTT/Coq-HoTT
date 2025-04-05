@@ -19,11 +19,10 @@ Arguments rationals_to_field A {_} B {_ _ _ _ _ _ _ _ _} _.
 
 Class Rationals A {Aap : Apart A} {Aplus Amult Azero Aone Aneg Arecip Ale Alt}
   `{U : !RationalsToField A} :=
-  { rationals_field : @IsDecField A Aplus Amult Azero Aone Aneg Arecip
-  ; rationals_order : FullPseudoSemiRingOrder Ale Alt
-  ; rationals_to_field_mor : forall {B} `{IsField B} `{!FieldCharacteristic B 0},
+  { rationals_field :: @IsDecField A Aplus Amult Azero Aone Aneg Arecip
+  ; rationals_order :: FullPseudoSemiRingOrder Ale Alt
+  ; rationals_to_field_mor :: forall {B} `{IsField B} `{!FieldCharacteristic B 0},
     IsSemiRingPreserving (rationals_to_field A B)
   ; rationals_initial : forall {B} `{IsField B} `{!FieldCharacteristic B 0}
     {h : A -> B} `{!IsSemiRingPreserving h} x,
     rationals_to_field A B x = h x }.
-#[export] Existing Instances rationals_field rationals_order rationals_to_field_mor.

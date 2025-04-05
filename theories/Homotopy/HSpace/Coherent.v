@@ -11,10 +11,9 @@ Class IsCoherent (X : pType) `{IsHSpace X} :=
   iscoherent : left_identity pt = right_identity pt.
 
 Record IsCohHSpace (A : pType) := {
-    ishspace_cohhspace : IsHSpace A;
-    iscoherent_cohhspace : IsCoherent A;
+    ishspace_cohhspace :: IsHSpace A;
+    iscoherent_cohhspace :: IsCoherent A;
   }.
-#[export] Existing Instances ishspace_cohhspace iscoherent_cohhspace.
 
 Definition issig_iscohhspace (A : pType)
   : { hspace_op : SgOp A
