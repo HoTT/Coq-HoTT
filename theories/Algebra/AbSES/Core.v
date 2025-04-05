@@ -296,8 +296,7 @@ Defined.
 Instance hasmorext_abses `{Funext} {A B : AbGroup@{u}}
   : HasMorExt (AbSES B A).
 Proof.
-  srapply Build_HasMorExt;
-    intros E F f g.
+  intros E F f g.
   srapply isequiv_homotopic'; cbn.
   1: exact (((equiv_path_groupisomorphism _ _)^-1%equiv)
               oE (equiv_path_sigma_hprop _ _)^-1%equiv).
