@@ -319,7 +319,7 @@ Proof.
       - exact (fun x b => K _ _ _ @ (ap _ (p (x^++) b))).
   + intro n; revert x; induction n as [ | n e].
     * exact (fun _ => isequiv_idmap _).
-    * intro x; exact isequiv_compose.
+    * intro x; rapply isequiv_compose.
 Defined.
 
 (** A fibered type sequence defines a type family; Section 4. *)

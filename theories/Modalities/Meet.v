@@ -93,7 +93,7 @@ Section RSUMeet.
 
   Definition isequiv_plus_inmeet (X : Type) `{In Meet X} : IsEquiv (to_plus X).
   Proof.
-    apply (@isequiv_compose _ _ (to O X) _ _ (to L (O X))).
+    rapply (isequiv_compose (to O X) (to L (O X))).
     apply isequiv_to_O_inO.
     exact (inO_equiv_inO X (to O X)).
   Defined.
