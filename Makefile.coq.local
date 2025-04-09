@@ -206,13 +206,6 @@ file-dep-graphs/hott-lib.dpd: $(CORE_VOFILES)
 	$(HIDE) ((echo "Require $(HOTT_LIB_FILES)."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_LIB_FILES).') | $(COQTOP) $(COQFLAGS) $(COQLIBS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
 	$(HIDE)rm $@.ok
 
-#file-dep-graphs/hott-all.dpd: $(CORE_VOFILES) $(CATEGORY_VOFILES)
-#	@ mkdir -p $(dir $@)
-#	$(SHOW)'HOQTHMDEP HoTT'
-#        HOTT_ALL_FILES=$(subst /,.,$(patsubst $(srcdir)/theories/%.v,HoTT.%,$(CORE_VFILES) $(CATEGORY_VFILES)))
-#	$(HIDE) ((echo "Require $(HOTT_ALL_FILES)."; echo 'Require Import dpdgraph.dpdgraph.'; echo 'Set DependGraph File "$@".'; echo 'Print FileDependGraph $(HOTT_ALL_FILES).') | $(COQTOP) $(COQFLAGS) $(COQLIBS) && touch $@.ok) >/dev/null 2>&1 | grep -v '^Coq <' >&2 || true
-#	$(HIDE)rm $@.ok
-
 file-dep-graphs/index.html: Makefile _CoqProject Makefile.coq.local Makefile.coq
 	@ mkdir -p $(dir $@)
 	$(SHOW)'MAKE $@'

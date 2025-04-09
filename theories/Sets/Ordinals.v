@@ -48,18 +48,12 @@ Proof. unfold Extensional. exact _. Qed.
 (** * Ordinals *)
 
 Class IsOrdinal@{carrier relation} (A : Type@{carrier}) (R : Relation@{carrier relation} A) := {
-  ordinal_is_hset : IsHSet A ;
-  ordinal_relation_is_mere : is_mere_relation A R ;
-  ordinal_extensionality : Extensional R ;
-  ordinal_well_foundedness : WellFounded R ;
-  ordinal_transitivity : Transitive R ;
+  ordinal_is_hset :: IsHSet A ;
+  ordinal_relation_is_mere :: is_mere_relation A R ;
+  ordinal_extensionality :: Extensional R ;
+  ordinal_well_foundedness :: WellFounded R ;
+  ordinal_transitivity :: Transitive R ;
 }.
-#[export] Existing Instances
-  ordinal_is_hset
-  ordinal_relation_is_mere
-  ordinal_extensionality
-  ordinal_well_foundedness
-  ordinal_transitivity.
 
 Instance ishprop_IsOrdinal `{Funext} A R
   : IsHProp (IsOrdinal A R).
@@ -72,11 +66,9 @@ Qed.
 
 Record Ordinal@{carrier relation +} :=
   { ordinal_carrier : Type@{carrier}
-    ; ordinal_relation : Lt@{carrier relation} ordinal_carrier
-    ; ordinal_property : IsOrdinal@{carrier relation} ordinal_carrier (<)
+    ; ordinal_relation :: Lt@{carrier relation} ordinal_carrier
+    ; ordinal_property :: IsOrdinal@{carrier relation} ordinal_carrier (<)
   }.
-
-Existing Instances ordinal_relation ordinal_property.
 
 Coercion ordinal_as_hset (A : Ordinal) : HSet
   := Build_HSet (ordinal_carrier A).

@@ -14,13 +14,11 @@ Generalizable Variables G H A B C N f g.
 
 (** A subgroup H of a group G is a predicate (i.e. an hProp-valued type family) on G which is closed under the group operations. The group underlying H is given by the total space { g : G & H g }, defined in [subgroup_group] below. *)
 Class IsSubgroup {G : Group} (H : G -> Type) := {
-  issubgroup_predicate : forall x, IsHProp (H x) ;
+  issubgroup_predicate :: forall x, IsHProp (H x) ;
   issubgroup_in_unit : H mon_unit ;
   issubgroup_in_op : forall x y, H x -> H y -> H (x * y) ;
   issubgroup_in_inv : forall x, H x -> H x^ ;
 }.
-
-Existing Instance issubgroup_predicate.
 
 Definition issig_issubgroup {G : Group} (H : G -> Type) : _ <~> IsSubgroup H
   := ltac:(issig).
@@ -130,11 +128,10 @@ Defined.
 (** The type (set) of subgroups of a group G. *)
 Record Subgroup (G : Group) := {
   subgroup_pred : G -> Type ;
-  subgroup_issubgroup : IsSubgroup subgroup_pred ;
+  subgroup_issubgroup :: IsSubgroup subgroup_pred ;
 }.
 
 Coercion subgroup_pred : Subgroup >-> Funclass.
-Existing Instance subgroup_issubgroup.
 
 Definition issig_subgroup {G : Group} : _ <~> Subgroup G
   := ltac:(issig).
@@ -442,13 +439,12 @@ Class IsNormalSubgroup {G : Group} (N : Subgroup G)
 
 Record NormalSubgroup (G : Group) := {
   normalsubgroup_subgroup : Subgroup G ;
-  normalsubgroup_isnormal : IsNormalSubgroup normalsubgroup_subgroup ;
+  normalsubgroup_isnormal :: IsNormalSubgroup normalsubgroup_subgroup ;
 }.
 
 Arguments Build_NormalSubgroup G N _ : rename.
 
 Coercion normalsubgroup_subgroup : NormalSubgroup >-> Subgroup.
-Existing Instance normalsubgroup_isnormal.
 
 Definition equiv_symmetric_in_normalsubgroup {G : Group}
   (N : Subgroup G) `{!IsNormalSubgroup N}

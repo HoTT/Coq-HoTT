@@ -16,11 +16,10 @@ Local Open Scope path_scope.
 (** A (non-coherent) H-space [X] is a pointed type with a binary operation for which the base point is a both a left and a right identity. (See Coherent.v for the notion of a coherent H-space.) We say [X] is left-invertible if left multiplication by any element is an equivalence, and dually for right-invertible. *)
 
 Class IsHSpace (X : pType) := {
-  hspace_op : SgOp X;
-  hspace_left_identity : LeftIdentity hspace_op pt;
-  hspace_right_identity : RightIdentity hspace_op pt;
+  hspace_op :: SgOp X;
+  hspace_left_identity :: LeftIdentity hspace_op pt;
+  hspace_right_identity :: RightIdentity hspace_op pt;
 }.
-#[export] Existing Instances hspace_left_identity hspace_right_identity hspace_op.
 
 #[export] Instance hspace_mon_unit {X : pType} `{IsHSpace X} : MonUnit X := pt.
 

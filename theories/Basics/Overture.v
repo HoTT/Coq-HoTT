@@ -92,11 +92,8 @@ Class Transitive {A} (R : Relation A) :=
 
 (** A [PreOrder] is both Reflexive and Transitive. *)
 Class PreOrder {A} (R : Relation A) :=
-  { PreOrder_Reflexive : Reflexive R | 2 ;
-    PreOrder_Transitive : Transitive R | 2 }.
-
-Existing Instance PreOrder_Reflexive.
-Existing Instance PreOrder_Transitive.
+  { PreOrder_Reflexive :: Reflexive R | 2 ;
+    PreOrder_Transitive :: Transitive R | 2 }.
 
 Arguments reflexivity {A R _} / _.
 Arguments symmetry {A R _} / _ _ _.
@@ -488,12 +485,10 @@ Global Opaque eisadj.
 (** A record that includes all the data of an adjoint equivalence. *)
 Record Equiv A B := {
   equiv_fun : A -> B ;
-  equiv_isequiv : IsEquiv equiv_fun
+  equiv_isequiv :: IsEquiv equiv_fun
 }.
 
 Coercion equiv_fun : Equiv >-> Funclass.
-
-Existing Instance equiv_isequiv.
 
 Arguments equiv_fun {A B} _ _.
 Arguments equiv_isequiv {A B} _.
@@ -728,11 +723,9 @@ Arguments point A {_}.
 
 Record pType :=
   { pointed_type : Type ;
-    ispointed_type : IsPointed pointed_type }.
+    ispointed_type :: IsPointed pointed_type }.
 
 Coercion pointed_type : pType >-> Sortclass.
-
-Existing Instance ispointed_type.
 
 (** *** Homotopy fibers *)
 

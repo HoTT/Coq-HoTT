@@ -11,11 +11,10 @@ Require Import WildCat.NatTrans.
 
 Record Fun01 (A B : Type) `{IsGraph A} `{IsGraph B} := {
   fun01_F : A -> B;
-  fun01_is0functor : Is0Functor fun01_F;
+  fun01_is0functor :: Is0Functor fun01_F;
 }.
 
 Coercion fun01_F : Fun01 >-> Funclass.
-Existing Instance fun01_is0functor.
 
 Arguments Build_Fun01 A B {isgraph_A isgraph_B} F {fun01_is0functor} : rename.
 Arguments fun01_F {A B isgraph_A isgraph_B} : rename.
@@ -113,13 +112,11 @@ Defined.
 Record Fun11 (A B : Type) `{Is1Cat A} `{Is1Cat B} :=
 {
   fun11_fun : A -> B ;
-  is0functor_fun11 : Is0Functor fun11_fun ;
-  is1functor_fun11 : Is1Functor fun11_fun
+  is0functor_fun11 :: Is0Functor fun11_fun ;
+  is1functor_fun11 :: Is1Functor fun11_fun
 }.
 
 Coercion fun11_fun : Fun11 >-> Funclass.
-Existing Instance is0functor_fun11.
-Existing Instance is1functor_fun11.
 
 Arguments Build_Fun11 A B
   {isgraph_A is2graph_A is01cat_A is1cat_A
@@ -179,7 +176,8 @@ Instance is0functor_fun01_postcomp {A B C}
 Proof.
   apply Build_Is0Functor.
   intros a b f.
-  rapply nattrans_postwhisker.
+  napply nattrans_postwhisker.
+  1: exact _.
   exact f.
 Defined.
 

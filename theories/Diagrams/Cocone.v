@@ -83,11 +83,8 @@ Section Cocone.
   (** A cocone [C] over [D] to [X] is said universal when for all [Y] the map [cocone_postcompose] is an equivalence. In particular, given another cocone [C'] over [D] to [X'] the inverse of the map allows to recover a map [h] : [X] -> [X'] such that [C'] is [C] postcomposed with [h]. The fact that [cocone_postcompose] is an equivalence is an elegant way of stating the usual "unique existence" of category theory. *)
 
   Class UniversalCocone (C : Cocone D X) := {
-    is_universal : forall Y, IsEquiv (@cocone_postcompose C Y);
+    is_universal :: forall Y, IsEquiv (@cocone_postcompose C Y);
   }.
-  (* Use :> and remove the two following lines,
-     once Coq 8.16 is the minimum required version. *)
-  #[export] Existing Instance is_universal.
   Coercion is_universal : UniversalCocone >-> Funclass.
 
 End Cocone.

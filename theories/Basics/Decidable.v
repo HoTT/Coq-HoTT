@@ -67,8 +67,7 @@ Ltac decidable_false p n :=
   try intro.
 
 Class DecidablePaths (A : Type) :=
-  dec_paths : forall (x y : A), Decidable (x = y).
-Existing Instance dec_paths.
+  dec_paths :: forall (x y : A), Decidable (x = y).
 
 Class Stable P := stable : ~~P -> P.
 
@@ -199,13 +198,11 @@ Defined.
 (** A type is collapsible if it admits a weakly constant endomap. *)
 Class Collapsible (A : Type) :=
   { collapse : A -> A ;
-    wconst_collapse : WeaklyConstant collapse
+    wconst_collapse :: WeaklyConstant collapse
   }.
-Existing Instance wconst_collapse.
 
 Class PathCollapsible (A : Type) :=
-  path_coll : forall (x y : A), Collapsible (x = y).
-Existing Instance path_coll.
+  path_coll :: forall (x y : A), Collapsible (x = y).
 
 Instance collapsible_decidable (A : Type) `{Decidable A}
 : Collapsible A.

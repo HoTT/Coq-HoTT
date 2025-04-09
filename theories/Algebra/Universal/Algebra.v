@@ -38,14 +38,10 @@ Record Signature := Build_Signature
   { Sort : Type
   ; Symbol : Type
   ; symbol_types : Symbol -> SymbolTypeOf Sort
-  ; hset_sort : IsHSet Sort
-  ; hset_symbol : IsHSet Symbol }.
+  ; hset_sort :: IsHSet Sort
+  ; hset_symbol :: IsHSet Symbol }.
 
 Notation SymbolType σ := (SymbolTypeOf (Sort σ)).
-
-Existing Instance hset_sort.
-
-Existing Instance hset_symbol.
 
 Global Coercion symbol_types : Signature >-> Funclass.
 
@@ -81,13 +77,11 @@ Definition Operation {σ} (A : Carriers σ) (w : SymbolType σ) : Type
 Record Algebra {σ : Signature} : Type := Build_Algebra
   { carriers : Carriers σ
   ; operations : forall (u : Symbol σ), Operation carriers (σ u)
-  ; hset_algebra : forall (s : Sort σ), IsHSet (carriers s) }.
+  ; hset_algebra :: forall (s : Sort σ), IsHSet (carriers s) }.
 
 Arguments Algebra : clear implicits.
 
 Arguments Build_Algebra {σ} carriers operations {hset_algebra}.
-
-Existing Instance hset_algebra.
 
 Global Coercion carriers : Algebra >-> Funclass.
 

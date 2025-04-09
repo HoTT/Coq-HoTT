@@ -35,13 +35,13 @@ Record Adjunction {C D : Type} (F : C -> D) (G : D -> C)
   (** Naturality condition in both variable separately *)
   (** The left variable is a bit trickier to state since we have opposite categories involved. *)
   is1natural_equiv_adjunction_l (y : D)
-    : Is1Natural (A := C^op) (yon y o F)
+    :: Is1Natural (A := C^op) (yon y o F)
         (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
         (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
         (yon (G y)) (fun x => equiv_adjunction _ y) ;
   (** Naturality in the right variable *)
   is1natural_equiv_adjunction_r (x : C)
-    : Is1Natural (opyon (F x)) (opyon x o G) (equiv_adjunction x) ; 
+    :: Is1Natural (opyon (F x)) (opyon x o G) (equiv_adjunction x) ;
 }.
 
 Arguments equiv_adjunction {C D F G
@@ -56,9 +56,6 @@ Arguments is1natural_equiv_adjunction_r {C D F G
   isgraph_C is2graph_C is01cat_C is1cat_C
   isgraph_D is2graph_D is01cat_D is1cat_D
   is0functor_F is0functor_G} adj x : rename.
-Existing Instances
-  is1natural_equiv_adjunction_l
-  is1natural_equiv_adjunction_r.
 
 Notation "F ⊣ G" := (Adjunction F G).
 

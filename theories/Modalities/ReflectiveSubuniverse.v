@@ -83,9 +83,7 @@ Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
 
 (** A map is O-local if all its fibers are. *)
 Class MapIn (O : Subuniverse) {A B : Type} (f : A -> B)
-  := inO_hfiber_ino_map : forall (b:B), In O (hfiber f b).
-
-Existing Instance inO_hfiber_ino_map.
+  := inO_hfiber_ino_map :: forall (b:B), In O (hfiber f b).
 
 Section Subuniverse.
   Context (O : Subuniverse).
@@ -141,14 +139,13 @@ End Subuniverse.
 Class PreReflects@{i} (O : Subuniverse@{i}) (T : Type@{i}) :=
 {
   O_reflector : Type@{i} ;
-  O_inO : In O O_reflector ;
+  O_inO :: In O O_reflector ;
   to : T -> O_reflector ;
 }.
 
 Arguments O_reflector O T {_}.
 Arguments to O T {_}.
 Arguments O_inO {O} T {_}.
-Existing Instance O_inO.
 
 (** It is a reflection if it has the requisite universal property. *)
 Class Reflects@{i} (O : Subuniverse@{i}) (T : Type@{i})
@@ -187,13 +184,11 @@ Defined.
 Record ReflectiveSubuniverse@{i} :=
 {
   rsu_subuniv : Subuniverse@{i} ;
-  rsu_prereflects : forall (T : Type@{i}), PreReflects rsu_subuniv T ;
-  rsu_reflects : forall (T : Type@{i}), Reflects rsu_subuniv T ;
+  rsu_prereflects :: forall (T : Type@{i}), PreReflects rsu_subuniv T ;
+  rsu_reflects :: forall (T : Type@{i}), Reflects rsu_subuniv T ;
 }.
 
 Coercion rsu_subuniv : ReflectiveSubuniverse >-> Subuniverse.
-Existing Instance rsu_prereflects.
-Existing Instance rsu_reflects.
 
 (** We allow the name of a subuniverse or modality to be used as the name of its reflector.  This means that when defining a particular example, you should generally put the parametrizing family in a wrapper, so that you can notate the subuniverse as parameterized by, rather than identical to, its parameter.  See Modality.v, Truncations.v, and Localization.v for examples. *)
 Definition rsu_reflector (O : ReflectiveSubuniverse) (T : Type) : Type
@@ -1344,9 +1339,7 @@ Question: is there a definition of connectedness (say, for n-types) that neither
 
 (** We give annotations to reduce the number of universe parameters. *)
 Class IsConnected (O : ReflectiveSubuniverse@{i}) (A : Type@{i})
-  := isconnected_contr_O : Contr@{i} (O A).
-
-Existing Instance isconnected_contr_O.
+  := isconnected_contr_O :: Contr@{i} (O A).
 
 Section ConnectedTypes.
   Context (O : ReflectiveSubuniverse).
@@ -1604,9 +1597,7 @@ Class IsConnMap (O : ReflectiveSubuniverse@{i})
       {A : Type@{i}} {B : Type@{i}} (f : A -> B)
   := isconnected_hfiber_conn_map
      (** The extra universe [k] is >= max(i,j). *)
-     : forall b:B, IsConnected@{i} O (hfiber@{i i} f b).
-
-Existing Instance isconnected_hfiber_conn_map.
+     :: forall b:B, IsConnected@{i} O (hfiber@{i i} f b).
 
 Section ConnectedMaps.
   Universe i.
@@ -2044,11 +2035,9 @@ Defined.
 (** Two subuniverses are the same if they have the same modal types.  The universe parameters are the same as for [O_leq]: [O1] and [O2] are reflective subuniverses of [Type@{i1}] and [Type@{i2}], and the relation says that they agree when restricted to [Type@{j}], where [j <= i1] and [j <= i2]. *)
 Class O_eq@{i1 i2 j} (O1 : Subuniverse@{i1}) (O2 : Subuniverse@{i2}) :=
 {
-  O_eq_l : O_leq@{i1 i2 j} O1 O2 ;
-  O_eq_r : O_leq@{i2 i1 j} O2 O1 ;
+  O_eq_l :: O_leq@{i1 i2 j} O1 O2 ;
+  O_eq_r :: O_leq@{i2 i1 j} O2 O1 ;
 }.
-
-Existing Instances O_eq_l O_eq_r.
 
 Infix "<=>" := O_eq : subuniverse_scope.
 

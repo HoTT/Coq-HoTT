@@ -38,15 +38,13 @@ End is_homomorphism.
 
 Record Homomorphism {σ} {A B : Algebra σ} : Type := Build_Homomorphism
   { def_homomorphism : forall (s : Sort σ), A s -> B s
-  ; is_homomorphism : IsHomomorphism def_homomorphism }.
+  ; is_homomorphism :: IsHomomorphism def_homomorphism }.
 
 Arguments Homomorphism {σ}.
 
 Arguments Build_Homomorphism {σ A B} def_homomorphism {is_homomorphism}.
 
 Global Coercion def_homomorphism : Homomorphism >-> Funclass.
-
-Existing Instance is_homomorphism.
 
 Instance isgraph_algebra (σ : Signature) : IsGraph (Algebra σ)
   := Build_IsGraph (Algebra σ) Homomorphism.
@@ -120,7 +118,7 @@ Section homomorphism_compose.
 End homomorphism_compose.
 
 Instance is01cat_algebra (σ : Signature) : Is01Cat (Algebra σ)
-  := Build_Is01Cat (Algebra σ) _
+  := Build_Is01Cat _ _
       (fun _ => homomorphism_id) (fun _ _ _ => homomorphism_compose).
 
 Lemma assoc_homomorphism_compose `{Funext} {σ}

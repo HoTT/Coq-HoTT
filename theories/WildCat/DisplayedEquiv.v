@@ -10,27 +10,27 @@ Require Import WildCat.Equiv.
 Class DHasEquivs {A : Type} `{HasEquivs A}
   (D : A -> Type) `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D, !IsD1Cat D} :=
 {
-  DCatEquiv : forall {a b}, (a $<~> b) -> D a -> D b -> Type;
-  DCatIsEquiv : forall {a b} {f : a $-> b} {fe : CatIsEquiv f} {a'} {b'},
+  DCatEquiv : forall {a b : A}, (a $<~> b) -> D a -> D b -> Type;
+  DCatIsEquiv : forall {a b : A} {f : a $-> b} {fe : CatIsEquiv f} {a'} {b'},
     DHom f a' b' -> Type;
-  dcate_fun : forall {a b} {f : a $<~> b} {a'} {b'},
+  dcate_fun : forall {a b : A} {f : a $<~> b} {a'} {b'},
     DCatEquiv f a' b' -> DHom f a' b';
-  dcate_isequiv : forall {a b} {f : a $<~> b} {a'} {b'}
+  dcate_isequiv : forall {a b : A} {f : a $<~> b} {a'} {b'}
     (f' : DCatEquiv f a' b'), DCatIsEquiv (dcate_fun f');
-  dcate_buildequiv : forall {a b} {f : a $-> b} `{!CatIsEquiv f} {a'} {b'}
+  dcate_buildequiv : forall {a b : A} {f : a $-> b} `{!CatIsEquiv f} {a'} {b'}
     (f' : DHom f a' b') {fe' : DCatIsEquiv f'},
     DCatEquiv (Build_CatEquiv f) a' b';
-  dcate_buildequiv_fun : forall {a b} {f : a $-> b} `{!CatIsEquiv f}
+  dcate_buildequiv_fun : forall {a b : A} {f : a $-> b} `{!CatIsEquiv f}
     {a'} {b'} (f' : DHom f a' b') {fe' : DCatIsEquiv f'},
     DGpdHom (cate_buildequiv_fun f)
     (dcate_fun (dcate_buildequiv f' (fe':=fe'))) f';
-  dcate_inv' : forall {a b} {f : a $<~> b} {a'} {b'} (f' : DCatEquiv f a' b'),
+  dcate_inv' : forall {a b : A} {f : a $<~> b} {a'} {b'} (f' : DCatEquiv f a' b'),
     DHom (cate_inv' _ _ f) b' a';
-  dcate_issect' : forall {a b} {f : a $<~> b} {a'} {b'} (f' : DCatEquiv f a' b'),
+  dcate_issect' : forall {a b : A} {f : a $<~> b} {a'} {b'} (f' : DCatEquiv f a' b'),
     DGpdHom (cate_issect' _ _ f) (dcate_inv' f' $o' dcate_fun f') (DId a');
-  dcate_isretr' : forall {a b} {f : a $<~> b} {a'} {b'} (f' : DCatEquiv f a' b'),
+  dcate_isretr' : forall {a b : A} {f : a $<~> b} {a'} {b'} (f' : DCatEquiv f a' b'),
     DGpdHom (cate_isretr' _ _ f) (dcate_fun f' $o' dcate_inv' f') (DId b');
-  dcatie_adjointify : forall {a b} {f : a $-> b} {g : b $-> a}
+  dcatie_adjointify : forall {a b : A} {f : a $-> b} {g : b $-> a}
     {r : f $o g $== Id b} {s : g $o f $== Id a} {a'} {b'} (f' : DHom f a' b')
     (g' : DHom g b' a') (r' : DGpdHom r (f' $o' g') (DId b'))
     (s' : DGpdHom s (g' $o' f') (DId a')),
@@ -529,10 +529,9 @@ Defined.
 
 Class IsDUnivalent1Cat {A} (D : A -> Type) `{DHasEquivs A D} :=
 {
-  isequiv_dcat_equiv_path : forall {a b : A} (p : a = b) a' b',
+  isequiv_dcat_equiv_path :: forall {a b : A} (p : a = b) a' b',
     IsEquiv (dcat_equiv_path p a' b')
 }.
-Existing Instance isequiv_dcat_equiv_path.
 
 Definition dcat_path_equiv {A} {D : A -> Type} `{IsDUnivalent1Cat A D}
   {a b : A} (p : a = b) (a' : D a) (b' : D b)

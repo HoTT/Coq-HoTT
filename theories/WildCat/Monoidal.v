@@ -124,8 +124,8 @@ Class IsMonoidal (A : Type) `{HasEquivs A}
   (** These all satisfy the following properties: *)
   := {
   (** A [cat_tensor] is a 1-bifunctor. *)
-  is0bifunctor_cat_tensor : Is0Bifunctor cat_tensor;
-  is1bifunctor_cat_tensor : Is1Bifunctor cat_tensor;
+  is0bifunctor_cat_tensor :: Is0Bifunctor cat_tensor | 10;
+  is1bifunctor_cat_tensor :: Is1Bifunctor cat_tensor | 10;
   (** A natural isomorphism [associator] witnessing the associativity of the tensor product. *)
   cat_tensor_associator :: Associator cat_tensor;
   (** A natural isomorphism [left_unitor] witnessing the left unit law. *)
@@ -137,9 +137,6 @@ Class IsMonoidal (A : Type) `{HasEquivs A}
   (** The pentagon identity. *)
   cat_tensor_pentagon_identity :: PentagonIdentity cat_tensor;
 }.
-
-Existing Instance is0bifunctor_cat_tensor | 10.
-Existing Instance is1bifunctor_cat_tensor | 10.
 
 (** TODO: Braided monoidal categories *)
 
@@ -255,7 +252,7 @@ Section SymmetricBraid.
     : F a b $<~> F b a
     := Build_CatEquiv (braid a b).
 
-  Definition moveL_braidL a b c f (g : c $-> _)
+  Definition moveL_braidL {a b c : A} f (g : c $-> _)
     : braid a b $o f $== g -> f $== braid b a $o g.
   Proof.
     intros p.
@@ -266,7 +263,7 @@ Section SymmetricBraid.
     apply braid_braid.
   Defined.
 
-  Definition moveL_braidR a b c f (g : _ $-> c)
+  Definition moveL_braidR {a b c : A} f (g : _ $-> c)
     : f $o braid a b $== g -> f $== g $o braid b a.
   Proof.
     intros p.
@@ -279,19 +276,19 @@ Section SymmetricBraid.
     exact p.
   Defined.
 
-  Definition moveR_braidL a b c f (g : c $-> _)
+  Definition moveR_braidL {a b c : A} f (g : c $-> _)
     : f $== braid b a $o g -> braid a b $o f $== g.
   Proof.
     intros p; symmetry; apply moveL_braidL; symmetry; exact p.
   Defined.
 
-  Definition moveR_braidR a b c f (g : _ $-> c)
+  Definition moveR_braidR {a b c : A} f (g : _ $-> c)
     : f $== g $o braid b a -> f $o braid a b $== g.
   Proof.
     intros p; symmetry; apply moveL_braidR; symmetry; exact p.
   Defined.
 
-  Definition moveL_fmap01_braidL a b c d f (g : d $-> _)
+  Definition moveL_fmap01_braidL {a b c d : A} f (g : d $-> _)
     : fmap01 F a (braid b c) $o f $== g
       -> f $== fmap01 F a (braid c b) $o g.
   Proof.
@@ -310,7 +307,7 @@ Section SymmetricBraid.
     apply cate_buildequiv_fun.
   Defined.
 
-  Definition moveL_fmap01_braidR a b c d f (g : _ $-> d)
+  Definition moveL_fmap01_braidR {a b c d : A} f (g : _ $-> d)
     :  f $o fmap01 F a (braid b c) $== g
       -> f $== g $o fmap01 F a (braid c b).
   Proof.
@@ -329,21 +326,21 @@ Section SymmetricBraid.
     apply cate_buildequiv_fun.
   Defined.
 
-  Definition moveR_fmap01_braidL a b c d f (g : d $-> _)
+  Definition moveR_fmap01_braidL {a b c d : A} f (g : d $-> _)
     : f $== fmap01 F a (braid c b) $o g
       -> fmap01 F a (braid b c) $o f $== g.
   Proof.
     intros p; symmetry; apply moveL_fmap01_braidL; symmetry; exact p.
   Defined.
 
-  Definition moveR_fmap01_braidR a b c d f (g : _ $-> d)
+  Definition moveR_fmap01_braidR {a b c d : A} f (g : _ $-> d)
     : f $== g $o fmap01 F a (braid c b)
       -> f $o fmap01 F a (braid b c) $== g.
   Proof.
     intros p; symmetry; apply moveL_fmap01_braidR; symmetry; exact p.
   Defined.
 
-  Definition moveL_fmap01_fmap01_braidL a b c d e f (g : e $-> _)
+  Definition moveL_fmap01_fmap01_braidL {a b c d e : A} f (g : e $-> _)
     : fmap01 F a (fmap01 F b (braid c d)) $o f $== g
       -> f $== fmap01 F a (fmap01 F b (braid d c)) $o g.
   Proof.
@@ -366,7 +363,7 @@ Section SymmetricBraid.
     apply cate_buildequiv_fun.
   Defined.
 
-  Definition moveL_fmap01_fmap01_braidR a b c d e f (g : _ $-> e)
+  Definition moveL_fmap01_fmap01_braidR {a b c d e : A} f (g : _ $-> e)
     : f $o fmap01 F a (fmap01 F b (braid c d)) $== g
       -> f $== g $o fmap01 F a (fmap01 F b (braid d c)).
   Proof.
@@ -389,14 +386,14 @@ Section SymmetricBraid.
     apply cate_buildequiv_fun.
   Defined.
 
-  Definition moveR_fmap01_fmap01_braidL a b c d e f (g : e $-> _)
+  Definition moveR_fmap01_fmap01_braidL {a b c d e : A} f (g : e $-> _)
     : f $== fmap01 F a (fmap01 F b (braid d c)) $o g
       -> fmap01 F a (fmap01 F b (braid c d)) $o f $== g.
   Proof.
     intros p; symmetry; apply moveL_fmap01_fmap01_braidL; symmetry; exact p.
   Defined.
 
-  Definition moveR_fmap01_fmap01_braidR a b c d e f (g : _ $-> e)
+  Definition moveR_fmap01_fmap01_braidR {a b c d e : A} f (g : _ $-> e)
     : f $== g $o fmap01 F a (fmap01 F b (braid d c))
       -> f $o fmap01 F a (fmap01 F b (braid c d)) $== g.
   Proof.

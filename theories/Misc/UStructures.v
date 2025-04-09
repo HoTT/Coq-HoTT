@@ -11,13 +11,11 @@ Local Open Scope nat_scope.
 (** A uniform structure on a type consists of an equivalence relation for every natural number, each one being stronger than its predecessor. *)
 Class UStructure (us_type : Type) := {
   us_rel : nat -> Relation us_type;
-  us_reflexive : forall n : nat, Reflexive (us_rel n);
-  us_symmetric : forall n : nat, Symmetric (us_rel n);
-  us_transitive : forall n : nat, Transitive (us_rel n);
+  us_reflexive :: forall n : nat, Reflexive (us_rel n);
+  us_symmetric :: forall n : nat, Symmetric (us_rel n);
+  us_transitive :: forall n : nat, Transitive (us_rel n);
   us_pred : forall (n : nat) (x y : us_type), us_rel n.+1 x y -> us_rel n x y
 }.
-
-Existing Instances us_reflexive us_symmetric us_transitive.
 
 Notation "u =[ n ] v" := (us_rel n u v)
   (at level 70, format "u  =[ n ]  v").
