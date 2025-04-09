@@ -70,7 +70,7 @@ Instance symmetric_GpdHom {A} `{Is0Gpd A}
   : Symmetric GpdHom
   := fun a b f => f^$.
 
-Instance symmetric_GpdHom' {A} `{Is0Gpd A}
+Instance symmetric_Hom {A} `{Is0Gpd A}
   : Symmetric Hom
   := fun a b f => f^$.
 
