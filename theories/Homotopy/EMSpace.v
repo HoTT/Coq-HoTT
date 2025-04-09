@@ -17,10 +17,10 @@ Local Open Scope nat_scope.
 Local Open Scope mc_mult_scope.
 
 (** The definition of the Eilenberg-Mac Lane spaces.  Note that while we allow [G] to be non-abelian for [n > 1], later results will need to assume that [G] is abelian. *)
-Fixpoint EilenbergMacLane (G : Group) (n : nat) : pType
+Fixpoint EilenbergMacLane@{u v | u <= v} (G : Group@{u}) (n : nat) : pType@{v}
   := match n with
       | 0    => G
-      | 1    => pClassifyingSpace G
+      | 1    => pClassifyingSpace@{u v} G
       | m.+1 => pTr m.+1 (psusp (EilenbergMacLane G m))
      end.
 
@@ -86,7 +86,7 @@ Section EilenbergMacLane.
     : G <~>* iterated_loops n K(G, n).
   Proof.
     induction n.
-    - reflexivity.
+    - exact pequiv_pmap_idmap.
     - refine ((unfold_iterated_loops' _ _)^-1* o*E _ o*E IHn).
       exact (emap (iterated_loops n) (pequiv_loops_em_em _ _)).
   Defined.
