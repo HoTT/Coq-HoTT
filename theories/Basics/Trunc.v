@@ -177,6 +177,35 @@ Definition trunc_index_succ_pred@{} (n : nat)
   : (n.-1).+1 = n
   := idpath.
 
+Definition trunc_index_succ_pred'@{} (n : trunc_index)
+  : -1 <= n -> (n.-1).+1 = n.
+Proof.
+  destruct n.
+  1: contradiction.
+  reflexivity.
+Defined.
+
+Definition trunc_index_add_pred@{} (m : trunc_index) (n : nat)
+  : m +2+ n.-1 = (m +2+ n).-1.
+Proof.
+  destruct m.
+  1: reflexivity.
+  (* The RHS is definitionally [m +2+ n], which is definitionally [m +2+ n.-1.+1], so this finishes it off: *)
+  symmetry; napply trunc_index_add_succ.
+Defined.
+
+Definition trunc_index_add_pred'@{} (m n : trunc_index)
+  : -1 <= n -> m +2+ n.-1 = (m +2+ n).-1.
+Proof.
+  destruct m.
+  1: reflexivity.
+  destruct n.
+  1: contradiction.
+  intros _.
+  (* The RHS is definitionally [m +2+ n], which is definitionally [m +2+ n.-1.+1], so this finishes it off: *)
+  symmetry; napply trunc_index_add_succ.
+Defined.
+
 Definition trunc_index_leq_minus_two@{} {n}
   : n <= -2 -> n = -2.
 Proof.
