@@ -132,10 +132,9 @@ Defined.
 Definition trunc_index_add_succ@{} m n
   : m +2+ n.+1 = (m +2+ n).+1.
 Proof.
-  revert m; simple_induction n n IHn; intro m; simple_induction m m IHm.
-  1,3: reflexivity.
-  all: cbn; apply ap.
-  all: assumption.
+  simple_induction m m IHm.
+  1: reflexivity.
+  cbn; apply ap; assumption.
 Defined.
 
 Definition trunc_index_add_comm@{} m n
@@ -175,12 +174,36 @@ Notation "n '.-1'" := (trunc_index_pred n) : trunc_scope.
 Notation "n '.-2'" := (n.-1.-1) : trunc_scope.
 
 Definition trunc_index_succ_pred@{} (n : nat)
-  : (n.-1).+1 = n.
+  : (n.-1).+1 = n
+  := idpath.
+
+Definition trunc_index_succ_pred'@{} (n : trunc_index)
+  : -1 <= n -> (n.-1).+1 = n.
 Proof.
-  simple_induction n n IHn.
+  destruct n.
+  1: contradiction.
+  reflexivity.
+Defined.
+
+Definition trunc_index_add_pred@{} (m : trunc_index) (n : nat)
+  : m +2+ n.-1 = (m +2+ n).-1.
+Proof.
+  destruct m.
   1: reflexivity.
-  unfold nat_to_trunc_index in *; cbn in *.
-  exact (ap trunc_S IHn).
+  (* The RHS is definitionally [m +2+ n], which is definitionally [m +2+ n.-1.+1], so this finishes it off: *)
+  symmetry; napply trunc_index_add_succ.
+Defined.
+
+Definition trunc_index_add_pred'@{} (m n : trunc_index)
+  : -1 <= n -> m +2+ n.-1 = (m +2+ n).-1.
+Proof.
+  destruct m.
+  1: reflexivity.
+  destruct n.
+  1: contradiction.
+  intros _.
+  (* The RHS is definitionally [m +2+ n], which is definitionally [m +2+ n.-1.+1], so this finishes it off: *)
+  symmetry; napply trunc_index_add_succ.
 Defined.
 
 Definition trunc_index_leq_minus_two@{} {n}

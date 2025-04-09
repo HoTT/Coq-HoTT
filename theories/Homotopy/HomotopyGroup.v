@@ -277,7 +277,7 @@ Definition isequiv_pi_connmap' `{Univalence} (n : nat) {X Y : pType} (f : X ->* 
   : IsEquiv (fmap (pTr 0) (fmap (iterated_loops n) f)).
 Proof.
   rapply O_inverts_conn_map.
-  rapply isconnected_iterated_fmap_loops.
+  rapply conn_map_iterated_fmap_loops.
   rewrite 2 trunc_index_inc'_succ.
   rewrite <- trunc_index_inc_agree.
   assumption.
@@ -322,7 +322,7 @@ Definition issurj_iterated_loops_connmap `{Univalence} (n : nat) {X Y : pType} (
   {C : IsConnMap n f}
   : IsSurjection (fmap (iterated_loops (n.+1)) f).
 Proof.
-  apply isconnected_iterated_fmap_loops. cbn.
+  apply conn_map_iterated_fmap_loops. cbn.
   rewrite trunc_index_inc'_0n; assumption.
 Defined.
 

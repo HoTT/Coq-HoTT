@@ -151,7 +151,7 @@ Proof.
 Defined.
 
 (** And likewise the connectedness.  *)
-Instance isconnected_fmap_loops `{Univalence} {n : trunc_index}
+Instance conn_map_fmap_loops `{Univalence} {n : trunc_index}
   (A B : pType) (f : A ->* B) `{IsConnMap n.+1 _ _ f}
   : IsConnMap n (fmap loops f).
 Proof.
@@ -161,14 +161,14 @@ Proof.
   - exact _.
 Defined.
 
-Definition isconnected_iterated_fmap_loops `{Univalence}
+Definition conn_map_iterated_fmap_loops `{Univalence}
   (n : trunc_index) (k : nat) (A B : pType) (f : A ->* B)
   (C : IsConnMap (trunc_index_inc' n k) f)
   : IsConnMap n (fmap (iterated_loops k) f).
 Proof.
   induction k in n, C |- *.
   - exact C.
-  - apply isconnected_fmap_loops.
+  - apply conn_map_fmap_loops.
     apply IHk.
     exact C.
 Defined.

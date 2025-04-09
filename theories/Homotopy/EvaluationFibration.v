@@ -5,7 +5,7 @@ Local Open Scope trunc_scope.
 
 (** * Evaluation fibrations and self-maps *)
 
-(* The type of unpointed self maps of A, pointed at the identity map. *)
+(** The type of unpointed self maps of A, pointed at the identity map. *)
 Definition selfmaps (A : Type) : pType := [A -> A, idmap].
 
 (** The unrestricted evaluation map. *)
@@ -20,5 +20,5 @@ Definition evfib {X : pType} {A : Type} (f : X -> A) : comp (X -> A) (tr f) -> A
 Definition pevfib {A X : pType} (f : X ->* A) : pcomp (X -> A) f ->* A
   := Build_pMap (fun g : pcomp (X -> A) f => g.1 pt) (point_eq f).
 
-(* The evaluation map of the identity. *)
+(** The evaluation map of the identity. *)
 Definition ev1 (A : pType) := pevfib (A:=A) pmap_idmap.

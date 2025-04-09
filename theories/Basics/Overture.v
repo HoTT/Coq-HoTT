@@ -137,7 +137,7 @@ Tactic Notation "transitivity" constr(x) := etransitivity x.
 
 (** ** Basic definitions *)
 
-(** Define an alias for [Set], which is really [Type₀]. *)
+(** Define an alias for [Set], which is really [Type₀], the smallest universe. *)
 Notation Type0 := Set.
 
 (** We make the identity map a notation so we do not have to unfold it,
