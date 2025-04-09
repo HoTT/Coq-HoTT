@@ -987,7 +987,7 @@ Defined.
 (** Under funext, [pType] has morphism extensionality *)
 Instance hasmorext_ptype `{Funext} : HasMorExt pType.
 Proof.
-  srapply Build_HasMorExt; intros A B f g.
+  intros A B f g.
   refine (isequiv_homotopic (equiv_path_pforall f g)^-1%equiv _).
   intros []; reflexivity.
 Defined.
@@ -1022,7 +1022,7 @@ Defined.
 (** [pType] is a univalent 1-coherent 1-category *)
 Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.
 Proof.
-  srapply Build_IsUnivalent1Cat; intros A B.
+  intros A B.
   (* [cate_equiv_path] is almost definitionally equal to [pequiv_path].  Both are defined by path induction, sending [idpath A] to [id_cate A] and [pequiv_pmap_idmap A], respectively.  [id_cate A] is almost definitionally equal to [pequiv_pmap_idmap A], except that the former uses [catie_adjointify], so the adjoint law is different. However, the underlying pointed maps are definitionally equal. *)
   refine (isequiv_homotopic pequiv_path _).
   intros [].
