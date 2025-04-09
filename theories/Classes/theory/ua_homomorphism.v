@@ -274,7 +274,7 @@ Section hom_compose.
     (f : ∀ s, A s → B s) `{IsIsomorphism σ A B f}
     : IsIsomorphism (λ s, g s o f s).
   Proof.
-    intro s. apply isequiv_compose.
+    intro s. rapply isequiv_compose.
   Qed.
 
   Definition hom_compose

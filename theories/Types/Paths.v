@@ -326,7 +326,7 @@ Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
 
 Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : IsEquiv (fun r:x=y => p @ r @ q) | 0
-  := @isequiv_compose _ _ (fun r => p @ r) _ _ (fun r => r @ q) _.
+  := isequiv_compose (fun r => p @ r) (fun r => r @ q).
 
 Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : (x = y) <~> (x' = y')
@@ -411,7 +411,7 @@ Instance isequiv_moveR_Mp
 : IsEquiv (moveR_Mp p q r).
 Proof.
   destruct r.
-  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_Mp
@@ -424,7 +424,7 @@ Instance isequiv_moveR_pM
 : IsEquiv (moveR_pM p q r).
 Proof.
   destruct p.
-  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_pM
@@ -437,7 +437,7 @@ Instance isequiv_moveR_Vp
 : IsEquiv (moveR_Vp p q r).
 Proof.
   destruct r.
-  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_Vp
@@ -450,7 +450,7 @@ Instance isequiv_moveR_pV
 : IsEquiv (moveR_pV p q r).
 Proof.
   destruct p.
-  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveR_pV
@@ -463,7 +463,7 @@ Instance isequiv_moveL_Mp
 : IsEquiv (moveL_Mp p q r).
 Proof.
   destruct r.
-  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_Mp
@@ -476,7 +476,7 @@ Definition isequiv_moveL_pM
 : IsEquiv (moveL_pM p q r).
 Proof.
   destruct p.
-  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_pM
@@ -489,7 +489,7 @@ Instance isequiv_moveL_Vp
 : IsEquiv (moveL_Vp p q r).
 Proof.
   destruct r.
-  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_Vp
@@ -502,7 +502,7 @@ Instance isequiv_moveL_pV
 : IsEquiv (moveL_pV p q r).
 Proof.
   destruct p.
-  exact (isequiv_compose' _ (isequiv_concat_l _ _) _ (isequiv_concat_r _ _)).
+  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
 Defined.
 
 Definition equiv_moveL_pV
@@ -656,7 +656,7 @@ Instance isequiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveR_equiv_M A B f _ x y).
 Proof.
   unfold moveR_equiv_M.
-  exact (@isequiv_compose _ _ (ap f) _ _ (fun q => q @ eisretr f y) _).
+  exact (isequiv_compose (ap f) (fun q => q @ eisretr f y)).
 Defined.
 
 Definition equiv_moveR_equiv_M `{IsEquiv A B f} (x : A) (y : B)
@@ -667,7 +667,7 @@ Instance isequiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveR_equiv_V A B f _ x y).
 Proof.
   unfold moveR_equiv_V.
-  exact (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => q @ eissect f y) _).
+  exact (isequiv_compose (ap f^-1) (fun q => q @ eissect f y)).
 Defined.
 
 Definition equiv_moveR_equiv_V `{IsEquiv A B f} (x : B) (y : A)
@@ -678,7 +678,7 @@ Instance isequiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
 : IsEquiv (@moveL_equiv_M A B f _ x y).
 Proof.
   unfold moveL_equiv_M.
-  exact (@isequiv_compose _ _ (ap f) _ _ (fun q => (eisretr f y)^ @ q) _).
+  exact (isequiv_compose (ap f) (fun q => (eisretr f y)^ @ q)).
 Defined.
 
 Definition equiv_moveL_equiv_M `{IsEquiv A B f} (x : A) (y : B)
@@ -689,7 +689,7 @@ Instance isequiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)
 : IsEquiv (@moveL_equiv_V A B f _ x y).
 Proof.
   unfold moveL_equiv_V.
-  exact (@isequiv_compose _ _ (ap f^-1) _ _ (fun q => (eissect f y)^ @ q) _).
+  exact (isequiv_compose (ap f^-1) (fun q => (eissect f y)^ @ q)).
 Defined.
 
 Definition equiv_moveL_equiv_V `{IsEquiv A B f} (x : B) (y : A)

@@ -326,13 +326,12 @@ Section ImpliesLex.
     specialize (H A Unit B Unit (const_tt _) (const_tt _) f idmap _ _ _ _
                   (fun _ => 1)).
     unfold IsPullback, pullback_corec in H.
-    refine (@isequiv_compose _ _ _ H _ (fun x => x.2.1) _).
+    refine (isequiv_compose _ (H:=H) (fun x => x.2.1)).
     unfold Pullback.
-    refine (@isequiv_compose _ {b:Unit & B}
-                             (functor_sigma idmap (fun a => pr1))
-                             _ _ pr2 _).
-    refine (@isequiv_compose _ _ (equiv_sigma_prod0 Unit B)
-                             _ _ snd _).
+    refine (isequiv_compose (B:={b:Unit & B})
+              (functor_sigma idmap (fun a => pr1))
+              pr2).
+    refine (isequiv_compose (equiv_sigma_prod0 Unit B) snd).
     exact (equiv_isequiv (prod_unit_l B)).
   Defined.
 

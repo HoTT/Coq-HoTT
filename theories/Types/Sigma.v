@@ -620,7 +620,7 @@ Definition path_sigma_hprop {A : Type} {P : A -> Type}
 
 Instance isequiv_path_sigma_hprop {A P} `{forall x : A, IsHProp (P x)} {u v : sig P}
   : IsEquiv (@path_sigma_hprop A P _ u v) | 100
-  := isequiv_compose.
+  := isequiv_compose _ _.
 
 #[export]
 Hint Immediate isequiv_path_sigma_hprop : typeclass_instances.

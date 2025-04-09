@@ -1461,7 +1461,7 @@ Section ConnectedTypes.
              {A : Type} `{IsConnected O A} (C : Type) `{In O C}
   : IsEquiv (@const A C).
   Proof.
-    exact (@isequiv_compose _ _ (fun c u => c) _ _ _
+    exact (@isequiv_compose _ _ _ (fun c u => c) _ _
               (isequiv_ooextendable (fun _ => C) (const_tt A)
                                     (ooextendable_const_isconnected_inO A C))).
   Defined.

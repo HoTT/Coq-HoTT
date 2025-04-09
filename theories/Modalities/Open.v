@@ -75,8 +75,8 @@ Proof.
       refine (cancelR_isequiv (fun x (u:Unit) => x)).
       exact X_inO.
     + intros ext; specialize (ext tt).
-      refine (isequiv_compose (f := (fun x => unit_name x))
-                              (g := (fun h => h o const_tt U))).
+      refine (isequiv_compose (fun x => unit_name x)
+                              (fun h => h o const_tt U)).
       exact (isequiv_ooextendable (fun _ => X) (const_tt U) ext).
 Defined.
 

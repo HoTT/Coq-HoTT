@@ -205,7 +205,7 @@ Section Diagram.
     napply (Build_diagram_equiv (diagram_comp m2 m1)).
     intros i.
     simpl.
-    apply isequiv_compose'; [apply m1 | apply m2].
+    apply isequiv_compose; [apply m1 | apply m2].
   Defined.
 End Diagram.
 

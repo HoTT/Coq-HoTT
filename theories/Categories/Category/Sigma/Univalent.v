@@ -348,16 +348,17 @@ Section on_both.
       refine ((@Pmor_iso_adjust s0 s1 d1)^-1 o _).
       exact (@Pidtoiso _ _ _). }
     { (* Do this in small steps to make it fast. *)
-      nrefine isequiv_compose. 1:apply isequiv_inverse.
-      nrefine isequiv_compose. 2:apply isequiv_inverse.
+      napply isequiv_compose. 1:apply isequiv_inverse.
+      napply isequiv_compose. 2:apply isequiv_inverse.
       nrefine isequiv_functor_sigma. 1:apply A_cat.
       destruct s, d.
       simpl Overture.pr1.
       intro p; destruct p.
-      eapply @isequiv_compose.
+      eapply isequiv_compose.
       - exact _.
       - eapply @isequiv_inverse. }
     { intro p; apply path_isomorphic; destruct p.
       reflexivity. }
   Defined.
 End on_both.
+

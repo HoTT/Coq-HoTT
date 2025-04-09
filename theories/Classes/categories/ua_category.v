@@ -74,7 +74,7 @@ Proof.
   intros A B.
   rewrite path_idtoiso_isomorphic_id.
   apply @isequiv_compose.
-  - apply isequiv_compose.
+  - rapply isequiv_compose.
   - apply isequiv_inverse.
 Qed.
 

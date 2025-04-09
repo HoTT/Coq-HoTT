@@ -625,7 +625,7 @@ Proof.
   intros X Y f g; cbn in *.
   snapply isequiv_homotopic.
   - exact (GpdHom_path o (ap (x:=f) (y:=g) cate_fun)).
-  - exact isequiv_compose.
+  - rapply isequiv_compose.
   - intro p; by induction p.
 Defined.
 

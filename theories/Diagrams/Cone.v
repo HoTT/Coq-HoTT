@@ -231,7 +231,7 @@ Section FunctorialityCone.
   Proof.
     srapply Build_UniversalCone; intro.
     rewrite (path_forall _ _ (fun f => cone_postcompose_precompose m f C)).
-    exact isequiv_compose.
+    rapply isequiv_compose.
   Defined.
 
   #[export] Instance cone_precompose_equiv_universality {D: Diagram G} `(f: Y <~> X)
@@ -240,7 +240,7 @@ Section FunctorialityCone.
   Proof.
     srapply Build_UniversalCone; intro.
     rewrite <- (path_forall _ _ (fun g => cone_precompose_comp g f C)).
-    exact isequiv_compose.
+    rapply isequiv_compose.
   Defined.
 
 End FunctorialityCone.
