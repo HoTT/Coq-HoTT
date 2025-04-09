@@ -1023,7 +1023,7 @@ Defined.
 
 (** ** Forall *)
 
-(** If a predicate holds for all elements of a list, the the [for_all] predicate holds for the list. *)
+(** If a predicate holds for all elements of a list, then the [for_all] predicate holds for the list. *)
 Definition for_all_inlist {A : Type} (P : A -> Type) l
   : (forall x, InList x l -> P x) -> for_all P l.
 Proof.

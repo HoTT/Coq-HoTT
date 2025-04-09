@@ -923,7 +923,7 @@ Proof.
   by induction p.
 Defined.
 
-(* TODO: What should this be called? *)
+(* Naturality of transport.  TODO: What should this be called?  [transport_postcompose]? *)
 Lemma ap_transport {A} {P Q : A -> Type} {x y : A} (p : x = y) (f : forall x, P x -> Q x) (z : P x) :
   f y (p # z) = (p # (f x z)).
 Proof.

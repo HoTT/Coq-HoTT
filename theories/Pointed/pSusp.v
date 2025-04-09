@@ -217,7 +217,7 @@ Proof.
     rhs_V napply concat_p1_1.
     apply whiskerL.
     exact (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid pt)).
-Defined. (* A bit slow, ~0.9s. *)
+Defined. (* A bit slow, ~0.09s. *)
 
 Definition loop_susp_triangle2 (X : pType)
   : loop_susp_counit (psusp X) o* fmap psusp (loop_susp_unit X)
