@@ -45,7 +45,7 @@ Proof.
   intro s.
   assert (p : forall n : nat, list_restrict s n = list_restrict c n).
   { intro n.
-    snrapply path_list_nth'.
+    srapply path_list_nth'.
     1: by rewrite !length_list_restrict.
     intros m h.
     by apply path_contr. }
