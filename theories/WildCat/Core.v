@@ -243,7 +243,6 @@ Definition mor_terminal_unique {A : Type} `{Is1Cat A} (x y : A) {h : IsTerminal 
 (** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
 Class HasMorExt (A : Type) `{Is1Cat A} :=
   isequiv_Htpy_path :: forall (a b : A) f g, IsEquiv (@GpdHom_path (a $-> b) _ _ _ f g).
-#[export] Typeclasses Opaque HasMorExt.
 
 Definition path_hom {A} `{HasMorExt A} {a b : A} {f g : a $-> b} (p : f $== g)
   : f = g
