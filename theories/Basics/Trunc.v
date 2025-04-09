@@ -132,10 +132,9 @@ Defined.
 Definition trunc_index_add_succ@{} m n
   : m +2+ n.+1 = (m +2+ n).+1.
 Proof.
-  revert m; simple_induction n n IHn; intro m; simple_induction m m IHm.
-  1,3: reflexivity.
-  all: cbn; apply ap.
-  all: assumption.
+  simple_induction m m IHm.
+  1: reflexivity.
+  cbn; apply ap; assumption.
 Defined.
 
 Definition trunc_index_add_comm@{} m n
@@ -175,13 +174,8 @@ Notation "n '.-1'" := (trunc_index_pred n) : trunc_scope.
 Notation "n '.-2'" := (n.-1.-1) : trunc_scope.
 
 Definition trunc_index_succ_pred@{} (n : nat)
-  : (n.-1).+1 = n.
-Proof.
-  simple_induction n n IHn.
-  1: reflexivity.
-  unfold nat_to_trunc_index in *; cbn in *.
-  exact (ap trunc_S IHn).
-Defined.
+  : (n.-1).+1 = n
+  := idpath.
 
 Definition trunc_index_leq_minus_two@{} {n}
   : n <= -2 -> n = -2.
