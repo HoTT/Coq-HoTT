@@ -12,9 +12,9 @@ Local Open Scope type_scope.
 (** ** [UStructure] defined by [seq_agree_lt] *)
 
 (** Every type of the form [nat -> X] carries a uniform structure defined by the [seq_agree_lt n] relation for every [n : nat]. *)
-Instance sequence_type_us' {X : Type} : UStructure (nat -> X) | 10.
+Global Instance sequence_type_us {X : Type} : UStructure (nat -> X) | 10.
 Proof.
-  snapply Build_UStructure.
+  srapply Build_UStructure.
   - exact seq_agree_lt.
   - exact (fun _ _ _ _ => idpath).
   - exact (fun _ _ _ h _ _ => (h _ _)^).
@@ -22,9 +22,12 @@ Proof.
   - exact (fun _ _ _ h _ _ => h _ _).
 Defined.
 
-Definition cons_of_eq {X : Type} {n : nat} {s t : nat -> X} {x : X}
+Definition sequence_type_us_zero {X : Type} (s t : nat -> X) : s =[0] t
+  := fun n hn => Empty_rec (not_lt_zero_r n hn).
+
+Definition seq_cons_of_eq {X : Type} {n : nat} {s t : nat -> X} {x : X}
   (h : s =[n] t)
-  : (cons x s) =[n.+1] (cons x t).
+  : (seq_cons x s) =[n.+1] (seq_cons x t).
 Proof.
   intros m hm; destruct m.
   - reflexivity.
@@ -38,8 +41,8 @@ Definition list_restrict_eq_iff_seq_agree_lt
 Proof.
   constructor.
   - intros h m hm.
-    lhs_V exact (nth'_list_restrict s ((length_list_restrict _ _)^ # hm)).
-    rhs_V exact (nth'_list_restrict t ((length_list_restrict _ _)^ # hm)).
+    lhs_V srapply (nth'_list_restrict s ((length_list_restrict _ _)^ # hm)).
+    rhs_V srapply (nth'_list_restrict t ((length_list_restrict _ _)^ # hm)).
     exact (nth'_path_list h _ _).
   - intro h.
     apply (path_list_nth' _ _
@@ -73,9 +76,9 @@ Definition uniformly_continuous_extensionality
 Definition cons_decreases_modulus {X Y : Type}
   (p : (nat -> X) -> Y) (n : nat) (b : X)
   (hSn : is_modulus_of_uniform_continuity n.+1 p)
-  : is_modulus_of_uniform_continuity n (p o cons b).
+  : is_modulus_of_uniform_continuity n (p o seq_cons b).
 Proof.
   intros u v huv.
   apply hSn.
-  exact (cons_of_eq huv).
+  exact (seq_cons_of_eq huv).
 Defined.
