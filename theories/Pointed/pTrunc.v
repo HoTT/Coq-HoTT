@@ -21,7 +21,7 @@ Definition pequiv_ptr {n : trunc_index} {A : pType} `{IsTrunc n A}
 (** We could specialize [pO_rec] to give the following result, but since maps induced by truncation-recursion compute on elements of the form [tr _], we can give a better proof of pointedness than the one coming from [pO_rec]. *)
 Definition pTr_rec n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
   : pTr n X ->* Y
-  := Build_pMap (pTr n X) Y (Trunc_rec f) (point_eq f).
+  := Build_pMap (Trunc_rec f) (point_eq f).
 
 (** Note that we get an equality of pointed functions here, without Funext, while [pO_rec_beta] only gives a pointed homotopy. This is because [pTr_rec] computes on elements of the form [tr _]. *)
 Definition pTr_rec_beta_path n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
@@ -29,7 +29,7 @@ Definition pTr_rec_beta_path n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
 Proof.
   unfold pTr_rec, "o*"; cbn.
   (* Since [f] is definitionally equal to [Build_pMap _ _ f (point_eq f)], this works: *)
-  apply (ap (Build_pMap _ _ f)).
+  apply (ap (Build_pMap f)).
   apply concat_1p.
 Defined.
 

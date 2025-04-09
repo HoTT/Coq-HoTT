@@ -34,7 +34,7 @@ Definition psusp (X : Type) : pType
 (** TODO: make this a displayed functor *)
 Instance is0functor_psusp : Is0Functor psusp
   := Build_Is0Functor _ _ _ _ psusp (fun X Y f
-      => Build_pMap (psusp X) (psusp Y) (functor_susp f) 1).
+      => Build_pMap (functor_susp f) 1).
 
 (** [psusp] is a 1-functor. *)
 Instance is1functor_psusp : Is1Functor psusp.
@@ -125,8 +125,7 @@ End Book_Loop_Susp_Adjunction.
 (** Thus, instead we will construct the adjunction in terms of a unit and counit natural transformation. *)
 
 Definition loop_susp_unit (X : pType) : X ->* loops (psusp X)
-  := Build_pMap X (loops (psusp X))
-      (fun x => merid x @ (merid (point X))^) (concat_pV _).
+  := Build_pMap (fun x => merid x @ (merid (point X))^) (concat_pV _).
 
 (** By Freudenthal, we have that this map is (2n+2)-connected when [X] is (n+1)-connected. *)
 Instance conn_map_loop_susp_unit `{Univalence} (n : trunc_index)
@@ -176,7 +175,7 @@ Proof.
 Defined.
 
 Definition loop_susp_counit (X : pType) : psusp (loops X) ->* X
-  :=  Build_pMap (psusp (loops X)) X (Susp_rec (point X) (point X) idmap) 1.
+  := Build_pMap (Susp_rec (point X) (point X) idmap) 1.
 
 Definition loop_susp_counit_natural {X Y : pType} (f : X ->* Y)
   : f o* loop_susp_counit X

@@ -293,7 +293,7 @@ Defined.
 Definition equiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
   : F <~>* pfiber f
-  := Build_pEquiv _ _ _ (isequiv_cxfib ex).
+  := Build_pEquiv _ (isequiv_cxfib ex).
 
 Proposition equiv_cxfib_beta {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
@@ -359,7 +359,7 @@ Defined.
 Definition pequiv_cxfib {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{IsExact purely F X Y i f}
   : F <~>* pfiber f
-  := Build_pEquiv _ _ (cxfib cx_isexact) _.
+  := Build_pEquiv (cxfib cx_isexact) _.
 
 Definition fiberseq_isexact_purely {F X Y : pType} (i : F ->* X) (f : X ->* Y)
   `{IsExact purely F X Y i f} : FiberSeq F X Y

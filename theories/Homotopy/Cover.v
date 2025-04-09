@@ -55,7 +55,7 @@ Definition pfunctor_O_pcover `{O : ReflectiveSubuniverse} {X Y : pType}
 
 Definition pequiv_pfunctor_O_pcover `{O : ReflectiveSubuniverse} {X Y : pType}
   (f : X ->* Y) `{IsEquiv _ _ f} : O_pcover O X pt <~>* O_pcover O Y pt
-  := Build_pEquiv _ _ (pfunctor_O_pcover f) _.
+  := Build_pEquiv (pfunctor_O_pcover f) _.
 
 (** In the case of truncations, [ptr_natural] gives a better proof of pointedness. *)
 Definition pfunctor_pTr_pcover `{n : trunc_index} {X Y : pType}
@@ -65,7 +65,7 @@ Definition pfunctor_pTr_pcover `{n : trunc_index} {X Y : pType}
 Definition pequiv_pfunctor_pTr_pcover `{n : trunc_index}
   {X Y : pType} (f : X ->* Y) `{IsEquiv _ _ f}
   : O_pcover (Tr n) X pt <~>* O_pcover (Tr n) Y pt
-  := Build_pEquiv _ _ (pfunctor_pTr_pcover f) _.
+  := Build_pEquiv (pfunctor_pTr_pcover f) _.
 
 
 (** * Components *)

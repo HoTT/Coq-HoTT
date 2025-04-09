@@ -373,7 +373,7 @@ Defined.
 (** ** Symmetry of the smash product *)
 
 Definition pswap (X Y : pType) : Smash X Y $-> Smash Y X
-  := Build_pMap _ _ (Smash_rec (flip sm) auxr auxl gluer gluel) 1.
+  := Build_pMap (Smash_rec (flip sm) auxr auxl gluer gluel) 1.
 
 Definition pswap_pswap {X Y : pType}
   : pswap X Y $o pswap Y X $== pmap_idmap.

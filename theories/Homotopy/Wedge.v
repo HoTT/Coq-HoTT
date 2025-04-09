@@ -19,10 +19,10 @@ Definition wglue {X Y : pType}
   : pushl (point X) = (pushr (point Y)) :> (X \/ Y) := pglue tt.
 
 Definition wedge_inl {X Y : pType} : X ->* X \/ Y
-  := Build_pMap _ _ pushl 1.
+  := Build_pMap pushl 1.
 
 Definition wedge_inr {X Y : pType} : Y ->* X \/ Y
-  := Build_pMap _ _ pushr wglue^.
+  := Build_pMap pushr wglue^.
 
 (** Wedge recursion into an unpointed type. *)
 Definition wedge_rec' {X Y : pType} {Z : Type}
@@ -32,7 +32,7 @@ Definition wedge_rec' {X Y : pType} {Z : Type}
 
 Definition wedge_rec {X Y : pType} {Z : pType} (f : X ->* Z) (g : Y ->* Z)
   : X \/ Y ->* Z
-  := Build_pMap _ _ (wedge_rec' f g (point_eq f @ (point_eq g)^)) (point_eq f).
+  := Build_pMap (wedge_rec' f g (point_eq f @ (point_eq g)^)) (point_eq f).
 
 Definition wedge_rec_beta_wglue {X Y Z : pType} (f : X ->* Z) (g : Y ->* Z)
   : ap (wedge_rec f g) wglue = point_eq f @ (point_eq g)^
@@ -215,12 +215,12 @@ Defined.
 
 Definition fwedge_in' (I : Type) (X : I -> pType)
   : forall i, X i ->* FamilyWedge I X
-  := fun i => Build_pMap _ _ (fun x => pushl (i; x)) (pglue i).
+  := fun i => Build_pMap (fun x => pushl (i; x)) (pglue i).
 
 (** We have an inclusion map [pushl : sig X -> FamilyWedge X].  When [I] is pointed, so is [sig X], and then this inclusion map is pointed. *)
 Definition fwedge_in (I : pType) (X : I -> pType)
   : psigma (pointed_fam X) ->* FamilyWedge I X
-  := Build_pMap _ _ pushl (pglue pt).
+  := Build_pMap pushl (pglue pt).
 
 (** Recursion principle for the wedge of an indexed family of pointed types. *)
 Definition fwedge_rec (I : Type) (X : I -> pType) (Z : pType)
@@ -308,7 +308,7 @@ Note that this is only a conceptual picture as we aren't working with "reduced s
 (** The pinch map for a suspension. *)
 Definition psusp_pinch (X : pType) : psusp X ->* psusp X \/ psusp X.
 Proof.
-  refine (Build_pMap _ _ (Susp_rec pt pt _) idpath).
+  refine (Build_pMap (Susp_rec pt pt _) idpath).
   intros x.
   refine (ap wedge_inl _ @ wglue @ ap wedge_inr _ @ wglue^).
   1,2: exact (loop_susp_unit X x).
