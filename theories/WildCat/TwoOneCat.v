@@ -126,10 +126,8 @@ Class Is21Cat (A : Type) `{IsBicat A} :=
 
 Definition cat_postwhisker_pp {A} `{IsBicat A} {a b c : A}
   {f g h : a $-> b} (k : b $-> c) (p : f $=> g) (q : g $=> h)
-  : k $@L (p $| q) $== (k $@L p) $| (k $@L q).
-Proof.
-  rapply fmap_comp.
-Defined.
+  : k $@L (p $| q) $== (k $@L p) $| (k $@L q)
+  := fmap_comp _ _ _.
 
 Definition cat_prewhisker_pp {A} `{IsBicat A} {a b c : A}
   {f g h : b $-> c} (k : a $-> b) (p : f $=> g) (q : g $=> h)
