@@ -537,10 +537,8 @@ Section Diamond.
   Defined.
 
   Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
-    : zigzag a a' b = zigzag a a' b'.
-  Proof.
-    by destruct p.
-  Defined.
+    : zigzag a a' b = zigzag a a' b'
+    := ap (zigzag a a') p.
 
   Definition diamond_v_sq (a a' : A) {b b' : B} (p : b = b')
     : Diamond a a' b b'.
