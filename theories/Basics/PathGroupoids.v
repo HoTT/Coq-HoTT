@@ -62,6 +62,19 @@ Local Open Scope path_scope.
 
 (** ** The 1-dimensional groupoid structure. *)
 
+(** Partially applied versions of [concat].  The first is a synonym for [concat p], but we include it to parallel the second one. *)
+Definition concat_l {A : Type} {x y z : A} (p : x = y)
+  : (y = z) -> (x = z)
+  := concat p.
+
+Definition concat_r {A : Type} {x y z : A} (q : y = z)
+  : (x = y) -> (x = z)
+  := fun p => p @ q.
+
+(** The operation of composing a path on two sides. *)
+Definition concat_lr {A : Type} {w x y z : A} (p : w = x) (r : y = z)
+  : (x = y) -> (w = z)
+  := fun q => p @ q @ r.
 
 (** The identity path is a right unit. *)
 Definition concat_p1 {A : Type} {x y : A} (p : x = y) :
@@ -182,112 +195,112 @@ Definition moveR_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   p = r^ @ q -> r @ p = q.
 Proof.
   destruct r.
-  intro h. exact (concat_1p _ @ h @ concat_1p _).
+  exact (concat_lr (concat_1p _) (concat_1p _)).
 Defined.
 
 Definition moveR_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r = q @ p^ -> r @ p = q.
 Proof.
   destruct p.
-  intro h. exact (concat_p1 _ @ h @ concat_p1 _).
+  exact (concat_lr (concat_p1 _) (concat_p1 _)).
 Defined.
 
 Definition moveR_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
   p = r @ q -> r^ @ p = q.
 Proof.
   destruct r.
-  intro h. exact (concat_1p _ @ h @ concat_1p _).
+  exact (concat_lr (concat_1p _) (concat_1p _)).
 Defined.
 
 Definition moveR_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
   r = q @ p -> r @ p^ = q.
 Proof.
   destruct p.
-  intro h. exact (concat_p1 _ @ h @ concat_p1 _).
+  exact (concat_lr (concat_p1 _) (concat_p1 _)).
 Defined.
 
 Definition moveL_Mp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   r^ @ q = p -> q = r @ p.
 Proof.
   destruct r.
-  intro h. exact ((concat_1p _)^ @ h @ (concat_1p _)^).
+  exact (concat_lr (concat_1p _)^ (concat_1p _)^).
 Defined.
 
 Definition moveL_pM {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x) :
   q @ p^ = r -> q = r @ p.
 Proof.
   destruct p.
-  intro h. exact ((concat_p1 _)^ @ h @ (concat_p1 _)^).
+  exact (concat_lr (concat_p1 _)^ (concat_p1 _)^).
 Defined.
 
 Definition moveL_Vp {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y) :
   r @ q = p -> q = r^ @ p.
 Proof.
   destruct r.
-  intro h. exact ((concat_1p _)^ @ h @ (concat_1p _)^).
+  exact (concat_lr (concat_1p _)^ (concat_1p _)^).
 Defined.
 
 Definition moveL_pV {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x) :
   q @ p = r -> q = r @ p^.
 Proof.
   destruct p.
-  intro h. exact ((concat_p1 _)^ @ h @ (concat_p1 _)^).
+  exact (concat_lr (concat_p1 _)^ (concat_p1 _)^).
 Defined.
 
 Definition moveL_1M {A : Type} {x y : A} (p q : x = y) :
   p @ q^ = 1 -> p = q.
 Proof.
   destruct q.
-  intro h. exact ((concat_p1 _)^ @ h).
+  exact (concat_l (concat_p1 _)^).
 Defined.
 
 Definition moveL_M1 {A : Type} {x y : A} (p q : x = y) :
   q^ @ p = 1 -> p = q.
 Proof.
   destruct q.
-  intro h. exact ((concat_1p _)^ @ h).
+  exact (concat_l (concat_1p _)^).
 Defined.
 
 Definition moveL_1V {A : Type} {x y : A} (p : x = y) (q : y = x) :
   p @ q = 1 -> p = q^.
 Proof.
   destruct q.
-  intro h. exact ((concat_p1 _)^ @ h).
+  exact (concat_l (concat_p1 _)^).
 Defined.
 
 Definition moveL_V1 {A : Type} {x y : A} (p : x = y) (q : y = x) :
   q @ p = 1 -> p = q^.
 Proof.
   destruct q.
-  intro h. exact ((concat_1p _)^ @ h).
+  exact (concat_l (concat_1p _)^).
 Defined.
 
 Definition moveR_M1 {A : Type} {x y : A} (p q : x = y) :
   1 = p^ @ q -> p = q.
 Proof.
   destruct p.
-  intro h. exact (h @ (concat_1p _)).
+  exact (concat_r (concat_1p _)).
 Defined.
 
 Definition moveR_1M {A : Type} {x y : A} (p q : x = y) :
   1 = q @ p^ -> p = q.
 Proof.
   destruct p.
-  intro h. exact (h @ (concat_p1 _)).
+  exact (concat_r (concat_p1 _)).
 Defined.
 
 Definition moveR_1V {A : Type} {x y : A} (p : x = y) (q : y = x) :
   1 = q @ p -> p^ = q.
 Proof.
   destruct p.
-  intro h. exact (h @ (concat_p1 _)).
+  exact (concat_r (concat_p1 _)).
 Defined.
 
 Definition moveR_V1 {A : Type} {x y : A} (p : x = y) (q : y = x) :
   1 = p @ q -> p^ = q.
 Proof.
   destruct p.
-  intro h. exact (h @ (concat_1p _)).
+  exact (concat_r (concat_1p _)).
 Defined.
 
 (* In general, the path we want to move might be arbitrarily deeply nested at the beginning of a long concatenation.  Thus, instead of defining functions such as [moveL_Mp_p], we define a tactical that can repeatedly rewrite with associativity to expose it. *)
