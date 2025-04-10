@@ -11,24 +11,24 @@ Local Open Scope nat_scope.
 Local Open Scope type_scope.
 Local Open Scope list_scope.
 
-Definition decidable_fan_theorem (A : Type) :=
+Definition DecidableFanTheorem (A : Type) :=
   forall (B : list A -> Type)
   (dec : forall l : list A, Decidable (B l))
-  (bar : is_bar B),
-  is_uniform_bar B.
+  (bar : IsBar B),
+  IsUniformBar B.
 
-Definition monotone_fan_theorem (A : Type) :=
+Definition MonotoneFanTheorem (A : Type) :=
   forall (B : list A -> Type)
-  (mon : is_monotone B)
-  (bar : is_bar B),
-  is_uniform_bar B.
+  (mon : IsMonotone B)
+  (bar : IsBar B),
+  IsUniformBar B.
 
-Definition fan_theorem (A : Type) :=
+Definition FanTheorem (A : Type) :=
   forall (B : list A -> Type)
-  (bar : is_bar B),
-  is_uniform_bar B.
+  (bar : IsBar B),
+  IsUniformBar B.
 
-Definition fan_theorem_empty : fan_theorem Empty.
+Definition fantheorem_empty : FanTheorem Empty.
 Proof.
   intros B bB.
   exists 0.
@@ -36,7 +36,7 @@ Proof.
   contradiction (s 0).
 Defined.
 
-Definition fan_theorem_contr (A : Type) `{Contr A} : fan_theorem A.
+Definition fantheorem_contr (A : Type) `{Contr A} : FanTheorem A.
 Proof.
   intros B bB.
   pose (c := fun (_ : nat) => center A).
@@ -63,7 +63,7 @@ Definition uc_theorem_family {A : Type} (p : (nat -> A) -> Bool)
 
 Definition is_bar_uc_theorem_family {A : Type}
   (p : (nat -> A) -> Bool) (cont : IsContinuous p)
-  : is_bar (uc_theorem_family p).
+  : IsBar (uc_theorem_family p).
 Proof.
   intro s.
   specialize (cont s 0) as [n H].
@@ -77,7 +77,7 @@ Defined.
 
 (** The fan theorem implies that every continuous function is uniformly continuous. The current proof uses the full fan theorem. Less powerful versions might be enough. *)
 
-Definition uniform_continuity_fan_theorem {A : Type} (fan : fan_theorem A)
+Definition uniform_continuity_fantheorem {A : Type} (fan : FanTheorem A)
   (p : (nat -> A) -> Bool) (c : IsContinuous p)
   : uniformly_continuous p.
 Proof.

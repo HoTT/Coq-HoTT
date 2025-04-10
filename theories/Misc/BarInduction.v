@@ -14,28 +14,28 @@ Local Open Scope list_scope.
 (** ** The basic definitions *)
 
 (** A family [B] on a type of lists is a bar if every infinite sequence restricts to a finite sequence satisfying [B]. *)
-Definition is_bar {A : Type} (B : list A -> Type)
+Definition IsBar {A : Type} (B : list A -> Type)
   := forall (s : nat -> A), {n : nat & B (list_restrict s n)}.
 
 (** A family [B] is a uniform bar if it is a bar such that there is an upper bound for the lengths of the restrictions needed to satisfy the bar condition. *)
-Definition is_uniform_bar {A : Type} (B : list A -> Type)
+Definition IsUniformBar {A : Type} (B : list A -> Type)
   := {M : nat & forall (s : nat -> A),
                   {n : nat & (n <= M) * B (list_restrict s n)}}.
 
 (** A family [B] on a type of finite sequences is inductive if, for every list [l], if the concatenation of [l] with any term satisfies [B], then the list satisfies [B]. *)
-Definition is_inductive {A : Type} (B : list A -> Type)
+Definition IsInductive {A : Type} (B : list A -> Type)
   := forall (l : list A), (forall (a : A), B (l ++ [a])) -> B l.
 
 (** A family [B] on a type of finite sequences is monotone if for every list satisfying [B], the concatenation with any other list still satisfies [B]. Equivalently, we can just check the concatenations with lists of length one. *)
-Definition is_monotone {A : Type} (B : list A -> Type)
+Definition IsMonotone {A : Type} (B : list A -> Type)
   := forall (l1 l2 : list A), B l1 -> B (l1 ++ l2).
 
-Definition is_monotone_singleton {A : Type} (B : list A -> Type)
+Definition IsMonotoneSingleton {A : Type} (B : list A -> Type)
   := forall (l : list A) (a : A), B l -> B (l ++ [a]).
 
-Definition is_monotone_is_monotone_singleton {A : Type} (B : list A -> Type)
-  (mon : is_monotone_singleton B)
-  : is_monotone B.
+Definition ismonotone_ismonotonesingleton {A : Type} (B : list A -> Type)
+  (mon : IsMonotoneSingleton B)
+  : IsMonotone B.
 Proof.
   intros l1 l2; induction l2 as [|a l2 IHl2] in l1 |- *.
   - by rewrite app_nil.
@@ -46,58 +46,58 @@ Defined.
 
 (** We state three forms of bar induction: (full) bar induction, monotone bar induction and decidable bar induction. *)
 
-Definition decidable_bar_induction (A : Type) :=
+Definition DecidableBarInduction (A : Type) :=
   forall (B : list A -> Type)
   (dec : forall (l : list A), Decidable (B l))
-  (ind : is_inductive B)
-  (bar : is_bar B),
+  (ind : IsInductive B)
+  (bar : IsBar B),
   B nil.
 
-Definition monotone_bar_induction (A : Type) :=
+Definition MonotoneBarInduction (A : Type) :=
   forall (B : list A -> Type)
-  (mon : is_monotone B)
-  (ind : is_inductive B)
-  (bar : is_bar B),
+  (mon : IsMonotone B)
+  (ind : IsInductive B)
+  (bar : IsBar B),
   B nil.
 
-Definition bar_induction (A : Type) :=
+Definition BarInduction (A : Type) :=
   forall (B : list A -> Type)
-  (ind : is_inductive B)
-  (bar : is_bar B),
+  (ind : IsInductive B)
+  (bar : IsBar B),
   B nil.
 
 (** The three bar induction principles can be more generally stated for two families. It's clear that the two-family versions imply the one-family versions. We show the reverse implications for full bar induction and monotone bar induction. We do not know if the definitions are equivalent in the decidable case yet. *)
 
-Definition decidable_bar_induction' (A : Type) :=
+Definition DecidableBarInduction' (A : Type) :=
   forall (B C : list A -> Type)
   (sub : forall l : list A, C l -> B l)
   (dC : forall (l : list A), Decidable (C l))
-  (ind : is_inductive B)
-  (bar : is_bar C),
+  (ind : IsInductive B)
+  (bar : IsBar C),
   B nil.
 
-Definition monotone_bar_induction' (A : Type) :=
+Definition MonotoneBarInduction' (A : Type) :=
   forall (B C : list A -> Type)
   (sub : forall l : list A, C l -> B l)
-  (monC : is_monotone C)
-  (indB : is_inductive B)
-  (barC : is_bar C),
+  (monC : IsMonotone C)
+  (indB : IsInductive B)
+  (barC : IsBar C),
   B nil.
 
-Definition bar_induction' (A : Type) :=
+Definition BarInduction' (A : Type) :=
   forall (B C : list A -> Type)
   (sub : forall l : list A, C l -> B l)
-  (indB : is_inductive B)
-  (barC : is_bar C),
+  (indB : IsInductive B)
+  (barC : IsBar C),
   B nil.
 
-Definition bar_induction'_bar_induction (A : Type) (BI : bar_induction A)
-  : bar_induction' A
+Definition barinduction'_barinduction (A : Type) (BI : BarInduction A)
+  : BarInduction' A
   := fun B C sub indB barC => BI B indB (fun s => ((barC s).1; sub _ (barC s).2)).
 
-Definition monotone_bar_induction'_monotone_bar_induction (A : Type)
-  (MBI : monotone_bar_induction A)
-  : monotone_bar_induction' A.
+Definition monotonebarinduction'_monotonebarinduction (A : Type)
+  (MBI : MonotoneBarInduction A)
+  : MonotoneBarInduction' A.
 Proof.
   intros B C sub monC indB barC.
   pose (P := fun v => forall w, B (v ++ w)).
@@ -119,21 +119,21 @@ Defined.
 
 (** Since decidable bar induction uses decidable predicates, we can state a logically equivalent form based on families of decidable propositions. This form has the advantage of being a proposition. *)
 
-Definition hprop_decidable_bar_induction (A : Type) :=
+Definition HPropDecidableBarInduction (A : Type) :=
   forall (B : list A -> Type)
   (prop : forall (l : list A), IsHProp (B l))
   (dec : forall (l : list A), Decidable (B l))
-  (ind : is_inductive B)
-  (bar : is_bar B),
+  (ind : IsInductive B)
+  (bar : IsBar B),
   B nil.
 
-Definition ishprop_hprop_decidable_bar_induction `{Funext} (A : Type)
-  : IsHProp (hprop_decidable_bar_induction A)
+Definition ishprop_hpropdecidablebarinduction `{Funext} (A : Type)
+  : IsHProp (HPropDecidableBarInduction A)
   := _.
 
-Definition decidable_bar_induction_hprop_decidable_bar_induction (A : Type)
-  (pDBI : hprop_decidable_bar_induction A)
-  : decidable_bar_induction A.
+Definition decidablebarinduction_hpropdecidablebarinduction (A : Type)
+  (pDBI : HPropDecidableBarInduction A)
+  : DecidableBarInduction A.
 Proof.
   intros P dP iP bP.
   apply merely_inhabited_iff_inhabited_stable.
@@ -155,9 +155,9 @@ Defined.
 
 (** Full bar induction clearly implies the other two. We now show that monotone bar induction implies decidable bar induction, by passing through the two-family versions. *)
 
-Definition decidable_bar_induction'_monotone_bar_induction' (A : Type)
-  (MBI : monotone_bar_induction' A)
-  : decidable_bar_induction' A.
+Definition decidablebarinduction'_monotone_bar_induction' (A : Type)
+  (MBI : MonotoneBarInduction' A)
+  : DecidableBarInduction' A.
 Proof.
   intros B C sub dC indB barC.
   (* The [n <= length l] part is redundant, but makes it clear that [P l] is decidable, which is used below. *)
@@ -200,25 +200,25 @@ Proof.
 Defined.
 
 Definition decidable_bar_induction_monotone_bar_induction (A : Type)
-  (MBI : monotone_bar_induction A)
-  : decidable_bar_induction A
+  (MBI : MonotoneBarInduction A)
+  : DecidableBarInduction A
   := fun B dec ind bar =>
-      (decidable_bar_induction'_monotone_bar_induction' A
-        (monotone_bar_induction'_monotone_bar_induction A MBI))
+      (decidablebarinduction'_monotone_bar_induction' A
+        (monotonebarinduction'_monotonebarinduction A MBI))
       B B (fun _ => idmap) dec ind bar.
 
 (** ** Examples of types that satisfy forms of bar induction *)
 
 (** The empty type and all contractible types satisfy full bar induction. *)
 
-Definition bar_induction_empty : bar_induction Empty.
+Definition barinduction_empty : BarInduction Empty.
 Proof.
   intros B iB _.
   rapply iB.
   intro a; contradiction a.
 Defined.
 
-Definition bar_induction_contr (A : Type) `{Contr A} : bar_induction A.
+Definition barinduction_contr (A : Type) `{Contr A} : BarInduction A.
 Proof.
   intros B iB bB.
   pose (c := fun (n : nat) => center A).
@@ -232,9 +232,9 @@ Proof.
 Defined.
 
 (** If a type satisfies decidable bar induction assuming that it is pointed, then it satisfies decidable bar induction. *)
-Definition decidable_bar_induction_pointed_decidable_bar_induction
-  (A : Type) (p : A -> decidable_bar_induction A)
-  : decidable_bar_induction A.
+Definition decidablebarinduction_pointed_decidablebarinduction
+  (A : Type) (p : A -> DecidableBarInduction A)
+  : DecidableBarInduction A.
 Proof.
   intros B dB iB bB.
   destruct (dec (B nil)) as [b | n].
@@ -262,9 +262,9 @@ Proof.
 Defined.
 
 (** The same is true for monotone bar induction. *)
-Definition monotone_bar_induction_pointed_monotone_bar_induction
-  (A : Type) (p : A -> monotone_bar_induction A)
-  : monotone_bar_induction A.
+Definition monotonebarinduction_pointed_monotonebarinduction
+  (A : Type) (p : A -> MonotoneBarInduction A)
+  : MonotoneBarInduction A.
 Proof.
   intros B mB iB bB.
   apply iB.
@@ -272,15 +272,15 @@ Proof.
   by apply (mB nil), (p a).
 Defined.
 
-(** Combining [monotone_bar_induction_pointed_monotone_bar_induction] and [bar_induction_contr], we prove that any proposition satisfies monotone bar induction. *)
-Definition monotone_bar_induction_hprop (A : Type) `{IsHProp A}
-  : monotone_bar_induction A.
+(** Combining [monotonebarinduction_pointed_monotonebarinduction] and [barinduction_contr], we prove that any proposition satisfies monotone bar induction. *)
+Definition monotonebarinduction_hprop (A : Type) `{IsHProp A}
+  : MonotoneBarInduction A.
 Proof.
-  apply monotone_bar_induction_pointed_monotone_bar_induction.
+  apply monotonebarinduction_pointed_monotonebarinduction.
   intro a.
-  enough (bar_induction A) as BI.
+  enough (BarInduction A) as BI.
   1: exact (fun B _ iB bB => BI B iB bB).
-  apply bar_induction_contr, (contr_inhabited_hprop A a).
+  apply barinduction_contr, (contr_inhabited_hprop A a).
 Defined.
 
 (** Note that [monotone_bar_induction_pointed_monotone_bar_induction] does not have an analogue for full bar induction. We prove below that every type satisfying full bar induction is Sigma-compact and therefore decidable. Then, as in [monotone_bar_induction_hprop], we would be able to prove that any proposition satisfies bar induction and therefore that every proposition is decidable. *)
@@ -297,7 +297,7 @@ Definition BI_sig_family {A : Type} (P : A -> Type) (l : list A) : Type
 
 Definition is_bar_BI_sig_family {A : Type} {P : A -> Type}
   (dec : forall n : A, Decidable (P n))
-  : is_bar (BI_sig_family P).
+  : IsBar (BI_sig_family P).
 Proof.
   intro s.
   destruct (dec (s 0)) as [p|p'].
@@ -308,26 +308,26 @@ Proof.
     exact p'.
 Defined.
 
-Definition is_inductive_BI_sig_family {A : Type} (P : A -> Type)
-  : is_inductive (BI_sig_family P).
+Definition isinductive_BI_sig_family {A : Type} (P : A -> Type)
+  : IsInductive (BI_sig_family P).
 Proof.
   intros [|a l] h.
   - right. exact (fun pa => h pa.1 pa.2).
   - exact (h a).
 Defined.
 
-Definition is_sig_compact_bar_induction {A : Type} (BI : bar_induction A)
+Definition issigcompact_barinduction {A : Type} (BI : BarInduction A)
   (P : A -> Type) (dec : forall n : A, Decidable (P n))
   : Decidable {a : A & P a}
   := BI (BI_sig_family P)
-          (is_inductive_BI_sig_family P) (is_bar_BI_sig_family dec).
+          (isinductive_BI_sig_family P) (is_bar_BI_sig_family dec).
 
 (** Full bar induction for [nat] implies the limited principle of omniscience, i.e., for every sequence of natural numbers we can decide whether every term is zero or there exists a non-zero term. *)
 
-Definition LPO_bar_induction {BI : bar_induction nat} (s : nat -> nat)
+Definition LPO_barinduction {BI : BarInduction nat} (s : nat -> nat)
   : (forall n : nat, s n = 0) + {n : nat & s n <> 0}.
 Proof.
-  destruct (is_sig_compact_bar_induction BI (fun n => s n <> 0) _) as [l|r].
+  destruct (issigcompact_barinduction BI (fun n => s n <> 0) _) as [l|r].
   - right; exact l.
   - left; exact (fun n => stable (fun z : s n <> 0 => r (n; z))).
 Defined.
