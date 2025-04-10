@@ -50,9 +50,8 @@ Proof.
     by apply path_contr. }
   exists (bB c).1; split.
   - exact _.
-  - rewrite (p _).
-    refine (_ # (bB c).2).
-    by cbn.
+  - rewrite p.
+    exact (bB c).2.
 Defined.
 
 (** The family we use when applying the fan theorem in our proof that continuity implies uniform continuity. *)
