@@ -3,7 +3,6 @@
 Require Import Basics Types. 
 Require Import Truncations.Core.
 Require Import Spaces.Nat.Core.
-Require Import Spaces.Finite.FinNat.
 Require Import Misc.UStructures BarInduction. 
 Require Import Spaces.NatSeq.Core Spaces.NatSeq.UStructure.
 Require Import Spaces.List.Core Spaces.List.Theory.
@@ -41,7 +40,7 @@ Definition fan_theorem_contr (A : Type) `{Contr A} : fan_theorem A.
 Proof.
   intros B bB.
   pose (c := fun (_ : nat) => center A).
-  exists (bB c).1.+1.
+  exists (bB c).1.
   intro s.
   assert (p : forall n : nat, list_restrict s n = list_restrict c n).
   { intro n.
@@ -49,7 +48,7 @@ Proof.
     1: by rewrite !length_list_restrict.
     intros m h.
     by apply path_contr. }
-  unshelve refine (((bB c).1; _); _).
+  exists (bB c).1; split.
   - exact _.
   - rewrite (p _).
     refine (_ # (bB c).2).
@@ -88,9 +87,10 @@ Proof.
   intro m.
   exists n.
   intros u v h.
-  apply (ub u).2.
+  destruct (ub u).2 as [bound uctf].
+  apply uctf.
   - exact (ap _ (length_list_restrict _ _)).
   - rewrite length_list_restrict.
     apply (snd list_restrict_eq_iff_seq_agree_lt).
-    symmetry; apply ((us_rel_leq (_ (ub u).1.2) h)).
+    symmetry; apply (us_rel_leq bound h).
 Defined.

@@ -3,7 +3,6 @@
 Require Import Basics Types.
 Require Import Truncations.Core.
 Require Import Spaces.Nat.Core.
-Require Import Spaces.Finite.FinNat.
 Require Import Spaces.NatSeq.Core.
 Require Import Spaces.List.Core Spaces.List.Theory.
 Require Import BoundedSearch.
@@ -21,7 +20,7 @@ Definition is_bar {A : Type} (B : list A -> Type)
 (** A family [B] is a uniform bar if it is a bar such that there is an upper bound for the lengths of the restrictions needed to satisfy the bar condition. *)
 Definition is_uniform_bar {A : Type} (B : list A -> Type)
   := {M : nat & forall (s : nat -> A),
-                  {n : FinNat M & B (list_restrict s n.1)}}.
+                  {n : nat & (n <= M) * B (list_restrict s n)}}.
 
 (** A family [B] on a type of finite sequences is inductive if, for every list [l], if the concatenation of [l] with any term satisfies [B], then the list satisfies [B]. *)
 Definition is_inductive {A : Type} (B : list A -> Type)
