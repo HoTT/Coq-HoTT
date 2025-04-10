@@ -58,7 +58,7 @@ Definition seq_agree_lt_seq_agree_inductive {X : Type} {n : nat}
 Proof.
   intros m hm.
   induction m in n, s, t, h, hm |- *.
-  - revert n hm h; nrapply gt_zero_ind; intros n h.
+  - revert n hm h; napply gt_zero_ind; intros n h.
     exact (fst h).
   - induction n.
     + contradiction (not_lt_zero_r _ hm).
