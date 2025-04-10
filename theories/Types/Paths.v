@@ -722,9 +722,7 @@ Definition dpath_path_lr {A : Type} {x1 x2 : A}
   transport (fun x => x = x) p q = r.
 Proof.
   destruct p; simpl.
-  transitivity (q @ 1 = r).
-  - exact (equiv_concat_r (concat_1p r) (q @ 1)).
-  - exact (equiv_concat_l (concat_p1 q)^ r).
+  symmetry; apply equiv_p1_1q.
 Defined.
 
 Definition dpath_path_Fl {A B : Type} {f : A -> B} {x1 x2 : A} {y : B}
@@ -766,9 +764,7 @@ Definition dpath_path_FFlr {A B : Type} {f : A -> B} {g : B -> A}
   transport (fun x => g (f x) = x) p q = r.
 Proof.
   destruct p; simpl.
-  transitivity (q @ 1 = r).
-  - exact (equiv_concat_r (concat_1p r) (q @ 1)).
-  - exact (equiv_concat_l (concat_p1 q)^ r).
+  symmetry; apply equiv_p1_1q.
 Defined.
 
 Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
@@ -778,9 +774,7 @@ Definition dpath_path_lFFr {A B : Type} {f : A -> B} {g : B -> A}
   transport (fun x => x = g (f x)) p q = r.
 Proof.
   destruct p; simpl.
-  transitivity (q @ 1 = r).
-  - exact (equiv_concat_r (concat_1p r) (q @ 1)).
-  - exact (equiv_concat_l (concat_p1 q)^ r).
+  symmetry; apply equiv_p1_1q.
 Defined.
 
 Definition dpath_paths2 {A : Type} {x y : A}
@@ -792,8 +786,8 @@ Definition dpath_paths2 {A : Type} {x y : A}
   transport (fun a => idpath a = idpath a) p q = r.
 Proof.
   destruct p. simpl.
-  refine (_ oE (equiv_whiskerR _ _ 1)^-1).
-  refine (_ oE (equiv_whiskerL 1 _ _)^-1).
+  refine (_ oE equiv_cancelR _ _ 1).
+  refine (_ oE equiv_cancelL 1 _ _).
   refine (equiv_concat_lr _ _).
   - symmetry; apply whiskerR_p1_1.
   - apply whiskerL_1p_1.
