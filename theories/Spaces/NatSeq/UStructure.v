@@ -41,8 +41,8 @@ Definition list_restrict_eq_iff_seq_agree_lt
 Proof.
   constructor.
   - intros h m hm.
-    lhs_V srapply (nth'_list_restrict s ((length_list_restrict _ _)^ # hm)).
-    rhs_V srapply (nth'_list_restrict t ((length_list_restrict _ _)^ # hm)).
+    lhs_V exact (nth'_list_restrict s ((length_list_restrict _ _)^ # hm)).
+    rhs_V exact (nth'_list_restrict t ((length_list_restrict _ _)^ # hm)).
     exact (nth'_path_list h _ _).
   - intro h.
     apply (path_list_nth' _ _

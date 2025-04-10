@@ -49,7 +49,7 @@ Proof.
     intros m h.
     by apply path_contr. }
   exists (bB c).1; split.
-  - exact _.
+  - reflexivity.
   - rewrite p.
     exact (bB c).2.
 Defined.
@@ -86,10 +86,10 @@ Proof.
   intro m.
   exists n.
   intros u v h.
-  destruct (ub u).2 as [bound uctf].
+  specialize (ub v) as [k [bound uctf]].
   apply uctf.
-  - exact (ap _ (length_list_restrict _ _)).
   - rewrite length_list_restrict.
     apply (snd list_restrict_eq_iff_seq_agree_lt).
-    symmetry; apply (us_rel_leq bound h).
+    apply (us_rel_leq bound h).
+  - exact (ap _ (length_list_restrict _ _)).
 Defined.

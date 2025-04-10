@@ -137,7 +137,7 @@ Definition decidable_bar_induction_hprop_decidable_bar_induction (A : Type)
 Proof.
   intros P dP iP bP.
   apply merely_inhabited_iff_inhabited_stable.
-  tapply (pDBI (Tr (-1) o P)).
+  rapply (pDBI (Tr (-1) o P)).
   - intro l.
     destruct (dP l) as [p | np].
     + left; exact (tr p).
@@ -163,7 +163,7 @@ Proof.
   (* The [n <= length l] part is redundant, but makes it clear that [P l] is decidable, which is used below. *)
   pose (P l := {n : nat & (n <= length l) * C (take n l)}).
   pose (Q l := B l + P l).
-  (* First we show that it is enough to prove [Q nil], and then we prove [Q nil]. *)
+  (* First we show that it is enough to prove [Q nil] (two cases), and then we prove [Q nil]. *)
   enough (Q nil) as [b0 | [n [hn hc]]].
   1: exact b0.
   1: exact (sub _ (take_nil _ # hc)).
@@ -287,7 +287,7 @@ Defined.
 
 (** ** Implications of bar induction *)
 
-(** Full bar induction for a type [A] implies that it is Sigma-compact, in the sense that any decidable family over [A] has a decidable Sigma-type. To prove this, we begin by defining a type family [P] on [list A] so that [P nil] i s our goal. *)
+(** Full bar induction for a type [A] implies that it is Sigma-compact, in the sense that any decidable family over [A] has a decidable Sigma-type. To prove this, we begin by defining a type family [P] on [list A] so that [P nil] is our goal. *)
 
 Definition BI_sig_family {A : Type} (P : A -> Type) (l : list A) : Type
   := match l with
