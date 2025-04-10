@@ -556,8 +556,9 @@ Proof.
   intro x. apply moveL_pV.
   transitivity (ap (Susp_rec H_N H_S f) (merid x) @ n.2 South).
   - apply whiskerR, inverse, Susp_rec_beta_merid.
-  - refine (concat_Ap n.2 (merid x) @ _).
-    apply (concatR (concat_p1 _)), whiskerL. apply ap_const.
+  - lhs napply (concat_Ap n.2 (merid x)).
+    rhs_V napply concat_p1.
+    apply whiskerL, ap_const.
 Defined.
 
 (** ** Contractibility of the suspension *)

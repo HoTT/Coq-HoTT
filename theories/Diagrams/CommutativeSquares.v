@@ -75,16 +75,21 @@ Lemma comm_square_inverse_is_sect
    = ap f (eissect wA a).
 Proof.
   unfold comm_square_inverse, comm_square_comp; simpl.
-  repeat apply (concat (concat_pp_p _ _ _)). apply moveR_Vp.
+  repeat lhs napply concat_pp_p. apply moveR_Vp.
   transitivity (ap (wB ^-1 o wB) (ap f (eissect wA a)) @ eissect wB (f a)).
-  2: apply (concat (concat_Ap (eissect wB) _)). 2: apply ap, ap_idmap.
-  apply (concat (concat_p_pp _ _ _)), whiskerR.
-  apply (concat (ap_pp (wB ^-1) _ _)^), (concatR (ap_compose wB _ _)^).
-  apply ap, (concat (concat_pp_p _ _ _)), moveR_Vp.
+  2: { lhs napply (concat_Ap (eissect wB)).
+       apply ap, ap_idmap. }
+  lhs napply concat_p_pp.
+  apply whiskerR.
+  lhs_V napply ap_pp.
+  rhs napply ap_compose.
+  apply ap.
+  lhs napply concat_pp_p.
+  apply moveR_Vp.
   path_via (ap (f' o wA) (eissect wA a) @ wf a).
-  - apply whiskerR.  apply (concatR (ap_compose wA f' _)^).
+  - apply whiskerR. rhs napply ap_compose.
     apply ap, eisadj.
-  - apply (concat (concat_Ap wf _)).
+  - lhs napply (concat_Ap wf).
     apply whiskerL, (ap_compose f wB).
 Defined.
 

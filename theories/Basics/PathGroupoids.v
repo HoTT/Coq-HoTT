@@ -62,8 +62,6 @@ Local Open Scope path_scope.
 
 (** ** The 1-dimensional groupoid structure. *)
 
-(** [concat], with arguments flipped. Useful mainly in the idiom [apply (concatR (expression))]. Given as a notation not a definition so that the resultant terms are literally instances of [concat], with no unfolding required. *)
-Notation concatR := (fun p q => concat q p).
 
 (** The identity path is a right unit. *)
 Definition concat_p1 {A : Type} {x y : A} (p : x = y) :
