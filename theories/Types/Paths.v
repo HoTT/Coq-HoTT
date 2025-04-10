@@ -301,7 +301,7 @@ Definition equiv_path_inverse {A : Type} (x y : A)
   := Build_Equiv _ _ (@inverse A x y) _.
 
 Instance isequiv_concat_l {A : Type} `(p : x = y:>A) (z : A)
-  : IsEquiv (@transitivity A _ _ x y z p) | 0.
+  : IsEquiv (concat_l (z:=z) p) | 0.
 Proof.
   refine (Build_IsEquiv _ _ _ (concat p^)
                        (concat_p_Vp p) (concat_V_pp p) _).
@@ -310,10 +310,10 @@ Defined.
 
 Definition equiv_concat_l {A : Type} `(p : x = y) (z : A)
   : (y = z) <~> (x = z)
-  := Build_Equiv _ _ (concat p) _.
+  := Build_Equiv _ _ (concat_l p) _.
 
 Instance isequiv_concat_r {A : Type} `(p : y = z) (x : A)
-  : IsEquiv (fun q:x=y => q @ p) | 0.
+  : IsEquiv (concat_r (x:=x) p) | 0.
 Proof.
   refine (Build_IsEquiv _ _ (fun q => q @ p) (fun q => q @ p^)
            (fun q => concat_pV_p q p) (fun q => concat_pp_V q p) _).
@@ -322,15 +322,15 @@ Defined.
 
 Definition equiv_concat_r {A : Type} `(p : y = z) (x : A)
   : (x = y) <~> (x = z)
-  := Build_Equiv _ _ (fun q => q @ p) _.
+  := Build_Equiv _ _ (concat_r p) _.
 
 Instance isequiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
-  : IsEquiv (fun r:x=y => p @ r @ q) | 0
-  := isequiv_compose (fun r => p @ r) (fun r => r @ q).
+  : IsEquiv (concat_lr p q) | 0
+  := isequiv_compose (concat_l p) (concat_r q).
 
 Definition equiv_concat_lr {A : Type} {x x' y y' : A} (p : x' = x) (q : y = y')
   : (x = y) <~> (x' = y')
-  := Build_Equiv _ _ (fun r:x=y => p @ r @ q) _.
+  := Build_Equiv _ _ (concat_lr p q) _.
 
 Definition equiv_p1_1q {A : Type} {x y : A} {p q : x = y}
   : p = q <~> p @ 1 = 1 @ q
@@ -410,8 +410,8 @@ Instance isequiv_moveR_Mp
  {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_Mp p q r).
 Proof.
-  destruct r.
-  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  destruct r; apply isequiv_concat_lr.
+  (* [isequiv_concat_lr] is also found by typeclass search, but this is clearer to the reader. *)
 Defined.
 
 Definition equiv_moveR_Mp
@@ -423,8 +423,7 @@ Instance isequiv_moveR_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pM p q r).
 Proof.
-  destruct p.
-  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  destruct p; apply isequiv_concat_lr.
 Defined.
 
 Definition equiv_moveR_pM
@@ -436,8 +435,7 @@ Instance isequiv_moveR_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveR_Vp p q r).
 Proof.
-  destruct r.
-  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  destruct r; apply isequiv_concat_lr.
 Defined.
 
 Definition equiv_moveR_Vp
@@ -449,8 +447,7 @@ Instance isequiv_moveR_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveR_pV p q r).
 Proof.
-  destruct p.
-  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  destruct p; apply isequiv_concat_lr.
 Defined.
 
 Definition equiv_moveR_pV
@@ -462,8 +459,7 @@ Instance isequiv_moveL_Mp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveL_Mp p q r).
 Proof.
-  destruct r.
-  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  destruct r; apply isequiv_concat_lr.
 Defined.
 
 Definition equiv_moveL_Mp
@@ -475,8 +471,7 @@ Definition isequiv_moveL_pM
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : y = x)
 : IsEquiv (moveL_pM p q r).
 Proof.
-  destruct p.
-  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  destruct p; apply isequiv_concat_lr.
 Defined.
 
 Definition equiv_moveL_pM
@@ -488,8 +483,7 @@ Instance isequiv_moveL_Vp
   {A : Type} {x y z : A} (p : x = z) (q : y = z) (r : x = y)
 : IsEquiv (moveL_Vp p q r).
 Proof.
-  destruct r.
-  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  destruct r; apply isequiv_concat_lr.
 Defined.
 
 Definition equiv_moveL_Vp
@@ -501,8 +495,7 @@ Instance isequiv_moveL_pV
   {A : Type} {x y z : A} (p : z = x) (q : y = z) (r : y = x)
 : IsEquiv (moveL_pV p q r).
 Proof.
-  destruct p.
-  exact (isequiv_compose (equiv_concat_l _ _) (equiv_concat_r _ _)).
+  destruct p; apply isequiv_concat_lr.
 Defined.
 
 Definition equiv_moveL_pV

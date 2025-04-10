@@ -76,6 +76,11 @@ Definition concat_lr {A : Type} {w x y z : A} (p : w = x) (r : y = z)
   : (x = y) -> (w = z)
   := fun q => p @ q @ r.
 
+(** The "/" indicates that these should be unfolded by [cbn] and [simpl] when the specified arguments are given. *)
+Arguments concat_l {A x y z} p q /.
+Arguments concat_r {A x y z} q p /.
+Arguments concat_lr {A w x y z} p r q /.
+
 (** The identity path is a right unit. *)
 Definition concat_p1 {A : Type} {x y : A} (p : x = y) :
   p @ 1 = p
