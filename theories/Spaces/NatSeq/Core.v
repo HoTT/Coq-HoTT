@@ -8,27 +8,24 @@ Local Open Scope type_scope.
 
 (** ** Operations on sequences *)
 
-(** The first term of a sequence. *)
-Definition head {X : Type} (u : nat -> X) : X := u 0.
-
 (** Shift of a sequence by 1 to the left. *)
-Definition tail {X : Type} (u : nat -> X) : (nat -> X) := u o S.
+Definition seq_tail {X : Type} (u : nat -> X) : (nat -> X) := u o S.
 
 (** Add a term to the start of a sequence. *)
-Definition cons {X : Type} : X -> (nat -> X) -> (nat -> X).
+Definition seq_cons {X : Type} : X -> (nat -> X) -> (nat -> X).
 Proof.
   intros x u [|n].
   - exact x.
   - exact (u n).
 Defined.
 
-Definition cons_head_tail {X : Type} (u : nat -> X)
-  : cons (head u) (tail u) == u.
+Definition seq_cons_head_tail {X : Type} (u : nat -> X)
+  : seq_cons (u 0) (seq_tail u) == u.
 Proof.
   by intros [|n].
 Defined.
 
-Definition tail_cons {X : Type} (u : nat -> X) {x : X} : tail (cons x u) == u
+Definition tail_cons {X : Type} (u : nat -> X) {x : X} : seq_tail (seq_cons x u) == u
   := fun _ => idpath.
 
 (** ** Equivalence relations on sequences.  *)
@@ -40,9 +37,9 @@ Definition seq_agree_lt {X : Type} (n : nat) (s t : nat -> X) : Type
 (** [seq_agree_lt] has an equivalent inductive definition. We don't use this equivalence, but include it in case it is useful in future work. *)
 Definition seq_agree_inductive {X : Type} (n : nat) (s t : nat -> X) : Type.
 Proof.
-  induction n in s, t |-*.
+  induction n in s, t |- *.
   - exact Unit.
-  - exact ((head s = head t) * (IHn (tail s) (tail t))).
+  - exact ((s 0 = t 0) * (IHn (seq_tail s) (seq_tail t))).
 Defined.
 
 Definition seq_agree_inductive_seq_agree_lt {X : Type} {n : nat}
@@ -65,7 +62,7 @@ Proof.
     exact (fst h).
   - induction n.
     + contradiction (not_lt_zero_r _ hm).
-    + exact (IHm _ (tail s) (tail t) (snd h) _).
+    + exact (IHm _ (seq_tail s) (seq_tail t) (snd h) _).
 Defined.
 
 Definition seq_agree_lt_iff_seq_agree_inductive
