@@ -1,0 +1,761 @@
+<html>
+<head>
+<title>Cofiber.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Cofiber.v</h1>
+
+<div class="code" title="File: Cofiber.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 75.757575757576%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc Basics.Equivalences.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 1
+Time: 0.006s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+Require Import Types.Unit Types.Paths Types.Universe Types.Sigma.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 2
+Time: 0.033s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 3
+Time: 0.017s">
+<div class="time" style="width: 51.515151515152%"></div>
+<pre>
+Require Import Colimits.Pushout Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.NullHomotopy.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 5
+Time: 0.012s">
+<div class="time" style="width: 36.363636363636%"></div>
+<pre>
+Require Import HFiber Limits.Pullback BlakersMassey.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Homotopy Cofibers *)
+
+(** ** Definition *)
+
+(** Homotopy cofibers or mapping cones are spaces constructed from a map [f : X -&gt; Y] by contracting the image of [f] inside [Y] to a point. They can be thought of as a kind of coimage or quotient. *)
+
+</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Cofiber {X Y : Type} (f : X -&gt; Y)
+  := Pushout f (const_tt X).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Constructors *)
+
+(** Any element of [Y] can be included in the cofiber. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cofib {X Y : Type} (f : X -&gt; Y) : Y -&gt; Cofiber f
+  := pushl.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We have a distinguished point in the cofiber, where the image of [f] is contracted to. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cf_apex {X Y : Type} (f : X -&gt; Y) : Cofiber f
+  := pushr tt.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given an element [x : X], we have the path [cfglue f x] from the [f x] to the [cf_apex]. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cfglue {X Y : Type} (f : X -&gt; Y) (x : X) : cofib f (f x) = cf_apex f
+  := pglue _.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Induction and recursion principles *)
+
+(** The recursion principle for the cofiber of [f : X -&gt; Y] requires a function [g : Y -&gt; Z] such that [g o f] is null homotopic, i.e. constant. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cofiber_rec {X Y Z : Type} (f : X -&gt; Y) (g : Y -&gt; Z)
+  (null : NullHomotopy (g o f))
+  : Cofiber f -&gt; Z.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+  snapply Pushout_rec.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact g.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; exact null.1.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (null.2 a).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The induction principle is similar, although requires a dependent form of null homotopy. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>Definition cofiber_ind {X Y : Type} (f : X -&gt; Y) (P : Cofiber f -&gt; Type)
+  (g : forall y, P (cofib f y))
+  (null : exists b, forall x, transport P (cfglue f x) (g (f x)) = b)
+  : forall x, P x.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+  snapply Pushout_ind.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y; apply g.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros []; exact null.1.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact null.2.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality *)
+
+</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Close Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The homotopy cofiber can be thought of as a functor from the category of arrows in [Type] to [Type]. *)
+
+(** 1-functorial action. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>Definition functor_cofiber {X Y X' Y' : Type} {f : X -&gt; Y} {f' : X' -&gt; Y'}
+  (g : X -&gt; X') (h : Y -&gt; Y') (p : h o f == f' o g)
+  : Cofiber f -&gt; Cofiber f'
+  := functor_pushout g h idmap p (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** 2-functorial action. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 63
+Time: 0.003s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>Definition functor_cofiber_homotopy {X Y X' Y' : Type} {f : X -&gt; Y} {f' : X' -&gt; Y'}
+  {g g' : X -&gt; X'} {h h' : Y -&gt; Y'} {p : h o f == f' o g} {p' : h' o f == f' o g'}
+  (u : g == g') (v : h == h') 
+  (r : forall x, p x @ ap f' (u x) = v (f x) @ p' x)
+  : functor_cofiber g h p == functor_cofiber g' h' p'.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+  snapply (functor_pushout_homotopic u v (fun _ =&gt; 1) r).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x; exact (concat_1p _ @ ap_const _ _).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The cofiber functor preserves the identity map. *) </pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>Definition functor_cofiber_idmap {X Y : Type} (f : X -&gt; Y)
+  : functor_cofiber (f:=f) idmap idmap (fun _ =&gt; 1) == idmap
+  := functor_pushout_idmap.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The cofiber functor preserves composition of squares. (When mapping parallel edges). *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 77
+Time: 0.007s">
+<div class="time" style="width: 21.212121212121%"></div>
+<pre>Definition functor_cofiber_compose {X Y X' Y' X'' Y'' : Type}
+  {f : X -&gt; Y} {f' : X' -&gt; Y'} {f'' : X'' -&gt; Y''}
+  {g : X -&gt; X'} {g' : X' -&gt; X''} {h : Y -&gt; Y'} {h' : Y' -&gt; Y''}
+  (p : h o f == f' o g) (p' : h' o f' == f'' o g')
+  : functor_cofiber (g' o g) (h' o h) (fun x =&gt; ap h' (p x) @ p' (g x))
+    == functor_cofiber g' h' p' o functor_cofiber g h p
+  := functor_pushout_compose g h idmap g' h' idmap p (fun _ =&gt; 1) p' (fun _ =&gt; 1).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Connectivity of cofibers *)
+
+(** The cofiber of an [n]-connected map is [n.+1]-connected. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isconnnected_cofiber (n : trunc_index) {X Y : Type} (f : X -&gt; Y)
+  {fc : IsConnMap n f}
+  : IsConnected n.+1 (Cofiber f).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isconnected_from_elim.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros C H' g.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (g (cf_apex _)).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+  snapply cofiber_ind.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 97
+Time: 0.009s">
+<div class="time" style="width: 27.272727272727%"></div>
+<pre> rapply (conn_map_elim n f).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap g (cfglue f x)).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists idpath.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+    lhs snapply transport_paths_Fl.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+    napply conn_map_comp.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 105
+Time: 0.002s">
+<div class="time" style="width: 6.0606060606061%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Comparison of fibers and cofibers *)
+
+</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fiber_to_path_cofiber {X Y : Type} (f : X -&gt; Y) (y : Y)
+  : hfiber f y -&gt; cofib f y = cf_apex f.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p].</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V napply (ap (cofib f) p).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cfglue.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Blakers-Massey implies that the comparison map is highly connected. *)</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isconnected_fiber_to_cofiber `{Univalence}
+  (n m : trunc_index) {X Y : Type} {ac : IsConnected m.+1 X}
+  (f : X -&gt; Y) {fc : IsConnMap n.+1 f} (y : Y)
+  : IsConnMap (m +2+ n) (fiber_to_path_cofiber f y).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* It's enough to check the connectivity of [functor_sigma idmap (fiber_to_path_cofiber f)]. *)
+ </pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>revert y; snapply conn_map_fiber.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We precompose with the equivalence [X &lt;~&gt; { y : Y &amp; hfiber f y }]. *)
+ </pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 125
+Time: 0.027s">
+<div class="time" style="width: 81.818181818182%"></div>
+<pre>rapply (cancelR_conn_map _ (equiv_fibration_replacement _)).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The Sigma-type [{ y : Y &amp; cofib f y = cf_apex f}] in the codomain is the fiber of the map [cofib f], and so it is equivalent to the pullback of the cospan in the pushout square defining [Cofiber f].  We postcompose with this equivalence. *)
+ </pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_hfiber _ _)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The composite is homotopic to the map from [blakers_massey_po], with the only difference being an extra [1 @ _]. *)
+ </pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 129
+Time: 0.001s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>snapply conn_map_homotopic.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 129
+Time: 0.003s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+  3: rapply blakers_massey_po.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Use [compute.] to see the details of the goal. *)
+ </pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>intros x.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 132
+Time: 0.004s">
+<div class="time" style="width: 12.121212121212%"></div>
+<pre>
+  apply (ap (fun z =&gt; (f x; tt; z))).</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold fiber_to_path_cofiber; simpl.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry; apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 135
+Time: 0.005s">
+<div class="time" style="width: 15.151515151515%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Cofiber.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

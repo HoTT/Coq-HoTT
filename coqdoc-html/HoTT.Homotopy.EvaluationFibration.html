@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Homotopy.EvaluationFibration</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Homotopy.EvaluationFibration</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a> <a class="idref" href="HoTT.Pointed.Core.html#"><span class="id" title="library">Pointed.Core</span></a> <a class="idref" href="HoTT.Homotopy.Cover.html#"><span class="id" title="library">Homotopy.Cover</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pointed_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1169"></a><h1 class="section">Evaluation fibrations and self-maps</h1>
+
+<div class="paragraph"> </div>
+
+ The type of unpointed self maps of A, pointed at the identity map. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="selfmaps" class="idref" href="#selfmaps"><span class="id" title="definition">selfmaps</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a> := <a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">[</span></a><a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:1"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">]</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The unrestricted evaluation map. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="ev" class="idref" href="#ev"><span class="id" title="definition">ev</span></a> (<a id="A:2" class="idref" href="#A:2"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>) : <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#selfmaps"><span class="id" title="definition">selfmaps</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:2"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Pointed.Core.html#dce20fa1e59aa814d0a053d0ce7a8a86"><span class="id" title="notation">-&gt;*</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:2"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Pointed.Core.html#Build_pMap"><span class="id" title="definition">Build_pMap</span></a> (<span class="id" title="keyword">fun</span> <a id="f:3" class="idref" href="#f:3"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#selfmaps"><span class="id" title="definition">selfmaps</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:2"><span class="id" title="variable">A</span></a> ⇒ <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#f:3"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Pointed.Core.html#::pointed_scope:'pt'"><span class="id" title="notation">pt</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The evaluation fibration of an unpointed map <span class="inlinecode"><a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="evfib" class="idref" href="#evfib"><span class="id" title="definition">evfib</span></a> {<a id="X:4" class="idref" href="#X:4"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>} {<a id="A:5" class="idref" href="#A:5"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:6" class="idref" href="#f:6"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#X:4"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:5"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Homotopy.Cover.html#comp"><span class="id" title="definition">comp</span></a> (<a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#X:4"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:5"><span class="id" title="variable">A</span></a>) (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#f:6"><span class="id" title="variable">f</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:5"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="g:7" class="idref" href="#g:7"><span class="id" title="binder">g</span></a> ⇒ <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#g:7"><span class="id" title="variable">g</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">pt</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> is pointed, then the evaluation fibration of <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> is too. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="pevfib" class="idref" href="#pevfib"><span class="id" title="definition">pevfib</span></a> {<a id="A:8" class="idref" href="#A:8"><span class="id" title="binder">A</span></a> <a id="X:9" class="idref" href="#X:9"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>} (<a id="f:10" class="idref" href="#f:10"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#X:9"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Pointed.Core.html#dce20fa1e59aa814d0a053d0ce7a8a86"><span class="id" title="notation">-&gt;*</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:8"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Homotopy.Cover.html#pcomp"><span class="id" title="definition">pcomp</span></a> (<a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#X:9"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:8"><span class="id" title="variable">A</span></a>) <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#f:10"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Pointed.Core.html#dce20fa1e59aa814d0a053d0ce7a8a86"><span class="id" title="notation">-&gt;*</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:8"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Pointed.Core.html#Build_pMap"><span class="id" title="definition">Build_pMap</span></a> (<span class="id" title="keyword">fun</span> <a id="g:11" class="idref" href="#g:11"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Homotopy.Cover.html#pcomp"><span class="id" title="definition">pcomp</span></a> (<a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#X:9"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:8"><span class="id" title="variable">A</span></a>) <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#f:10"><span class="id" title="variable">f</span></a> ⇒ <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#g:11"><span class="id" title="variable">g</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">pt</span></a>) (<a class="idref" href="HoTT.Pointed.Core.html#point_eq"><span class="id" title="definition">point_eq</span></a> <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#f:10"><span class="id" title="variable">f</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The evaluation map of the identity. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="ev1" class="idref" href="#ev1"><span class="id" title="definition">ev1</span></a> (<a id="A:12" class="idref" href="#A:12"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>) := <a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#pevfib"><span class="id" title="definition">pevfib</span></a> (<span class="id" title="var">A</span>:=<a class="idref" href="HoTT.Homotopy.EvaluationFibration.html#A:12"><span class="id" title="variable">A</span></a>) <a class="idref" href="HoTT.Pointed.Core.html#pmap_idmap"><span class="id" title="definition">pmap_idmap</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

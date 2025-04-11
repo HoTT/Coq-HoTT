@@ -1,0 +1,844 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Basics.Trunc</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Basics.Trunc</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab346"></a><h1 class="section">Truncatedness</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Contractible.html#"><span class="id" title="library">Basics.Contractible</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Equivalences.html#"><span class="id" title="library">Basics.Equivalences</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Nat.html#"><span class="id" title="library">Basics.Nat</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Iff.html#"><span class="id" title="library">Basics.Iff</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">trunc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+<span class="id" title="keyword">Generalizable Variables</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> <span class="id" title="var">f</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab347"></a><h2 class="section">Notation for truncation-levels</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Increase a truncation index by a natural number. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="trunc_index_inc" class="idref" href="#trunc_index_inc"><span class="id" title="definition">trunc_index_inc@</span></a>{} (<a id="k:1" class="idref" href="#k:1"><span class="id" title="binder">k</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) (<a id="n:2" class="idref" href="#n:2"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#n:2"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#k:1"><span class="id" title="variable">k</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc:3"><span class="id" title="definition">trunc_index_inc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#k:1"><span class="id" title="variable">k</span></a> <span class="id" title="var">m</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">).+1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This is a variation that inserts the successor operations in the other order.  This is sometimes convenient. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="trunc_index_inc'" class="idref" href="#trunc_index_inc'"><span class="id" title="definition">trunc_index_inc'@</span></a>{} (<a id="k:5" class="idref" href="#k:5"><span class="id" title="binder">k</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) (<a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#n:6"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#k:5"><span class="id" title="variable">k</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span> ⇒ (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc':7"><span class="id" title="definition">trunc_index_inc'</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#k:5"><span class="id" title="variable">k</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_inc'_succ" class="idref" href="#trunc_index_inc'_succ"><span class="id" title="definition">trunc_index_inc'_succ@</span></a>{} (<a id="n:9" class="idref" href="#n:9"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="k:10" class="idref" href="#k:10"><span class="id" title="binder">k</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc'"><span class="id" title="definition">trunc_index_inc'</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#k:10"><span class="id" title="variable">k</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:9"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc'"><span class="id" title="definition">trunc_index_inc'</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#k:10"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:9"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">).+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">k</span>; <span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IHn</span>; <span class="id" title="tactic">intro</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="var">IHn</span> <span class="id" title="var">k</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_inc_agree" class="idref" href="#trunc_index_inc_agree"><span class="id" title="definition">trunc_index_inc_agree@</span></a>{} (<a id="k:11" class="idref" href="#k:11"><span class="id" title="binder">k</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) (<a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc"><span class="id" title="definition">trunc_index_inc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#k:11"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc'"><span class="id" title="definition">trunc_index_inc'</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#k:11"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:12"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IHn</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">_</span> <span class="id" title="var">IHn</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc'_succ"><span class="id" title="definition">trunc_index_inc'_succ</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="nat_to_trunc_index" class="idref" href="#nat_to_trunc_index"><span class="id" title="definition">nat_to_trunc_index@</span></a>{} (<a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc"><span class="id" title="definition">trunc_index_inc</span></a> <a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:13"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">).+2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Basics.Trunc.html#nat_to_trunc_index"><span class="id" title="definition">nat_to_trunc_index</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#nat_to_trunc_index"><span class="id" title="definition">:</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#nat_to_trunc_index"><span class="id" title="definition">nat</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#nat_to_trunc_index"><span class="id" title="definition">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#nat_to_trunc_index"><span class="id" title="definition">trunc_index</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_inc'_0n" class="idref" href="#trunc_index_inc'_0n"><span class="id" title="definition">trunc_index_inc'_0n</span></a> (<a id="n:14" class="idref" href="#n:14"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc'"><span class="id" title="definition">trunc_index_inc'</span></a> 0%<span class="id" title="var">nat</span> <a class="idref" href="HoTT.Basics.Trunc.html#n:14"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:14"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">p</span>].<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc'_succ"><span class="id" title="definition">trunc_index_inc'_succ</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">_</span> <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="int_to_trunc_index" class="idref" href="#int_to_trunc_index"><span class="id" title="definition">int_to_trunc_index@</span></a>{} (<a id="v:15" class="idref" href="#v:15"><span class="id" title="binder">v</span></a> : <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#int"><span class="id" title="inductive">Decimal.int</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#v:15"><span class="id" title="variable">v</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Decimal.Pos</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#nat_to_trunc_index"><span class="id" title="definition">nat_to_trunc_index</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#of_uint"><span class="id" title="definition">Nat.of_uint</span></a> <span class="id" title="var">d</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Decimal.Neg</span></a> <span class="id" title="var">d</span> ⇒ <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Nat.html#of_uint"><span class="id" title="definition">Nat.of_uint</span></a> <span class="id" title="var">d</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 2%<span class="id" title="var">nat</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> <a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 1%<span class="id" title="var">nat</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0%<span class="id" title="var">nat</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">.+2</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="num_int_to_trunc_index" class="idref" href="#num_int_to_trunc_index"><span class="id" title="definition">num_int_to_trunc_index@</span></a>{} (<a id="v:17" class="idref" href="#v:17"><span class="id" title="binder">v</span></a> : <a class="idref" href="HoTT.Basics.Numeral.html#int"><span class="id" title="inductive">Numeral.int</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#v:17"><span class="id" title="variable">v</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numeral.html#IntDec"><span class="id" title="constructor">Numeral.IntDec</span></a> <span class="id" title="var">v</span> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#int_to_trunc_index"><span class="id" title="definition">int_to_trunc_index</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#v:17"><span class="id" title="variable">v</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numeral.html#IntHex"><span class="id" title="constructor">Numeral.IntHex</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="trunc_index_to_little_uint" class="idref" href="#trunc_index_to_little_uint"><span class="id" title="definition">trunc_index_to_little_uint@</span></a>{} <a id="n:19" class="idref" href="#n:19"><span class="id" title="binder">n</span></a> <a id="acc:20" class="idref" href="#acc:20"><span class="id" title="binder">acc</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#n:19"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#acc:20"><span class="id" title="variable">acc</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#acc:20"><span class="id" title="variable">acc</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">.+2</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#acc:20"><span class="id" title="variable">acc</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#trunc_S"><span class="id" title="constructor">trunc_S</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_to_little_uint:21"><span class="id" title="definition">trunc_index_to_little_uint</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:19"><span class="id" title="variable">n</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Little.succ"><span class="id" title="definition">Decimal.Little.succ</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#acc:20"><span class="id" title="variable">acc</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_to_int" class="idref" href="#trunc_index_to_int"><span class="id" title="definition">trunc_index_to_int@</span></a>{} <a id="n:23" class="idref" href="#n:23"><span class="id" title="binder">n</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#n:23"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Decimal.Neg</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#to_uint"><span class="id" title="definition">Nat.to_uint</span></a> 2)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Decimal.Neg</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#to_uint"><span class="id" title="definition">Nat.to_uint</span></a> 1)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Decimal.Pos</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#rev"><span class="id" title="definition">Decimal.rev</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_to_little_uint"><span class="id" title="definition">trunc_index_to_little_uint</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#zero"><span class="id" title="abbreviation">Decimal.zero</span></a>))<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_to_num_int" class="idref" href="#trunc_index_to_num_int"><span class="id" title="definition">trunc_index_to_num_int@</span></a>{} <a id="n:25" class="idref" href="#n:25"><span class="id" title="binder">n</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Numeral.html#IntDec"><span class="id" title="constructor">Numeral.IntDec</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_to_int"><span class="id" title="definition">trunc_index_to_int</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:25"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This allows us to use notation like (-2) and 42 for a <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Number Notation</span> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#num_int_to_trunc_index"><span class="id" title="definition">num_int_to_trunc_index</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_to_num_int"><span class="id" title="definition">trunc_index_to_num_int</span></a><br/>
+&nbsp;&nbsp;: <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Sends a <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span> to the natural number <span class="inlinecode"><span class="id" title="var">n</span>+2</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="trunc_index_to_nat" class="idref" href="#trunc_index_to_nat"><span class="id" title="definition">trunc_index_to_nat</span></a> (<a id="n:26" class="idref" href="#n:26"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#n:26"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#minus_two"><span class="id" title="constructor">minus_two</span></a> ⇒ 0%<span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">n'</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> ⇒ <a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_to_nat:27"><span class="id" title="definition">trunc_index_to_nat</span></a> <span class="id" title="var">n'</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">).+1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab348"></a><h2 class="section">Arithmetic on truncation-levels.</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="trunc_index_add" class="idref" href="#trunc_index_add"><span class="id" title="definition">trunc_index_add@</span></a>{} (<a id="m:29" class="idref" href="#m:29"><span class="id" title="binder">m</span></a> <a id="n:30" class="idref" href="#n:30"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#m:29"><span class="id" title="variable">m</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| -2 ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#n:30"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">m'</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_add:31"><span class="id" title="definition">trunc_index_add</span></a> <span class="id" title="var">m'</span> <a class="idref" href="HoTT.Basics.Trunc.html#n:30"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">).+1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="5c37b2558ec22aeb7a122cb85ff5d685" class="idref" href="#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">&quot;</span></a>m +2+ n" := (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_add"><span class="id" title="definition">trunc_index_add</span></a> <span class="id" title="var">m</span> <span class="id" title="var">n</span>) : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_add_minus_two" class="idref" href="#trunc_index_add_minus_two"><span class="id" title="definition">trunc_index_add_minus_two@</span></a>{} <a id="m:33" class="idref" href="#m:33"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#m:33"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> -2 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:33"><span class="id" title="variable">m</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">m</span> <span class="id" title="var">m</span> <span class="id" title="var">IHm</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_add_succ" class="idref" href="#trunc_index_add_succ"><span class="id" title="definition">trunc_index_add_succ@</span></a>{} <a id="m:34" class="idref" href="#m:34"><span class="id" title="binder">m</span></a> <a id="n:35" class="idref" href="#n:35"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#m:34"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:35"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#m:34"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:35"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">).+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">m</span> <span class="id" title="var">m</span> <span class="id" title="var">IHm</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_add_comm" class="idref" href="#trunc_index_add_comm"><span class="id" title="definition">trunc_index_add_comm@</span></a>{} <a id="m:36" class="idref" href="#m:36"><span class="id" title="binder">m</span></a> <a id="n:37" class="idref" href="#n:37"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#m:36"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:37"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:37"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:36"><span class="id" title="variable">m</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IHn</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_add_minus_two"><span class="id" title="definition">trunc_index_add_minus_two</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_add_succ"><span class="id" title="definition">trunc_index_add_succ</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Basics.Overture.html#trunc_S"><span class="id" title="constructor">trunc_S</span></a> <span class="id" title="var">IHn</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="trunc_index_leq" class="idref" href="#trunc_index_leq"><span class="id" title="definition">trunc_index_leq@</span></a>{} (<a id="m:38" class="idref" href="#m:38"><span class="id" title="binder">m</span></a> <a id="n:39" class="idref" href="#n:39"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Trunc.html#m:38"><span class="id" title="variable">m</span></a>, <a class="idref" href="HoTT.Basics.Trunc.html#n:39"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| -2, <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">m'</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>, -2 ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">m'</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>, <span class="id" title="var">n'</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_leq:40"><span class="id" title="definition">trunc_index_leq</span></a> <span class="id" title="var">m'</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Existing Class</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_leq"><span class="id" title="definition">trunc_index_leq</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="20142177726a7a019ee7c2fb6997f6d8" class="idref" href="#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">&quot;</span></a>m &lt;= n" := (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_leq"><span class="id" title="class">trunc_index_leq</span></a> <span class="id" title="var">m</span> <span class="id" title="var">n</span>) : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="trunc_index_leq_minus_two_n" class="idref" href="#trunc_index_leq_minus_two_n"><span class="id" title="instance">trunc_index_leq_minus_two_n@</span></a>{} <a id="n:43" class="idref" href="#n:43"><span class="id" title="binder">n</span></a> : -2 <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:43"><span class="id" title="variable">n</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="trunc_index_leq_succ" class="idref" href="#trunc_index_leq_succ"><span class="id" title="instance">trunc_index_leq_succ@</span></a>{} <a id="n:44" class="idref" href="#n:44"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#n:44"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:44"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_pred" class="idref" href="#trunc_index_pred"><span class="id" title="definition">trunc_index_pred@</span></a>{} : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [|<span class="id" title="var">m</span>].<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (-2).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="::trunc_scope:x_'.-1'" class="idref" href="#::trunc_scope:x_'.-1'"><span class="id" title="notation">&quot;</span></a>n '.-1'" := (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_pred"><span class="id" title="definition">trunc_index_pred</span></a> <span class="id" title="var">n</span>) : <span class="id" title="var">trunc_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="::trunc_scope:x_'.-2'" class="idref" href="#::trunc_scope:x_'.-2'"><span class="id" title="notation">&quot;</span></a>n '.-2'" := (<span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1.-1</span></a>) : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_succ_pred" class="idref" href="#trunc_index_succ_pred"><span class="id" title="definition">trunc_index_succ_pred@</span></a>{} (<a id="n:45" class="idref" href="#n:45"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#n:45"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">).+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:45"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_succ_pred'" class="idref" href="#trunc_index_succ_pred'"><span class="id" title="definition">trunc_index_succ_pred'@</span></a>{} (<a id="n:46" class="idref" href="#n:46"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: -1 <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:46"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#n:46"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">).+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:46"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_add_pred" class="idref" href="#trunc_index_add_pred"><span class="id" title="definition">trunc_index_add_pred@</span></a>{} (<a id="m:47" class="idref" href="#m:47"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) (<a id="n:48" class="idref" href="#n:48"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#m:47"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:48"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#m:47"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:48"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">).-1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;RHS&nbsp;is&nbsp;definitionally&nbsp;<span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+2+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>,&nbsp;which&nbsp;is&nbsp;definitionally&nbsp;<span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+2+</span> <span class="inlinecode"><span class="id" title="var">n</span>.-1.+1</span>,&nbsp;so&nbsp;this&nbsp;finishes&nbsp;it&nbsp;off:&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>; <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_add_succ"><span class="id" title="definition">trunc_index_add_succ</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_add_pred'" class="idref" href="#trunc_index_add_pred'"><span class="id" title="definition">trunc_index_add_pred'@</span></a>{} (<a id="m:49" class="idref" href="#m:49"><span class="id" title="binder">m</span></a> <a id="n:50" class="idref" href="#n:50"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: -1 <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:50"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:49"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:50"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">.-1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#m:49"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:50"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::trunc_scope:x_'.-1'"><span class="id" title="notation">).-1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;RHS&nbsp;is&nbsp;definitionally&nbsp;<span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+2+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>,&nbsp;which&nbsp;is&nbsp;definitionally&nbsp;<span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+2+</span> <span class="inlinecode"><span class="id" title="var">n</span>.-1.+1</span>,&nbsp;so&nbsp;this&nbsp;finishes&nbsp;it&nbsp;off:&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>; <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_add_succ"><span class="id" title="definition">trunc_index_add_succ</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_leq_minus_two" class="idref" href="#trunc_index_leq_minus_two"><span class="id" title="definition">trunc_index_leq_minus_two@</span></a>{} {<a id="n:51" class="idref" href="#n:51"><span class="id" title="binder">n</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#n:51"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> -2 <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:51"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> -2.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_leq_succ'" class="idref" href="#trunc_index_leq_succ'"><span class="id" title="definition">trunc_index_leq_succ'@</span></a>{} <a id="n:52" class="idref" href="#n:52"><span class="id" title="binder">n</span></a> <a id="m:53" class="idref" href="#m:53"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#n:52"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:53"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:52"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:53"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">m</span> <span class="id" title="var">IHm</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHn</span>, <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="trunc_index_leq_refl" class="idref" href="#trunc_index_leq_refl"><span class="id" title="instance">trunc_index_leq_refl@</span></a>{}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Reflexive"><span class="id" title="class">Reflexive</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_leq"><span class="id" title="class">trunc_index_leq</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="trunc_index_leq_transitive" class="idref" href="#trunc_index_leq_transitive"><span class="id" title="instance">trunc_index_leq_transitive@</span></a>{}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Transitive"><span class="id" title="class">Transitive</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_leq"><span class="id" title="class">trunc_index_leq</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span> <span class="id" title="var">c</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">b</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">b</span> <span class="id" title="var">IHb</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">c</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_leq_minus_two"><span class="id" title="definition">trunc_index_leq_minus_two</span></a> <span class="id" title="var">p</span>). }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">a</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">a</span> <span class="id" title="var">IHa</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">c</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">c</span> <span class="id" title="var">IHc</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>, <span class="id" title="var">q</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">IHb</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_leq_add" class="idref" href="#trunc_index_leq_add"><span class="id" title="definition">trunc_index_leq_add@</span></a>{} <a id="n:54" class="idref" href="#n:54"><span class="id" title="binder">n</span></a> <a id="m:55" class="idref" href="#m:55"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#n:54"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:55"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:54"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">m</span> <span class="id" title="var">m</span> <span class="id" title="var">IHm</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_leq_transitive"><span class="id" title="instance">trunc_index_leq_transitive</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_leq_add'" class="idref" href="#trunc_index_leq_add'"><span class="id" title="definition">trunc_index_leq_add'@</span></a>{} <a id="n:56" class="idref" href="#n:56"><span class="id" title="binder">n</span></a> <a id="m:57" class="idref" href="#m:57"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#n:56"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:56"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#5c37b2558ec22aeb7a122cb85ff5d685"><span class="id" title="notation">+2+</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:57"><span class="id" title="variable">m</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_add_comm"><span class="id" title="definition">trunc_index_add_comm</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_leq_add"><span class="id" title="definition">trunc_index_leq_add</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="trunc_index_min" class="idref" href="#trunc_index_min"><span class="id" title="definition">trunc_index_min@</span></a>{} (<a id="n:58" class="idref" href="#n:58"><span class="id" title="binder">n</span></a> <a id="m:59" class="idref" href="#m:59"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (-2).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (-2).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">(</span></a><span class="id" title="var">trunc_index_min</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">).+1</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_min_minus_two" class="idref" href="#trunc_index_min_minus_two"><span class="id" title="definition">trunc_index_min_minus_two@</span></a>{} <a id="n:61" class="idref" href="#n:61"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_min"><span class="id" title="definition">trunc_index_min</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:61"><span class="id" title="variable">n</span></a> (-2) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> -2.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_min_swap" class="idref" href="#trunc_index_min_swap"><span class="id" title="definition">trunc_index_min_swap@</span></a>{} <a id="n:62" class="idref" href="#n:62"><span class="id" title="binder">n</span></a> <a id="m:63" class="idref" href="#m:63"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_min"><span class="id" title="definition">trunc_index_min</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:62"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:63"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_min"><span class="id" title="definition">trunc_index_min</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:63"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:62"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IHn</span>; <span class="id" title="tactic">intro</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_min_minus_two"><span class="id" title="definition">trunc_index_min_minus_two</span></a>. }<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">m</span> <span class="id" title="var">m</span> <span class="id" title="var">IHm</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <span class="id" title="var">IHn</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_min_path" class="idref" href="#trunc_index_min_path"><span class="id" title="definition">trunc_index_min_path@</span></a>{} <a id="n:64" class="idref" href="#n:64"><span class="id" title="binder">n</span></a> <a id="m:65" class="idref" href="#m:65"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_min"><span class="id" title="definition">trunc_index_min</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:64"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:65"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:64"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_min"><span class="id" title="definition">trunc_index_min</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:64"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:65"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:65"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m</span>; <span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IHn</span>; <span class="id" title="tactic">intro</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">m</span> <span class="id" title="var">m</span> <span class="id" title="var">IHm</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">IHn</span> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="var">cbn</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_min_leq_left" class="idref" href="#trunc_index_min_leq_left"><span class="id" title="definition">trunc_index_min_leq_left@</span></a>{} (<a id="n:66" class="idref" href="#n:66"><span class="id" title="binder">n</span></a> <a id="m:67" class="idref" href="#m:67"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_min"><span class="id" title="definition">trunc_index_min</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:66"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:67"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:66"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>); [ | <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IHn</span> ].<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>); [ | <span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">IHm</span> ].<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">try</span> <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">IHn</span> <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trunc_index_min_leq_right" class="idref" href="#trunc_index_min_leq_right"><span class="id" title="definition">trunc_index_min_leq_right@</span></a>{} (<a id="n:68" class="idref" href="#n:68"><span class="id" title="binder">n</span></a> <a id="m:69" class="idref" href="#m:69"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_min"><span class="id" title="definition">trunc_index_min</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:68"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:69"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#m:69"><span class="id" title="variable">m</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>); [ | <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IHn</span> ].<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#trunc_index_ind"><span class="id" title="definition">trunc_index_ind</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>); [ | <span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">IHm</span> ].<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">try</span> <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">IHn</span> <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab349"></a><h2 class="section">Truncatedness proper.</h2>
+
+<div class="paragraph"> </div>
+
+ A contractible space is (-2)-truncated, by definition. This function is the identity, so there is never any need to actually use it, but it exists to be found in searches. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="contr_istrunc_minus_two" class="idref" href="#contr_istrunc_minus_two"><span class="id" title="definition">contr_istrunc_minus_two</span></a> `{<a id="H:71" class="idref" href="#H:71"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> (-2) <a id="A:70" class="idref" href="#A:70"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:70"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Trunc.html#H:71"><span class="id" title="variable">H</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Truncation levels are cumulative. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="istrunc_paths'" class="idref" href="#istrunc_paths'"><span class="id" title="instance">istrunc_paths'</span></a> {<a id="n:72" class="idref" href="#n:72"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>} {<a id="A:73" class="idref" href="#A:73"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} `{<a id="IsTrunc0:74" class="idref" href="#IsTrunc0:74"><span class="id" title="binder">IsTrunc</span></a> <a id="IsTrunc0:74" class="idref" href="#IsTrunc0:74"><span class="id" title="binder">n</span></a> <a id="IsTrunc0:74" class="idref" href="#IsTrunc0:74"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:75" class="idref" href="#x:75"><span class="id" title="binder">x</span></a> <a id="y:76" class="idref" href="#y:76"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#A:73"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:72"><span class="id" title="variable">n</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#x:75"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#y:76"><span class="id" title="variable">y</span></a>) | 1000.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">H</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Contractible.html#contr_paths_contr"><span class="id" title="instance">contr_paths_contr</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>. <span class="id" title="var">rapply</span> <span class="id" title="var">IH</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="istrunc_succ" class="idref" href="#istrunc_succ"><span class="id" title="instance">istrunc_succ</span></a> {<a id="n:77" class="idref" href="#n:77"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>} {<a id="A:78" class="idref" href="#A:78"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} `{<a id="IsTrunc0:79" class="idref" href="#IsTrunc0:79"><span class="id" title="binder">IsTrunc</span></a> <a id="IsTrunc0:79" class="idref" href="#IsTrunc0:79"><span class="id" title="binder">n</span></a> <a id="IsTrunc0:79" class="idref" href="#IsTrunc0:79"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:77"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:78"><span class="id" title="variable">A</span></a> | 1000.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_paths'"><span class="id" title="instance">istrunc_paths'</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This could be an <span class="inlinecode"><span class="id" title="keyword">Instance</span></span> (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a></span> <span class="inlinecode">≤</span> <span class="inlinecode"><span class="id" title="var">n</span></span>, so it would only ever be used trivially.  
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="istrunc_leq" class="idref" href="#istrunc_leq"><span class="id" title="definition">istrunc_leq</span></a> {<a id="m:80" class="idref" href="#m:80"><span class="id" title="binder">m</span></a> <a id="n:81" class="idref" href="#n:81"><span class="id" title="binder">n</span></a>} (<a id="Hmn:82" class="idref" href="#Hmn:82"><span class="id" title="binder">Hmn</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#m:80"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:81"><span class="id" title="variable">n</span></a>) `{<a id="IsTrunc0:84" class="idref" href="#IsTrunc0:84"><span class="id" title="binder">IsTrunc</span></a> <a id="IsTrunc0:84" class="idref" href="#IsTrunc0:84"><span class="id" title="binder">m</span></a> <a id="A:83" class="idref" href="#A:83"><span class="id" title="binder"><span id="IsTrunc0:84" class="id">A</span></span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:81"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:83"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">A</span>; <span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n'</span> <span class="id" title="var">IH</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [ | <span class="id" title="var">m'</span>] <span class="id" title="var">Hmn</span> <span class="id" title="var">A</span> ? .<br/>
+&nbsp;&nbsp;- <span class="comment">(*&nbsp;-2,&nbsp;-2&nbsp;*)</span> <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;- <span class="comment">(*&nbsp;S&nbsp;m',&nbsp;-2&nbsp;*)</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">Hmn</span>.<br/>
+&nbsp;&nbsp;- <span class="comment">(*&nbsp;-2,&nbsp;S&nbsp;n'&nbsp;*)</span> <span class="id" title="tactic">apply</span> @<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_succ"><span class="id" title="instance">istrunc_succ</span></a>, (<span class="id" title="var">IH</span> (-2)); <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;- <span class="comment">(*&nbsp;S&nbsp;m',&nbsp;S&nbsp;n'&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">apply</span> (<span class="id" title="var">IH</span> <span class="id" title="var">m'</span>); <span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">typeclass_instances</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In particular, a contractible type, hprop, or hset is truncated at all higher levels.  We don't allow these to be used as idmaps, since there would be no point to it. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="istrunc_contr" class="idref" href="#istrunc_contr"><span class="id" title="definition">istrunc_contr</span></a> {<a id="n:85" class="idref" href="#n:85"><span class="id" title="binder">n</span></a>} {<a id="A:86" class="idref" href="#A:86"><span class="id" title="binder">A</span></a>} `{<a id="Contr0:87" class="idref" href="#Contr0:87"><span class="id" title="binder">Contr</span></a> <a id="Contr0:87" class="idref" href="#Contr0:87"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:85"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:86"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= (@<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_leq"><span class="id" title="definition">istrunc_leq</span></a> (-2) <a class="idref" href="HoTT.Basics.Trunc.html#n:85"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="istrunc_hprop" class="idref" href="#istrunc_hprop"><span class="id" title="definition">istrunc_hprop</span></a> {<a id="n:88" class="idref" href="#n:88"><span class="id" title="binder">n</span></a>} {<a id="A:89" class="idref" href="#A:89"><span class="id" title="binder">A</span></a>} `{<a id="IsHProp0:90" class="idref" href="#IsHProp0:90"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:90" class="idref" href="#IsHProp0:90"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:88"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">.+2</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:89"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= (@<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_leq"><span class="id" title="definition">istrunc_leq</span></a> (-1) <a class="idref" href="HoTT.Basics.Trunc.html#n:88"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">.+2</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="istrunc_hset" class="idref" href="#istrunc_hset"><span class="id" title="definition">istrunc_hset</span></a> {<a id="n:91" class="idref" href="#n:91"><span class="id" title="binder">n</span></a>} {<a id="A:92" class="idref" href="#A:92"><span class="id" title="binder">A</span></a>} `{<a id="IsHSet0:93" class="idref" href="#IsHSet0:93"><span class="id" title="binder">IsHSet</span></a> <a id="IsHSet0:93" class="idref" href="#IsHSet0:93"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:91"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#10fc77c461ebbbc67176dfb3cae95a72"><span class="id" title="notation">.+3</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:92"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= (@<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_leq"><span class="id" title="definition">istrunc_leq</span></a> 0 <a class="idref" href="HoTT.Basics.Trunc.html#n:91"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#10fc77c461ebbbc67176dfb3cae95a72"><span class="id" title="notation">.+3</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Consider the preceding definitions as instances for typeclass search, but only if the requisite hypothesis is already a known assumption; otherwise they result in long or interminable searches. 
+</div>
+<div class="code">
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Immediate</span> <span class="id" title="var">istrunc_contr</span> : <span class="id" title="var">typeclass_instances</span>.<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Immediate</span> <span class="id" title="var">istrunc_hprop</span> : <span class="id" title="var">typeclass_instances</span>.<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Immediate</span> <span class="id" title="var">istrunc_hset</span> : <span class="id" title="var">typeclass_instances</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Equivalence preserves truncation (this is, of course, trivial with univalence).  This is not an <span class="inlinecode"><span class="id" title="keyword">Instance</span></span> because it causes infinite loops. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="istrunc_isequiv_istrunc" class="idref" href="#istrunc_isequiv_istrunc"><span class="id" title="definition">istrunc_isequiv_istrunc</span></a> <a id="A:94" class="idref" href="#A:94"><span class="id" title="binder">A</span></a> {<a id="B:95" class="idref" href="#B:95"><span class="id" title="binder">B</span></a>} (<a id="f:96" class="idref" href="#f:96"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#A:94"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:95"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;`{<a id="IsTrunc0:98" class="idref" href="#IsTrunc0:98"><span class="id" title="binder">IsTrunc</span></a> <a id="n:97" class="idref" href="#n:97"><span class="id" title="binder"><span id="IsTrunc0:98" class="id">n</span></span></a> <a id="IsTrunc0:98" class="idref" href="#IsTrunc0:98"><span class="id" title="binder">A</span></a>} `{<a id="H:99" class="idref" href="#H:99"><span class="id" title="binder">IsEquiv</span></a> <a id="H:99" class="idref" href="#H:99"><span class="id" title="binder">A</span></a> <a id="H:99" class="idref" href="#H:99"><span class="id" title="binder">B</span></a> <a id="H:99" class="idref" href="#H:99"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:97"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:95"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">B</span>; <span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> ? <span class="id" title="var">B</span> <span class="id" title="var">f</span> ?.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#contr_equiv"><span class="id" title="lemma">contr_equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">IH</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<span class="id" title="var">f</span><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a>)<a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">)^-1</span></a> <span class="id" title="var">_</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="istrunc_equiv_istrunc" class="idref" href="#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> <a id="A:100" class="idref" href="#A:100"><span class="id" title="binder">A</span></a> {<a id="B:101" class="idref" href="#B:101"><span class="id" title="binder">B</span></a>} (<a id="f:102" class="idref" href="#f:102"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#A:100"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:101"><span class="id" title="variable">B</span></a>) `{<a id="IsTrunc0:104" class="idref" href="#IsTrunc0:104"><span class="id" title="binder">IsTrunc</span></a> <a id="n:103" class="idref" href="#n:103"><span class="id" title="binder"><span id="IsTrunc0:104" class="id">n</span></span></a> <a id="IsTrunc0:104" class="idref" href="#IsTrunc0:104"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:103"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:101"><span class="id" title="variable">B</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_isequiv_istrunc"><span class="id" title="definition">istrunc_isequiv_istrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:100"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#f:102"><span class="id" title="variable">f</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab350"></a><h2 class="section">Truncated morphisms</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="IsTruncMap" class="idref" href="#IsTruncMap"><span class="id" title="inductive, record"><span id="IsTruncMap" class="id">IsTruncMap</span></span></a> (<a id="n:105" class="idref" href="#n:105"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) {<a id="X:106" class="idref" href="#X:106"><span class="id" title="binder">X</span></a> <a id="Y:107" class="idref" href="#Y:107"><span class="id" title="binder">Y</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:108" class="idref" href="#f:108"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#X:106"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#Y:107"><span class="id" title="variable">Y</span></a>)<br/>
+&nbsp;&nbsp;:= <a id="istruncmap_fiber" class="idref" href="#istruncmap_fiber"><span class="id" title="constructor, projection"><span id="istruncmap_fiber" class="id">istruncmap_fiber</span></span></a> :: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="y:110" class="idref" href="#y:110"><span class="id" title="binder">y</span></a>:<a class="idref" href="HoTT.Basics.Trunc.html#Y:107"><span class="id" title="variable">Y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:105"><span class="id" title="variable">n</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#hfiber"><span class="id" title="definition">hfiber</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#f:108"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#y:110"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="IsEmbedding" class="idref" href="#IsEmbedding"><span class="id" title="abbreviation">IsEmbedding</span></a> := (<a class="idref" href="HoTT.Basics.Trunc.html#IsTruncMap"><span class="id" title="class">IsTruncMap</span></a> (-1)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab351"></a><h2 class="section">Universes of truncated types</h2>
+
+<div class="paragraph"> </div>
+
+ It is convenient for some purposes to consider the universe of all n-truncated types (within a given universe of types).  In particular, this allows us to state the important fact that each such universe is itself (n+1)-truncated. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="TruncType" class="idref" href="#TruncType"><span class="id" title="definition, record"><span id="TruncType_rect" class="id"><span id="TruncType_ind" class="id"><span id="TruncType_rec" class="id"><span id="TruncType_sind" class="id">TruncType</span></span></span></span></span></a> (<a id="n:112" class="idref" href="#n:112"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="trunctype_type" class="idref" href="#trunctype_type"><span class="id" title="projection">trunctype_type</span></a> : <span class="id" title="keyword">Type</span> ;<br/>
+&nbsp;&nbsp;<a id="trunctype_istrunc" class="idref" href="#trunctype_istrunc"><span class="id" title="projection">trunctype_istrunc</span></a> :: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:112"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunctype_type:114"><span class="id" title="method">trunctype_type</span></a><br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Trunc.html#Build_TruncType"><span class="id" title="constructor">Build_TruncType</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> {<span class="id" title="var">_</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunctype_type"><span class="id" title="projection">trunctype_type</span></a> {<span class="id" title="var">_</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunctype_istrunc"><span class="id" title="projection">trunctype_istrunc</span></a> [<span class="id" title="var">_</span>] <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Basics.Trunc.html#trunctype_type"><span class="id" title="projection">trunctype_type</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunctype_type"><span class="id" title="projection">:</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunctype_type"><span class="id" title="projection">TruncType</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunctype_type"><span class="id" title="projection">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#trunctype_type"><span class="id" title="projection">Sortclass</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="::type_scope:x_'-Type'" class="idref" href="#::type_scope:x_'-Type'"><span class="id" title="notation">&quot;</span></a>n -Type" := (<a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">TruncType</span></a> <span class="id" title="var">n</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="HProp" class="idref" href="#HProp"><span class="id" title="abbreviation">HProp</span></a> := <a class="idref" href="HoTT.Basics.Trunc.html#::type_scope:x_'-Type'"><span class="id" title="notation">(</span></a>-1<a class="idref" href="HoTT.Basics.Trunc.html#::type_scope:x_'-Type'"><span class="id" title="notation">)-</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::type_scope:x_'-Type'"><span class="id" title="notation">Type</span></a>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="HSet" class="idref" href="#HSet"><span class="id" title="abbreviation">HSet</span></a> := 0<a class="idref" href="HoTT.Basics.Trunc.html#::type_scope:x_'-Type'"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Basics.Trunc.html#::type_scope:x_'-Type'"><span class="id" title="notation">Type</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="Build_HProp" class="idref" href="#Build_HProp"><span class="id" title="abbreviation">Build_HProp</span></a> := (<a class="idref" href="HoTT.Basics.Trunc.html#Build_TruncType"><span class="id" title="constructor">Build_TruncType</span></a> (-1)).<br/>
+<span class="id" title="keyword">Notation</span> <a id="Build_HSet" class="idref" href="#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> := (<a class="idref" href="HoTT.Basics.Trunc.html#Build_TruncType"><span class="id" title="constructor">Build_TruncType</span></a> 0).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This is (as of October 2014) the only <span class="inlinecode"><span class="id" title="var">Canonical</span></span> <span class="inlinecode"><span class="id" title="keyword">Structure</span></span> in the library.  It would be nice to do without it, in the interests of minimizing the number of fancy Coq features that the reader needs to know about. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Canonical</span> <span class="id" title="keyword">Structure</span> <a id="default_TruncType" class="idref" href="#default_TruncType"><span class="id" title="definition">default_TruncType</span></a> := <span class="id" title="keyword">fun</span> <a id="n:116" class="idref" href="#n:116"><span class="id" title="binder">n</span></a> <a id="T:117" class="idref" href="#T:117"><span class="id" title="binder">T</span></a> <a id="P:118" class="idref" href="#P:118"><span class="id" title="binder">P</span></a> ⇒ (@<a class="idref" href="HoTT.Basics.Trunc.html#Build_TruncType"><span class="id" title="constructor">Build_TruncType</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:116"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#T:117"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#P:118"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Version of <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#smalltype"><span class="id" title="projection">smalltype</span></a></span> for n-Types. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="smallntype" class="idref" href="#smallntype"><span class="id" title="definition">smallntype@</span></a>{<span class="id" title="var">i</span> <span class="id" title="var">j</span>} (<a id="n:119" class="idref" href="#n:119"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) (<a id="P:120" class="idref" href="#P:120"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">TruncType@</span></a><a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">{</span></a><a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">j</span></a><a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">}</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:119"><span class="id" title="variable">n</span></a>) {<a id="smallP:121" class="idref" href="#smallP:121"><span class="id" title="binder">smallP</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsSmall"><span class="id" title="class">IsSmall@</span></a><a class="idref" href="HoTT.Basics.Overture.html#IsSmall"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Basics.Overture.html#IsSmall"><span class="id" title="class">i</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsSmall"><span class="id" title="class">j</span></a><a class="idref" href="HoTT.Basics.Overture.html#IsSmall"><span class="id" title="class">}</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#P:120"><span class="id" title="variable">P</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">TruncType@</span></a><a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">{</span></a><a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">i</span></a><a class="idref" href="HoTT.Basics.Trunc.html#TruncType"><span class="id" title="record">}</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:119"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_TruncType"><span class="id" title="constructor">Build_TruncType</span></a> <span class="id" title="var">n</span> (<a class="idref" href="HoTT.Basics.Overture.html#smalltype"><span class="id" title="method">smalltype</span></a> <span class="id" title="var">P</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (@<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#equiv_smalltype"><span class="id" title="method">equiv_smalltype</span></a> <span class="id" title="var">P</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a> <span class="id" title="var">n</span> <span class="id" title="var">_</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="smallhprop" class="idref" href="#smallhprop"><span class="id" title="abbreviation">smallhprop</span></a> := (<a class="idref" href="HoTT.Basics.Trunc.html#smallntype"><span class="id" title="definition">smallntype</span></a> (-1)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab352"></a><h2 class="section">Facts about hprops</h2>
+
+<div class="paragraph"> </div>
+
+ An inhabited proposition is contractible.  This is not an <span class="inlinecode"><span class="id" title="keyword">Instance</span></span> because it causes infinite loops. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="contr_inhabited_hprop" class="idref" href="#contr_inhabited_hprop"><span class="id" title="lemma">contr_inhabited_hprop</span></a> (<a id="A:122" class="idref" href="#A:122"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H:123" class="idref" href="#H:123"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:122"><span class="id" title="variable">A</span></a>} (<a id="x:124" class="idref" href="#x:124"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#A:122"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:122"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">Build_Contr</span></a> <span class="id" title="var">_</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If inhabitation implies contractibility, then we have an h-proposition.  We probably won't often have a hypothesis of the form <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>, so we make sure we give priority to other instances. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="hprop_inhabited_contr" class="idref" href="#hprop_inhabited_contr"><span class="id" title="instance">hprop_inhabited_contr</span></a> (<a id="A:125" class="idref" href="#A:125"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#A:125"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:125"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:125"><span class="id" title="variable">A</span></a> | 10000.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">C</span> := <span class="id" title="var">H</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Contractible.html#contr_paths_contr"><span class="id" title="instance">contr_paths_contr</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any two points in an hprop are connected by a path. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <a id="path_ishprop" class="idref" href="#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a> `{<a id="H:127" class="idref" href="#H:127"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a id="A:126" class="idref" href="#A:126"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:128" class="idref" href="#x:128"><span class="id" title="binder">x</span></a> <a id="y:129" class="idref" href="#y:129"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#A:126"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#x:128"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#y:129"><span class="id" title="variable">y</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Conversely, this property characterizes hprops. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <a id="hprop_allpath" class="idref" href="#hprop_allpath"><span class="id" title="lemma">hprop_allpath</span></a> (<a id="A:130" class="idref" href="#A:130"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="x:131" class="idref" href="#x:131"><span class="id" title="binder">x</span></a> <a id="y:132" class="idref" href="#y:132"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#A:130"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#x:131"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#y:132"><span class="id" title="variable">y</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:130"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Contractible.html#contr_paths_contr"><span class="id" title="instance">contr_paths_contr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">Build_Contr</span></a> <span class="id" title="var">_</span> <span class="id" title="var">x</span> (<span class="id" title="var">H</span> <span class="id" title="var">x</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Two propositions are equivalent as soon as there are maps in both directions. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="isequiv_iff_hprop" class="idref" href="#isequiv_iff_hprop"><span class="id" title="definition">isequiv_iff_hprop</span></a> `{<a id="IsHProp0:134" class="idref" href="#IsHProp0:134"><span class="id" title="binder">IsHProp</span></a> <a id="A:133" class="idref" href="#A:133"><span class="id" title="binder"><span id="IsHProp0:134" class="id">A</span></span></a>} `{<a id="IsHProp1:136" class="idref" href="#IsHProp1:136"><span class="id" title="binder">IsHProp</span></a> <a id="B:135" class="idref" href="#B:135"><span class="id" title="binder"><span id="IsHProp1:136" class="id">B</span></span></a>}<br/>
+&nbsp;&nbsp;(<a id="f:137" class="idref" href="#f:137"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#A:133"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:135"><span class="id" title="variable">B</span></a>) (<a id="g:138" class="idref" href="#g:138"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#B:135"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:133"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#f:137"><span class="id" title="variable">f</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> <span class="id" title="var">f</span> <span class="id" title="var">g</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ?; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_iff_hprop_uncurried" class="idref" href="#equiv_iff_hprop_uncurried"><span class="id" title="definition">equiv_iff_hprop_uncurried</span></a> `{<a id="IsHProp0:140" class="idref" href="#IsHProp0:140"><span class="id" title="binder">IsHProp</span></a> <a id="A:139" class="idref" href="#A:139"><span class="id" title="binder"><span id="IsHProp0:140" class="id">A</span></span></a>} `{<a id="IsHProp1:142" class="idref" href="#IsHProp1:142"><span class="id" title="binder">IsHProp</span></a> <a id="B:141" class="idref" href="#B:141"><span class="id" title="binder"><span id="IsHProp1:142" class="id">B</span></span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#A:139"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:141"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#A:139"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:141"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">fg</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#equiv_adjointify"><span class="id" title="definition">equiv_adjointify</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <span class="id" title="var">fg</span>) (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <span class="id" title="var">fg</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ?; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_iff_hprop" class="idref" href="#equiv_iff_hprop"><span class="id" title="definition">equiv_iff_hprop</span></a> `{<a id="IsHProp0:144" class="idref" href="#IsHProp0:144"><span class="id" title="binder">IsHProp</span></a> <a id="A:143" class="idref" href="#A:143"><span class="id" title="binder"><span id="IsHProp0:144" class="id">A</span></span></a>} `{<a id="IsHProp1:146" class="idref" href="#IsHProp1:146"><span class="id" title="binder">IsHProp</span></a> <a id="B:145" class="idref" href="#B:145"><span class="id" title="binder"><span id="IsHProp1:146" class="id">B</span></span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#A:143"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:145"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#B:145"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:143"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#A:143"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#B:145"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="f:147" class="idref" href="#f:147"><span class="id" title="binder">f</span></a> <a id="g:148" class="idref" href="#g:148"><span class="id" title="binder">g</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#equiv_iff_hprop_uncurried"><span class="id" title="definition">equiv_iff_hprop_uncurried</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Trunc.html#f:147"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#g:148"><span class="id" title="variable">g</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Corollary</span> <a id="iff_contr_hprop" class="idref" href="#iff_contr_hprop"><span class="id" title="lemma">iff_contr_hprop</span></a> (<a id="A:149" class="idref" href="#A:149"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="IsHProp0:150" class="idref" href="#IsHProp0:150"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:150" class="idref" href="#IsHProp0:150"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:149"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:149"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#contr_inhabited_hprop"><span class="id" title="lemma">contr_inhabited_hprop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab353"></a><h2 class="section">Truncatedness: any dependent product of n-types is an n-type</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="contr_forall" class="idref" href="#contr_forall"><span class="id" title="definition">contr_forall</span></a> `{<a id="H:151" class="idref" href="#H:151"><span class="id" title="binder">Funext</span></a>} `{<a id="P:153" class="idref" href="#P:153"><span class="id" title="binder">P</span></a> : <a id="A:152" class="idref" href="#A:152"><span class="id" title="binder">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>} `{<a id="H0:155" class="idref" href="#H0:155"><span class="id" title="binder">∀</span></a> <a id="a:154" class="idref" href="#a:154"><span class="id" title="binder"><span id="H0:155" class="id">a</span></span></a><a id="H0:155" class="idref" href="#H0:155"><span class="id" title="binder">,</span></a> <a id="H0:155" class="idref" href="#H0:155"><span class="id" title="binder">Contr</span></a> <a id="H0:155" class="idref" href="#H0:155"><span class="id" title="binder">(</span></a><a id="H0:155" class="idref" href="#H0:155"><span class="id" title="binder">P</span></a> <a id="H0:155" class="idref" href="#H0:155"><span class="id" title="binder">a</span></a><a id="H0:155" class="idref" href="#H0:155"><span class="id" title="binder">)</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="a:156" class="idref" href="#a:156"><span class="id" title="binder">a</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#P:153"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#a:156"><span class="id" title="variable">a</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">Build_Contr</span></a> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> <a id="a:157" class="idref" href="#a:157"><span class="id" title="binder"><span id="a:158" class="id">a</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a> (<span class="id" title="var">P</span> <a class="idref" href="HoTT.Basics.Trunc.html#a:157"><span class="id" title="variable">a</span></a>))).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>. <span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#contr"><span class="id" title="definition">contr</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="istrunc_forall" class="idref" href="#istrunc_forall"><span class="id" title="instance">istrunc_forall</span></a> `{<a id="H:159" class="idref" href="#H:159"><span class="id" title="binder">Funext</span></a>} `{<a id="P:161" class="idref" href="#P:161"><span class="id" title="binder">P</span></a> : <a id="A:160" class="idref" href="#A:160"><span class="id" title="binder">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>} `{<a id="H0:164" class="idref" href="#H0:164"><span class="id" title="binder">∀</span></a> <a id="a:162" class="idref" href="#a:162"><span class="id" title="binder"><span id="H0:164" class="id">a</span></span></a><a id="H0:164" class="idref" href="#H0:164"><span class="id" title="binder">,</span></a> <a id="H0:164" class="idref" href="#H0:164"><span class="id" title="binder">IsTrunc</span></a> <a id="n:163" class="idref" href="#n:163"><span class="id" title="binder"><span id="H0:164" class="id">n</span></span></a> <a id="H0:164" class="idref" href="#H0:164"><span class="id" title="binder">(</span></a><a id="H0:164" class="idref" href="#H0:164"><span class="id" title="binder">P</span></a> <a id="H0:164" class="idref" href="#H0:164"><span class="id" title="binder">a</span></a><a id="H0:164" class="idref" href="#H0:164"><span class="id" title="binder">)</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:163"><span class="id" title="variable">n</span></a> (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="a:165" class="idref" href="#a:165"><span class="id" title="binder">a</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#P:161"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#a:165"><span class="id" title="variable">a</span></a>) | 100.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">P</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> ?.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;case&nbsp;<span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">-2</span>,&nbsp;i.e.&nbsp;contractibility&nbsp;*)</span><br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Trunc.html#contr_forall"><span class="id" title="definition">contr_forall</span></a>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;case&nbsp;n&nbsp;=&nbsp;n'.+1&nbsp;*)</span><br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>; <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_isequiv_istrunc"><span class="id" title="definition">istrunc_isequiv_istrunc@</span></a><a class="idref" href="HoTT.Basics.Trunc.html#istrunc_isequiv_istrunc"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Basics.Trunc.html#istrunc_isequiv_istrunc"><span class="id" title="definition">u1</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_isequiv_istrunc"><span class="id" title="definition">u1</span></a><a class="idref" href="HoTT.Basics.Trunc.html#istrunc_isequiv_istrunc"><span class="id" title="definition">}</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">apD10@</span></a><a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">_</span></a> <a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">_</span></a> <a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">u1</span></a><a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Truncatedness is an hprop. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="ishprop_istrunc" class="idref" href="#ishprop_istrunc"><span class="id" title="instance">ishprop_istrunc</span></a> `{<a id="H:166" class="idref" href="#H:166"><span class="id" title="binder">Funext</span></a>} (<a id="n:167" class="idref" href="#n:167"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) (<a id="A:168" class="idref" href="#A:168"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:167"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:168"><span class="id" title="variable">A</span></a>) | 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">A</span>; <span class="id" title="var">simple_induction</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intro</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#equiv_istrunc_unfold"><span class="id" title="definition">equiv_istrunc_unfold</span></a> (-2) <span class="id" title="var">A</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a>%<span class="id" title="var">equiv</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#hprop_allpath"><span class="id" title="lemma">hprop_allpath</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">a1</span> <span class="id" title="var">c1</span>] [<span class="id" title="var">a2</span> <span class="id" title="var">c2</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">c1</span> <span class="id" title="var">a2</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#exist"><span class="id" title="constructor">exist</span></a> <span class="id" title="var">_</span> <span class="id" title="var">a1</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">funext</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">Build_Contr</span></a> <span class="id" title="var">_</span> <span class="id" title="var">a1</span> <span class="id" title="var">c1</span>); <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Contractible.html#path2_contr"><span class="id" title="definition">path2_contr</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#equiv_istrunc_unfold"><span class="id" title="definition">equiv_istrunc_unfold</span></a> <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <span class="id" title="var">A</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a>%<span class="id" title="var">equiv</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;This&nbsp;case&nbsp;follows&nbsp;from&nbsp;<span class="inlinecode"><span class="id" title="var">istrunc_forall</span></span>.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+By <span class="inlinecode"><span class="id" title="var">trunc_hprop</span></span>, it follows that <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is also <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a></span>-truncated for any <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a></span> <span class="inlinecode">≥</span> <span class="inlinecode">-1</span>. 
+<div class="paragraph"> </div>
+
+ Similarly, a map being truncated is also a proposition. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="ishprop_istruncmap" class="idref" href="#ishprop_istruncmap"><span class="id" title="instance">ishprop_istruncmap</span></a> `{<a id="H:169" class="idref" href="#H:169"><span class="id" title="binder">Funext</span></a>} (<a id="n:170" class="idref" href="#n:170"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) {<a id="X:171" class="idref" href="#X:171"><span class="id" title="binder">X</span></a> <a id="Y:172" class="idref" href="#Y:172"><span class="id" title="binder">Y</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:173" class="idref" href="#f:173"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#X:171"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#Y:172"><span class="id" title="variable">Y</span></a>)<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#IsTruncMap"><span class="id" title="class">IsTruncMap</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:170"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#f:173"><span class="id" title="variable">f</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#hprop_allpath"><span class="id" title="lemma">hprop_allpath</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">s</span> <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If a type <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is <span class="inlinecode"><span class="id" title="var">n</span></span>-truncated, then <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is contractible. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="contr_istrunc" class="idref" href="#contr_istrunc"><span class="id" title="instance">contr_istrunc</span></a> `{<a id="H:174" class="idref" href="#H:174"><span class="id" title="binder">Funext</span></a>} (<a id="n:175" class="idref" href="#n:175"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) (<a id="A:176" class="idref" href="#A:176"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="istruncA:177" class="idref" href="#istruncA:177"><span class="id" title="binder">istruncA</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:175"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:176"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:175"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:176"><span class="id" title="variable">A</span></a>) | 100<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Trunc.html#contr_inhabited_hprop"><span class="id" title="lemma">contr_inhabited_hprop</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Corollary</span> <a id="equiv_contr_hprop" class="idref" href="#equiv_contr_hprop"><span class="id" title="lemma">equiv_contr_hprop</span></a> (<a id="A:178" class="idref" href="#A:178"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H:179" class="idref" href="#H:179"><span class="id" title="binder">Funext</span></a>} `{<a id="IsHProp0:180" class="idref" href="#IsHProp0:180"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:180" class="idref" href="#IsHProp0:180"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:178"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:178"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Trunc.html#equiv_iff_hprop_uncurried"><span class="id" title="definition">equiv_iff_hprop_uncurried</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#iff_contr_hprop"><span class="id" title="lemma">iff_contr_hprop</span></a> <span class="id" title="var">A</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If a type <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> implies that it is <span class="inlinecode"><span class="id" title="var">n</span>.+1</span>-truncated, then it is <span class="inlinecode"><span class="id" title="var">n</span>.+1</span>-truncated. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="istrunc_inhabited_istrunc" class="idref" href="#istrunc_inhabited_istrunc"><span class="id" title="definition">istrunc_inhabited_istrunc</span></a> {<a id="n:181" class="idref" href="#n:181"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>}<br/>
+&nbsp;&nbsp;{<a id="A:182" class="idref" href="#A:182"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="H:183" class="idref" href="#H:183"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#A:182"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:181"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:182"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#n:181"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#A:182"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> <a id="a:184" class="idref" href="#a:184"><span class="id" title="binder">a</span></a> <a id="b:185" class="idref" href="#b:185"><span class="id" title="binder">b</span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#H:183"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#a:184"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#a:184"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#b:185"><span class="id" title="variable">b</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". 
+</div>
+<div class="code">
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.List.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.List.Core</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Unset</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Polymorphic</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Cumulativity</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1534"></a><h1 class="section">Lists</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1535"></a><h2 class="section">Definition</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">list_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">list_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A list is a sequence of elements from a type <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>. This is a very useful datatype and has many applications ranging from programming to algebra. It can be thought of a free monoid. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="list" class="idref" href="#list"><span class="id" title="inductive">list@</span></a>{<span class="id" title="var">i</span>|} (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}) : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>} :=<br/>
+| <a id="nil" class="idref" href="#nil"><span class="id" title="constructor">nil</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list:2"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:1"><span class="id" title="variable">A</span></a><br/>
+| <a id="cons" class="idref" href="#cons"><span class="id" title="constructor">cons</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#list:2"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#list:2"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:1"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Spaces.List.Core.html#cons"><span class="id" title="constructor">cons</span></a> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">list_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">list</span>.<br/>
+<span class="id" title="keyword">Bind Scope</span> <span class="id" title="var">list_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">list</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This messes with Coq's parsing of <font size=-2>&#9744;</font> in Ltac. Therefore we keep it commented out. It's not difficult to write <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a></span> instead. 
+</div>
+<div class="code">
+<span class="comment">(*&nbsp;Notation&nbsp;"<span class="inlinecode"></span>"&nbsp;:=&nbsp;nil&nbsp;:&nbsp;list_scope.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Infix</span> <a id="::list_scope:x_'::'_x" class="idref" href="#::list_scope:x_'::'_x"><span class="id" title="notation">&quot;</span></a>::" := <a class="idref" href="HoTT.Spaces.List.Core.html#cons"><span class="id" title="constructor">cons</span></a> : <span class="id" title="var">list_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Scheme</span> <a id="list_rect" class="idref" href="#list_rect"><span class="id" title="definition">list_rect</span></a> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Scheme</span> <a id="list_ind" class="idref" href="#list_ind"><span class="id" title="definition">list_ind</span></a> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Scheme</span> <a id="list_rec" class="idref" href="#list_rec"><span class="id" title="definition">list_rec</span></a> := <span class="id" title="var">Minimality</span> <span class="id" title="keyword">for</span> <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A tactic for doing induction over a list that avoids spurious universes. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">simple_list_induction</span> <span class="id" title="var">l</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> <span class="id" title="var">IH</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">l</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 1;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>];<br/>
+&nbsp;&nbsp;[ <span class="id" title="tactic">clear</span> <span class="id" title="var">IH</span> | <span class="id" title="tactic">specialize</span> (<span class="id" title="var">IH</span> <span class="id" title="var">t</span>) ].<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Syntactic sugar for creating lists. <span class="inlinecode"></span> <span class="inlinecode">[<span class="id" title="var">a1</span>,</span> <span class="inlinecode"><span class="id" title="var">b2</span>,</span> <span class="inlinecode">...,</span> <span class="inlinecode"><span class="id" title="var">an</span>]</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">a1</span></span> <span class="inlinecode">::</span> <span class="inlinecode"><span class="id" title="var">b2</span></span> <span class="inlinecode">::</span> <span class="inlinecode">...</span> <span class="inlinecode">::</span> <span class="inlinecode"><span class="id" title="var">an</span></span> <span class="inlinecode">::</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a></span> <span class="inlinecode"></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="4a92cf40ccc9c9213e08082dfb05c13e" class="idref" href="#4a92cf40ccc9c9213e08082dfb05c13e"><span class="id" title="notation">&quot;</span></a>[ x ]" := (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a>) : <span class="id" title="var">list_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="4e703a2a951efc2a183d803853736465" class="idref" href="#4e703a2a951efc2a183d803853736465"><span class="id" title="notation">&quot;</span></a>[ x , y , .. , z ]" := (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">(</span></a><span class="id" title="var">y</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> .. (<span class="id" title="var">z</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a>) ..<a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">)</span></a>) : <span class="id" title="var">list_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1536"></a><h2 class="section">Length</h2>
+
+<div class="paragraph"> </div>
+
+ Notice that the definition of a list looks very similar to the definition of <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span>. It is as if each <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.lax_comma_category_parts.S"><span class="id" title="variable">S</span></a></span> constructor from <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span> has an element of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> attached to it. We can discard this extra element and get a list invariant that we call <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#length"><span class="id" title="definition">length</span></a></span>. 
+<div class="paragraph"> </div>
+
+ The length (number of elements) of a list. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="length" class="idref" href="#length"><span class="id" title="definition">length</span></a> {<a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="l:5" class="idref" href="#l:5"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:4"><span class="id" title="variable">A</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:5"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="HoTT.Spaces.List.Core.html#length:6"><span class="id" title="definition">length</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:5"><span class="id" title="variable">l</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1537"></a><h2 class="section">Concatenation</h2>
+
+<div class="paragraph"> </div>
+
+ Given two lists <span class="inlinecode"></span> <span class="inlinecode">[<span class="id" title="var">a1</span>;</span> <span class="inlinecode"><span class="id" title="var">a2</span>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">an</span>]</span> <span class="inlinecode"></span> and <span class="inlinecode"></span> <span class="inlinecode">[<span class="id" title="var">b1</span>;</span> <span class="inlinecode"><span class="id" title="var">b2</span>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">bm</span>]</span> <span class="inlinecode"></span>, we can concatenate them to get <span class="inlinecode"></span> <span class="inlinecode">[<span class="id" title="var">a1</span>;</span> <span class="inlinecode"><span class="id" title="var">a2</span>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">an</span>;</span> <span class="inlinecode"><span class="id" title="var">b1</span>;</span> <span class="inlinecode"><span class="id" title="var">b2</span>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">bm</span>]</span> <span class="inlinecode"></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="app" class="idref" href="#app"><span class="id" title="definition">app</span></a> {<a id="A:8" class="idref" href="#A:8"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:8"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:8"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:8"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">app</span> <a id="l:9" class="idref" href="#l:9"><span class="id" title="binder">l</span></a> <a id="m:10" class="idref" href="#m:10"><span class="id" title="binder">m</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:9"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#m:10"><span class="id" title="variable">m</span></a><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l1</span> ⇒ <span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#app:11"><span class="id" title="variable">app</span></a> <span class="id" title="var">l1</span> <a class="idref" href="HoTT.Spaces.List.Core.html#m:10"><span class="id" title="variable">m</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="bc347c51eaf667706ae54503b26d52c6" class="idref" href="#bc347c51eaf667706ae54503b26d52c6"><span class="id" title="notation">&quot;</span></a>++" := <a class="idref" href="HoTT.Spaces.List.Core.html#app"><span class="id" title="definition">app</span></a> : <span class="id" title="var">list_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1538"></a><h2 class="section">Folding</h2>
+
+<div class="paragraph"> </div>
+
+ Folding is a very important operation on lists. It is a way to reduce a list to a single value. The <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#fold_left"><span class="id" title="definition">fold_left</span></a></span> function starts from the left and the <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#fold_right"><span class="id" title="definition">fold_right</span></a></span> function starts from the right. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#fold_left"><span class="id" title="definition">fold_left</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Adjoint.Pointwise.html#AdjointPointwise.l"><span class="id" title="section">l</span></a></span> <span class="inlinecode"><span class="id" title="var">a0</span></span> computes <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">(...</span> <span class="inlinecode">(<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><span class="id" title="var">a0</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a>)</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Category.Morphisms.html#associativity_composition.x2"><span class="id" title="variable">x2</span></a>)</span> <span class="inlinecode">...)</span> <span class="inlinecode"><span class="id" title="var">xn</span></span> where <span class="inlinecode"><a class="idref" href="HoTT.Categories.Adjoint.Pointwise.html#AdjointPointwise.l"><span class="id" title="section">l</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode">[<a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a>;</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Category.Morphisms.html#associativity_composition.x2"><span class="id" title="variable">x2</span></a>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">xn</span>]</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="fold_left" class="idref" href="#fold_left"><span class="id" title="definition">fold_left</span></a> {<a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a> <a id="B:14" class="idref" href="#B:14"><span class="id" title="binder">B</span></a>} (<a id="f:15" class="idref" href="#f:15"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#B:14"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:13"><span class="id" title="variable">A</span></a>) (<a id="l:16" class="idref" href="#l:16"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#B:14"><span class="id" title="variable">B</span></a>) (<a id="default:17" class="idref" href="#default:17"><span class="id" title="binder">default</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:13"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#A:13"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:16"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#default:17"><span class="id" title="variable">default</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#cons"><span class="id" title="constructor">cons</span></a> <span class="id" title="var">b</span> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#fold_left:18"><span class="id" title="definition">fold_left</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#f:15"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:16"><span class="id" title="variable">l</span></a> (<a class="idref" href="HoTT.Spaces.List.Core.html#f:15"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#default:17"><span class="id" title="variable">default</span></a> <span class="id" title="var">b</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#fold_right"><span class="id" title="definition">fold_right</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><span class="id" title="var">a0</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Adjoint.Pointwise.html#AdjointPointwise.l"><span class="id" title="section">l</span></a></span> computes <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Category.Morphisms.html#associativity_composition.x2"><span class="id" title="variable">x2</span></a></span> <span class="inlinecode">...</span> <span class="inlinecode">(<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><span class="id" title="var">xn</span></span> <span class="inlinecode"><span class="id" title="var">a0</span>)</span> <span class="inlinecode">...)</span> where <span class="inlinecode"><a class="idref" href="HoTT.Categories.Adjoint.Pointwise.html#AdjointPointwise.l"><span class="id" title="section">l</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode">[<a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a>;</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Category.Morphisms.html#associativity_composition.x2"><span class="id" title="variable">x2</span></a>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">xn</span>]</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="fold_right" class="idref" href="#fold_right"><span class="id" title="definition">fold_right</span></a> {<a id="A:20" class="idref" href="#A:20"><span class="id" title="binder">A</span></a> <a id="B:21" class="idref" href="#B:21"><span class="id" title="binder">B</span></a>} (<a id="f:22" class="idref" href="#f:22"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#B:21"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:20"><span class="id" title="variable">A</span></a>) (<a id="default:23" class="idref" href="#default:23"><span class="id" title="binder">default</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:20"><span class="id" title="variable">A</span></a>) (<a id="l:24" class="idref" href="#l:24"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#B:21"><span class="id" title="variable">B</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#A:20"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:24"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#default:23"><span class="id" title="variable">default</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#cons"><span class="id" title="constructor">cons</span></a> <span class="id" title="var">b</span> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#f:22"><span class="id" title="variable">f</span></a> <span class="id" title="var">b</span> (<a class="idref" href="HoTT.Spaces.List.Core.html#fold_right:25"><span class="id" title="definition">fold_right</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#f:22"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#default:23"><span class="id" title="variable">default</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:24"><span class="id" title="variable">l</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1539"></a><h2 class="section">Maps - Functoriality of Lists</h2>
+
+<div class="paragraph"> </div>
+
+ The <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#list_map"><span class="id" title="definition">list_map</span></a></span> function applies a function to each element of a list. In other words <span class="inlinecode"></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#list_map"><span class="id" title="definition">list_map</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">[<span class="id" title="var">a1</span>;</span> <span class="inlinecode"><span class="id" title="var">a2</span>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">an</span>]</span> <span class="inlinecode">=</span> <span class="inlinecode">[<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><span class="id" title="var">a1</span>;</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><span class="id" title="var">a2</span>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><span class="id" title="var">an</span>]</span> <span class="inlinecode"></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="list_map" class="idref" href="#list_map"><span class="id" title="definition">list_map</span></a> {<a id="A:27" class="idref" href="#A:27"><span class="id" title="binder">A</span></a> <a id="B:28" class="idref" href="#B:28"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:29" class="idref" href="#f:29"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:27"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#B:28"><span class="id" title="variable">B</span></a>) (<a id="l:30" class="idref" href="#l:30"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:27"><span class="id" title="variable">A</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:30"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.List.Core.html#f:29"><span class="id" title="variable">f</span></a> <span class="id" title="var">x</span><a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.List.Core.html#list_map:31"><span class="id" title="definition">list_map</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#f:29"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:30"><span class="id" title="variable">l</span></a><a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#list_map2"><span class="id" title="definition">list_map2</span></a></span> function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="list_map2" class="idref" href="#list_map2"><span class="id" title="definition">list_map2</span></a> {<a id="A:33" class="idref" href="#A:33"><span class="id" title="binder">A</span></a> <a id="B:34" class="idref" href="#B:34"><span class="id" title="binder">B</span></a> <a id="C:35" class="idref" href="#C:35"><span class="id" title="binder">C</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:36" class="idref" href="#f:36"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:33"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#B:34"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#C:35"><span class="id" title="variable">C</span></a>)<br/>
+&nbsp;&nbsp;(<a id="def_l:37" class="idref" href="#def_l:37"><span class="id" title="binder">def_l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:33"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#C:35"><span class="id" title="variable">C</span></a>) (<a id="def_r:38" class="idref" href="#def_r:38"><span class="id" title="binder">def_r</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#B:34"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#C:35"><span class="id" title="variable">C</span></a>) <a id="l1:39" class="idref" href="#l1:39"><span class="id" title="binder">l1</span></a> <a id="l2:40" class="idref" href="#l2:40"><span class="id" title="binder">l2</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l1:39"><span class="id" title="variable">l1</span></a>, <a class="idref" href="HoTT.Spaces.List.Core.html#l2:40"><span class="id" title="variable">l2</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a>, <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a>, <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#def_r:38"><span class="id" title="variable">def_r</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l2:40"><span class="id" title="variable">l2</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span>, <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#def_l:37"><span class="id" title="variable">def_l</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l1:39"><span class="id" title="variable">l1</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l1</span>, <span class="id" title="var">y</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l2</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.List.Core.html#f:36"><span class="id" title="variable">f</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span><a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.List.Core.html#list_map2:41"><span class="id" title="definition">list_map2</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#f:36"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#def_l:37"><span class="id" title="variable">def_l</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#def_r:38"><span class="id" title="variable">def_r</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l1:39"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l2:40"><span class="id" title="variable">l2</span></a><a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1540"></a><h2 class="section">Reversal</h2>
+
+<div class="paragraph"> </div>
+
+ Tail-recursive list reversal. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="reverse_acc" class="idref" href="#reverse_acc"><span class="id" title="definition">reverse_acc</span></a> {<a id="A:44" class="idref" href="#A:44"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="acc:45" class="idref" href="#acc:45"><span class="id" title="binder">acc</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:44"><span class="id" title="variable">A</span></a>) (<a id="l:46" class="idref" href="#l:46"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:44"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:44"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:46"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#acc:45"><span class="id" title="variable">acc</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#reverse_acc:47"><span class="id" title="definition">reverse_acc</span></a> (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#acc:45"><span class="id" title="variable">acc</span></a>) <a class="idref" href="HoTT.Spaces.List.Core.html#l:46"><span class="id" title="variable">l</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reversing the order of a list. The list <span class="inlinecode"></span> <span class="inlinecode">[<span class="id" title="var">a1</span>;</span> <span class="inlinecode"><span class="id" title="var">a2</span>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">an</span>]</span> <span class="inlinecode"></span> becomes <span class="inlinecode"></span> <span class="inlinecode">[<span class="id" title="var">an</span>;</span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="var">a2</span>;</span> <span class="inlinecode"><span class="id" title="var">a1</span>]</span> <span class="inlinecode"></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="reverse" class="idref" href="#reverse"><span class="id" title="definition">reverse</span></a> {<a id="A:49" class="idref" href="#A:49"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="l:50" class="idref" href="#l:50"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:49"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:49"><span class="id" title="variable">A</span></a> := <a class="idref" href="HoTT.Spaces.List.Core.html#reverse_acc"><span class="id" title="definition">reverse_acc</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:50"><span class="id" title="variable">l</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1541"></a><h2 class="section">Getting Elements</h2>
+
+<div class="paragraph"> </div>
+
+ The head of a list is its first element. Returns <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a></span> If the list is empty. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="head" class="idref" href="#head"><span class="id" title="definition">head</span></a> {<a id="A:51" class="idref" href="#A:51"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="l:52" class="idref" href="#l:52"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:51"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:51"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:52"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> <span class="id" title="var">a</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The tail of a list is the list without its first element. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="tail" class="idref" href="#tail"><span class="id" title="definition">tail</span></a> {<a id="A:54" class="idref" href="#A:54"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="l:55" class="idref" href="#l:55"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:54"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:54"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:55"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">m</span> ⇒ <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The last element of a list. If the list is empty, it returns <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="last" class="idref" href="#last"><span class="id" title="definition">last</span></a> {<a id="A:57" class="idref" href="#A:57"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="l:58" class="idref" href="#l:58"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:57"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:57"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:58"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> <span class="id" title="var">a</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#last:59"><span class="id" title="definition">last</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:58"><span class="id" title="variable">l</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><span class="id" title="var">n</span></span>-th element of a list. If the list is too short, it returns <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="nth" class="idref" href="#nth"><span class="id" title="definition">nth</span></a> {<a id="A:61" class="idref" href="#A:61"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="l:62" class="idref" href="#l:62"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:61"><span class="id" title="variable">A</span></a>) (<a id="n:63" class="idref" href="#n:63"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:61"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#n:63"><span class="id" title="variable">n</span></a>, <a class="idref" href="HoTT.Spaces.List.Core.html#l:62"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a>, <span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span>, <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#nth:64"><span class="id" title="definition">nth</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:62"><span class="id" title="variable">l</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#n:63"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1542"></a><h2 class="section">Removing Elements</h2>
+
+<div class="paragraph"> </div>
+
+ Remove the last element of a list and do nothing if it is empty. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="remove_last" class="idref" href="#remove_last"><span class="id" title="definition">remove_last</span></a> {<a id="A:67" class="idref" href="#A:67"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="l:68" class="idref" href="#l:68"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:67"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:67"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:68"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l</span> ⇒ <span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#remove_last:69"><span class="id" title="definition">remove_last</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:68"><span class="id" title="variable">l</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1543"></a><h2 class="section">Sequences</h2>
+
+<div class="paragraph"> </div>
+
+ Descending sequence of natural numbers starting from <span class="inlinecode"><span class="id" title="var">n</span>.-1</span> to <span class="inlinecode">0</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="seq_rev" class="idref" href="#seq_rev"><span class="id" title="definition">seq_rev</span></a> (<a id="n:71" class="idref" href="#n:71"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#n:71"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#n:71"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#seq_rev:72"><span class="id" title="definition">seq_rev</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#n:71"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ascending sequence of natural numbers <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="seq" class="idref" href="#seq"><span class="id" title="definition">seq</span></a> (<a id="n:74" class="idref" href="#n:74"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> := <a class="idref" href="HoTT.Spaces.List.Core.html#reverse"><span class="id" title="definition">reverse</span></a> (<a class="idref" href="HoTT.Spaces.List.Core.html#seq_rev"><span class="id" title="definition">seq_rev</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#n:74"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1544"></a><h2 class="section">Repeat</h2>
+
+<div class="paragraph"> </div>
+
+ Repeat an element <span class="inlinecode"><span class="id" title="var">n</span></span> times. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="repeat" class="idref" href="#repeat"><span class="id" title="definition">repeat</span></a> {<a id="A:75" class="idref" href="#A:75"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="x:76" class="idref" href="#x:76"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:75"><span class="id" title="variable">A</span></a>) (<a id="n:77" class="idref" href="#n:77"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:75"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#n:77"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#x:76"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#repeat:78"><span class="id" title="definition">repeat</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#x:76"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#n:77"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1545"></a><h2 class="section">Membership Predicate</h2>
+
+<div class="paragraph"> </div>
+
+ The "In list" predicate 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="InList" class="idref" href="#InList"><span class="id" title="definition">InList@</span></a>{<span class="id" title="var">i</span>|} {<a id="A:80" class="idref" href="#A:80"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}} (<a id="a:81" class="idref" href="#a:81"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:80"><span class="id" title="variable">A</span></a>) (<a id="l:82" class="idref" href="#l:82"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#A:80"><span class="id" title="variable">A</span></a>) : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>} :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:82"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">b</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">m</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">(</span></a><span class="id" title="var">b</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#a:81"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#InList:83"><span class="id" title="definition">InList</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#a:81"><span class="id" title="variable">a</span></a> <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1546"></a><h2 class="section">Forall</h2>
+
+<div class="paragraph"> </div>
+
+ Apply a predicate to all elements of a list and take their conjunction. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="for_all" class="idref" href="#for_all"><span class="id" title="definition">for_all@</span></a>{<span class="id" title="var">i</span> <span class="id" title="var">j</span>|} {<a id="A:85" class="idref" href="#A:85"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}} (<a id="P:86" class="idref" href="#P:86"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:85"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">Type@</span>{<span class="id" title="var">j</span>}) <a id="l:87" class="idref" href="#l:87"><span class="id" title="binder">l</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">j</span>} :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:87"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#P:86"><span class="id" title="variable">P</span></a> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#for_all:88"><span class="id" title="definition">for_all</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#P:86"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:87"><span class="id" title="variable">l</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1547"></a><h2 class="section">Exists</h2>
+
+<div class="paragraph"> </div>
+
+ Apply a predicate to all elements of a list and take their disjunction. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="list_exists" class="idref" href="#list_exists"><span class="id" title="definition">list_exists@</span></a>{<span class="id" title="var">i</span> <span class="id" title="var">j</span>|} {<a id="A:90" class="idref" href="#A:90"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}} (<a id="P:91" class="idref" href="#P:91"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#A:90"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">Type@</span>{<span class="id" title="var">j</span>}) <a id="l:92" class="idref" href="#l:92"><span class="id" title="binder">l</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">j</span>} :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Core.html#l:92"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">x</span> <a class="idref" href="HoTT.Spaces.List.Core.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.List.Core.html#P:91"><span class="id" title="variable">P</span></a> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#list_exists:93"><span class="id" title="definition">list_exists</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#P:91"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#l:92"><span class="id" title="variable">l</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

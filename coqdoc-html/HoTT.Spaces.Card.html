@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Card</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Card</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Representation of cardinals, see Chapter 10 of the HoTT book. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Universes.TruncType.html#"><span class="id" title="library">HoTT.Universes.TruncType</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">HoTT.Classes.interfaces.abstract_algebra</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This speeds things up considerably 
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Opaque</span> <a class="idref" href="HoTT.Basics.Overture.html#equiv_isequiv"><span class="id" title="projection">equiv_isequiv</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_isequiv_istrunc"><span class="id" title="definition">istrunc_isequiv_istrunc</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1475"></a><h2 class="section">Definitions and operations</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Card" class="idref" href="#Card"><span class="id" title="definition">Card</span></a> := <a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> 0 <a class="idref" href="HoTT.Basics.Trunc.html#HSet"><span class="id" title="abbreviation">HSet</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="card" class="idref" href="#card"><span class="id" title="definition">card</span></a> <a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> `{<a id="IsHSet0:2" class="idref" href="#IsHSet0:2"><span class="id" title="binder">IsHSet</span></a> <a id="IsHSet0:2" class="idref" href="#IsHSet0:2"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Spaces.Card.html#A:1"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="sum_card" class="idref" href="#sum_card"><span class="id" title="definition">sum_card</span></a> (<a id="a:3" class="idref" href="#a:3"><span class="id" title="binder">a</span></a> <a id="b:4" class="idref" href="#b:4"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> (<span class="id" title="var">a</span> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <span class="id" title="var">b</span>))).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="prod_card" class="idref" href="#prod_card"><span class="id" title="definition">prod_card</span></a> (<a id="a:5" class="idref" href="#a:5"><span class="id" title="binder">a</span></a> <a id="b:6" class="idref" href="#b:6"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> (<span class="id" title="var">a</span> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <span class="id" title="var">b</span>))).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="exp_card" class="idref" href="#exp_card"><span class="id" title="definition">exp_card</span></a> `{<a id="H:7" class="idref" href="#H:7"><span class="id" title="binder">Funext</span></a>} (<a id="b:8" class="idref" href="#b:8"><span class="id" title="binder">b</span></a> <a id="a:9" class="idref" href="#a:9"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> (<span class="id" title="var">b</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">a</span>))).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="leq_card" class="idref" href="#leq_card"><span class="id" title="definition">leq_card</span></a> `{<a id="H:10" class="idref" href="#H:10"><span class="id" title="binder">Univalence</span></a>} : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc_rec"><span class="id" title="definition">Trunc_rec</span></a> (<span class="id" title="keyword">fun</span> <a id="a:11" class="idref" href="#a:11"><span class="id" title="binder"><span id="a:12" class="id">a</span></span></a> ⇒ <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc_rec"><span class="id" title="definition">Trunc_rec</span></a> (<span class="id" title="keyword">fun</span> <a id="b:13" class="idref" href="#b:13"><span class="id" title="binder"><span id="b:14" class="id">b</span></span></a> ⇒ <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#hexists"><span class="id" title="definition">hexists</span></a> (<span class="id" title="keyword">fun</span> (<a id="i:15" class="idref" href="#i:15"><span class="id" title="binder"><span id="i:16" class="id">i</span></span></a> : <span class="id" title="var">a</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">b</span>) ⇒ <a class="idref" href="HoTT.Basics.Classes.html#IsInjective"><span class="id" title="class">IsInjective</span></a> <a class="idref" href="HoTT.Spaces.Card.html#i:15"><span class="id" title="variable">i</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1476"></a><h2 class="section">Properties</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="contents" class="idref" href="#contents"><span class="id" title="section">contents</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:17" class="idref" href="#H:17"><span class="id" title="binder">Univalence</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="plus_card" class="idref" href="#plus_card"><span class="id" title="instance">plus_card</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Plus"><span class="id" title="class">Plus</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a> := <a class="idref" href="HoTT.Spaces.Card.html#sum_card"><span class="id" title="definition">sum_card</span></a>.<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="mult_card" class="idref" href="#mult_card"><span class="id" title="instance">mult_card</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Mult"><span class="id" title="class">Mult</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a> := <a class="idref" href="HoTT.Spaces.Card.html#prod_card"><span class="id" title="definition">prod_card</span></a>.<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="zero_card" class="idref" href="#zero_card"><span class="id" title="instance">zero_card</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Zero"><span class="id" title="class">Zero</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a> := <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>).<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="one_card" class="idref" href="#one_card"><span class="id" title="instance">one_card</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#One"><span class="id" title="class">One</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a> := <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HSet"><span class="id" title="abbreviation">Build_HSet</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a>).<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="le_card" class="idref" href="#le_card"><span class="id" title="instance">le_card</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Le"><span class="id" title="class">Le</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a> := <a class="idref" href="HoTT.Spaces.Card.html#leq_card"><span class="id" title="definition">leq_card</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;Reduce&nbsp;an&nbsp;algebraic&nbsp;equation&nbsp;to&nbsp;an&nbsp;equivalence&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Ltac</span> <span class="id" title="var">reduce</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">intros</span> ?); <span class="id" title="var">strip_truncations</span>; <span class="id" title="var">cbn</span>; <span class="id" title="var">f_ap</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_hset"><span class="id" title="definition">path_hset</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;Simplify&nbsp;an&nbsp;equation&nbsp;by&nbsp;unfolding&nbsp;all&nbsp;the&nbsp;definitions&nbsp;apart&nbsp;from<br/>
+&nbsp;&nbsp;the&nbsp;actual&nbsp;operations.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;Note&nbsp;that&nbsp;this&nbsp;is&nbsp;an&nbsp;expensive&nbsp;thing&nbsp;to&nbsp;do,&nbsp;and&nbsp;will&nbsp;be&nbsp;very&nbsp;slow&nbsp;unless&nbsp;we&nbsp;tell&nbsp;it&nbsp;not&nbsp;to&nbsp;unfold&nbsp;the&nbsp;following.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Ltac</span> <span class="id" title="var">simpl_ops</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">cbv</span>-[<a class="idref" href="HoTT.Spaces.Card.html#plus_card"><span class="id" title="instance">plus_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#mult_card"><span class="id" title="instance">mult_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#zero_card"><span class="id" title="instance">zero_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#one_card"><span class="id" title="instance">one_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a>].<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We only make the instances of upper classes global, since the
+  other instances will be project anyway. 
+<div class="paragraph"> </div>
+
+<a id="lab1477"></a><h3 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a></span> is a semi-ring</h3>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="associative_sum" class="idref" href="#associative_sum"><span class="id" title="instance">associative_sum</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT.Spaces.Card.html#plus_card"><span class="id" title="instance">plus_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sum.html#equiv_sum_assoc"><span class="id" title="definition">equiv_sum_assoc</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="rightid_sum" class="idref" href="#rightid_sum"><span class="id" title="instance">rightid_sum</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightIdentity"><span class="id" title="class">RightIdentity</span></a> <a class="idref" href="HoTT.Spaces.Card.html#plus_card"><span class="id" title="instance">plus_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#zero_card"><span class="id" title="instance">zero_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sum.html#sum_empty_r"><span class="id" title="definition">sum_empty_r</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="commutative_sum" class="idref" href="#commutative_sum"><span class="id" title="instance">commutative_sum</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Commutative"><span class="id" title="class">Commutative</span></a> <a class="idref" href="HoTT.Spaces.Card.html#plus_card"><span class="id" title="instance">plus_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sum.html#equiv_sum_symm"><span class="id" title="definition">equiv_sum_symm</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="associative_prod" class="idref" href="#associative_prod"><span class="id" title="instance">associative_prod</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT.Spaces.Card.html#mult_card"><span class="id" title="instance">mult_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#equiv_prod_assoc"><span class="id" title="definition">equiv_prod_assoc</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="rightid_prod" class="idref" href="#rightid_prod"><span class="id" title="instance">rightid_prod</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightIdentity"><span class="id" title="class">RightIdentity</span></a> <a class="idref" href="HoTT.Spaces.Card.html#mult_card"><span class="id" title="instance">mult_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#one_card"><span class="id" title="instance">one_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#prod_unit_r"><span class="id" title="definition">prod_unit_r</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="commutative_prod" class="idref" href="#commutative_prod"><span class="id" title="instance">commutative_prod</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Commutative"><span class="id" title="class">Commutative</span></a> <a class="idref" href="HoTT.Spaces.Card.html#mult_card"><span class="id" title="instance">mult_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#equiv_prod_symm"><span class="id" title="definition">equiv_prod_symm</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="leftdistributive_card" class="idref" href="#leftdistributive_card"><span class="id" title="instance">leftdistributive_card</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftDistribute"><span class="id" title="class">LeftDistribute</span></a> <a class="idref" href="HoTT.Spaces.Card.html#mult_card"><span class="id" title="instance">mult_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#plus_card"><span class="id" title="instance">plus_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sum.html#sum_distrib_l"><span class="id" title="definition">sum_distrib_l</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="leftabsorb_card" class="idref" href="#leftabsorb_card"><span class="id" title="instance">leftabsorb_card</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftAbsorb"><span class="id" title="class">LeftAbsorb</span></a> <a class="idref" href="HoTT.Spaces.Card.html#mult_card"><span class="id" title="instance">mult_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#zero_card"><span class="id" title="instance">zero_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#prod_empty_l"><span class="id" title="definition">prod_empty_l</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="issemiring_card" class="idref" href="#issemiring_card"><span class="id" title="instance">issemiring_card</span></a> : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsSemiCRing"><span class="id" title="class">IsSemiCRing</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">intro</span>. <span class="id" title="var">simpl_ops</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#commutativity"><span class="id" title="definition">commutativity</span></a> <a class="idref" href="HoTT.Spaces.Card.html#zero_card"><span class="id" title="instance">zero_card</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Card.html#rightid_sum"><span class="id" title="instance">rightid_sum</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">intro</span>. <span class="id" title="var">simpl_ops</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#commutativity"><span class="id" title="definition">commutativity</span></a> <a class="idref" href="HoTT.Spaces.Card.html#one_card"><span class="id" title="instance">one_card</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Card.html#rightid_prod"><span class="id" title="instance">rightid_prod</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1478"></a><h3 class="section">Properties of exponentiation</h3>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="exp_zero_card" class="idref" href="#exp_zero_card"><span class="id" title="lemma">exp_zero_card</span></a> (<a id="a:18" class="idref" href="#a:18"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) : <a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> 0 <a class="idref" href="HoTT.Spaces.Card.html#a:18"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">simpl_ops</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Empty.html#equiv_empty_rec"><span class="id" title="definition">equiv_empty_rec</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="exp_card_one" class="idref" href="#exp_card_one"><span class="id" title="lemma">exp_card_one</span></a> (<a id="a:19" class="idref" href="#a:19"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) : <a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#a:19"><span class="id" title="variable">a</span></a> 1 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">simpl_ops</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Unit.html#equiv_unit_coind"><span class="id" title="definition">equiv_unit_coind</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="exp_one_card" class="idref" href="#exp_one_card"><span class="id" title="lemma">exp_one_card</span></a> (<a id="a:20" class="idref" href="#a:20"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) : <a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> 1 <a class="idref" href="HoTT.Spaces.Card.html#a:20"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Card.html#a:20"><span class="id" title="variable">a</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Unit.html#equiv_unit_rec"><span class="id" title="definition">equiv_unit_rec</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="exp_card_sum_mult" class="idref" href="#exp_card_sum_mult"><span class="id" title="lemma">exp_card_sum_mult</span></a> (<a id="a:21" class="idref" href="#a:21"><span class="id" title="binder">a</span></a> <a id="b:22" class="idref" href="#b:22"><span class="id" title="binder">b</span></a> <a id="c:23" class="idref" href="#c:23"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> (<a class="idref" href="HoTT.Spaces.Card.html#b:22"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Card.html#c:23"><span class="id" title="variable">c</span></a>) <a class="idref" href="HoTT.Spaces.Card.html#a:21"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#b:22"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Spaces.Card.html#a:21"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#c:23"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Spaces.Card.html#a:21"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sum.html#equiv_sum_distributive"><span class="id" title="definition">equiv_sum_distributive</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="exp_mult_card_exp" class="idref" href="#exp_mult_card_exp"><span class="id" title="lemma">exp_mult_card_exp</span></a> (<a id="a:24" class="idref" href="#a:24"><span class="id" title="binder">a</span></a> <a id="b:25" class="idref" href="#b:25"><span class="id" title="binder">b</span></a> <a id="c:26" class="idref" href="#c:26"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> (<a class="idref" href="HoTT.Spaces.Card.html#b:25"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Card.html#c:26"><span class="id" title="variable">c</span></a>) <a class="idref" href="HoTT.Spaces.Card.html#a:24"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#c:26"><span class="id" title="variable">c</span></a> (<a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#b:25"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Spaces.Card.html#a:24"><span class="id" title="variable">a</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (@<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#commutativity"><span class="id" title="definition">commutativity</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#2bb6684825e11a22369a7f84a08d3711"><span class="id" title="notation">(.*.)</span></a> <span class="id" title="var">_</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">reduce</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#equiv_uncurry"><span class="id" title="definition">equiv_uncurry</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="exp_card_mult_mult" class="idref" href="#exp_card_mult_mult"><span class="id" title="lemma">exp_card_mult_mult</span></a> (<a id="a:27" class="idref" href="#a:27"><span class="id" title="binder">a</span></a> <a id="b:28" class="idref" href="#b:28"><span class="id" title="binder">b</span></a> <a id="c:29" class="idref" href="#c:29"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Spaces.Card.html#Card"><span class="id" title="definition">Card</span></a>) :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#c:29"><span class="id" title="variable">c</span></a> (<a class="idref" href="HoTT.Spaces.Card.html#a:27"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Card.html#b:28"><span class="id" title="variable">b</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#c:29"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Spaces.Card.html#a:27"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Card.html#exp_card"><span class="id" title="definition">exp_card</span></a> <a class="idref" href="HoTT.Spaces.Card.html#c:29"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Spaces.Card.html#b:28"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="var">reduce</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#equiv_prod_coind"><span class="id" title="definition">equiv_prod_coind</span></a>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1479"></a><h3 class="section">Properties of ≤</h3>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="reflexive_card" class="idref" href="#reflexive_card"><span class="id" title="instance">reflexive_card</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Reflexive"><span class="id" title="class">Reflexive</span></a> <a class="idref" href="HoTT.Spaces.Card.html#leq_card"><span class="id" title="definition">leq_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>. <span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>. <span class="id" title="tactic">∃</span> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>. <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="transitive_card" class="idref" href="#transitive_card"><span class="id" title="instance">transitive_card</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Transitive"><span class="id" title="class">Transitive</span></a> <a class="idref" href="HoTT.Spaces.Card.html#leq_card"><span class="id" title="definition">leq_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>. <span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Hab</span> <span class="id" title="var">Hbc</span>. <span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hab</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">iab</span> <span class="id" title="var">Hab</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hbc</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">ibc</span> <span class="id" title="var">Hbc</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>. <span class="id" title="tactic">∃</span> (<span class="id" title="var">ibc</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#c90061783c20674b3a3a6b46d343da03"><span class="id" title="notation">∘</span></a> <span class="id" title="var">iab</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">Hxy</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Hab</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Hbc</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">Hxy</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="preorder_card" class="idref" href="#preorder_card"><span class="id" title="instance">preorder_card</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#PreOrder"><span class="id" title="class">PreOrder</span></a> <a class="idref" href="HoTT.Spaces.Card.html#le_card"><span class="id" title="instance">le_card</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Spaces.Card.html#contents"><span class="id" title="section">contents</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1480"></a><h1 class="section">Cardinality comparisons</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;We&nbsp;also&nbsp;work&nbsp;with&nbsp;cardinality&nbsp;comparisons&nbsp;directly&nbsp;to&nbsp;avoid&nbsp;unnecessary&nbsp;type&nbsp;truncations&nbsp;via&nbsp;cardinals.&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Injection" class="idref" href="#Injection"><span class="id" title="definition">Injection</span></a> <a id="X:30" class="idref" href="#X:30"><span class="id" title="binder">X</span></a> <a id="Y:31" class="idref" href="#Y:31"><span class="id" title="binder">Y</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="f:32" class="idref" href="#f:32"><span class="id" title="binder">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Spaces.Card.html#X:30"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Y:31"><span class="id" title="variable">Y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Basics.Classes.html#IsInjective"><span class="id" title="class">IsInjective</span></a> <a class="idref" href="HoTT.Spaces.Card.html#f:32"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="Injection_refl" class="idref" href="#Injection_refl"><span class="id" title="instance">Injection_refl</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#Reflexive"><span class="id" title="class">Reflexive</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">X</span>. <span class="id" title="tactic">∃</span> (<span class="id" title="keyword">fun</span> <a id="x:33" class="idref" href="#x:33"><span class="id" title="binder"><span id="x:34" class="id">x</span></span></a> ⇒ <a class="idref" href="HoTT.Spaces.Card.html#x:33"><span class="id" title="variable">x</span></a>). <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">x'</span>. <span class="id" title="var">done</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Injection_trans" class="idref" href="#Injection_trans"><span class="id" title="lemma">Injection_trans</span></a> <a id="X:35" class="idref" href="#X:35"><span class="id" title="binder">X</span></a> <a id="Y:36" class="idref" href="#Y:36"><span class="id" title="binder">Y</span></a> <a id="Z:37" class="idref" href="#Z:37"><span class="id" title="binder">Z</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a> <a class="idref" href="HoTT.Spaces.Card.html#X:35"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Y:36"><span class="id" title="variable">Y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Y:36"><span class="id" title="variable">Y</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Z:37"><span class="id" title="variable">Z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a> <a class="idref" href="HoTT.Spaces.Card.html#X:35"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Z:37"><span class="id" title="variable">Z</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">f</span> <span class="id" title="var">Hf</span>] [<span class="id" title="var">g</span> <span class="id" title="var">Hg</span>]. <span class="id" title="tactic">∃</span> (<span class="id" title="keyword">fun</span> <a id="x:38" class="idref" href="#x:38"><span class="id" title="binder"><span id="x:39" class="id">x</span></span></a> ⇒ <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <a class="idref" href="HoTT.Spaces.Card.html#x:38"><span class="id" title="variable">x</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">x'</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">Hf</span>, <span class="id" title="var">Hg</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="InjectsInto" class="idref" href="#InjectsInto"><span class="id" title="definition">InjectsInto</span></a> <a id="X:40" class="idref" href="#X:40"><span class="id" title="binder">X</span></a> <a id="Y:41" class="idref" href="#Y:41"><span class="id" title="binder">Y</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Truncations.Core.html#merely"><span class="id" title="definition">merely</span></a> (<a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a> <a class="idref" href="HoTT.Spaces.Card.html#X:40"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Y:41"><span class="id" title="variable">Y</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="InjectsInto_refl" class="idref" href="#InjectsInto_refl"><span class="id" title="instance">InjectsInto_refl</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#Reflexive"><span class="id" title="class">Reflexive</span></a> <a class="idref" href="HoTT.Spaces.Card.html#InjectsInto"><span class="id" title="definition">InjectsInto</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">X</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="InjectsInto_trans" class="idref" href="#InjectsInto_trans"><span class="id" title="lemma">InjectsInto_trans</span></a> <a id="X:42" class="idref" href="#X:42"><span class="id" title="binder">X</span></a> <a id="Y:43" class="idref" href="#Y:43"><span class="id" title="binder">Y</span></a> <a id="Z:44" class="idref" href="#Z:44"><span class="id" title="binder">Z</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.Card.html#InjectsInto"><span class="id" title="definition">InjectsInto</span></a> <a class="idref" href="HoTT.Spaces.Card.html#X:42"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Y:43"><span class="id" title="variable">Y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#InjectsInto"><span class="id" title="definition">InjectsInto</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Y:43"><span class="id" title="variable">Y</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Z:44"><span class="id" title="variable">Z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#InjectsInto"><span class="id" title="definition">InjectsInto</span></a> <a class="idref" href="HoTT.Spaces.Card.html#X:42"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Z:44"><span class="id" title="variable">Z</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H1</span> <span class="id" title="var">H2</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#merely_destruct"><span class="id" title="lemma">merely_destruct</span></a>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">exact</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">intros</span> [<span class="id" title="var">f</span> <span class="id" title="var">Hf</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#merely_destruct"><span class="id" title="lemma">merely_destruct</span></a>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">exact</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">intros</span> [<span class="id" title="var">g</span> <span class="id" title="var">Hg</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>. <span class="id" title="tactic">∃</span> (<span class="id" title="keyword">fun</span> <a id="x:45" class="idref" href="#x:45"><span class="id" title="binder"><span id="x:46" class="id">x</span></span></a> ⇒ <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <a class="idref" href="HoTT.Spaces.Card.html#x:45"><span class="id" title="variable">x</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">x'</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">Hf</span>, <span class="id" title="var">Hg</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1481"></a><h1 class="section">Infinity</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;We&nbsp;call&nbsp;a&nbsp;set&nbsp;infinite&nbsp;if&nbsp;nat&nbsp;embeds&nbsp;into&nbsp;it.&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="infinite" class="idref" href="#infinite"><span class="id" title="definition">infinite</span></a> <a id="X:47" class="idref" href="#X:47"><span class="id" title="binder">X</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Spaces.Card.html#X:47"><span class="id" title="variable">X</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

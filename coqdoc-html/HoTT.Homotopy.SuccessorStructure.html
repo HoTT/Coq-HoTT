@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Homotopy.SuccessorStructure</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Homotopy.SuccessorStructure</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Nat.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Finite.Fin.html#"><span class="id" title="library">Spaces.Finite.Fin</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1239"></a><h1 class="section">Successor Structures.</h1>
+
+<div class="paragraph"> </div>
+
+ A successor structure is just a type with a endofunctor on it, called 'successor'. Typical examples include either the integers or natural numbers with the successor (or predecessor) operation. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="SuccStr" class="idref" href="#SuccStr"><span class="id" title="definition, record"><span id="SuccStr_rect" class="id"><span id="SuccStr_ind" class="id"><span id="SuccStr_rec" class="id"><span id="SuccStr_sind" class="id">SuccStr</span></span></span></span></span></a> : <span class="id" title="keyword">Type</span> := {<br/>
+&nbsp;&nbsp;&nbsp;<a id="ss_carrier" class="idref" href="#ss_carrier"><span class="id" title="projection">ss_carrier</span></a> :&gt; <span class="id" title="keyword">Type</span> ;<br/>
+&nbsp;&nbsp;&nbsp;<a id="ss_succ" class="idref" href="#ss_succ"><span class="id" title="projection">ss_succ</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_carrier:2"><span class="id" title="method">ss_carrier</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_carrier:2"><span class="id" title="method">ss_carrier</span></a> ;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">succ_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">succ_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">succ_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">succ</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_succ"><span class="id" title="projection">ss_succ</span></a> {<span class="id" title="var">_</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="89df0ccd31566b62f639c57640bd833d" class="idref" href="#89df0ccd31566b62f639c57640bd833d"><span class="id" title="notation">&quot;</span></a>x .+1" := (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_succ"><span class="id" title="projection">ss_succ</span></a> <span class="id" title="var">x</span>) : <span class="id" title="var">succ_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Successor structure of naturals 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="NatSucc" class="idref" href="#NatSucc"><span class="id" title="definition">NatSucc</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a> := <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_SuccStr"><span class="id" title="constructor">Build_SuccStr</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_succ"><span class="id" title="abbreviation">nat_succ</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Successor structure of integers 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="BinIntSucc" class="idref" href="#BinIntSucc"><span class="id" title="definition">BinIntSucc</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a> := <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_SuccStr"><span class="id" title="constructor">Build_SuccStr</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_succ"><span class="id" title="definition">int_succ</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="8c4103adfe392fce83a6aba6aaa6271f" class="idref" href="#8c4103adfe392fce83a6aba6aaa6271f"><span class="id" title="notation">&quot;</span></a>'+N'" := <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#NatSucc"><span class="id" title="definition">NatSucc</span></a> : <span class="id" title="var">succ_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="4183524c74f0c2475241f999cb384ddb" class="idref" href="#4183524c74f0c2475241f999cb384ddb"><span class="id" title="notation">&quot;</span></a>'+Z'" := <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#BinIntSucc"><span class="id" title="definition">BinIntSucc</span></a> : <span class="id" title="var">succ_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Stratified successor structures 
+<div class="paragraph"> </div>
+
+ If <span class="inlinecode"><a class="idref" href="HoTT.Metatheory.Nat.html#N"><span class="id" title="definition">N</span></a></span> has a successor structure, then so does the product <span class="inlinecode"><a class="idref" href="HoTT.Metatheory.Nat.html#N"><span class="id" title="definition">N</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span>.  The successor operation increases the second factor, and if it wraps around, it also increases the first factor. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="StratifiedType" class="idref" href="#StratifiedType"><span class="id" title="definition">StratifiedType</span></a> (<a id="N:4" class="idref" href="#N:4"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>) (<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) := <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:4"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:5"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="stratified_succ" class="idref" href="#stratified_succ"><span class="id" title="definition">stratified_succ</span></a> (<a id="N:6" class="idref" href="#N:6"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>) (<a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#StratifiedType"><span class="id" title="definition">StratifiedType</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:6"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:7"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#StratifiedType"><span class="id" title="definition">StratifiedType</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:6"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:7"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#Empty_rec"><span class="id" title="definition">Empty_rec</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <span class="id" title="var">x</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_succ"><span class="id" title="projection">ss_succ</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <span class="id" title="var">x</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#fsucc_mod"><span class="id" title="definition">fsucc_mod</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <span class="id" title="var">x</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Stratified" class="idref" href="#Stratified"><span class="id" title="definition">Stratified</span></a> (<a id="N:9" class="idref" href="#N:9"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>) (<a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_SuccStr"><span class="id" title="constructor">Build_SuccStr</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#StratifiedType"><span class="id" title="definition">StratifiedType</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:9"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:10"><span class="id" title="variable">n</span></a>) (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#stratified_succ"><span class="id" title="definition">stratified_succ</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:9"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:10"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Addition in successor structures 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="ss_add" class="idref" href="#ss_add"><span class="id" title="definition">ss_add</span></a> {<a id="N:11" class="idref" href="#N:11"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:11"><span class="id" title="variable">N</span></a>) (<a id="k:13" class="idref" href="#k:13"><span class="id" title="binder">k</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:11"><span class="id" title="variable">N</span></a> := <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_iter"><span class="id" title="abbreviation">nat_iter</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#k:13"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_succ"><span class="id" title="projection">ss_succ</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:12"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="bf19de1323148acdb46250be91cc60a9" class="idref" href="#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">&quot;</span></a>+" := <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_add"><span class="id" title="definition">ss_add</span></a> : <span class="id" title="var">succ_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="ss_add_succ" class="idref" href="#ss_add_succ"><span class="id" title="definition">ss_add_succ</span></a> {<a id="N:14" class="idref" href="#N:14"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="n:15" class="idref" href="#n:15"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:14"><span class="id" title="variable">N</span></a>) (<a id="k:16" class="idref" href="#k:16"><span class="id" title="binder">k</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:15"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#k:16"><span class="id" title="variable">k</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:15"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#89df0ccd31566b62f639c57640bd833d"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#k:16"><span class="id" title="variable">k</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_iter_succ_r"><span class="id" title="definition">nat_iter_succ_r</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#k:16"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_succ"><span class="id" title="projection">ss_succ</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:15"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="ss_add_sum" class="idref" href="#ss_add_sum"><span class="id" title="definition">ss_add_sum</span></a> {<a id="N:17" class="idref" href="#N:17"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="n:18" class="idref" href="#n:18"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#N:17"><span class="id" title="variable">N</span></a>) (<a id="k:19" class="idref" href="#k:19"><span class="id" title="binder">k</span></a> <a id="l:20" class="idref" href="#l:20"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:18"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#k:19"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#l:20"><span class="id" title="variable">l</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:18"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#l:20"><span class="id" title="variable">l</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#bf19de1323148acdb46250be91cc60a9"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#k:19"><span class="id" title="variable">k</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_iter_add"><span class="id" title="definition">nat_iter_add</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#k:19"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#l:20"><span class="id" title="variable">l</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_succ"><span class="id" title="projection">ss_succ</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#n:18"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nat and Int segmented by triples 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="::succ_scope:'N3'" class="idref" href="#::succ_scope:'N3'"><span class="id" title="notation">&quot;</span></a>'N3'" := (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Stratified"><span class="id" title="definition">Stratified</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#8c4103adfe392fce83a6aba6aaa6271f"><span class="id" title="notation">+</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#8c4103adfe392fce83a6aba6aaa6271f"><span class="id" title="notation">N</span></a>) 3) : <span class="id" title="var">succ_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="::succ_scope:'Z3'" class="idref" href="#::succ_scope:'Z3'"><span class="id" title="notation">&quot;</span></a>'Z3'" := (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Stratified"><span class="id" title="definition">Stratified</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#4183524c74f0c2475241f999cb384ddb"><span class="id" title="notation">+</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#4183524c74f0c2475241f999cb384ddb"><span class="id" title="notation">Z</span></a>) 3) : <span class="id" title="var">succ_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1240"></a><h2 class="section">Category of successor structures</h2>
+
+<div class="paragraph"> </div>
+
+ Inspired by the construction of the wildcat structure on <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a></span>, we can give <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a></span> a wildcat structure in a similar manner (all the way up). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="ssFam" class="idref" href="#ssFam"><span class="id" title="definition, record"><span id="ssFam_rect" class="id"><span id="ssFam_ind" class="id"><span id="ssFam_rec" class="id"><span id="ssFam_sind" class="id">ssFam</span></span></span></span></span></a> (<a id="A:21" class="idref" href="#A:21"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="ss_fam" class="idref" href="#ss_fam"><span class="id" title="projection">ss_fam</span></a> :&gt; <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:21"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>;<br/>
+&nbsp;&nbsp;<a id="dss_succ" class="idref" href="#dss_succ"><span class="id" title="projection">dss_succ</span></a> {<a id="x:24" class="idref" href="#x:24"><span class="id" title="binder">x</span></a>} : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fam:23"><span class="id" title="method">ss_fam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#x:24"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fam:23"><span class="id" title="method">ss_fam</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#x:24"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#89df0ccd31566b62f639c57640bd833d"><span class="id" title="notation">.+1</span></a>);<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fam"><span class="id" title="projection">ss_fam</span></a> {<span class="id" title="var">_</span> <span class="id" title="var">_</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#dss_succ"><span class="id" title="projection">dss_succ</span></a> {<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="ssForall" class="idref" href="#ssForall"><span class="id" title="definition, record"><span id="ssForall_rect" class="id"><span id="ssForall_ind" class="id"><span id="ssForall_rec" class="id"><span id="ssForall_sind" class="id">ssForall</span></span></span></span></span></a> {<a id="A:26" class="idref" href="#A:26"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="B:27" class="idref" href="#B:27"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:26"><span class="id" title="variable">A</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="ss_fun" class="idref" href="#ss_fun"><span class="id" title="projection">ss_fun</span></a> :&gt; <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:29" class="idref" href="#x:29"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#B:27"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#x:29"><span class="id" title="variable">x</span></a>;<br/>
+&nbsp;&nbsp;<a id="ss_fun_succ" class="idref" href="#ss_fun_succ"><span class="id" title="projection">ss_fun_succ</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:31" class="idref" href="#x:31"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun:30"><span class="id" title="method">ss_fun</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#x:31"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#89df0ccd31566b62f639c57640bd833d"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#dss_succ"><span class="id" title="projection">dss_succ</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun:30"><span class="id" title="method">ss_fun</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#x:31"><span class="id" title="variable">x</span></a>); <br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun"><span class="id" title="projection">ss_fun</span></a> {<span class="id" title="var">_</span> <span class="id" title="var">_</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun_succ"><span class="id" title="projection">ss_fun_succ</span></a> {<span class="id" title="var">_</span> <span class="id" title="var">_</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="ssfam_const" class="idref" href="#ssfam_const"><span class="id" title="definition">ssfam_const</span></a> {<a id="A:33" class="idref" href="#A:33"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="B:34" class="idref" href="#B:34"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>) : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:33"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssFam"><span class="id" title="constructor">Build_ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:33"><span class="id" title="variable">A</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#B:34"><span class="id" title="variable">B</span></a>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_succ"><span class="id" title="projection">ss_succ</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="ssfam_sshomotopy" class="idref" href="#ssfam_sshomotopy"><span class="id" title="definition">ssfam_sshomotopy</span></a> {<a id="A:35" class="idref" href="#A:35"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} {<a id="P:36" class="idref" href="#P:36"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:35"><span class="id" title="variable">A</span></a>} (<a id="f:37" class="idref" href="#f:37"><span class="id" title="binder">f</span></a> <a id="g:38" class="idref" href="#g:38"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssForall"><span class="id" title="record">ssForall</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#P:36"><span class="id" title="variable">P</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:35"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssFam"><span class="id" title="constructor">Build_ssFam</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <a id="x:39" class="idref" href="#x:39"><span class="id" title="binder"><span id="x:40" class="id">x</span></span></a> ⇒ <span class="id" title="var">f</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#x:39"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">g</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#x:39"><span class="id" title="variable">x</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun_succ"><span class="id" title="projection">ss_fun_succ</span></a> <span class="id" title="var">f</span> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#dss_succ"><span class="id" title="projection">dss_succ</span></a> <span class="id" title="var">p</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun_succ"><span class="id" title="projection">ss_fun_succ</span></a> <span class="id" title="var">g</span> <span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="ssHomotopy" class="idref" href="#ssHomotopy"><span class="id" title="definition">ssHomotopy</span></a> {<a id="A:41" class="idref" href="#A:41"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} {<a id="P:42" class="idref" href="#P:42"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:41"><span class="id" title="variable">A</span></a>} (<a id="f:43" class="idref" href="#f:43"><span class="id" title="binder">f</span></a> <a id="g:44" class="idref" href="#g:44"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssForall"><span class="id" title="record">ssForall</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#P:42"><span class="id" title="variable">P</span></a>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssForall"><span class="id" title="record">ssForall</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssfam_sshomotopy"><span class="id" title="definition">ssfam_sshomotopy</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#f:43"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#g:44"><span class="id" title="variable">g</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isgraph_ss" class="idref" href="#isgraph_ss"><span class="id" title="instance">isgraph_ss</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_IsGraph"><span class="id" title="constructor">Build_IsGraph</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssForall"><span class="id" title="record">ssForall</span></a> <span class="id" title="var">X</span> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssfam_const"><span class="id" title="definition">ssfam_const</span></a> <span class="id" title="var">Y</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isgraph_ssforall" class="idref" href="#isgraph_ssforall"><span class="id" title="instance">isgraph_ssforall</span></a> {<a id="A:45" class="idref" href="#A:45"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="P:46" class="idref" href="#P:46"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:45"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssForall"><span class="id" title="record">ssForall</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#P:46"><span class="id" title="variable">P</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_IsGraph"><span class="id" title="constructor">Build_IsGraph</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssHomotopy"><span class="id" title="definition">ssHomotopy</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="is2graph_ssforall" class="idref" href="#is2graph_ssforall"><span class="id" title="instance">is2graph_ssforall</span></a> {<a id="A:47" class="idref" href="#A:47"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="P:48" class="idref" href="#P:48"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:47"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#Is2Graph"><span class="id" title="class">Is2Graph</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssForall"><span class="id" title="record">ssForall</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#P:48"><span class="id" title="variable">P</span></a>)<br/>
+&nbsp;&nbsp;:= {}.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="is2graph_ss" class="idref" href="#is2graph_ss"><span class="id" title="instance">is2graph_ss</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is2Graph"><span class="id" title="class">Is2Graph</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a> := {}.<br/>
+<span class="id" title="keyword">Instance</span> <a id="is3graph_ss" class="idref" href="#is3graph_ss"><span class="id" title="instance">is3graph_ss</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is3Graph"><span class="id" title="class">Is3Graph</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a> := {}.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">sselim_elim</span> <span class="id" title="var">eq</span> <span class="id" title="var">x</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> (<span class="id" title="var">eq</span> <span class="id" title="var">x</span>) <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| ?<span class="id" title="var">lhs</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">_</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> (<span class="id" title="var">eq</span> <span class="id" title="var">x</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">lhs</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">fail</span> "sselim: no lhs found"<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">sselim</span> <span class="id" title="var">f</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">eq</span> := <span class="id" title="tactic">fresh</span> "eq" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">f</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">f</span> <span class="id" title="var">eq</span>];<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">eq</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:49" class="idref" href="#x:49"><span class="id" title="binder"><span id="x:50" class="id">x</span></span></a> : ?<span class="id" title="var">X</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">_</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">multimatch</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">x</span> : <span class="id" title="var">X</span> |- <span class="id" title="var">_</span> ⇒ <span class="id" title="var">sselim_elim</span> <span class="id" title="var">eq</span> <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">f</span> : ?<span class="id" title="var">Y</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">X</span> |- <span class="id" title="var">_</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">y</span> : <span class="id" title="var">Y</span> |- <span class="id" title="var">_</span> ⇒ <span class="id" title="var">sselim_elim</span> <span class="id" title="var">eq</span> (<span class="id" title="var">f</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">g</span> : ?<span class="id" title="var">Z</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">Y</span> |- <span class="id" title="var">_</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">z</span> : <span class="id" title="var">Z</span> |- <span class="id" title="var">_</span> ⇒ <span class="id" title="var">sselim_elim</span> <span class="id" title="var">eq</span> (<span class="id" title="var">f</span> (<span class="id" title="var">g</span> <span class="id" title="var">z</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">fail</span> "sselim: no hyp found"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">fail</span> "sselim: no eq found"<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>;  <br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Overture.html#paths_ind_r"><span class="id" title="definition">paths_ind_r</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">clear</span> <span class="id" title="var">eq</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">clear</span> <span class="id" title="var">f</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Tactic Notation</span> "sselim" <span class="id" title="keyword">constr</span>(<span class="id" title="var">x0</span>) := <span class="id" title="var">sselim</span> <span class="id" title="var">x0</span>.<br/>
+<span class="id" title="keyword">Tactic Notation</span> "sselim" <span class="id" title="keyword">constr</span>(<span class="id" title="var">x0</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x1</span>) := <span class="id" title="var">sselim</span> <span class="id" title="var">x0</span>; <span class="id" title="var">sselim</span> <span class="id" title="var">x1</span>.<br/>
+<span class="id" title="keyword">Tactic Notation</span> "sselim" <span class="id" title="keyword">constr</span>(<span class="id" title="var">x0</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x1</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x2</span>) := <span class="id" title="var">sselim</span> <span class="id" title="var">x0</span>; <span class="id" title="var">sselim</span> <span class="id" title="var">x1</span> <span class="id" title="var">x2</span>.<br/>
+<span class="id" title="keyword">Tactic Notation</span> "sselim" <span class="id" title="keyword">constr</span>(<span class="id" title="var">x0</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x1</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x2</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x3</span>) := <span class="id" title="var">sselim</span> <span class="id" title="var">x0</span>; <span class="id" title="var">sselim</span> <span class="id" title="var">x1</span> <span class="id" title="var">x2</span> <span class="id" title="var">x3</span>.<br/>
+<span class="id" title="keyword">Tactic Notation</span> "sselim" <span class="id" title="keyword">constr</span>(<span class="id" title="var">x0</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x1</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x2</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x3</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x4</span>) := <span class="id" title="var">sselim</span> <span class="id" title="var">x0</span>; <span class="id" title="var">sselim</span> <span class="id" title="var">x1</span> <span class="id" title="var">x2</span> <span class="id" title="var">x3</span> <span class="id" title="var">x4</span>.<br/>
+<span class="id" title="keyword">Tactic Notation</span> "sselim" <span class="id" title="keyword">constr</span>(<span class="id" title="var">x0</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x1</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x2</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x3</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x4</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x5</span>) := <span class="id" title="var">sselim</span> <span class="id" title="var">x0</span>; <span class="id" title="var">sselim</span> <span class="id" title="var">x1</span> <span class="id" title="var">x2</span> <span class="id" title="var">x3</span> <span class="id" title="var">x4</span> <span class="id" title="var">x5</span>.<br/>
+<span class="id" title="keyword">Tactic Notation</span> "sselim" <span class="id" title="keyword">constr</span>(<span class="id" title="var">x0</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x1</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x2</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x3</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x4</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x5</span>) <span class="id" title="keyword">constr</span>(<span class="id" title="var">x6</span>) := <span class="id" title="var">sselim</span> <span class="id" title="var">x0</span>; <span class="id" title="var">sselim</span> <span class="id" title="var">x1</span> <span class="id" title="var">x2</span> <span class="id" title="var">x3</span> <span class="id" title="var">x4</span> <span class="id" title="var">x5</span> <span class="id" title="var">x6</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="is01cat_ss" class="idref" href="#is01cat_ss"><span class="id" title="instance">is01cat_ss</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is01Cat"><span class="id" title="class">Is01Cat</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is01Cat"><span class="id" title="constructor">Build_Is01Cat</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">X</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <a id="x:51" class="idref" href="#x:51"><span class="id" title="binder"><span id="x:52" class="id">x</span></span></a> ⇒ <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#x:51"><span class="id" title="variable">x</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">f</span> (<span class="id" title="var">g</span> <span class="id" title="var">x</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">f</span> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun_succ"><span class="id" title="projection">ss_fun_succ</span></a> <span class="id" title="var">g</span> <span class="id" title="var">x</span>) <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun_succ"><span class="id" title="projection">ss_fun_succ</span></a> <span class="id" title="var">f</span> (<span class="id" title="var">g</span> <span class="id" title="var">x</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="is01cat_ssforall" class="idref" href="#is01cat_ssforall"><span class="id" title="instance">is01cat_ssforall</span></a> {<a id="A:53" class="idref" href="#A:53"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="P:54" class="idref" href="#P:54"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:53"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#Is01Cat"><span class="id" title="class">Is01Cat</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssForall"><span class="id" title="record">ssForall</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#P:54"><span class="id" title="variable">P</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is01Cat"><span class="id" title="constructor">Build_Is01Cat</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ss_fun_succ"><span class="id" title="projection">ss_fun_succ</span></a> <span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> <span class="id" title="var">h</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">q</span> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">p</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sselim</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> <span class="id" title="var">h</span>. <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>), (<span class="id" title="var">q</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="is0gpd_ssforall" class="idref" href="#is0gpd_ssforall"><span class="id" title="instance">is0gpd_ssforall</span></a> {<a id="A:55" class="idref" href="#A:55"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>} (<a id="P:56" class="idref" href="#P:56"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssFam"><span class="id" title="record">ssFam</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#A:55"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#Is0Gpd"><span class="id" title="class">Is0Gpd</span></a> (<a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#ssForall"><span class="id" title="record">ssForall</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#P:56"><span class="id" title="variable">P</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is0Gpd"><span class="id" title="constructor">Build_Is0Gpd</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><span class="id" title="var">p</span> <span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sselim</span> <span class="id" title="var">p</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="is1cat_ss" class="idref" href="#is1cat_ss"><span class="id" title="instance">is1cat_ss</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is1Cat"><span class="id" title="class">Is1Cat</span></a> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#SuccStr"><span class="id" title="record">SuccStr</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is1Cat'"><span class="id" title="definition">Build_Is1Cat'</span></a>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is0Functor"><span class="id" title="constructor">Build_Is0Functor</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">g</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sselim</span> <span class="id" title="var">p</span> <span class="id" title="var">f</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>); <span class="id" title="tactic">clear</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sselim</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">eq</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is0Functor"><span class="id" title="constructor">Build_Is0Functor</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="var">sselim</span> <span class="id" title="var">g</span> <span class="id" title="var">q</span> <span class="id" title="var">f</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> <span class="id" title="var">W</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="var">sselim</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="var">sselim</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Homotopy.SuccessorStructure.html#Build_ssForall"><span class="id" title="constructor">Build_ssForall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="var">sselim</span> <span class="id" title="var">f</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

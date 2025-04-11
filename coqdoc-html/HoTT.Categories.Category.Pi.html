@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Category.Pi</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Category.Pi</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab537"></a><h1 class="section">Dependent Product Category</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Strict.html#"><span class="id" title="library">Category.Strict</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab538"></a><h2 class="section">Definition of <span class="inlinecode">∀</span>, or <span class="inlinecode">∏</span>, for categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="pi" class="idref" href="#pi"><span class="id" title="section">pi</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="pi.A" class="idref" href="#pi.A"><span class="id" title="variable">A</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="pi.P" class="idref" href="#pi.P"><span class="id" title="variable">P</span></a> : <a class="idref" href="HoTT.Categories.Category.Pi.html#pi.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pi" class="idref" href="#pi"><span class="id" title="definition">pi</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<a class="idref" href="HoTT.Categories.Category.Core.html#Build_PreCategory"><span class="id" title="definition">Build_PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="a:4" class="idref" href="#a:4"><span class="id" title="binder"><span id="a:16" class="id">a</span></span></a> : <a class="idref" href="HoTT.Categories.Category.Pi.html#pi.A"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#pi.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#a:4"><span class="id" title="variable">a</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:5" class="idref" href="#s:5"><span class="id" title="binder"><span id="s:17" class="id">s</span></span></a> <a id="d:6" class="idref" href="#d:6"><span class="id" title="binder"><span id="d:18" class="id">d</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="a:7" class="idref" href="#a:7"><span class="id" title="binder"><span id="a:19" class="id">a</span></span></a> : <a class="idref" href="HoTT.Categories.Category.Pi.html#pi.A"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> (<a class="idref" href="HoTT.Categories.Category.Pi.html#pi.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#a:7"><span class="id" title="variable">a</span></a>) (<a class="idref" href="HoTT.Categories.Category.Pi.html#s:5"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#a:7"><span class="id" title="variable">a</span></a>) (<a class="idref" href="HoTT.Categories.Category.Pi.html#d:6"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#a:7"><span class="id" title="variable">a</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:8" class="idref" href="#x:8"><span class="id" title="binder"><span id="x:20" class="id">x</span></span></a> ⇒ <span class="id" title="keyword">fun</span> <a id="a:9" class="idref" href="#a:9"><span class="id" title="binder"><span id="a:21" class="id">a</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.Category.Core.html#identity"><span class="id" title="projection">identity</span></a> (<a class="idref" href="HoTT.Categories.Category.Pi.html#x:8"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#a:9"><span class="id" title="variable">a</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:10" class="idref" href="#s:10"><span class="id" title="binder"><span id="s:22" class="id">s</span></span></a> <a id="d:11" class="idref" href="#d:11"><span class="id" title="binder"><span id="d:23" class="id">d</span></span></a> <a id="d':12" class="idref" href="#d':12"><span class="id" title="binder"><span id="d':24" class="id">d'</span></span></a> <a id="m2:13" class="idref" href="#m2:13"><span class="id" title="binder"><span id="m2:25" class="id">m2</span></span></a> <a id="m1:14" class="idref" href="#m1:14"><span class="id" title="binder"><span id="m1:26" class="id">m1</span></span></a> ⇒ <span class="id" title="keyword">fun</span> <a id="a:15" class="idref" href="#a:15"><span class="id" title="binder"><span id="a:27" class="id">a</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.Category.Pi.html#m2:13"><span class="id" title="variable">m2</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#a:15"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#m1:14"><span class="id" title="variable">m1</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#a:15"><span class="id" title="variable">a</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">intro</span> || <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">morphism</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Category.Pi.html#pi"><span class="id" title="section">pi</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="a46514f7419edb3d22453078cf7c9fb7" class="idref" href="#a46514f7419edb3d22453078cf7c9fb7"><span class="id" title="notation">&quot;</span></a>'forall'  x .. y , P" := (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:28" class="idref" href="#x:28"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> .. (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="y:29" class="idref" href="#y:29"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <span class="id" title="var">P</span>) ..) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="71c99cc552a3dc81926287be8aa265ba" class="idref" href="#71c99cc552a3dc81926287be8aa265ba"><span class="id" title="notation">&quot;</span></a>'forall'  x .. y , P" := (<a class="idref" href="HoTT.Categories.Category.Pi.html#pi"><span class="id" title="definition">pi</span></a> (<span class="id" title="keyword">fun</span> <a id="x:30" class="idref" href="#x:30"><span class="id" title="binder">x</span></a> ⇒ .. (<a class="idref" href="HoTT.Categories.Category.Pi.html#pi"><span class="id" title="definition">pi</span></a> (<span class="id" title="keyword">fun</span> <a id="y:31" class="idref" href="#y:31"><span class="id" title="binder">y</span></a> ⇒ <span class="id" title="var">P</span>)) .. )) : <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab539"></a><h2 class="section">The product of strict categories is strict</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isstrict_category_pi" class="idref" href="#isstrict_category_pi"><span class="id" title="instance">isstrict_category_pi</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H:32" class="idref" href="#H:32"><span class="id" title="binder">Funext</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H0:36" class="idref" href="#H0:36"><span class="id" title="binder">∀</span></a> <a id="a:33" class="idref" href="#a:33"><span class="id" title="binder"><span id="H0:36" class="id">a</span></span></a> <a id="H0:36" class="idref" href="#H0:36"><span class="id" title="binder">:</span></a> <a id="A:34" class="idref" href="#A:34"><span class="id" title="binder"><span id="H0:36" class="id">A</span></span></a><a id="H0:36" class="idref" href="#H0:36"><span class="id" title="binder">,</span></a> <a id="H0:36" class="idref" href="#H0:36"><span class="id" title="binder">IsStrictCategory</span></a> <a id="H0:36" class="idref" href="#H0:36"><span class="id" title="binder">(</span></a><a id="P:35" class="idref" href="#P:35"><span class="id" title="binder"><span id="H0:36" class="id">P</span></span></a> <a id="H0:36" class="idref" href="#H0:36"><span class="id" title="binder">a</span></a><a id="H0:36" class="idref" href="#H0:36"><span class="id" title="binder">)</span></a>}<br/>
+: <a class="idref" href="HoTT.Categories.Category.Strict.html#IsStrictCategory"><span class="id" title="abbreviation">IsStrictCategory</span></a> (<a class="idref" href="HoTT.Categories.Category.Pi.html#71c99cc552a3dc81926287be8aa265ba"><span class="id" title="notation">∀</span></a> <a id="a:37" class="idref" href="#a:37"><span class="id" title="binder">a</span></a><a class="idref" href="HoTT.Categories.Category.Pi.html#71c99cc552a3dc81926287be8aa265ba"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#P:35"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Category.Pi.html#a:37"><span class="id" title="variable">a</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="CategoryPiNotations" class="idref" href="#CategoryPiNotations"><span class="id" title="module">CategoryPiNotations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="93d2f260e06964aa6eaeaddb2de7ce13" class="idref" href="#93d2f260e06964aa6eaeaddb2de7ce13"><span class="id" title="notation">&quot;</span></a>'forall'  x .. y , P" := (<a class="idref" href="HoTT.Categories.Category.Pi.html#a46514f7419edb3d22453078cf7c9fb7"><span class="id" title="notation">∀</span></a> <a id="x:38" class="idref" href="#x:38"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Categories.Category.Pi.html#a46514f7419edb3d22453078cf7c9fb7"><span class="id" title="notation">,</span></a> .. (<a class="idref" href="HoTT.Categories.Category.Pi.html#a46514f7419edb3d22453078cf7c9fb7"><span class="id" title="notation">∀</span></a> <a id="y:39" class="idref" href="#y:39"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Categories.Category.Pi.html#a46514f7419edb3d22453078cf7c9fb7"><span class="id" title="notation">,</span></a> <span class="id" title="var">P</span>) ..)%<span class="id" title="keyword">type</span> : <span class="id" title="var">type_scope</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="e7829045914135ecc4922926f0de1705" class="idref" href="#e7829045914135ecc4922926f0de1705"><span class="id" title="notation">&quot;</span></a>'forall'  x .. y , P" := (<a class="idref" href="HoTT.Categories.Category.Pi.html#pi"><span class="id" title="definition">pi</span></a> (<span class="id" title="keyword">fun</span> <a id="x:40" class="idref" href="#x:40"><span class="id" title="binder">x</span></a> ⇒ .. (<a class="idref" href="HoTT.Categories.Category.Pi.html#pi"><span class="id" title="definition">pi</span></a> (<span class="id" title="keyword">fun</span> <a id="y:41" class="idref" href="#y:41"><span class="id" title="binder">y</span></a> ⇒ <span class="id" title="var">P</span>)) .. )) : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Category.Pi.html#CategoryPiNotations"><span class="id" title="module">CategoryPiNotations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.NaturalTransformation.Composition.Functorial</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.NaturalTransformation.Composition.Functorial</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab882"></a><h1 class="section">Functoriality of composition of natural transformations</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#"><span class="id" title="library">NaturalTransformation.Composition.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#"><span class="id" title="library">NaturalTransformation.Composition.Laws</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="functorial_composition" class="idref" href="#functorial_composition"><span class="id" title="section">functorial_composition</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="functorial_composition.C" class="idref" href="#functorial_composition.C"><span class="id" title="variable">C</span></a> <a id="functorial_composition.D" class="idref" href="#functorial_composition.D"><span class="id" title="variable">D</span></a> <a id="functorial_composition.E" class="idref" href="#functorial_composition.E"><span class="id" title="variable">E</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">natural_transformation_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab883"></a><h2 class="section">whiskering on the left is a functor</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="whiskerL_functor" class="idref" href="#whiskerL_functor"><span class="id" title="definition">whiskerL_functor</span></a> (<a id="F:5" class="idref" href="#F:5"><span class="id" title="binder">F</span></a> : (<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.E"><span class="id" title="variable">E</span></a>)%<span class="id" title="var">category</span>)<br/>
+&nbsp;&nbsp;: (<a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.D"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.E"><span class="id" title="variable">E</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a>)%<span class="id" title="var">category</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.D"><span class="id" title="variable">D</span></a>) (<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.E"><span class="id" title="variable">E</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="G:7" class="idref" href="#G:7"><span class="id" title="binder">G</span></a> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#F:5"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#G:7"><span class="id" title="variable">G</span></a>)%<span class="id" title="var">functor</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a id="T:6" class="idref" href="#T:6"><span class="id" title="binder">T</span></a> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#F:5"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oL'_x"><span class="id" title="notation">oL</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#T:6"><span class="id" title="variable">T</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#composition_of_whisker_l"><span class="id" title="lemma">composition_of_whisker_l</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#whisker_l_right_identity"><span class="id" title="definition">whisker_l_right_identity</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab884"></a><h2 class="section">whiskering on the right is a functor</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="whiskerR_functor" class="idref" href="#whiskerR_functor"><span class="id" title="definition">whiskerR_functor</span></a> (<a id="G:8" class="idref" href="#G:8"><span class="id" title="binder">G</span></a> : (<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.D"><span class="id" title="variable">D</span></a>)%<span class="id" title="var">category</span>)<br/>
+&nbsp;&nbsp;: (<a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.E"><span class="id" title="variable">E</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.E"><span class="id" title="variable">E</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a>)%<span class="id" title="var">category</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.E"><span class="id" title="variable">E</span></a>) (<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition.E"><span class="id" title="variable">E</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="F:10" class="idref" href="#F:10"><span class="id" title="binder">F</span></a> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#F:10"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#G:8"><span class="id" title="variable">G</span></a>)%<span class="id" title="var">functor</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a id="T:9" class="idref" href="#T:9"><span class="id" title="binder">T</span></a> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#T:9"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oR'_x"><span class="id" title="notation">oR</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#G:8"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#composition_of_whisker_r"><span class="id" title="lemma">composition_of_whisker_r</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#whisker_r_left_identity"><span class="id" title="definition">whisker_r_left_identity</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Functorial.html#functorial_composition"><span class="id" title="section">functorial_composition</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

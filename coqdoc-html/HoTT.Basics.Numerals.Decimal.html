@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Basics.Numerals.Decimal</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Basics.Numerals.Decimal</h1>
+
+<div class="code">
+<span class="comment">(************************************************************************)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;The&nbsp;Coq&nbsp;Proof&nbsp;Assistant&nbsp;/&nbsp;The&nbsp;Coq&nbsp;Development&nbsp;Team&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;INRIA,&nbsp;CNRS&nbsp;and&nbsp;contributors&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&lt;O___,,&nbsp;*&nbsp;(see&nbsp;version&nbsp;control&nbsp;and&nbsp;CREDITS&nbsp;file&nbsp;for&nbsp;authors&nbsp;&amp;&nbsp;dates)&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;\VV/&nbsp;&nbsp;**************************************************************)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;file&nbsp;is&nbsp;distributed&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;Lesser&nbsp;General&nbsp;Public&nbsp;License&nbsp;Version&nbsp;2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(see&nbsp;LICENSE&nbsp;file&nbsp;for&nbsp;the&nbsp;text&nbsp;of&nbsp;the&nbsp;license)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(************************************************************************)</span><br/>
+
+<br/>
+<span class="comment">(************************************************************************)</span><br/>
+<span class="comment">(*&nbsp;This&nbsp;file&nbsp;has&nbsp;been&nbsp;modified&nbsp;for&nbsp;use&nbsp;in&nbsp;the&nbsp;HoTT&nbsp;library&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+<span class="comment">(************************************************************************)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab295"></a><h1 class="section">Decimal numbers</h1>
+
+<div class="paragraph"> </div>
+
+ These numbers coded in base 10 will be used for parsing and printing
+    other Coq numeral datatypes in an human-readable way.
+    See the <span class="inlinecode"><span class="id" title="library">Numeral</span></span> <span class="inlinecode"><span class="id" title="keyword">Notation</span></span> command.
+    We represent numbers in base 10 as lists of decimal digits,
+    in big-endian order (most significant digit comes first). 
+<div class="paragraph"> </div>
+
+ Unsigned integers are just lists of digits.
+    For instance, ten is (D1 (D0 Nil)) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="uint" class="idref" href="#uint"><span class="id" title="definition, inductive"><span id="uint_rect" class="id"><span id="uint_ind" class="id"><span id="uint_rec" class="id"><span id="uint_sind" class="id">uint</span></span></span></span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> :=<br/>
+&nbsp;| <a id="Nil" class="idref" href="#Nil"><span class="id" title="constructor">Nil</span></a><br/>
+&nbsp;| <a id="D0" class="idref" href="#D0"><span class="id" title="constructor">D0</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D1" class="idref" href="#D1"><span class="id" title="constructor">D1</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D2" class="idref" href="#D2"><span class="id" title="constructor">D2</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D3" class="idref" href="#D3"><span class="id" title="constructor">D3</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D4" class="idref" href="#D4"><span class="id" title="constructor">D4</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D5" class="idref" href="#D5"><span class="id" title="constructor">D5</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D6" class="idref" href="#D6"><span class="id" title="constructor">D6</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D7" class="idref" href="#D7"><span class="id" title="constructor">D7</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D8" class="idref" href="#D8"><span class="id" title="constructor">D8</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="D9" class="idref" href="#D9"><span class="id" title="constructor">D9</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint:1"><span class="id" title="inductive">uint</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#Nil"><span class="id" title="constructor">Nil</span></a></span> is the number terminator. Taken alone, it behaves as zero,
+    but rather use <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#D0"><span class="id" title="constructor">D0</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#Nil"><span class="id" title="constructor">Nil</span></a></span> instead, since this form will be denoted
+    as <span class="inlinecode">0</span>, while <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#Nil"><span class="id" title="constructor">Nil</span></a></span> will be printed as <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#Nil"><span class="id" title="constructor">Nil</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="zero" class="idref" href="#zero"><span class="id" title="abbreviation">zero</span></a> := (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For signed integers, we use two constructors <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Classes.tactics.ring_quote.html#Quoting.Neg"><span class="id" title="constructor">Neg</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Variant</span> <a id="int" class="idref" href="#int"><span class="id" title="definition, inductive"><span id="int_rect" class="id"><span id="int_ind" class="id"><span id="int_rec" class="id"><span id="int_sind" class="id">int</span></span></span></span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> := <a id="Pos" class="idref" href="#Pos"><span class="id" title="constructor">Pos</span></a> (<a id="d:5" class="idref" href="#d:5"><span class="id" title="binder">d</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">uint</span></a>) | <a id="Neg" class="idref" href="#Neg"><span class="id" title="constructor">Neg</span></a> (<a id="d:6" class="idref" href="#d:6"><span class="id" title="binder">d</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">uint</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For decimal numbers, we use two constructors <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Decimal"><span class="id" title="constructor">Decimal</span></a></span> and
+    <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Decimal.html#DecimalExp"><span class="id" title="constructor">DecimalExp</span></a></span>, depending on whether or not they are given with an
+    exponent (e.g., 1.02e+01). <span class="inlinecode"><a class="idref" href="HoTT.Classes.theory.ua_second_isomorphism.html#i"><span class="id" title="abbreviation">i</span></a></span> is the integral part while <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> is
+    the fractional part (beware that leading zeroes do matter). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Variant</span> <a id="decimal" class="idref" href="#decimal"><span class="id" title="definition, inductive"><span id="decimal_rect" class="id"><span id="decimal_ind" class="id"><span id="decimal_rec" class="id"><span id="decimal_sind" class="id">decimal</span></span></span></span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> :=<br/>
+&nbsp;| <a id="Decimal" class="idref" href="#Decimal"><span class="id" title="constructor">Decimal</span></a> (<a id="i:9" class="idref" href="#i:9"><span class="id" title="binder">i</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#int"><span class="id" title="inductive">int</span></a>) (<a id="f:10" class="idref" href="#f:10"><span class="id" title="binder">f</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">uint</span></a>)<br/>
+&nbsp;| <a id="DecimalExp" class="idref" href="#DecimalExp"><span class="id" title="constructor">DecimalExp</span></a> (<a id="i:11" class="idref" href="#i:11"><span class="id" title="binder">i</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#int"><span class="id" title="inductive">int</span></a>) (<a id="f:12" class="idref" href="#f:12"><span class="id" title="binder">f</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">uint</span></a>) (<a id="e:13" class="idref" href="#e:13"><span class="id" title="binder">e</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#int"><span class="id" title="inductive">int</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">dec_uint_scope</span>.<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">dec_uint_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">uint</span>.<br/>
+<span class="id" title="keyword">Bind Scope</span> <span class="id" title="var">dec_uint_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">uint</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">dec_int_scope</span>.<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">dec_int_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">int</span>.<br/>
+<span class="id" title="keyword">Bind Scope</span> <span class="id" title="var">dec_int_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">int</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">uint</span> <span class="id" title="keyword">as</span> <span class="id" title="var">num.uint.type</span>.<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">int</span> <span class="id" title="keyword">as</span> <span class="id" title="var">num.int.type</span>.<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">decimal</span> <span class="id" title="keyword">as</span> <span class="id" title="var">num.decimal.type</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="nb_digits" class="idref" href="#nb_digits"><span class="id" title="definition">nb_digits</span></a> <a id="d:14" class="idref" href="#d:14"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:14"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> <span class="id" title="var">d</span> | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> <span class="id" title="var">d</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#nb_digits:15"><span class="id" title="definition">nb_digits</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:14"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This representation favors simplicity over canonicity.
+    For normalizing numbers, we need to remove head zero digits,
+    and choose our canonical representation of 0 (here <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#D0"><span class="id" title="constructor">D0</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#Nil"><span class="id" title="constructor">Nil</span></a></span>
+    for unsigned numbers and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#D0"><span class="id" title="constructor">D0</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#Nil"><span class="id" title="constructor">Nil</span></a>)</span> for signed numbers). 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#nzhead"><span class="id" title="definition">nzhead</span></a></span> removes all head zero digits 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="nzhead" class="idref" href="#nzhead"><span class="id" title="definition">nzhead</span></a> <a id="d:17" class="idref" href="#d:17"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:17"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#nzhead:18"><span class="id" title="definition">nzhead</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:17"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:17"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#unorm"><span class="id" title="definition">unorm</span></a></span> : normalization of unsigned integers 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="unorm" class="idref" href="#unorm"><span class="id" title="definition">unorm</span></a> <a id="d:20" class="idref" href="#d:20"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#nzhead"><span class="id" title="definition">nzhead</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:20"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#zero"><span class="id" title="abbreviation">zero</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:20"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#norm"><span class="id" title="definition">norm</span></a></span> : normalization of signed integers 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="norm" class="idref" href="#norm"><span class="id" title="definition">norm</span></a> <a id="d:21" class="idref" href="#d:21"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:21"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#unorm"><span class="id" title="definition">unorm</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:21"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> <span class="id" title="var">d</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#nzhead"><span class="id" title="definition">nzhead</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:21"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#zero"><span class="id" title="abbreviation">zero</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:21"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A few easy operations. For more advanced computations, use the conversions
+    with other Coq numeral datatypes (e.g. Z) and the operations on them. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="opp" class="idref" href="#opp"><span class="id" title="definition">opp</span></a> (<a id="d:23" class="idref" href="#d:23"><span class="id" title="binder">d</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#int"><span class="id" title="inductive">int</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:23"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:23"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:23"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For conversions with binary numbers, it is easier to operate
+    on little-endian numbers. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="revapp" class="idref" href="#revapp"><span class="id" title="definition">revapp</span></a> (<a id="d:25" class="idref" href="#d:25"><span class="id" title="binder">d</span></a> <a id="d':26" class="idref" href="#d':26"><span class="id" title="binder">d'</span></a> : <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">uint</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp:27"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:25"><span class="id" title="variable">d</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':26"><span class="id" title="variable">d'</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="rev" class="idref" href="#rev"><span class="id" title="definition">rev</span></a> <a id="d:29" class="idref" href="#d:29"><span class="id" title="binder">d</span></a> := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp"><span class="id" title="definition">revapp</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:29"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="app" class="idref" href="#app"><span class="id" title="definition">app</span></a> <a id="d:30" class="idref" href="#d:30"><span class="id" title="binder">d</span></a> <a id="d':31" class="idref" href="#d':31"><span class="id" title="binder">d'</span></a> := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#revapp"><span class="id" title="definition">revapp</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#rev"><span class="id" title="definition">rev</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:30"><span class="id" title="variable">d</span></a>) <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d':31"><span class="id" title="variable">d'</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="app_int" class="idref" href="#app_int"><span class="id" title="definition">app_int</span></a> <a id="d1:32" class="idref" href="#d1:32"><span class="id" title="binder">d1</span></a> <a id="d2:33" class="idref" href="#d2:33"><span class="id" title="binder">d2</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d1:32"><span class="id" title="variable">d1</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> <span class="id" title="var">d1</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#app"><span class="id" title="definition">app</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d1:32"><span class="id" title="variable">d1</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d2:33"><span class="id" title="variable">d2</span></a>) | <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> <span class="id" title="var">d1</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#app"><span class="id" title="definition">app</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d1:32"><span class="id" title="variable">d1</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d2:33"><span class="id" title="variable">d2</span></a>) <span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#nztail"><span class="id" title="definition">nztail</span></a></span> removes all trailing zero digits and return both the
+    result and the number of removed digits. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="nztail" class="idref" href="#nztail"><span class="id" title="definition">nztail</span></a> <a id="d:35" class="idref" href="#d:35"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="keyword">fix</span> <a id="aux:41" class="idref" href="#aux:41"><span class="id" title="binder">aux</span></a> <a id="d_rev:36" class="idref" href="#d_rev:36"><span class="id" title="binder">d_rev</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d_rev:36"><span class="id" title="variable">d_rev</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <span class="id" title="var">d_rev</span> ⇒ <span class="id" title="keyword">let</span> (<a id="r:39" class="idref" href="#r:39"><span class="id" title="binder">r</span></a>, <a id="n:40" class="idref" href="#n:40"><span class="id" title="binder">n</span></a>) := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#aux:37"><span class="id" title="variable">aux</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d_rev:36"><span class="id" title="variable">d_rev</span></a> <span class="id" title="tactic">in</span> <a class="idref" href="HoTT.Basics.Overture.html#pair"><span class="id" title="constructor">pair</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#r:39"><span class="id" title="variable">r</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#n:40"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#pair"><span class="id" title="constructor">pair</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d_rev:36"><span class="id" title="variable">d_rev</span></a> <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> (<a id="r:42" class="idref" href="#r:42"><span class="id" title="binder">r</span></a>, <a id="n:43" class="idref" href="#n:43"><span class="id" title="binder">n</span></a>) := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#aux:41"><span class="id" title="variable">aux</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#rev"><span class="id" title="definition">rev</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:35"><span class="id" title="variable">d</span></a>) <span class="id" title="tactic">in</span> <a class="idref" href="HoTT.Basics.Overture.html#pair"><span class="id" title="constructor">pair</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#rev"><span class="id" title="definition">rev</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#r:42"><span class="id" title="variable">r</span></a>) <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#n:43"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="nztail_int" class="idref" href="#nztail_int"><span class="id" title="definition">nztail_int</span></a> <a id="d:44" class="idref" href="#d:44"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:44"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> <span class="id" title="var">d</span> ⇒ <span class="id" title="keyword">let</span> (<a id="r:46" class="idref" href="#r:46"><span class="id" title="binder">r</span></a>, <a id="n:47" class="idref" href="#n:47"><span class="id" title="binder">n</span></a>) := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#nztail"><span class="id" title="definition">nztail</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:44"><span class="id" title="variable">d</span></a> <span class="id" title="tactic">in</span> <a class="idref" href="HoTT.Basics.Overture.html#pair"><span class="id" title="constructor">pair</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#r:46"><span class="id" title="variable">r</span></a>) <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#n:47"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> <span class="id" title="var">d</span> ⇒ <span class="id" title="keyword">let</span> (<a id="r:48" class="idref" href="#r:48"><span class="id" title="binder">r</span></a>, <a id="n:49" class="idref" href="#n:49"><span class="id" title="binder">n</span></a>) := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#nztail"><span class="id" title="definition">nztail</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:44"><span class="id" title="variable">d</span></a> <span class="id" title="tactic">in</span> <a class="idref" href="HoTT.Basics.Overture.html#pair"><span class="id" title="constructor">pair</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#r:48"><span class="id" title="variable">r</span></a>) <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#n:49"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="Little" class="idref" href="#Little"><span class="id" title="module">Little</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Successor of little-endian numbers 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="Little.succ" class="idref" href="#Little.succ"><span class="id" title="definition">succ</span></a> <a id="d:50" class="idref" href="#d:50"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ:51"><span class="id" title="definition">succ</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:50"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Doubling little-endian numbers 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="Little.double" class="idref" href="#Little.double"><span class="id" title="definition">double</span></a> <a id="d:53" class="idref" href="#d:53"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:53"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <a id="Little.succ_double" class="idref" href="#Little.succ_double"><span class="id" title="definition">succ_double</span></a> <a id="d:54" class="idref" href="#d:54"><span class="id" title="binder">d</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Nil</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">D0</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">D2</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">D4</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#double:55"><span class="id" title="definition">double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">D1</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">D6</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">D3</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">D5</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">D8</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">D7</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">D9</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#succ_double:56"><span class="id" title="definition">succ_double</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#d:54"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Little"><span class="id" title="module">Little</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pseudo-conversion functions used when declaring
+    Numeral Notations on <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#uint"><span class="id" title="inductive">uint</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#int"><span class="id" title="inductive">int</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="uint_of_uint" class="idref" href="#uint_of_uint"><span class="id" title="definition">uint_of_uint</span></a> (<a id="i:59" class="idref" href="#i:59"><span class="id" title="binder">i</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">uint</span></a>) := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#i:59"><span class="id" title="variable">i</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="int_of_int" class="idref" href="#int_of_int"><span class="id" title="definition">int_of_int</span></a> (<a id="i:60" class="idref" href="#i:60"><span class="id" title="binder">i</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#int"><span class="id" title="inductive">int</span></a>) := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#i:60"><span class="id" title="variable">i</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

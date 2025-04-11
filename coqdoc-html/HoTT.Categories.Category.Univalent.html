@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Category.Univalent</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Category.Univalent</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab570"></a><h1 class="section">Definition of a univalent/saturated precategory, or just "category"</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Tactics.html#"><span class="id" title="library">HoTT.Tactics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A category is a precategory for which <span class="inlinecode"><a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#idtoiso"><span class="id" title="definition">idtoiso</span></a></span> is an equivalence. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="IsCategory" class="idref" href="#IsCategory"><span class="id" title="abbreviation">IsCategory</span></a> <span class="id" title="var">C</span> := (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="s:1" class="idref" href="#s:1"><span class="id" title="binder">s</span></a> <a id="d:2" class="idref" href="#d:2"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <span class="id" title="var">C</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (@<a class="idref" href="HoTT.Categories.Category.Morphisms.html#idtoiso"><span class="id" title="definition">idtoiso</span></a> <span class="id" title="var">C</span> <a class="idref" href="HoTT.Categories.Category.Univalent.html#s:1"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Category.Univalent.html#d:2"><span class="id" title="variable">d</span></a>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="isotoid" class="idref" href="#isotoid"><span class="id" title="abbreviation">isotoid</span></a> <span class="id" title="var">C</span> <span class="id" title="var">s</span> <span class="id" title="var">d</span> := (@<a class="idref" href="HoTT.Basics.Overture.html#equiv_inv"><span class="id" title="method">equiv_inv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (@<a class="idref" href="HoTT.Categories.Category.Morphisms.html#idtoiso"><span class="id" title="definition">idtoiso</span></a> <span class="id" title="var">C</span> <span class="id" title="var">s</span> <span class="id" title="var">d</span>) <span class="id" title="var">_</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab571"></a><h3 class="section">The objects of a category are a 1-type</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="trunc_category" class="idref" href="#trunc_category"><span class="id" title="instance">trunc_category</span></a> `{<a id="IsCategory0:4" class="idref" href="#IsCategory0:4"><span class="id" title="binder">IsCategory</span></a> <a id="C:3" class="idref" href="#C:3"><span class="id" title="binder"><span id="IsCategory0:4" class="id">C</span></span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> 1 <a class="idref" href="HoTT.Categories.Category.Univalent.html#C:3"><span class="id" title="variable">C</span></a> | 10000.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ? ?.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a>;<br/>
+&nbsp;&nbsp;[ <span class="id" title="tactic">symmetry</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">esplit</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">apply_hyp</span><br/>
+&nbsp;&nbsp;| ].<br/>
+&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="Category" class="idref" href="#Category"><span class="id" title="definition, record"><span id="Category_rect" class="id"><span id="Category_ind" class="id"><span id="Category_rec" class="id"><span id="Category_sind" class="id">Category</span></span></span></span></span></a> :=<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="precategory_of_category" class="idref" href="#precategory_of_category"><span class="id" title="projection">precategory_of_category</span></a> :&gt; <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="iscategory_precategory_of_category" class="idref" href="#iscategory_precategory_of_category"><span class="id" title="projection">iscategory_precategory_of_category</span></a> :&gt; <a class="idref" href="HoTT.Categories.Category.Univalent.html#IsCategory"><span class="id" title="abbreviation">IsCategory</span></a> <a class="idref" href="HoTT.Categories.Category.Univalent.html#precategory_of_category:6"><span class="id" title="method">precategory_of_category</span></a><br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Existing Instance</span> <a class="idref" href="HoTT.Categories.Category.Univalent.html#iscategory_precategory_of_category"><span class="id" title="projection">iscategory_precategory_of_category</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

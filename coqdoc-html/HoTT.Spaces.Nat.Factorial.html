@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Nat.Factorial</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Nat.Factorial</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Decidable.html#"><span class="id" title="library">Basics.Decidable</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#"><span class="id" title="library">Spaces.Nat.Division</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#"><span class="id" title="library">Tactics.EvalIn</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1626"></a><h1 class="section">Factorials</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1627"></a><h2 class="section">Definition</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="factorial" class="idref" href="#factorial"><span class="id" title="definition">factorial</span></a> <a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> := <br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0 ⇒ 1<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:1"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial:2"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:1"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1628"></a><h2 class="section">Properties</h2>
+
+<div class="paragraph"> </div>
+
+ The factorial of <span class="inlinecode">0</span> is <span class="inlinecode">1</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_factorial_zero" class="idref" href="#nat_factorial_zero"><span class="id" title="definition">nat_factorial_zero</span></a> : <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> 0 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1 := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The factorial of <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> is <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> times the factorial of <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_factorial_succ" class="idref" href="#nat_factorial_succ"><span class="id" title="definition">nat_factorial_succ</span></a> <a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:4"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:4"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:4"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A variant of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_succ"><span class="id" title="definition">nat_factorial_succ</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_factorial_pred" class="idref" href="#nat_factorial_pred"><span class="id" title="definition">nat_factorial_pred</span></a> <a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: 0 <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_pred"><span class="id" title="definition">nat_pred</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:5"><span class="id" title="variable">n</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> []; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Every factorial is positive. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="lt_zero_factorial" class="idref" href="#lt_zero_factorial"><span class="id" title="instance">lt_zero_factorial</span></a> <a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a> : 0 <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:6"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Except for <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a></span> <span class="inlinecode">0</span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a></span> <span class="inlinecode">1</span>, the <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a></span> function is strictly monotone.  We separate out the successor case since it is used twice in the proof of the general result. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_factorial_strictly_monotone_succ" class="idref" href="#nat_factorial_strictly_monotone_succ"><span class="id" title="definition">nat_factorial_strictly_monotone_succ</span></a> <a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: 0 <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:7"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:7"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:7"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_one_l"><span class="id" title="definition">nat_mul_one_l</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <span class="id" title="var">n</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_r_strictly_monotone"><span class="id" title="definition">nat_mul_r_strictly_monotone</span></a> <span class="id" title="var">_</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="nat_factorial_strictly_monotone" class="idref" href="#nat_factorial_strictly_monotone"><span class="id" title="instance">nat_factorial_strictly_monotone</span></a> <a id="n:8" class="idref" href="#n:8"><span class="id" title="binder">n</span></a> <a id="m:9" class="idref" href="#m:9"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: 0 <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:9"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:9"><span class="id" title="variable">m</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H1</span> <span class="id" title="var">H2</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">H2</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_strictly_monotone_succ"><span class="id" title="definition">nat_factorial_strictly_monotone_succ</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#lt_trans"><span class="id" title="definition">lt_trans</span></a> <span class="id" title="var">IHleq</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_strictly_monotone_succ"><span class="id" title="definition">nat_factorial_strictly_monotone_succ</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1629"></a><h2 class="section">Divisibility</h2>
+
+<div class="paragraph"> </div>
+
+ Any number less than or equal to <span class="inlinecode"><span class="id" title="var">n</span></span> divides <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="nat_divides_factorial_factor" class="idref" href="#nat_divides_factorial_factor"><span class="id" title="instance">nat_divides_factorial_factor</span></a> <a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> <a id="m:11" class="idref" href="#m:11"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: 0 <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:11"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:11"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [] <span class="id" title="var">H2</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H2</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a></span> is a monotone function from <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span> with respect to <span class="inlinecode">≤</span> and divides. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="nat_divides_factorial_lt" class="idref" href="#nat_divides_factorial_lt"><span class="id" title="instance">nat_divides_factorial_lt</span></a> <a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> <a id="m:13" class="idref" href="#m:13"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:13"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:13"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A product of factorials divides the factorial of the sum. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="nat_divides_factorial_mul_factorial_add" class="idref" href="#nat_divides_factorial_mul_factorial_add"><span class="id" title="instance">nat_divides_factorial_mul_factorial_add</span></a> <a id="n:14" class="idref" href="#n:14"><span class="id" title="binder">n</span></a> <a id="m:15" class="idref" href="#m:15"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:14"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:15"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:14"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:15"><span class="id" title="variable">m</span></a>)<a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">remember</span> (<span class="id" title="var">n</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <span class="id" title="var">m</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">k</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">k</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span>; <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_ind_strong"><span class="id" title="definition">nat_ind_strong</span></a>; <span class="id" title="tactic">hnf</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">k</span> <span class="id" title="var">IH</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#equiv_nat_add_zero"><span class="id" title="definition">equiv_nat_add_zero</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>. }<br/>
+&nbsp;&nbsp;<span class="id" title="var">rewrite_refl</span> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_succ"><span class="id" title="definition">nat_factorial_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_dist_r"><span class="id" title="definition">nat_dist_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">helper</span> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n':16" class="idref" href="#n':16"><span class="id" title="binder"><span id="n':19" class="id">n'</span></span></a> <a id="m':17" class="idref" href="#m':17"><span class="id" title="binder"><span id="m':20" class="id">m'</span></span></a> (<a id="p':18" class="idref" href="#p':18"><span class="id" title="binder"><span id="p':21" class="id">p'</span></span></a> : <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n':16"><span class="id" title="variable">n'</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m':17"><span class="id" title="variable">m'</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">k</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n':16"><span class="id" title="variable">n'</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m':17"><span class="id" title="variable">m'</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n':16"><span class="id" title="variable">n'</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <span class="id" title="var">k</span><a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">)</span></a>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">p'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n'</span>; <span class="id" title="var">only</span> 1: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_succ"><span class="id" title="definition">nat_factorial_succ</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_assoc"><span class="id" title="definition">nat_mul_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_divides_mul_monotone"><span class="id" title="instance">nat_divides_mul_monotone</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_pred"><span class="id" title="definition">nat_pred</span></a> <span class="id" title="var">p'</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_divides_add"><span class="id" title="instance">nat_divides_add</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <span class="id" title="var">helper</span>, <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_comm"><span class="id" title="definition">nat_mul_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">helper</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add_comm"><span class="id" title="definition">nat_add_comm</span></a>; <span class="id" title="tactic">exact</span> <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here is a variant of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_divides_factorial_mul_factorial_add"><span class="id" title="instance">nat_divides_factorial_mul_factorial_add</span></a></span> that is more suitable for binomial coefficients. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="nat_divides_factorial_mul_factorial_add'" class="idref" href="#nat_divides_factorial_mul_factorial_add'"><span class="id" title="instance">nat_divides_factorial_mul_factorial_add'</span></a> <a id="n:22" class="idref" href="#n:22"><span class="id" title="binder">n</span></a> <a id="m:23" class="idref" href="#m:23"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:23"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:22"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:23"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:22"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#m:23"><span class="id" title="variable">m</span></a>) <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#n:22"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add_sub_r_cancel"><span class="id" title="definition">nat_add_sub_r_cancel</span></a> <span class="id" title="var">H</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_divides_factorial_mul_factorial_add"><span class="id" title="instance">nat_divides_factorial_mul_factorial_add</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

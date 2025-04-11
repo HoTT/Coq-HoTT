@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Category.Prod</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Category.Prod</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab540"></a><h1 class="section">Product Category</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Strict.html#"><span class="id" title="library">Category.Strict</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.Prod.html#"><span class="id" title="library">Types.Prod</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab541"></a><h2 class="section">Definition of <span class="inlinecode">×</span> for categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="prod" class="idref" href="#prod"><span class="id" title="section">prod</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="prod.C" class="idref" href="#prod.C"><span class="id" title="variable">C</span></a> <a id="prod.D" class="idref" href="#prod.D"><span class="id" title="variable">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="prod" class="idref" href="#prod"><span class="id" title="definition">prod</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<a class="idref" href="HoTT.Categories.Category.Core.html#Build_PreCategory"><span class="id" title="definition">Build_PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Category.Prod.html#prod.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#prod.D"><span class="id" title="variable">D</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:3" class="idref" href="#s:3"><span class="id" title="binder"><span id="s:11" class="id">s</span></span></a> <a id="d:4" class="idref" href="#d:4"><span class="id" title="binder"><span id="d:12" class="id">d</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#prod.C"><span class="id" title="variable">C</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#s:3"><span class="id" title="variable">s</span></a>) (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#d:4"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#prod.D"><span class="id" title="variable">D</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#s:3"><span class="id" title="variable">s</span></a>) (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#d:4"><span class="id" title="variable">d</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:5" class="idref" href="#x:5"><span class="id" title="binder"><span id="x:13" class="id">x</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Category.Core.html#identity"><span class="id" title="projection">identity</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#x:5"><span class="id" title="variable">x</span></a>)<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#identity"><span class="id" title="projection">identity</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#x:5"><span class="id" title="variable">x</span></a>)<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:6" class="idref" href="#s:6"><span class="id" title="binder"><span id="s:14" class="id">s</span></span></a> <a id="d:7" class="idref" href="#d:7"><span class="id" title="binder"><span id="d:15" class="id">d</span></span></a> <a id="d':8" class="idref" href="#d':8"><span class="id" title="binder"><span id="d':16" class="id">d'</span></span></a> <a id="m2:9" class="idref" href="#m2:9"><span class="id" title="binder"><span id="m2:17" class="id">m2</span></span></a> <a id="m1:10" class="idref" href="#m1:10"><span class="id" title="binder"><span id="m1:18" class="id">m1</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#m2:9"><span class="id" title="variable">m2</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#m1:10"><span class="id" title="variable">m1</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#m2:9"><span class="id" title="variable">m2</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#m1:10"><span class="id" title="variable">m1</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">simpl</span> || <span class="id" title="tactic">intros</span> [] || <span class="id" title="tactic">intro</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="var">f_ap</span>; <span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">morphism</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Category.Prod.html#prod"><span class="id" title="section">prod</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Infix</span> <a id="bf9039ef0618096f6a92208e5ca25783" class="idref" href="#bf9039ef0618096f6a92208e5ca25783"><span class="id" title="notation">&quot;</span></a>×" := <a class="idref" href="HoTT.Categories.Category.Prod.html#prod"><span class="id" title="definition">prod</span></a> : <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab542"></a><h2 class="section">The product of strict categories is strict</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isstrict_category_product" class="idref" href="#isstrict_category_product"><span class="id" title="instance">isstrict_category_product</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="IsStrictCategory0:20" class="idref" href="#IsStrictCategory0:20"><span class="id" title="binder">IsStrictCategory</span></a> <a id="C:19" class="idref" href="#C:19"><span class="id" title="binder"><span id="IsStrictCategory0:20" class="id">C</span></span></a>, <a id="IsStrictCategory1:22" class="idref" href="#IsStrictCategory1:22"><span class="id" title="binder">IsStrictCategory</span></a> <a id="D:21" class="idref" href="#D:21"><span class="id" title="binder"><span id="IsStrictCategory1:22" class="id">D</span></span></a>}<br/>
+: <a class="idref" href="HoTT.Categories.Category.Strict.html#IsStrictCategory"><span class="id" title="abbreviation">IsStrictCategory</span></a> (<a class="idref" href="HoTT.Categories.Category.Prod.html#C:19"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#bf9039ef0618096f6a92208e5ca25783"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#D:21"><span class="id" title="variable">D</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="CategoryProdNotations" class="idref" href="#CategoryProdNotations"><span class="id" title="module">CategoryProdNotations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Infix</span> <a id="7af51393f97117cfe17831a51eb0b762" class="idref" href="#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">&quot;</span></a>×" := <a class="idref" href="HoTT.Categories.Category.Prod.html#prod"><span class="id" title="definition">prod</span></a> : <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Category.Prod.html#CategoryProdNotations"><span class="id" title="module">CategoryProdNotations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

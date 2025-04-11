@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.HomotopyPreCategory</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.HomotopyPreCategory</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab801"></a><h1 class="section">Homotopy precategory of types</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">HoTT.Truncations.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Quoting the HoTT Book:
+
+<div class="paragraph"> </div>
+
+    Example. There is a precategory whose type of objects is <span class="inlinecode"><a class="idref" href="HoTT.Categories.UniversalProperties.html#UniversalMorphism.TerminalMorphism.U"><span class="id" title="variable">U</span></a></span> and
+    with <span class="inlinecode"><span class="id" title="var">hom</span>(<a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a>,<a class="idref" href="HoTT.HIT.iso.html#iso.Y"><span class="id" title="variable">Y</span></a>)</span> <span class="inlinecode">:</span> <span class="inlinecode">∥<a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.HIT.iso.html#iso.Y"><span class="id" title="variable">Y</span></a>∥<span class="id" title="var">₀</span></span>, and composition defined by induction
+    on truncation from ordinary composition <span class="inlinecode">(<a class="idref" href="HoTT.HIT.iso.html#iso.Y"><span class="id" title="variable">Y</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Classes.implementations.natpair_integers.html#NatPair.Z"><span class="id" title="definition">Z</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.HIT.iso.html#iso.Y"><span class="id" title="variable">Y</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span> <span class="inlinecode">→</span>
+    <span class="inlinecode"><a class="idref" href="HoTT.Classes.implementations.natpair_integers.html#NatPair.Z"><span class="id" title="definition">Z</span></a>)</span>. We call this the homotopy precategory of types. 
+<div class="paragraph"> </div>
+
+ We don't want access to all of the internals of this category at top level. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Module</span> <a id="HomotopyPreCategoryInternals" class="idref" href="#HomotopyPreCategoryInternals"><span class="id" title="module">HomotopyPreCategoryInternals</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="HomotopyPreCategoryInternals.homotopy_precategory" class="idref" href="#HomotopyPreCategoryInternals.homotopy_precategory"><span class="id" title="section">homotopy_precategory</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Local Notation</span> <a id="HomotopyPreCategoryInternals.object" class="idref" href="#HomotopyPreCategoryInternals.object"><span class="id" title="abbreviation">object</span></a> := <span class="id" title="keyword">Type</span> (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Local Notation</span> <a id="HomotopyPreCategoryInternals.morphism" class="idref" href="#HomotopyPreCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <span class="id" title="var">s</span> <span class="id" title="var">d</span> := (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> 0 (<span class="id" title="var">s</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">d</span>)) (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="HomotopyPreCategoryInternals.compose" class="idref" href="#HomotopyPreCategoryInternals.compose"><span class="id" title="definition">compose</span></a> <a id="s:1" class="idref" href="#s:1"><span class="id" title="binder">s</span></a> <a id="d:2" class="idref" href="#d:2"><span class="id" title="binder">d</span></a> <a id="d':3" class="idref" href="#d':3"><span class="id" title="binder">d'</span></a> (<a id="m:4" class="idref" href="#m:4"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#HomotopyPreCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#d:2"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#d':3"><span class="id" title="variable">d'</span></a>) (<a id="m':5" class="idref" href="#m':5"><span class="id" title="binder">m'</span></a> : <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#HomotopyPreCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#s:1"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#d:2"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#HomotopyPreCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#s:1"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#d':3"><span class="id" title="variable">d'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m'</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc_rec"><span class="id" title="definition">Trunc_rec</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">m'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc_rec"><span class="id" title="definition">Trunc_rec</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">m</span> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <span class="id" title="var">m'</span>)%<span class="id" title="var">core</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="HomotopyPreCategoryInternals.identity" class="idref" href="#HomotopyPreCategoryInternals.identity"><span class="id" title="definition">identity</span></a> <a id="x:6" class="idref" href="#x:6"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#HomotopyPreCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#x:6"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#x:6"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#HomotopyPreCategoryInternals.compose"><span class="id" title="definition">compose</span></a> [<span class="id" title="var">s</span> <span class="id" title="var">d</span> <span class="id" title="var">d'</span>] <span class="id" title="var">m</span> <span class="id" title="var">m'</span> / .<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#HomotopyPreCategoryInternals.identity"><span class="id" title="definition">identity</span></a> <span class="id" title="var">x</span> / .<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#HomotopyPreCategoryInternals.homotopy_precategory"><span class="id" title="section">homotopy_precategory</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#HomotopyPreCategoryInternals"><span class="id" title="module">HomotopyPreCategoryInternals</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab802"></a><h2 class="section">The homotopy precategory of types</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="homotopy_precategory" class="idref" href="#homotopy_precategory"><span class="id" title="definition">homotopy_precategory</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<a class="idref" href="HoTT.Categories.Category.Core.html#Build_PreCategory"><span class="id" title="definition">Build_PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Type</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#identity"><span class="id" title="definition">HomotopyPreCategoryInternals.identity</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#compose"><span class="id" title="definition">HomotopyPreCategoryInternals.compose</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">intros</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ <span class="id" title="var">m</span> : <a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="var">revert</span> <span class="id" title="var">m</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc_ind"><span class="id" title="definition">Trunc_ind</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" title="tactic">intro</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ |- <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> (?<span class="id" title="var">a</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> ?<span class="id" title="var">b</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> ?<span class="id" title="var">T</span>) ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="tactic">generalize</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">intros</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:7" class="idref" href="#x:7"><span class="id" title="binder"><span id="x:9" class="id"><span id="x:11" class="id"><span id="x:13" class="id"><span id="x:15" class="id"><span id="x:17" class="id">x</span></span></span></span></span></span></a> <a id="y:8" class="idref" href="#y:8"><span class="id" title="binder"><span id="y:10" class="id"><span id="y:12" class="id"><span id="y:14" class="id"><span id="y:16" class="id"><span id="y:18" class="id">y</span></span></span></span></span></span></a> : <span class="id" title="var">T</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#x:7"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#y:8"><span class="id" title="variable">y</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">intro</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

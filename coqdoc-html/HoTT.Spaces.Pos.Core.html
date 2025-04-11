@@ -1,0 +1,720 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Pos.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Pos.Core</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#"><span class="id" title="library">Basics.Decidable</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1655"></a><h1 class="section">Binary Positive Integers</h1>
+
+<div class="paragraph"> </div>
+
+ Most of this file has been adapted from the Coq standard library for positive binary integers. 
+<div class="paragraph"> </div>
+
+ Here we define the inductive type of positive binary numbers. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="Pos" class="idref" href="#Pos"><span class="id" title="definition, inductive"><span id="Pos_rect" class="id"><span id="Pos_ind" class="id"><span id="Pos_rec" class="id"><span id="Pos_sind" class="id">Pos</span></span></span></span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> :=<br/>
+&nbsp;&nbsp;| <a id="xH" class="idref" href="#xH"><span class="id" title="constructor">xH</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos:1"><span class="id" title="inductive">Pos</span></a><br/>
+&nbsp;&nbsp;| <a id="x0" class="idref" href="#x0"><span class="id" title="constructor">x0</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos:1"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos:1"><span class="id" title="inductive">Pos</span></a><br/>
+&nbsp;&nbsp;| <a id="x1" class="idref" href="#x1"><span class="id" title="constructor">x1</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos:1"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos:1"><span class="id" title="inductive">Pos</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">positive_scope</span>.<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">positive_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">pos</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here are some notations that let us write binary positive integers more easily. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="::positive_scope:'1'" class="idref" href="#::positive_scope:'1'"><span class="id" title="notation">&quot;</span></a>1" := <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a> : <span class="id" title="var">positive_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="119ad21c8e0c4947cd973f1f72e5feea" class="idref" href="#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">&quot;</span></a>p ~ 1" := (<a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <span class="id" title="var">p</span>) : <span class="id" title="var">positive_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="35713fcadfdd66af247cbf95acf859fa" class="idref" href="#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">&quot;</span></a>p ~ 0" := (<a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <span class="id" title="var">p</span>) : <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1656"></a><h2 class="section">Successor</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_succ" class="idref" href="#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a id="x:3" class="idref" href="#x:3"><span class="id" title="binder">x</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:3"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ:4"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Peano induction (due to Daniel Schepler) 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_peano_ind" class="idref" href="#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a> (<a id="P:6" class="idref" href="#P:6"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) (<a id="a:7" class="idref" href="#a:7"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:6"><span class="id" title="variable">P</span></a> 1)<br/>
+&nbsp;&nbsp;(<a id="f:9" class="idref" href="#f:9"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="p:8" class="idref" href="#p:8"><span class="id" title="binder">p</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:6"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:8"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:6"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:8"><span class="id" title="variable">p</span></a>)) (<a id="p:10" class="idref" href="#p:10"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:6"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:10"><span class="id" title="variable">p</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">let</span> <a id="f2:15" class="idref" href="#f2:15"><span class="id" title="binder">f2</span></a> := <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind:11"><span class="id" title="definition">pos_peano_ind</span></a> (<span class="id" title="keyword">fun</span> <a id="p:14" class="idref" href="#p:14"><span class="id" title="binder">p</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:6"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#p:14"><span class="id" title="variable">p</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Spaces.Pos.Core.html#f:9"><span class="id" title="variable">f</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:7"><span class="id" title="variable">a</span></a>) (<span class="id" title="keyword">fun</span> <a id="p:12" class="idref" href="#p:12"><span class="id" title="binder">p</span></a> (<a id="x:13" class="idref" href="#x:13"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:6"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:12"><span class="id" title="variable">p</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>) ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:9"><span class="id" title="variable">f</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#f:9"><span class="id" title="variable">f</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:13"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:10"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:9"><span class="id" title="variable">f</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#f2:15"><span class="id" title="variable">f2</span></a> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#f2:15"><span class="id" title="variable">f2</span></a> <span class="id" title="var">q</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:7"><span class="id" title="variable">a</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Computation rules for Peano induction 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="pos_peano_ind_beta_1" class="idref" href="#pos_peano_ind_beta_1"><span class="id" title="definition">pos_peano_ind_beta_1</span></a> (<a id="P:17" class="idref" href="#P:17"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) (<a id="a:18" class="idref" href="#a:18"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:17"><span class="id" title="variable">P</span></a> 1)<br/>
+&nbsp;&nbsp;(<a id="f:20" class="idref" href="#f:20"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="p:19" class="idref" href="#p:19"><span class="id" title="binder">p</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:17"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:19"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:17"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:19"><span class="id" title="variable">p</span></a>))<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:17"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:18"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:20"><span class="id" title="variable">f</span></a> 1 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:18"><span class="id" title="variable">a</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_peano_ind_beta_pos_succ" class="idref" href="#pos_peano_ind_beta_pos_succ"><span class="id" title="definition">pos_peano_ind_beta_pos_succ</span></a> (<a id="P:21" class="idref" href="#P:21"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) (<a id="a:22" class="idref" href="#a:22"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:21"><span class="id" title="variable">P</span></a> 1)<br/>
+&nbsp;&nbsp;(<a id="f:24" class="idref" href="#f:24"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="p:23" class="idref" href="#p:23"><span class="id" title="binder">p</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:21"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:23"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:21"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:23"><span class="id" title="variable">p</span></a>)) (<a id="p:25" class="idref" href="#p:25"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:21"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:22"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:24"><span class="id" title="variable">f</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:25"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:24"><span class="id" title="variable">f</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:21"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:22"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:24"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:25"><span class="id" title="variable">p</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">P</span> <span class="id" title="var">a</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">a</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <span class="id" title="var">IHp</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_peano_rec" class="idref" href="#pos_peano_rec"><span class="id" title="definition">pos_peano_rec</span></a> (<a id="P:26" class="idref" href="#P:26"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:26"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:26"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:26"><span class="id" title="variable">P</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:26"><span class="id" title="variable">P</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:26"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_peano_rec_beta_pos_succ" class="idref" href="#pos_peano_rec_beta_pos_succ"><span class="id" title="definition">pos_peano_rec_beta_pos_succ</span></a> (<a id="P:27" class="idref" href="#P:27"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="a:28" class="idref" href="#a:28"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:27"><span class="id" title="variable">P</span></a>) (<a id="f:29" class="idref" href="#f:29"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:27"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:27"><span class="id" title="variable">P</span></a>) (<a id="p:30" class="idref" href="#p:30"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_rec"><span class="id" title="definition">pos_peano_rec</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:27"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:28"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:29"><span class="id" title="variable">f</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:30"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:29"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:30"><span class="id" title="variable">p</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_rec"><span class="id" title="definition">pos_peano_rec</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:27"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:28"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:29"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:30"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind_beta_pos_succ"><span class="id" title="definition">pos_peano_ind_beta_pos_succ</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#P:27"><span class="id" title="variable">P</span></a>) <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:28"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#f:29"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:30"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1657"></a><h2 class="section">Properties of constructors</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="x0_inj" class="idref" href="#x0_inj"><span class="id" title="definition">x0_inj</span></a> {<a id="z:31" class="idref" href="#z:31"><span class="id" title="binder">z</span></a> <a id="w:32" class="idref" href="#w:32"><span class="id" title="binder">w</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>} (<a id="p:33" class="idref" href="#p:33"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:31"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:32"><span class="id" title="variable">w</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:31"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:32"><span class="id" title="variable">w</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> (<span class="id" title="keyword">fun</span> <a id="s:34" class="idref" href="#s:34"><span class="id" title="binder">s</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:31"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">(</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#s:34"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:32"><span class="id" title="variable">w</span></a> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <span class="id" title="var">a</span> ⇒ <span class="id" title="var">a</span> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <span class="id" title="var">a</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:32"><span class="id" title="variable">w</span></a> <span class="id" title="keyword">end</span><a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">)</span></a>) <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:33"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="x1_inj" class="idref" href="#x1_inj"><span class="id" title="definition">x1_inj</span></a> {<a id="z:36" class="idref" href="#z:36"><span class="id" title="binder">z</span></a> <a id="w:37" class="idref" href="#w:37"><span class="id" title="binder">w</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>} (<a id="p:38" class="idref" href="#p:38"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:36"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:37"><span class="id" title="variable">w</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:36"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:37"><span class="id" title="variable">w</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> (<span class="id" title="keyword">fun</span> <a id="s:39" class="idref" href="#s:39"><span class="id" title="binder">s</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:36"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">(</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#s:39"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:37"><span class="id" title="variable">w</span></a> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <span class="id" title="var">a</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:37"><span class="id" title="variable">w</span></a> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <span class="id" title="var">a</span> ⇒ <span class="id" title="var">a</span> <span class="id" title="keyword">end</span><a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">)</span></a>) <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:38"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="x0_neq_xH" class="idref" href="#x0_neq_xH"><span class="id" title="definition">x0_neq_xH</span></a> {<a id="z:41" class="idref" href="#z:41"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>} : <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:41"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="p:42" class="idref" href="#p:42"><span class="id" title="binder">p</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> (<span class="id" title="keyword">fun</span> <a id="s:43" class="idref" href="#s:43"><span class="id" title="binder">s</span></a> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#s:43"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <span class="id" title="var">a</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:41"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">a</span> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <span class="id" title="var">a</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> <span class="id" title="keyword">end</span>) <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:42"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="x1_neq_xH" class="idref" href="#x1_neq_xH"><span class="id" title="definition">x1_neq_xH</span></a> {<a id="z:45" class="idref" href="#z:45"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>} : <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:45"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="p:46" class="idref" href="#p:46"><span class="id" title="binder">p</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> (<span class="id" title="keyword">fun</span> <a id="s:47" class="idref" href="#s:47"><span class="id" title="binder">s</span></a> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#s:47"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <span class="id" title="var">a</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <span class="id" title="var">a</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:45"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">a</span> <span class="id" title="keyword">end</span>) <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:46"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="x0_neq_x1" class="idref" href="#x0_neq_x1"><span class="id" title="definition">x0_neq_x1</span></a> {<a id="z:49" class="idref" href="#z:49"><span class="id" title="binder">z</span></a> <a id="w:50" class="idref" href="#w:50"><span class="id" title="binder">w</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>} : <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:49"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:50"><span class="id" title="variable">w</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="p:51" class="idref" href="#p:51"><span class="id" title="binder">p</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> (<span class="id" title="keyword">fun</span> <a id="s:52" class="idref" href="#s:52"><span class="id" title="binder">s</span></a> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#s:52"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <span class="id" title="var">a</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:49"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">a</span> | <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> <span class="id" title="keyword">end</span>) <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:51"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="xH_neq_x0" class="idref" href="#xH_neq_x0"><span class="id" title="definition">xH_neq_x0</span></a> {<a id="z:54" class="idref" href="#z:54"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>} : <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:54"><span class="id" title="variable">z</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0_neq_xH"><span class="id" title="definition">x0_neq_xH</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#symmetry"><span class="id" title="definition">symmetry</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="xH_neq_x1" class="idref" href="#xH_neq_x1"><span class="id" title="definition">xH_neq_x1</span></a> {<a id="z:55" class="idref" href="#z:55"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>} : <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH"><span class="id" title="constructor">xH</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:55"><span class="id" title="variable">z</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1_neq_xH"><span class="id" title="definition">x1_neq_xH</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#symmetry"><span class="id" title="definition">symmetry</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="x1_neq_x0" class="idref" href="#x1_neq_x0"><span class="id" title="definition">x1_neq_x0</span></a> {<a id="z:56" class="idref" href="#z:56"><span class="id" title="binder">z</span></a> <a id="w:57" class="idref" href="#w:57"><span class="id" title="binder">w</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>} : <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1"><span class="id" title="constructor">x1</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#z:56"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#w:57"><span class="id" title="variable">w</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0_neq_x1"><span class="id" title="definition">x0_neq_x1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#symmetry"><span class="id" title="definition">symmetry</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1658"></a><h1 class="section">Positive binary integers have decidable paths</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="decpaths_pos" class="idref" href="#decpaths_pos"><span class="id" title="instance">decpaths_pos</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#DecidablePaths"><span class="id" title="class">DecidablePaths</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">zn</span>|<span class="id" title="var">on</span>];<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">m</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">zm</span>|<span class="id" title="var">om</span>].<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH_neq_x0"><span class="id" title="definition">xH_neq_x0</span></a>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#xH_neq_x1"><span class="id" title="definition">xH_neq_x1</span></a>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0_neq_xH"><span class="id" title="definition">x0_neq_xH</span></a>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">destruct</span> (<span class="id" title="var">IHzn</span> <span class="id" title="var">zm</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span>|<span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">q</span>, <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0_inj"><span class="id" title="definition">x0_inj</span></a>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x0_neq_x1"><span class="id" title="definition">x0_neq_x1</span></a>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1_neq_xH"><span class="id" title="definition">x1_neq_xH</span></a>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1_neq_x0"><span class="id" title="definition">x1_neq_x0</span></a>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">destruct</span> (<span class="id" title="var">IHon</span> <span class="id" title="var">om</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span>|<span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">q</span>, <a class="idref" href="HoTT.Spaces.Pos.Core.html#x1_inj"><span class="id" title="definition">x1_inj</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Decidable paths imply <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a></span> is a hSet 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="ishset_pos" class="idref" href="#ishset_pos"><span class="id" title="instance">ishset_pos</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> := <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1659"></a><h1 class="section">Operations over positive numbers</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1660"></a><h2 class="section">Addition</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_add" class="idref" href="#pos_add"><span class="id" title="definition">pos_add</span></a> <a id="x:58" class="idref" href="#x:58"><span class="id" title="binder">x</span></a> <a id="y:59" class="idref" href="#y:59"><span class="id" title="binder">y</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:58"><span class="id" title="variable">x</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:59"><span class="id" title="variable">y</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add_carry:63"><span class="id" title="definition">pos_add_carry</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add:62"><span class="id" title="definition">pos_add</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">)~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add:62"><span class="id" title="definition">pos_add</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">)~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add:62"><span class="id" title="definition">pos_add</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, 1 ⇒ <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, 1 ⇒ 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <a id="pos_add_carry" class="idref" href="#pos_add_carry"><span class="id" title="definition">pos_add_carry</span></a> <a id="x:60" class="idref" href="#x:60"><span class="id" title="binder">x</span></a> <a id="y:61" class="idref" href="#y:61"><span class="id" title="binder">y</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:60"><span class="id" title="variable">x</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:61"><span class="id" title="variable">y</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add_carry:63"><span class="id" title="definition">pos_add_carry</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">)~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add_carry:63"><span class="id" title="definition">pos_add_carry</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">)~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add_carry:63"><span class="id" title="definition">pos_add_carry</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add:62"><span class="id" title="definition">pos_add</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">)~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">)~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, 1 ⇒ 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="50efadf7a9f9d41adb2b162cbba3bda7" class="idref" href="#50efadf7a9f9d41adb2b162cbba3bda7"><span class="id" title="notation">&quot;</span></a>+" := <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> : <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1661"></a><h2 class="section">Operation <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode">2*<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>-1</span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_pred_double" class="idref" href="#pos_pred_double"><span class="id" title="definition">pos_pred_double</span></a> <a id="x:68" class="idref" href="#x:68"><span class="id" title="binder">x</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:68"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_pred_double:69"><span class="id" title="definition">pos_pred_double</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">)~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ 1<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1662"></a><h2 class="section">Predecessor</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_pred" class="idref" href="#pos_pred"><span class="id" title="definition">pos_pred</span></a> <a id="x:71" class="idref" href="#x:71"><span class="id" title="binder">x</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:71"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_pred_double"><span class="id" title="definition">pos_pred_double</span></a> <span class="id" title="var">p</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ 1<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1663"></a><h2 class="section">An auxiliary type for subtraction</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="Pos_mask" class="idref" href="#Pos_mask"><span class="id" title="definition, inductive"><span id="Pos_mask_rect" class="id"><span id="Pos_mask_ind" class="id"><span id="Pos_mask_rec" class="id"><span id="Pos_mask_sind" class="id">Pos_mask</span></span></span></span></span></a> : <span class="id" title="keyword">Set</span> :=<br/>
+&nbsp;&nbsp;| <a id="IsNul" class="idref" href="#IsNul"><span class="id" title="constructor">IsNul</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask:73"><span class="id" title="inductive">Pos_mask</span></a><br/>
+&nbsp;&nbsp;| <a id="IsPos" class="idref" href="#IsPos"><span class="id" title="constructor">IsPos</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask:73"><span class="id" title="inductive">Pos_mask</span></a><br/>
+&nbsp;&nbsp;| <a id="IsNeg" class="idref" href="#IsNeg"><span class="id" title="constructor">IsNeg</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask:73"><span class="id" title="inductive">Pos_mask</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1664"></a><h2 class="section">Operation <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode">2*<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>+1</span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_mask_succ_double" class="idref" href="#pos_mask_succ_double"><span class="id" title="definition">pos_mask_succ_double</span></a> (<a id="x:75" class="idref" href="#x:75"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:75"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNul"><span class="id" title="constructor">IsNul</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1665"></a><h2 class="section">Operation <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode">2*<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_mask_double" class="idref" href="#pos_mask_double"><span class="id" title="definition">pos_mask_double</span></a> (<a id="x:77" class="idref" href="#x:77"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:77"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNul"><span class="id" title="constructor">IsNul</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNul"><span class="id" title="constructor">IsNul</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1666"></a><h2 class="section">Operation <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode">2*<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>-2</span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_mask_double_pred" class="idref" href="#pos_mask_double_pred"><span class="id" title="definition">pos_mask_double_pred</span></a> <a id="x:79" class="idref" href="#x:79"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:79"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_pred_double"><span class="id" title="definition">pos_pred_double</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNul"><span class="id" title="constructor">IsNul</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1667"></a><h2 class="section">Predecessor with mask</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_mask_pred" class="idref" href="#pos_mask_pred"><span class="id" title="definition">pos_mask_pred</span></a> (<a id="p:81" class="idref" href="#p:81"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:81"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNul"><span class="id" title="constructor">IsNul</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <span class="id" title="var">q</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_pred"><span class="id" title="definition">pos_pred</span></a> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNul"><span class="id" title="constructor">IsNul</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1668"></a><h2 class="section">Subtraction, result as a mask</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_mask_sub" class="idref" href="#pos_mask_sub"><span class="id" title="definition">pos_mask_sub</span></a> (<a id="x:83" class="idref" href="#x:83"><span class="id" title="binder">x</span></a> <a id="y:84" class="idref" href="#y:84"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">y</span>} : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:83"><span class="id" title="variable">x</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:84"><span class="id" title="variable">y</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_double"><span class="id" title="definition">pos_mask_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub:87"><span class="id" title="definition">pos_mask_sub</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_succ_double"><span class="id" title="definition">pos_mask_succ_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub:87"><span class="id" title="definition">pos_mask_sub</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_succ_double"><span class="id" title="definition">pos_mask_succ_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub_carry:88"><span class="id" title="definition">pos_mask_sub_carry</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_double"><span class="id" title="definition">pos_mask_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub:87"><span class="id" title="definition">pos_mask_sub</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_pred_double"><span class="id" title="definition">pos_pred_double</span></a> <span class="id" title="var">p</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNul"><span class="id" title="constructor">IsNul</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <a id="pos_mask_sub_carry" class="idref" href="#pos_mask_sub_carry"><span class="id" title="definition">pos_mask_sub_carry</span></a> (<a id="x:85" class="idref" href="#x:85"><span class="id" title="binder">x</span></a> <a id="y:86" class="idref" href="#y:86"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">y</span>} : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos_mask"><span class="id" title="inductive">Pos_mask</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:85"><span class="id" title="variable">x</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:86"><span class="id" title="variable">y</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_succ_double"><span class="id" title="definition">pos_mask_succ_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub_carry:88"><span class="id" title="definition">pos_mask_sub_carry</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_double"><span class="id" title="definition">pos_mask_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub:87"><span class="id" title="definition">pos_mask_sub</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>, 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_pred_double"><span class="id" title="definition">pos_pred_double</span></a> <span class="id" title="var">p</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_double"><span class="id" title="definition">pos_mask_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub_carry:88"><span class="id" title="definition">pos_mask_sub_carry</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, <span class="id" title="var">q</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_succ_double"><span class="id" title="definition">pos_mask_succ_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub_carry:88"><span class="id" title="definition">pos_mask_sub_carry</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>, 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_double_pred"><span class="id" title="definition">pos_mask_double_pred</span></a> <span class="id" title="var">p</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1, <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsNeg"><span class="id" title="constructor">IsNeg</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1669"></a><h2 class="section">Subtraction, result as a positive, returning 1 if <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>≤<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_sub" class="idref" href="#pos_sub"><span class="id" title="definition">pos_sub</span></a> <a id="x:93" class="idref" href="#x:93"><span class="id" title="binder">x</span></a> <a id="y:94" class="idref" href="#y:94"><span class="id" title="binder">y</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mask_sub"><span class="id" title="definition">pos_mask_sub</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:93"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:94"><span class="id" title="variable">y</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.Pos.Core.html#IsPos"><span class="id" title="constructor">IsPos</span></a> <span class="id" title="var">z</span> ⇒ <span class="id" title="var">z</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ 1<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="::positive_scope:x_'-'_x" class="idref" href="#::positive_scope:x_'-'_x"><span class="id" title="notation">&quot;</span></a>-" := <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_sub"><span class="id" title="definition">pos_sub</span></a> : <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1670"></a><h2 class="section">Multiplication</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_mul" class="idref" href="#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a id="x:95" class="idref" href="#x:95"><span class="id" title="binder">x</span></a> <a id="y:96" class="idref" href="#y:96"><span class="id" title="binder">y</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:95"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:96"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#50efadf7a9f9d41adb2b162cbba3bda7"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul:97"><span class="id" title="definition">pos_mul</span></a> <span class="id" title="var">p</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:96"><span class="id" title="variable">y</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul:97"><span class="id" title="definition">pos_mul</span></a> <span class="id" title="var">p</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:96"><span class="id" title="variable">y</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#y:96"><span class="id" title="variable">y</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="83db3fa9f059c10cb623a122cf097cd0" class="idref" href="#83db3fa9f059c10cb623a122cf097cd0"><span class="id" title="notation">&quot;</span></a>×" := <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> : <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1671"></a><h2 class="section">Iteration over a positive number</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_iter" class="idref" href="#pos_iter"><span class="id" title="definition">pos_iter</span></a> {<a id="A:99" class="idref" href="#A:99"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:100" class="idref" href="#f:100"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:99"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:99"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:99"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:99"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_rec"><span class="id" title="definition">pos_peano_rec</span></a> (<span class="id" title="var">A</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">A</span>) <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">f</span> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <span class="id" title="var">g</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1672"></a><h2 class="section">Iteration of a two-variable function, with nesting reflecting the bits</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_iter_op" class="idref" href="#pos_iter_op"><span class="id" title="definition">pos_iter_op</span></a> {<a id="A:101" class="idref" href="#A:101"><span class="id" title="binder">A</span></a>} (<a id="op:102" class="idref" href="#op:102"><span class="id" title="binder">op</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:101"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:101"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:101"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fix</span> <span class="id" title="var">p_iter</span> (<a id="p:103" class="idref" href="#p:103"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>) (<a id="a:104" class="idref" href="#a:104"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:101"><span class="id" title="variable">A</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#A:101"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:103"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:104"><span class="id" title="variable">a</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#p_iter:105"><span class="id" title="variable">p_iter</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:103"><span class="id" title="variable">p</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#op:102"><span class="id" title="variable">op</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:104"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:104"><span class="id" title="variable">a</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#op:102"><span class="id" title="variable">op</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:104"><span class="id" title="variable">a</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#p_iter:105"><span class="id" title="variable">p_iter</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:103"><span class="id" title="variable">p</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#op:102"><span class="id" title="variable">op</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:104"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#a:104"><span class="id" title="variable">a</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1673"></a><h2 class="section">Power</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_pow" class="idref" href="#pos_pow"><span class="id" title="definition">pos_pow</span></a> (<a id="x:107" class="idref" href="#x:107"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>) := <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_iter"><span class="id" title="definition">pos_iter</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#x:107"><span class="id" title="variable">x</span></a>) 1.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1674"></a><h2 class="section">Square</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_square" class="idref" href="#pos_square"><span class="id" title="definition">pos_square</span></a> <a id="p:108" class="idref" href="#p:108"><span class="id" title="binder">p</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:108"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_square:109"><span class="id" title="definition">pos_square</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:108"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#50efadf7a9f9d41adb2b162cbba3bda7"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:108"><span class="id" title="variable">p</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_square:109"><span class="id" title="definition">pos_square</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:108"><span class="id" title="variable">p</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">)~0~0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ 1<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1675"></a><h2 class="section">Division by 2 rounded below but for 1</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_div2" class="idref" href="#pos_div2"><span class="id" title="definition">pos_div2</span></a> <a id="p:111" class="idref" href="#p:111"><span class="id" title="binder">p</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:111"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:111"><span class="id" title="variable">p</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:111"><span class="id" title="variable">p</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Division by 2 rounded up 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_div2_up" class="idref" href="#pos_div2_up"><span class="id" title="definition">pos_div2_up</span></a> <a id="p:113" class="idref" href="#p:113"><span class="id" title="binder">p</span></a> :=<br/>
+&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:113"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| 1 ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:113"><span class="id" title="variable">p</span></a><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:113"><span class="id" title="variable">p</span></a><br/>
+&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1676"></a><h2 class="section">Number of digits in a positive number</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="nat_pos_size" class="idref" href="#nat_pos_size"><span class="id" title="definition">nat_pos_size</span></a> <a id="p:115" class="idref" href="#p:115"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:115"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#nat_pos_size:116"><span class="id" title="definition">nat_pos_size</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:115"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#nat_pos_size:116"><span class="id" title="definition">nat_pos_size</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:115"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Same, with positive output 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_size" class="idref" href="#pos_size"><span class="id" title="definition">pos_size</span></a> <a id="p:118" class="idref" href="#p:118"><span class="id" title="binder">p</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:118"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_size:119"><span class="id" title="definition">pos_size</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:118"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_size:119"><span class="id" title="definition">pos_size</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:118"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1677"></a><h2 class="section">From binary positive numbers to Peano natural numbers</h2>
+
+<div class="paragraph"> </div>
+
+ Sends <span class="inlinecode"><span class="id" title="var">n</span></span> to <span class="inlinecode"><span class="id" title="var">n</span></span>, missing <span class="inlinecode">0</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_of_pos" class="idref" href="#nat_of_pos"><span class="id" title="definition">nat_of_pos</span></a> (<a id="p:121" class="idref" href="#p:121"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_iter"><span class="id" title="definition">pos_iter</span></a> <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:121"><span class="id" title="variable">p</span></a> 0%<span class="id" title="var">nat</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1678"></a><h2 class="section">From Peano natural numbers to binary positive numbers</h2>
+
+<div class="paragraph"> </div>
+
+ A version preserving positive numbers, and sending 0 to 1. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_of_nat" class="idref" href="#pos_of_nat"><span class="id" title="definition">pos_of_nat</span></a> (<a id="n:122" class="idref" href="#n:122"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> :=<br/>
+&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#n:122"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">x</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_nat:123"><span class="id" title="definition">pos_of_nat</span></a> <span class="id" title="var">x</span>)<br/>
+&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Another&nbsp;version&nbsp;that&nbsp;converts&nbsp;<span class="inlinecode"><span class="id" title="var">n</span></span>&nbsp;into&nbsp;<span class="inlinecode"><span class="id" title="var">n</span>+1</span>&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_of_succ_nat" class="idref" href="#pos_of_succ_nat"><span class="id" title="definition">pos_of_succ_nat</span></a> (<a id="n:125" class="idref" href="#n:125"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#n:125"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">x</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_succ_nat:126"><span class="id" title="definition">pos_of_succ_nat</span></a> <span class="id" title="var">x</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1679"></a><h2 class="section">Conversion with a decimal representation for printing/parsing</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="ten" class="idref" href="#ten"><span class="id" title="abbreviation">ten</span></a> := 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_of_uint_acc" class="idref" href="#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> (<a id="d:128" class="idref" href="#d:128"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">Decimal.uint</span></a>) (<a id="acc:129" class="idref" href="#acc:129"><span class="id" title="binder">acc</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#d:128"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Decimal.Nil</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">Decimal.D0</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">Decimal.D1</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1 (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">Decimal.D2</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">Decimal.D3</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">Decimal.D4</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">Decimal.D5</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">Decimal.D6</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">Decimal.D7</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1~1</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">Decimal.D8</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0~0</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">Decimal.D9</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc:130"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_add"><span class="id" title="definition">pos_add</span></a> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_mul"><span class="id" title="definition">pos_mul</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#ten"><span class="id" title="abbreviation">ten</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#acc:129"><span class="id" title="variable">acc</span></a>))<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_of_uint" class="idref" href="#pos_of_uint"><span class="id" title="definition">pos_of_uint</span></a> (<a id="d:132" class="idref" href="#d:132"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">Decimal.uint</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#d:132"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Decimal.Nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D0"><span class="id" title="constructor">Decimal.D0</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint:133"><span class="id" title="definition">pos_of_uint</span></a> <span class="id" title="var">l</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">Decimal.D1</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D2"><span class="id" title="constructor">Decimal.D2</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D3"><span class="id" title="constructor">Decimal.D3</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D4"><span class="id" title="constructor">Decimal.D4</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D5"><span class="id" title="constructor">Decimal.D5</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D6"><span class="id" title="constructor">Decimal.D6</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D7"><span class="id" title="constructor">Decimal.D7</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1~1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D8"><span class="id" title="constructor">Decimal.D8</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0~0</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D9"><span class="id" title="constructor">Decimal.D9</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Some"><span class="id" title="constructor">Some</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint_acc"><span class="id" title="definition">pos_of_uint_acc</span></a> <span class="id" title="var">l</span> 1<a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0</span></a><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_of_decimal_int" class="idref" href="#pos_of_decimal_int"><span class="id" title="definition">pos_of_decimal_int</span></a> (<a id="d:135" class="idref" href="#d:135"><span class="id" title="binder">d</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#int"><span class="id" title="inductive">Decimal.int</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#d:135"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Decimal.Pos</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_uint"><span class="id" title="definition">pos_of_uint</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#d:135"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Decimal.Neg</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_of_number_uint" class="idref" href="#pos_of_number_uint"><span class="id" title="definition">pos_of_number_uint</span></a> (<a id="d:137" class="idref" href="#d:137"><span class="id" title="binder">d</span></a>:<a class="idref" href="HoTT.Basics.Numeral.html#int"><span class="id" title="inductive">Numeral.int</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#option"><span class="id" title="inductive">option</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#d:137"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numeral.html#IntDec"><span class="id" title="constructor">Numeral.IntDec</span></a> <span class="id" title="var">d</span> ⇒ <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_decimal_int"><span class="id" title="definition">pos_of_decimal_int</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#d:137"><span class="id" title="variable">d</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numeral.html#IntHex"><span class="id" title="constructor">Numeral.IntHex</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="pos_to_little_uint" class="idref" href="#pos_to_little_uint"><span class="id" title="definition">pos_to_little_uint</span></a> <a id="p:139" class="idref" href="#p:139"><span class="id" title="binder">p</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:139"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 1 ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#D1"><span class="id" title="constructor">Decimal.D1</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Nil"><span class="id" title="constructor">Decimal.Nil</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Little.succ_double"><span class="id" title="definition">Decimal.Little.succ_double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_to_little_uint:140"><span class="id" title="definition">pos_to_little_uint</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:139"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">p</span><a class="idref" href="HoTT.Spaces.Pos.Core.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Little.double"><span class="id" title="definition">Decimal.Little.double</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_to_little_uint:140"><span class="id" title="definition">pos_to_little_uint</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:139"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_to_uint" class="idref" href="#pos_to_uint"><span class="id" title="definition">pos_to_uint</span></a> <a id="p:142" class="idref" href="#p:142"><span class="id" title="binder">p</span></a> := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#rev"><span class="id" title="definition">Decimal.rev</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_to_little_uint"><span class="id" title="definition">pos_to_little_uint</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:142"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_to_decimal_int" class="idref" href="#pos_to_decimal_int"><span class="id" title="definition">pos_to_decimal_int</span></a> <a id="n:143" class="idref" href="#n:143"><span class="id" title="binder">n</span></a> := <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Decimal.Pos</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_to_uint"><span class="id" title="definition">pos_to_uint</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#n:143"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_to_number_uint" class="idref" href="#pos_to_number_uint"><span class="id" title="definition">pos_to_number_uint</span></a> <a id="p:144" class="idref" href="#p:144"><span class="id" title="binder">p</span></a> := <a class="idref" href="HoTT.Basics.Numeral.html#UIntDec"><span class="id" title="constructor">Numeral.UIntDec</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_to_uint"><span class="id" title="definition">pos_to_uint</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#p:144"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pos_to_nat" class="idref" href="#pos_to_nat"><span class="id" title="definition">pos_to_nat</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add"><span class="id" title="definition">nat_add</span></a> <span class="id" title="var">IHp</span> <span class="id" title="var">IHp</span>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add"><span class="id" title="definition">nat_add</span></a> <span class="id" title="var">IHp</span> <span class="id" title="var">IHp</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Number Notation</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_of_number_uint"><span class="id" title="definition">pos_of_number_uint</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_to_number_uint"><span class="id" title="definition">pos_to_number_uint</span></a> : <span class="id" title="var">positive_scope</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

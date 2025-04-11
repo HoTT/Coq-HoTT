@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.PseudonaturalTransformation.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.PseudonaturalTransformation.Core</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab958"></a><h1 class="section">Definition of pseudonatural transformation</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#"><span class="id" title="library">Pseudofunctor.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#"><span class="id" title="library">FunctorCategory.Morphisms</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#"><span class="id" title="library">NaturalTransformation.Composition.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#"><span class="id" title="library">NaturalTransformation.Composition.Laws</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Identity.html#"><span class="id" title="library">NaturalTransformation.Identity</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">pseudonatural_transformation_scope</span>.<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pseudonatural_transformation_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">pseudonatural_transformation</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">natural_transformation_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pseudonatural_transformation_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Quoting Michael Shulman from an email:
+
+<div class="paragraph"> </div>
+
+    The 2-limit in question is sometimes called a "descent object", or
+    the totalization of a truncated cosimplicial object.  It's a
+    generalization of an equalizer.  The set of natural
+    transformations between two ordinary functors <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span>,<span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span> is
+    the equalizer of
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">Π_x</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>(<span class="id" title="var">Fx</span>,<span class="id" title="var">Gx</span>)</span> <span class="inlinecode">⇉</span> <span class="inlinecode"><span class="id" title="var">Π_</span>{<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>→<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>}</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>(<span class="id" title="var">Fx</span>,<span class="id" title="var">Gy</span>)</span>
+
+<div class="paragraph"> </div>
+
+    The category of pseudonatural transformations between two
+    2-functors is the descent object of
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">Π_x</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>(<span class="id" title="var">Fx</span>,<span class="id" title="var">Gx</span>)</span> <span class="inlinecode">⇉</span> <span class="inlinecode"><span class="id" title="var">Π_</span>{<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>→<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>}</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>(<span class="id" title="var">Fx</span>,<span class="id" title="var">Gy</span>)</span> <span class="inlinecode">⇛</span> <span class="inlinecode"><span class="id" title="var">Π_</span>{<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>→<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>→<span class="id" title="var">z</span>}</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>(<span class="id" title="var">Fx</span>,<span class="id" title="var">Gz</span>)</span>
+
+<div class="paragraph"> </div>
+
+    where there are three maps from the second product to the third,
+    corresponding to picking out <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>→<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span>, <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>→<span class="id" title="var">z</span></span>, and <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>→<span class="id" title="var">z</span></span>.
+
+<div class="paragraph"> </div>
+
+    In general, the descent object of
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">⇉</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> <span class="inlinecode">⇛</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span>
+
+<div class="paragraph"> </div>
+
+    is the category of objects <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>∈<a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> equipped with an isomorphism
+    between their two images in <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> which results in a commutative
+    triangle between their three images in <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span>. 
+<div class="paragraph"> </div>
+
+ Later, he said (https://github.com/HoTT/HoTT/pull/382#issuecomment-41240787):
+
+<div class="paragraph"> </div>
+
+    The "naturality" axiom is only necessary if the domain is a
+    2-category rather than a 1-category. However, the respect for
+    units axiom really is necessary; I guess I forgot to mention that
+    in the email. The way it comes up in the descent object is that
+    there's a map from <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> given by projecting the components
+    of identities, and the coherence cell has to become an identity
+    when composed with that map. 
+<div class="paragraph"> </div>
+
+ We construct the parts as above, but inline the resulting definitions for speed.
+<pre>
+Module PseudonaturalTransformationParts.
+  Section PseudonaturalTransformation.
+    Context `{Funext}.
+
+    Variable X : PreCategory.
+
+    Variables F G : Pseudofunctor X.
+
+
+    Definition A : PreCategory
+      := (forall x : X, F x -&gt; G x)%category.
+    Definition B : PreCategory
+      := (forall x y (m : morphism X x y), F x -&gt; G y)%category.
+    Definition C : PreCategory
+      := (forall x y z (m1 : morphism X y z) (m2 : morphism X x y), F x -&gt; G z)%category.
+
+    Definition a_part := Eval simpl in object A.
+
+    Definition A_to_B_1 : Functor A B.
+    Proof.
+      exact (Build_Functor
+                A B
+                (fun x__Fx_to_Gx =&gt; fun x y m =&gt; x__Fx_to_Gx y o p_morphism_of F m)%functor
+                (fun x__s x__d x__m =&gt; fun x y m =&gt; x__m y oR p_morphism_of F m)
+                _
+                _);
+      simpl; repeat (intro || apply path_forall);
+      [ apply composition_of_whisker_r
+      | apply whisker_r_left_identity ].
+    Defined.
+
+    Definition A_to_B_2 : Functor A B.
+    Proof.
+      exact (Build_Functor
+                A B
+                (fun x__Fx_to_Gx =&gt; fun x y m =&gt; p_morphism_of G m o x__Fx_to_Gx x)%functor
+                (fun x__s x__d x__m =&gt; fun x y m =&gt; p_morphism_of G m oL x__m x)
+                _
+                _);
+      simpl; repeat (intro || apply path_forall);
+      [ apply composition_of_whisker_l
+      | apply whisker_l_right_identity ].
+    Defined.
+
+    Definition b_part (a : a_part)
+      := Eval simpl in forall x y m, (A_to_B_1 a x y m &lt;~=~&gt; A_to_B_2 a x y m).
+
+    Definition B_to_A : Functor B A
+      := Build_Functor
+           B A
+           (fun xym__Fx_to_Gy =&gt; fun x =&gt; xym__Fx_to_Gy x x 1)
+           (fun x__s x__d x__m =&gt; fun x =&gt; x__m x x 1)
+           (fun _ _ _ _ _ =&gt; idpath)
+           (fun _ =&gt; idpath).
+
+    Definition b_id_part (a : a_part) (b : b_part a)
+      := Eval simpl in
+          forall x,
+            (((left_identity_natural_transformation_1 _)
+                o (p_identity_of G _ oR _)
+                o (B_to_A _1 b x)
+                o (_ oL (p_identity_of F _)^-1)
+                o (left_identity_natural_transformation_2 _))
+             = 1)%natural_transformation.
+
+    Definition B_to_C_1 : Functor B C.
+    Proof.
+      exact (Build_Functor
+                B C
+                (fun xym__Fx_to_Gy =&gt; fun x y z m1 m2 =&gt; xym__Fx_to_Gy y z m1 o p_morphism_of F m2)%functor
+                (fun xym__s xym__d xym__m =&gt; fun x y z m1 m2 =&gt; xym__m y z m1 oR p_morphism_of F m2)
+                _
+                _);
+      simpl; repeat (intro || apply path_forall);
+      [ apply composition_of_whisker_r
+      | apply whisker_r_left_identity ].
+    Defined.
+
+    Definition B_to_C_2 : Functor B C.
+    Proof.
+      exact (Build_Functor
+                B C
+                (fun xym__Fx_to_Gy =&gt; fun x y z m1 m2 =&gt; p_morphism_of G m1 o xym__Fx_to_Gy x y m2)%functor
+                (fun xym__s xym__d xym__m =&gt; fun x y z m1 m2 =&gt; p_morphism_of G m1 oL xym__m x y m2)
+                _
+                _);
+      simpl; repeat (intro || apply path_forall);
+      [ apply composition_of_whisker_l
+      | apply whisker_l_right_identity ].
+    Defined.
+
+    Definition B_to_C_3 : Functor B C
+      := Build_Functor
+           B C
+           (fun xym__Fx_to_Gy =&gt; fun x y z m1 m2 =&gt; xym__Fx_to_Gy x z (m1 o m2))
+           (fun xym__s xym__d xym__m =&gt; fun x y z m1 m2 =&gt; xym__m x z (m1 o m2))
+           (fun _ _ _ _ _ =&gt; idpath)
+           (fun _ =&gt; idpath).
+
+    Definition c_part' (a : a_part) (b : b_part a)
+    : forall (x y z : X) (m1 : morphism X y z) (m2 : morphism X x y), Type.
+    Proof.
+      hnf in a, b.
+      pose (fun x y m =&gt; (b x y m : morphism _ _ _)) as bB; simpl in *.
+      intros x y z m1 m2.
+      exact (((associator_2 _ _ _)
+                o (B_to_C_2 _1 bB x y z m1 m2)
+                o (associator_1 _ _ _)
+                o (B_to_C_1 _1 bB x y z m1 m2)
+                o (associator_2 _ _ _))
+             = ((p_composition_of G _ _ _ m1 m2 oR _)
+                  o (B_to_C_3 _1 bB x y z m1 m2)
+                  o (_ oL (p_composition_of F _ _ _ m1 m2)^-1)))%natural_transformation.
+    Defined.
+
+    Arguments c_part' / .
+
+    Definition c_part (a : a_part) (b : b_part a)
+      := Eval simpl in forall x y z m1 m2, @c_part' a b x y z m1 m2.
+
+    (** We would like to define [PseudonaturalTransformation] here, then our types are η-expanded. *)
+  (*Record PseudonaturalTransformation :=
+      { p_components_of :&gt; a_part;
+        p_commutes : b_part p_components_of;
+        p_commutes_coherent : c_part p_commutes }.*)
+  End PseudonaturalTransformation.
+End PseudonaturalTransformationParts.
+
+Print PseudonaturalTransformationParts.a_part.
+Print PseudonaturalTransformationParts.b_part.
+Print PseudonaturalTransformationParts.b_id_part.
+Print PseudonaturalTransformationParts.c_part.
+</pre>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="PseudonaturalTransformation" class="idref" href="#PseudonaturalTransformation"><span class="id" title="definition, record"><span id="PseudonaturalTransformation_rect" class="id"><span id="PseudonaturalTransformation_ind" class="id"><span id="PseudonaturalTransformation_rec" class="id"><span id="PseudonaturalTransformation_sind" class="id">PseudonaturalTransformation</span></span></span></span></span></a> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>} (<a id="X:2" class="idref" href="#X:2"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F:3" class="idref" href="#F:3"><span class="id" title="binder">F</span></a> <a id="G:4" class="idref" href="#G:4"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#Pseudofunctor"><span class="id" title="record">Pseudofunctor</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#X:2"><span class="id" title="variable">X</span></a>) :=<br/>
+&nbsp;&nbsp;{ <a id="p_components_of" class="idref" href="#p_components_of"><span class="id" title="projection">p_components_of</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&gt; <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="a:6" class="idref" href="#a:6"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#X:2"><span class="id" title="variable">X</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#a:6"><span class="id" title="variable">a</span></a>) (<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#G:4"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#a:6"><span class="id" title="variable">a</span></a>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="p_commutes" class="idref" href="#p_commutes"><span class="id" title="projection">p_commutes</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a> <a id="y:9" class="idref" href="#y:9"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#X:2"><span class="id" title="variable">X</span></a>) (<a id="m:10" class="idref" href="#m:10"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#X:2"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:8"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:9"><span class="id" title="variable">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:9"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m:10"><span class="id" title="variable">m</span></a>)%<span class="id" title="var">functor</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#8cdc5a97e991efffdb0f240da05dbcc3"><span class="id" title="notation">&lt;~=~&gt;</span></a> (<a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#G:4"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m:10"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:8"><span class="id" title="variable">x</span></a>)%<span class="id" title="var">functor</span>)%<span class="id" title="var">natural_transformation</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="p_commutes_respects_identity" class="idref" href="#p_commutes_respects_identity"><span class="id" title="projection">p_commutes_respects_identity</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:12" class="idref" href="#x:12"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#X:2"><span class="id" title="variable">X</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#left_identity_natural_transformation_1"><span class="id" title="definition">left_identity_natural_transformation_1</span></a> (<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:12"><span class="id" title="variable">x</span></a>)<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_identity_of"><span class="id" title="projection">p_identity_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#G:4"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:12"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oR'_x"><span class="id" title="notation">oR</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:12"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_commutes:11"><span class="id" title="method">p_commutes</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:12"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:12"><span class="id" title="variable">x</span></a> 1%<span class="id" title="var">morphism</span><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:12"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oL'_x"><span class="id" title="notation">oL</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#2170248a3ff84d7d3e1276c5b6c2e93b"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_identity_of"><span class="id" title="projection">p_identity_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:12"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Categories.Category.Morphisms.html#2170248a3ff84d7d3e1276c5b6c2e93b"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#2170248a3ff84d7d3e1276c5b6c2e93b"><span class="id" title="notation">^-1</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#right_identity_natural_transformation_2"><span class="id" title="definition">right_identity_natural_transformation_2</span></a> (<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:12"><span class="id" title="variable">x</span></a>)<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1)%<span class="id" title="var">natural_transformation</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="p_commutes_respects_composition" class="idref" href="#p_commutes_respects_composition"><span class="id" title="projection">p_commutes_respects_composition</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="x:14" class="idref" href="#x:14"><span class="id" title="binder">x</span></a> <a id="y:15" class="idref" href="#y:15"><span class="id" title="binder">y</span></a> <a id="z:16" class="idref" href="#z:16"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#X:2"><span class="id" title="variable">X</span></a>) (<a id="m1:17" class="idref" href="#m1:17"><span class="id" title="binder">m1</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#X:2"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:15"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#z:16"><span class="id" title="variable">z</span></a>) (<a id="m2:18" class="idref" href="#m2:18"><span class="id" title="binder">m2</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#X:2"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:15"><span class="id" title="variable">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#associator_2"><span class="id" title="definition">associator_2</span></a> (<a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#G:4"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m1:17"><span class="id" title="variable">m1</span></a>) (<a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#G:4"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m2:18"><span class="id" title="variable">m2</span></a>) (<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:14"><span class="id" title="variable">x</span></a>)<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#G:4"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m1:17"><span class="id" title="variable">m1</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oL'_x"><span class="id" title="notation">oL</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_commutes:11"><span class="id" title="method">p_commutes</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:15"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m2:18"><span class="id" title="variable">m2</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#associator_1"><span class="id" title="definition">associator_1</span></a> (<a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#G:4"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m1:17"><span class="id" title="variable">m1</span></a>) (<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:15"><span class="id" title="variable">y</span></a>) (<a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m2:18"><span class="id" title="variable">m2</span></a>)<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_commutes:11"><span class="id" title="method">p_commutes</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:15"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#z:16"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m1:17"><span class="id" title="variable">m1</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oR'_x"><span class="id" title="notation">oR</span></a> <a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m2:18"><span class="id" title="variable">m2</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Laws.html#associator_2"><span class="id" title="definition">associator_2</span></a> (<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#z:16"><span class="id" title="variable">z</span></a>) (<a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m1:17"><span class="id" title="variable">m1</span></a>) (<a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_morphism_of"><span class="id" title="projection">p_morphism_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m2:18"><span class="id" title="variable">m2</span></a>)<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_composition_of"><span class="id" title="projection">p_composition_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#G:4"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:15"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#z:16"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m1:17"><span class="id" title="variable">m1</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m2:18"><span class="id" title="variable">m2</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oR'_x"><span class="id" title="notation">oR</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_commutes:11"><span class="id" title="method">p_commutes</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#z:16"><span class="id" title="variable">z</span></a> (<a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m1:17"><span class="id" title="variable">m1</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m2:18"><span class="id" title="variable">m2</span></a>)%<span class="id" title="var">morphism</span><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of:7"><span class="id" title="method">p_components_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#z:16"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oL'_x"><span class="id" title="notation">oL</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#2170248a3ff84d7d3e1276c5b6c2e93b"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#p_composition_of"><span class="id" title="projection">p_composition_of</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#y:15"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#z:16"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m1:17"><span class="id" title="variable">m1</span></a> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#m2:18"><span class="id" title="variable">m2</span></a><a class="idref" href="HoTT.Categories.Category.Morphisms.html#2170248a3ff84d7d3e1276c5b6c2e93b"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#2170248a3ff84d7d3e1276c5b6c2e93b"><span class="id" title="notation">^-1</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'o'_x"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">)</span></a>)%<span class="id" title="var">natural_transformation</span> }.<br/>
+
+<br/>
+<span class="id" title="keyword">Bind Scope</span> <span class="id" title="var">pseudonatural_transformation_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">PseudonaturalTransformation</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Create HintDb</span> <span class="id" title="var">pseuodnatural_transformation</span> <span class="id" title="var">discriminated</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#p_components_of"><span class="id" title="projection">p_components_of</span></a> {<span class="id" title="var">_</span>} {<span class="id" title="var">X</span>}%<span class="id" title="var">_category</span> {<span class="id" title="var">F</span> <span class="id" title="var">G</span>}%<span class="id" title="var">_pseudofunctor</span> <span class="id" title="var">T</span>%<span class="id" title="var">_pseudonatural_transformation</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">a</span>%<span class="id" title="var">_object</span> : <span class="id" title="tactic">rename</span>, <span class="id" title="tactic">simpl</span> <span class="id" title="var">nomatch</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">p_commutes_respects_identity</span> <span class="id" title="var">p_commutes_respects_composition</span> : <span class="id" title="var">category</span> <span class="id" title="var">pseudonatural_transformation</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

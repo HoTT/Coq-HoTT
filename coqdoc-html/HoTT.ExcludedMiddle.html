@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.ExcludedMiddle</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.ExcludedMiddle</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1105"></a><h1 class="section">The law of excluded middle</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Monomorphic Axiom</span> <a id="ExcludedMiddle" class="idref" href="#ExcludedMiddle"><span class="id" title="axiom">ExcludedMiddle</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a>.<br/>
+<span class="id" title="keyword">Existing Class</span> <a class="idref" href="HoTT.ExcludedMiddle.html#ExcludedMiddle"><span class="id" title="axiom">ExcludedMiddle</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mark this axiom as a "global axiom", which some of our tactics will automatically handle. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is_global_axiom_excludedmiddle" class="idref" href="#is_global_axiom_excludedmiddle"><span class="id" title="instance">is_global_axiom_excludedmiddle</span></a> : <a class="idref" href="HoTT.Basics.Tactics.html#IsGlobalAxiom"><span class="id" title="class">IsGlobalAxiom</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#ExcludedMiddle"><span class="id" title="class">ExcludedMiddle</span></a> := {}.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a id="LEM" class="idref" href="#LEM"><span class="id" title="axiom">LEM</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">`{</span></a><a id="H:2" class="idref" href="#H:2"><span class="id" title="binder">ExcludedMiddle</span></a>} (<a id="P:3" class="idref" href="#P:3"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:3"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:3"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><a class="idref" href="HoTT.ExcludedMiddle.html#P:3"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="ExcludedMiddle_type" class="idref" href="#ExcludedMiddle_type"><span class="id" title="definition">ExcludedMiddle_type</span></a> := <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="P:5" class="idref" href="#P:5"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:5"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:5"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><a class="idref" href="HoTT.ExcludedMiddle.html#P:5"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1106"></a><h2 class="section">LEM means that all propositions are decidable</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="decidable_lem" class="idref" href="#decidable_lem"><span class="id" title="instance">decidable_lem</span></a> `{<a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">ExcludedMiddle</span></a>} (<a id="P:7" class="idref" href="#P:7"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="IsHProp0:8" class="idref" href="#IsHProp0:8"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:8" class="idref" href="#IsHProp0:8"><span class="id" title="binder">P</span></a>} : <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:7"><span class="id" title="variable">P</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.ExcludedMiddle.html#LEM"><span class="id" title="axiom">LEM</span></a> <span class="id" title="var">P</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1107"></a><h2 class="section">Double-negation elimination</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="DNE_type" class="idref" href="#DNE_type"><span class="id" title="definition">DNE_type</span></a> := <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="P:9" class="idref" href="#P:9"><span class="id" title="binder">P</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:9"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6ff74d9c79c8ebe4ff3987390d67f9c7"><span class="id" title="notation">~~</span></a><a class="idref" href="HoTT.ExcludedMiddle.html#P:9"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:9"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="LEM_to_DNE" class="idref" href="#LEM_to_DNE"><span class="id" title="definition">LEM_to_DNE</span></a> : <a class="idref" href="HoTT.ExcludedMiddle.html#ExcludedMiddle"><span class="id" title="class">ExcludedMiddle</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#DNE_type"><span class="id" title="definition">DNE_type</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">lem</span> <span class="id" title="var">P</span> <span class="id" title="var">hp</span> <span class="id" title="var">nnp</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">case</span> (<a class="idref" href="HoTT.ExcludedMiddle.html#LEM"><span class="id" title="axiom">LEM</span></a> <span class="id" title="var">P</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">np</span>; <span class="id" title="tactic">elim</span> (<span class="id" title="var">nnp</span> <span class="id" title="var">np</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This direction requires Funext. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="DNE_to_LEM" class="idref" href="#DNE_to_LEM"><span class="id" title="definition">DNE_to_LEM</span></a> `{<a id="H:10" class="idref" href="#H:10"><span class="id" title="binder">Funext</span></a>} : <br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.ExcludedMiddle.html#DNE_type"><span class="id" title="definition">DNE_type</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#ExcludedMiddle_type"><span class="id" title="definition">ExcludedMiddle_type</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">dn</span> <span class="id" title="var">P</span> <span class="id" title="var">hp</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">dn</span> (<span class="id" title="var">P</span> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><span class="id" title="var">P</span>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sum.html#ishprop_sum"><span class="id" title="instance">ishprop_sum</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">np</span>; <span class="id" title="tactic">exact</span> (<span class="id" title="var">np</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">nlem</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nlem</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nlem</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+DNE is equivalent to "every proposition is a negation". 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="allneg_from_DNE" class="idref" href="#allneg_from_DNE"><span class="id" title="definition">allneg_from_DNE</span></a> (<a id="H:11" class="idref" href="#H:11"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.ExcludedMiddle.html#DNE_type"><span class="id" title="definition">DNE_type</span></a>) (<a id="P:12" class="idref" href="#P:12"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="IsHProp0:13" class="idref" href="#IsHProp0:13"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:13" class="idref" href="#IsHProp0:13"><span class="id" title="binder">P</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="Q:14" class="idref" href="#Q:14"><span class="id" title="binder">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <span class="id" title="keyword">Type</span> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:12"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><a class="idref" href="HoTT.ExcludedMiddle.html#Q:14"><span class="id" title="variable">Q</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><span class="id" title="var">P</span>); <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">np</span>; <span class="id" title="tactic">exact</span> (<span class="id" title="var">np</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="DNE_from_allneg" class="idref" href="#DNE_from_allneg"><span class="id" title="definition">DNE_from_allneg</span></a> (<a id="H:17" class="idref" href="#H:17"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="P:15" class="idref" href="#P:15"><span class="id" title="binder">P</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:15"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="Q:16" class="idref" href="#Q:16"><span class="id" title="binder">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <span class="id" title="keyword">Type</span> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.ExcludedMiddle.html#P:15"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><a class="idref" href="HoTT.ExcludedMiddle.html#Q:16"><span class="id" title="variable">Q</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.ExcludedMiddle.html#DNE_type"><span class="id" title="definition">DNE_type</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> ? <span class="id" title="var">nnp</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">H</span> <span class="id" title="var">P</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">Q</span> <span class="id" title="var">e</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">e</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nnp</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <span class="id" title="var">e</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
