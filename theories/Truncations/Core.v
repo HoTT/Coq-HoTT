@@ -185,15 +185,23 @@ Defined.
 #[export]
 Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 
-(** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)
-Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
-  : Tr (-1) A <-> A.
+(** ** How stability interacts with truncation *)
+
+(** For [n >= -1], a stable type is logically equivalent to its [n]-truncation. (It follows that this is true for decidable types as well.) *)
+Definition trunc_inhabited_iff_inhabited_stable (n : trunc_index) {A} {A_stable : Stable A}
+  : Tr n.+1 A <-> A.
 Proof.
-  refine (_, tr).
+  nrefine (_, tr).
   intro ma.
   apply stable; intro na.
-  revert ma; rapply Trunc_ind; exact na.
+  strip_truncations.
+  exact (na ma).
 Defined.
+
+(** The most common case involves [Tr (-1)], so we give it its own name. *)
+Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
+  : Tr (-1) A <-> A
+  := trunc_inhabited_iff_inhabited_stable (-2).
 
 (** ** A few special things about the (-2)-truncation *)
 
