@@ -777,8 +777,7 @@ Proof.
   refine (equiv_sigma_prod0 _ _ oE equiv_functor_sigma_id (fun _ => equiv_sigma_contr _)).
   intros f.
   rapply contr_forall.
-  intros []; apply contr_inhab_prop.
-  apply tr.
+  intros []; rapply contr_inhabited_hprop.
   exact (grp_homo_unit _ @ (grp_homo_unit _)^).
 Defined.
 
