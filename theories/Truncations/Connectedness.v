@@ -277,7 +277,7 @@ Proof.
     exists (fun a => pr2 (f_eb a) tt).
     (* The last component is essentially (g' ..2), wrapped in a bit of path-algebra. *)
     apply moveL_Mp.
-    apply (concatR (apD10 (ea_eab ..2) tt)).
+    rhs_V napply (apD10 (ea_eab ..2) tt).
     set (ea := ea_eab ..1). generalize ea; simpl. clear ea_eab ea. intros.
     rewrite transport_arrow. rewrite transport_const. rewrite transport_paths_Fl.
     exact 1%path.

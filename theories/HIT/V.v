@@ -162,7 +162,7 @@ Proof.
     intros [b Rab]. exists b.
     apply tr.
     exists (ap h (spglue R Rab)).
-    apply (concatR (apD H_h (spglue R Rab))).
+    rhs_V napply (apD H_h (spglue R Rab)).
     apply inverse. unfold f, g. apply transport_compose.
   - intros b.
     set (trunca := snd bitot_R b). generalize trunca.
@@ -170,7 +170,7 @@ Proof.
     intros [a Rab]. exists a.
     apply tr.
     exists (ap h (spglue R Rab)).
-    apply (concatR (apD H_h (spglue R Rab))).
+    rhs_V napply (apD H_h (spglue R Rab)).
     apply inverse. unfold f, g. apply transport_compose.
 Defined.
 

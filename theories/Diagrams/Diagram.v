@@ -117,8 +117,8 @@ Section Diagram.
     intros h_comm.
     assert (HH : m1_comm = m2_comm).
     { funext i j f x.
-      apply (concatR (concat_1p _)).
-      apply (concatR (h_comm _ _ _ _)).
+      rhs_V napply concat_1p.
+      rhs_V napply h_comm.
       apply inverse, concat_p1. }
     destruct HH.
     reflexivity.
