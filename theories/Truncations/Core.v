@@ -50,6 +50,21 @@ Definition Trunc_rec_tr n {A : Type}
   : Trunc_rec (A:=A) (tr (n:=n)) == idmap
   := Trunc_ind _ (fun a => idpath).
 
+(** ** Tactic to remove truncations in hypotheses if possible *)
+
+Ltac strip_truncations :=
+  progress repeat
+    match goal with
+    | [ T : _ |- _ ]
+      => revert_opaque T;
+        refine (@Trunc_ind _ _ _ _ _);
+        (* Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated: *)
+        [];
+        intro T
+    end.
+
+(** See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities.  We provide this version because it sometimes needs fewer universes (due to the cumulativity of [Trunc]).  However, that same cumulativity sometimes causes free universe variables.  For a hypothesis of type [Trunc@{i} X], we can use [Trunc_ind@{i j}], but sometimes Coq uses [Trunc_ind@{k j}] with [i <= k] and [k] otherwise free.  In these cases, [strip_reflections] and/or [strip_modalities] may generate fewer universe variables. *)
+
 (** ** [Trunc] is a modality *)
 
 Definition Tr (n : trunc_index) : Modality.
@@ -170,6 +185,16 @@ Defined.
 #[export]
 Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 
+(** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)
+Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
+  : Tr (-1) A <-> A.
+Proof.
+  refine (_, tr).
+  intro ma.
+  apply stable; intro na.
+  revert ma; rapply Trunc_ind; exact na.
+Defined.
+
 (** ** A few special things about the (-2)-truncation *)
 
 (** The type of contractible types is contractible. *)
@@ -199,16 +224,6 @@ Declare Scope hprop_scope.
 Notation "A \/ B" := (hor A B) : hprop_scope.
 
 Definition himage {X Y} (f : X -> Y) := image (Tr (-1)) f.
-
-(** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)
-Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
-  : Tr (-1) A <-> A.
-Proof.
-  refine (_, tr).
-  intro ma.
-  apply stable; intro na.
-  revert ma; rapply Trunc_ind; exact na.
-Defined.
 
 (** ** Surjections *)
 
@@ -337,21 +352,6 @@ Proof.
     intros [].
     reflexivity.
 Defined.
-
-(** ** Tactic to remove truncations in hypotheses if possible *)
-
-Ltac strip_truncations :=
-  progress repeat
-    match goal with
-    | [ T : _ |- _ ]
-      => revert_opaque T;
-        refine (@Trunc_ind _ _ _ _ _);
-        (* Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated: *)
-        [];
-        intro T
-    end.
-
-(** See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities.  We provide this version because it sometimes needs fewer universes (due to the cumulativity of [Trunc]).  However, that same cumulativity sometimes causes free universe variables.  For a hypothesis of type [Trunc@{i} X], we can use [Trunc_ind@{i j}], but sometimes Coq uses [Trunc_ind@{k j}] with [i <= k] and [k] otherwise free.  In these cases, [strip_reflections] and/or [strip_modalities] may generate fewer universe variables. *)
 
 (** ** Iterated truncations *)
 
