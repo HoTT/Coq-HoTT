@@ -185,7 +185,7 @@ Defined.
 #[export]
 Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 
-(** ** How stability interacts with truncation *)
+(** ** How stability and decidability interact with truncation *)
 
 (** For [n >= -1], a stable type is logically equivalent to its [n]-truncation. (It follows that this is true for decidable types as well.) *)
 Definition trunc_inhabited_iff_inhabited_stable (n : trunc_index) {A} {A_stable : Stable A}
@@ -202,6 +202,13 @@ Defined.
 Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
   : Tr (-1) A <-> A
   := trunc_inhabited_iff_inhabited_stable (-2).
+
+Instance decidable_trunc_decidable (n : trunc_index) {A} {A_decidable : Decidable A}
+  : Decidable (Tr n.+1 A).
+Proof.
+  rapply decidable_iff.
+  symmetry; rapply trunc_inhabited_iff_inhabited_stable.
+Defined.
 
 (** ** A few special things about the (-2)-truncation *)
 
