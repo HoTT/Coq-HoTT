@@ -341,16 +341,15 @@ Defined.
 (** ** Tactic to remove truncations in hypotheses if possible *)
 
 Ltac strip_truncations :=
-  (** search for truncated hypotheses *)
   progress repeat
     match goal with
     | [ T : _ |- _ ]
       => revert_opaque T;
         refine (@Trunc_ind _ _ _ _ _);
-        (** ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated *)
+        (* Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated: *)
         [];
         intro T
-  end.
+    end.
 
 (** See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities.  We provide this version because it sometimes needs fewer universes (due to the cumulativity of [Trunc]).  However, that same cumulativity sometimes causes free universe variables.  For a hypothesis of type [Trunc@{i} X], we can use [Trunc_ind@{i j}], but sometimes Coq uses [Trunc_ind@{k j}] with [i <= k] and [k] otherwise free.  In these cases, [strip_reflections] and/or [strip_modalities] may generate fewer universe variables. *)
 
