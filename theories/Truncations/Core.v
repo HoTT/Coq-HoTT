@@ -200,7 +200,7 @@ Notation "A \/ B" := (hor A B) : hprop_scope.
 
 Definition himage {X Y} (f : X -> Y) := image (Tr (-1)) f.
 
-Definition contr_inhab_prop {A} `{IsHProp A} (ma : merely A) : Contr A.
+Definition contr_merely_inhabited_hprop {A} `{IsHProp A} (ma : merely A) : Contr A.
 Proof.
   refine (@contr_trunc_conn (Tr (-1)) A _ _).
   exact (contr_inhabited_hprop _ ma).
