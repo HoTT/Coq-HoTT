@@ -170,6 +170,16 @@ Defined.
 #[export]
 Hint Immediate istruncmap_mapinO_tr : typeclass_instances.
 
+(** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)
+Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
+  : Tr (-1) A <-> A.
+Proof.
+  refine (_, tr).
+  intro ma.
+  apply stable; intro na.
+  revert ma; rapply Trunc_ind; exact na.
+Defined.
+
 (** ** A few special things about the (-2)-truncation *)
 
 (** The type of contractible types is contractible. *)
@@ -204,16 +214,6 @@ Definition contr_merely_inhabited_hprop {A} `{IsHProp A} (ma : merely A) : Contr
 Proof.
   refine (@contr_trunc_conn (Tr (-1)) A _ _).
   exact (contr_inhabited_hprop _ ma).
-Defined.
-
-(** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)
-Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
-  : Tr (-1) A <-> A.
-Proof.
-  refine (_, tr).
-  intro ma.
-  apply stable; intro na.
-  revert ma; rapply Trunc_ind; exact na.
 Defined.
 
 (** ** Surjections *)
