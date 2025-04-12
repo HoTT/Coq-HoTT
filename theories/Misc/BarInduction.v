@@ -138,11 +138,6 @@ Proof.
   intros P dP iP bP.
   apply merely_inhabited_iff_inhabited_stable.
   rapply (pDBI (Tr (-1) o P)).
-  - intro l.
-    destruct (dP l) as [p | np].
-    + left; exact (tr p).
-    + right; intro s.
-      by strip_truncations.
   - intros l q.
     refine (tr (iP _ _)).
     intro a; apply merely_inhabited_iff_inhabited_stable, (q a).
