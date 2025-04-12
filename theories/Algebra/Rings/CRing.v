@@ -49,15 +49,16 @@ Definition rng_mult_comm {R : CRing} (x y : R) : x * y = y * x := commutativity 
 Lemma rng_power_mult {R : CRing} (x y : R) (n : nat)
   : rng_power (R:=R) (x * y) n = rng_power (R:=R) x n * rng_power (R:=R) y n.
 Proof.
-  induction n.
+  simple_induction' n.
   1: symmetry; rapply rng_mult_one_l.
   simpl.
-  rewrite (rng_mult_assoc (A:=R)).
-  rewrite <- (rng_mult_assoc (A:=R) x _ y).
-  rewrite (rng_mult_comm (rng_power (R:=R) x n) y).
-  rewrite rng_mult_assoc.
-  rewrite <- (rng_mult_assoc _ (rng_power (R:=R) x n)).
-  f_ap.
+  lhs_V napply rng_mult_assoc.
+  rhs_V napply rng_mult_assoc.
+  napply (ap (x *.)).
+  lhs napply (ap (y *.) IH).
+  lhs napply rng_mult_assoc.
+  rhs napply rng_mult_assoc.
+  exact (ap (.* _) (rng_mult_comm _ _)).
 Defined.
 
 Definition rng_mult_permute_2_3 {R : CRing} (x y z : R)
