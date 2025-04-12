@@ -200,9 +200,6 @@ Notation "A \/ B" := (hor A B) : hprop_scope.
 
 Definition himage {X Y} (f : X -> Y) := image (Tr (-1)) f.
 
-Definition contr_merely_inhabited_hprop {A} `{IsHProp A} (ma : merely A) : Contr A
-  := contr_inhabited_hprop _ (tr^-1 ma).
-
 (** A stable type is logically equivalent to its (-1)-truncation. (It follows that this is true for decidable types as well.) *)
 Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
   : Tr (-1) A <-> A.
