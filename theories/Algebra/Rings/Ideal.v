@@ -809,11 +809,11 @@ Definition ideal_intersection_comm {R : Ring} (I J : Ideal R)
 
 (** Ideals include into their sum on the left *)
 Definition ideal_sum_subset_l {R : Ring} (I J : Ideal R) : I ⊆ (I + J)
-  := subgroup_product_incl_l I J.
+  := subgroup_product_incl_l.
 
 (** Ideals include into their sum on the right *)
 Definition ideal_sum_subset_r {R : Ring} (I J : Ideal R) : J ⊆ (I + J)
-  := subgroup_product_incl_r I J.
+  := subgroup_product_incl_r.
 
 #[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
 
