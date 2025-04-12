@@ -769,8 +769,6 @@ Defined.
 (** We declare and import a module for various (Unicode) ideal notations. These exist in their own special case, and can be imported and used in other files when needing to reason about ideals. *)
 
 Module Import Notation.
-  Infix "⊆" := pred_subset        : ideal_scope.
-  Infix "↔" := pred_eq            : ideal_scope.
   Infix "+" := ideal_sum          : ideal_scope.
   Infix "⋅" := ideal_product      : ideal_scope.
   Infix "∩" := ideal_intersection : ideal_scope.
@@ -778,6 +776,8 @@ Module Import Notation.
   Notation "〈 X 〉" := (ideal_generated X)  : ideal_scope.
   Notation Ann := ideal_annihilator.
 End Notation.
+
+Local Open Scope predicate_scope.
 
 (** *** Ideal Lemmas *)
 

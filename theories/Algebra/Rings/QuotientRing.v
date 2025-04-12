@@ -10,6 +10,7 @@ Require Import Algebra.Rings.Ideal.
 (** In this file we define the quotient of a ring by an ideal. *)
 
 Import Ideal.Notation.
+Local Open Scope predicate_scope.
 Local Open Scope ring_scope.
 Local Open Scope wc_iso_scope.
 

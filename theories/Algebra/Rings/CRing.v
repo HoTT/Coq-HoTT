@@ -6,6 +6,7 @@ Require Export Algebra.Rings.Ring Algebra.Rings.Ideal Algebra.Rings.QuotientRing
 
 (** * Commutative Rings *)
 
+Local Open Scope predicate_scope.
 Local Open Scope ring_scope.
 Local Open Scope wc_iso_scope.
 
