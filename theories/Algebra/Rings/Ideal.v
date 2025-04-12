@@ -500,6 +500,19 @@ Proof.
     exact igt_mul_r.
 Defined. 
 
+Definition ideal_generated_rec {R : Ring} {X : R -> Type} {I : Ideal R}
+  (p : X ⊆ I)
+  : ideal_generated X ⊆ I.
+Proof.
+  intros x; apply Trunc_rec; intros q.
+  induction q.
+  - by apply p.
+  - apply ideal_in_zero.
+  - by apply ideal_in_plus_negate.
+  - by apply isleftideal.
+  - by rapply isrightideal.
+Defined.
+
 (** *** Finitely generated ideal *)
 
 (** Finitely generated ideals *)
@@ -1194,16 +1207,10 @@ Definition ideal_subset_extension_preimage {R S : Ring} (f : R $-> S)
   (I : Ideal S)
   : ideal_extension f (ideal_preimage f I) ⊆ I.
 Proof.
-  intros x.
-  apply Trunc_rec.
-  intros y.
-  induction y.
-  + destruct x as [s [p q]].
-    destruct q; exact p.
-  + apply ideal_in_zero.
-  + by apply ideal_in_plus_negate.
-  + by rapply isleftideal.
-  + by rapply isrightideal.
+  apply ideal_generated_rec.
+  intros s [r [p q]].
+  destruct q.
+  exact p.
 Defined.
 
 (** TODO: Maximal ideals *)
