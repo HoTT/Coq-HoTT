@@ -6,6 +6,7 @@ Require Import Groups.Group AbGroups.Abelianization AbGroups.AbelianGroup
 Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.
 Require Import Truncations.Core.
 
+Local Open Scope predicate_scope.
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
@@ -228,7 +229,7 @@ Local Open Scope group_scope.
 (** [subgroup_commutator H K] is the smallest subgroup containing the commutators of elements of [H] with elements of [K]. *)
 Definition subgroup_commutator_rec {G : Group} {H K : Subgroup G} (J : Subgroup G)
   (i : forall x y, H x -> K y -> J (grp_commutator x y))
-  : pred_subset [H, K] J.
+  : [H, K] ⊆ J.
 Proof.
   rapply subgroup_generated_rec; intros x [[y Hy] [[z Kz] p]];
     destruct p; simpl.
@@ -239,7 +240,7 @@ Defined.
 Definition subgroup_commutator_2_rec {G : Group} {H J K : Subgroup G}
   (N : Subgroup G) `{!IsNormalSubgroup N}
   (i : forall x y z, H x -> J y -> K z -> N (grp_commutator (grp_commutator x y) z))
-  : pred_subset [[H, J], K] N.
+  : [[H, J], K] ⊆ N.
 Proof.
   snapply subgroup_commutator_rec.
   intros x z HJx Kz; revert x HJx.
@@ -259,8 +260,8 @@ Defined.
 
 (** Commutator subgroups are functorial. *)
 Definition functor_subgroup_commutator {G : Group} {H J K L : Subgroup G}
-  (f : pred_subset H K) (g : pred_subset J L)
-  : pred_subset [H, J] [K, L].
+  (f : H ⊆ K) (g : J ⊆ L)
+  : [H, J] ⊆ [K, L].
 Proof.
   snapply subgroup_commutator_rec.
   intros x y Hx Jx.
@@ -268,8 +269,8 @@ Proof.
 Defined.
 
 Definition subgroup_eq_commutator {G : Group} {H J K L : Subgroup G}
-  (f : pred_eq H K) (g : pred_eq J L)
-  : pred_eq [H, J] [K, L].
+  (f : H ↔ K) (g : J ↔ L)
+  : [H, J] ↔ [K, L].
 Proof.
   snapply pred_subset_antisymm; apply functor_subgroup_commutator.
   3,4: apply pred_subset_pred_eq'.
@@ -278,7 +279,7 @@ Proof.
 Defined.
 
 Definition subgroup_incl_commutator_symm {G : Group} (H J : Subgroup G)
-  : pred_subset [H, J] [J, H].
+  : [H, J] ⊆ [J, H].
 Proof.
   snapply subgroup_commutator_rec.
   intros x y Hx Jy.
@@ -289,14 +290,14 @@ Defined.
 
 (** Commutator subgroups are symmetric in their arguments. *)
 Definition subgroup_commutator_symm {G : Group} (H J : Subgroup G)
-  : pred_eq [H, J] [J, H].
+  : [H, J] ↔ [J, H].
 Proof.
   snapply pred_subset_antisymm; apply subgroup_incl_commutator_symm.
 Defined.
 
 (** The opposite subgroup of a commutator subgroup is the commutator subgroup of the opposite subgroups. *)
 Definition subgroup_eq_commutator_grp_op {G : Group} (H J : Subgroup G)
-  : pred_eq (subgroup_grp_op [H, J]) [subgroup_grp_op J, subgroup_grp_op H].
+  : subgroup_grp_op [H, J] ↔ [subgroup_grp_op J, subgroup_grp_op H].
 Proof.
   napply (subgroup_eq_subgroup_generated_op (G:=G)).
   intro x.
@@ -336,7 +337,7 @@ Defined.
 (** Commutator subgroups distribute over products of normal subgroups on the left. *)
 Definition subgroup_commutator_normal_prod_l {G : Group}
   (H K L : NormalSubgroup G)
-  : pred_eq [subgroup_product H K, L] (subgroup_product [H, L] [K, L]).
+  : [subgroup_product H K, L] ↔ subgroup_product [H, L] [K, L].
 Proof.
   intros x; split.
   - revert x; snapply subgroup_commutator_rec.
@@ -364,7 +365,7 @@ Defined.
 (** Commutator subgroups distribute over products of normal subgroups on the right. *)
 Definition subgroup_commutator_normal_prod_r {G : Group}
   (H K L : NormalSubgroup G)
-  : pred_eq [H, subgroup_product K L] (subgroup_product [H, K] [H, L]).
+  : [H, subgroup_product K L] ↔ subgroup_product [H, K] [H, L].
 Proof.
   intros x.
   etransitivity.
@@ -378,9 +379,7 @@ Defined.
 (** The subgroup image of a commutator is included in the commutator of the subgroup images. The converse only generally holds for a normal [J] and [K] and a surjective [f]. *)
 Definition subgroup_image_commutator_incl {G H : Group}
   (f : G $-> H) (J K : Subgroup G)
-  : pred_subset
-      (subgroup_image f [J, K])
-      [subgroup_image f J, subgroup_image f K].
+  : subgroup_image f [J, K] ⊆ [subgroup_image f J, subgroup_image f K].
 Proof.
   snapply subgroup_image_rec.
   snapply subgroup_commutator_rec.
@@ -447,9 +446,8 @@ Defined.
 
 Definition three_subgroups_lemma (G : Group) (H J K N : Subgroup G)
   `{!IsNormalSubgroup N}
-  (T1 : pred_subset [[H, J], K] N)
-  (T2 : pred_subset [[J, K], H] N)
-  : pred_subset [[K, H], J] N.
+  (T1 : [[H, J], K] ⊆ N) (T2 : [[J, K], H] ⊆ N)
+  : [[K, H], J] ⊆ N.
 Proof.
   rapply subgroup_commutator_2_rec.
   Local Close Scope group_scope.
