@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Category.Objects</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Category.Objects</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab523"></a><h1 class="section">Universal objects</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab524"></a><h2 class="section">Definition of "unique up to unique isomorphism"</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="unique_up_to_unique_isomorphism" class="idref" href="#unique_up_to_unique_isomorphism"><span class="id" title="definition">unique_up_to_unique_isomorphism</span></a> (<a id="C:1" class="idref" href="#C:1"><span class="id" title="binder">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) (<a id="P:2" class="idref" href="#P:2"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Categories.Category.Objects.html#C:1"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:3" class="idref" href="#x:3"><span class="id" title="binder">x</span></a> (<span class="id" title="var">_</span> : <a class="idref" href="HoTT.Categories.Category.Objects.html#P:2"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#x:3"><span class="id" title="variable">x</span></a>) <a id="x':4" class="idref" href="#x':4"><span class="id" title="binder">x'</span></a> (<span class="id" title="var">_</span> : <a class="idref" href="HoTT.Categories.Category.Objects.html#P:2"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#x':4"><span class="id" title="variable">x'</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="c:5" class="idref" href="#c:5"><span class="id" title="binder">c</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> (<a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#C:1"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#x:3"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#x':4"><span class="id" title="variable">x'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#IsIsomorphism"><span class="id" title="class">IsIsomorphism</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a> (<a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#C:1"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#x:3"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#x':4"><span class="id" title="variable">x'</span></a>)) <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab525"></a><h2 class="section">Terminal objects</h2>
+ A terminal object is an object with a unique morphism from every
+    other object. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="IsTerminalObject" class="idref" href="#IsTerminalObject"><span class="id" title="abbreviation">IsTerminalObject</span></a> <span class="id" title="var">C</span> <span class="id" title="var">x</span> :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x':6" class="idref" href="#x':6"><span class="id" title="binder">x'</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <span class="id" title="var">C</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> (<a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <span class="id" title="var">C</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#x':6"><span class="id" title="variable">x'</span></a> <span class="id" title="var">x</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="TerminalObject" class="idref" href="#TerminalObject"><span class="id" title="definition, record"><span id="TerminalObject_rect" class="id"><span id="TerminalObject_ind" class="id"><span id="TerminalObject_rec" class="id"><span id="TerminalObject_sind" class="id">TerminalObject</span></span></span></span></span></a> (<a id="C:7" class="idref" href="#C:7"><span class="id" title="binder">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) :=<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="object_terminal" class="idref" href="#object_terminal"><span class="id" title="projection">object_terminal</span></a> :&gt; <a class="idref" href="HoTT.Categories.Category.Objects.html#C:7"><span class="id" title="variable">C</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="isterminal_object_terminal" class="idref" href="#isterminal_object_terminal"><span class="id" title="projection">isterminal_object_terminal</span></a> :&gt; <a class="idref" href="HoTT.Categories.Category.Objects.html#IsTerminalObject"><span class="id" title="abbreviation">IsTerminalObject</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#C:7"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#object_terminal:9"><span class="id" title="method">object_terminal</span></a><br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Existing Instance</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#isterminal_object_terminal"><span class="id" title="projection">isterminal_object_terminal</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab526"></a><h2 class="section">Initial objects</h2>
+ An initial object is an object with a unique morphism from every
+    other object. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="IsInitialObject" class="idref" href="#IsInitialObject"><span class="id" title="abbreviation">IsInitialObject</span></a> <span class="id" title="var">C</span> <span class="id" title="var">x</span> :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x':11" class="idref" href="#x':11"><span class="id" title="binder">x'</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <span class="id" title="var">C</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> (<a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <span class="id" title="var">C</span> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#x':11"><span class="id" title="variable">x'</span></a>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="InitialObject" class="idref" href="#InitialObject"><span class="id" title="definition, record"><span id="InitialObject_rect" class="id"><span id="InitialObject_ind" class="id"><span id="InitialObject_rec" class="id"><span id="InitialObject_sind" class="id">InitialObject</span></span></span></span></span></a> (<a id="C:12" class="idref" href="#C:12"><span class="id" title="binder">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) :=<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="object_initial" class="idref" href="#object_initial"><span class="id" title="projection">object_initial</span></a> :&gt; <a class="idref" href="HoTT.Categories.Category.Objects.html#C:12"><span class="id" title="variable">C</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="isinitial_object_initial" class="idref" href="#isinitial_object_initial"><span class="id" title="projection">isinitial_object_initial</span></a> :&gt; <a class="idref" href="HoTT.Categories.Category.Objects.html#IsInitialObject"><span class="id" title="abbreviation">IsInitialObject</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#C:12"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#object_initial:14"><span class="id" title="method">object_initial</span></a><br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Existing Instance</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#isinitial_object_initial"><span class="id" title="projection">isinitial_object_initial</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#unique_up_to_unique_isomorphism"><span class="id" title="definition">unique_up_to_unique_isomorphism</span></a> [<span class="id" title="var">C</span>] <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab527"></a><h2 class="section">Initial and terminal objects are unique up to unique isomorphism</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="CategoryObjectsTheorems" class="idref" href="#CategoryObjectsTheorems"><span class="id" title="section">CategoryObjectsTheorems</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="CategoryObjectsTheorems.C" class="idref" href="#CategoryObjectsTheorems.C"><span class="id" title="variable">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Ltac</span> <span class="id" title="var">unique</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">first</span> [ <span class="id" title="tactic">intro</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">∃</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a> (<a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#CategoryObjectsTheorems.C"><span class="id" title="variable">C</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">etransitivity</span>; [ <span class="id" title="tactic">symmetry</span> | ]; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#contr"><span class="id" title="definition">contr</span></a> ].<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The terminal object is unique up to unique isomorphism. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="terminal_object_unique" class="idref" href="#terminal_object_unique"><span class="id" title="lemma">terminal_object_unique</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Objects.html#unique_up_to_unique_isomorphism"><span class="id" title="definition">unique_up_to_unique_isomorphism</span></a> (<span class="id" title="keyword">fun</span> <a id="x:17" class="idref" href="#x:17"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="HoTT.Categories.Category.Objects.html#IsTerminalObject"><span class="id" title="abbreviation">IsTerminalObject</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#CategoryObjectsTheorems.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#x:17"><span class="id" title="variable">x</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">unique</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The initial object is unique up to unique isomorphism. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="initial_object_unique" class="idref" href="#initial_object_unique"><span class="id" title="lemma">initial_object_unique</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Objects.html#unique_up_to_unique_isomorphism"><span class="id" title="definition">unique_up_to_unique_isomorphism</span></a> (<span class="id" title="keyword">fun</span> <a id="x:18" class="idref" href="#x:18"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="HoTT.Categories.Category.Objects.html#IsInitialObject"><span class="id" title="abbreviation">IsInitialObject</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#CategoryObjectsTheorems.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Objects.html#x:18"><span class="id" title="variable">x</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">unique</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#CategoryObjectsTheorems"><span class="id" title="section">CategoryObjectsTheorems</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

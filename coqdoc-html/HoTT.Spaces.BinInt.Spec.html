@@ -1,0 +1,705 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.BinInt.Spec</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.BinInt.Spec</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Pos.html#"><span class="id" title="library">Spaces.Pos</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#"><span class="id" title="library">Spaces.BinInt.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">binint_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1451"></a><h2 class="section">Addition is commutative</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_comm" class="idref" href="#binint_add_comm"><span class="id" title="lemma">binint_add_comm</span></a> <a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> <a id="m:2" class="idref" href="#m:2"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:1"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:2"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:2"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:1"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span>; <span class="id" title="tactic">trivial</span>. <span class="id" title="var">all</span>: <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_comm"><span class="id" title="lemma">pos_add_comm</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1452"></a><h2 class="section">Zero is the additive identity.</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="binint_add_0_l" class="idref" href="#binint_add_0_l"><span class="id" title="definition">binint_add_0_l</span></a> <a id="n:3" class="idref" href="#n:3"><span class="id" title="binder">n</span></a> : 0 <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:3"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:3"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;:= 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_0_r" class="idref" href="#binint_add_0_r"><span class="id" title="lemma">binint_add_0_r</span></a> <a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:4"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> 0 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:4"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1453"></a><h2 class="section">Multiplication by zero is zero</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="binint_mul_0_l" class="idref" href="#binint_mul_0_l"><span class="id" title="definition">binint_mul_0_l</span></a> <a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> : 0 <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0<br/>
+&nbsp;&nbsp;:= 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_mul_0_r" class="idref" href="#binint_mul_0_r"><span class="id" title="lemma">binint_mul_0_r</span></a> <a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:6"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> 0 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1454"></a><h2 class="section">One is the multiplicative identity</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_mul_1_l" class="idref" href="#binint_mul_1_l"><span class="id" title="lemma">binint_mul_1_l</span></a> <a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a> : 1 <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:7"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:7"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_mul_1_r" class="idref" href="#binint_mul_1_r"><span class="id" title="lemma">binint_mul_1_r</span></a> <a id="n:8" class="idref" href="#n:8"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> 1 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:8"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_mul_1_r"><span class="id" title="lemma">pos_mul_1_r</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1455"></a><h2 class="section">Inverse laws</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_sub_diag" class="idref" href="#binint_pos_sub_diag"><span class="id" title="lemma">binint_pos_sub_diag</span></a> <a id="n:9" class="idref" href="#n:9"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:9"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:9"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_double"><span class="id" title="definition">binint_double</span></a> <span class="id" title="var">IHn</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_negation_l" class="idref" href="#binint_add_negation_l"><span class="id" title="lemma">binint_add_negation_l</span></a> <a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:10"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_diag"><span class="id" title="lemma">binint_pos_sub_diag</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_negation_r" class="idref" href="#binint_add_negation_r"><span class="id" title="lemma">binint_add_negation_r</span></a> <a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:11"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:11"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_diag"><span class="id" title="lemma">binint_pos_sub_diag</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1456"></a><h2 class="section">Permutation of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg"><span class="id" title="constructor">neg</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a></span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_neg_pos_succ" class="idref" href="#binint_neg_pos_succ"><span class="id" title="lemma">binint_neg_pos_succ</span></a> <a id="p:12" class="idref" href="#p:12"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg"><span class="id" title="constructor">neg</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:12"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg"><span class="id" title="constructor">neg</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:12"><span class="id" title="variable">p</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1457"></a><h2 class="section">Permutation of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a></span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_pos_succ" class="idref" href="#binint_pos_pos_succ"><span class="id" title="lemma">binint_pos_pos_succ</span></a> <a id="p:13" class="idref" href="#p:13"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:13"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:13"><span class="id" title="variable">p</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1458"></a><h2 class="section">Negation of a doubled positive integer</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_negation_double" class="idref" href="#binint_negation_double"><span class="id" title="lemma">binint_negation_double</span></a> <a id="a:14" class="idref" href="#a:14"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_double"><span class="id" title="definition">binint_double</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:14"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_double"><span class="id" title="definition">binint_double</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:14"><span class="id" title="variable">a</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Negation of the predecessor of a doubled positive integer. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_negation_pred_double" class="idref" href="#binint_negation_pred_double"><span class="id" title="lemma">binint_negation_pred_double</span></a> <a id="a:15" class="idref" href="#a:15"><span class="id" title="binder">a</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred_double"><span class="id" title="definition">binint_pred_double</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:15"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ_double"><span class="id" title="definition">binint_succ_double</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:15"><span class="id" title="variable">a</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Negation of the doubling of the successor of an positive. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_negation_succ_double" class="idref" href="#binint_negation_succ_double"><span class="id" title="lemma">binint_negation_succ_double</span></a> <a id="a:16" class="idref" href="#a:16"><span class="id" title="binder">a</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ_double"><span class="id" title="definition">binint_succ_double</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:16"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred_double"><span class="id" title="definition">binint_pred_double</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:16"><span class="id" title="variable">a</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Negation of subtraction of positive integers 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_sub_negation" class="idref" href="#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a> <a id="a:17" class="idref" href="#a:17"><span class="id" title="binder">a</span></a> <a id="b:18" class="idref" href="#b:18"><span class="id" title="binder">b</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:17"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:18"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:18"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:17"><span class="id" title="variable">a</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">a</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">a</span> <span class="id" title="var">ah</span>|<span class="id" title="var">a</span> <span class="id" title="var">ah</span>];<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">rewrite</span> ?<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_double"><span class="id" title="lemma">binint_negation_double</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;?<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_succ_double"><span class="id" title="lemma">binint_negation_succ_double</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;?<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_pred_double"><span class="id" title="lemma">binint_negation_pred_double</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <span class="id" title="var">ah</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1459"></a><h2 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a></span> is a retract of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a></span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="binint_succ_pred" class="idref" href="#binint_succ_pred"><span class="id" title="definition">binint_succ_pred</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">n</span> | | <span class="id" title="var">n</span>]; [|<span class="id" title="tactic">trivial</span>|].<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_succ_pred_double"><span class="id" title="lemma">pos_succ_pred_double</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1460"></a><h2 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a></span> is a retract of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a></span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="binint_pred_succ" class="idref" href="#binint_pred_succ"><span class="id" title="definition">binint_pred_succ</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">n</span> | | <span class="id" title="var">n</span>]; [|<span class="id" title="tactic">trivial</span>|].<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_succ_pred_double"><span class="id" title="lemma">pos_succ_pred_double</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;**&nbsp;The&nbsp;successor&nbsp;auto-equivalence.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_binint_succ" class="idref" href="#isequiv_binint_succ"><span class="id" title="instance">isequiv_binint_succ</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> | 0<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_succ_pred"><span class="id" title="definition">binint_succ_pred</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_succ"><span class="id" title="definition">binint_pred_succ</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_binint_succ" class="idref" href="#equiv_binint_succ"><span class="id" title="definition">equiv_binint_succ</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#BinInt"><span class="id" title="inductive">BinInt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#BinInt"><span class="id" title="inductive">BinInt</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#isequiv_binint_succ"><span class="id" title="instance">isequiv_binint_succ</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1461"></a><h2 class="section">Negation distributes over addition</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_negation_add_distr" class="idref" href="#binint_negation_add_distr"><span class="id" title="lemma">binint_negation_add_distr</span></a> <a id="n:19" class="idref" href="#n:19"><span class="id" title="binder">n</span></a> <a id="m:20" class="idref" href="#m:20"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:19"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:20"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:19"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:20"><span class="id" title="variable">m</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">trivial</span> <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1462"></a><h2 class="section">Negation is injective</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_negation_inj" class="idref" href="#binint_negation_inj"><span class="id" title="lemma">binint_negation_inj</span></a> <a id="n:21" class="idref" href="#n:21"><span class="id" title="binder">n</span></a> <a id="m:22" class="idref" href="#m:22"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:21"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:22"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:21"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:22"><span class="id" title="variable">m</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos_inj"><span class="id" title="definition">pos_inj</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos_neq_zero"><span class="id" title="definition">pos_neq_zero</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;3: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos_neq_neg"><span class="id" title="definition">pos_neq_neg</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;4: <span class="id" title="tactic">apply</span>  <a class="idref" href="HoTT.Spaces.BinInt.Core.html#zero_neq_pos"><span class="id" title="definition">zero_neq_pos</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;6: <span class="id" title="tactic">apply</span>  <a class="idref" href="HoTT.Spaces.BinInt.Core.html#zero_neq_neg"><span class="id" title="definition">zero_neq_neg</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;7: <span class="id" title="tactic">apply</span>  <a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg_neq_pos"><span class="id" title="definition">neg_neq_pos</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;8: <span class="id" title="tactic">apply</span>  <a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg_neq_zero"><span class="id" title="definition">neg_neq_zero</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;9: <span class="id" title="tactic">apply</span>  <a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg_inj"><span class="id" title="definition">neg_inj</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1463"></a><h2 class="section">Subtracting 1 from a successor gives the positive integer.</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_sub_succ_l" class="idref" href="#binint_pos_sub_succ_l"><span class="id" title="lemma">binint_pos_sub_succ_l</span></a> <a id="a:23" class="idref" href="#a:23"><span class="id" title="binder">a</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:23"><span class="id" title="variable">a</span></a>) 1%<span class="id" title="var">pos</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:23"><span class="id" title="variable">a</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1464"></a><h2 class="section">Subtracting a successor from 1 gives minus the integer.</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_sub_succ_r" class="idref" href="#binint_pos_sub_succ_r"><span class="id" title="lemma">binint_pos_sub_succ_r</span></a> <a id="a:24" class="idref" href="#a:24"><span class="id" title="binder">a</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> 1%<span class="id" title="var">pos</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:24"><span class="id" title="variable">a</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg"><span class="id" title="constructor">neg</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:24"><span class="id" title="variable">a</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1465"></a><h2 class="section">Interaction of doubling functions and subtraction</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_succ_double_binint_pos_sub" class="idref" href="#binint_succ_double_binint_pos_sub"><span class="id" title="lemma">binint_succ_double_binint_pos_sub</span></a> <a id="a:25" class="idref" href="#a:25"><span class="id" title="binder">a</span></a> <a id="b:26" class="idref" href="#b:26"><span class="id" title="binder">b</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ_double"><span class="id" title="definition">binint_succ_double</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:25"><span class="id" title="variable">a</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:26"><span class="id" title="variable">b</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred_double"><span class="id" title="definition">binint_pred_double</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:25"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:26"><span class="id" title="variable">b</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>; <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span>); <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHa</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">a</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">b</span>)); <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>; <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span>); <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHa</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span>); <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_pred_double_binint_pos_sub" class="idref" href="#binint_pred_double_binint_pos_sub"><span class="id" title="lemma">binint_pred_double_binint_pos_sub</span></a> <a id="a:27" class="idref" href="#a:27"><span class="id" title="binder">a</span></a> <a id="b:28" class="idref" href="#b:28"><span class="id" title="binder">b</span></a> <br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred_double"><span class="id" title="definition">binint_pred_double</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:27"><span class="id" title="variable">a</span></a>) <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:28"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ_double"><span class="id" title="definition">binint_succ_double</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:27"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:28"><span class="id" title="variable">b</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHa</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <span class="id" title="var">a</span>) <span class="id" title="var">b</span>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHa</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1466"></a><h2 class="section">Subtractions cancel successors.</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_sub_succ_succ" class="idref" href="#binint_pos_sub_succ_succ"><span class="id" title="lemma">binint_pos_sub_succ_succ</span></a> <a id="a:29" class="idref" href="#a:29"><span class="id" title="binder">a</span></a> <a id="b:30" class="idref" href="#b:30"><span class="id" title="binder">b</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:29"><span class="id" title="variable">a</span></a>) (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:30"><span class="id" title="variable">b</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:29"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:30"><span class="id" title="variable">b</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- 2 <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>. }<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_succ_double_binint_pos_sub"><span class="id" title="lemma">binint_succ_double_binint_pos_sub</span></a>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>. }<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_double_binint_pos_sub"><span class="id" title="lemma">binint_pred_double_binint_pos_sub</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- 2 <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHa</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1467"></a><h2 class="section">Predecessor of a subtraction is the subtraction of a successor.</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_pred_pos_sub_r" class="idref" href="#binint_pred_pos_sub_r"><span class="id" title="lemma">binint_pred_pos_sub_r</span></a> <a id="a:31" class="idref" href="#a:31"><span class="id" title="binder">a</span></a> <a id="b:32" class="idref" href="#b:32"><span class="id" title="binder">b</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:31"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:32"><span class="id" title="variable">b</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:31"><span class="id" title="variable">a</span></a> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_succ"><span class="id" title="definition">pos_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:32"><span class="id" title="variable">b</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">b</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">b</span> <span class="id" title="var">bH</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">b</span> <span class="id" title="var">bH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">a</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">a</span> <span class="id" title="var">aH</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">bH</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">bH</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_succ_pred_double"><span class="id" title="lemma">pos_succ_pred_double</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>. }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">bH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_succ_succ"><span class="id" title="lemma">binint_pos_sub_succ_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">bH</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1468"></a><h2 class="section">Negation of the predecessor is an involution.</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_negation_pred_negation_red" class="idref" href="#binint_negation_pred_negation_red"><span class="id" title="lemma">binint_negation_pred_negation_red</span></a> <a id="x:33" class="idref" href="#x:33"><span class="id" title="binder">x</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#::binint_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#x:33"><span class="id" title="variable">x</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#x:33"><span class="id" title="variable">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span>| |<span class="id" title="var">x</span>]; <span class="id" title="tactic">trivial</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_pred_double_succ"><span class="id" title="lemma">pos_pred_double_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_succ_pred_double"><span class="id" title="lemma">pos_succ_pred_double</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1469"></a><h2 class="section">Predecessor of a sum is the sum with a predecessor</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_pred_add_r" class="idref" href="#binint_pred_add_r"><span class="id" title="lemma">binint_pred_add_r</span></a> <a id="a:34" class="idref" href="#a:34"><span class="id" title="binder">a</span></a> <a id="b:35" class="idref" href="#b:35"><span class="id" title="binder">b</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:34"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:35"><span class="id" title="variable">b</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:34"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:35"><span class="id" title="variable">b</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span>| |<span class="id" title="var">a</span>] [<span class="id" title="var">b</span>| |<span class="id" title="var">b</span>]; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_assoc"><span class="id" title="lemma">pos_add_assoc</span></a>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">revert</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">b</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">b</span> <span class="id" title="var">bH</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_succ"><span class="id" title="definition">binint_pred_succ</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg"><span class="id" title="constructor">neg</span></a> <span class="id" title="var">a</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_succ"><span class="id" title="definition">binint_pred_succ</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">b</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_comm"><span class="id" title="lemma">binint_add_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_pos_sub_r"><span class="id" title="lemma">binint_pred_pos_sub_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_inj"><span class="id" title="lemma">binint_negation_inj</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_pred_negation_red"><span class="id" title="lemma">binint_negation_pred_negation_red</span></a>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_pos_sub_r"><span class="id" title="lemma">binint_pred_pos_sub_r</span></a>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="var">revert</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">b</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">b</span> <span class="id" title="var">bH</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_succ"><span class="id" title="definition">binint_pred_succ</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">a</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_1_r"><span class="id" title="lemma">pos_add_1_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_succ"><span class="id" title="definition">binint_pred_succ</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">b</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_assoc"><span class="id" title="lemma">pos_add_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> (<span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#50efadf7a9f9d41adb2b162cbba3bda7"><span class="id" title="notation">+</span></a> <span class="id" title="var">b</span>)%<span class="id" title="var">pos</span>)) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">b</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_succ"><span class="id" title="definition">binint_pred_succ</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1470"></a><h2 class="section">Subtraction from a sum is the sum of a subtraction</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_sub_add" class="idref" href="#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a> (<a id="a:36" class="idref" href="#a:36"><span class="id" title="binder">a</span></a> <a id="b:37" class="idref" href="#b:37"><span class="id" title="binder">b</span></a> <a id="c:38" class="idref" href="#c:38"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Spaces.Pos.Core.html#Pos"><span class="id" title="inductive">Pos</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:36"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#50efadf7a9f9d41adb2b162cbba3bda7"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:37"><span class="id" title="variable">b</span></a>)%<span class="id" title="var">pos</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#c:38"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:36"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:37"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#c:38"><span class="id" title="variable">c</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">c</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">c</span> <span class="id" title="var">ch</span>] <span class="id" title="keyword">using</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#pos_peano_ind"><span class="id" title="definition">pos_peano_ind</span></a>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">b</span>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">a</span> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <span class="id" title="var">b</span>)<a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">)</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_add_r"><span class="id" title="lemma">binint_pred_add_r</span></a>. }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_pos_sub_r"><span class="id" title="lemma">binint_pred_pos_sub_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">ch</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_pos_sub_r"><span class="id" title="lemma">binint_pred_pos_sub_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pred_add_r"><span class="id" title="lemma">binint_pred_add_r</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+An auxiliary lemma used to prove associativity. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_assoc_pos" class="idref" href="#binint_add_assoc_pos"><span class="id" title="lemma">binint_add_assoc_pos</span></a> <a id="p:39" class="idref" href="#p:39"><span class="id" title="binder">p</span></a> <a id="n:40" class="idref" href="#n:40"><span class="id" title="binder">n</span></a> <a id="m:41" class="idref" href="#m:41"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:39"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:40"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:41"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:39"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:40"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:41"><span class="id" title="variable">m</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span>| |<span class="id" title="var">n</span>], <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">m</span>| |<span class="id" title="var">m</span>]; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_inj"><span class="id" title="lemma">binint_negation_inj</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_add_distr"><span class="id" title="lemma">binint_negation_add_distr</span></a>, !<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_comm"><span class="id" title="lemma">binint_add_comm</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_comm"><span class="id" title="lemma">pos_add_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_0_r"><span class="id" title="lemma">binint_add_0_r</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a>, <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_comm"><span class="id" title="lemma">binint_add_comm</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_comm"><span class="id" title="lemma">pos_add_comm</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_add_assoc"><span class="id" title="lemma">pos_add_assoc</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1471"></a><h2 class="section">Associativity of addition</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_assoc" class="idref" href="#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a> <a id="n:42" class="idref" href="#n:42"><span class="id" title="binder">n</span></a> <a id="m:43" class="idref" href="#m:43"><span class="id" title="binder">m</span></a> <a id="p:44" class="idref" href="#p:44"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:42"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:43"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:44"><span class="id" title="variable">p</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:42"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:43"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:44"><span class="id" title="variable">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_inj"><span class="id" title="lemma">binint_negation_inj</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_add_distr"><span class="id" title="lemma">binint_negation_add_distr</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc_pos"><span class="id" title="lemma">binint_add_assoc_pos</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc_pos"><span class="id" title="lemma">binint_add_assoc_pos</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1472"></a><h2 class="section">Relationship between <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#int_succ"><span class="id" title="definition">int_succ</span></a></span>, <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#int_pred"><span class="id" title="definition">int_pred</span></a></span> and addition.</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_succ_l" class="idref" href="#binint_add_succ_l"><span class="id" title="lemma">binint_add_succ_l</span></a> <a id="a:45" class="idref" href="#a:45"><span class="id" title="binder">a</span></a> <a id="b:46" class="idref" href="#b:46"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:45"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:46"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:45"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:46"><span class="id" title="variable">b</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a>, (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_comm"><span class="id" title="lemma">binint_add_comm</span></a> 1 <span class="id" title="var">b</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_succ_r" class="idref" href="#binint_add_succ_r"><span class="id" title="lemma">binint_add_succ_r</span></a> <a id="a:47" class="idref" href="#a:47"><span class="id" title="binder">a</span></a> <a id="b:48" class="idref" href="#b:48"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:47"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:48"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_succ"><span class="id" title="definition">binint_succ</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:47"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:48"><span class="id" title="variable">b</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_pred_l" class="idref" href="#binint_add_pred_l"><span class="id" title="lemma">binint_add_pred_l</span></a> <a id="a:49" class="idref" href="#a:49"><span class="id" title="binder">a</span></a> <a id="b:50" class="idref" href="#b:50"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:49"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:50"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:49"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:50"><span class="id" title="variable">b</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a>, (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_comm"><span class="id" title="lemma">binint_add_comm</span></a> (-1) <span class="id" title="var">b</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_add_pred_r" class="idref" href="#binint_add_pred_r"><span class="id" title="lemma">binint_add_pred_r</span></a> <a id="a:51" class="idref" href="#a:51"><span class="id" title="binder">a</span></a> <a id="b:52" class="idref" href="#b:52"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:51"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:52"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pred"><span class="id" title="definition">binint_pred</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#a:51"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#b:52"><span class="id" title="variable">b</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1473"></a><h2 class="section">Commutativity of multiplication</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="binint_mul_comm" class="idref" href="#binint_mul_comm"><span class="id" title="lemma">binint_mul_comm</span></a> <a id="n:53" class="idref" href="#n:53"><span class="id" title="binder">n</span></a> <a id="m:54" class="idref" href="#m:54"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:53"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:54"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:54"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:53"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">reflexivity</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_mul_comm"><span class="id" title="lemma">pos_mul_comm</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Distributivity of multiplication over addition 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_sub_mul_pos" class="idref" href="#binint_pos_sub_mul_pos"><span class="id" title="lemma">binint_pos_sub_mul_pos</span></a> <a id="n:55" class="idref" href="#n:55"><span class="id" title="binder">n</span></a> <a id="m:56" class="idref" href="#m:56"><span class="id" title="binder">m</span></a> <a id="p:57" class="idref" href="#p:57"><span class="id" title="binder">p</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:55"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:56"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#pos"><span class="id" title="constructor">pos</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:57"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:55"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#83db3fa9f059c10cb623a122cf097cd0"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:57"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">pos</span> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:56"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#83db3fa9f059c10cb623a122cf097cd0"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:57"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">pos</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_mul_comm"><span class="id" title="lemma">binint_mul_comm</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 (<a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_mul_comm"><span class="id" title="lemma">pos_mul_comm</span></a> <span class="id" title="var">_</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_mul_1_l"><span class="id" title="lemma">pos_mul_1_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_mul_1_l"><span class="id" title="lemma">binint_mul_1_l</span></a>. }<br/>
+&nbsp;&nbsp;{ <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHp</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">set</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">k</span>. }<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_add_distr"><span class="id" title="lemma">binint_negation_add_distr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHp</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">set</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">k</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_pos_sub_mul_neg" class="idref" href="#binint_pos_sub_mul_neg"><span class="id" title="lemma">binint_pos_sub_mul_neg</span></a> <a id="n:58" class="idref" href="#n:58"><span class="id" title="binder">n</span></a> <a id="m:59" class="idref" href="#m:59"><span class="id" title="binder">m</span></a> <a id="p:60" class="idref" href="#p:60"><span class="id" title="binder">p</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:59"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:58"><span class="id" title="variable">n</span></a>  <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#neg"><span class="id" title="constructor">neg</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:60"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:58"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#83db3fa9f059c10cb623a122cf097cd0"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:60"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">pos</span> (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:59"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Pos.Core.html#83db3fa9f059c10cb623a122cf097cd0"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:60"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">pos</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_mul_comm"><span class="id" title="lemma">binint_mul_comm</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 (<a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_mul_comm"><span class="id" title="lemma">pos_mul_comm</span></a> <span class="id" title="var">_</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_mul_1_l"><span class="id" title="lemma">pos_mul_1_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">n</span> <span class="id" title="var">m</span>). }<br/>
+&nbsp;&nbsp;{ <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHp</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">set</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">k</span>. }<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spaces.Pos.Core.html#x0"><span class="id" title="constructor">x0</span></a> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_add"><span class="id" title="lemma">binint_pos_sub_add</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_negation_add_distr"><span class="id" title="lemma">binint_negation_add_distr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_add_assoc"><span class="id" title="lemma">binint_add_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHp</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_negation"><span class="id" title="lemma">binint_pos_sub_negation</span></a> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">set</span> (<a class="idref" href="HoTT.Spaces.BinInt.Core.html#binint_pos_sub"><span class="id" title="definition">binint_pos_sub</span></a> <span class="id" title="var">m</span> <span class="id" title="var">n</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">k</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_mul_add_distr_r" class="idref" href="#binint_mul_add_distr_r"><span class="id" title="lemma">binint_mul_add_distr_r</span></a> <a id="n:61" class="idref" href="#n:61"><span class="id" title="binder">n</span></a> <a id="m:62" class="idref" href="#m:62"><span class="id" title="binder">m</span></a> <a id="p:63" class="idref" href="#p:63"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:61"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:62"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:63"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:61"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:63"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:62"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:63"><span class="id" title="variable">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="tactic">try</span> <span class="id" title="var">f_ap</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_mul_add_distr_r"><span class="id" title="lemma">pos_mul_add_distr_r</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_mul_neg"><span class="id" title="lemma">binint_pos_sub_mul_neg</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_pos_sub_mul_pos"><span class="id" title="lemma">binint_pos_sub_mul_pos</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_mul_0_r"><span class="id" title="lemma">binint_mul_0_r</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_mul_add_distr_l" class="idref" href="#binint_mul_add_distr_l"><span class="id" title="lemma">binint_mul_add_distr_l</span></a> <a id="n:64" class="idref" href="#n:64"><span class="id" title="binder">n</span></a> <a id="m:65" class="idref" href="#m:65"><span class="id" title="binder">m</span></a> <a id="p:66" class="idref" href="#p:66"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:64"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:65"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:66"><span class="id" title="variable">p</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:64"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:65"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#46a9fc2d9a4a5aa06b40444c72e0dca2"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:64"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:66"><span class="id" title="variable">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 3 (<a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_mul_comm"><span class="id" title="lemma">binint_mul_comm</span></a> <span class="id" title="var">n</span>); <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#binint_mul_add_distr_r"><span class="id" title="lemma">binint_mul_add_distr_r</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binint_mul_assoc" class="idref" href="#binint_mul_assoc"><span class="id" title="lemma">binint_mul_assoc</span></a> <a id="n:67" class="idref" href="#n:67"><span class="id" title="binder">n</span></a> <a id="m:68" class="idref" href="#m:68"><span class="id" title="binder">m</span></a> <a id="p:69" class="idref" href="#p:69"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:67"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:68"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:69"><span class="id" title="variable">p</span></a><a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#n:67"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#m:68"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Core.html#fe8fbb6e11496f4cd6e21383f8c6a82c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.BinInt.Spec.html#p:69"><span class="id" title="variable">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span>, <span class="id" title="var">p</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="var">f_ap</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Pos.Spec.html#pos_mul_assoc"><span class="id" title="lemma">pos_mul_assoc</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

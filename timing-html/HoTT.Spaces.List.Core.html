@@ -1,0 +1,593 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.019s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Set Polymorphic Inductive Cumulativity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Lists *)
+
+(** ** Definition *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Declare Scope list_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope list_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A list is a sequence of elements from a type [A]. This is a very useful datatype and has many applications ranging from programming to algebra. It can be thought of a free monoid. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Inductive list@{i|} (A : Type@{i}) : Type@{i} :=
+| nil : list A
+| cons : A -&gt; list A -&gt; list A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments nil {A}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cons {A} _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Delimit Scope list_scope with list.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Bind Scope list_scope with list.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This messes with Coq's parsing of [] in Ltac. Therefore we keep it commented out. It's not difficult to write [nil] instead. *)
+(* Notation "[]" := nil : list_scope. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Infix "::" := cons : list_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Scheme list_rect := Induction for list Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme list_ind := Induction for list Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme list_rec := Minimality for list Sort Type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A tactic for doing induction over a list that avoids spurious universes. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac simple_list_induction l h t IH :=
+  try generalize dependent l;
+  fix IH 1;
+  intros [| h t];
+  [ clear IH | specialize (IH t) ].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Syntactic sugar for creating lists. [ [a1, b2, ..., an] = a1 :: b2 :: ... :: an :: nil ]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "[ x ]" := (x :: nil) : list_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "[ x , y , .. , z ]" := (x :: (y :: .. (z :: nil) ..)) : list_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Length *)
+
+(** Notice that the definition of a list looks very similar to the definition of [nat]. It is as if each [S] constructor from [nat] has an element of [A] attached to it. We can discard this extra element and get a list invariant that we call [length]. *)
+
+(** The length (number of elements) of a list. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint length {A : Type} (l : list A) :=
+  match l with
+  | nil =&gt; O
+  | _ :: l =&gt; S (length l)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Concatenation *)
+
+(** Given two lists [ [a1; a2; ...; an] ] and [ [b1; b2; ...; bm] ], we can concatenate them to get [ [a1; a2; ...; an; b1; b2; ...; bm] ]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition app {A : Type} : list A -&gt; list A -&gt; list A :=
+  fix app l m :=
+  match l with
+   | nil =&gt; m
+   | a :: l1 =&gt; a :: app l1 m
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "++" := app : list_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Folding *)
+
+(** Folding is a very important operation on lists. It is a way to reduce a list to a single value. The [fold_left] function starts from the left and the [fold_right] function starts from the right. *)
+
+(** [fold_left f l a0] computes [f (... (f (f a0 x1) x2) ...) xn] where [l = [x1; x2; ...; xn]]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint fold_left {A B} (f : A -&gt; B -&gt; A) (l : list B) (default : A) : A :=
+  match l with
+    | nil =&gt; default
+    | cons b l =&gt; fold_left f l (f default b)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [fold_right f a0 l] computes [f x1 (f x2 ... (f xn a0) ...)] where [l = [x1; x2; ...; xn]]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint fold_right {A B} (f : B -&gt; A -&gt; A) (default : A) (l : list B) : A :=
+  match l with
+    | nil =&gt; default
+    | cons b l =&gt; f b (fold_right f default l)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Maps - Functoriality of Lists *)
+
+(** The [list_map] function applies a function to each element of a list. In other words [ list_map f [a1; a2; ...; an] = [f a1; f a2; ...; f an] ]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint list_map {A B : Type} (f : A -&gt; B) (l : list A) :=
+  match l with
+  | nil =&gt; nil
+  | x :: l =&gt; (f x) :: (list_map f l)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [list_map2] function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Fixpoint list_map2 {A B C : Type} (f : A -&gt; B -&gt; C)
+  (def_l : list A -&gt; list C) (def_r : list B -&gt; list C) l1 l2 :=
+  match l1, l2 with
+  | nil, nil =&gt; nil
+  | nil, _ =&gt; def_r l2
+  | _, nil =&gt; def_l l1
+  | x :: l1, y :: l2 =&gt; (f x y) :: (list_map2 f def_l def_r l1 l2)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Reversal *)
+
+(** Tail-recursive list reversal. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint reverse_acc {A : Type} (acc : list A) (l : list A) : list A :=
+  match l with
+  | nil =&gt; acc
+  | x :: l =&gt; reverse_acc (x :: acc) l
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Reversing the order of a list. The list [ [a1; a2; ...; an] ] becomes [ [an; ...; a2; a1] ]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition reverse {A : Type} (l : list A) : list A := reverse_acc nil l.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Getting Elements *)
+
+(** The head of a list is its first element. Returns [None] If the list is empty. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition head {A : Type} (l : list A) : option A :=
+  match l with
+  | nil =&gt; None
+  | a :: _ =&gt; Some a
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The tail of a list is the list without its first element. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition tail {A : Type} (l : list A) : list A :=
+  match l with
+    | nil =&gt; nil
+    | a :: m =&gt; m
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The last element of a list. If the list is empty, it returns [None]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint last {A : Type} (l : list A) : option A :=
+  match l with
+  | nil =&gt; None
+  | a :: nil =&gt; Some a
+  | _ :: l =&gt; last l
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [n]-th element of a list. If the list is too short, it returns [None]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint nth {A : Type} (l : list A) (n : nat) : option A :=
+  match n, l with
+  | O, x :: _ =&gt; Some x
+  | S n, _ :: l =&gt; nth l n
+  | _, _ =&gt; None
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Removing Elements *)
+
+(** Remove the last element of a list and do nothing if it is empty. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint remove_last {A : Type} (l : list A) : list A :=
+  match l with
+  | nil =&gt; nil
+  | _ :: nil =&gt; nil
+  | x :: l =&gt; x :: remove_last l
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Sequences *)
+
+(** Descending sequence of natural numbers starting from [n.-1] to [0]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint seq_rev (n : nat) : list nat :=
+    match n with
+    | O =&gt; nil
+    | S n =&gt; n :: seq_rev n
+    end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ascending sequence of natural numbers [&lt; n]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition seq (n : nat) : list nat := reverse (seq_rev n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Repeat *)
+
+(** Repeat an element [n] times. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint repeat {A : Type} (x : A) (n : nat) : list A :=
+  match n with
+  | O =&gt; nil
+  | S n =&gt; x :: repeat x n
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Membership Predicate *)
+
+(** The "In list" predicate *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint InList@{i|} {A : Type@{i}} (a : A) (l : list A) : Type@{i} :=
+  match l with
+    | nil =&gt; Empty
+    | b :: m =&gt; (b = a) + InList a m
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Forall *)
+
+(** Apply a predicate to all elements of a list and take their conjunction. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint for_all@{i j|} {A : Type@{i}} (P : A -&gt; Type@{j}) l : Type@{j} :=
+  match l with
+  | nil =&gt; Unit
+  | x :: l =&gt; P x /\ for_all P l
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Exists *)
+
+(** Apply a predicate to all elements of a list and take their disjunction. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint list_exists@{i j|} {A : Type@{i}} (P : A -&gt; Type@{j}) l : Type@{j} :=
+  match l with
+  | nil =&gt; Empty
+  | x :: l =&gt; P x + list_exists P l
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

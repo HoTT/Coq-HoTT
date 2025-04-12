@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab354"></a><h1 class="section">Category Theory</h1>
+ To get all of the category theory library in scope with the proper qualified names, you should <span class="inlinecode"><span class="id" title="keyword">Require</span></span> <span class="inlinecode"><span class="id" title="keyword">Import</span></span> <span class="inlinecode"><span class="id" title="library">Categories</span>.</span> or <span class="inlinecode"><span class="id" title="keyword">Require</span></span> <span class="inlinecode"><span class="id" title="keyword">Import</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.html#"><span class="id" title="library">HoTT.Categories</span></a>.</span> 
+<div class="paragraph"> </div>
+
+ First we give modules to all of the kinds of category theory constructions (corresponding to directories), so that we can refer to them as <span class="inlinecode"><span class="id" title="var">Category.foo</span></span> or <span class="inlinecode"><span class="id" title="var">Functor.foo</span></span> after <span class="inlinecode"><span class="id" title="keyword">Require</span></span> <span class="inlinecode"><span class="id" title="keyword">Import</span></span> <span class="inlinecode"><span class="id" title="library">Categories</span>.</span> <a id="lab355"></a><h2 class="section">Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Category.html#"><span class="id" title="library">HoTT.Categories.Category</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab356"></a><h2 class="section">Functors</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Functor.html#"><span class="id" title="library">HoTT.Categories.Functor</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab357"></a><h2 class="section">Natural Transformations</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.html#"><span class="id" title="library">HoTT.Categories.NaturalTransformation</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab358"></a><h2 class="section">Functor Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.FunctorCategory.html#"><span class="id" title="library">HoTT.Categories.FunctorCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab359"></a><h2 class="section">Groupoids</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.GroupoidCategory.html#"><span class="id" title="library">HoTT.Categories.GroupoidCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab360"></a><h2 class="section">Precategory of Groupoids</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.CategoryOfGroupoids.html#"><span class="id" title="library">HoTT.Categories.CategoryOfGroupoids</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab361"></a><h2 class="section">Discrete Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.DiscreteCategory.html#"><span class="id" title="library">HoTT.Categories.DiscreteCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab362"></a><h2 class="section">Indiscrete Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.IndiscreteCategory.html#"><span class="id" title="library">HoTT.Categories.IndiscreteCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab363"></a><h2 class="section">Finite Discrete Categories (natural numbers as categories)</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.NatCategory.html#"><span class="id" title="library">HoTT.Categories.NatCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab364"></a><h2 class="section">Chain Categories <span class="inlinecode">[<span class="id" title="var">n</span>]</span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ChainCategory.html#"><span class="id" title="library">HoTT.Categories.ChainCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab365"></a><h2 class="section">Initial and Terminal Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.InitialTerminalCategory.html#"><span class="id" title="library">HoTT.Categories.InitialTerminalCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab366"></a><h2 class="section">The Category of Sets</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.SetCategory.html#"><span class="id" title="library">HoTT.Categories.SetCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab367"></a><h2 class="section">The Category of Simplicial Sets</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.SimplicialSets.html#"><span class="id" title="library">HoTT.Categories.SimplicialSets</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab368"></a><h2 class="section">The Category of Semi-Simplicial Sets</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#"><span class="id" title="library">HoTT.Categories.SemiSimplicialSets</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab369"></a><h2 class="section">The Hom Functor</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.HomFunctor.html#"><span class="id" title="library">HoTT.Categories.HomFunctor</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab370"></a><h2 class="section">Profunctors</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Profunctor.html#"><span class="id" title="library">HoTT.Categories.Profunctor</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab371"></a><h2 class="section">The Category of Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Cat.html#"><span class="id" title="library">HoTT.Categories.Cat</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab372"></a><h2 class="section">Laws about Functor Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.html#"><span class="id" title="library">HoTT.Categories.ExponentialLaws</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab373"></a><h2 class="section">Laws about Product Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.ProductLaws.html#"><span class="id" title="library">HoTT.Categories.ProductLaws</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab374"></a><h2 class="section">Comma Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Comma.html#"><span class="id" title="library">HoTT.Categories.Comma</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab375"></a><h2 class="section">Universal Properties and Universal Morphisms</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.UniversalProperties.html#"><span class="id" title="library">HoTT.Categories.UniversalProperties</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab376"></a><h2 class="section">Kan Extensions</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.KanExtensions.html#"><span class="id" title="library">HoTT.Categories.KanExtensions</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab377"></a><h2 class="section">Adjunctions</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Adjoint.html#"><span class="id" title="library">HoTT.Categories.Adjoint</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab378"></a><h2 class="section">Limits</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Limits.html#"><span class="id" title="library">HoTT.Categories.Limits</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab379"></a><h2 class="section">Pseudofunctors</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Pseudofunctor.html#"><span class="id" title="library">HoTT.Categories.Pseudofunctor</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab380"></a><h2 class="section">Pseudonatural Transformations</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.html#"><span class="id" title="library">HoTT.Categories.PseudonaturalTransformation</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab381"></a><h2 class="section">Lax Comma Categories</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.LaxComma.html#"><span class="id" title="library">HoTT.Categories.LaxComma</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab382"></a><h2 class="section">Duality as a Functor</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.DualFunctor.html#"><span class="id" title="library">HoTT.Categories.DualFunctor</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab383"></a><h2 class="section">The Grothendieck Construction</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Grothendieck.html#"><span class="id" title="library">HoTT.Categories.Grothendieck</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab384"></a><h2 class="section">The Category of Sections of a Functor</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.CategoryOfSections.html#"><span class="id" title="library">HoTT.Categories.CategoryOfSections</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab385"></a><h2 class="section">The Dependent Product</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.DependentProduct.html#"><span class="id" title="library">HoTT.Categories.DependentProduct</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab386"></a><h2 class="section">The Yoneda Lemma</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Yoneda.html#"><span class="id" title="library">HoTT.Categories.Yoneda</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab387"></a><h2 class="section">The Structure Identity Principle</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Structure.html#"><span class="id" title="library">HoTT.Categories.Structure</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab388"></a><h2 class="section">Fundamental Pregroupoids</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#"><span class="id" title="library">HoTT.Categories.FundamentalPreGroupoidCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab389"></a><h2 class="section">Homotopy precategory</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#"><span class="id" title="library">HoTT.Categories.HomotopyPreCategory</span></a>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;We&nbsp;bind&nbsp;the&nbsp;record&nbsp;structures&nbsp;for&nbsp;<span class="inlinecode"><span class="id" title="var">PreCategory</span></span>,&nbsp;<span class="inlinecode"><span class="id" title="var">IsCategory</span></span>,&nbsp;<span class="inlinecode"><span class="id" title="var">IsStrictCategory</span></span>,&nbsp;<span class="inlinecode"><span class="id" title="var">Functor</span></span>,&nbsp;and&nbsp;eventually&nbsp;<span class="inlinecode"><span class="id" title="var">NaturalTransformation</span></span>&nbsp;at&nbsp;top&nbsp;level.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="module">HoTT.Categories.Category.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Strict.html#"><span class="id" title="module">HoTT.Categories.Category.Strict</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Category.Univalent.html#"><span class="id" title="module">HoTT.Categories.Category.Univalent</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="module">HoTT.Categories.Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="module">HoTT.Categories.NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="module">HoTT.Categories.FunctorCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.GroupoidCategory.Core.html#"><span class="id" title="module">HoTT.Categories.GroupoidCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.CategoryOfGroupoids.html#"><span class="id" title="module">HoTT.Categories.CategoryOfGroupoids</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.DiscreteCategory.html#Core"><span class="id" title="module">HoTT.Categories.DiscreteCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.IndiscreteCategory.html#Core"><span class="id" title="module">HoTT.Categories.IndiscreteCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.NatCategory.html#Core"><span class="id" title="module">HoTT.Categories.NatCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.ChainCategory.html#Core"><span class="id" title="module">HoTT.Categories.ChainCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.InitialTerminalCategory.Core.html#"><span class="id" title="module">HoTT.Categories.InitialTerminalCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.SetCategory.Core.html#"><span class="id" title="module">HoTT.Categories.SetCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.SimplicialSets.html#Core"><span class="id" title="module">HoTT.Categories.SimplicialSets.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.SemiSimplicialSets.html#Core"><span class="id" title="module">HoTT.Categories.SemiSimplicialSets.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.HomFunctor.html#"><span class="id" title="module">HoTT.Categories.HomFunctor</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Profunctor.Core.html#"><span class="id" title="module">HoTT.Categories.Profunctor.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Cat.Core.html#"><span class="id" title="module">HoTT.Categories.Cat.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Comma.Core.html#"><span class="id" title="module">HoTT.Categories.Comma.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.UniversalProperties.html#"><span class="id" title="module">HoTT.Categories.UniversalProperties</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.KanExtensions.Core.html#"><span class="id" title="module">HoTT.Categories.KanExtensions.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#"><span class="id" title="module">HoTT.Categories.Adjoint.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Limits.Core.html#"><span class="id" title="module">HoTT.Categories.Limits.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Pseudofunctor.Core.html#"><span class="id" title="module">HoTT.Categories.Pseudofunctor.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.PseudonaturalTransformation.Core.html#"><span class="id" title="module">HoTT.Categories.PseudonaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.LaxComma.Core.html#"><span class="id" title="module">HoTT.Categories.LaxComma.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.DualFunctor.html#"><span class="id" title="module">HoTT.Categories.DualFunctor</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.CategoryOfSections.Core.html#"><span class="id" title="module">HoTT.Categories.CategoryOfSections.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.DependentProduct.html#"><span class="id" title="module">HoTT.Categories.DependentProduct</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Yoneda.html#"><span class="id" title="module">HoTT.Categories.Yoneda</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.Structure.Core.html#"><span class="id" title="module">HoTT.Categories.Structure.Core</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#"><span class="id" title="module">HoTT.Categories.FundamentalPreGroupoidCategory</span></a>.<br/>
+<span class="id" title="keyword">Include</span> <a class="idref" href="HoTT.Categories.HomotopyPreCategory.html#"><span class="id" title="module">HoTT.Categories.HomotopyPreCategory</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Categories.Notations.html#"><span class="id" title="library">HoTT.Categories.Notations</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Some checks that should pass, if all of the importing went correctly. 
+</div>
+<div class="code">
+<span class="comment">(*Check&nbsp;PreCategory.<br/>
+Check&nbsp;IsStrictCategory&nbsp;_.<br/>
+Check&nbsp;Category.compose.<br/>
+Check&nbsp;Category.sum.<br/>
+Check&nbsp;Category.Sum.sum_compose.<br/>
+Check&nbsp;Functor.sum.<br/>
+Check&nbsp;Functor.Prod.Core.unique.<br/>
+Check&nbsp;(_&nbsp;o&nbsp;_)functor.*)</span><br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Basics.Numeral</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Basics.Numeral</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#"><span class="id" title="library">Basics.Numerals.Decimal</span></a> <a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#"><span class="id" title="library">Basics.Numerals.Hexadecimal</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab294"></a><h1 class="section">Decimal or Hexadecimal numbers</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Variant</span> <a id="uint" class="idref" href="#uint"><span class="id" title="definition, inductive"><span id="uint_rect" class="id"><span id="uint_ind" class="id"><span id="uint_rec" class="id"><span id="uint_sind" class="id">uint</span></span></span></span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> := <a id="UIntDec" class="idref" href="#UIntDec"><span class="id" title="constructor">UIntDec</span></a> (<a id="u:3" class="idref" href="#u:3"><span class="id" title="binder">u</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#uint"><span class="id" title="inductive">Decimal.uint</span></a>) | <a id="UIntHex" class="idref" href="#UIntHex"><span class="id" title="constructor">UIntHex</span></a> (<a id="u:4" class="idref" href="#u:4"><span class="id" title="binder">u</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#uint"><span class="id" title="inductive">Hexadecimal.uint</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Variant</span> <a id="int" class="idref" href="#int"><span class="id" title="definition, inductive"><span id="int_rect" class="id"><span id="int_ind" class="id"><span id="int_rec" class="id"><span id="int_sind" class="id">int</span></span></span></span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> := <a id="IntDec" class="idref" href="#IntDec"><span class="id" title="constructor">IntDec</span></a> (<a id="i:7" class="idref" href="#i:7"><span class="id" title="binder">i</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#int"><span class="id" title="inductive">Decimal.int</span></a>) | <a id="IntHex" class="idref" href="#IntHex"><span class="id" title="constructor">IntHex</span></a> (<a id="i:8" class="idref" href="#i:8"><span class="id" title="binder">i</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#int"><span class="id" title="inductive">Hexadecimal.int</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Variant</span> <a id="numeral" class="idref" href="#numeral"><span class="id" title="definition, inductive"><span id="numeral_rect" class="id"><span id="numeral_ind" class="id"><span id="numeral_rec" class="id"><span id="numeral_sind" class="id">numeral</span></span></span></span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> := <a id="Dec" class="idref" href="#Dec"><span class="id" title="constructor">Dec</span></a> (<a id="d:11" class="idref" href="#d:11"><span class="id" title="binder">d</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#decimal"><span class="id" title="inductive">Decimal.decimal</span></a>) | <a id="Hex" class="idref" href="#Hex"><span class="id" title="constructor">Hex</span></a> (<a id="h:12" class="idref" href="#h:12"><span class="id" title="binder">h</span></a>:<a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#hexadecimal"><span class="id" title="inductive">Hexadecimal.hexadecimal</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">uint</span> <span class="id" title="keyword">as</span> <span class="id" title="var">num.num_uint.type</span>.<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">int</span> <span class="id" title="keyword">as</span> <span class="id" title="var">num.num_int.type</span>.<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">numeral</span> <span class="id" title="keyword">as</span> <span class="id" title="var">num.numeral.type</span>.<br/>
+<span class="id" title="keyword">Register</span> <span class="id" title="var">numeral</span> <span class="id" title="keyword">as</span> <span class="id" title="var">num.number.type</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pseudo-conversion functions used when declaring
+    Numeral Notations on <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#uint"><span class="id" title="inductive">uint</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#int"><span class="id" title="inductive">int</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="uint_of_uint" class="idref" href="#uint_of_uint"><span class="id" title="definition">uint_of_uint</span></a> (<a id="i:13" class="idref" href="#i:13"><span class="id" title="binder">i</span></a>:<a class="idref" href="HoTT.Basics.Numeral.html#uint"><span class="id" title="inductive">uint</span></a>) := <a class="idref" href="HoTT.Basics.Numeral.html#i:13"><span class="id" title="variable">i</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="int_of_int" class="idref" href="#int_of_int"><span class="id" title="definition">int_of_int</span></a> (<a id="i:14" class="idref" href="#i:14"><span class="id" title="binder">i</span></a>:<a class="idref" href="HoTT.Basics.Numeral.html#int"><span class="id" title="inductive">int</span></a>) := <a class="idref" href="HoTT.Basics.Numeral.html#i:14"><span class="id" title="variable">i</span></a>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Parsing&nbsp;/&nbsp;printing&nbsp;of&nbsp;decimal&nbsp;numbers&nbsp;*)</span><br/>
+<span class="id" title="keyword">Number Notation</span> <a class="idref" href="HoTT.Basics.Numeral.html#uint"><span class="id" title="inductive">uint</span></a> <a class="idref" href="HoTT.Basics.Numeral.html#uint_of_uint"><span class="id" title="definition">uint_of_uint</span></a> <a class="idref" href="HoTT.Basics.Numeral.html#uint_of_uint"><span class="id" title="definition">uint_of_uint</span></a> : <span class="id" title="var">dec_uint_scope</span>.<br/>
+<span class="id" title="keyword">Number Notation</span> <a class="idref" href="HoTT.Basics.Numeral.html#int"><span class="id" title="inductive">int</span></a> <a class="idref" href="HoTT.Basics.Numeral.html#int_of_int"><span class="id" title="definition">int_of_int</span></a> <a class="idref" href="HoTT.Basics.Numeral.html#int_of_int"><span class="id" title="definition">int_of_int</span></a> : <span class="id" title="var">dec_int_scope</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

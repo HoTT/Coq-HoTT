@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Paths.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk3d" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk3d"><span class="kn">Require Import</span> Basics.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> Basics.Nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> HoTT.Universes.DProp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Characterization of the path types of [nat] *)</span>
+
+<span class="sd">(** We characterize the path types of [nat].  We put this in its own file because it uses [DProp], which has a lot of dependencies. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Universe Minimization ToSet</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Close Scope</span> trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">code_nat</span> (<span class="nv">m</span> <span class="nv">n</span> : nat) {<span class="nv">struct</span> <span class="nv">m</span>} : DHProp@{<span class="kt">Set</span>} :=
+  <span class="kr">match</span> m, n <span class="kr">with</span>
+  | <span class="mi">0</span>, <span class="mi">0</span> =&gt; <span class="kt">True</span>
+  | m&#39;.+<span class="mi">1</span>, n&#39;.+<span class="mi">1</span> =&gt; code_nat m&#39; n&#39;
+  | _, _ =&gt; <span class="kt">False</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;=n&quot;</span> := code_nat : nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">idcode_nat</span> {<span class="nv">n</span>} : (n =n n) :=
+  <span class="kr">match</span> n <span class="kr">as</span> n <span class="kr">return</span> (n =n n) <span class="kr">with</span>
+  | <span class="mi">0</span> =&gt; tt
+  | S n&#39; =&gt; @idcode_nat n&#39;
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">path_nat</span> {<span class="nv">n</span> <span class="nv">m</span>} : (n =n m) -&gt; (n = m) :=
+  <span class="kr">match</span> m <span class="kr">as</span> m, n <span class="kr">as</span> n <span class="kr">return</span> (n =n m) -&gt; (n = m) <span class="kr">with</span>
+  | <span class="mi">0</span>, <span class="mi">0</span> =&gt; <span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath
+  | m&#39;.+<span class="mi">1</span>, n&#39;.+<span class="mi">1</span> =&gt; <span class="kr">fun</span> <span class="nv">H</span> : (n&#39; =n m&#39;) =&gt; ap S (path_nat H)
+  | _, _ =&gt; <span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="kr">match</span> H <span class="kr">with</span> <span class="kr">end</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk3e" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk3e"><span class="kn">Instance</span> <span class="nf">isequiv_path_nat</span> {<span class="nv">n</span> <span class="nv">m</span>} : IsEquiv (@path_nat n m).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv path_nat</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk3f" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk3f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv path_nat</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk40" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk40"><span class="nb">refine</span> (isequiv_adjointify
+            (@path_nat n m)
+            (<span class="kr">fun</span> <span class="nv">H</span> =&gt; transport (<span class="kr">fun</span> <span class="nv">m&#39;</span> =&gt; (n =n m&#39;)) H idcode_nat)
+            _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : n = m =&gt;
+ path_nat
+   (transport (<span class="kr">fun</span> <span class="nv">m&#39;</span> : nat =&gt; n =n m&#39;) x idcode_nat)) ==
+idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="paths-v-chk41" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><label class="goal-separator" for="paths-v-chk41"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : n =n m =&gt;
+ transport (<span class="kr">fun</span> <span class="nv">m&#39;</span> : nat =&gt; n =n m&#39;) (path_nat x)
+   idcode_nat) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk42" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk42">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : n = m =&gt;
+ path_nat
+   (transport (<span class="kr">fun</span> <span class="nv">m&#39;</span> : nat =&gt; n =n m&#39;) x idcode_nat)) ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk43" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk43"><span class="nb">intros</span> []; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_nat idcode_nat = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk44" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk44"><span class="nb">induction</span> n; <span class="nb">simpl</span>; <span class="nb">trivial</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>path_nat idcode_nat = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap S (path_nat idcode_nat) = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">destruct</span> (IHn^)%path.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk45" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk45">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : n =n m =&gt;
+ transport (<span class="kr">fun</span> <span class="nv">m&#39;</span> : nat =&gt; n =n m&#39;) (path_nat x)
+   idcode_nat) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk46" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk46">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : n =n m =&gt;
+ transport (<span class="kr">fun</span> <span class="nv">m&#39;</span> : nat =&gt; n =n m&#39;) (path_nat x)
+   idcode_nat) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk47" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk47"><span class="nb">intro</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n, m</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>n =n m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">m&#39;</span> : nat =&gt; n =n m&#39;) (path_nat x)
+  idcode_nat = x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_ishprop.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">}</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_path_nat</span> {<span class="nv">n</span> <span class="nv">m</span>} : (n =n m) &lt;~&gt; (n = m)
+  := Build_Equiv _ _ (@path_nat n m) _.</span></span></pre>
+</div>
+</div></body>
+</html>

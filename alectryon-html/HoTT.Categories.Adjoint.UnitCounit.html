@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>UnitCounit.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Adjunctions by units and counits *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unitcounit-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="unitcounit-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Dual Functor.Dual NaturalTransformation.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Core Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Adjunction</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** Unit + UMP definition of adjunction *)</span>
+  <span class="sd">(** Quoting from Awodey&#39;s &quot;Category Theory&quot;:</span>
+
+<span class="sd">      An adjunction between categories [C] and [D] consists of</span>
+<span class="sd">      functors</span>
+
+<span class="sd">      [F : C &lt;-&gt; D : G]</span>
+
+<span class="sd">      and a natural transformation</span>
+
+<span class="sd">      [T : 1_C -&gt; G ∘ F]</span>
+
+<span class="sd">      with the property:</span>
+
+<span class="sd">      (o) For any [c : C], [d : D], and [f : c -&gt; G d], there exists a</span>
+<span class="sd">          unique [g : F c -&gt; d] such that [f = (G g) ∘ (T c)] as</span>
+<span class="sd">          indicated in</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">                g</span>
+<span class="sd">     F c ..................&gt; d</span>
+
+<span class="sd">                 G g</span>
+<span class="sd">     G (F c) --------------&gt; G d</span>
+<span class="sd">       ^                    _</span>
+<span class="sd">       |                    /|</span>
+<span class="sd">       |                  /</span>
+<span class="sd">       |                /</span>
+<span class="sd">       |              /</span>
+<span class="sd">       | T c        /</span>
+<span class="sd">       |          /  f</span>
+<span class="sd">       |        /</span>
+<span class="sd">       |      /</span>
+<span class="sd">       |    /</span>
+<span class="sd">       |  /</span>
+<span class="sd">        c</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">     Terminology and notation:</span>
+
+<span class="sd">     - [F] is called the left adjoint, [G] is called the right</span>
+<span class="sd">       adjoint, and [T] is called the unit of the adjunction.</span>
+
+<span class="sd">     - One sometimes writes [F -| G] for ``[F] is left and [G] right</span>
+<span class="sd">       adjoint.&#39;&#39;</span>
+
+<span class="sd">     - The statement (o) is the UMP of the unit [T].</span>
+
+<span class="sd">     Note that the situation [F ⊣ G] is a generalization of</span>
+<span class="sd">     equivalence of categories, in that a pseudo-inverse is an</span>
+<span class="sd">     adjoint. In that case, however, it is the relation between</span>
+<span class="sd">     categories that one is interested in. Here, one is concerned with</span>
+<span class="sd">     the relation between special functors. That is to say, it is not</span>
+<span class="sd">     the relation on categories ``there exists an adjunction,&#39;&#39; but</span>
+<span class="sd">     rather ``this functor has an adjoint&#39;&#39; that we are concerned</span>
+<span class="sd">     with. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">unit</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">AdjunctionUnit</span> :=
+      { T : NaturalTransformation <span class="mi">1</span> (G o F)
+      | <span class="kr">forall</span> (<span class="nv">c</span> : C) (<span class="nv">d</span> : D) (<span class="nv">f</span> : morphism C c (G d)),
+          Contr { g : morphism D (F c) d | G _1 g o T c = f }
+      }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">unit</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Counit + UMP definition of adjunction *)</span>
+  <span class="sd">(**</span>
+<span class="sd">     Paraphrasing and quoting from Awodey&#39;s &quot;Category Theory&quot;:</span>
+
+<span class="sd">     An adjunction between categories [C] and [D] consists of functors</span>
+
+<span class="sd">     [F : C &lt;-&gt; D : G]</span>
+
+<span class="sd">     and a natural transformation</span>
+
+<span class="sd">     [U : F ∘ G -&gt; 1_D]</span>
+
+<span class="sd">     with the property:</span>
+
+<span class="sd">     (o) For any [c : C], [d : D], and [g : F c -&gt; d], there exists a</span>
+<span class="sd">         unique [f : c -&gt; G d] such that [g = (U d) ∘ (F f)] as</span>
+<span class="sd">         indicated in the diagram</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">                f</span>
+<span class="sd">     c ..................&gt; G d</span>
+
+<span class="sd">               F f</span>
+<span class="sd">     F c --------------&gt; F (G d)</span>
+<span class="sd">      \                    |</span>
+<span class="sd">        \                  |</span>
+<span class="sd">          \                |</span>
+<span class="sd">            \              |</span>
+<span class="sd">              \            | U d</span>
+<span class="sd">             g  \          |</span>
+<span class="sd">                  \        |</span>
+<span class="sd">                    \      |</span>
+<span class="sd">                      \    |</span>
+<span class="sd">                       _\| V</span>
+<span class="sd">                          d</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    Terminology and notation:</span>
+
+<span class="sd">    - The statement (o) is the UMP of the counit [U].</span>
+<span class="sd">    *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">counit</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">AdjunctionCounit</span> :=
+      { U : NaturalTransformation (F o G) <span class="mi">1</span>
+      | <span class="kr">forall</span> (<span class="nv">c</span> : C) (<span class="nv">d</span> : D) (<span class="nv">g</span> : morphism D (F c) d),
+          Contr { f : morphism C c (G d) | U d o F _1 f = g }
+      }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">counit</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** The counit is just the dual of the unit.  We formalize this here</span>
+<span class="sd">      so that we can use it to make coercions easier. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">unit_counit_op</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">adjunction_counit__op__adjunction_unit</span> (<span class="nv">A</span> : AdjunctionUnit G^op F^op)
+    : AdjunctionCounit F G
+      := exist
+           (<span class="kr">fun</span> <span class="nv">U</span> : NaturalTransformation (F o G) <span class="mi">1</span> =&gt;
+              <span class="kr">forall</span> (<span class="nv">c</span> : C) (<span class="nv">d</span> : D) (<span class="nv">g</span> : morphism D (F c) d),
+                Contr {f : morphism C c (G d)
+                      | U d o F _1 f = g })
+           (A.<span class="mi">1</span>^op)%natural_transformation
+           (<span class="kr">fun</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">g</span> =&gt; A.<span class="mi">2</span> d c g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">adjunction_counit__op__adjunction_unit__inv</span> (<span class="nv">A</span> : AdjunctionUnit G F)
+    : AdjunctionCounit F^op G^op
+      := exist
+           (<span class="kr">fun</span> <span class="nv">U</span> : NaturalTransformation (F^op o G^op) <span class="mi">1</span>
+            =&gt; <span class="kr">forall</span> (<span class="nv">c</span> : C^op) (<span class="nv">d</span> : D^op) (<span class="nv">g</span> : morphism D^op ((F^op)%functor c) d),
+                 Contr {f : morphism C^op c ((G^op)%functor d)
+                       | U d o F^op _1 f = g })
+           (A.<span class="mi">1</span>^op)%natural_transformation
+           (<span class="kr">fun</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">g</span> =&gt; A.<span class="mi">2</span> d c g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">adjunction_unit__op__adjunction_counit</span> (<span class="nv">A</span> : AdjunctionCounit G^op F^op)
+    : AdjunctionUnit F G
+      := exist
+           (<span class="kr">fun</span> <span class="nv">T</span> : NaturalTransformation <span class="mi">1</span> (G o F) =&gt;
+              <span class="kr">forall</span> (<span class="nv">c</span> : C) (<span class="nv">d</span> : D) (<span class="nv">f</span> : morphism C c (G d)),
+                Contr { g : morphism D (F c) d
+                      | G _1 g o T c = f })
+           (A.<span class="mi">1</span>^op)%natural_transformation
+           (<span class="kr">fun</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">g</span> =&gt; A.<span class="mi">2</span> d c g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">adjunction_unit__op__adjunction_counit__inv</span> (<span class="nv">A</span> : AdjunctionCounit G F)
+    : AdjunctionUnit F^op G^op
+      := exist
+           (<span class="kr">fun</span> <span class="nv">T</span> : NaturalTransformation <span class="mi">1</span> (G^op o F^op)
+            =&gt; <span class="kr">forall</span> (<span class="nv">c</span> : C^op) (<span class="nv">d</span> : D^op) (<span class="nv">f</span> : morphism C^op c ((G^op)%functor d)),
+                 Contr {g : morphism D^op ((F^op)%functor c) d
+                       | G^op _1 g o T c = f })
+           (A.<span class="mi">1</span>^op)%natural_transformation
+           (<span class="kr">fun</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">g</span> =&gt; A.<span class="mi">2</span> d c g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">unit_counit_op</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Unit + Counit + Zig + Zag definition of adjunction *)</span>
+  <span class="sd">(** Quoting Wikipedia on Adjoint Functors:</span>
+
+<span class="sd">      A counit-unit adjunction between two categories [C] and [D]</span>
+<span class="sd">      consists of two functors [F : C ← D] and [G : C → D] and two</span>
+<span class="sd">      natural transformations</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">      ε : FG → 1_C</span>
+<span class="sd">      η : 1_D → GF</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">      respectively called the counit and the unit of the adjunction</span>
+<span class="sd">      (terminology from universal algebra), such that the compositions</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">          F η            ε F</span>
+<span class="sd">      F -------&gt; F G F -------&gt; F</span>
+
+<span class="sd">          η G            G ε</span>
+<span class="sd">      G -------&gt; G F G -------&gt; G</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">      are the identity transformations [1_F] and [1_G] on [F] and [G]</span>
+<span class="sd">      respectively.</span>
+
+<span class="sd">      In this situation we say that ``[F] is left adjoint to [G]&#39;&#39; and</span>
+<span class="sd">      &#39;&#39;[G] is right adjoint to [F]&#39;&#39;, and may indicate this</span>
+<span class="sd">      relationship by writing [(ε, η) : F ⊣ G], or simply [F ⊣ G].</span>
+
+<span class="sd">      In equation form, the above conditions on (ε, η) are the</span>
+<span class="sd">      counit-unit equations</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">      1_F = ε F ∘ F η</span>
+<span class="sd">      1_G = G ε ∘ η G</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">      which mean that for each [X] in [C] and each [Y] in [D],</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">      1_{FY} = ε_{FY} ∘ F(η_Y)</span>
+<span class="sd">      1_{GX} = G(ε_X) ∘ η_{GX}</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">      These equations are useful in reducing proofs about adjoint</span>
+<span class="sd">      functors to algebraic manipulations.  They are sometimes called</span>
+<span class="sd">      the ``zig-zag equations&#39;&#39; because of the appearance of the</span>
+<span class="sd">      corresponding string diagrams.  A way to remember them is to</span>
+<span class="sd">      first write down the nonsensical equation [1 = ε ∘ η] and then</span>
+<span class="sd">      fill in either [F] or [G] in one of the two simple ways which</span>
+<span class="sd">      make the compositions defined.</span>
+
+<span class="sd">      Note: The use of the prefix ``co&#39;&#39; in counit here is not</span>
+<span class="sd">      consistent with the terminology of limits and colimits, because</span>
+<span class="sd">      a colimit satisfies an initial property whereas the counit</span>
+<span class="sd">      morphisms will satisfy terminal properties, and dually.  The</span>
+<span class="sd">      term unit here is borrowed from the theory of monads where it</span>
+<span class="sd">      looks like the insertion of the identity 1 into a monoid.  *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">unit_counit</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="c">(*Local Reserved Notation &quot;&#39;ε&#39;&quot;.</span>
+<span class="c">    Local Reserved Notation &quot;&#39;η&#39;&quot;.*)</span>
+
+    <span class="sd">(** Use the per-object version of the equations, so that we don&#39;t</span>
+<span class="sd">        need the associator in the middle.  Also, explicitly simplify</span>
+<span class="sd">        some of the types so that [rewrite] works better. *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">AdjunctionUnitCounit</span> :=
+      {
+        unit : NaturalTransformation (identity C) (G o F)
+        <span class="c">(*where &quot;&#39;η&#39;&quot; := unit*)</span>;
+        counit : NaturalTransformation (F o G) (identity D)
+        <span class="c">(*where &quot;&#39;ε&#39;&quot; := counit*)</span>;
+        unit_counit_equation_1
+        : <span class="kr">forall</span> <span class="nv">Y</span> : C, <span class="c">(*ε (F Y) ∘ F ₁ (η Y) = identity (F Y);*)</span>
+            Category.Core.compose (C := D) (s := F Y) (d := F (G (F Y))) (d&#39; := F Y)
+                                  (counit (F Y))
+                                  (F _1 (unit Y : morphism _ Y (G (F Y))))
+            = <span class="mi">1</span>;
+        unit_counit_equation_2
+        : <span class="kr">forall</span> <span class="nv">X</span> : D, <span class="c">(* G ₁ (ε X) ∘ η (G X) = identity (G X) *)</span>
+            Category.Core.compose (C := C) (s := G X) (d := G (F (G X))) (d&#39; := G X)
+                                  (G _1 (counit X : morphism _ (F (G X)) X))
+                                  (unit (G X))
+            = <span class="mi">1</span>
+      }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">unit_counit</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Adjunction</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> adjunction_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> adjunction_scope <span class="kr">with</span> adjunction.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> adjunction_scope <span class="kr">with</span> AdjunctionUnit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> adjunction_scope <span class="kr">with</span> AdjunctionCounit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> adjunction_scope <span class="kr">with</span> AdjunctionUnitCounit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> unit [C D]%_category [F G]%_functor _%_adjunction / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> counit [C D]%_category [F G]%_functor _%_adjunction / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> AdjunctionUnitCounit [C D]%_category (F G)%_functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> unit_counit_equation_1 [C D]%_category [F G]%_functor _%_adjunction _%_object.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> unit_counit_equation_2 [C D]%_category [F G]%_functor _%_adjunction _%_object.</span></span></pre>
+</div>
+</div></body>
+</html>

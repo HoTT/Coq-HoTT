@@ -1,0 +1,291 @@
+<html>
+<head>
+<title>ua_setalgebra.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ua_setalgebra.v</h1>
+
+<div class="code" title="File: ua_setalgebra.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** This file defines [SetAlgebra], a specialized [Algebra] where
+    the carriers are always sets. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 3
+Time: 0.036s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Export HoTT.Classes.interfaces.ua_algebra.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 3
+Time: 0.001s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+
+
+Record SetAlgebra {σ : Signature} : Type := BuildSetAlgebra
+  { algebra_setalgebra : Algebra σ
+  ; is_hset_algebra_setalgebra :: IsHSetAlgebra algebra_setalgebra }.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments SetAlgebra : clear implicits.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Coercion algebra_setalgebra : SetAlgebra &gt;-&gt; Algebra.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** To find a path [A = B] between set algebras [A B : SetAlgebra σ],
+    it is enough to find a path between the defining algebras,
+    [algebra_setalgebra A = algebra_setalgebra B]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma path_setalgebra `{Funext} {σ} (A B : SetAlgebra σ)
+  (p : algebra_setalgebra A = algebra_setalgebra B)
+  : A = B.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct A as [A AH], B as [B BH].</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in *.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transparent assert (a : (p#AH = BH)) by apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by path_induction.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The id path is mapped to the id path by [path_setalgebra]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma path_setalgebra_1 `{Funext} {σ} (A : SetAlgebra σ)
+  : path_setalgebra A A idpath = idpath.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transparent assert (p :
+      (∀ I : IsHSetAlgebra A, path_ishprop I I = idpath)).</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold path_setalgebra.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite p.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The function [path_setalgebra A B] is an equivalence with inverse
+    [ap algebra_setalgebra]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_path_setalgebra `{Funext} {σ : Signature}
+  (A B : SetAlgebra σ)
+  : IsEquiv (path_setalgebra A B).</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_adjointify
+            (path_setalgebra A B) (ap algebra_setalgebra) _ _).</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 44
+Time: 0.001s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> abstract (intro p; induction p; by rewrite path_setalgebra_1).</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 45
+Time: 0.003s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre> abstract (
+      intro e; destruct A as [A AH], B as [B BH];
+      cbn in e; destruct e;
+      unfold path_setalgebra; by destruct path_ishprop).</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_setalgebra.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

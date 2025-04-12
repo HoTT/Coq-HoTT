@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Modalities.Open</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Modalities.Open</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Extensions.html#"><span class="id" title="library">Extensions</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Modalities.Modality.html#"><span class="id" title="library">Modality</span></a> <a class="idref" href="HoTT.Modalities.Accessible.html#"><span class="id" title="library">Accessible</span></a> <a class="idref" href="HoTT.Modalities.Nullification.html#"><span class="id" title="library">Nullification</span></a> <a class="idref" href="HoTT.Modalities.Lex.html#"><span class="id" title="library">Lex</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1331"></a><h1 class="section">Open modalities</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1332"></a><h2 class="section">Definition</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Op" class="idref" href="#Op"><span class="id" title="definition">Op</span></a> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>} (<a id="U:2" class="idref" href="#U:2"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>) : <a class="idref" href="HoTT.Modalities.Modality.html#Modality"><span class="id" title="record">Modality</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Modalities.Modality.html#easy_modality"><span class="id" title="definition">easy_modality</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span>; <span class="id" title="tactic">exact</span> (<span class="id" title="var">U</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">X</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">T</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">f</span> <span class="id" title="var">z</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <span class="id" title="var">B</span> <span class="id" title="var">_</span> (<span class="id" title="var">f</span> (<span class="id" title="var">z</span> <span class="id" title="var">u</span>) <span class="id" title="var">u</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Arrow.html#path_arrow"><span class="id" title="definition">path_arrow</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">u'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Arrow.html#path_arrow"><span class="id" title="definition">path_arrow</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">transitivity</span> (<a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <span class="id" title="var">B</span> 1 (<span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">u</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">path_hints</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<span class="id" title="keyword">fun</span> <a id="p:3" class="idref" href="#p:3"><span class="id" title="binder"><span id="p:4" class="id">p</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <span class="id" title="var">B</span> <a class="idref" href="HoTT.Modalities.Open.html#p:3"><span class="id" title="variable">p</span></a> (<span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">u</span>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">transitivity</span> (<a class="idref" href="HoTT.Types.Arrow.html#path_arrow"><span class="id" title="definition">path_arrow</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">a</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">a</span>) (@<a class="idref" href="HoTT.Basics.Overture.html#ap10"><span class="id" title="definition">ap10</span></a> <span class="id" title="var">U</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> 1));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">path_hints</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">u'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#ap_const"><span class="id" title="definition">ap_const</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Arrow.html#eta_path_arrow"><span class="id" title="definition">eta_path_arrow</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">z</span> <span class="id" title="var">z'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srefine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Arrow.html#path_arrow"><span class="id" title="definition">path_arrow</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap10"><span class="id" title="definition">ap10</span></a> (<span class="id" title="var">f</span> <span class="id" title="var">u</span>) <span class="id" title="var">u</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Arrow.html#path_arrow"><span class="id" title="definition">path_arrow</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">transitivity</span> (<a class="idref" href="HoTT.Types.Arrow.html#path_arrow"><span class="id" title="definition">path_arrow</span></a> <span class="id" title="var">z</span> <span class="id" title="var">z'</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap10"><span class="id" title="definition">ap10</span></a> (<span class="id" title="var">f</span> <span class="id" title="var">u</span>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#to"><span class="id" title="method">to</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">u'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<span class="id" title="keyword">fun</span> <a id="u0:5" class="idref" href="#u0:5"><span class="id" title="binder"><span id="u0:6" class="id">u0</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#ap10"><span class="id" title="definition">ap10</span></a> (<span class="id" title="var">f</span> <a class="idref" href="HoTT.Modalities.Open.html#u0:5"><span class="id" title="variable">u0</span></a>) <span class="id" title="var">u'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Arrow.html#eta_path_arrow"><span class="id" title="definition">eta_path_arrow</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Types.Arrow.html#eta_path_arrow"><span class="id" title="definition">eta_path_arrow</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1333"></a><h2 class="section">The open modality is lex</h2>
+
+<div class="paragraph"> </div>
+
+ Note that unlike most other cases, we can prove this without univalence (though we do of course need funext). 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="lex_open" class="idref" href="#lex_open"><span class="id" title="instance">lex_open</span></a> `{<a id="H:7" class="idref" href="#H:7"><span class="id" title="binder">Funext</span></a>} (<a id="U:8" class="idref" href="#U:8"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Modalities.Lex.html#Lex"><span class="id" title="abbreviation">Lex</span></a> (<a class="idref" href="HoTT.Modalities.Open.html#Op"><span class="id" title="definition">Op</span></a> <a class="idref" href="HoTT.Modalities.Open.html#U:8"><span class="id" title="variable">U</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Modalities.Lex.html#lex_from_isconnected_paths"><span class="id" title="definition">lex_from_isconnected_paths</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">Ac</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Trunc.html#contr_forall"><span class="id" title="definition">contr_forall</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<a class="idref" href="HoTT.Basics.Trunc.html#contr_inhabited_hprop"><span class="id" title="lemma">contr_inhabited_hprop</span></a> <span class="id" title="var">U</span> <span class="id" title="var">u</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Contractible.html#contr_paths_contr"><span class="id" title="instance">contr_paths_contr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#contr_equiv"><span class="id" title="lemma">contr_equiv</span></a> (<span class="id" title="var">U</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">A</span>) (<a class="idref" href="HoTT.Types.Forall.html#equiv_contr_forall"><span class="id" title="definition">equiv_contr_forall</span></a> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">Ac</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1334"></a><h2 class="section">The open modality is accessible.</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="acc_open" class="idref" href="#acc_open"><span class="id" title="instance">acc_open</span></a> `{<a id="H:9" class="idref" href="#H:9"><span class="id" title="binder">Funext</span></a>} (<a id="U:10" class="idref" href="#U:10"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Modalities.Accessible.html#IsAccModality"><span class="id" title="class">IsAccModality</span></a> (<a class="idref" href="HoTT.Modalities.Open.html#Op"><span class="id" title="definition">Op</span></a> <a class="idref" href="HoTT.Modalities.Open.html#U:10"><span class="id" title="variable">U</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">unshelve</span> <span class="id" title="tactic">econstructor</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">econstructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Types.Unit.html#unit_name"><span class="id" title="abbreviation">unit_name</span></a> <span class="id" title="var">U</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span>; <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">X_inO</span> <span class="id" title="var">u</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#equiv_inverse"><span class="id" title="lemma">equiv_inverse</span></a> (<a class="idref" href="HoTT.Extensions.html#equiv_ooextendable_isequiv"><span class="id" title="definition">equiv_ooextendable_isequiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#cancelR_isequiv"><span class="id" title="definition">cancelR_isequiv</span></a> (<span class="id" title="keyword">fun</span> <a id="x:11" class="idref" href="#x:11"><span class="id" title="binder"><span id="x:13" class="id">x</span></span></a> (<a id="u:12" class="idref" href="#u:12"><span class="id" title="binder"><span id="u:14" class="id">u</span></span></a>:<a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a>) ⇒ <a class="idref" href="HoTT.Modalities.Open.html#x:11"><span class="id" title="variable">x</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">X_inO</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">ext</span>; <span class="id" title="tactic">specialize</span> (<span class="id" title="var">ext</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_compose"><span class="id" title="instance">isequiv_compose</span></a> (<span class="id" title="keyword">fun</span> <a id="x:16" class="idref" href="#x:16"><span class="id" title="binder"><span id="x:18" class="id">x</span></span></a> ⇒ <a class="idref" href="HoTT.Types.Unit.html#unit_name"><span class="id" title="abbreviation">unit_name</span></a> <a class="idref" href="HoTT.Modalities.Open.html#x:16"><span class="id" title="variable">x</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="h:15" class="idref" href="#h:15"><span class="id" title="binder"><span id="h:17" class="id">h</span></span></a> ⇒ <a class="idref" href="HoTT.Modalities.Open.html#h:15"><span class="id" title="variable">h</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Types.Unit.html#const_tt"><span class="id" title="definition">const_tt</span></a> <span class="id" title="var">U</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Extensions.html#isequiv_ooextendable"><span class="id" title="definition">isequiv_ooextendable</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">X</span>) (<a class="idref" href="HoTT.Types.Unit.html#const_tt"><span class="id" title="definition">const_tt</span></a> <span class="id" title="var">U</span>) <span class="id" title="var">ext</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Thus, arguably a better definition of <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Open.html#Op"><span class="id" title="definition">Op</span></a></span> would be as a nullification modality, as it would not require <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="axiom">Funext</span></a></span> and would have a judgmental computation rule.  However, the above definition is also nice to know, as it doesn't use HITs.  We name the other version <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Open.html#Op'"><span class="id" title="definition">Op'</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Op'" class="idref" href="#Op'"><span class="id" title="definition">Op'</span></a> (<a id="U:19" class="idref" href="#U:19"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>) : <a class="idref" href="HoTT.Modalities.Modality.html#Modality"><span class="id" title="record">Modality</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Modalities.Nullification.html#Nul"><span class="id" title="definition">Nul</span></a> (<a class="idref" href="HoTT.Modalities.Accessible.html#Build_NullGenerators"><span class="id" title="constructor">Build_NullGenerators</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Modalities.Open.html#U:19"><span class="id" title="variable">U</span></a>)).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

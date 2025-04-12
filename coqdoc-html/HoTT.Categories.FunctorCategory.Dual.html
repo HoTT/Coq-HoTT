@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.FunctorCategory.Dual</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.FunctorCategory.Dual</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab753"></a><h1 class="section">Dual functor categories</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#"><span class="id" title="library">Category.Dual</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#"><span class="id" title="library">Functor.Dual</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#"><span class="id" title="library">NaturalTransformation.Dual</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="library">Functor.Identity</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Paths.html#"><span class="id" title="library">Functor.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Tactics.html#"><span class="id" title="library">HoTT.Tactics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="opposite" class="idref" href="#opposite"><span class="id" title="section">opposite</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab754"></a><h2 class="section">Functors <span class="inlinecode">(<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> <span class="inlinecode">↔</span> <span class="inlinecode">(<a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a>ᵒᵖ</span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>ᵒᵖ)ᵒᵖ</span></h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="opposite_functor" class="idref" href="#opposite_functor"><span class="id" title="definition">opposite_functor</span></a> (<a id="C:2" class="idref" href="#C:2"><span class="id" title="binder">C</span></a> <a id="D:3" class="idref" href="#D:3"><span class="id" title="binder">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#C:2"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#D:3"><span class="id" title="variable">D</span></a>) <a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#C:2"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#D:3"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">)^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#C:2"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#D:3"><span class="id" title="variable">D</span></a>) (<a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#C:2"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#D:3"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">)^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="F:5" class="idref" href="#F:5"><span class="id" title="binder">F</span></a> ⇒ <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#F:5"><span class="id" title="variable">F</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">op</span></a>)%<span class="id" title="var">functor</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a id="T:4" class="idref" href="#T:4"><span class="id" title="binder">T</span></a> ⇒ <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#T:4"><span class="id" title="variable">T</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#a0b75bf8b4bbaaad7e25eaba30181001"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Dual.html#a0b75bf8b4bbaaad7e25eaba30181001"><span class="id" title="notation">op</span></a>)%<span class="id" title="var">natural_transformation</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Ltac</span> <span class="id" title="var">op_t</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path_functor</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>; <span class="id" title="tactic">intro</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">destruct_head</span> <span class="id" title="var">NaturalTransformation</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab755"></a><h2 class="section">The above functors are isomorphisms</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="opposite_functor_law" class="idref" href="#opposite_functor_law"><span class="id" title="definition">opposite_functor_law</span></a> <a id="C:6" class="idref" href="#C:6"><span class="id" title="binder">C</span></a> <a id="D:7" class="idref" href="#D:7"><span class="id" title="binder">D</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#opposite_functor"><span class="id" title="definition">opposite_functor</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#C:6"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#D:7"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#opposite_functor"><span class="id" title="definition">opposite_functor</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#C:6"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#D:7"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">)^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#opposite_functor"><span class="id" title="definition">opposite_functor</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#C:6"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#D:7"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">)^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#opposite_functor"><span class="id" title="definition">opposite_functor</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#C:6"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#D:7"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">op_t</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Dual.html#opposite"><span class="id" title="section">opposite</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

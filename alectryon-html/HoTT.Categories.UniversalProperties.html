@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>UniversalProperties.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Universal morphisms *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Dual Functor.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Objects.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> InitialTerminalCategory.Core InitialTerminalCategory.Functors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Comma.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;-notation-overridden&quot;</span>. <span class="c">(* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Comma.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;notation-overridden&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Trunc Types.Sigma HoTT.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">UniversalMorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** Quoting Wikipedia:</span>
+
+<span class="sd">      Suppose that [U : D → C] is a functor from a category [D] to a</span>
+<span class="sd">      category [C], and let [X] be an object of [C].  Consider the</span>
+<span class="sd">      following dual (opposite) notions: *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">univ_hprop_t</span> UniversalProperty :=
+    <span class="nb">apply</span> @istrunc_succ <span class="kr">in</span> UniversalProperty;
+    <span class="nb">eapply</span> @istrunc_sigma;
+    <span class="kp">first</span> [ <span class="nb">intro</span>;
+            <span class="nb">simpl</span>;
+            <span class="kr">match goal with</span>
+              | [ |- <span class="kp">context</span>[<span class="nl">?m</span> o <span class="mi">1</span>] ]
+                =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (right_identity _ _ _ m)
+              | [ |- <span class="kp">context</span>[<span class="mi">1</span> o <span class="nl">?m</span>] ]
+                =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (left_identity _ _ _ m)
+            <span class="kr">end</span>;
+            <span class="bp">assumption</span>
+          | <span class="bp">by</span> <span class="nb">typeclasses eauto</span> ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Initial morphisms *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">InitialMorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** *** Definition *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">X</span> : C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">U</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** An initial morphism from [X] to [U] is an initial object in</span>
+<span class="sd">        the category [(X ↓ U)] of morphisms from [X] to [U].  In other</span>
+<span class="sd">        words, it consists of a pair [(A, φ)] where [A] is an object</span>
+<span class="sd">        of [D] and [φ: X → U A] is a morphism in [C], such that the</span>
+<span class="sd">        following initial property is satisfied:</span>
+
+<span class="sd">       - Whenever [Y] is an object of [D] and [f : X → U Y] is a</span>
+<span class="sd">         morphism in [C], then there exists a unique morphism [g : A</span>
+<span class="sd">         → Y] such that the following diagram commutes:</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">             φ</span>
+<span class="sd">         X -----&gt; U A       A</span>
+<span class="sd">          \        .        .</span>
+<span class="sd">            \      . U g    . g</span>
+<span class="sd">           f  \    .        .</span>
+<span class="sd">               ↘   ↓        ↓</span>
+<span class="sd">                 U Y        Y</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">       *)</span>
+
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsInitialMorphism</span> (<span class="nv">Ap</span> : object (X / U)) :=
+      IsInitialObject (X / U) Ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** *** Introduction rule *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">IntroductionAbstractionBarrier</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk1"><span class="kn">Definition</span> <span class="nf">Build_IsInitialMorphism</span>
+                 (*(Ap : Object (X ↓ U))*)
+                 (<span class="nv">A</span> : D)(* := CCO_b Ap*)
+                 (<span class="nv">p</span> : morphism C X (U A))(*:= CCO_f Ap*)
+                 (<span class="nv">Ap</span> := CommaCategory.Build_object !X U tt A p)
+                 (<span class="nv">UniversalProperty</span>
+                  : <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C X (U A&#39;)),
+                      Contr { m : morphism D A A&#39;
+                            | U _1 m o p = p&#39; })
+      : IsInitialMorphism Ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">A&#39;</span> : D)
+(<span class="nv">p&#39;</span> : morphism C X
+        (U _0 A&#39;)%object),
+Contr
+  {m : morphism D A A&#39; &amp;
+  U _1 m o p = p&#39;}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsInitialMorphism Ap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">A&#39;</span> : D)
+(<span class="nv">p&#39;</span> : morphism C X
+        (U _0 A&#39;)%object),
+Contr
+  {m : morphism D A A&#39; &amp;
+  U _1 m o p = p&#39;}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsInitialMorphism Ap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk3"><span class="nb">intro</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">A&#39;</span> : D)
+(<span class="nv">p&#39;</span> : morphism C X
+        (U _0 A&#39;)%object),
+Contr
+  {m : morphism D A A&#39; &amp;
+  U _1 m o p = p&#39;}</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (morphism (X / U) Ap x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk4"><span class="nb">specialize</span> (UniversalProperty (CommaCategory.b x) (CommaCategory.f x)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (morphism (X / U) Ap x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        <span class="sd">(** We want to preserve the computation rules for the morphisms, even though they&#39;re unique up to unique isomorphism. *)</span>
+</span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk5"><span class="nb">eapply</span> istrunc_equiv_istrunc.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nl">?A</span> &lt;~&gt; morphism (X / U) Ap x</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="universalproperties-v-chk6" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><label class="goal-separator" for="universalproperties-v-chk6"><hr></label><div class="goal-conclusion">Contr <span class="nl">?A</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk7">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="nl">?A</span> &lt;~&gt; morphism (X / U) Ap x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> CommaCategory.issig_morphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk8">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr
+  {g
+  : morphism (NatCategory.Core.nat_category (S O))
+      (CommaCategory.a Ap) (CommaCategory.a x) &amp;
+  {h
+  : morphism D (CommaCategory.b Ap)
+      (CommaCategory.b x) &amp;
+  U _1 h o CommaCategory.f Ap =
+  CommaCategory.f x o X _1 g}}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chk9"><span class="nb">apply</span> contr_inhabited_hprop.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp
+  {g
+  : morphism (NatCategory.Core.nat_category (S O))
+      (CommaCategory.a Ap) (CommaCategory.a x) &amp;
+  {h
+  : morphism D (CommaCategory.b Ap)
+      (CommaCategory.b x) &amp;
+  U _1 h o CommaCategory.f Ap =
+  CommaCategory.f x o X _1 g}}</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="universalproperties-v-chka" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><label class="goal-separator" for="universalproperties-v-chka"><hr></label><div class="goal-conclusion">{g
+: morphism (NatCategory.Core.nat_category (S O))
+    (CommaCategory.a Ap) 
+    (CommaCategory.a x) &amp;
+{h
+: morphism D (CommaCategory.b Ap) (CommaCategory.b x)
+&amp;
+U _1 h o CommaCategory.f Ap =
+CommaCategory.f x o X _1 g}}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">          </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chkb">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp
+  {g
+  : morphism (NatCategory.Core.nat_category (S O))
+      (CommaCategory.a Ap) (CommaCategory.a x) &amp;
+  {h
+  : morphism D (CommaCategory.b Ap)
+      (CommaCategory.b x) &amp;
+  U _1 h o CommaCategory.f Ap =
+  CommaCategory.f x o X _1 g}}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> univ_hprop_t UniversalProperty.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">          </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chkc">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{g
+: morphism (NatCategory.Core.nat_category (S O))
+    (CommaCategory.a Ap) (CommaCategory.a x) &amp;
+{h
+: morphism D (CommaCategory.b Ap) (CommaCategory.b x)
+&amp;
+U _1 h o CommaCategory.f Ap =
+CommaCategory.f x o X _1 g}}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chkd">(<span class="kr">exists</span> <span class="nv">tt</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{h
+: morphism D (CommaCategory.b Ap) (CommaCategory.b x)
+&amp;
+U _1 h o CommaCategory.f Ap =
+CommaCategory.f x o X _1 tt}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">            </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="universalproperties-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="universalproperties-v-chke">(<span class="kr">exists</span> (@center _ UniversalProperty).<span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>U</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>morphism C X (U _0 A)%object</span></span></span><br><span><var>Ap</var><span><span class="hyp-body"><b>:= </b><span>{|
+  CommaCategory.a := tt;
+  CommaCategory.b := A;
+  CommaCategory.f := p
+|}</span></span><span class="hyp-type"><b>: </b><span>CommaCategory.object !X U</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(X / U)%category</span></span></span><br><span><var>UniversalProperty</var><span class="hyp-type"><b>: </b><span>Contr
+  {m
+  : morphism D A
+      (CommaCategory.b x) &amp;
+  U _1 m o p = CommaCategory.f x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">U
+_1 (center
+      {m : morphism D A (CommaCategory.b x) &amp;
+      U _1 m o p = CommaCategory.f x}).<span class="mi">1</span>
+o CommaCategory.f Ap = CommaCategory.f x o X _1 tt</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">            </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (<span class="kp">progress</span> <span class="nb">rewrite</span> <span class="nl">?right_identity</span>, <span class="nl">?left_identity</span>;
+                      <span class="bp">exact</span> (@center _ UniversalProperty).<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_IsInitialMorphism_curried</span>
+                 (<span class="nv">A</span> : D)
+                 (<span class="nv">p</span> : morphism C X (U A))
+                 (<span class="nv">Ap</span> := CommaCategory.Build_object !X U tt A p)
+                 (<span class="nv">m</span> : <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C X (U A&#39;)),
+                        morphism D A A&#39;)
+                 (<span class="nv">H</span> : <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C X (U A&#39;)),
+                        U _1 (m A&#39; p&#39;) o p = p&#39;)
+                 (<span class="nv">H&#39;</span> : <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C X (U A&#39;)) <span class="nv">m&#39;</span>,
+                         U _1 m&#39; o p = p&#39;
+                         -&gt; m A&#39; p&#39; = m&#39;)
+      : IsInitialMorphism Ap
+        := Build_IsInitialMorphism
+             A
+             p
+             (<span class="kr">fun</span> <span class="nv">A&#39;</span> <span class="nv">p&#39;</span> =&gt;
+                Build_Contr _ (m A&#39; p&#39;; H A&#39; p&#39;)
+                              (<span class="kr">fun</span> <span class="nv">m&#39;</span> =&gt; path_sigma
+                                 _
+                                 (m A&#39; p&#39;; H A&#39; p&#39;)
+                                 m&#39;
+                                 (H&#39; A&#39; p&#39; m&#39;.<span class="mi">1</span> m&#39;.<span class="mi">2</span>)
+                                 (center _))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+      <span class="sd">(** Projections from nested sigmas are currently rather slow.  We should just be able to do</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">      Definition Build_IsInitialMorphism_uncurried</span>
+<span class="sd">                 (univ</span>
+<span class="sd">                  : { A : D</span>
+<span class="sd">                    | { p : morphism C X (U A)</span>
+<span class="sd">                       | let Ap := CommaCategory.Build_object !X U tt A p in</span>
+<span class="sd">                         forall (A&#39; : D) (p&#39; : morphism C X (U A&#39;)),</span>
+<span class="sd">                           { m : morphism D A A&#39;</span>
+<span class="sd">                           | { H : U _1 m o p = p&#39;</span>
+<span class="sd">                             | forall m&#39;,</span>
+<span class="sd">                                 U _1 m&#39; o p = p&#39;</span>
+<span class="sd">                                 -&gt; m = m&#39; }}}})</span>
+<span class="sd">        := @Build_IsInitialMorphism_curried</span>
+<span class="sd">             (univ.1)</span>
+<span class="sd">             (univ.2.1)</span>
+<span class="sd">             (fun A&#39; p&#39; =&gt; (univ.2.2 A&#39; p&#39;).1)</span>
+<span class="sd">             (fun A&#39; p&#39; =&gt; (univ.2.2 A&#39; p&#39;).2.1)</span>
+<span class="sd">             (fun A&#39; p&#39; =&gt; (univ.2.2 A&#39; p&#39;).2.2).</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">      But that&#39;s currently too slow.  (About 6-8 seconds, on my machine.)  So instead we factor out all of the type parts by hand, and then apply them after. *)</span>
+
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">make_uncurried</span> <span class="nv">A&#39;</span> <span class="nv">B&#39;</span> <span class="nv">C&#39;</span> <span class="nv">D&#39;</span> <span class="nv">E&#39;0</span>
+          (<span class="nv">E&#39;1</span> : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">a&#39;</span> <span class="nv">b</span> <span class="nv">b&#39;</span> (<span class="nv">c</span> : C&#39; a a&#39;), D&#39; a a&#39; b b&#39; c -&gt; E&#39;0 a a&#39; -&gt; <span class="kt">Type</span>)
+          (<span class="nv">E&#39;</span> : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">a&#39;</span> <span class="nv">b</span> <span class="nv">b&#39;</span> (<span class="nv">c</span> : C&#39; a a&#39;), D&#39; a a&#39; b b&#39; c -&gt; E&#39;0 a a&#39; -&gt; <span class="kt">Type</span>)
+          <span class="nv">F&#39;</span>
+          (<span class="nv">f</span> : <span class="kr">forall</span> (<span class="nv">a</span> : A&#39;)
+                      (<span class="nv">b</span> : B&#39; a)
+                      (<span class="nv">c</span> : <span class="kr">forall</span> (<span class="nv">a&#39;</span> : A&#39;) (<span class="nv">b&#39;</span> : B&#39; a&#39;),
+                             C&#39; a a&#39;)
+                      (<span class="nv">d</span> : <span class="kr">forall</span> (<span class="nv">a&#39;</span> : A&#39;) (<span class="nv">b&#39;</span> : B&#39; a&#39;),
+                             D&#39; a a&#39; b b&#39; (c a&#39; b&#39;))
+                      (<span class="nv">e</span> : <span class="kr">forall</span> (<span class="nv">a&#39;</span> : A&#39;) (<span class="nv">b&#39;</span> : B&#39; a&#39;)
+                                  (<span class="nv">e0</span> : E&#39;0 a a&#39;)
+                                  (<span class="nv">e1</span> : E&#39;1 a a&#39; b b&#39; (c a&#39; b&#39;) (d a&#39; b&#39;) e0),
+                             E&#39; a a&#39; b b&#39; (c a&#39; b&#39;) (d a&#39; b&#39;) e0),
+                 F&#39; a b)
+          (<span class="nv">univ</span>
+           : { a : A&#39;
+             | { b : B&#39; a
+               | <span class="kr">forall</span> (<span class="nv">a&#39;</span> : A&#39;) (<span class="nv">b&#39;</span> : B&#39; a&#39;),
+                   { c : C&#39; a a&#39;
+                   | { d : D&#39; a a&#39; b b&#39; c
+                     | <span class="kr">forall</span> (<span class="nv">e0</span> : E&#39;0 a a&#39;)
+                              (<span class="nv">e1</span> : E&#39;1 a a&#39; b b&#39; c d e0),
+                         E&#39; a a&#39; b b&#39; c d e0 }}}})
+      : F&#39; univ.<span class="mi">1</span> univ.<span class="mi">2</span>.<span class="mi">1</span>
+        := f
+             (univ.<span class="mi">1</span>)
+             (univ.<span class="mi">2</span>.<span class="mi">1</span>)
+             (<span class="kr">fun</span> <span class="nv">A&#39;</span> <span class="nv">p&#39;</span> =&gt; (univ.<span class="mi">2</span>.<span class="mi">2</span> A&#39; p&#39;).<span class="mi">1</span>)
+             (<span class="kr">fun</span> <span class="nv">A&#39;</span> <span class="nv">p&#39;</span> =&gt; (univ.<span class="mi">2</span>.<span class="mi">2</span> A&#39; p&#39;).<span class="mi">2</span>.<span class="mi">1</span>)
+             (<span class="kr">fun</span> <span class="nv">A&#39;</span> <span class="nv">p&#39;</span> =&gt; (univ.<span class="mi">2</span>.<span class="mi">2</span> A&#39; p&#39;).<span class="mi">2</span>.<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_IsInitialMorphism_uncurried</span>
+      : <span class="kr">forall</span> (<span class="nv">univ</span>
+                : { A : D
+                  | { p : morphism C X (U A)
+                    | <span class="kr">let</span> <span class="nv">Ap</span> := CommaCategory.Build_object !X U tt A p <span class="kr">in</span>
+                      <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C X (U A&#39;)),
+                        { m : morphism D A A&#39;
+                        | { H : U _1 m o p = p&#39;
+                          | <span class="kr">forall</span> <span class="nv">m&#39;</span>,
+                              U _1 m&#39; o p = p&#39;
+                              -&gt; m = m&#39; }}}}),
+          IsInitialMorphism (CommaCategory.Build_object !X U tt univ.<span class="mi">1</span> univ.<span class="mi">2</span>.<span class="mi">1</span>)
+        := @make_uncurried
+             _ _ _ _ _ _ _ _
+             (@Build_IsInitialMorphism_curried).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">IntroductionAbstractionBarrier</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> Build_IsInitialMorphism : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> Build_IsInitialMorphism_curried : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> Build_IsInitialMorphism_uncurried : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** *** Elimination rule *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">EliminationAbstractionBarrier</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Ap</span> : object (X / U).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsInitialMorphism_object</span> (<span class="nv">M</span> : IsInitialMorphism Ap) : D
+        := CommaCategory.b Ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsInitialMorphism_morphism</span> (<span class="nv">M</span> : IsInitialMorphism Ap)
+      : morphism C X (U (IsInitialMorphism_object M))
+        := CommaCategory.f Ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsInitialMorphism_property_morphism</span> (<span class="nv">M</span> : IsInitialMorphism Ap)
+                 (<span class="nv">Y</span> : D) (<span class="nv">f</span> : morphism C X (U Y))
+      : morphism D (IsInitialMorphism_object M) Y
+        := CommaCategory.h
+             (@center _ (M (CommaCategory.Build_object !X U tt Y f))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsInitialMorphism_property_morphism_property</span>
+                 (<span class="nv">M</span> : IsInitialMorphism Ap)
+                 (<span class="nv">Y</span> : D) (<span class="nv">f</span> : morphism C X (U Y))
+      : (U _1 (IsInitialMorphism_property_morphism M Y f))
+          o IsInitialMorphism_morphism M = f
+        := concat
+             (CommaCategory.p
+                (@center _ (M (CommaCategory.Build_object !X U tt Y f))))
+             (right_identity _ _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsInitialMorphism_property_morphism_unique</span>
+                 (<span class="nv">M</span> : IsInitialMorphism Ap)
+                 (<span class="nv">Y</span> : D) (<span class="nv">f</span> : morphism C X (U Y))
+                 <span class="nv">m&#39;</span>
+                 (<span class="nv">H</span> : U _1 m&#39; o IsInitialMorphism_morphism M = f)
+      : IsInitialMorphism_property_morphism M Y f = m&#39;
+        := ap
+             (@CommaCategory.h _ _ _ _ _ _ _)
+             (@contr _
+                     (M (CommaCategory.Build_object !X U tt Y f))
+                     (CommaCategory.Build_morphism
+                        Ap (CommaCategory.Build_object !X U tt Y f)
+                        tt m&#39; (H @ (right_identity _ _ _ _)^)%path)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsInitialMorphism_property</span>
+                 (<span class="nv">M</span> : IsInitialMorphism Ap)
+                 (<span class="nv">Y</span> : D) (<span class="nv">f</span> : morphism C X (U Y))
+      : Contr { m : morphism D (IsInitialMorphism_object M) Y
+              | U _1 m o IsInitialMorphism_morphism M = f }
+        := Build_Contr _ (IsInitialMorphism_property_morphism M Y f;
+                         IsInitialMorphism_property_morphism_property M Y f)
+              (<span class="kr">fun</span> <span class="nv">m&#39;</span> =&gt; path_sigma
+                            _
+                            (IsInitialMorphism_property_morphism M Y f;
+                             IsInitialMorphism_property_morphism_property M Y f)
+                            m&#39;
+                            (@IsInitialMorphism_property_morphism_unique M Y f m&#39;.<span class="mi">1</span> m&#39;.<span class="mi">2</span>)
+                            (center _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">EliminationAbstractionBarrier</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> IsInitialMorphism_object : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> IsInitialMorphism_morphism : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> IsInitialMorphism_property : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> IsInitialMorphism_property_morphism : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> IsInitialMorphism_property_morphism_property : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> IsInitialMorphism_property_morphism_unique : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">InitialMorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Terminal morphisms *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">TerminalMorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** *** Definition *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">U</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">X</span> : C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** A terminal morphism from [U] to [X] is a terminal object in</span>
+<span class="sd">       the comma category [(U ↓ X)] of morphisms from [U] to [X].  In</span>
+<span class="sd">       other words, it consists of a pair [(A, φ)] where [A] is an</span>
+<span class="sd">       object of [D] and [φ : U A -&gt; X] is a morphism in [C], such</span>
+<span class="sd">       that the following terminal property is satisfied:</span>
+
+<span class="sd">       - Whenever [Y] is an object of [D] and [f : U Y -&gt; X] is a</span>
+<span class="sd">         morphism in [C], then there exists a unique morphism [g : Y</span>
+<span class="sd">         -&gt; A] such that the following diagram commutes:</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">         Y      U Y</span>
+<span class="sd">         .       . \</span>
+<span class="sd">       g .   U g .   \  f</span>
+<span class="sd">         .       .     \</span>
+<span class="sd">         ↓       ↓       ↘</span>
+<span class="sd">         A      U A -----&gt; X</span>
+<span class="sd">                      φ</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">       *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">op_object</span> Ap
+      := (CommaCategory.Build_object
+            (Functors.from_terminal C^op X) (U^op)
+            (CommaCategory.b (Ap : object (U / X)))
+            (CommaCategory.a (Ap : object (U / X)))
+            (CommaCategory.f (Ap : object (U / X)))
+          : object ((X : object C^op) / U^op)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTerminalMorphism</span> (<span class="nv">Ap</span> : object (U / X)) : <span class="kt">Type</span>
+      := @IsInitialMorphism
+           (C^op)
+           _
+           X
+           (U^op)
+           (op_object Ap).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** *** Introduction rule *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">IntroductionAbstractionBarrier</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_IsTerminalMorphism</span>
+      : <span class="kr">forall</span>
+          (*(Ap : Object (U ↓ X))*)
+          (<span class="nv">A</span> : D)(* := CommaCategory.a Ap*)
+          (<span class="nv">p</span> : morphism C (U A) X)(*:= CommaCategory.f Ap*)
+          (<span class="nv">Ap</span> := CommaCategory.Build_object U !X A tt p)
+          (<span class="nv">UniversalProperty</span>
+           : <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C (U A&#39;) X),
+               Contr { m : morphism D A&#39; A
+                     | p o U _1 m = p&#39; }),
+          IsTerminalMorphism Ap
+        := @Build_IsInitialMorphism
+             (C^op)
+             (D^op)
+             X
+             (U^op).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_IsTerminalMorphism_curried</span>
+      : <span class="kr">forall</span>
+          (<span class="nv">A</span> : D)
+          (<span class="nv">p</span> : morphism C (U A) X)
+          (<span class="nv">Ap</span> := CommaCategory.Build_object U !X A tt p)
+          (<span class="nv">m</span> : <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C (U A&#39;) X),
+                 morphism D A&#39; A)
+          (<span class="nv">H</span> : <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C (U A&#39;) X),
+                 p o U _1 (m A&#39; p&#39;) = p&#39;)
+          (<span class="nv">H&#39;</span> : <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C (U A&#39;) X) <span class="nv">m&#39;</span>,
+                  p o U _1 m&#39; = p&#39;
+                  -&gt; m A&#39; p&#39; = m&#39;),
+          IsTerminalMorphism Ap
+        := @Build_IsInitialMorphism_curried
+             (C^op)
+             (D^op)
+             X
+             (U^op).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_IsTerminalMorphism_uncurried</span>
+      : <span class="kr">forall</span>
+          (<span class="nv">univ</span> : { A : D
+                  | { p : morphism C (U A) X
+                    | <span class="kr">let</span> <span class="nv">Ap</span> := CommaCategory.Build_object U !X A tt p <span class="kr">in</span>
+                      <span class="kr">forall</span> (<span class="nv">A&#39;</span> : D) (<span class="nv">p&#39;</span> : morphism C (U A&#39;) X),
+                        { m : morphism D A&#39; A
+                        | { H : p o U _1 m = p&#39;
+                          | <span class="kr">forall</span> <span class="nv">m&#39;</span>,
+                              p o U _1 m&#39; = p&#39;
+                              -&gt; m = m&#39; }}}}),
+          IsTerminalMorphism (CommaCategory.Build_object U !X univ.<span class="mi">1</span> tt univ.<span class="mi">2</span>.<span class="mi">1</span>)
+        := @Build_IsInitialMorphism_uncurried
+             (C^op)
+             (D^op)
+             X
+             (U^op).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">IntroductionAbstractionBarrier</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** *** Elimination rule *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">EliminationAbstractionBarrier</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Ap</span> : object (U / X).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">M</span> : IsTerminalMorphism Ap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTerminalMorphism_object</span> : D :=
+        @IsInitialMorphism_object C^op D^op X U^op (op_object Ap) M.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTerminalMorphism_morphism</span>
+      : morphism C (U IsTerminalMorphism_object) X
+        := @IsInitialMorphism_morphism C^op D^op X U^op (op_object Ap) M.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTerminalMorphism_property</span>
+      : <span class="kr">forall</span> (<span class="nv">Y</span> : D) (<span class="nv">f</span> : morphism C (U Y) X),
+          Contr { m : morphism D Y IsTerminalMorphism_object
+                | IsTerminalMorphism_morphism o U _1 m = f }
+        := @IsInitialMorphism_property C^op D^op X U^op (op_object Ap) M.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTerminalMorphism_property_morphism</span>
+      : <span class="kr">forall</span> (<span class="nv">Y</span> : D) (<span class="nv">f</span> : morphism C (U Y) X),
+          morphism D Y IsTerminalMorphism_object
+        := @IsInitialMorphism_property_morphism
+             C^op D^op X U^op (op_object Ap) M.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTerminalMorphism_property_morphism_property</span>
+      : <span class="kr">forall</span> (<span class="nv">Y</span> : D) (<span class="nv">f</span> : morphism C (U Y) X),
+          IsTerminalMorphism_morphism
+            o (U _1 (IsTerminalMorphism_property_morphism Y f))
+          = f
+        := @IsInitialMorphism_property_morphism_property
+             C^op D^op X U^op (op_object Ap) M.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTerminalMorphism_property_morphism_unique</span>
+      : <span class="kr">forall</span> (<span class="nv">Y</span> : D) (<span class="nv">f</span> : morphism C (U Y) X)
+               <span class="nv">m&#39;</span>
+               (<span class="nv">H</span> : IsTerminalMorphism_morphism o U _1 m&#39; = f),
+          IsTerminalMorphism_property_morphism Y f = m&#39;
+        := @IsInitialMorphism_property_morphism_unique
+             C^op D^op X U^op (op_object Ap) M.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">EliminationAbstractionBarrier</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">TerminalMorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">UniversalMorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** The term universal morphism refers either to an initial</span>
+<span class="sd">        morphism or a terminal morphism, and the term universal</span>
+<span class="sd">        property refers either to an initial property or a terminal</span>
+<span class="sd">        property.  In each definition, the existence of the morphism</span>
+<span class="sd">        [g] intuitively expresses the fact that [(A, φ)] is ``general</span>
+<span class="sd">        enough&#39;&#39;, while the uniqueness of the morphism ensures that</span>
+<span class="sd">        [(A, φ)] is ``not too general&#39;&#39;.  *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">UniversalMorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">UniversalMorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> Build_IsInitialMorphism [C D] X U A p UniversalProperty _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> Build_IsTerminalMorphism [C D] U X A p UniversalProperty _.</span></span></pre>
+</div>
+</div></body>
+</html>

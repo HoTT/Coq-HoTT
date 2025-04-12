@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Rings.Idempotent</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Rings.Idempotent</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Equivalences.html#"><span class="id" title="library">Basics.Equivalences</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a> <a class="idref" href="HoTT.Types.Sigma.html#"><span class="id" title="library">Types.Sigma</span></a> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Nat.Core</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#"><span class="id" title="library">Rings.Ring</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab192"></a><h1 class="section">Idempotent elements of rings</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab193"></a><h2 class="section">Definition</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="IsIdempotent" class="idref" href="#IsIdempotent"><span class="id" title="inductive, record"><span id="IsIdempotent" class="id">IsIdempotent</span></span></a> (<a id="R:1" class="idref" href="#R:1"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) (<a id="e:2" class="idref" href="#e:2"><span class="id" title="binder">e</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:1"><span class="id" title="variable">R</span></a>)<br/>
+&nbsp;&nbsp;:= <a id="rng_idem" class="idref" href="#rng_idem"><span class="id" title="constructor, projection"><span id="rng_idem" class="id">rng_idem</span></span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:2"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:2"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:2"><span class="id" title="variable">e</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="ishprop_isidempotent" class="idref" href="#ishprop_isidempotent"><span class="id" title="instance">ishprop_isidempotent</span></a> <a id="R:5" class="idref" href="#R:5"><span class="id" title="binder">R</span></a> <a id="e:6" class="idref" href="#e:6"><span class="id" title="binder">e</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:5"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:6"><span class="id" title="variable">e</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab194"></a><h3 class="section">Examples</h3>
+
+<div class="paragraph"> </div>
+
+ Zero is idempotent. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isidempotent_zero" class="idref" href="#isidempotent_zero"><span class="id" title="instance">isidempotent_zero</span></a> (<a id="R:7" class="idref" href="#R:7"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:7"><span class="id" title="variable">R</span></a> 0<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_zero_r"><span class="id" title="definition">rng_mult_zero_r</span></a> 0.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+One is idempotent. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isidempotent_one" class="idref" href="#isidempotent_one"><span class="id" title="instance">isidempotent_one</span></a> (<a id="R:8" class="idref" href="#R:8"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:8"><span class="id" title="variable">R</span></a> 1<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a> 1.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> is idempotent, then <span class="inlinecode">1</span> <span class="inlinecode">-</span> <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> is idempotent. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isidempotent_complement" class="idref" href="#isidempotent_complement"><span class="id" title="instance">isidempotent_complement</span></a> (<a id="R:9" class="idref" href="#R:9"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) (<a id="e:10" class="idref" href="#e:10"><span class="id" title="binder">e</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:9"><span class="id" title="variable">R</span></a>) `{<a id="H:11" class="idref" href="#H:11"><span class="id" title="binder">IsIdempotent</span></a> <a id="H:11" class="idref" href="#H:11"><span class="id" title="binder">R</span></a> <a id="H:11" class="idref" href="#H:11"><span class="id" title="binder">e</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:9"><span class="id" title="variable">R</span></a> (1 <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:10"><span class="id" title="variable">e</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_l_negate"><span class="id" title="definition">rng_dist_l_negate</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_r_negate"><span class="id" title="definition">rng_dist_r_negate</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_l"><span class="id" title="definition">rng_mult_one_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem"><span class="id" title="definition">rng_idem</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_negate_r"><span class="id" title="definition">rng_plus_negate_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_negate_zero"><span class="id" title="definition">rng_negate_zero</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_zero_r"><span class="id" title="definition">rng_plus_zero_r</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> is idempotent, then it is also an idempotent element of the opposite ring. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isidempotent_op" class="idref" href="#isidempotent_op"><span class="id" title="instance">isidempotent_op</span></a> (<a id="R:12" class="idref" href="#R:12"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) (<a id="e:13" class="idref" href="#e:13"><span class="id" title="binder">e</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:12"><span class="id" title="variable">R</span></a>) `{<a id="i:14" class="idref" href="#i:14"><span class="id" title="binder">i</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:12"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:13"><span class="id" title="variable">e</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_op"><span class="id" title="definition">rng_op</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:12"><span class="id" title="variable">R</span></a>) <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:13"><span class="id" title="variable">e</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="var">i</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any positive power of an idempotent element <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> is <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="rng_power_idem" class="idref" href="#rng_power_idem"><span class="id" title="definition">rng_power_idem</span></a> {<a id="R:15" class="idref" href="#R:15"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} (<a id="e:16" class="idref" href="#e:16"><span class="id" title="binder">e</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:15"><span class="id" title="variable">R</span></a>) `{<a id="H:17" class="idref" href="#H:17"><span class="id" title="binder">IsIdempotent</span></a> <a id="H:17" class="idref" href="#H:17"><span class="id" title="binder">R</span></a> <a id="H:17" class="idref" href="#H:17"><span class="id" title="binder">e</span></a>} (<a id="n:18" class="idref" href="#n:18"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;: (1 <a class="idref" href="HoTT.Spaces.Nat.Core.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#n:18"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">nat</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_power"><span class="id" title="definition">rng_power</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:16"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#n:18"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:16"><span class="id" title="variable">e</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">L</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">L</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">rhs_V</span> <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem"><span class="id" title="definition">rng_idem</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#e89b8696f6779e42374ab72b22e44d19"><span class="id" title="notation">(</span></a><span class="id" title="var">e</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#e89b8696f6779e42374ab72b22e44d19"><span class="id" title="notation">*.)</span></a> <span class="id" title="var">IHL</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ring homomorphisms preserve idempotent elements. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isidempotent_rng_homo" class="idref" href="#isidempotent_rng_homo"><span class="id" title="instance">isidempotent_rng_homo</span></a> {<a id="R:19" class="idref" href="#R:19"><span class="id" title="binder">R</span></a> <a id="S:20" class="idref" href="#S:20"><span class="id" title="binder">S</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} (<a id="f:21" class="idref" href="#f:21"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:19"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#S:20"><span class="id" title="variable">S</span></a>) (<a id="e:22" class="idref" href="#e:22"><span class="id" title="binder">e</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:19"><span class="id" title="variable">R</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:19"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:22"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#S:20"><span class="id" title="variable">S</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:21"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:22"><span class="id" title="variable">e</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">f</span> <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab195"></a><h2 class="section">Orthogonal idempotent elements</h2>
+
+<div class="paragraph"> </div>
+
+ Two idempotent elements <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> are orthogonal if both <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> and <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="IsOrthogonal" class="idref" href="#IsOrthogonal"><span class="id" title="definition, record"><span id="IsOrthogonal_rect" class="id"><span id="IsOrthogonal_ind" class="id"><span id="IsOrthogonal_rec" class="id"><span id="IsOrthogonal_sind" class="id">IsOrthogonal</span></span></span></span></span></a> (<a id="R:23" class="idref" href="#R:23"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) (<a id="e:24" class="idref" href="#e:24"><span class="id" title="binder">e</span></a> <a id="f:25" class="idref" href="#f:25"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:23"><span class="id" title="variable">R</span></a>)<br/>
+&nbsp;&nbsp;`{<a id="IsIdempotent0:26" class="idref" href="#IsIdempotent0:26"><span class="id" title="binder">!</span></a><a id="IsIdempotent0:26" class="idref" href="#IsIdempotent0:26"><span class="id" title="binder">IsIdempotent</span></a> <a id="IsIdempotent0:26" class="idref" href="#IsIdempotent0:26"><span class="id" title="binder">R</span></a> <a id="IsIdempotent0:26" class="idref" href="#IsIdempotent0:26"><span class="id" title="binder">e</span></a>, <a id="IsIdempotent1:27" class="idref" href="#IsIdempotent1:27"><span class="id" title="binder">!</span></a><a id="IsIdempotent1:27" class="idref" href="#IsIdempotent1:27"><span class="id" title="binder">IsIdempotent</span></a> <a id="IsIdempotent1:27" class="idref" href="#IsIdempotent1:27"><span class="id" title="binder">R</span></a> <a id="IsIdempotent1:27" class="idref" href="#IsIdempotent1:27"><span class="id" title="binder">f</span></a>} := {<br/>
+&nbsp;&nbsp;<a id="rng_idem_orth" class="idref" href="#rng_idem_orth"><span class="id" title="projection">rng_idem_orth</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:24"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:25"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0 ;<br/>
+&nbsp;&nbsp;<a id="rng_idem_orth'" class="idref" href="#rng_idem_orth'"><span class="id" title="projection">rng_idem_orth'</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:25"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:24"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0 ;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="issig_IsOrthogonal" class="idref" href="#issig_IsOrthogonal"><span class="id" title="definition">issig_IsOrthogonal</span></a> {<a id="R:31" class="idref" href="#R:31"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} {<a id="e:32" class="idref" href="#e:32"><span class="id" title="binder">e</span></a> <a id="f:33" class="idref" href="#f:33"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:31"><span class="id" title="variable">R</span></a>}<br/>
+&nbsp;&nbsp;`{<a id="H:34" class="idref" href="#H:34"><span class="id" title="binder">IsIdempotent</span></a> <a id="H:34" class="idref" href="#H:34"><span class="id" title="binder">R</span></a> <a id="H:34" class="idref" href="#H:34"><span class="id" title="binder">e</span></a>, <a id="H0:35" class="idref" href="#H0:35"><span class="id" title="binder">IsIdempotent</span></a> <a id="H0:35" class="idref" href="#H0:35"><span class="id" title="binder">R</span></a> <a id="H0:35" class="idref" href="#H0:35"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsOrthogonal"><span class="id" title="class">IsOrthogonal</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:31"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:32"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:33"><span class="id" title="variable">f</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">issig</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="ishprop_isorthogonal" class="idref" href="#ishprop_isorthogonal"><span class="id" title="instance">ishprop_isorthogonal</span></a> <a id="R:36" class="idref" href="#R:36"><span class="id" title="binder">R</span></a> <a id="e:37" class="idref" href="#e:37"><span class="id" title="binder">e</span></a> <a id="f:38" class="idref" href="#f:38"><span class="id" title="binder">f</span></a><br/>
+&nbsp;&nbsp;`{<a id="H:39" class="idref" href="#H:39"><span class="id" title="binder">IsIdempotent</span></a> <a id="H:39" class="idref" href="#H:39"><span class="id" title="binder">R</span></a> <a id="H:39" class="idref" href="#H:39"><span class="id" title="binder">e</span></a>, <a id="H0:40" class="idref" href="#H0:40"><span class="id" title="binder">IsIdempotent</span></a> <a id="H0:40" class="idref" href="#H0:40"><span class="id" title="binder">R</span></a> <a id="H0:40" class="idref" href="#H0:40"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsOrthogonal"><span class="id" title="class">IsOrthogonal</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:36"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:37"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:38"><span class="id" title="variable">f</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#issig_IsOrthogonal"><span class="id" title="definition">issig_IsOrthogonal</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab196"></a><h3 class="section">Properties</h3>
+
+<div class="paragraph"> </div>
+
+ Two idempotents being orthogonal is a symmetric relation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="isorthogonal_swap" class="idref" href="#isorthogonal_swap"><span class="id" title="definition">isorthogonal_swap</span></a> (<a id="R:41" class="idref" href="#R:41"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) (<a id="e:42" class="idref" href="#e:42"><span class="id" title="binder">e</span></a> <a id="f:43" class="idref" href="#f:43"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:41"><span class="id" title="variable">R</span></a>) `{<a id="H:46" class="idref" href="#H:46"><span class="id" title="binder">IsOrthogonal</span></a> <a id="H:46" class="idref" href="#H:46"><span class="id" title="binder">R</span></a> <a id="H:46" class="idref" href="#H:46"><span class="id" title="binder">e</span></a> <a id="H:46" class="idref" href="#H:46"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsOrthogonal"><span class="id" title="class">IsOrthogonal</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:41"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:43"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:42"><span class="id" title="variable">e</span></a><br/>
+&nbsp;&nbsp;:= {| <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem_orth"><span class="id" title="method">rng_idem_orth</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem_orth'"><span class="id" title="method">rng_idem_orth'</span></a> ; <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem_orth'"><span class="id" title="method">rng_idem_orth'</span></a> := <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem_orth"><span class="id" title="method">rng_idem_orth</span></a> |}.<br/>
+<span class="id" title="keyword">Hint Immediate</span> <span class="id" title="var">isorthogonal_swap</span> : <span class="id" title="var">typeclass_instances</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> are orthogonal idempotents, then they are also orthogonal idempotents in the opposite ring. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isorthogonal_op" class="idref" href="#isorthogonal_op"><span class="id" title="instance">isorthogonal_op</span></a> {<a id="R:47" class="idref" href="#R:47"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} (<a id="e:48" class="idref" href="#e:48"><span class="id" title="binder">e</span></a> <a id="f:49" class="idref" href="#f:49"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:47"><span class="id" title="variable">R</span></a>) `{<a id="r:52" class="idref" href="#r:52"><span class="id" title="binder">r</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsOrthogonal"><span class="id" title="class">IsOrthogonal</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:47"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:48"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:49"><span class="id" title="variable">f</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsOrthogonal"><span class="id" title="class">IsOrthogonal</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_op"><span class="id" title="definition">rng_op</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:47"><span class="id" title="variable">R</span></a>) <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:48"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:49"><span class="id" title="variable">f</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#Build_IsOrthogonal"><span class="id" title="constructor">Build_IsOrthogonal</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem_orth'"><span class="id" title="method">rng_idem_orth'</span></a> (<span class="id" title="var">R</span>:=<span class="id" title="var">R</span>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem_orth"><span class="id" title="method">rng_idem_orth</span></a> (<span class="id" title="var">R</span>:=<span class="id" title="var">R</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> are orthogonal idempotents, then <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> <span class="inlinecode">+</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> is idempotent. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isidempotent_plus_orthogonal" class="idref" href="#isidempotent_plus_orthogonal"><span class="id" title="instance">isidempotent_plus_orthogonal</span></a> {<a id="R:53" class="idref" href="#R:53"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} (<a id="e:54" class="idref" href="#e:54"><span class="id" title="binder">e</span></a> <a id="f:55" class="idref" href="#f:55"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:53"><span class="id" title="variable">R</span></a>)<br/>
+&nbsp;&nbsp;`{<a id="H:58" class="idref" href="#H:58"><span class="id" title="binder">IsOrthogonal</span></a> <a id="H:58" class="idref" href="#H:58"><span class="id" title="binder">R</span></a> <a id="H:58" class="idref" href="#H:58"><span class="id" title="binder">e</span></a> <a id="H:58" class="idref" href="#H:58"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:53"><span class="id" title="variable">R</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:54"><span class="id" title="variable">e</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#f:55"><span class="id" title="variable">f</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsIdempotent"><span class="id" title="class">IsIdempotent</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_l"><span class="id" title="definition">rng_dist_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_r"><span class="id" title="definition">rng_dist_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem"><span class="id" title="definition">rng_idem</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem_orth"><span class="id" title="method">rng_idem_orth</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_zero_r"><span class="id" title="definition">rng_plus_zero_r</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_zero_l"><span class="id" title="definition">rng_plus_zero_l</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+An idempotent element <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span> is orthogonal to its complement <span class="inlinecode">1</span> <span class="inlinecode">-</span> <span class="inlinecode"><a class="idref" href="HoTT.HIT.V.html#AssumingUA.MonicSetPresent_Uniqueness.e"><span class="id" title="variable">e</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isorthogonal_complement" class="idref" href="#isorthogonal_complement"><span class="id" title="instance">isorthogonal_complement</span></a> {<a id="R:59" class="idref" href="#R:59"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} (<a id="e:60" class="idref" href="#e:60"><span class="id" title="binder">e</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:59"><span class="id" title="variable">R</span></a>) `{<a id="H:61" class="idref" href="#H:61"><span class="id" title="binder">IsIdempotent</span></a> <a id="H:61" class="idref" href="#H:61"><span class="id" title="binder">R</span></a> <a id="H:61" class="idref" href="#H:61"><span class="id" title="binder">e</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#IsOrthogonal"><span class="id" title="class">IsOrthogonal</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#R:59"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:60"><span class="id" title="variable">e</span></a> (1 <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#e:60"><span class="id" title="variable">e</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#Build_IsOrthogonal"><span class="id" title="constructor">Build_IsOrthogonal</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_l_negate"><span class="id" title="definition">rng_dist_l_negate</span></a>,<a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_r_negate"><span class="id" title="definition">rng_dist_r_negate</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_l"><span class="id" title="definition">rng_mult_one_l</span></a>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Idempotent.html#rng_idem"><span class="id" title="definition">rng_idem</span></a>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_negate_r"><span class="id" title="definition">rng_plus_negate_r</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

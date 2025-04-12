@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Torus.TorusHomotopy</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Torus.TorusHomotopy</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Pointed.html#"><span class="id" title="library">Pointed</span></a> <a class="idref" href="HoTT.WildCat.html#"><span class="id" title="library">WildCat</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#"><span class="id" title="library">Modalities.ReflectiveSubuniverse</span></a> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.html#"><span class="id" title="library">Algebra.AbGroups</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#"><span class="id" title="library">Homotopy.HomotopyGroup</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.PinSn.html#"><span class="id" title="library">Homotopy.PinSn</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#"><span class="id" title="library">Spaces.Circle</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Torus.Torus.html#"><span class="id" title="library">Spaces.Torus.Torus</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Torus.TorusEquivCircles.html#"><span class="id" title="library">Spaces.Torus.TorusEquivCircles</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">trunc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pointed_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1703"></a><h2 class="section">Fundamental group of the torus .</h2>
+
+<div class="paragraph"> </div>
+
+ The torus is 1-truncated 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="is1type_torus" class="idref" href="#is1type_torus"><span class="id" title="instance">is1type_torus</span></a> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Univalence</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> 1 <a class="idref" href="HoTT.Spaces.Torus.Torus.html#Torus.Torus"><span class="id" title="inductive">Torus</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.Torus.TorusEquivCircles.html#equiv_torus_prod_Circle"><span class="id" title="definition">equiv_torus_prod_Circle</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">^-1</span></a>).<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The torus is 0-connected 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isconnected_torus" class="idref" href="#isconnected_torus"><span class="id" title="instance">isconnected_torus</span></a> `{<a id="H:2" class="idref" href="#H:2"><span class="id" title="binder">Univalence</span></a>} : <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#IsConnected"><span class="id" title="class">IsConnected</span></a> 0 <a class="idref" href="HoTT.Spaces.Torus.Torus.html#Torus.Torus"><span class="id" title="inductive">Torus</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#isconnected_equiv'"><span class="id" title="definition">isconnected_equiv'</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.Torus.TorusEquivCircles.html#equiv_torus_prod_Circle"><span class="id" title="definition">equiv_torus_prod_Circle</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">^-1</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#isconnected_equiv'"><span class="id" title="definition">isconnected_equiv'</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Types.Sigma.html#equiv_sigma_prod0"><span class="id" title="definition">equiv_sigma_prod0</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)).<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We give these notations for the pointed versions. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Notation</span> <a id="T" class="idref" href="#T"><span class="id" title="abbreviation">T</span></a> := (<a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">[</span></a><a class="idref" href="HoTT.Spaces.Torus.Torus.html#Torus.Torus"><span class="id" title="inductive">Torus</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">]</span></a>).<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="S1" class="idref" href="#S1"><span class="id" title="abbreviation">S1</span></a> := (<a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">[</span></a><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">]</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A pointed version of the equivalence from TorusEquivCircles.v.  TODO: If <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="axiom">Funext</span></a></span> is removed from there, remove it from here as well. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="pequiv_torus_prod_circles" class="idref" href="#pequiv_torus_prod_circles"><span class="id" title="lemma">pequiv_torus_prod_circles</span></a> `{<a id="H:3" class="idref" href="#H:3"><span class="id" title="binder">Funext</span></a>} : <a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#T"><span class="id" title="abbreviation">T</span></a>  <a class="idref" href="HoTT.Pointed.Core.html#103880150f1b8a9c385f8c09ab3e01b0"><span class="id" title="notation">&lt;~&gt;*</span></a> <a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#S1"><span class="id" title="abbreviation">S1</span></a> <a class="idref" href="HoTT.Pointed.Core.html#867ca46dea6d6884af1893325332ab7c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#S1"><span class="id" title="abbreviation">S1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Pointed.pEquiv.html#Build_pEquiv'"><span class="id" title="definition">Build_pEquiv'</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Torus.TorusEquivCircles.html#equiv_torus_prod_Circle"><span class="id" title="definition">equiv_torus_prod_Circle</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Fundamental group of torus 
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <a id="pi1_torus" class="idref" href="#pi1_torus"><span class="id" title="lemma">pi1_torus</span></a> `{<a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">Univalence</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Group.html#GroupIsomorphism"><span class="id" title="record">GroupIsomorphism</span></a> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 <a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#T"><span class="id" title="abbreviation">T</span></a>) (<a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_prod"><span class="id" title="definition">grp_prod</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">etransitivity</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Equiv.html#emap"><span class="id" title="definition">emap</span></a> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1) <a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#pequiv_torus_prod_circles"><span class="id" title="lemma">pequiv_torus_prod_circles</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">etransitivity</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#grp_iso_pi_prod"><span class="id" title="lemma">grp_iso_pi_prod</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_iso_prod"><span class="id" title="definition">grp_iso_prod</span></a>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.PinSn.html#pi1_circle"><span class="id" title="lemma">pi1_circle</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Loop space of torus 
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <a id="loops_torus" class="idref" href="#loops_torus"><span class="id" title="lemma">loops_torus</span></a> `{<a id="H:5" class="idref" href="#H:5"><span class="id" title="binder">Univalence</span></a>} : <a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> <a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#T"><span class="id" title="abbreviation">T</span></a> <a class="idref" href="HoTT.Pointed.Core.html#103880150f1b8a9c385f8c09ab3e01b0"><span class="id" title="notation">&lt;~&gt;*</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a> <a class="idref" href="HoTT.Pointed.Core.html#867ca46dea6d6884af1893325332ab7c"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;Since&nbsp;<span class="inlinecode"><span class="id" title="var">T</span></span>&nbsp;is&nbsp;1-truncated,&nbsp;<span class="inlinecode"><span class="id" title="var">loops</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span>&nbsp;is&nbsp;0-truncated,&nbsp;and&nbsp;is&nbsp;therefore&nbsp;equivalent&nbsp;to&nbsp;its&nbsp;0-truncation.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">o</span></a><a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">×</span></a><a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">E</span></a> <a class="idref" href="HoTT.Pointed.pTrunc.html#pequiv_ptr"><span class="id" title="definition">pequiv_ptr</span></a> (<span class="id" title="var">n</span>:=0)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#pi1_torus"><span class="id" title="lemma">pi1_torus</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

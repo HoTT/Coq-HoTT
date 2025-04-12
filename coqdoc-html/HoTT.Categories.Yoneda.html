@@ -1,0 +1,559 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Yoneda</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Yoneda</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab993"></a><h1 class="section">The Yoneda Lemma</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Dual.html#"><span class="id" title="library">Category.Dual</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#"><span class="id" title="library">Functor.Dual</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#"><span class="id" title="library">Category.Morphisms</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#"><span class="id" title="library">FunctorCategory.Morphisms</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.SetCategory.html#"><span class="id" title="library">SetCategory</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Attributes.html#"><span class="id" title="library">Functor.Attributes</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.html#"><span class="id" title="library">Functor.Composition.Functorial</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="library">Functor.Identity</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.HomFunctor.html#"><span class="id" title="library">HomFunctor</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Paths.html#"><span class="id" title="library">NaturalTransformation.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Tactics.html#"><span class="id" title="library">HoTT.Tactics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Quoting Wikipedia on the Yoneda lemma (changing <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> and
+    <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> so that we can use unicode superscripts and
+    subscripts):
+
+<div class="paragraph"> </div>
+
+    In mathematics, specifically in category theory, the Yoneda lemma
+    is an abstract result on functors of the type morphisms into a
+    fixed object. It is a vast generalisation of Cayley's theorem from
+    group theory (viewing a group as a particular kind of category
+    with just one object). It allows the embedding of any category
+    into a category of functors (contravariant set-valued functors)
+    defined on that category. It also clarifies how the embedded
+    category, of representable functors and their natural
+    transformations, relates to the other objects in the larger
+    functor category. It is an important tool that underlies several
+    modern developments in algebraic geometry and representation
+    theory. It is named after Nobuo Yoneda.
+
+<div class="paragraph"> </div>
+
+<a id="lab994"></a><h2 class="section">Generalities</h2>
+
+
+<div class="paragraph"> </div>
+
+    The Yoneda lemma suggests that instead of studying the (locally
+    small) category <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>, one should study the category of all functors
+    of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> into <span class="inlinecode"><span class="id" title="keyword">Set</span></span> (the category of sets with functions as
+    morphisms). <span class="inlinecode"><span class="id" title="keyword">Set</span></span> is a category we understand well, and a functor
+    of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> into <span class="inlinecode"><span class="id" title="keyword">Set</span></span> can be seen as a "representation" of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> in
+    terms of known structures. The original category <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is contained
+    in this functor category, but new objects appear in the functor
+    category which were absent and "hidden" in <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>. Treating these new
+    objects just like the old ones often unifies and simplifies the
+    theory.  This approach is akin to (and in fact generalizes) the
+    common method of studying a ring by investigating the modules over
+    that ring. The ring takes the place of the category <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>, and the
+    category of modules over the ring is a category of functors
+    defined on <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>.
+
+<div class="paragraph"> </div>
+
+<a id="lab995"></a><h2 class="section">Formal statement</h2>
+
+
+<div class="paragraph"> </div>
+
+<a id="lab996"></a><h3 class="section">General version</h3>
+
+
+<div class="paragraph"> </div>
+
+    Yoneda's lemma concerns functors from a fixed category <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to the
+    category of sets, <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. If <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is a locally small category
+    (i.e. the hom-sets are actual sets and not proper classes), then
+    each object <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> gives rise to a natural functor to <span class="inlinecode"><span class="id" title="keyword">Set</span></span>
+    called a hom-functor. This functor is denoted:
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ</span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,</span> <span class="inlinecode">─)</span>.
+
+<div class="paragraph"> </div>
+
+    The (covariant) hom-functor <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ</span> sends <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> to the set of morphisms
+    <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>)</span> and sends a morphism <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> from <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> to the
+    morphism <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">∘</span> <span class="inlinecode">─</span> (composition with <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> on the left) that sends a
+    morphism <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.g"><span class="id" title="variable">g</span></a></span> in <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>)</span> to the morphism <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">∘</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.g"><span class="id" title="variable">g</span></a></span> in <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,</span>
+    <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span>. That is,
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">↦</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a>)</span> <span class="inlinecode">=</span> <span class="inlinecode">⟦</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>)</span> <span class="inlinecode">∋</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.g"><span class="id" title="variable">g</span></a></span> <span class="inlinecode">↦</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">∘</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.g"><span class="id" title="variable">g</span></a></span> <span class="inlinecode">∈</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> <span class="inlinecode">⟧</span>.
+ 
+<div class="paragraph"> </div>
+
+<a id="lab997"></a><h2 class="section">The (co-)Yoneda functors <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a>ᵒᵖ</span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="tactic">set</span>)</span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="yoneda" class="idref" href="#yoneda"><span class="id" title="section">yoneda</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;TODO(JasonGross):&nbsp;Find&nbsp;a&nbsp;way&nbsp;to&nbsp;unify&nbsp;the&nbsp;<span class="inlinecode"><span class="id" title="var">yoneda</span></span>&nbsp;and&nbsp;<span class="inlinecode"><span class="id" title="var">coyoneda</span></span>&nbsp;lemmas&nbsp;into&nbsp;a&nbsp;single&nbsp;lemma&nbsp;which&nbsp;is&nbsp;more&nbsp;functorial.&nbsp;*)</span><br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="coyoneda" class="idref" href="#coyoneda"><span class="id" title="definition">coyoneda</span></a> <a id="A:2" class="idref" href="#A:2"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#A:2"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#A:2"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#inverse"><span class="id" title="definition">ExponentialLaws.Law4.Functors.inverse</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Categories.HomFunctor.html#hom_functor"><span class="id" title="definition">hom_functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#A:2"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="yoneda" class="idref" href="#yoneda"><span class="id" title="definition">yoneda</span></a> <a id="A:3" class="idref" href="#A:3"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#A:3"><span class="id" title="variable">A</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#A:3"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda"><span class="id" title="definition">coyoneda</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#A:3"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda"><span class="id" title="section">yoneda</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab998"></a><h2 class="section">The (co-)Yoneda lemma</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="coyoneda_lemma" class="idref" href="#coyoneda_lemma"><span class="id" title="section">coyoneda_lemma</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="coyoneda_lemma.functor" class="idref" href="#coyoneda_lemma.functor"><span class="id" title="section">functor</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="coyoneda_lemma.functor.A" class="idref" href="#coyoneda_lemma.functor.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+Let <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> be an arbitrary functor from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. Then Yoneda's
+      lemma says that: 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*Variable&nbsp;F&nbsp;:&nbsp;Functor&nbsp;A&nbsp;(@set_cat&nbsp;fs).*)</span><br/>
+</div>
+
+<div class="doc">
+For each object <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>, 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*Variable&nbsp;a&nbsp;:&nbsp;A.*)</span><br/>
+</div>
+
+<div class="doc">
+the natural transformations from <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ</span> to <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> are in one-to-one
+      correspondence with the elements of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span>. That is,
+
+<div class="paragraph"> </div>
+
+      <span class="inlinecode"><span class="id" title="library">Nat</span>(<a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ,</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>)</span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span>.
+
+<div class="paragraph"> </div>
+
+      Moreover this isomorphism is natural in <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> when both
+      sides are regarded as functors from <span class="inlinecode"><span class="id" title="keyword">Set</span>ᴬ</span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to
+      <span class="inlinecode"><span class="id" title="keyword">Set</span></span>.
+
+<div class="paragraph"> </div>
+
+      Given a natural transformation <span class="inlinecode"><span class="id" title="var">Φ</span></span> from <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ</span> to <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span>, the
+      corresponding element of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span> is <span class="inlinecode"><span class="id" title="var">u</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">Φ</span>ₐ(<a class="idref" href="HoTT.Tactics.EquivalenceInduction.html#id"><span class="id" title="section">id</span></a>ₐ)</span>. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;&nbsp;&nbsp;Definition&nbsp;coyoneda_lemma_morphism&nbsp;(a&nbsp;:&nbsp;A)<br/>
+&nbsp;&nbsp;:&nbsp;morphism&nbsp;set_cat<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(BuildhSet<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(morphism&nbsp;(A&nbsp;-&gt;&nbsp;set_cat)&nbsp;(coyoneda&nbsp;A&nbsp;a)&nbsp;F)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(F&nbsp;a)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:=&nbsp;fun&nbsp;phi&nbsp;=&gt;&nbsp;phi&nbsp;a&nbsp;1*)</span><br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="coyoneda_functor" class="idref" href="#coyoneda_functor"><span class="id" title="definition">coyoneda_functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.functor.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.functor.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Functor.Composition.Functorial.html#compose_functor"><span class="id" title="definition">compose_functor</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a> <a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda"><span class="id" title="definition">coyoneda</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.functor.A"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">)^</span></a><a class="idref" href="HoTT.Categories.Functor.Dual.html#720738f6e2ec0d11c85920c05a0794ea"><span class="id" title="notation">op</span></a><a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Yoneda.html#yoneda"><span class="id" title="definition">yoneda</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.functor.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a>)<a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.functor"><span class="id" title="section">functor</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="coyoneda_lemma.nt" class="idref" href="#coyoneda_lemma.nt"><span class="id" title="section">nt</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="coyoneda_lemma.nt.A" class="idref" href="#coyoneda_lemma.nt.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="coyoneda_natural_transformation_helper" class="idref" href="#coyoneda_natural_transformation_helper"><span class="id" title="definition">coyoneda_natural_transformation_helper</span></a> <a id="F:8" class="idref" href="#F:8"><span class="id" title="binder">F</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">_</span>) (<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_functor"><span class="id" title="definition">coyoneda_functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.nt.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#F:8"><span class="id" title="variable">F</span></a>) <a class="idref" href="HoTT.Categories.Yoneda.html#F:8"><span class="id" title="variable">F</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#Build_NaturalTransformation"><span class="id" title="definition">Build_NaturalTransformation</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_functor"><span class="id" title="definition">coyoneda_functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.nt.A"><span class="id" title="variable">A</span></a> <span class="id" title="var">F</span>) <span class="id" title="var">F</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="a:9" class="idref" href="#a:9"><span class="id" title="binder"><span id="a:11" class="id">a</span></span></a> <a id="phi:10" class="idref" href="#phi:10"><span class="id" title="binder"><span id="phi:12" class="id">phi</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.Yoneda.html#phi:10"><span class="id" title="variable">phi</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#a:9"><span class="id" title="variable">a</span></a> 1%<span class="id" title="var">morphism</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">intro</span> || <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> *;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ <span class="id" title="var">T</span> : <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">rewrite</span> &lt;- (<span class="id" title="keyword">fun</span> <a id="s:13" class="idref" href="#s:13"><span class="id" title="binder"><span id="s:16" class="id">s</span></span></a> <a id="d:14" class="idref" href="#d:14"><span class="id" title="binder"><span id="d:17" class="id">d</span></span></a> <a id="m:15" class="idref" href="#m:15"><span class="id" title="binder"><span id="m:18" class="id">m</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#apD10"><span class="id" title="definition">apD10</span></a> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#commutes"><span class="id" title="projection">commutes</span></a> <span class="id" title="var">T</span> <a class="idref" href="HoTT.Categories.Yoneda.html#s:13"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#d:14"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#m:15"><span class="id" title="variable">m</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> ?<a class="idref" href="HoTT.Categories.Category.Core.html#left_identity"><span class="id" title="projection">left_identity</span></a>, ?<a class="idref" href="HoTT.Categories.Category.Core.html#right_identity"><span class="id" title="projection">right_identity</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="coyoneda_natural_transformation" class="idref" href="#coyoneda_natural_transformation"><span class="id" title="definition">coyoneda_natural_transformation</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_functor"><span class="id" title="definition">coyoneda_functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.nt.A"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">hnf</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">F</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> ?<span class="id" title="var">F</span> ?<span class="id" title="var">G</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">F</span>) <span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">G</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> ?<span class="id" title="var">F</span> ?<span class="id" title="var">G</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">G</span>) <span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#Build_NaturalTransformation"><span class="id" title="definition">Build_NaturalTransformation</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">F</span> <span class="id" title="var">G</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_natural_transformation_helper"><span class="id" title="definition">coyoneda_natural_transformation_helper</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">first</span> [ <span class="id" title="tactic">intro</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">progress</span> <span class="id" title="var">path_natural_transformation</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">reflexivity</span> ]).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma.nt"><span class="id" title="section">nt</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="coyoneda_lemma_morphism_inverse" class="idref" href="#coyoneda_lemma_morphism_inverse"><span class="id" title="definition">coyoneda_lemma_morphism_inverse</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H:19" class="idref" href="#H:19"><span class="id" title="binder">Funext</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="A:20" class="idref" href="#A:20"><span class="id" title="binder">A</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F:21" class="idref" href="#F:21"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="a:22" class="idref" href="#a:22"><span class="id" title="binder">a</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Yoneda.html#F:21"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#a:22"><span class="id" title="variable">a</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_functor"><span class="id" title="definition">coyoneda_functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#F:21"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#a:22"><span class="id" title="variable">a</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">Fa</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">hnf</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">F0</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> ?<span class="id" title="var">F</span> ?<span class="id" title="var">G</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">F</span>) <span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">G0</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> ?<span class="id" title="var">F</span> ?<span class="id" title="var">G</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">G</span>) <span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#Build_NaturalTransformation"><span class="id" title="definition">Build_NaturalTransformation</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">F0</span> <span class="id" title="var">G0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="a':23" class="idref" href="#a':23"><span class="id" title="binder"><span id="a':25" class="id">a'</span></span></a> : <span class="id" title="var">A</span> ⇒ (<span class="id" title="keyword">fun</span> <a id="f:24" class="idref" href="#f:24"><span class="id" title="binder"><span id="f:26" class="id">f</span></span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <span class="id" title="var">A</span> <span class="id" title="var">a</span> <a class="idref" href="HoTT.Categories.Yoneda.html#a':23"><span class="id" title="variable">a'</span></a> ⇒ <span class="id" title="var">F</span> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">_1</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#f:24"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">Fa</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">first</span> [ <span class="id" title="tactic">reflexivity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">intro</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">progress</span> <span class="id" title="tactic">rewrite</span> ?<a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a>, ?<a class="idref" href="HoTT.Categories.Functor.Core.html#identity_of"><span class="id" title="projection">identity_of</span></a> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="coyoneda_lemma" class="idref" href="#coyoneda_lemma"><span class="id" title="instance">coyoneda_lemma</span></a> `{<a id="H:27" class="idref" href="#H:27"><span class="id" title="binder">Funext</span></a>} <a id="A:28" class="idref" href="#A:28"><span class="id" title="binder">A</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Morphisms.html#IsIsomorphism"><span class="id" title="class">IsIsomorphism</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_natural_transformation"><span class="id" title="definition">coyoneda_natural_transformation</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#A:28"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#isisomorphism_natural_transformation"><span class="id" title="definition">isisomorphism_natural_transformation</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">F</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#isisomorphism_natural_transformation"><span class="id" title="definition">isisomorphism_natural_transformation</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma_morphism_inverse"><span class="id" title="definition">coyoneda_lemma_morphism_inverse</span></a> <span class="id" title="var">F</span> <span class="id" title="var">a</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> *;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">intro</span> || <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a> || <span class="id" title="var">path_natural_transformation</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> *;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">solve</span> [ <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">rewrite</span> &lt;- (<span class="id" title="keyword">fun</span> <a id="c:29" class="idref" href="#c:29"><span class="id" title="binder"><span id="c:32" class="id"><span id="c:35" class="id">c</span></span></span></a> <a id="d:30" class="idref" href="#d:30"><span class="id" title="binder"><span id="d:33" class="id"><span id="d:36" class="id">d</span></span></span></a> <a id="m:31" class="idref" href="#m:31"><span class="id" title="binder"><span id="m:34" class="id"><span id="m:37" class="id">m</span></span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#ap10"><span class="id" title="definition">ap10</span></a> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#commutes"><span class="id" title="projection">commutes</span></a> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Categories.Yoneda.html#c:29"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#d:30"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#m:31"><span class="id" title="variable">m</span></a>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> ?<a class="idref" href="HoTT.Categories.Category.Core.html#right_identity"><span class="id" title="projection">right_identity</span></a>, ?<a class="idref" href="HoTT.Categories.Category.Core.html#left_identity"><span class="id" title="projection">left_identity</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Categories.Functor.Core.html#identity_of"><span class="id" title="projection">identity_of</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma"><span class="id" title="section">coyoneda_lemma</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="yoneda_lemma" class="idref" href="#yoneda_lemma"><span class="id" title="section">yoneda_lemma</span></a>.<br/>
+</div>
+
+<div class="doc">
+There is a contravariant version of Yoneda's lemma which
+      concerns contravariant functors from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. This version
+      involves the contravariant hom-functor
+
+<div class="paragraph"> </div>
+
+      <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ₐ</span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(─,</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a>)</span>,
+
+<div class="paragraph"> </div>
+
+      which sends <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> to the hom-set <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span>. Given an arbitrary
+      contravariant functor <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to <span class="inlinecode"><span class="id" title="keyword">Set</span></span>, Yoneda's lemma
+      asserts that
+
+<div class="paragraph"> </div>
+
+      <span class="inlinecode"><span class="id" title="library">Nat</span>(<a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ₐ,</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a>)</span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span>. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="yoneda_lemma.functor" class="idref" href="#yoneda_lemma.functor"><span class="id" title="section">functor</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:38" class="idref" href="#H:38"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="yoneda_lemma.functor.A" class="idref" href="#yoneda_lemma.functor.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+</div>
+
+<div class="doc">
+Let <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> be an arbitrary functor from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. Then Yoneda's
+      lemma says that: 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*Variable&nbsp;F&nbsp;:&nbsp;Functor&nbsp;A&nbsp;(@set_cat&nbsp;fs).*)</span><br/>
+</div>
+
+<div class="doc">
+For each object <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>, 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*Variable&nbsp;a&nbsp;:&nbsp;A.*)</span><br/>
+</div>
+
+<div class="doc">
+the natural transformations from <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ</span> to <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> are in one-to-one
+      correspondence with the elements of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span>. That is,
+
+<div class="paragraph"> </div>
+
+      <span class="inlinecode"><span class="id" title="library">Nat</span>(<a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ,</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>)</span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span>.
+
+<div class="paragraph"> </div>
+
+      Moreover this isomorphism is natural in <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> when both
+      sides are regarded as functors from <span class="inlinecode"><span class="id" title="keyword">Set</span>ᴬ</span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to
+      <span class="inlinecode"><span class="id" title="keyword">Set</span></span>.
+
+<div class="paragraph"> </div>
+
+      Given a natural transformation <span class="inlinecode"><span class="id" title="var">Φ</span></span> from <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ</span> to <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span>, the
+      corresponding element of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span> is <span class="inlinecode"><span class="id" title="var">u</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">Φ</span>ₐ(<a class="idref" href="HoTT.Tactics.EquivalenceInduction.html#id"><span class="id" title="section">id</span></a>ₐ)</span>. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;Definition&nbsp;yoneda_lemma_morphism&nbsp;A&nbsp;(G&nbsp;:&nbsp;object&nbsp;(A^op&nbsp;-&gt;&nbsp;set_cat))&nbsp;(a&nbsp;:&nbsp;A)<br/>
+&nbsp;&nbsp;:&nbsp;morphism&nbsp;set_cat<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(BuildhSet<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(morphism&nbsp;(A^op&nbsp;-&gt;&nbsp;set_cat)&nbsp;(yoneda&nbsp;A&nbsp;a)&nbsp;G)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(G&nbsp;a)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:=&nbsp;fun&nbsp;phi&nbsp;=&gt;&nbsp;phi&nbsp;a&nbsp;1*)</span><br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="yoneda_functor" class="idref" href="#yoneda_functor"><span class="id" title="definition">yoneda_functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_lemma.functor.A"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_lemma.functor.A"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.SetCategory.html#set_cat"><span class="id" title="definition">set_cat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_functor"><span class="id" title="definition">coyoneda_functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_lemma.functor.A"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_lemma.functor"><span class="id" title="section">functor</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:40" class="idref" href="#H:40"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="yoneda_lemma.A" class="idref" href="#yoneda_lemma.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="yoneda_natural_transformation" class="idref" href="#yoneda_natural_transformation"><span class="id" title="definition">yoneda_natural_transformation</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_functor"><span class="id" title="definition">yoneda_functor</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_lemma.A"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Categories.Category.Morphisms.html#morphism_inverse"><span class="id" title="method">morphism_inverse</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma"><span class="id" title="instance">coyoneda_lemma</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_lemma.A"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="yoneda_lemma" class="idref" href="#yoneda_lemma"><span class="id" title="instance">yoneda_lemma</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Morphisms.html#IsIsomorphism"><span class="id" title="class">IsIsomorphism</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_natural_transformation"><span class="id" title="definition">yoneda_natural_transformation</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Categories.Category.Morphisms.html#isisomorphism_inverse"><span class="id" title="definition">isisomorphism_inverse</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma"><span class="id" title="instance">coyoneda_lemma</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_lemma.A"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a>).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda_lemma"><span class="id" title="section">yoneda_lemma</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab999"></a><h2 class="section">The Yoneda embedding</h2>
+
+
+<div class="paragraph"> </div>
+
+    An important special case of Yoneda's lemma is when the functor
+    <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to <span class="inlinecode"><span class="id" title="keyword">Set</span></span> is another hom-functor <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵇ</span>. In this case,
+    the covariant version of Yoneda's lemma states that
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="library">Nat</span>(<a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ,</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵇ)</span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>)</span>.
+
+<div class="paragraph"> </div>
+
+    That is, natural transformations between hom-functors are in
+    one-to-one correspondence with morphisms (in the reverse
+    direction) between the associated objects. Given a morphism <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a></span>
+    <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> the associated natural transformation is denoted <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a>,</span> <span class="inlinecode">─)</span>.
+
+<div class="paragraph"> </div>
+
+    Mapping each object <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> in <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to its associated hom-functor <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ=</span>
+    <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,</span> <span class="inlinecode">─)</span> and each morphism <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to the corresponding
+    natural transformation <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a>,</span> <span class="inlinecode">─)</span> determines a contravariant
+    functor <span class="inlinecode"><span class="id" title="var">h⁻</span></span> from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to <span class="inlinecode"><span class="id" title="keyword">Set</span>ᴬ</span>, the functor category of all
+    (covariant) functors from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. One can interpret <span class="inlinecode"><span class="id" title="var">h⁻</span></span> as
+    a covariant functor:
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">h⁻</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a>ᵒᵖ</span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Set</span>ᴬ</span>.
+
+<div class="paragraph"> </div>
+
+    The meaning of Yoneda's lemma in this setting is that the functor
+    <span class="inlinecode"><span class="id" title="var">h⁻</span></span> is fully faithful, and therefore gives an embedding of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a>ᵒᵖ</span>
+    in the category of functors to <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. The collection of all
+    functors {<span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ</span>, <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> in <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>} is a subcategory of <span class="inlinecode"><span class="id" title="keyword">Set</span>̂ᴬ</span>. Therefore,
+    Yoneda embedding implies that the category <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a>ᵒᵖ</span> is isomorphic to
+    the category {<span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ᵃ</span>, <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> in <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>}.
+
+<div class="paragraph"> </div>
+
+    The contravariant version of Yoneda's lemma states that
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="library">Nat</span>(<a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>ₐ,</span> <span class="inlinecode"><span class="id" title="var">h_b</span>)</span> <span class="inlinecode">≅</span> <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="projection">Hom</span></a>(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a>)</span>.
+
+<div class="paragraph"> </div>
+
+    Therefore, <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>₋</span> gives rise to a covariant functor from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to the
+    category of contravariant functors to <span class="inlinecode"><span class="id" title="keyword">Set</span></span>:
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>₋</span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Set</span>⁽⁽ᴬ⁾ᵒᵖ⁾</span>.
+
+<div class="paragraph"> </div>
+
+    Yoneda's lemma then states that any locally small category <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> can
+    be embedded in the category of contravariant functors from <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> to
+    <span class="inlinecode"><span class="id" title="keyword">Set</span></span> via <span class="inlinecode"><a class="idref" href="HoTT.Categories.Structure.Core.html#PreCategoryOfStructures.h"><span class="id" title="projection">h</span></a>₋</span>. This is called the Yoneda embedding. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="FullyFaithful" class="idref" href="#FullyFaithful"><span class="id" title="section">FullyFaithful</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:42" class="idref" href="#H:42"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="coyoneda_embedding" class="idref" href="#coyoneda_embedding"><span class="id" title="definition">coyoneda_embedding</span></a> (<a id="A:43" class="idref" href="#A:43"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) : <a class="idref" href="HoTT.Categories.Functor.Attributes.html#IsFullyFaithful"><span class="id" title="class">IsFullyFaithful</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda"><span class="id" title="definition">coyoneda</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#A:43"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">proof</span> (@<a class="idref" href="HoTT.Categories.Category.Morphisms.html#isisomorphism_inverse"><span class="id" title="definition">isisomorphism_inverse</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#isisomorphism_components_of"><span class="id" title="definition">isisomorphism_components_of</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.FunctorCategory.Morphisms.html#isisomorphism_components_of"><span class="id" title="definition">isisomorphism_components_of</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma"><span class="id" title="instance">coyoneda_lemma</span></a> <span class="id" title="var">_</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda"><span class="id" title="definition">coyoneda</span></a> <span class="id" title="var">_</span> <span class="id" title="var">A</span> <span class="id" title="var">b</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">a</span>)) <span class="id" title="keyword">as</span> <span class="id" title="var">H'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_lemma_morphism_inverse"><span class="id" title="definition">coyoneda_lemma_morphism_inverse</span></a> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#inverse_object_of_morphism_of"><span class="id" title="definition">Functors.inverse_object_of_morphism_of</span></a> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">m</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">H'</span> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#IsIsomorphism"><span class="id" title="class">IsIsomorphism</span></a> ?<span class="id" title="var">m</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">m</span>) <span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.SetCategory.html#isisomorphism_set_cat_natural_transformation_paths"><span class="id" title="lemma">isisomorphism_set_cat_natural_transformation_paths</span></a> <span class="id" title="keyword">with</span> (<span class="id" title="var">T1</span> := <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">H'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Categories.Category.Core.html#left_identity"><span class="id" title="projection">left_identity</span></a>, <a class="idref" href="HoTT.Categories.Category.Core.html#right_identity"><span class="id" title="projection">right_identity</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">H'</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">m'</span> <span class="id" title="var">H0'</span> <span class="id" title="var">H1'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">∃</span> <span class="id" title="var">m'</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <span class="id" title="var">H0'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <span class="id" title="var">H1'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="yoneda_embedding" class="idref" href="#yoneda_embedding"><span class="id" title="definition">yoneda_embedding</span></a> (<a id="A:44" class="idref" href="#A:44"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) : <a class="idref" href="HoTT.Categories.Functor.Attributes.html#IsFullyFaithful"><span class="id" title="class">IsFullyFaithful</span></a> (<a class="idref" href="HoTT.Categories.Yoneda.html#yoneda"><span class="id" title="definition">yoneda</span></a> <a class="idref" href="HoTT.Categories.Yoneda.html#A:44"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">proof</span> (@<a class="idref" href="HoTT.Categories.Yoneda.html#coyoneda_embedding"><span class="id" title="definition">coyoneda_embedding</span></a> <span class="id" title="var">A</span><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Categories.Category.Dual.html#e17c1e699005f0ab82c0cfba8577fdb5"><span class="id" title="notation">op</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">CYE</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Categories.Yoneda.html#yoneda"><span class="id" title="definition">yoneda</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">T</span> := <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">CYE</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">T'</span> := (<span class="id" title="tactic">eval</span> <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">T</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">proof</span> ((<span class="id" title="keyword">fun</span> <a id="x:45" class="idref" href="#x:45"><span class="id" title="binder"><span id="x:46" class="id">x</span></span></a> : <span class="id" title="var">T</span> ⇒ (<a class="idref" href="HoTT.Categories.Yoneda.html#x:45"><span class="id" title="variable">x</span></a> : <span class="id" title="var">T'</span>)) <span class="id" title="var">CYE</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">CYE'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">G</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- ?<span class="id" title="var">G</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">G</span>) <span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">G'</span> := (<span class="id" title="tactic">eval</span> <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">G</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> ((<span class="id" title="keyword">fun</span> <a id="x:47" class="idref" href="#x:47"><span class="id" title="binder"><span id="x:48" class="id">x</span></span></a> : <span class="id" title="var">G'</span> ⇒ (<a class="idref" href="HoTT.Categories.Yoneda.html#x:47"><span class="id" title="variable">x</span></a> : <span class="id" title="var">G</span>)) <span class="id" title="var">CYE'</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Yoneda.html#FullyFaithful"><span class="id" title="section">FullyFaithful</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
