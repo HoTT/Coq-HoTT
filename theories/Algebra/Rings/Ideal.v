@@ -9,6 +9,7 @@ Require Import WildCat.Core.
 Declare Scope ideal_scope.
 Delimit Scope ideal_scope with ideal.
 Local Open Scope ideal_scope.
+Local Open Scope predicate_scope.
 
 (** * Left, Right and Two-sided Ideals *)
 
@@ -147,7 +148,7 @@ End IdealElements.
 
 (** With univalence we can characterize equality of ideals. *)
 Definition equiv_path_ideal `{Univalence} {R : Ring} {I J : Ideal R}
-  : pred_eq I J <~> I = J.
+  : (I ↔ J) <~> I = J.
 Proof.
   refine ((equiv_ap' (issig_Ideal R)^-1 _ _)^-1 oE _).
   refine (equiv_path_sigma_hprop _ _ oE _).
@@ -156,12 +157,12 @@ Defined.
 
 (** Under funext, ideal equality is a proposition. *)
 Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
-  : IsHProp (pred_eq I J) := _.
+  : IsHProp (I ↔ J) := _.
 
 (** *** Invariance under subgroup equality *)
 
 (** Being a left ideal is invariant under subgroup equality. *)
-Definition isleftideal_eq {R : Ring} (I J : Subgroup R) (p : pred_eq I J)
+Definition isleftideal_eq {R : Ring} (I J : Subgroup R) (p : I ↔ J)
   : IsLeftIdeal I -> IsLeftIdeal J.
 Proof.
   intros i r x j.
@@ -171,7 +172,7 @@ Proof.
 Defined.
 
 (** Being a right ideal is invariant under subgroup equality. *)
-Definition isrightideal_eq {R : Ring} (I J : Subgroup R) (p : pred_eq I J)
+Definition isrightideal_eq {R : Ring} (I J : Subgroup R) (p : I ↔ J)
   : IsRightIdeal I -> IsRightIdeal J
   := isleftideal_eq (R := rng_op R) I J p.
 
@@ -325,7 +326,7 @@ Definition ideal_product_type {R : Ring} (I J : Subgroup R) : Subgroup R
 
 (** The product ideal swapped is just the product ideal of the opposite ring. *)
 Definition ideal_product_type_op {R : Ring} (I J : Subgroup R)
-  : pred_eq (ideal_product_type (R:=R) I J) (ideal_product_type (R:=rng_op R) J I).
+  : ideal_product_type (R:=R) I J ↔ ideal_product_type (R:=rng_op R) J I.
 Proof.
   apply (subgroup_eq_functor_subgroup_generated _ _ grp_iso_id).
   apply pred_subset_antisymm; cbn; intros _ []; by napply ipn_in.
@@ -523,15 +524,15 @@ Definition subgroup_leftideal_quotient {R : Ring} (I J : Subgroup R)
   : Subgroup R.
 Proof.
   snapply Build_Subgroup'.
-  - exact (fun r => merely (forall x, J x -> I (r * x))).
+  - exact (fun r => merely (J ⊆ subgroup_preimage (grp_homo_rng_left_mult r) I)).
   - exact _.
-  - apply tr.
+  - apply tr; simpl.
     intros r p.
     rewrite rng_mult_zero_l.
     apply ideal_in_zero.
   - intros x y p q.
     strip_truncations; apply tr.
-    hnf; intros s j.
+    hnf; intros s j; simpl.
     rewrite rng_dist_r.
     rewrite rng_mult_negate_l.
     apply ideal_in_plus_negate.
@@ -546,7 +547,7 @@ Instance isleftideal_subgroup_leftideal_quotient {R : Ring}
 Proof.
   intros r x p.
   strip_truncations; apply tr.
-  intros s j.
+  intros s j; simpl.
   rewrite <- rng_mult_assoc.
   apply isleftideal.
   by napply p.
@@ -698,7 +699,7 @@ Definition ideal_annihilator {R : Ring} (I : Ideal R) : Ideal R
 
 (** Two ideals are coprime if their sum is the unit ideal. *)
 Definition Coprime {R : Ring} (I J : Ideal R) : Type
-  := pred_eq (ideal_sum I J) (ideal_unit R).
+  := ideal_sum I J ↔ ideal_unit R.
 Existing Class Coprime.
 
 Instance ishprop_coprime `{Funext} {R : Ring}
@@ -776,8 +777,6 @@ Module Import Notation.
   Notation "〈 X 〉" := (ideal_generated X)  : ideal_scope.
   Notation Ann := ideal_annihilator.
 End Notation.
-
-Local Open Scope predicate_scope.
 
 (** *** Ideal Lemmas *)
 
@@ -1048,6 +1047,24 @@ Proof.
   - by rapply isleftideal.
 Defined.
 
+Definition ideal_quotient_subset_l {R : Ring} (I J K : Ideal R) (p : I ⊆ J)
+  : (I :: K) ⊆ (J :: K).
+Proof.
+  napply pred_and_is_meet.
+  - rapply (transitivity (pred_and_subset_l _ _)).
+    apply (pred_subset_postcomp merely (@Trunc_functor _)).
+    intros r.
+    napply functor_forall_id; intros x.
+    napply functor_forall_id; intros y.
+    apply p.
+  - rapply (transitivity (pred_and_subset_r _ _)).
+    apply (pred_subset_postcomp merely (@Trunc_functor _)).
+    intros r.
+    napply functor_forall_id; intros x.
+    napply functor_forall_id; intros y.
+    apply p.
+Defined.
+
 (** If [J] divides [I] then the ideal quotient of [J] by [I] is trivial. *)
 Definition ideal_quotient_trivial {R : Ring} (I J : Ideal R)
   : I ⊆ J -> J :: I ↔ ideal_unit R.
@@ -1093,23 +1110,11 @@ Proof.
     - by rapply q; rapply ideal_sum_subset_l.
     - by rapply p; rapply ideal_sum_subset_r.
     - by rapply q; rapply ideal_sum_subset_r. }
-  intros r [[p q] [u v]]; strip_truncations; split; apply tr;
-  intros x jk; strip_truncations.
-  - induction jk as [? [] | | ? ? ? ? ? ? ].
-    + by apply p.
-    + by apply u.
-    + apply u, ideal_in_zero.
-    + rewrite rng_dist_l.
-      rewrite rng_mult_negate_r.
-      by apply ideal_in_plus_negate.
-  - induction jk as [? [] | | ? ? ? ? ? ? ].
-    + by apply q.
-    + by apply v.
-    + apply v, ideal_in_zero.
-    + change (I ((g - h) * r)). 
-      rewrite rng_dist_r.
-      rewrite rng_mult_negate_l.
-      by apply ideal_in_plus_negate.
+  intros r [[p q] [u v]]; strip_truncations; split; apply tr.
+  - nrefine (subgroup_generated_rec _ (subgroup_preimage (grp_homo_rng_left_mult r) I) _).
+    by napply pred_or_is_join.
+  - nrefine (subgroup_generated_rec _ (subgroup_preimage (grp_homo_rng_right_mult r) I) _).
+    by napply pred_or_is_join.
 Defined.
 
 (** Ideal quotients distribute over intersections. *)
@@ -1117,15 +1122,13 @@ Definition ideal_quotient_intersection {R : Ring} (I J K : Ideal R)
   : (I ∩ J :: K) ↔ (I :: K) ∩ (J :: K).
 Proof.
   apply pred_subset_antisymm.
-  - intros r [p q]; strip_truncations; split; split; apply tr; intros x k.
-    1,3: by apply p.
-    1,2: by apply q.
+  - napply pred_and_is_meet.
+    + napply ideal_quotient_subset_l.
+      apply pred_and_subset_l.
+    + napply ideal_quotient_subset_l.
+      apply pred_and_subset_r.
   - intros r [[p q] [u v]].
-    strip_truncations; split; apply tr; intros x k; split.
-    + by apply p.
-    + by apply u.
-    + by apply q.
-    + by apply v.
+    strip_truncations; split; apply tr; by napply pred_and_is_meet.
 Defined.
 
 (** Annihilators reverse the order of inclusion. *)

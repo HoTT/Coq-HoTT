@@ -719,6 +719,18 @@ Definition normalsubgroup_grp_op {G : Group}
   : NormalSubgroup G -> NormalSubgroup (grp_op G)
   := fun N => Build_NormalSubgroup (grp_op G) (subgroup_grp_op N) _.
 
+(** ** Subgroup intersection *)
+
+(** Intersection of two subgroups *)
+Definition subgroup_intersection {G : Group} (H K : Subgroup G) : Subgroup G.
+Proof.
+  snapply (Build_Subgroup' (pred_and H K)).
+  1: exact _.
+  1: split; apply subgroup_in_unit.
+  intros x y [] [].
+  split; by apply subgroup_in_op_inv.
+Defined.
+
 (** ** Preimage subgroup *)
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
@@ -752,18 +764,17 @@ Proof.
   exact (transport N (grp_homo_op _ _ _) Nfxy).
 Defined.
 
-(** ** Subgroup intersection *)
+Definition functor_subgroup_preimage {G H : Group} (f : G $-> H)
+  {S T : Subgroup H} (p : S ⊆ T)
+  : subgroup_preimage f S ⊆ subgroup_preimage f T
+  := p o f.
 
-(** Intersection of two subgroups *)
-Definition subgroup_intersection {G : Group} (H K : Subgroup G) : Subgroup G.
-Proof.
-  snapply Build_Subgroup'.
-  1: exact (fun g => H g /\ K g).
-  1: exact _.
-  1: split; apply subgroup_in_unit.
-  intros x y [] [].
-  split; by apply subgroup_in_op_inv.
-Defined.
+(** The preimage of an intersection is the intersection of preimages. *)
+Definition subgroup_preimage_intersection {G H : Group} (f : G $-> H)
+  (S T : Subgroup H)
+  : subgroup_preimage f (subgroup_intersection S T)
+    ↔ subgroup_intersection (subgroup_preimage f S) (subgroup_preimage f T)
+  := reflexivity _.
 
 (** ** Simple groups *)
 

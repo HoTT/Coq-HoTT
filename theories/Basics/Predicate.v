@@ -49,6 +49,11 @@ Definition pred_subset_precomp {A B : Type} {P Q : B -> Type} (f : A -> B)
   : P ⊆ Q -> (P o f) ⊆ (Q o f)
   := pointwise_precomp _ f P Q.
 
+Definition pred_subset_postcomp {A : Type} {P Q : A -> Type}
+  (F : Type -> Type) (f : forall {X Y}, (X -> Y) -> F X -> F Y) (p : P ⊆ Q)
+  : (F o P) ⊆ (F o Q)
+  := fun x => f (p x).
+
 Definition pred_subset_moveL_equiv {A B : Type} {P : B -> Type} {Q : A -> Type}
   (f : B <~> A)
   : (P o f^-1) ⊆ Q -> P ⊆ (Q o f)
@@ -105,6 +110,12 @@ Section OperationsAndIdentities.
   Definition pred_and_comm (P Q : Pred)
     : pred_and P Q ↔ pred_and Q P
     := pred_subset_antisymm (pred_and_comm' P Q) (pred_and_comm' Q P).
+
+  Definition pred_or_is_join (P Q R : Pred) (p : P ⊆ R) (q : Q ⊆ R)
+    : pred_or P Q ⊆ R
+    := fun a pq => match pq with
+                 | inl l => p a l
+                 | inr r => q a r end.
 
   Definition pred_or_comm' (P Q : Pred)
     : pred_or P Q ⊆ pred_or Q P

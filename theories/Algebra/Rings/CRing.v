@@ -173,6 +173,7 @@ Section IdealCRing.
       intros r; rapply Trunc_rec; intros jk.
       + induction jk as [y [z z' j k] | | ? ? ? ? ? ? ].
         * rewrite (rng_mult_comm z z').
+          simpl.
           rewrite rng_mult_assoc.
           destruct (p z' k) as [p' ?].
           revert p'; apply Trunc_rec; intros p'.
@@ -200,7 +201,8 @@ Section IdealCRing.
           by apply ideal_in_plus_negate.
     - intros x [p q]; strip_truncations; split; apply tr;
       intros r k; split; apply tr; intros z j.
-      + rewrite <- rng_mult_assoc.
+      + simpl.
+        rewrite <- rng_mult_assoc.
         rewrite (rng_mult_comm r z).
         by apply p, tr, sgt_in, ipn_in.
       + cbn in z.
