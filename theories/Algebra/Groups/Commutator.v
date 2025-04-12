@@ -272,7 +272,7 @@ Definition subgroup_eq_commutator {G : Group} {H J K L : Subgroup G}
   : pred_eq [H, J] [K, L].
 Proof.
   snapply pred_subset_antisymm; apply functor_subgroup_commutator.
-  3,4: apply pred_eq_subset'.
+  3,4: apply pred_subset_pred_eq'.
   1,3: exact f.
   1,2: exact g.
 Defined.

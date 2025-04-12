@@ -30,11 +30,11 @@ Infix "↔" := pred_eq     : predicate_scope.
 
 (** It follows from [reflexive_pointwise] and [transitive_pointwise] that [pred_subset] is reflexive and transitive. *)
 
-Coercion pred_eq_subset {A : Type} (P Q : A -> Type)
+Coercion pred_subset_pred_eq {A : Type} (P Q : A -> Type)
   : P ↔ Q -> P ⊆ Q
   := fun p x => fst (p x).
 
-Definition pred_eq_subset' {A : Type} (P Q : A -> Type)
+Definition pred_subset_pred_eq' {A : Type} (P Q : A -> Type)
   : P ↔ Q -> Q ⊆ P
   := fun p x => snd (p x).
 

@@ -875,7 +875,7 @@ Proof.
   - apply (pred_subset_moveR_equiv f).
     apply (functor_subgroup_generated _ _ f^-1$).
     apply (pred_subset_moveL_equiv f^-1$); cbn.
-    apply pred_eq_subset.
+    apply pred_subset_pred_eq.
     by symmetry.
 Defined.
 
@@ -919,10 +919,10 @@ Definition functor_subgroup_generated_merely {G : Group}
   : pred_subset (subgroup_generated X) (subgroup_generated Y).
 Proof.
   transitivity (subgroup_generated (merely o X)).
-  1: apply pred_eq_subset, subgroup_generated_merely.
+  1: apply pred_subset_pred_eq, subgroup_generated_merely.
   transitivity (subgroup_generated (merely o Y)).
   1: by apply functor_subgroup_generated'.
-  apply pred_eq_subset', subgroup_generated_merely.
+  apply pred_subset_pred_eq', subgroup_generated_merely.
 Defined.
 
 Definition subgroup_eq_functor_subgroup_generated_merely {G : Group}
@@ -930,8 +930,8 @@ Definition subgroup_eq_functor_subgroup_generated_merely {G : Group}
   : pred_eq (subgroup_generated X) (subgroup_generated Y).
 Proof.
   apply pred_subset_antisymm; apply functor_subgroup_generated_merely.
-  - apply pred_eq_subset, K.
-  - apply pred_eq_subset', K.
+  - apply pred_subset_pred_eq, K.
+  - apply pred_subset_pred_eq', K.
 Defined.
 
 (** If the predicates selecting the generators are merely equivalent, then the generated subgroups are isomorphic. *)
@@ -1072,7 +1072,8 @@ Definition subgroup_product_eq {G : Group} (H K L M : Subgroup G)
   (p : pred_eq H K) (q : pred_eq L M)
   : pred_eq (subgroup_product H L) (subgroup_product K M).
 Proof.
-  by apply pred_subset_antisymm; apply subgroup_product_subset_pres; apply pred_eq_subset.
+  by apply pred_subset_antisymm; apply subgroup_product_subset_pres;
+    apply pred_subset_pred_eq.
 Defined.
 
 (** A product of normal subgroups is normal. *)

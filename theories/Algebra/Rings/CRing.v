@@ -144,7 +144,7 @@ Section IdealCRing.
   Proof.
     intros p.
     etransitivity.
-    { apply pred_eq_subset.
+    { apply pred_subset_pred_eq.
       symmetry.
       apply ideal_product_unit_r. }
     etransitivity.
