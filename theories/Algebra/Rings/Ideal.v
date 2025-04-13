@@ -532,8 +532,8 @@ Definition ideal_principal {R : Ring} (x : R) : Ideal R
 
 (** The definitions here are not entirely standard, but will become so when considering only commutative rings. For the non-commutative case there isn't a lot written about ideal quotients. *)
 
-(** The subgroup corresponding to the left ideal quotient. *)
-Definition subgroup_leftideal_quotient {R : Ring} (I J : Subgroup R)
+(** The subgroup corresponding to the left ideal quotient [I :: J] consists of the elements [r] in [R] such that [J x -> I (r x)] for every [x] in [R]. *)
+Definition subgroup_leftideal_quotient {R : Ring} (I : Subgroup R) (J : R -> Type)
   : Subgroup R.
 Proof.
   snapply Build_Subgroup'.
@@ -555,7 +555,7 @@ Defined.
 
 (** The left ideal quotient of a left ideal is a left ideal. *)
 Instance isleftideal_subgroup_leftideal_quotient {R : Ring}
-  (I J : Subgroup R) `{IsLeftIdeal R I}
+  (I : Subgroup R) `{IsLeftIdeal R I} (J : R -> Type)
   : IsLeftIdeal (subgroup_leftideal_quotient I J).
 Proof.
   intros r x p.
@@ -566,10 +566,10 @@ Proof.
   by napply p.
 Defined.
 
-(** The left ideal quotient of a right ideal by a left ideal is a right ideal. *)
+(** The left ideal quotient by a left ideal is a right ideal. *)
 Instance isrightideal_subgroup_leftideal_quotient {R : Ring}
-  (I J : Subgroup R) `{IsRightIdeal R I, IsLeftIdeal R J}
-  : IsRightIdeal (subgroup_leftideal_quotient (R:=R) I J).
+  (I J : Subgroup R) `{IsLeftIdeal R J}
+  : IsRightIdeal (subgroup_leftideal_quotient I J).
 Proof.
   intros r x p.
   strip_truncations; apply tr.
@@ -582,29 +582,26 @@ Defined.
 
 (** We define the left ideal quotient as a left ideal. *)
 Definition leftideal_quotient {R : Ring}
-  : LeftIdeal R -> Subgroup R -> LeftIdeal R
+  : LeftIdeal R -> (R -> Type) -> LeftIdeal R
   := fun I J => Build_LeftIdeal R (subgroup_leftideal_quotient I J) _.
   
-Definition subgroup_rightideal_quotient {R : Ring} (I J : Subgroup R) : Subgroup R
+Definition subgroup_rightideal_quotient {R : Ring} (I : Subgroup R) (J : R -> Type)
+  : Subgroup R
   := subgroup_leftideal_quotient (R:=rng_op R) I J. 
 
 Instance isrightideal_subgroup_rightideal_quotient {R : Ring}
-  (I J : Subgroup R) `{IsRightIdeal R I}
+  (I : Subgroup R) `{IsRightIdeal R I} (J : R -> Type)
   : IsRightIdeal (subgroup_rightideal_quotient I J)
   := isleftideal_subgroup_leftideal_quotient (R:=rng_op R) I J.
 
 Instance isleftideal_subgroup_rightideal_quotient {R : Ring}
-  (I J : Subgroup R) `{H : IsLeftIdeal R I, IsRightIdeal R J}
-  : IsLeftIdeal (subgroup_rightideal_quotient I J).
-Proof.
-  snapply (isrightideal_subgroup_leftideal_quotient (R:=rng_op R) I J).
-  - exact H.
-  - exact _.
-Defined.
+  (I J : Subgroup R) `{IsRightIdeal R J}
+  : IsLeftIdeal (subgroup_rightideal_quotient I J)
+  := isrightideal_subgroup_leftideal_quotient (R:=rng_op R) I J.
 
 (** We define the right ideal quotient as a right ideal. *)
 Definition rightideal_quotient {R : Ring}
-  : RightIdeal R -> Subgroup R -> RightIdeal R
+  : RightIdeal R -> (R -> Type) -> RightIdeal R
   := fun I J => Build_RightIdeal R (subgroup_rightideal_quotient (R:=R) I J) _.
 
 (** The ideal quotient is then the intersection of a left and right quotient of both two sided ideals. *)
@@ -1060,22 +1057,23 @@ Proof.
   - by rapply isleftideal.
 Defined.
 
+Definition leftideal_quotient_subset_l {R : Ring} (I J K : Ideal R) (p : I ⊆ J)
+  : leftideal_quotient I K ⊆ leftideal_quotient J K.
+Proof.
+  apply (pred_subset_postcomp merely (@Trunc_functor _)).
+  intros r q.
+  rapply (transitivity q).
+  by apply functor_subgroup_preimage.
+Defined.
+
 Definition ideal_quotient_subset_l {R : Ring} (I J K : Ideal R) (p : I ⊆ J)
   : (I :: K) ⊆ (J :: K).
 Proof.
   napply pred_and_is_meet.
   - rapply (transitivity (pred_and_subset_l _ _)).
-    apply (pred_subset_postcomp merely (@Trunc_functor _)).
-    intros r.
-    napply functor_forall_id; intros x.
-    napply functor_forall_id; intros y.
-    apply p.
+    by apply leftideal_quotient_subset_l.
   - rapply (transitivity (pred_and_subset_r _ _)).
-    apply (pred_subset_postcomp merely (@Trunc_functor _)).
-    intros r.
-    napply functor_forall_id; intros x.
-    napply functor_forall_id; intros y.
-    apply p.
+    exact (leftideal_quotient_subset_l (R:=rng_op R) I J K p).
 Defined.
 
 (** If [J] divides [I] then the ideal quotient of [J] by [I] is trivial. *)
@@ -1124,9 +1122,9 @@ Proof.
     - by rapply p; rapply ideal_sum_subset_r.
     - by rapply q; rapply ideal_sum_subset_r. }
   intros r [[p q] [u v]]; strip_truncations; split; apply tr.
-  - nrefine (subgroup_generated_rec _ (subgroup_preimage (grp_homo_rng_left_mult r) I) _).
+  - napply subgroup_generated_rec.
     by napply pred_or_is_join.
-  - nrefine (subgroup_generated_rec _ (subgroup_preimage (grp_homo_rng_right_mult r) I) _).
+  - napply subgroup_generated_rec.
     by napply pred_or_is_join.
 Defined.
 
