@@ -1,11 +1,12 @@
 Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc
-  Basics.Iff Basics.Equivalences.
+  Basics.Iff Basics.Equivalences Basics.Predicate.
 Require Import Types.Sigma Types.Paths.
 Require Import Groups.Group AbGroups.Abelianization AbGroups.AbelianGroup
   Groups.QuotientGroup.
 Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.
 Require Import Truncations.Core.
 
+Local Open Scope predicate_scope.
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.
 
@@ -228,7 +229,7 @@ Local Open Scope group_scope.
 (** [subgroup_commutator H K] is the smallest subgroup containing the commutators of elements of [H] with elements of [K]. *)
 Definition subgroup_commutator_rec {G : Group} {H K : Subgroup G} (J : Subgroup G)
   (i : forall x y, H x -> K y -> J (grp_commutator x y))
-  : forall x, [H, K] x -> J x.
+  : [H, K] ⊆ J.
 Proof.
   rapply subgroup_generated_rec; intros x [[y Hy] [[z Kz] p]];
     destruct p; simpl.
@@ -239,7 +240,7 @@ Defined.
 Definition subgroup_commutator_2_rec {G : Group} {H J K : Subgroup G}
   (N : Subgroup G) `{!IsNormalSubgroup N}
   (i : forall x y z, H x -> J y -> K z -> N (grp_commutator (grp_commutator x y) z))
-  : forall x, [[H, J], K] x -> N x.
+  : [[H, J], K] ⊆ N.
 Proof.
   snapply subgroup_commutator_rec.
   intros x z HJx Kz; revert x HJx.
@@ -259,27 +260,26 @@ Defined.
 
 (** Commutator subgroups are functorial. *)
 Definition functor_subgroup_commutator {G : Group} {H J K L : Subgroup G}
-  (f : forall x, H x -> K x) (g : forall x, J x -> L x)
-  : forall x, [H, J] x -> [K, L] x.
+  (f : H ⊆ K) (g : J ⊆ L)
+  : [H, J] ⊆ [K, L].
 Proof.
   snapply subgroup_commutator_rec.
   intros x y Hx Jx.
-  apply subgroup_commutator_in.
-  - by apply f.
-  - by apply g.
+  exact (subgroup_commutator_in (f _ Hx) (g _ Jx)).
 Defined.
 
 Definition subgroup_eq_commutator {G : Group} {H J K L : Subgroup G}
-  (f : forall x, H x <-> K x) (g : forall x, J x <-> L x)
-  : forall x, [H, J] x <-> [K, L] x.
+  (f : H ↔ K) (g : J ↔ L)
+  : [H, J] ↔ [K, L].
 Proof.
-  intros x; split; revert x; apply functor_subgroup_commutator.
-  1,3: apply f.
-  1,2: apply g.
+  snapply pred_subset_antisymm; apply functor_subgroup_commutator.
+  3,4: apply pred_subset_pred_eq'.
+  1,3: exact f.
+  1,2: exact g.
 Defined.
 
 Definition subgroup_incl_commutator_symm {G : Group} (H J : Subgroup G)
-  : forall x, [H, J] x -> [J, H] x.
+  : [H, J] ⊆ [J, H].
 Proof.
   snapply subgroup_commutator_rec.
   intros x y Hx Jy.
@@ -290,15 +290,14 @@ Defined.
 
 (** Commutator subgroups are symmetric in their arguments. *)
 Definition subgroup_commutator_symm {G : Group} (H J : Subgroup G)
-  : forall x, [H, J] x <-> [J, H] x.
+  : [H, J] ↔ [J, H].
 Proof.
-  intros x; split; snapply subgroup_incl_commutator_symm.
+  snapply pred_subset_antisymm; apply subgroup_incl_commutator_symm.
 Defined.
 
 (** The opposite subgroup of a commutator subgroup is the commutator subgroup of the opposite subgroups. *)
 Definition subgroup_eq_commutator_grp_op {G : Group} (H J : Subgroup G)
-  : forall (x : grp_op G), [H, J] x
-    <-> [subgroup_grp_op J, subgroup_grp_op H] x.
+  : subgroup_grp_op [H, J] ↔ [subgroup_grp_op J, subgroup_grp_op H].
 Proof.
   napply (subgroup_eq_subgroup_generated_op (G:=G)).
   intro x.
@@ -338,7 +337,7 @@ Defined.
 (** Commutator subgroups distribute over products of normal subgroups on the left. *)
 Definition subgroup_commutator_normal_prod_l {G : Group}
   (H K L : NormalSubgroup G)
-  : forall x, [subgroup_product H K, L] x <-> subgroup_product [H, L] [K, L] x.
+  : [subgroup_product H K, L] ↔ subgroup_product [H, L] [K, L].
 Proof.
   intros x; split.
   - revert x; snapply subgroup_commutator_rec.
@@ -354,17 +353,19 @@ Proof.
   - revert x; snapply subgroup_generated_rec.
     intros x [HLx | KLx].
     + revert x HLx.
-      apply functor_subgroup_commutator; trivial.
+      apply functor_subgroup_commutator.
+      2: reflexivity.
       apply subgroup_product_incl_l.
     + revert x KLx.
-      apply functor_subgroup_commutator; trivial.
+      apply functor_subgroup_commutator.
+      2: reflexivity.
       apply subgroup_product_incl_r.
 Defined.
 
 (** Commutator subgroups distribute over products of normal subgroups on the right. *)
 Definition subgroup_commutator_normal_prod_r {G : Group}
   (H K L : NormalSubgroup G)
-  : forall x, [H, subgroup_product K L] x <-> subgroup_product [H, K] [H, L] x.
+  : [H, subgroup_product K L] ↔ subgroup_product [H, K] [H, L].
 Proof.
   intros x.
   etransitivity.
@@ -378,11 +379,9 @@ Defined.
 (** The subgroup image of a commutator is included in the commutator of the subgroup images. The converse only generally holds for a normal [J] and [K] and a surjective [f]. *)
 Definition subgroup_image_commutator_incl {G H : Group}
   (f : G $-> H) (J K : Subgroup G)
-  : forall x, subgroup_image f [J, K] x
-    -> [subgroup_image f J, subgroup_image f K] x.
+  : subgroup_image f [J, K] ⊆ [subgroup_image f J, subgroup_image f K].
 Proof.
   snapply subgroup_image_rec.
-  change ([?G, ?H] (f ?x)) with (subgroup_preimage f [G, H] x).
   snapply subgroup_commutator_rec.
   intros x y Jx Ky.
   change (subgroup_preimage f [?G, ?H] ?x) with ([G, H] (f x)).
@@ -447,9 +446,8 @@ Defined.
 
 Definition three_subgroups_lemma (G : Group) (H J K N : Subgroup G)
   `{!IsNormalSubgroup N}
-  (T1 : forall x, [[H, J], K] x -> N x)
-  (T2 : forall x, [[J, K], H] x -> N x)
-  : forall x, [[K, H], J] x -> N x.
+  (T1 : [[H, J], K] ⊆ N) (T2 : [[J, K], H] ⊆ N)
+  : [[K, H], J] ⊆ N.
 Proof.
   rapply subgroup_commutator_2_rec.
   Local Close Scope group_scope.
