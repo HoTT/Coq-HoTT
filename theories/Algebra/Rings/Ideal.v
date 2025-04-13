@@ -532,7 +532,7 @@ Definition ideal_principal {R : Ring} (x : R) : Ideal R
 
 (** The definitions here are not entirely standard, but will become so when considering only commutative rings. For the non-commutative case there isn't a lot written about ideal quotients. *)
 
-(** The subgroup corresponding to the left ideal quotient [I :: J] consists of the elements [r] in [R] such that [J x -> I (r x)] for every [x] in [R]. *)
+(** The subgroup corresponding to the left ideal quotient [I :: J] consists of the elements [r] in [R] such that [J x -> I (r * x)] for every [x] in [R]. *)
 Definition subgroup_leftideal_quotient {R : Ring} (I : Subgroup R) (J : R -> Type)
   : Subgroup R.
 Proof.
