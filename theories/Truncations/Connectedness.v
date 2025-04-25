@@ -64,11 +64,11 @@ Defined.
 
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
 
-(** We can't make both of these [Instance]s, as that would result in infinite loops. *)
+(** We can't make both of these [Instance]s, as that would result in infinite loops. And the first one is not likely to be useful as an instance, as it requires guessing the point [a0]. *)
 
-Instance conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
-  `{IsConnMap n _ _ (unit_name a0)}
-  : IsConnected n.+1 A | 1000.
+Definition conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
+  `{IsConnMap@{u} n _ _ (unit_name a0)}
+  : IsConnected n.+1 A.
 Proof.
   apply isconnected_conn_map_to_unit.
   exact (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
@@ -82,6 +82,7 @@ Proof.
   apply O_lex_leq_Tr.
 Defined.
 
+(** [conn_point_incl] can be made an instance, but at the time of writing, this doesn't cause any additional goals to be solved compared to making it an immediate hint, so we do the latter. *)
 #[export] Hint Immediate conn_point_incl : typeclass_instances.
 
 (** Note that [OO_cancelR_conn_map] and [OO_cancelL_conn_map] (Proposition 2.31 of CORS) generalize the above statements to 2/3 of a 2-out-of-3 property for connected maps, for any reflective subuniverse and its subuniverse of separated types.  If useful, we could specialize that more general form explicitly to truncations. *)
