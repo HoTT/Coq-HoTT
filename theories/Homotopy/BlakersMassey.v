@@ -211,13 +211,10 @@ Section GBM.
         Definition equiv_Ocodeleft2
           : O (Pushout Ocodeleft2ab Ocodeleft2ac) <~> O codeleft2.
         Proof.
-          refine ((equiv_O_functor O (equiv_sigma_contr
-                  (fun yqqu : codeleft2 =>
-                     O (Join ((x0; codeleft2_q00 yqqu) = (x1; codeleft2_q10 yqqu))
-                             ((codeleft2_y0 yqqu ; codeleft2_q10 yqqu) = (y1; q11)))))) oE _).
-          refine ((equiv_O_sigma_O O _)^-1 oE _).
+          refine (_ oE equiv_O_functor O equiv_Ocodeleft2plus).
+          refine (_ oE (equiv_O_sigma_O O _)^-1).
           apply equiv_O_functor.
-          exact equiv_Ocodeleft2plus.
+          rapply equiv_sigma_contr.
         Defined.
 
         (** The next step is to reassociate the resulting double-pushout and "contract" both of them, one after the other, because they are pushouts along equivalences.  In order to do this, we need first of all to know that the resulting map from [codeleft0] to the above pushout factors through [Ocodeleft2b] via an equivalence.  Here's the equivalence: *)
