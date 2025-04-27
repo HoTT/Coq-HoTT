@@ -146,6 +146,20 @@ Proof.
   exact (isconnected_pred_add n m _).
 Defined.
 
+(** ** (-2)-connectedness *)
+
+(** Every type is (-2)-connected. *)
+Definition isconnected_minus_two A : IsConnected (-2) A
+  := istrunc_truncation (-2) A.
+
+(** Every map is (-2)-connected. *)
+Definition isconnmap_minus_two {A B : Type} (f : A -> B)
+  : IsConnMap (-2) f
+  := fun b => isconnected_minus_two _.
+
+Hint Immediate isconnected_minus_two : typeclass_instances.
+Hint Immediate isconnmap_minus_two : typeclass_instances.
+
 (** ** 0-connectedness *)
 
 (** To be 0-connected is the same as to be (-1)-connected and that any two points are merely equal.  TODO: This should also be generalized to separated subuniverses (CORS Remark 2.35).  *)
