@@ -156,6 +156,7 @@ Reserved Infix "$oE" (at level 40, left associativity).
 Reserved Infix "$==" (at level 70).
 Reserved Infix "$o@" (at level 30).
 Reserved Infix "$@" (at level 30).
+Reserved Infix "$|" (at level 30).
 Reserved Infix "$@L" (at level 30).
 Reserved Infix "$@R" (at level 30).
 Reserved Infix "$@@" (at level 30).
