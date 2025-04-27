@@ -871,33 +871,24 @@ Section JoinTrunc.
     : IsConnected (m +2+ n) (Join A B).
   Proof.
     apply isconnected_from_elim; intros C ? k.
-    pose @istrunc_inO_tr.
-    pose proof (istrunc_extension_along_conn
-                  (fun b:B => tt) (fun _ => C) (k o joinr)).
-    unfold ExtensionAlong in *.
     transparent assert (f : (A -> {s : Unit -> C &
                                    forall x, s tt = k (joinr x)})).
     { intros a; exists (fun _ => k (joinl a)); intros b.
       exact (ap k (jglue a b)). }
-    assert (h := isconnected_elim
-                   m {s : Unit -> C & forall x : B, s tt = k (joinr x)} f).
+    assert (h : NullHomotopy f).
+    { rapply (isconnected_elim m).
+      rapply (istrunc_extension_along_conn (n:=n)). }
     unfold NullHomotopy in *; destruct h as [[c g] h].
     exists (c tt).
     snapply Join_ind.
-    - intros a; cbn. exact (ap10 (h a)..1 tt).
-    - intros b; cbn. exact ((g b)^).
+    - intros a; cbn beta. exact (ap10 (h a)..1 tt).
+    - intros b; cbn beta. exact (g b)^.
     - intros a b.
-      rewrite transport_paths_FlFr, ap_const, concat_p1; cbn.
-      subst f; set (ha := h a); clearbody ha; clear h;
-      assert (ha2 := ha..2); set (ha1 := ha..1) in *;
-      clearbody ha1; clear ha; cbn in *.
-      rewrite <- (inv_V (ap10 ha1 tt)).
-      rewrite <- inv_pp.
-      apply inverse2.
-      refine (_ @ apD10 ha2 b); clear ha2.
-      rewrite transport_forall_constant, transport_paths_FlFr.
-      rewrite ap_const, concat_p1.
-      reflexivity.
+      transport_paths Fl.
+      apply moveL_pV, moveR_Mp.
+      lhs_V napply (apD10 (h a)..2 b); simpl.
+      lhs napply transport_forall_constant.
+      napply transport_paths_Fl.
   Defined.
 
 End JoinTrunc.
