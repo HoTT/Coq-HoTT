@@ -165,7 +165,7 @@ Defined.
 Hint Extern 1000 (IsTrunc _ _) => simple apply istrunc_inO_tr; solve [ trivial ] : typeclass_instances.
 (** This doesn't seem to be quite the same as [Hint Immediate] with a different cost either, though.  *)
 
-(** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc].  You can always apply [istrunc_inO_tr] explicitly, but sometimes it also works to just [pose] it into the context. *)
+(** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc].  You can always apply [istrunc_inO_tr] explicitly, but sometimes it also works to just [pose] it into the context (at the risk of causing loops in typeclass search). *)
 
 (** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)
 Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
