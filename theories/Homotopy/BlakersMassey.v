@@ -597,6 +597,30 @@ Proof.
     make_equiv_contr_basedpaths.
 Defined.
 
+(** A version that requires [g] to be surjective instead of [f]. *)
+Definition blakers_massey_po' `{Univalence} (m n : trunc_index)
+  {X Y Z : Type} (f : X -> Y) (g : X -> Z)
+  `{H1 : !IsConnMap m f} `{H2 : !IsConnMap n.+1 g}
+  : IsConnMap (n +2+ m).-1 (pullback_corec (pglue (f:=f) (g:=g))).
+Proof.
+  rewrite trunc_index_add_comm.
+  (* We will postcompose with an equivalence to the symmetrical pullback. *)
+  snapply cancelL_equiv_conn_map.
+  (* And we'll show that the composite is homotopic to the symmetrical [pullback_corec] map, which we already know is connected. *)
+  3: rapply (conn_map_homotopic _ _ _ _ (blakers_massey_po n m g f)).
+  - (* We give the equivalence between the pullbacks. *)
+    refine (_ oE equiv_pullback_symm _ _).
+    snapply (equiv_pullback pushout_sym equiv_idmap equiv_idmap (fun _ => 1) (fun _ => 1)).
+  - (* We show that the composite is homotopic to the symmetrical [pullback_corec] map. *)
+    intro x; cbn; unfold pullback_corec, functor_sigma; cbn.
+    apply (ap (fun w => (g x; f x; w))).
+    symmetry; lhs napply concat_1p; lhs napply concat_p1.
+    lhs napply (ap_V pushout_sym_map (pglue x)).
+    rhs_V napply inv_V.
+    apply inverse2.
+    napply Pushout_rec_beta_pglue.
+Defined.
+
 (** ** The Freudenthal Suspension Theorem *)
 
 (** The Freudenthal suspension theorem is a fairly trivial corollary of the Blakers-Massey theorem.  It says that [merid : X -> North = South] is highly connected. *)
