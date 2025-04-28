@@ -45,7 +45,7 @@ Defined.
 Section GBM.
     Context {X Y : Type} (Q : X -> Y -> Type).
 
-    (** Here's the hypothesis of ABFJ's generalized Blakers-Massey.  It works for any reflective subuniverse, not only modalities! *)
+    (** Here's the hypothesis of ABFJ's generalized Blakers-Massey theorem.  It works for any reflective subuniverse, not only modalities!  In the application, [O] will be [Tr (n +2+ m)] and we'll use [isconnected_join] to verify [isconnected_cogap]. *)
     Context (O : ReflectiveSubuniverse).
     Context
       (isconnected_cogap :
@@ -571,7 +571,7 @@ Definition blakers_massey_po `{Univalence} (m n : trunc_index)
   `{H1 : !IsConnMap m.+1 f} `{H2 : !IsConnMap n g}
   : IsConnMap (n +2+ m).-1 (pullback_corec (pglue (f:=f) (g:=g))).
 Proof.
-  (** We postcompose our map with an equivalence from the the pullback of the pushout of [f] and [g] to the pullback of an equivalent [SPushout] over a family [Q]. *)
+  (** We postcompose our map with an equivalence from the pullback of the pushout of [f] and [g] to the pullback of an equivalent [SPushout] over a family [Q]. *)
   pose (Q := fun y z => {x : X & f x = y /\ g x = z}).
   snapply cancelL_equiv_conn_map.
   1: exact (Pullback (spushl Q) (spushr Q)).
