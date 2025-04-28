@@ -141,7 +141,7 @@ Proof.
   snapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_hfiber _ _)^-1%equiv).
   (* The composite is homotopic to the map from [blakers_massey_po], with the only difference being an extra [1 @ _]. *)
   snapply conn_map_homotopic.
-  3: rapply blakers_massey_po.
+  3: rapply (blakers_massey_po n m.+1).
   (* Use [compute.] to see the details of the goal. *)
   intros x.
   apply (ap (fun z => (f x; tt; z))).
