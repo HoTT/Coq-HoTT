@@ -37,9 +37,9 @@ COQPROJECT_HEADER=\
 if [ "$GENERATE_COQPROJECT_FOR_DUNE" == "true" ]; then
   COQPROJECT_HEADER="$COQPROJECT_HEADER
 # Dune compatibility
--R _build/default/theories HoTT
--Q _build/default/contrib HoTT.Contrib
--Q _build/default/test HoTT.Tests
+-R $PWD/theories HoTT
+-Q $PWD/contrib HoTT.Contrib
+-Q $PWD/test HoTT.Tests
 "
 fi
 
