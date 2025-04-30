@@ -34,9 +34,9 @@ Ltac decide :=
 
 Definition decidable_true {A : Type}
   (a : A)
-  (P : forall (p : Decidable A), Type)
+  (P : forall (d : Decidable A), Type)
   (p : forall x, P (inl x))
-  : forall p, P p.
+  : forall d, P d.
 Proof.
   intros [x|n].
   - apply p.
@@ -44,16 +44,16 @@ Proof.
 Defined.
 
 (** Replace a term [p] of the form [Decidable A] with [inl x] if we have a term [a : A] showing that [A] is true. *)
-Ltac decidable_true p a :=
-  generalize p;
+Ltac decidable_true d a :=
+  generalize d;
   rapply (decidable_true a);
   try intro.
 
 Definition decidable_false {A : Type}
   (n : not A)
-  (P : forall (p : Decidable A), Type)
+  (P : forall (d : Decidable A), Type)
   (p : forall n', P (inr n'))
-  : forall p, P p.
+  : forall d, P d.
 Proof.
   intros [x|n'].
   - contradiction n.
