@@ -910,15 +910,10 @@ Proof.
       simpl.
       generalize (dec_paths j i).
       generalize (dec_paths i j).
-      intros p q.
-      destruct p as [p|np].
-      * decidable_true q p^.
-        assert (r :  p^ = x0) by apply path_ishprop.
-        destruct r.
-        destruct p.
-        reflexivity.
-      * destruct q.
-        1: by destruct (np p^).
+      intros [p|np].
+      * apply (decidable_hprop_true p^).
+        by destruct p.
+      * apply (decidable_false (fun q => np q^)).
         reflexivity.
 Defined.
 
