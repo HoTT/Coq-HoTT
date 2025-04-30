@@ -704,15 +704,13 @@ Section Associativity.
 
   Context {A : Type} `{HasBinaryBiproducts A}.
 
-  Local Instance associator_cat_binbiprod
-    : Associator (fun x y => cat_binbiprod x y)
-    := associator_cat_binprod.
+  Local Existing Instance associator_cat_binprod.
 
   Lemma cate_binbiprod_assoc (x y z : A)
     : cat_binbiprod x (cat_binbiprod y z)
       $<~> cat_binbiprod (cat_binbiprod x y) z.
   Proof.
-    rapply associator_cat_binbiprod.
+    rapply associator_cat_binprod.
   Defined.
 
   Definition cat_binbiprod_twist (x y z : A)
