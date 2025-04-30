@@ -815,10 +815,9 @@ Section Associativity.
     { refine ((cat_binbiprod_corec_rec _ _ $@R _) $@ (_ $@ _)).
       1: napply cat_binbiprod_rec_beta_inl.
       napply cat_idr. }
-    simpl.
     refine ((_ $@L _) $@ _).
     1: napply cat_binbiprod_twist_inl.
-    refine ((cat_assoc _ _ _)^$ $@ _).
+    refine (cat_assoc_opp _ _ _ $@ _).
     refine (_ $@R _).
     napply cat_binbiprod_swap_inr.
   Defined.
