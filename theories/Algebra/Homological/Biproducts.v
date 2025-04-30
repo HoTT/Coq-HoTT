@@ -71,12 +71,10 @@ Section Biproducts.
   Definition cat_biprod_rec_eta {z : A} (f : cat_biprod $-> z)
     : cat_biprod_rec (fun i => f $o cat_biprod_in i) $== f.
   Proof.
-    unfold cat_biprod_rec.
+    unfold cat_biprod_rec, cat_biprod_in.
     napply cate_moveR_eV.
-    napply cat_coprod_in_eta.
-    intros i.
-    refine (cat_coprod_beta I _ i $@ _^$).
-    napply cat_assoc; exact _.
+    napply (cat_coprod_rec_eta _ (fun i => cat_assoc_opp _ _ _) $@ _).
+    napply cat_coprod_eta.
   Defined.
 
   Definition cat_biprod_rec_eta' {z : A} {f f' : forall i, x i $-> z}
@@ -94,7 +92,7 @@ Section Biproducts.
     napply (cate_epic_equiv cate_coprod_prod).
     napply cat_coprod_in_eta.
     intros i.
-    exact (cat_assoc _ _ _ $@ p i $@ (cat_assoc _ _ _)^$).
+    exact (cat_assoc _ _ _ $@ p i $@ cat_assoc_opp _ _ _).
   Defined.
 
 End Biproducts.
@@ -125,36 +123,18 @@ Definition Build_Biproduct (I : Type) `{DecidablePaths I}
   (cat_pr_in_ne : forall i j, i <> j -> cat_pr j $o cat_in i $== zero_morphism)
   : Biproduct I x.
 Proof.
-  (** We can show these directly when building the biproduct, however we would like to refer to them between goals so we prove them here first. *)
-  transparent assert (product : (Product I x)).
-  { snapply Build_Product.
-    - exact cat_biprod.
-    - exact cat_pr.
-    - exact corec.
-    - exact corec_beta.
-    - exact corec_eta. }
-  transparent assert (coproduct : (Coproduct I x)).
-  { snapply Build_Coproduct.
-    - exact cat_biprod.
-    - exact cat_in.
-    - exact rec.
-    - exact rec_beta.
-    - exact rec_eta. }
-  assert (r : (cat_coprod_prod x $== Id cat_biprod)).
-  { napply rec_eta.
-    intros i.
-    refine (rec_beta _ _ _ $@ _ $@ (cat_idl _)^$).
-    napply corec_eta.
-    intros j.
-    refine (corec_beta _ _ _ $@ _^$).
-    destruct (dec_paths i j) as [p|np].
+  snapply Build_Biproduct'.
+  - by napply Build_Product.
+  - by napply Build_Coproduct.
+  - rapply (catie_homotopic (Id cat_biprod)).
+    napply rec_eta; intros i.
+    refine (cat_idl _ $@ _ $@ (rec_beta _ _ _)^$).
+    napply corec_eta; intros j.
+    refine (_ $@ (corec_beta _ _ _)^$).
+    destruct (dec_paths i j) as [p|np]; cbn.
     * destruct p.
       exact (cat_pr_in i).
-    * exact (cat_pr_in_ne i j np). }
-  snapply Build_Biproduct'.
-  - exact product.
-  - exact coproduct.
-  - exact (catie_homotopic _ r^$).
+    * exact (cat_pr_in_ne i j np).
 Defined.
 
 (** An inclusion followed by a projection of the same index is the identity. *)
