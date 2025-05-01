@@ -12,7 +12,7 @@ Class Biproduct (I : Type) `{DecidablePaths I} {A : Type}
   `{HasEquivs A, !IsPointedCat A} {x : I -> A}
   := Build_Biproduct' {
   biproduct_product :: Product I x;
-  biproduct_coproduct :: Coproduct I x;
+  biproduct_coproduct : Coproduct I x;
   catie_cat_coprod_prod :: CatIsEquiv (cat_coprod_prod x);
 }.
 
@@ -840,7 +840,7 @@ Global Instance biproduct_op {I A : Type} {x : I -> A} `{Biproduct I A x}
 Proof.
   snapply Build_Biproduct'.
   (** Products in the opposite category are coproducts in the original category. *)
-  - exact _.
+  - exact biproduct_coproduct.
   (** Coproducts in the opposite category are products in the original category. *)
   - napply coproduct_op.
     exact _.
