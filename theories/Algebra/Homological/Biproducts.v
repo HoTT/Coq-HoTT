@@ -28,29 +28,6 @@ Section Biproducts.
   Definition cat_biprod : A
     := cat_prod I x.
 
-  Definition cat_biprod_pr : forall (i : I), cat_biprod $-> x i
-    := cat_pr.
-
-  Definition cat_biprod_corec {z : A}
-    : (forall i, z $-> x i) -> z $-> cat_biprod
-    := cat_prod_corec I.
-
-  Definition cat_biprod_corec_beta {z : A} (f : forall i, z $-> x i)
-    : forall i, cat_biprod_pr i $o cat_biprod_corec f $== f i
-    := cat_prod_beta I f.
-
-  Definition cat_biprod_corec_eta {z : A} (f : z $-> cat_biprod)
-    : cat_biprod_corec (fun i => cat_biprod_pr i $o f) $== f
-    := cat_prod_eta I f.
-
-  Definition cat_biprod_corec_eta' {z : A} {f f' : forall i, z $-> x i}
-    : (forall i, f i $== f' i) -> cat_biprod_corec f $== cat_biprod_corec f'
-    := cat_prod_corec_eta I.
-
-  Definition cat_biprod_pr_eta {z : A} {f f' : z $-> cat_biprod}
-    : (forall i, cat_biprod_pr i $o f $== cat_biprod_pr i $o f') -> f $== f'
-    := cat_prod_pr_eta I.
-
   Definition cat_biprod_in : forall (i : I), x i $-> cat_biprod
     := fun i => cate_coprod_prod $o cat_in i.
 
@@ -98,7 +75,6 @@ Section Biproducts.
 End Biproducts.
 
 Arguments cat_biprod I {A} x {_ _ _ _ _ _ _ _}.
-Arguments cat_biprod_pr {I A x _ _ _ _ _ _ _ _} i.
 Arguments cat_biprod_in {I A x _ _ _ _ _ _ _ _} i.
 Arguments cate_coprod_prod {I A} x {_ _ _ _ _ _ _ _}.
 
@@ -140,9 +116,9 @@ Defined.
 (** An inclusion followed by a projection of the same index is the identity. *)
 Definition cat_biprod_pr_in (I : Type) {A : Type} (x : I -> A)
   `{Biproduct I A x} (i : I)
-  : cat_biprod_pr i $o cat_biprod_in i $== Id _.
+  : cat_pr i $o cat_biprod_in i $== Id _.
 Proof.
-  unfold cat_biprod_pr, cat_biprod_in.
+  unfold cat_biprod_in.
   refine ((_ $@L _) $@ _).
   { refine ((cate_buildequiv_fun _ $@R _) $@ _).
     napply cat_coprod_beta. }
@@ -155,9 +131,9 @@ Defined.
 (** An inclusion followed by a projection of a different index is zero. *)
 Definition cat_biprod_pr_in_ne (I : Type) {A : Type} (x : I -> A)
   `{Biproduct I A x} {i j : I} (p : i <> j)
-  : cat_biprod_pr j $o cat_biprod_in i $== zero_morphism.
+  : cat_pr j $o cat_biprod_in i $== zero_morphism.
 Proof.
-  unfold cat_biprod_pr, cat_biprod_in.
+  unfold cat_biprod_in.
   refine ((_ $@L _) $@ _).
   { refine ((cate_buildequiv_fun _ $@R _) $@ _).
     napply cat_coprod_beta. }
@@ -175,17 +151,17 @@ Definition cat_biprod_codiag I {A} (x : A) `{Biproduct I A (fun _ => x)}
   : cat_biprod I (fun _ => x) $-> x
   := cat_coprod_codiag x $o (cate_coprod_prod (fun _ => x))^-1$.
 
-(** Compatability of [cat_biprod_rec] and [cat_biprod_corec]. *)
+(** Compatability of [cat_biprod_rec] and [cat_prod_corec]. *)
 Definition cat_biprod_corec_rec I `{DecidablePaths I} {A : Type}
   `{HasEquivs A, !IsPointedCat A} {x y : I -> A}
   `{!Biproduct I x, !Biproduct I y}
   (f : forall i, x i $-> y i)
-  : cat_biprod_corec y (fun i => f i $o cat_biprod_pr i)
+  : cat_prod_corec I (fun i => f i $o cat_pr i)
     $== cat_biprod_rec x (fun i => cat_biprod_in i $o f i).
 Proof.
-  napply cat_biprod_pr_eta.
+  napply cat_prod_pr_eta.
   intros i.
-  refine (cat_biprod_corec_beta _ _ i $@ _).
+  refine (cat_prod_beta _ _ i $@ _).
   napply cat_biprod_in_eta.
   intros j.
   refine (_ $@ (_ $@L (cat_biprod_rec_beta _ _ _)^$) $@ (cat_assoc _ _ _)^$).
@@ -303,13 +279,13 @@ Section BinaryBiproducts.
   Definition cat_binbiprod : A
     := cat_biprod Bool (fun b => if b then x else y).
 
-  Definition cat_binbiprod_pr1 : cat_binbiprod $-> x := cat_biprod_pr true.
-  Definition cat_binbiprod_pr2 : cat_binbiprod $-> y := cat_biprod_pr false.
+  Definition cat_binbiprod_pr1 : cat_binbiprod $-> x := cat_pr true.
+  Definition cat_binbiprod_pr2 : cat_binbiprod $-> y := cat_pr false.
 
   Definition cat_binbiprod_corec {z : A} (f : z $-> x) (g : z $-> y)
     : z $-> cat_binbiprod.
   Proof.
-    napply cat_biprod_corec.
+    napply cat_prod_corec.
     intros [|].
     - exact f.
     - exact g.
@@ -317,17 +293,17 @@ Section BinaryBiproducts.
 
   Definition cat_binbiprod_corec_beta_pr1 {z : A} (f : z $-> x) (g : z $-> y)
     : cat_binbiprod_pr1 $o cat_binbiprod_corec f g $== f
-    := cat_biprod_corec_beta _ _ true.
+    := cat_prod_beta _ _ true.
 
   Definition cat_binbiprod_corec_beta_pr2 {z : A} (f : z $-> x) (g : z $-> y)
     : cat_binbiprod_pr2 $o cat_binbiprod_corec f g $== g
-    := cat_biprod_corec_beta _ _ false.
+    := cat_prod_beta _ _ false.
 
   Definition cat_binbiprod_corec_eta {z : A} (f : z $-> cat_binbiprod)
     : cat_binbiprod_corec (cat_binbiprod_pr1 $o f) (cat_binbiprod_pr2 $o f)
       $== f.
   Proof.
-    napply cat_biprod_pr_eta.
+    napply cat_prod_pr_eta.
     intros [|].
     - exact (cat_binbiprod_corec_beta_pr1 _ _).
     - exact (cat_binbiprod_corec_beta_pr2 _ _).
@@ -338,7 +314,7 @@ Section BinaryBiproducts.
       -> cat_binbiprod_corec f g $== cat_binbiprod_corec f' g'.
   Proof.
     intros p q.
-    napply cat_biprod_corec_eta'.
+    napply cat_prod_corec_eta.
     intros [|].
     - exact p.
     - exact q.
@@ -350,7 +326,7 @@ Section BinaryBiproducts.
       -> f $== f'.
   Proof.
     intros p q.
-    napply cat_biprod_pr_eta.
+    napply cat_prod_pr_eta.
     intros [|].
     - exact p.
     - exact q.
@@ -480,7 +456,7 @@ Proof.
   unfold cat_binbiprod_corec, cat_binbiprod_rec.
   nrefine (_ $@ _ $@ _).
   2: snapply cat_biprod_corec_rec; by intros [|].
-  1: snapply cat_biprod_corec_eta'; by intros [|].
+  1: snapply cat_prod_corec_eta; by intros [|].
   snapply cat_biprod_rec_eta'; by intros [|].
 Defined.
 
