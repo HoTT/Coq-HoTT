@@ -98,21 +98,20 @@ Local Open Scope trunc_scope.
 (** ** Connectivity of cofibers *)
 
 (** The cofiber of an [n]-connected map is [n.+1]-connected. *)
-Definition isconnnected_cofiber (n : trunc_index) {X Y : Type} (f : X -> Y)
+Definition isconnected_cofiber (n : trunc_index) {X Y : Type} (f : X -> Y)
   {fc : IsConnMap n f}
   : IsConnected n.+1 (Cofiber f).
 Proof.
   apply isconnected_from_elim.
   intros C H' g.
   exists (g (cf_apex _)).
-  snapply cofiber_ind.
+  snapply cofiber_ind; cbn beta.
   - rapply (conn_map_elim n f).
     intros x.
     exact (ap g (cfglue f x)).
   - exists idpath.
     intros x.
-    lhs snapply transport_paths_Fl.
-    apply moveR_Vp.
+    transport_paths Fl.
     rhs napply concat_p1.
     napply conn_map_comp.
 Defined.
