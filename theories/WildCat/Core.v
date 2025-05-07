@@ -356,7 +356,7 @@ Proof.
   - intros a b f g p; exact (fmap2 G (fmap2 F p)).
   - intros a; exact (fmap2 G (fmap_id F a) $@ fmap_id G (F a)).
   - intros a b c f g.
-    refine (fmap2 G (fmap_comp F f g) $@ _).
+    lhs' rapply (fmap2 G (fmap_comp F f g)).
     exact (fmap_comp G (fmap F f) (fmap F g)).
 Defined.
 
@@ -401,21 +401,21 @@ Definition gpd_hV_h {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : b $-> a)
 Definition gpd_moveL_1M {A} `{Is1Gpd A} {x y : A} {p q : x $-> y}
   (r : p $o q^$ $== Id _) : p $== q.
 Proof.
-  refine ((cat_idr p)^$ $@ (p $@L (gpd_issect q)^$) $@ (cat_assoc _ _ _)^$ $@ _).
+  lhs' exact ((cat_idr p)^$ $@ (p $@L (gpd_issect q)^$) $@ (cat_assoc _ _ _)^$).
   exact ((r $@R q) $@ cat_idl q).
 Defined.
 
 Definition gpd_moveR_V1 {A} `{Is1Gpd A} {x y : A} {p : x $-> y}
   {q : y $-> x} (r : Id _ $== p $o q) : p^$ $== q.
 Proof.
-  refine ((cat_idr p^$)^$ $@ (p^$ $@L r) $@ _).
+  lhs' exact ((cat_idr p^$)^$ $@ (p^$ $@L r)).
   apply gpd_V_hh.
 Defined.
 
 Definition gpd_moveR_M1 {A : Type} `{Is1Gpd A} {x y : A} {p q : x $-> y}
   (r : Id _ $== p^$ $o q) : p $== q.
 Proof.
-  refine (_ $@ (cat_assoc _ _ _)^$ $@ ((gpd_isretr p) $@R q) $@ (cat_idl q)).
+  rhs_V' exact ((cat_assoc _ _ _)^$ $@ (gpd_isretr p $@R q) $@ cat_idl q).
   exact ((cat_idr p)^$ $@ (p $@L r)).
 Defined.
 
@@ -430,8 +430,8 @@ Defined.
 Definition gpd_moveL_1V {A : Type} `{Is1Gpd A} {x y : A} {p : x $-> y}
   {q : y $-> x} (r : p $o q $== Id _) : p $== q^$.
 Proof.
-  refine (_ $@ (cat_idl q^$)).
-  refine (_ $@ (r $@R q^$)).
+  rhs_V' apply cat_idl.
+  rhs_V' exact (r $@R q^$).
   exact (gpd_hh_V _ _)^$.
 Defined.
 
@@ -475,17 +475,16 @@ Definition gpd_rev_pp {A} `{Is1Gpd A} {a b c : A} (f : b $-> c) (g : a $-> b)
   : (f $o g)^$ $== g^$ $o f^$.
 Proof.
   apply gpd_moveR_V1.
-  refine (_ $@ cat_assoc _ _ _).
+  rhs_V' napply cat_assoc.
   apply gpd_moveL_hV.
-  refine (cat_idl _ $@ _).
+  lhs' napply cat_idl.
   exact (gpd_hh_V _ _)^$.
 Defined.
 
 Definition gpd_rev_1 {A} `{Is1Gpd A} {a : A} : (Id a)^$ $== Id a.
 Proof.
-  refine ((gpd_rev2 (gpd_issect (Id a)))^$ $@ _).
-  refine (gpd_rev_pp _ _ $@ _).
-  apply gpd_isretr.
+  rhs_V' exact (gpd_isretr (Id a)).
+  symmetry; apply cat_idl.
 Defined.
 
 Definition gpd_rev_rev {A} `{Is1Gpd A} {a0 a1 : A} (g : a0 $== a1)
