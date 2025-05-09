@@ -102,12 +102,24 @@ Defined.
 
 (** ** Decreasing connectedness *)
 
-(** An [n.+1]-connected type is also [n]-connected.  This obviously can't be an [Instance]! *)
+(** An [n.+1]-connected type is also [n]-connected. *)
 Definition isconnected_pred n A `{IsConnected n.+1 A}
   : IsConnected n A.
 Proof.
   apply isconnected_from_elim; intros C ? f.
   exact (isconnected_elim n.+1 C f).
+Defined.
+
+(* As an instance, this would cause loops, but it can be added as an immediate hint. *)
+Hint Immediate isconnected_pred : typeclass_instances.
+
+(** A version explicitly using the predecessor function. *)
+Definition isconnected_pred' (n : trunc_index) (A : Type) `{IsConnected n A}
+  : IsConnected n.-1 A.
+Proof.
+  destruct n.
+  1: unfold IsConnected; simpl; apply istrunc_truncation.
+  by apply isconnected_pred.
 Defined.
 
 (** A [k]-connected type is [n]-connected, when [k >= n].  We constrain [k] by making it of the form [n +2+ m], which makes the induction go through smoothly. *)
@@ -116,9 +128,7 @@ Definition isconnected_pred_add n m A `{H : IsConnected (n +2+ m) A}
 Proof.
   induction n.
   1: assumption.
-  apply IHn.
-  apply isconnected_pred.
-  assumption.
+  rapply IHn.
 Defined.
 
 (** A version with the order of summands swapped, which is sometimes handy, e.g. in the next two results. *)
@@ -138,6 +148,11 @@ Definition merely_isconnected n A `{IsConnected n.+1 A}
 Definition is0connected_isconnected (n : trunc_index) A `{IsConnected n.+2 A}
   : IsConnected 0 A
   := isconnected_pred_add' n 0 A.
+
+Definition isconnmap_pred' (n : trunc_index) {A B : Type} (f : A -> B)
+  `{IsConnMap n _ _ f}
+  : IsConnMap n.-1 f
+  := fun b => isconnected_pred' n _.
 
 Definition isconnmap_pred_add n m A B (f : A -> B) `{IsConnMap (n +2+ m) _ _ f}
   : IsConnMap m f.
