@@ -1,0 +1,247 @@
+<html>
+<head>
+<title>Classes.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Classes.v</h1>
+
+<div class="code" title="File: Classes.v
+Line: 1
+Time: 0.02s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Classes *)
+
+(** ** Injective Functions *)
+
+</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsInjective {A B : Type} (f : A -&gt; B)
+  := injective : forall x y, f x = f y -&gt; x = y.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments injective {A B} f {_} _ _.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition neq_isinj {A B : Type} (f : A -&gt; B) `{!IsInjective f}
+  : forall x y, x &lt;&gt; y -&gt; f x &lt;&gt; f y.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y np q.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply np, (injective f).</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact q.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isinj_idmap A : @IsInjective A A idmap
+  := fun x y =&gt; idmap.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Hint Unfold IsInjective : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isinj_compose {A B C f g} `{IsInjective B C g} `{IsInjective A B f}
+  : IsInjective (g o f).</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply (injective f), (injective g).</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export] Hint Immediate isinj_compose : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isinj_cancelL {A B C : Type} (f : A -&gt; B) (g : B -&gt; C)
+  `{!IsInjective (g o f)}
+  : IsInjective f.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (injective (g o f)).</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap g p).</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Antisymmetric Relations *)
+
+</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class AntiSymmetric {A : Type} (R : A -&gt; A -&gt; Type) : Type
+  := antisymmetry : forall x y, R x y -&gt; R y x -&gt; x = y.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments antisymmetry {A} R {AntiSymmetric} x y _ _.</pre>
+</div>
+<div class="code" title="File: Classes.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

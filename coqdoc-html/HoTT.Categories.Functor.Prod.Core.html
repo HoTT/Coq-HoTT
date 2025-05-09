@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Functor.Prod.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Functor.Prod.Core</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab728"></a><h1 class="section">Functors involving product categories</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#"><span class="id" title="library">Category.Prod</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.Prod.html#"><span class="id" title="library">Types.Prod</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="fst_type" class="idref" href="#fst_type"><span class="id" title="abbreviation">fst_type</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a>.<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="snd_type" class="idref" href="#snd_type"><span class="id" title="abbreviation">snd_type</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a>.<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="pair_type" class="idref" href="#pair_type"><span class="id" title="abbreviation">pair_type</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#pair"><span class="id" title="constructor">pair</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab729"></a><h2 class="section">First and second projections from a product precategory</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="proj" class="idref" href="#proj"><span class="id" title="section">proj</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="C:1" class="idref" href="#C:1"><span class="id" title="binder">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="D:2" class="idref" href="#D:2"><span class="id" title="binder">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="fst" class="idref" href="#fst"><span class="id" title="definition">fst</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.D"><span class="id" title="variable">D</span></a>) <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.C"><span class="id" title="variable">C</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a> (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.D"><span class="id" title="variable">D</span></a>) <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.C"><span class="id" title="variable">C</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ @<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="snd" class="idref" href="#snd"><span class="id" title="definition">snd</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.D"><span class="id" title="variable">D</span></a>) <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.D"><span class="id" title="variable">D</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a> (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.D"><span class="id" title="variable">D</span></a>) <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj.D"><span class="id" title="variable">D</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ @<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#proj"><span class="id" title="section">proj</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab730"></a><h2 class="section">Product of two functors from the same domain</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="prod" class="idref" href="#prod"><span class="id" title="section">prod</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="prod.C" class="idref" href="#prod.C"><span class="id" title="variable">C</span></a> <a id="prod.D" class="idref" href="#prod.D"><span class="id" title="variable">D</span></a> <a id="prod.D'" class="idref" href="#prod.D'"><span class="id" title="variable">D'</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="prod" class="idref" href="#prod"><span class="id" title="definition">prod</span></a> (<a id="F:6" class="idref" href="#F:6"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.D"><span class="id" title="variable">D</span></a>) (<a id="F':7" class="idref" href="#F':7"><span class="id" title="binder">F'</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.D'"><span class="id" title="variable">D'</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.C"><span class="id" title="variable">C</span></a> (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.D'"><span class="id" title="variable">D'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.C"><span class="id" title="variable">C</span></a> (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod.D'"><span class="id" title="variable">D'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="c:11" class="idref" href="#c:11"><span class="id" title="binder">c</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#F:6"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#c:11"><span class="id" title="variable">c</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#F':7"><span class="id" title="variable">F'</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#c:11"><span class="id" title="variable">c</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:8" class="idref" href="#s:8"><span class="id" title="binder">s</span></a> <a id="d:9" class="idref" href="#d:9"><span class="id" title="binder">d</span></a> <a id="m:10" class="idref" href="#m:10"><span class="id" title="binder">m</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#F:6"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">_1</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#m:10"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#F':7"><span class="id" title="variable">F'</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">_1</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#m:10"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Types.Prod.html#path_prod'"><span class="id" title="definition">path_prod'</span></a> (<a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#F:6"><span class="id" title="variable">F</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#F':7"><span class="id" title="variable">F'</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Types.Prod.html#path_prod'"><span class="id" title="definition">path_prod'</span></a> (<a class="idref" href="HoTT.Categories.Functor.Core.html#identity_of"><span class="id" title="projection">identity_of</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#F:6"><span class="id" title="variable">F</span></a> <span class="id" title="var">_</span>) (<a class="idref" href="HoTT.Categories.Functor.Core.html#identity_of"><span class="id" title="projection">identity_of</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#F':7"><span class="id" title="variable">F'</span></a> <span class="id" title="var">_</span>)).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod"><span class="id" title="section">prod</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Infix</span> <a id="30a334f79da6d13c1f77736f58b3db0f" class="idref" href="#30a334f79da6d13c1f77736f58b3db0f"><span class="id" title="notation">&quot;</span></a>×" := <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod"><span class="id" title="definition">prod</span></a> : <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab731"></a><h2 class="section">Pairing of two functors</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="pair" class="idref" href="#pair"><span class="id" title="section">pair</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="pair.C" class="idref" href="#pair.C"><span class="id" title="variable">C</span></a> <a id="pair.D" class="idref" href="#pair.D"><span class="id" title="variable">D</span></a> <a id="pair.C'" class="idref" href="#pair.C'"><span class="id" title="variable">C'</span></a> <a id="pair.D'" class="idref" href="#pair.D'"><span class="id" title="variable">D'</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="pair.F" class="idref" href="#pair.F"><span class="id" title="variable">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.D"><span class="id" title="variable">D</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="pair.F'" class="idref" href="#pair.F'"><span class="id" title="variable">F'</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.C'"><span class="id" title="variable">C'</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.D'"><span class="id" title="variable">D'</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pair" class="idref" href="#pair"><span class="id" title="definition">pair</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.C'"><span class="id" title="variable">C'</span></a>) (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.D'"><span class="id" title="variable">D'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#30a334f79da6d13c1f77736f58b3db0f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#fst"><span class="id" title="definition">fst</span></a><a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#30a334f79da6d13c1f77736f58b3db0f"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#30a334f79da6d13c1f77736f58b3db0f"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#30a334f79da6d13c1f77736f58b3db0f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair.F'"><span class="id" title="variable">F'</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#snd"><span class="id" title="definition">snd</span></a><a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#30a334f79da6d13c1f77736f58b3db0f"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair"><span class="id" title="section">pair</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Notation</span> <a id="91cf4b5621512d94ad006d79bbb83f61" class="idref" href="#91cf4b5621512d94ad006d79bbb83f61"><span class="id" title="notation">&quot;</span></a>( x , y , .. , z )" := (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair"><span class="id" title="definition">pair</span></a> .. (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair"><span class="id" title="definition">pair</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) .. <span class="id" title="var">z</span>) : <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab732"></a><h2 class="section">Partially applied functors out of a product precategory</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="induced" class="idref" href="#induced"><span class="id" title="section">induced</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="induced.C" class="idref" href="#induced.C"><span class="id" title="variable">C</span></a> <a id="induced.D" class="idref" href="#induced.D"><span class="id" title="variable">D</span></a> <a id="induced.E" class="idref" href="#induced.E"><span class="id" title="variable">E</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="induced.F" class="idref" href="#induced.F"><span class="id" title="variable">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Category.Prod.html#7af51393f97117cfe17831a51eb0b762"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.D"><span class="id" title="variable">D</span></a>) <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.E"><span class="id" title="variable">E</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">core_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Ltac</span> <span class="id" title="var">t</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">intros</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">rewrite</span> &lt;- ?<a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a>, &lt;- ?<a class="idref" href="HoTT.Categories.Functor.Core.html#identity_of"><span class="id" title="projection">identity_of</span></a>, ?<a class="idref" href="HoTT.Categories.Category.Core.html#left_identity"><span class="id" title="projection">left_identity</span></a>, ?<a class="idref" href="HoTT.Categories.Category.Core.html#right_identity"><span class="id" title="projection">right_identity</span></a>; <span class="id" title="tactic">simpl</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Note: This is just the currying exponential law.  TODO: Come up with a better name for this? 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="induced_fst" class="idref" href="#induced_fst"><span class="id" title="definition">induced_fst</span></a> (<a id="d:22" class="idref" href="#d:22"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.D"><span class="id" title="variable">D</span></a>) : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.E"><span class="id" title="variable">E</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.E"><span class="id" title="variable">E</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="c:24" class="idref" href="#c:24"><span class="id" title="binder"><span id="c:26" class="id">c</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#c:24"><span class="id" title="variable">c</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">d</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a id="m:23" class="idref" href="#m:23"><span class="id" title="binder"><span id="m:25" class="id">m</span></span></a> ⇒ @<a class="idref" href="HoTT.Categories.Functor.Core.html#morphism_of"><span class="id" title="projection">morphism_of</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#m:23"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#identity"><span class="id" title="projection">identity</span></a> <span class="id" title="var">d</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="induced_snd" class="idref" href="#induced_snd"><span class="id" title="definition">induced_snd</span></a> (<a id="c:27" class="idref" href="#c:27"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.C"><span class="id" title="variable">C</span></a>) : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.E"><span class="id" title="variable">E</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Categories.Functor.Core.html#Build_Functor"><span class="id" title="constructor">Build_Functor</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.E"><span class="id" title="variable">E</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="d:29" class="idref" href="#d:29"><span class="id" title="binder"><span id="d:31" class="id">d</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">c</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#d:29"><span class="id" title="variable">d</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a id="m:28" class="idref" href="#m:28"><span class="id" title="binder"><span id="m:30" class="id">m</span></span></a> ⇒ @<a class="idref" href="HoTT.Categories.Functor.Core.html#morphism_of"><span class="id" title="projection">morphism_of</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Category.Core.html#identity"><span class="id" title="projection">identity</span></a> <span class="id" title="var">c</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#m:28"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#induced"><span class="id" title="section">induced</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="FunctorProdCoreNotations" class="idref" href="#FunctorProdCoreNotations"><span class="id" title="module">FunctorProdCoreNotations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Infix</span> <a id="e57dd629c4eca81888eb3964e79cd7ee" class="idref" href="#e57dd629c4eca81888eb3964e79cd7ee"><span class="id" title="notation">&quot;</span></a>×" := <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#prod"><span class="id" title="definition">prod</span></a> : <span class="id" title="var">functor_scope</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="c44be6143d06a045ea931bd04d46a99e" class="idref" href="#c44be6143d06a045ea931bd04d46a99e"><span class="id" title="notation">&quot;</span></a>( x , y , .. , z )" := (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair"><span class="id" title="definition">pair</span></a> .. (<a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#pair"><span class="id" title="definition">pair</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) .. <span class="id" title="var">z</span>) : <span class="id" title="var">functor_scope</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Functor.Prod.Core.html#FunctorProdCoreNotations"><span class="id" title="module">FunctorProdCoreNotations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

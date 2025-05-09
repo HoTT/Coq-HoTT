@@ -1,0 +1,115 @@
+<html>
+<head>
+<title>SetCone.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for SetCone.v</h1>
+
+<div class="code" title="File: SetCone.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics Types.Unit.</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 1
+Time: 0.015s">
+<div class="time" style="width: 55.555555555556%"></div>
+<pre>
+Require Import Colimits.Pushout.</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 2
+Time: 0.019s">
+<div class="time" style="width: 70.37037037037%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Cones of HSets *)
+
+</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section SetCone.</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A B : HSet} (f : A -&gt; B).</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition setcone := Trunc 0 (Pushout@{_ _ Set _} f (const_tt A)).</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance istrunc_setcone : IsHSet setcone := _.</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition setcone_point : setcone := tr (push (inr tt)).</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End SetCone.</pre>
+</div>
+<div class="code" title="File: SetCone.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

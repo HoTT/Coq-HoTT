@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.Tactics.napply</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.Tactics.napply</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Testing the different <span class="inlinecode"><span class="id" title="tactic">apply</span></span> tacitcs in the library. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test1_type" class="idref" href="#test1_type"><span class="id" title="definition">test1_type</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Tests.Tactics.napply.html#n:1"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> 3<a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>.<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> : <a class="idref" href="HoTT.Tests.Tactics.napply.html#test1_type"><span class="id" title="definition">test1_type</span></a> := <span class="id" title="keyword">ltac</span>:(<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#exist"><span class="id" title="constructor">exist</span></a>).<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> : <a class="idref" href="HoTT.Tests.Tactics.napply.html#test1_type"><span class="id" title="definition">test1_type</span></a> := <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Overture.html#exist"><span class="id" title="constructor">exist</span></a>).<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> : <a class="idref" href="HoTT.Tests.Tactics.napply.html#test1_type"><span class="id" title="definition">test1_type</span></a> := <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Overture.html#exist"><span class="id" title="constructor">exist</span></a>).<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> : <a class="idref" href="HoTT.Tests.Tactics.napply.html#test1_type"><span class="id" title="definition">test1_type</span></a> := <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">tapply</span> <a class="idref" href="HoTT.Basics.Overture.html#exist"><span class="id" title="constructor">exist</span></a>).<br/>
+<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> : <a class="idref" href="HoTT.Tests.Tactics.napply.html#test1_type"><span class="id" title="definition">test1_type</span></a> := <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Overture.html#exist"><span class="id" title="constructor">exist</span></a>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Testing deprecated tactics 
+</div>
+<div class="code">
+<span class="id" title="var">Fail</span> #[<span class="id" title="var">warnings</span>="+deprecated-tactic-notation-since-2025-03-11"]<br/>
+<span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> : <a class="idref" href="HoTT.Tests.Tactics.napply.html#test1_type"><span class="id" title="definition">test1_type</span></a> := <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">nrapply</span> <span class="id" title="var">exist</span>).<br/>
+<span class="id" title="var">Fail</span> #[<span class="id" title="var">warnings</span>="+deprecated-tactic-notation-since-2025-03-11"]<br/>
+<span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> : <a class="idref" href="HoTT.Tests.Tactics.napply.html#test1_type"><span class="id" title="definition">test1_type</span></a> := <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">snrapply</span> <span class="id" title="var">exist</span>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

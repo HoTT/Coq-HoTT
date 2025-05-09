@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.WildCat.Category</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.WildCat.Category</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a> <a class="idref" href="HoTT.WildCat.NatTrans.html#"><span class="id" title="library">WildCat.NatTrans</span></a> <a class="idref" href="HoTT.WildCat.FunctorCat.html#"><span class="id" title="library">WildCat.FunctorCat</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1941"></a><h1 class="section">Category of categories</h1>
+
+<div class="paragraph"> </div>
+
+ TODO: make into a bicategory 
+<div class="paragraph"> </div>
+
+<a id="lab1942"></a><h2 class="section">Definition</h2>
+
+<div class="paragraph"> </div>
+
+ A category is a <span class="inlinecode"><span class="id" title="keyword">Type</span></span> together with a proof that it is a 1-category. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Record</span> <a id="Category" class="idref" href="#Category"><span class="id" title="definition, record"><span id="Category_rect" class="id"><span id="Category_ind" class="id"><span id="Category_rec" class="id"><span id="Category_sind" class="id">Category</span></span></span></span></span></a> := {<br/>
+&nbsp;&nbsp;<a id="category_carrier" class="idref" href="#category_carrier"><span class="id" title="projection">category_carrier</span></a> :&gt; <span class="id" title="keyword">Type</span>;<br/>
+&nbsp;&nbsp;<a id="isgraph_category_carrier" class="idref" href="#isgraph_category_carrier"><span class="id" title="projection">isgraph_category_carrier</span></a> :: <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> <a class="idref" href="HoTT.WildCat.Category.html#category_carrier:2"><span class="id" title="method">category_carrier</span></a>;<br/>
+&nbsp;&nbsp;<a id="is01cat_category_carrier" class="idref" href="#is01cat_category_carrier"><span class="id" title="projection">is01cat_category_carrier</span></a> :: <a class="idref" href="HoTT.WildCat.Core.html#Is01Cat"><span class="id" title="class">Is01Cat</span></a> <a class="idref" href="HoTT.WildCat.Category.html#category_carrier:2"><span class="id" title="method">category_carrier</span></a>;<br/>
+&nbsp;&nbsp;<a id="is2graph_category_carrier" class="idref" href="#is2graph_category_carrier"><span class="id" title="projection">is2graph_category_carrier</span></a> :: <a class="idref" href="HoTT.WildCat.Core.html#Is2Graph"><span class="id" title="class">Is2Graph</span></a> <a class="idref" href="HoTT.WildCat.Category.html#category_carrier:2"><span class="id" title="method">category_carrier</span></a>;<br/>
+&nbsp;&nbsp;<a id="is1cat_category_carrier" class="idref" href="#is1cat_category_carrier"><span class="id" title="projection">is1cat_category_carrier</span></a> :: <a class="idref" href="HoTT.WildCat.Core.html#Is1Cat"><span class="id" title="class">Is1Cat</span></a> <a class="idref" href="HoTT.WildCat.Category.html#category_carrier:2"><span class="id" title="method">category_carrier</span></a><br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Morphisms of categories are given by functors. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isgraph_cat" class="idref" href="#isgraph_cat"><span class="id" title="instance">isgraph_cat</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> <a class="idref" href="HoTT.WildCat.Category.html#Category"><span class="id" title="record">Category</span></a><br/>
+&nbsp;&nbsp;:= { <a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="method">Hom</span></a> <a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> <a id="B:8" class="idref" href="#B:8"><span class="id" title="binder">B</span></a> := <a class="idref" href="HoTT.WildCat.FunctorCat.html#Fun11"><span class="id" title="record">Fun11</span></a> <a class="idref" href="HoTT.WildCat.Category.html#A:7"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.WildCat.Category.html#B:8"><span class="id" title="variable">B</span></a> }.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+2-morphisms of categories are given by natural transformations. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is2graph_cat" class="idref" href="#is2graph_cat"><span class="id" title="instance">is2graph_cat</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is2Graph"><span class="id" title="class">Is2Graph</span></a> <a class="idref" href="HoTT.WildCat.Category.html#Category"><span class="id" title="record">Category</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="A:9" class="idref" href="#A:9"><span class="id" title="binder">A</span></a> <a id="B:10" class="idref" href="#B:10"><span class="id" title="binder">B</span></a> ⇒ <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+3-morphisms of categories are given by "wild modifications" - the underlying data of a modification, subject to no coherence conditions. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is3graph_cat" class="idref" href="#is3graph_cat"><span class="id" title="instance">is3graph_cat</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is3Graph"><span class="id" title="class">Is3Graph</span></a> <a class="idref" href="HoTT.WildCat.Category.html#Category"><span class="id" title="record">Category</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a> <a id="B:12" class="idref" href="#B:12"><span class="id" title="binder">B</span></a> ⇒ <span class="id" title="var">_</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

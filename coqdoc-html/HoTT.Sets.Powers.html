@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Sets.Powers</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Sets.Powers</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a> <a class="idref" href="HoTT.Universes.TruncType.html#"><span class="id" title="library">TruncType</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Universes.Smallness.html#"><span class="id" title="library">Universes.Smallness</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Card.html#"><span class="id" title="library">Spaces.Card</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1422"></a><h1 class="section">Definition of Power types</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;The&nbsp;definition&nbsp;is&nbsp;only&nbsp;used&nbsp;in&nbsp;Hartogs.v&nbsp;to&nbsp;allow&nbsp;defining&nbsp;a&nbsp;coercion,&nbsp;and&nbsp;one&nbsp;place&nbsp;below.&nbsp;&nbsp;Everywhere&nbsp;else&nbsp;we&nbsp;prefer&nbsp;to&nbsp;write&nbsp;out&nbsp;the&nbsp;definition&nbsp;for&nbsp;clarity.&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="power_type" class="idref" href="#power_type"><span class="id" title="definition">power_type</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Sets.Powers.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1423"></a><h1 class="section">Iterated powers</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Injection_power" class="idref" href="#Injection_power"><span class="id" title="lemma">Injection_power</span></a> {<a id="PR:2" class="idref" href="#PR:2"><span class="id" title="binder">PR</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#PropResizing"><span class="id" title="class">PropResizing</span></a>} <a id="X:3" class="idref" href="#X:3"><span class="id" title="binder">X</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:3"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:3"><span class="id" title="variable">X</span></a> (<a class="idref" href="HoTT.Sets.Powers.html#X:3"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">HX</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">set</span> (<span class="id" title="var">f</span> (<a id="x:4" class="idref" href="#x:4"><span class="id" title="binder"><span id="x:6" class="id">x</span></span></a> : <span class="id" title="var">X</span>) := <span class="id" title="keyword">fun</span> <a id="y:5" class="idref" href="#y:5"><span class="id" title="binder"><span id="y:7" class="id">y</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#Build_HProp"><span class="id" title="abbreviation">Build_HProp</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#smalltype"><span class="id" title="method">smalltype</span></a> (<a class="idref" href="HoTT.Sets.Powers.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Sets.Powers.html#y:5"><span class="id" title="variable">y</span></a>))).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">x'</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Basics.Overture.html#equiv_smalltype"><span class="id" title="method">equiv_smalltype</span></a>. <span class="id" title="tactic">change</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span> <span class="id" title="var">x'</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#equiv_smalltype"><span class="id" title="method">equiv_smalltype</span></a>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="power_iterated" class="idref" href="#power_iterated"><span class="id" title="definition">power_iterated</span></a> <a id="X:8" class="idref" href="#X:8"><span class="id" title="binder">X</span></a> <a id="n:9" class="idref" href="#n:9"><span class="id" title="binder">n</span></a> := <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_iter"><span class="id" title="abbreviation">nat_iter</span></a> <a class="idref" href="HoTT.Sets.Powers.html#n:9"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Sets.Powers.html#power_type"><span class="id" title="definition">power_type</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:8"><span class="id" title="variable">X</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="power_iterated_shift" class="idref" href="#power_iterated_shift"><span class="id" title="definition">power_iterated_shift</span></a> <a id="X:10" class="idref" href="#X:10"><span class="id" title="binder">X</span></a> <a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Sets.Powers.html#power_iterated"><span class="id" title="definition">power_iterated</span></a> (<a class="idref" href="HoTT.Sets.Powers.html#X:10"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>) <a class="idref" href="HoTT.Sets.Powers.html#n:11"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Sets.Powers.html#power_iterated"><span class="id" title="definition">power_iterated</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:10"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Sets.Powers.html#n:11"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_iter_succ_r"><span class="id" title="definition">nat_iter_succ_r</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="hset_power" class="idref" href="#hset_power"><span class="id" title="instance">hset_power</span></a> {<a id="UA:12" class="idref" href="#UA:12"><span class="id" title="binder">UA</span></a> : <a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>} (<a id="X:13" class="idref" href="#X:13"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HSet"><span class="id" title="abbreviation">HSet</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> (<a class="idref" href="HoTT.Sets.Powers.html#X:13"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#hprop_allpath"><span class="id" title="lemma">hprop_allpath</span></a>. <span class="id" title="tactic">intros</span> <span class="id" title="var">H</span> <span class="id" title="var">H'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Types.Arrow.html#equiv_path_arrow"><span class="id" title="definition">equiv_path_arrow</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">f</span> [<span class="id" title="var">g</span> <span class="id" title="var">Hfg</span> <span class="id" title="var">Hgf</span> <span class="id" title="var">_</span>]].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<span class="id" title="var">Hfg</span> <span class="id" title="var">H</span>), &lt;- (<span class="id" title="var">Hfg</span> <span class="id" title="var">H'</span>). <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="hset_power_iterated" class="idref" href="#hset_power_iterated"><span class="id" title="instance">hset_power_iterated</span></a> {<a id="UA:14" class="idref" href="#UA:14"><span class="id" title="binder">UA</span></a> : <a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>} (<a id="X:15" class="idref" href="#X:15"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HSet"><span class="id" title="abbreviation">HSet</span></a>) <a id="n:16" class="idref" href="#n:16"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> (<a class="idref" href="HoTT.Sets.Powers.html#power_iterated"><span class="id" title="definition">power_iterated</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:15"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Sets.Powers.html#n:16"><span class="id" title="variable">n</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_iter_invariant"><span class="id" title="definition">nat_iter_invariant</span></a> <span class="id" title="var">n</span> <a class="idref" href="HoTT.Sets.Powers.html#power_type"><span class="id" title="definition">power_type</span></a> (<span class="id" title="keyword">fun</span> <a id="A:17" class="idref" href="#A:17"><span class="id" title="binder"><span id="A:18" class="id">A</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <a class="idref" href="HoTT.Sets.Powers.html#A:17"><span class="id" title="variable">A</span></a>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">Y</span> <span class="id" title="var">HS</span>. <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Sets.Powers.html#hset_power"><span class="id" title="instance">hset_power</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Injection_power_iterated" class="idref" href="#Injection_power_iterated"><span class="id" title="lemma">Injection_power_iterated</span></a> {<a id="UA:19" class="idref" href="#UA:19"><span class="id" title="binder">UA</span></a> : <a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>} {<a id="PR:20" class="idref" href="#PR:20"><span class="id" title="binder">PR</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#PropResizing"><span class="id" title="class">PropResizing</span></a>} (<a id="X:21" class="idref" href="#X:21"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HSet"><span class="id" title="abbreviation">HSet</span></a>) <a id="n:22" class="idref" href="#n:22"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:21"><span class="id" title="variable">X</span></a> (<a class="idref" href="HoTT.Sets.Powers.html#power_iterated"><span class="id" title="definition">power_iterated</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:21"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Sets.Powers.html#n:22"><span class="id" title="variable">n</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Spaces.Card.html#Injection_trans"><span class="id" title="lemma">Injection_trans</span></a>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">exact</span> <span class="id" title="var">IHn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Sets.Powers.html#Injection_power"><span class="id" title="lemma">Injection_power</span></a>. <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="infinite_inject" class="idref" href="#infinite_inject"><span class="id" title="lemma">infinite_inject</span></a> <a id="X:23" class="idref" href="#X:23"><span class="id" title="binder">X</span></a> <a id="Y:24" class="idref" href="#Y:24"><span class="id" title="binder">Y</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Card.html#infinite"><span class="id" title="definition">infinite</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:23"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#Injection"><span class="id" title="definition">Injection</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:23"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Sets.Powers.html#Y:24"><span class="id" title="variable">Y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#infinite"><span class="id" title="definition">infinite</span></a> <a class="idref" href="HoTT.Sets.Powers.html#Y:24"><span class="id" title="variable">Y</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Card.html#Injection_trans"><span class="id" title="lemma">Injection_trans</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="infinite_power_iterated" class="idref" href="#infinite_power_iterated"><span class="id" title="lemma">infinite_power_iterated</span></a> {<a id="UA:25" class="idref" href="#UA:25"><span class="id" title="binder">UA</span></a> : <a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>} {<a id="PR:26" class="idref" href="#PR:26"><span class="id" title="binder">PR</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#PropResizing"><span class="id" title="class">PropResizing</span></a>} (<a id="X:27" class="idref" href="#X:27"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HSet"><span class="id" title="abbreviation">HSet</span></a>) <a id="n:28" class="idref" href="#n:28"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Card.html#infinite"><span class="id" title="definition">infinite</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:27"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Card.html#infinite"><span class="id" title="definition">infinite</span></a> (<a class="idref" href="HoTT.Sets.Powers.html#power_iterated"><span class="id" title="definition">power_iterated</span></a> <a class="idref" href="HoTT.Sets.Powers.html#X:27"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Sets.Powers.html#n:28"><span class="id" title="variable">n</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Sets.Powers.html#infinite_inject"><span class="id" title="lemma">infinite_inject</span></a>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Sets.Powers.html#Injection_power_iterated"><span class="id" title="lemma">Injection_power_iterated</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

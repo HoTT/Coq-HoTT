@@ -1,0 +1,137 @@
+<html>
+<head>
+<title>EvaluationFibration.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for EvaluationFibration.v</h1>
+
+<div class="code" title="File: EvaluationFibration.v
+Line: 1
+Time: 0.095s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types Truncations.Core Pointed.Core Homotopy.Cover.</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Evaluation fibrations and self-maps *)
+
+(** The type of unpointed self maps of A, pointed at the identity map. *)</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition selfmaps (A : Type) : pType := [A -&gt; A, idmap].</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The unrestricted evaluation map. *)</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ev (A : pType) : selfmaps A -&gt;* A
+  := Build_pMap (fun f : selfmaps A =&gt; f pt) idpath.</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The evaluation fibration of an unpointed map [X -&gt; A]. *)</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition evfib {X : pType} {A : Type} (f : X -&gt; A) : comp (X -&gt; A) (tr f) -&gt; A
+  := fun g =&gt; g.1 pt.</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [f] is pointed, then the evaluation fibration of [f] is too. *)</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 1.0526315789474%"></div>
+<pre>Definition pevfib {A X : pType} (f : X -&gt;* A) : pcomp (X -&gt; A) f -&gt;* A
+  := Build_pMap (fun g : pcomp (X -&gt; A) f =&gt; g.1 pt) (point_eq f).</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The evaluation map of the identity. *)</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ev1 (A : pType) := pevfib (A:=A) pmap_idmap.</pre>
+</div>
+<div class="code" title="File: EvaluationFibration.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

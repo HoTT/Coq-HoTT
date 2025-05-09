@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.List.Paths</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.List.Paths</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Equivalences.html#"><span class="id" title="library">Basics.Equivalences</span></a> <a class="idref" href="HoTT.Types.Empty.html#"><span class="id" title="library">Types.Empty</span></a> <a class="idref" href="HoTT.Types.Unit.html#"><span class="id" title="library">Types.Unit</span></a> <a class="idref" href="HoTT.Types.Prod.html#"><span class="id" title="library">Types.Prod</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#"><span class="id" title="library">Modalities.ReflectiveSubuniverse</span></a> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.List.Core.html#"><span class="id" title="library">Spaces.List.Core</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1548"></a><h1 class="section">Path spaces of lists</h1>
+
+<div class="paragraph"> </div>
+
+ This proof was adapted from a proof given in Agda/cubical by Evan Cavallo. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="PathList" class="idref" href="#PathList"><span class="id" title="section">PathList</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We'll show that this type is equivalent to the path space <span class="inlinecode"><a class="idref" href="HoTT.Categories.Adjoint.Pointwise.html#AdjointPointwise.l"><span class="id" title="section">l</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">l'</span></span> in <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Fixpoint</span> <a id="ListEq" class="idref" href="#ListEq"><span class="id" title="definition">ListEq</span></a> (<a id="l:2" class="idref" href="#l:2"><span class="id" title="binder">l</span></a> <a id="l':3" class="idref" href="#l':3"><span class="id" title="binder">l'</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#PathList.A"><span class="id" title="variable">A</span></a>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.List.Paths.html#l:2"><span class="id" title="variable">l</span></a>, <a class="idref" href="HoTT.Spaces.List.Paths.html#l':3"><span class="id" title="variable">l'</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a>, <a class="idref" href="HoTT.Spaces.List.Core.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.List.Core.html#cons"><span class="id" title="constructor">cons</span></a> <span class="id" title="var">x</span> <span class="id" title="var">xs</span>, <a class="idref" href="HoTT.Spaces.List.Core.html#cons"><span class="id" title="constructor">cons</span></a> <span class="id" title="var">x'</span> <span class="id" title="var">xs'</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">x'</span><a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq:4"><span class="id" title="definition">ListEq</span></a> <span class="id" title="var">xs</span> <span class="id" title="var">xs'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="reflexive_listeq" class="idref" href="#reflexive_listeq"><span class="id" title="instance">reflexive_listeq</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Reflexive"><span class="id" title="class">Reflexive</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">a</span> <span class="id" title="var">l</span> <span class="id" title="var">IHl</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">IHl</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Definition</span> <a id="encode" class="idref" href="#encode"><span class="id" title="definition">encode</span></a> {<a id="l1:7" class="idref" href="#l1:7"><span class="id" title="binder">l1</span></a> <a id="l2:8" class="idref" href="#l2:8"><span class="id" title="binder">l2</span></a>} (<a id="p:9" class="idref" href="#p:9"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:7"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:8"><span class="id" title="variable">l2</span></a>) : <a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:7"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:8"><span class="id" title="variable">l2</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Definition</span> <a id="decode" class="idref" href="#decode"><span class="id" title="definition">decode</span></a> {<a id="l1:10" class="idref" href="#l1:10"><span class="id" title="binder">l1</span></a> <a id="l2:11" class="idref" href="#l2:11"><span class="id" title="binder">l2</span></a>} (<a id="q:12" class="idref" href="#q:12"><span class="id" title="binder">q</span></a> : <a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:10"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:11"><span class="id" title="variable">l2</span></a>) : <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:10"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:11"><span class="id" title="variable">l2</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">a</span> <span class="id" title="var">l1</span> <span class="id" title="var">IHl1</span> ] <span class="id" title="tactic">in</span> <span class="id" title="var">l2</span>, <span class="id" title="var">q</span> |- ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">q</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#ap011"><span class="id" title="definition">ap011</span></a> (<a class="idref" href="HoTT.Spaces.List.Core.html#cons"><span class="id" title="constructor">cons</span></a> (<span class="id" title="var">A</span>:=<span class="id" title="var">_</span>)) <span class="id" title="var">p</span> (<span class="id" title="var">IHl1</span> <span class="id" title="var">_</span> <span class="id" title="var">q</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Definition</span> <a id="decode_refl" class="idref" href="#decode_refl"><span class="id" title="definition">decode_refl</span></a> {<a id="l:13" class="idref" href="#l:13"><span class="id" title="binder">l</span></a>} : <a class="idref" href="HoTT.Spaces.List.Paths.html#decode"><span class="id" title="definition">decode</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#reflexivity"><span class="id" title="definition">reflexivity</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l:13"><span class="id" title="variable">l</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#ap02"><span class="id" title="definition">ap02</span></a> (<a class="idref" href="HoTT.Spaces.List.Core.html#cons"><span class="id" title="constructor">cons</span></a> <span class="id" title="var">a</span>) <span class="id" title="var">IHl</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Definition</span> <a id="decode_encode" class="idref" href="#decode_encode"><span class="id" title="definition">decode_encode</span></a> {<a id="l1:14" class="idref" href="#l1:14"><span class="id" title="binder">l1</span></a> <a id="l2:15" class="idref" href="#l2:15"><span class="id" title="binder">l2</span></a>} (<a id="p:16" class="idref" href="#p:16"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:14"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:15"><span class="id" title="variable">l2</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.List.Paths.html#decode"><span class="id" title="definition">decode</span></a> (<a class="idref" href="HoTT.Spaces.List.Paths.html#encode"><span class="id" title="definition">encode</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#p:16"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#p:16"><span class="id" title="variable">p</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.List.Paths.html#decode_refl"><span class="id" title="definition">decode_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+By case analysis on both lists, it's easy to show that <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a></span> is <span class="inlinecode"><span class="id" title="var">n</span>.+1</span>-truncated if <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is <span class="inlinecode"><span class="id" title="var">n</span>.+2</span>-truncated. 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="istrunc_listeq" class="idref" href="#istrunc_listeq"><span class="id" title="instance">istrunc_listeq</span></a> <a id="n:17" class="idref" href="#n:17"><span class="id" title="binder">n</span></a> {<a id="l1:18" class="idref" href="#l1:18"><span class="id" title="binder">l1</span></a> <a id="l2:19" class="idref" href="#l2:19"><span class="id" title="binder">l2</span></a>} {<a id="H:20" class="idref" href="#H:20"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#n:17"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">.+2</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#PathList.A"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#n:17"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> (<a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:18"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:19"><span class="id" title="variable">l2</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l2</span> |- ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Types.Prod.html#istrunc_prod"><span class="id" title="instance">istrunc_prod</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The path space of lists is a retract of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a></span>, therefore it is <span class="inlinecode"><span class="id" title="var">n</span>.+1</span>-truncated if <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a></span> is <span class="inlinecode"><span class="id" title="var">n</span>.+1</span>-truncated. By the previous result, this holds when <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is <span class="inlinecode"><span class="id" title="var">n</span>.+2</span>-truncated. 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="istrunc_list" class="idref" href="#istrunc_list"><span class="id" title="instance">istrunc_list</span></a> <a id="n:21" class="idref" href="#n:21"><span class="id" title="binder">n</span></a> {<a id="H:22" class="idref" href="#H:22"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#n:21"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">.+2</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#PathList.A"><span class="id" title="variable">A</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#n:21"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">.+2</span></a> (<a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#PathList.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#inO_retract_inO"><span class="id" title="definition">inO_retract_inO</span></a> <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.List.Paths.html#encode"><span class="id" title="definition">encode</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#decode"><span class="id" title="definition">decode</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#decode_encode"><span class="id" title="definition">decode_encode</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+With a little more work, we can show that <span class="inlinecode"><a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a></span> is also a retract of the path space. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Definition</span> <a id="encode_decode" class="idref" href="#encode_decode"><span class="id" title="definition">encode_decode</span></a> {<a id="l1:23" class="idref" href="#l1:23"><span class="id" title="binder">l1</span></a> <a id="l2:24" class="idref" href="#l2:24"><span class="id" title="binder">l2</span></a>} (<a id="p:25" class="idref" href="#p:25"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:23"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:24"><span class="id" title="variable">l2</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.List.Paths.html#encode"><span class="id" title="definition">encode</span></a> (<a class="idref" href="HoTT.Spaces.List.Paths.html#decode"><span class="id" title="definition">decode</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#p:25"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#p:25"><span class="id" title="variable">p</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l2</span>, <span class="id" title="var">p</span> |- ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">r</span> <span class="id" title="var">p</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#path_prod"><span class="id" title="definition">path_prod</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.List.Paths.html#decode"><span class="id" title="definition">decode</span></a> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <span class="id" title="var">IHl1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.List.Paths.html#decode"><span class="id" title="definition">decode</span></a> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Giving us a way of characterizing paths in lists. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="equiv_path_list" class="idref" href="#equiv_path_list"><span class="id" title="definition">equiv_path_list</span></a> {<a id="l1:26" class="idref" href="#l1:26"><span class="id" title="binder">l1</span></a> <a id="l2:27" class="idref" href="#l2:27"><span class="id" title="binder">l2</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.List.Paths.html#ListEq"><span class="id" title="definition">ListEq</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:26"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:27"><span class="id" title="variable">l2</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l1:26"><span class="id" title="variable">l1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#l2:27"><span class="id" title="variable">l2</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Equivalences.html#equiv_adjointify"><span class="id" title="definition">equiv_adjointify</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#decode"><span class="id" title="definition">decode</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#encode"><span class="id" title="definition">encode</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#decode_encode"><span class="id" title="definition">decode_encode</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#encode_decode"><span class="id" title="definition">encode_decode</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Spaces.List.Paths.html#PathList"><span class="id" title="section">PathList</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

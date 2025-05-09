@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Diagrams.ConstantDiagram</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Diagrams.ConstantDiagram</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.Paths.html#"><span class="id" title="library">Types.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Cone.html#"><span class="id" title="library">Cone</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Cocone.html#"><span class="id" title="library">Cocone</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Diagram.html#"><span class="id" title="library">Diagram</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Graph.html#"><span class="id" title="library">Diagrams.Graph</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1091"></a><h1 class="section">Constant diagram</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="ConstantDiagram" class="idref" href="#ConstantDiagram"><span class="id" title="section">ConstantDiagram</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="G:1" class="idref" href="#G:1"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Diagrams.Graph.html#Graph"><span class="id" title="record">Graph</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="diagram_const" class="idref" href="#diagram_const"><span class="id" title="definition">diagram_const</span></a> (<a id="C:2" class="idref" href="#C:2"><span class="id" title="binder">C</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Diagrams.Diagram.html#Diagram"><span class="id" title="record">Diagram</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#ConstantDiagram.G"><span class="id" title="variable">G</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Diagram.html#Build_Diagram"><span class="id" title="constructor">Build_Diagram</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">C</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">j</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="diagram_const_functor" class="idref" href="#diagram_const_functor"><span class="id" title="definition">diagram_const_functor</span></a> {<a id="A:3" class="idref" href="#A:3"><span class="id" title="binder">A</span></a> <a id="B:4" class="idref" href="#B:4"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:5" class="idref" href="#f:5"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#A:3"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#B:4"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Diagrams.Diagram.html#DiagramMap"><span class="id" title="record">DiagramMap</span></a> (<a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const"><span class="id" title="definition">diagram_const</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#A:3"><span class="id" title="variable">A</span></a>) (<a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const"><span class="id" title="definition">diagram_const</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#B:4"><span class="id" title="variable">B</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Diagram.html#Build_DiagramMap"><span class="id" title="constructor">Build_DiagramMap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">intro</span> <span class="id" title="var">i</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="diagram_const_functor_comp" class="idref" href="#diagram_const_functor_comp"><span class="id" title="definition">diagram_const_functor_comp</span></a> {<a id="A:6" class="idref" href="#A:6"><span class="id" title="binder">A</span></a> <a id="B:7" class="idref" href="#B:7"><span class="id" title="binder">B</span></a> <a id="C:8" class="idref" href="#C:8"><span class="id" title="binder">C</span></a> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="f:9" class="idref" href="#f:9"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#A:6"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#B:7"><span class="id" title="variable">B</span></a>) (<a id="g:10" class="idref" href="#g:10"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#B:7"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#C:8"><span class="id" title="variable">C</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const_functor"><span class="id" title="definition">diagram_const_functor</span></a> (<a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#g:10"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#f:9"><span class="id" title="variable">f</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Diagrams.Diagram.html#diagram_comp"><span class="id" title="definition">diagram_comp</span></a> (<a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const_functor"><span class="id" title="definition">diagram_const_functor</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#g:10"><span class="id" title="variable">g</span></a>) (<a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const_functor"><span class="id" title="definition">diagram_const_functor</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#f:9"><span class="id" title="variable">f</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="diagram_const_functor_idmap" class="idref" href="#diagram_const_functor_idmap"><span class="id" title="definition">diagram_const_functor_idmap</span></a> {<a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const_functor"><span class="id" title="definition">diagram_const_functor</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a> : <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#A:11"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#A:11"><span class="id" title="variable">A</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Diagrams.Diagram.html#diagram_idmap"><span class="id" title="definition">diagram_idmap</span></a> (<a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const"><span class="id" title="definition">diagram_const</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#A:11"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="equiv_diagram_const_cocone" class="idref" href="#equiv_diagram_const_cocone"><span class="id" title="definition">equiv_diagram_const_cocone</span></a> `{<a id="H:12" class="idref" href="#H:12"><span class="id" title="binder">Funext</span></a>} (<a id="D:13" class="idref" href="#D:13"><span class="id" title="binder">D</span></a> : <a class="idref" href="HoTT.Diagrams.Diagram.html#Diagram"><span class="id" title="record">Diagram</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#ConstantDiagram.G"><span class="id" title="variable">G</span></a>) (<a id="X:14" class="idref" href="#X:14"><span class="id" title="binder">X</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Diagrams.Diagram.html#DiagramMap"><span class="id" title="record">DiagramMap</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#D:13"><span class="id" title="variable">D</span></a> (<a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const"><span class="id" title="definition">diagram_const</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#X:14"><span class="id" title="variable">X</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Diagrams.Cocone.html#Cocone"><span class="id" title="class">Cocone</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#D:13"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#X:14"><span class="id" title="variable">X</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#equiv_adjointify"><span class="id" title="definition">equiv_adjointify</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;two&nbsp;functions&nbsp;are&nbsp;defined&nbsp;in&nbsp;parallel:&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">intros</span> [? <span class="id" title="var">w</span>]; <span class="id" title="tactic">econstructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;This&nbsp;reversal&nbsp;is&nbsp;a&nbsp;defect&nbsp;in&nbsp;the&nbsp;definition&nbsp;of&nbsp;<span class="inlinecode"><span class="id" title="var">Cocone</span></span>.&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> <span class="id" title="var">z'</span>; <span class="id" title="tactic">symmetry</span>; <span class="id" title="var">revert</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> <span class="id" title="var">z'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">exact</span> <span class="id" title="var">w</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;two&nbsp;homotopies&nbsp;are&nbsp;proved&nbsp;in&nbsp;parallel:&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">intros</span> [].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Cocone.html#path_cocone"><span class="id" title="definition">path_cocone</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;3: <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Diagram.html#path_DiagramMap"><span class="id" title="definition">path_DiagramMap</span></a>; <span class="id" title="var">snrefine</span> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,3: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">intros</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Paths.html#equiv_p1_1q"><span class="id" title="definition">equiv_p1_1q</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#inv_V"><span class="id" title="definition">inv_V</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="equiv_diagram_const_cone" class="idref" href="#equiv_diagram_const_cone"><span class="id" title="definition">equiv_diagram_const_cone</span></a> `{<a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">Funext</span></a>} (<a id="X:16" class="idref" href="#X:16"><span class="id" title="binder">X</span></a> : <span class="id" title="keyword">Type</span>) (<a id="D:17" class="idref" href="#D:17"><span class="id" title="binder">D</span></a> : <a class="idref" href="HoTT.Diagrams.Diagram.html#Diagram"><span class="id" title="record">Diagram</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#ConstantDiagram.G"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Diagrams.Diagram.html#DiagramMap"><span class="id" title="record">DiagramMap</span></a> (<a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#diagram_const"><span class="id" title="definition">diagram_const</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#X:16"><span class="id" title="variable">X</span></a>) <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#D:17"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Diagrams.Cone.html#Cone"><span class="id" title="class">Cone</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#X:16"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#D:17"><span class="id" title="variable">D</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#equiv_adjointify"><span class="id" title="definition">equiv_adjointify</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">intros</span> [? <span class="id" title="var">w</span>]; <span class="id" title="tactic">econstructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">exact</span> <span class="id" title="var">w</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">intros</span>[].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Cone.html#path_cone"><span class="id" title="definition">path_cone</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;3: <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Diagram.html#path_DiagramMap"><span class="id" title="definition">path_DiagramMap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,3: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>; <span class="id" title="var">hott_simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Diagrams.ConstantDiagram.html#ConstantDiagram"><span class="id" title="section">ConstantDiagram</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

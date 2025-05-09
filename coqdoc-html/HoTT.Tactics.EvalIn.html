@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tactics.EvalIn</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tactics.EvalIn</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1715"></a><h1 class="section">Evaluating tactics on terms</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It sometimes happens, in the course of writing a tactic, that we have some term in an Ltac variable (more precisely, we have what Ltac calls a "constr") and we would like to act on it with some tactic such as <span class="inlinecode"><span class="id" title="tactic">cbv</span></span> or <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span>.  Ordinarily, such tactics only act on the current *goal*, and generally they have a version such as <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode">...</span> which acts on something in the current *context*, but neither of these is the same as acting on a term held in an Ltac variable.
+
+<div class="paragraph"> </div>
+
+For some tactics, such as <span class="inlinecode"><span class="id" title="tactic">cbv</span></span> and <span class="inlinecode"><span class="id" title="tactic">pattern</span></span>, we can write <span class="inlinecode"><span class="id" title="tactic">eval</span></span> <span class="inlinecode"><span class="id" title="var">TAC</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span>, where <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> is the term in question; this form *returns* the modified term so we can place it in another Ltac variable.  However, other tactics such as <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> do not support this syntax.  (There is a feature request for it at https://coq.inria.fr/bugs/show_bug.cgi?id=3677.)
+
+<div class="paragraph"> </div>
+
+The following tactic <span class="inlinecode"><span class="id" title="var">eval_in</span></span> <span class="inlinecode"><span class="id" title="var">TAC</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> fills this gap, allowing us to act by <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> on terms in Ltac variables.  The argument <span class="inlinecode"><span class="id" title="var">TAC</span></span> must be a tactic that takes one argument, which is an Ltac function that gets passed the name of a hypothesis to act on, such as <span class="inlinecode"><span class="id" title="keyword">ltac</span>:(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.H'"><span class="id" title="variable">H'</span></a></span> <span class="inlinecode">⇒</span> <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.H'"><span class="id" title="variable">H'</span></a>)</span>.  (Unfortunately, however, <span class="inlinecode"><span class="id" title="var">eval_in</span></span> cannot be used to exactly generalize <span class="inlinecode"><span class="id" title="tactic">eval</span></span> <span class="inlinecode"><span class="id" title="tactic">pattern</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span>; see below.)
+
+<div class="paragraph"> </div>
+
+There is also a variant called <span class="inlinecode"><span class="id" title="var">eval_in_using</span></span>, which also accepts a second user-specified tactic and uses it to solve side-conditions generated by the first one.  We actually define <span class="inlinecode"><span class="id" title="var">eval_in</span></span> in terms of <span class="inlinecode"><span class="id" title="var">eval_in_using</span></span> by passing <span class="inlinecode"><span class="id" title="tactic">idtac</span></span> as the second tactic. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">eval_in_using</span> <span class="id" title="var">tac_in</span> <span class="id" title="var">using_tac</span> <span class="id" title="var">H</span> :=<br/>
+&nbsp;&nbsp;</div>
+
+<div class="doc">
+The syntax <span class="inlinecode">$(...)$</span> allows execution of an arbitrary tactic to supply a needed term.  By prefixing it with <span class="inlinecode"><span class="id" title="keyword">constr</span>:</span> which tells Ltac to expect a term, we obtain a pattern <span class="inlinecode"><span class="id" title="keyword">constr</span>:($(...)$)</span> which allows us to execute an arbitrary tactic in the situation of a fresh goal.   This way we avoid modifying the existing context, and we can also get our hands on a proof term corresponding to the stateful modification.  We pose <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> in the fresh context so we can play with it nicely, regardless of if it's a hypothesis or a term.  Then we run <span class="inlinecode"><span class="id" title="var">tac_in</span></span> on the hypothesis to modify it, use <span class="inlinecode"><span class="id" title="tactic">exact</span></span> to "return" the modified hypothesis, and give a nice error message if <span class="inlinecode"><span class="id" title="var">using_tac</span></span> fails to solve some side-condition. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">ret</span> := <span class="id" title="keyword">constr</span>:(<span class="id" title="keyword">ltac</span>:(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H'</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> <span class="id" title="var">H'</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tac_in</span> <span class="id" title="var">H'</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" title="tactic">exact</span> <span class="id" title="var">H'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">solve</span> [ <span class="id" title="var">using_tac</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="keyword">let</span> <span class="id" title="var">G</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- ?<span class="id" title="var">G</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">G</span>) <span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> <span class="id" title="var">H</span> : <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ⇒ <span class="id" title="var">revert</span> <span class="id" title="var">H</span> <span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">G'</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- ?<span class="id" title="var">G</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">G</span>) <span class="id" title="keyword">end</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">fail</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Cannot use" <span class="id" title="var">using_tac</span> "to solve side-condition goal" <span class="id" title="var">G</span> "."<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Extended goal with context:" <span class="id" title="var">G'</span> ].. ])) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;</div>
+
+<div class="doc">
+Finally, we play some games to format the return value nicely.  We want to zeta-reduce the let-in generated by <span class="inlinecode"><span class="id" title="tactic">pose</span></span>, but not any other <span class="inlinecode"><span class="id" title="keyword">let</span>-<span class="id" title="tactic">in</span></span>s; we do this by matching for it and doing the substitution manually.  Additionally, <span class="inlinecode"><span class="id" title="tactic">pose</span></span>/<span class="inlinecode"><span class="id" title="tactic">exact</span></span> also results in an extra <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a></span>; we remove this with <span class="inlinecode"><span class="id" title="tactic">cbv</span></span> <span class="inlinecode"><span class="id" title="keyword">beta</span></span>, which unfortunately also beta-reduces everything else.  (This is why <span class="inlinecode"><span class="id" title="var">eval_in</span></span> <span class="inlinecode"><span class="id" title="tactic">pattern</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> doesn't strictly generalize <span class="inlinecode"><span class="id" title="tactic">eval</span></span> <span class="inlinecode"><span class="id" title="tactic">pattern</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span>, since the latter doesn't beta-reduce.)  Perhaps we want to zeta-reduce everything, and not beta-reduce anything instead? 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">T</span> := <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">ret</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">ret'</span> := (<span class="id" title="keyword">lazymatch</span> <span class="id" title="var">ret</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="keyword">let</span> <a id="x:1" class="idref" href="#x:1"><span class="id" title="binder"><span id="x:2" class="id">x</span></span></a> := ?<span class="id" title="var">x'</span> <span class="id" title="tactic">in</span> @?<span class="id" title="var">P</span> <a class="idref" href="HoTT.Tactics.EvalIn.html#x:1"><span class="id" title="variable">x</span></a> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">P</span> <span class="id" title="var">x'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">ret''</span> := (<span class="id" title="tactic">eval</span> <span class="id" title="tactic">cbv</span> <span class="id" title="keyword">beta</span> <span class="id" title="tactic">in</span> <span class="id" title="var">ret'</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">constr</span>:(<span class="id" title="var">ret''</span> : <span class="id" title="var">T</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">eval_in</span> <span class="id" title="var">tac_in</span> <span class="id" title="var">H</span> := <span class="id" title="var">eval_in_using</span> <span class="id" title="var">tac_in</span> <span class="id" title="tactic">idtac</span> <span class="id" title="var">H</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="eval_in_example" class="idref" href="#eval_in_example"><span class="id" title="definition">eval_in_example</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="A:3" class="idref" href="#A:3"><span class="id" title="binder">A</span></a> <a id="B:4" class="idref" href="#B:4"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Set</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#A:3"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#B:4"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#A:3"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#B:4"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">H</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">x</span> := (<span class="id" title="var">eval_in</span> <span class="id" title="keyword">ltac</span>:(<span class="id" title="keyword">fun</span> <span class="id" title="var">H'</span> ⇒ <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>) <span class="id" title="var">a</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> <span class="id" title="var">b</span>.<br/>
+</div>
+
+<div class="doc">
+we get a <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span>  We <span class="inlinecode"><span class="id" title="keyword">Abort</span></span>, so that we don't get an extra constant floating around. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1716"></a><h2 class="section">Rewriting with reflexivity</h2>
+
+<div class="paragraph"> </div>
+
+ As an example application, we define a tactic that takes a lemma whose definition is <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a></span> and behaves like <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span>, except that it doesn't insert any transport lemmas like <span class="inlinecode"><span class="id" title="var">Overture.internal_paths_rew_r</span></span>.  In other words, it does a <span class="inlinecode"><span class="id" title="tactic">change</span></span>, but leverages the pattern-matching and substitution engine of <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> to decide what to <span class="inlinecode"><span class="id" title="tactic">change</span></span> into. 
+<div class="paragraph"> </div>
+
+ We use a dummy inductive type since <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> acts on the *type* of a hypothesis rather than its body (if any). 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="dummy" class="idref" href="#dummy"><span class="id" title="definition, inductive"><span id="dummy_rect" class="id"><span id="dummy_ind" class="id"><span id="dummy_rec" class="id"><span id="dummy_sind" class="id">dummy</span></span></span></span></span></a> (<a id="A:5" class="idref" href="#A:5"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>) := <a id="adummy" class="idref" href="#adummy"><span class="id" title="constructor">adummy</span></a> : <a class="idref" href="HoTT.Tactics.EvalIn.html#dummy:6"><span class="id" title="inductive">dummy</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#A:5"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">rewrite_refl</span> <span class="id" title="var">H</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [ |- ?<span class="id" title="var">X</span> ] ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">dX'</span> := <span class="id" title="var">eval_in</span> <span class="id" title="keyword">ltac</span>:(<span class="id" title="keyword">fun</span> <span class="id" title="var">H'</span> ⇒ <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>) (<a class="idref" href="HoTT.Tactics.EvalIn.html#adummy"><span class="id" title="constructor">adummy</span></a> <span class="id" title="var">X</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">dX'</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Tactics.EvalIn.html#dummy"><span class="id" title="inductive">dummy</span></a> ?<span class="id" title="var">X'</span> ⇒ <span class="id" title="tactic">change</span> <span class="id" title="var">X'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here's what it would look like with ordinary <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span>: 
+</div>
+<div class="code">
+<span class="id" title="keyword">Example</span> <a id="rewrite_refl_example" class="idref" href="#rewrite_refl_example"><span class="id" title="definition">rewrite_refl_example</span></a> {<a id="A:8" class="idref" href="#A:8"><span class="id" title="binder">A</span></a> <a id="B:9" class="idref" href="#B:9"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="x:10" class="idref" href="#x:10"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Tactics.EvalIn.html#A:8"><span class="id" title="variable">A</span></a>) (<a id="f:11" class="idref" href="#f:11"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Tactics.EvalIn.html#A:8"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#B:9"><span class="id" title="variable">B</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#f:11"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tactics.EvalIn.html#f:11"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#x:10"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#f:11"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#x:10"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#ap_1"><span class="id" title="definition">ap_1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+</div>
+
+<div class="doc">
+Show Proof.  ==&gt; (fun (A B : Type) (x : A) (f : A -&gt; B) =&gt;
+ Overture.internal_paths_rew_r (f x = f x) (ap f 1) 1
+   (fun p : f x = f x =&gt; p = 1) 1 (ap_1 x f)) 
+</div>
+<div class="code">
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And here's what we get with <span class="inlinecode"><span class="id" title="var">rewrite_refl</span></span>: 
+</div>
+<div class="code">
+<span class="id" title="keyword">Example</span> <a id="rewrite_refl_example" class="idref" href="#rewrite_refl_example"><span class="id" title="definition">rewrite_refl_example</span></a> {<a id="A:12" class="idref" href="#A:12"><span class="id" title="binder">A</span></a> <a id="B:13" class="idref" href="#B:13"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="x:14" class="idref" href="#x:14"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Tactics.EvalIn.html#A:12"><span class="id" title="variable">A</span></a>) (<a id="f:15" class="idref" href="#f:15"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Tactics.EvalIn.html#A:12"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#B:13"><span class="id" title="variable">B</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#f:15"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tactics.EvalIn.html#f:15"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#f:15"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Tactics.EvalIn.html#x:14"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rewrite_refl</span> @<a class="idref" href="HoTT.Basics.PathGroupoids.html#ap_1"><span class="id" title="definition">ap_1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+</div>
+
+<div class="doc">
+Show Proof.  ==&gt; (fun (A B : Type) (x : A) (f : A -&gt; B) =&gt; 1) 
+</div>
+<div class="code">
+<span class="id" title="keyword">Abort</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

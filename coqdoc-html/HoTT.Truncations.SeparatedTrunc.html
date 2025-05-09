@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Truncations.SeparatedTrunc</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Truncations.SeparatedTrunc</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Universes.TruncType.html#"><span class="id" title="library">TruncType</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a> <a class="idref" href="HoTT.Modalities.Modality.html#"><span class="id" title="library">Modalities.Modality</span></a> <a class="idref" href="HoTT.Modalities.Descent.html#"><span class="id" title="library">Modalities.Descent</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1745"></a><h2 class="section">Separatedness and path-spaces of truncations</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="SeparatedTrunc" class="idref" href="#SeparatedTrunc"><span class="id" title="section">SeparatedTrunc</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">subuniverse_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><span class="id" title="var">n</span>.+1</span>-truncation modality consists of the separated types for the <span class="inlinecode"><span class="id" title="var">n</span></span>-truncation modality. 
+</div>
+<div class="code">
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="O_eq_Tr" class="idref" href="#O_eq_Tr"><span class="id" title="instance">O_eq_Tr</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:1"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#2985062378df787f21af1f07095e736f"><span class="id" title="notation">&lt;=&gt;</span></a> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#Sep"><span class="id" title="definition">Sep</span></a> (<a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:1"><span class="id" title="variable">n</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">A_inO</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It follows that <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;&lt;&lt;</span> <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span>.+1</span>.  However, it is easier to prove this directly than to go through separatedness. 
+</div>
+<div class="code">
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="O_leq_Tr" class="idref" href="#O_leq_Tr"><span class="id" title="instance">O_leq_Tr</span></a> (<a id="n:2" class="idref" href="#n:2"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:2"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#b5f3c25d695ec097acaa6ae191ca7b20"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:2"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> ?; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="O_strong_leq_Tr" class="idref" href="#O_strong_leq_Tr"><span class="id" title="instance">O_strong_leq_Tr</span></a> (<a id="n:3" class="idref" href="#n:3"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:3"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Modalities.Modality.html#::subuniverse_scope:x_'&lt;&lt;'_x"><span class="id" title="notation">&lt;&lt;</span></a> <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:3"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Modalities.Modality.html#O_strong_leq_trans_l"><span class="id" title="definition">O_strong_leq_trans_l</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For some reason, this causes typeclass search to spin. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Instance</span> <a id="O_lex_leq_Tr" class="idref" href="#O_lex_leq_Tr"><span class="id" title="instance">O_lex_leq_Tr</span></a> `{<a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">Univalence</span></a>} (<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Modalities.Descent.html#::subuniverse_scope:x_'&lt;&lt;&lt;'_x"><span class="id" title="notation">&lt;&lt;&lt;</span></a> <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:5"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span>; <span class="id" title="var">unshelve</span> <span class="id" title="tactic">econstructor</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">P'</span> <span class="id" title="var">P_inO</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">P</span> := <span class="id" title="keyword">fun</span> <a id="x:6" class="idref" href="#x:6"><span class="id" title="binder"><span id="x:7" class="id"><span id="x:8" class="id"><span id="x:9" class="id">x</span></span></span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Trunc.html#Build_TruncType"><span class="id" title="constructor">Build_TruncType</span></a> <span class="id" title="var">n</span> (<span class="id" title="var">P'</span> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#x:6"><span class="id" title="variable">x</span></a>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc_rec"><span class="id" title="definition">Trunc_rec</span></a> <span class="id" title="var">P</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span>; <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="path_Tr" class="idref" href="#path_Tr"><span class="id" title="definition">path_Tr</span></a> {<a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> <a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a>} {<a id="x:12" class="idref" href="#x:12"><span class="id" title="binder">x</span></a> <a id="y:13" class="idref" href="#y:13"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#A:11"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:10"><span class="id" title="variable">n</span></a> (<a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#x:12"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#y:13"><span class="id" title="variable">y</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#x:12"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#y:13"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:10"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#A:11"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Modalities.Descent.html#path_OO"><span class="id" title="definition">path_OO</span></a> (<a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:10"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>) (<a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:10"><span class="id" title="variable">n</span></a>) <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#x:12"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#y:13"><span class="id" title="variable">y</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_path_Tr" class="idref" href="#equiv_path_Tr"><span class="id" title="definition">equiv_path_Tr</span></a> `{<a id="H:14" class="idref" href="#H:14"><span class="id" title="binder">Univalence</span></a>} {<a id="n:15" class="idref" href="#n:15"><span class="id" title="binder">n</span></a>} {<a id="A:16" class="idref" href="#A:16"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="x:17" class="idref" href="#x:17"><span class="id" title="binder">x</span></a> <a id="y:18" class="idref" href="#y:18"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#A:16"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:15"><span class="id" title="variable">n</span></a> (<a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#x:17"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#y:18"><span class="id" title="variable">y</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#x:17"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#y:18"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:15"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#A:16"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Modalities.Descent.html#equiv_path_OO"><span class="id" title="definition">equiv_path_OO</span></a> (<a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:15"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a>) (<a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#n:15"><span class="id" title="variable">n</span></a>) <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#x:17"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#y:18"><span class="id" title="variable">y</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Truncations.SeparatedTrunc.html#SeparatedTrunc"><span class="id" title="section">SeparatedTrunc</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.NaturalTransformation.Pointwise</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.NaturalTransformation.Pointwise</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab920"></a><h1 class="section">Pointwise Natural Transformations</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#"><span class="id" title="library">FunctorCategory.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Paths.html#"><span class="id" title="library">NaturalTransformation.Paths</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#"><span class="id" title="library">NaturalTransformation.Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#"><span class="id" title="library">Functor.Pointwise.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Recall that a "pointwise" functor is a functor <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a>ᴮ</span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a>ᴰ</span> induced
+    by functors <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span>.  Given two functors <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> and a
+    natural transformation between them, there is an induced natural
+    transformation between the resulting functors between functor
+    categories, and similarly for two functors <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span>.  In this file,
+    we construct these natural transformations. They will be used to
+    construct the pointwise induced adjunction <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>ˣ</span> <span class="inlinecode">⊣</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a>ˣ</span> of an
+    adjunction <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> <span class="inlinecode">⊣</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> for all categories <span class="inlinecode"><a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">natural_transformation_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="pointwise" class="idref" href="#pointwise"><span class="id" title="section">pointwise</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="pointwise.C" class="idref" href="#pointwise.C"><span class="id" title="variable">C</span></a> <a id="pointwise.D" class="idref" href="#pointwise.D"><span class="id" title="variable">D</span></a> <a id="pointwise.C'" class="idref" href="#pointwise.C'"><span class="id" title="variable">C'</span></a> <a id="pointwise.D'" class="idref" href="#pointwise.D'"><span class="id" title="variable">D'</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Ltac</span> <span class="id" title="var">t</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path_natural_transformation</span>; <span class="id" title="tactic">simpl</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- ?<a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">first</span> [ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#commutes"><span class="id" title="projection">commutes</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">symmetry</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#commutes"><span class="id" title="projection">commutes</span></a> ].<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab921"></a><h2 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#T"><span class="id" title="abbreviation">T</span></a>ˣ</span> for a natural transformation <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#T"><span class="id" title="abbreviation">T</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> and a functor <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span></h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pointwise_l" class="idref" href="#pointwise_l"><span class="id" title="definition">pointwise_l</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F:6" class="idref" href="#F:6"><span class="id" title="binder">F</span></a> <a id="G:7" class="idref" href="#G:7"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.D"><span class="id" title="variable">D</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="T:8" class="idref" href="#T:8"><span class="id" title="binder">T</span></a> : <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#F:6"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#G:7"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F':9" class="idref" href="#F':9"><span class="id" title="binder">F'</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.D'"><span class="id" title="variable">D'</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> (<a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#pointwise"><span class="id" title="definition">pointwise</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#F:6"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#F':9"><span class="id" title="variable">F'</span></a>) (<a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#pointwise"><span class="id" title="definition">pointwise</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#G:7"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#F':9"><span class="id" title="variable">F'</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#Build_NaturalTransformation"><span class="id" title="definition">Build_NaturalTransformation</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#pointwise"><span class="id" title="definition">pointwise</span></a> <span class="id" title="var">F</span> <span class="id" title="var">F'</span>) (<a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#pointwise"><span class="id" title="definition">pointwise</span></a> <span class="id" title="var">G</span> <span class="id" title="var">F'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="f:10" class="idref" href="#f:10"><span class="id" title="binder"><span id="f:11" class="id">f</span></span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a>) ⇒ <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oL'_x"><span class="id" title="notation">(</span></a><span class="id" title="var">F'</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#f:10"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oL'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oL'_x"><span class="id" title="notation">oL</span></a> <span class="id" title="var">T</span>)%<span class="id" title="var">natural_transformation</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab922"></a><h2 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a>ᵀ</span> for a natural transformation <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Torus.TorusHomotopy.html#T"><span class="id" title="abbreviation">T</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.NaturalTransformation.Prod.html#prod.F'"><span class="id" title="variable">F'</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.NaturalTransformation.Prod.html#prod.G'"><span class="id" title="variable">G'</span></a></span> and a functor <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a></span></h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pointwise_r" class="idref" href="#pointwise_r"><span class="id" title="definition">pointwise_r</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F:12" class="idref" href="#F:12"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.D"><span class="id" title="variable">D</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F':13" class="idref" href="#F':13"><span class="id" title="binder">F'</span></a> <a id="G':14" class="idref" href="#G':14"><span class="id" title="binder">G'</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.D'"><span class="id" title="variable">D'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="T':15" class="idref" href="#T':15"><span class="id" title="binder">T'</span></a> : <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#F':13"><span class="id" title="variable">F'</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#G':14"><span class="id" title="variable">G'</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> (<a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#pointwise"><span class="id" title="definition">pointwise</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#F:12"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#F':13"><span class="id" title="variable">F'</span></a>) (<a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#pointwise"><span class="id" title="definition">pointwise</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#F:12"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#G':14"><span class="id" title="variable">G'</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#Build_NaturalTransformation"><span class="id" title="definition">Build_NaturalTransformation</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#pointwise"><span class="id" title="definition">pointwise</span></a> <span class="id" title="var">F</span> <span class="id" title="var">F'</span>) (<a class="idref" href="HoTT.Categories.Functor.Pointwise.Core.html#pointwise"><span class="id" title="definition">pointwise</span></a> <span class="id" title="var">F</span> <span class="id" title="var">G'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="f:16" class="idref" href="#f:16"><span class="id" title="binder"><span id="f:17" class="id">f</span></span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.FunctorCategory.Core.html#FunctorCategoryCoreNotations.::category_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise.C'"><span class="id" title="variable">C'</span></a>) ⇒ <span class="id" title="var">T'</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oR'_x"><span class="id" title="notation">oR</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#f:16"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Composition.Core.html#NaturalTransformationCompositionCoreNotations.::natural_transformation_scope:x_'oR'_x"><span class="id" title="notation">oR</span></a> <span class="id" title="var">F</span>)%<span class="id" title="var">natural_transformation</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Pointwise.html#pointwise"><span class="id" title="section">pointwise</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Basics.Decidable</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Basics.Decidable</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Iff.html#"><span class="id" title="library">Basics.Iff</span></a>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">trunc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab278"></a><h1 class="section">Decidability</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab279"></a><h2 class="section">Definitions</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;NB:&nbsp;This&nbsp;has&nbsp;to&nbsp;come&nbsp;after&nbsp;our&nbsp;definition&nbsp;of&nbsp;<span class="inlinecode"><span class="id" title="var">not</span></span>&nbsp;(which&nbsp;is&nbsp;in&nbsp;<span class="inlinecode"><span class="id" title="var">Overture</span></span>),&nbsp;so&nbsp;that&nbsp;it&nbsp;refers&nbsp;to&nbsp;our&nbsp;<span class="inlinecode"><span class="id" title="var">not</span></span>&nbsp;rather&nbsp;than&nbsp;the&nbsp;one&nbsp;in&nbsp;<span class="inlinecode"><span class="id" title="var">Coq.Logic</span></span>.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Class</span> <a id="Decidable" class="idref" href="#Decidable"><span class="id" title="inductive, record"><span id="Decidable" class="id">Decidable</span></span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) :=<br/>
+&nbsp;&nbsp;<a id="dec" class="idref" href="#dec"><span class="id" title="constructor, projection"><span id="dec" class="id">dec</span></span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:1"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">A</span> {<span class="id" title="var">_</span>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><span class="id" title="var">decide_type</span></span> and <span class="inlinecode"><span class="id" title="var">decide</span></span> tactic allow to automatically prove
+decidable claims using previously written decision procedures that
+compute. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">decide_type</span> <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">K</span> := (<span class="id" title="tactic">eval</span> <span class="id" title="tactic">hnf</span> <span class="id" title="tactic">in</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">A</span>)) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">K</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> ?<span class="id" title="var">Z</span> ⇒ <span class="id" title="tactic">exact</span> <span class="id" title="var">Z</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> ?<span class="id" title="var">Z</span> ⇒ <span class="id" title="tactic">exact</span> <span class="id" title="var">Z</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">decide</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">multimatch</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [|- ?<span class="id" title="var">A</span>] ⇒ <span class="id" title="var">decide_type</span> <span class="id" title="var">A</span><br/>
+&nbsp;&nbsp;| [|- <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> ?<span class="id" title="var">A</span>] ⇒ <span class="id" title="var">decide_type</span> <span class="id" title="var">A</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="decidable_true" class="idref" href="#decidable_true"><span class="id" title="definition">decidable_true</span></a> {<a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<a id="a:5" class="idref" href="#a:5"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:4"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;(<a id="P:7" class="idref" href="#P:7"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="p:6" class="idref" href="#p:6"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:4"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="p:9" class="idref" href="#p:9"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:7"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#x:8"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="p:10" class="idref" href="#p:10"><span class="id" title="binder">p</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:7"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#p:10"><span class="id" title="variable">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span>|<span class="id" title="var">n</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">contradiction</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Replace a term <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a></span> of the form <span class="inlinecode"><a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#Reflective_Subuniverse.Decidable"><span class="id" title="section">Decidable</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> with <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Sum.html#inl"><span class="id" title="definition">inl</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> if we have a term <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> showing that <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is true. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">decidable_true</span> <span class="id" title="var">p</span> <span class="id" title="var">a</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="var">p</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> (<a class="idref" href="HoTT.Basics.Decidable.html#decidable_true"><span class="id" title="definition">decidable_true</span></a> <span class="id" title="var">a</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">intro</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="decidable_false" class="idref" href="#decidable_false"><span class="id" title="definition">decidable_false</span></a> {<a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#not"><span class="id" title="definition">not</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:11"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;(<a id="P:14" class="idref" href="#P:14"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="p:13" class="idref" href="#p:13"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:11"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="p:16" class="idref" href="#p:16"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n':15" class="idref" href="#n':15"><span class="id" title="binder">n'</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:14"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#n':15"><span class="id" title="variable">n'</span></a>))<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="p:17" class="idref" href="#p:17"><span class="id" title="binder">p</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:14"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#p:17"><span class="id" title="variable">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span>|<span class="id" title="var">n'</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="var">contradiction</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Replace a term <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a></span> of the form <span class="inlinecode"><a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#Reflective_Subuniverse.Decidable"><span class="id" title="section">Decidable</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> with <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Sum.html#inr"><span class="id" title="definition">inr</span></a></span> <span class="inlinecode"><span class="id" title="var">na</span></span> if we have a term <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#not"><span class="id" title="definition">not</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> showing that <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> is false. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">decidable_false</span> <span class="id" title="var">p</span> <span class="id" title="var">n</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="var">p</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> (<a class="idref" href="HoTT.Basics.Decidable.html#decidable_false"><span class="id" title="definition">decidable_false</span></a> <span class="id" title="var">n</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">intro</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="DecidablePaths" class="idref" href="#DecidablePaths"><span class="id" title="inductive, record"><span id="DecidablePaths" class="id">DecidablePaths</span></span></a> (<a id="A:18" class="idref" href="#A:18"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) :=<br/>
+&nbsp;&nbsp;<a id="dec_paths" class="idref" href="#dec_paths"><span class="id" title="constructor, projection"><span id="dec_paths" class="id">dec_paths</span></span></a> :: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="x:20" class="idref" href="#x:20"><span class="id" title="binder">x</span></a> <a id="y:21" class="idref" href="#y:21"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:18"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#x:20"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#y:21"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="Stable" class="idref" href="#Stable"><span class="id" title="inductive, record"><span id="Stable" class="id">Stable</span></span></a> <a id="P:23" class="idref" href="#P:23"><span class="id" title="binder">P</span></a> := <a id="stable" class="idref" href="#stable"><span class="id" title="constructor, projection"><span id="stable" class="id">stable</span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#6ff74d9c79c8ebe4ff3987390d67f9c7"><span class="id" title="notation">~~</span></a><a class="idref" href="HoTT.Basics.Decidable.html#P:23"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:23"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We always have a map in the other direction. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="not_not_unit" class="idref" href="#not_not_unit"><span class="id" title="definition">not_not_unit</span></a> {<a id="P:26" class="idref" href="#P:26"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>} : <a class="idref" href="HoTT.Basics.Decidable.html#P:26"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6ff74d9c79c8ebe4ff3987390d67f9c7"><span class="id" title="notation">~~</span></a><a class="idref" href="HoTT.Basics.Decidable.html#P:26"><span class="id" title="variable">P</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="x:27" class="idref" href="#x:27"><span class="id" title="binder">x</span></a> <a id="np:28" class="idref" href="#np:28"><span class="id" title="binder">np</span></a> ⇒ <a class="idref" href="HoTT.Basics.Decidable.html#np:28"><span class="id" title="variable">np</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#x:27"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="ishprop_stable_hprop" class="idref" href="#ishprop_stable_hprop"><span class="id" title="instance">ishprop_stable_hprop</span></a> `{<a id="H:29" class="idref" href="#H:29"><span class="id" title="binder">Funext</span></a>} <a id="P:30" class="idref" href="#P:30"><span class="id" title="binder">P</span></a> `{<a id="IsHProp0:31" class="idref" href="#IsHProp0:31"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:31" class="idref" href="#IsHProp0:31"><span class="id" title="binder">P</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:30"><span class="id" title="variable">P</span></a>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_forall"><span class="id" title="instance">istrunc_forall</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="stable_decidable" class="idref" href="#stable_decidable"><span class="id" title="instance">stable_decidable</span></a> <a id="P:32" class="idref" href="#P:32"><span class="id" title="binder">P</span></a> `{<a id="H:33" class="idref" href="#H:33"><span class="id" title="binder">Decidable</span></a> <a id="H:33" class="idref" href="#H:33"><span class="id" title="binder">P</span></a>} : <a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:32"><span class="id" title="variable">P</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">dn</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;<span class="inlinecode"><span class="id" title="var">dec</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>&nbsp;either&nbsp;solves&nbsp;the&nbsp;goal&nbsp;or&nbsp;contradicts&nbsp;<span class="inlinecode"><span class="id" title="var">dn</span></span>.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="stable_negation" class="idref" href="#stable_negation"><span class="id" title="instance">stable_negation</span></a> <a id="P:34" class="idref" href="#P:34"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:34"><span class="id" title="variable">P</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">nnnp</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">nnnp</span> (<a class="idref" href="HoTT.Basics.Decidable.html#not_not_unit"><span class="id" title="definition">not_not_unit</span></a> <span class="id" title="var">p</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="iff_stable" class="idref" href="#iff_stable"><span class="id" title="definition">iff_stable</span></a> <a id="P:35" class="idref" href="#P:35"><span class="id" title="binder">P</span></a> `(<a id="H:36" class="idref" href="#H:36"><span class="id" title="binder">Stable</span></a> <a id="H:36" class="idref" href="#H:36"><span class="id" title="binder">P</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#6ff74d9c79c8ebe4ff3987390d67f9c7"><span class="id" title="notation">~~</span></a><a class="idref" href="HoTT.Basics.Decidable.html#P:35"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:35"><span class="id" title="variable">P</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Decidable.html#stable"><span class="id" title="definition">stable</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Decidable.html#not_not_unit"><span class="id" title="definition">not_not_unit</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="stable_iff" class="idref" href="#stable_iff"><span class="id" title="definition">stable_iff</span></a> {<a id="A:37" class="idref" href="#A:37"><span class="id" title="binder">A</span></a> <a id="B:38" class="idref" href="#B:38"><span class="id" title="binder">B</span></a>} (<a id="f:39" class="idref" href="#f:39"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:37"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:38"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:37"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:38"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">stableA</span> <span class="id" title="var">nnb</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">f</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">f</span> <span class="id" title="var">finv</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">f</span> (<span class="id" title="var">stableA</span> (<span class="id" title="keyword">fun</span> <a id="na:40" class="idref" href="#na:40"><span class="id" title="binder"><span id="na:42" class="id">na</span></span></a> ⇒ <span class="id" title="var">nnb</span> (<span class="id" title="keyword">fun</span> <a id="b:41" class="idref" href="#b:41"><span class="id" title="binder"><span id="b:43" class="id">b</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Decidable.html#na:40"><span class="id" title="variable">na</span></a> (<span class="id" title="var">finv</span> <a class="idref" href="HoTT.Basics.Decidable.html#b:41"><span class="id" title="variable">b</span></a>))))).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="stable_equiv'" class="idref" href="#stable_equiv'"><span class="id" title="definition">stable_equiv'</span></a> {<a id="A:44" class="idref" href="#A:44"><span class="id" title="binder">A</span></a> <a id="B:45" class="idref" href="#B:45"><span class="id" title="binder">B</span></a>} (<a id="f:46" class="idref" href="#f:46"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:44"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:45"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:44"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:45"><span class="id" title="variable">B</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Decidable.html#stable_iff"><span class="id" title="definition">stable_iff</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#f:46"><span class="id" title="variable">f</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="stable_equiv" class="idref" href="#stable_equiv"><span class="id" title="definition">stable_equiv</span></a> {<a id="A:47" class="idref" href="#A:47"><span class="id" title="binder">A</span></a> <a id="B:48" class="idref" href="#B:48"><span class="id" title="binder">B</span></a>} (<a id="f:49" class="idref" href="#f:49"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:47"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:48"><span class="id" title="variable">B</span></a>) `{<a id="IsEquiv0:50" class="idref" href="#IsEquiv0:50"><span class="id" title="binder">!</span></a><a id="IsEquiv0:50" class="idref" href="#IsEquiv0:50"><span class="id" title="binder">IsEquiv</span></a> <a id="IsEquiv0:50" class="idref" href="#IsEquiv0:50"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:47"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Stable"><span class="id" title="class">Stable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:48"><span class="id" title="variable">B</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Decidable.html#stable_equiv'"><span class="id" title="definition">stable_equiv'</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Decidable.html#f:49"><span class="id" title="variable">f</span></a> <span class="id" title="var">_</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  Because <span class="inlinecode"><span class="id" title="keyword">vm_compute</span></span> evaluates terms in <span class="inlinecode"><span class="id" title="var">PROP</span></span> eagerly
+  and does not remove dead code we
+  need the decide_rel hack. Suppose we have <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> <span class="inlinecode">=<span class="id" title="var">def</span></span>  <span class="inlinecode">(<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span>, now:
+     <span class="inlinecode"><span class="id" title="var">bool_decide</span></span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool_decide</span></span> <span class="inlinecode">(<a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode">...</span>
+  As we see, the dead code <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> is actually evaluated,
+  which is of course an utter waste.
+  Therefore we introduce <span class="inlinecode"><a class="idref" href="HoTT.Basics.Decidable.html#decide_rel"><span class="id" title="definition">decide_rel</span></a></span> and <span class="inlinecode"><span class="id" title="var">bool_decide_rel</span></span>.
+     <span class="inlinecode"><span class="id" title="var">bool_decide_rel</span></span> <span class="inlinecode">(=)</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool_decide_rel</span></span> <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a></span> <span class="inlinecode">⇒</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a>)</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode">...</span>
+  Now the definition of equality remains under a lambda and
+  our problem does not occur anymore!
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="decide_rel" class="idref" href="#decide_rel"><span class="id" title="definition">decide_rel</span></a> {<a id="A:51" class="idref" href="#A:51"><span class="id" title="binder">A</span></a> <a id="B:52" class="idref" href="#B:52"><span class="id" title="binder">B</span></a>} (<a id="R:53" class="idref" href="#R:53"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:51"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:52"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;{<a id="dec:56" class="idref" href="#dec:56"><span class="id" title="binder">dec</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:54" class="idref" href="#x:54"><span class="id" title="binder">x</span></a> <a id="y:55" class="idref" href="#y:55"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#R:53"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#x:54"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#y:55"><span class="id" title="variable">y</span></a>)} (<a id="x:57" class="idref" href="#x:57"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:51"><span class="id" title="variable">A</span></a>) (<a id="y:58" class="idref" href="#y:58"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#B:52"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#R:53"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#x:57"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#y:58"><span class="id" title="variable">y</span></a>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Decidable.html#dec:56"><span class="id" title="variable">dec</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#x:57"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#y:58"><span class="id" title="variable">y</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab280"></a><h2 class="section">Decidable hprops</h2>
+
+<div class="paragraph"> </div>
+
+ Contractible types are decidable. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="decidable_contr" class="idref" href="#decidable_contr"><span class="id" title="instance">decidable_contr</span></a> <a id="X:59" class="idref" href="#X:59"><span class="id" title="binder">X</span></a> `{<a id="Contr0:60" class="idref" href="#Contr0:60"><span class="id" title="binder">Contr</span></a> <a id="Contr0:60" class="idref" href="#Contr0:60"><span class="id" title="binder">X</span></a>} : <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#X:59"><span class="id" title="variable">X</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a> <span class="id" title="var">X</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Thus, hprops have decidable equality. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="decidablepaths_hprop" class="idref" href="#decidablepaths_hprop"><span class="id" title="instance">decidablepaths_hprop</span></a> <a id="X:61" class="idref" href="#X:61"><span class="id" title="binder">X</span></a> `{<a id="IsHProp0:62" class="idref" href="#IsHProp0:62"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:62" class="idref" href="#IsHProp0:62"><span class="id" title="binder">X</span></a>} : <a class="idref" href="HoTT.Basics.Decidable.html#DecidablePaths"><span class="id" title="class">DecidablePaths</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#X:61"><span class="id" title="variable">X</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="x:63" class="idref" href="#x:63"><span class="id" title="binder">x</span></a> <a id="y:64" class="idref" href="#y:64"><span class="id" title="binder">y</span></a> ⇒ <a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#x:63"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#y:64"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Empty types are trivial. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="decidable_empty" class="idref" href="#decidable_empty"><span class="id" title="instance">decidable_empty</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab281"></a><h2 class="section">Transfer along equivalences</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="decidable_iff" class="idref" href="#decidable_iff"><span class="id" title="definition">decidable_iff</span></a> {<a id="A:65" class="idref" href="#A:65"><span class="id" title="binder">A</span></a> <a id="B:66" class="idref" href="#B:66"><span class="id" title="binder">B</span></a>} (<a id="f:67" class="idref" href="#f:67"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:65"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:66"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:65"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:66"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span>|<span class="id" title="var">na</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <span class="id" title="var">f</span> <span class="id" title="var">a</span>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> (<span class="id" title="keyword">fun</span> <a id="b:68" class="idref" href="#b:68"><span class="id" title="binder"><span id="b:69" class="id">b</span></span></a> ⇒ <span class="id" title="var">na</span> (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <span class="id" title="var">f</span> <a class="idref" href="HoTT.Basics.Decidable.html#b:68"><span class="id" title="variable">b</span></a>))).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="decidable_equiv'" class="idref" href="#decidable_equiv'"><span class="id" title="definition">decidable_equiv'</span></a> (<a id="A:70" class="idref" href="#A:70"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) {<a id="B:71" class="idref" href="#B:71"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:72" class="idref" href="#f:72"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:70"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:71"><span class="id" title="variable">B</span></a>)<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:70"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:71"><span class="id" title="variable">B</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Decidable.html#decidable_iff"><span class="id" title="definition">decidable_iff</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#f:72"><span class="id" title="variable">f</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="decidable_equiv" class="idref" href="#decidable_equiv"><span class="id" title="definition">decidable_equiv</span></a> (<a id="A:73" class="idref" href="#A:73"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) {<a id="B:74" class="idref" href="#B:74"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:75" class="idref" href="#f:75"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:73"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:74"><span class="id" title="variable">B</span></a>) `{<a id="IsEquiv0:76" class="idref" href="#IsEquiv0:76"><span class="id" title="binder">!</span></a><a id="IsEquiv0:76" class="idref" href="#IsEquiv0:76"><span class="id" title="binder">IsEquiv</span></a> <a id="IsEquiv0:76" class="idref" href="#IsEquiv0:76"><span class="id" title="binder">f</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:73"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:74"><span class="id" title="variable">B</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Decidable.html#decidable_equiv'"><span class="id" title="definition">decidable_equiv'</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Decidable.html#f:75"><span class="id" title="variable">f</span></a> <span class="id" title="var">_</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="decidablepaths_equiv" class="idref" href="#decidablepaths_equiv"><span class="id" title="definition">decidablepaths_equiv</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="A:77" class="idref" href="#A:77"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) {<a id="B:78" class="idref" href="#B:78"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:79" class="idref" href="#f:79"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:77"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:78"><span class="id" title="variable">B</span></a>) `{<a id="H:80" class="idref" href="#H:80"><span class="id" title="binder">IsEquiv</span></a> <a id="H:80" class="idref" href="#H:80"><span class="id" title="binder">A</span></a> <a id="H:80" class="idref" href="#H:80"><span class="id" title="binder">B</span></a> <a id="H:80" class="idref" href="#H:80"><span class="id" title="binder">f</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#DecidablePaths"><span class="id" title="class">DecidablePaths</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:77"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#DecidablePaths"><span class="id" title="class">DecidablePaths</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:78"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">d</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">d</span> (<span class="id" title="var">f</span><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">x</span></a>) (<span class="id" title="var">f</span><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">y</span></a>)) <span class="id" title="keyword">as</span> [<span class="id" title="var">e</span>|<span class="id" title="var">ne</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>. <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#eisretr"><span class="id" title="method">eisretr</span></a> <span class="id" title="var">f</span> <span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">f</span> <span class="id" title="var">e</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#eisretr"><span class="id" title="method">eisretr</span></a> <span class="id" title="var">f</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">ne</span>, <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="decidablepaths_equiv'" class="idref" href="#decidablepaths_equiv'"><span class="id" title="definition">decidablepaths_equiv'</span></a> (<a id="A:81" class="idref" href="#A:81"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) {<a id="B:82" class="idref" href="#B:82"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:83" class="idref" href="#f:83"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:81"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:82"><span class="id" title="variable">B</span></a>)<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#DecidablePaths"><span class="id" title="class">DecidablePaths</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:81"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#DecidablePaths"><span class="id" title="class">DecidablePaths</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:82"><span class="id" title="variable">B</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Decidable.html#decidablepaths_equiv"><span class="id" title="definition">decidablepaths_equiv</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:81"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#f:83"><span class="id" title="variable">f</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab282"></a><h2 class="section">Hedberg's theorem: any type with decidable equality is a set.</h2>
+
+<div class="paragraph"> </div>
+
+ A weakly constant function is one all of whose values are equal (in a specified way). 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="WeaklyConstant" class="idref" href="#WeaklyConstant"><span class="id" title="inductive, record"><span id="WeaklyConstant" class="id">WeaklyConstant</span></span></a> {<a id="A:84" class="idref" href="#A:84"><span class="id" title="binder">A</span></a> <a id="B:85" class="idref" href="#B:85"><span class="id" title="binder">B</span></a>} (<a id="f:86" class="idref" href="#f:86"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:84"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:85"><span class="id" title="variable">B</span></a>) :=<br/>
+&nbsp;&nbsp;<a id="wconst" class="idref" href="#wconst"><span class="id" title="constructor, projection"><span id="wconst" class="id">wconst</span></span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:88" class="idref" href="#x:88"><span class="id" title="binder">x</span></a> <a id="y:89" class="idref" href="#y:89"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#f:86"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#x:88"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#f:86"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#y:89"><span class="id" title="variable">y</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any map that factors through an hprop is weakly constant. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="wconst_through_hprop" class="idref" href="#wconst_through_hprop"><span class="id" title="definition">wconst_through_hprop</span></a> {<a id="A:91" class="idref" href="#A:91"><span class="id" title="binder">A</span></a> <a id="B:92" class="idref" href="#B:92"><span class="id" title="binder">B</span></a> <a id="P:93" class="idref" href="#P:93"><span class="id" title="binder">P</span></a>} `{<a id="IsHProp0:94" class="idref" href="#IsHProp0:94"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:94" class="idref" href="#IsHProp0:94"><span class="id" title="binder">P</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="f:95" class="idref" href="#f:95"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:91"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:93"><span class="id" title="variable">P</span></a>) (<a id="g:96" class="idref" href="#g:96"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#P:93"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:92"><span class="id" title="variable">B</span></a>)<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#WeaklyConstant"><span class="id" title="class">WeaklyConstant</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#g:96"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#f:95"><span class="id" title="variable">f</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">g</span>), <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A type is collapsible if it admits a weakly constant endomap. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="Collapsible" class="idref" href="#Collapsible"><span class="id" title="definition, record"><span id="Collapsible_rect" class="id"><span id="Collapsible_ind" class="id"><span id="Collapsible_rec" class="id"><span id="Collapsible_sind" class="id">Collapsible</span></span></span></span></span></a> (<a id="A:97" class="idref" href="#A:97"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) :=<br/>
+&nbsp;&nbsp;{ <a id="collapse" class="idref" href="#collapse"><span class="id" title="projection">collapse</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:97"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:97"><span class="id" title="variable">A</span></a> ;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="wconst_collapse" class="idref" href="#wconst_collapse"><span class="id" title="projection">wconst_collapse</span></a> :: <a class="idref" href="HoTT.Basics.Decidable.html#WeaklyConstant"><span class="id" title="class">WeaklyConstant</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#collapse:99"><span class="id" title="method">collapse</span></a><br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="PathCollapsible" class="idref" href="#PathCollapsible"><span class="id" title="inductive, record"><span id="PathCollapsible" class="id">PathCollapsible</span></span></a> (<a id="A:101" class="idref" href="#A:101"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) :=<br/>
+&nbsp;&nbsp;<a id="path_coll" class="idref" href="#path_coll"><span class="id" title="constructor, projection"><span id="path_coll" class="id">path_coll</span></span></a> :: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="x:103" class="idref" href="#x:103"><span class="id" title="binder">x</span></a> <a id="y:104" class="idref" href="#y:104"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:101"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Collapsible"><span class="id" title="class">Collapsible</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#x:103"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#y:104"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="collapsible_decidable" class="idref" href="#collapsible_decidable"><span class="id" title="instance">collapsible_decidable</span></a> (<a id="A:106" class="idref" href="#A:106"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H:107" class="idref" href="#H:107"><span class="id" title="binder">Decidable</span></a> <a id="H:107" class="idref" href="#H:107"><span class="id" title="binder">A</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#Collapsible"><span class="id" title="class">Collapsible</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:106"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">A</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">a</span> | <span class="id" title="var">na</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Basics.Overture.html#const"><span class="id" title="definition">const</span></a> <span class="id" title="var">a</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">∃</span> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">destruct</span> (<span class="id" title="var">na</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="pathcoll_decpaths" class="idref" href="#pathcoll_decpaths"><span class="id" title="instance">pathcoll_decpaths</span></a> (<a id="A:108" class="idref" href="#A:108"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H:109" class="idref" href="#H:109"><span class="id" title="binder">DecidablePaths</span></a> <a id="H:109" class="idref" href="#H:109"><span class="id" title="binder">A</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#PathCollapsible"><span class="id" title="class">PathCollapsible</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:108"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We give this a relatively high-numbered priority so that in deducing <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a></span> Coq doesn't detour via <span class="inlinecode"><a class="idref" href="HoTT.Types.IWType.html#DecidablePaths"><span class="id" title="section">DecidablePaths</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="hset_pathcoll" class="idref" href="#hset_pathcoll"><span class="id" title="instance">hset_pathcoll</span></a> (<a id="A:110" class="idref" href="#A:110"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H:111" class="idref" href="#H:111"><span class="id" title="binder">PathCollapsible</span></a> <a id="H:111" class="idref" href="#H:111"><span class="id" title="binder">A</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:110"><span class="id" title="variable">A</span></a> | 1000.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">h</span> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="p:112" class="idref" href="#p:112"><span class="id" title="binder"><span id="p:113" class="id">p</span></span></a>:<span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><span class="id" title="var">y</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#p:112"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Decidable.html#collapse"><span class="id" title="method">collapse</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <span class="id" title="var">x</span>)<a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#collapse"><span class="id" title="method">collapse</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#p:112"><span class="id" title="variable">p</span></a>).<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intros</span> []; <span class="id" title="tactic">symmetry</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_Vp"><span class="id" title="definition">concat_Vp</span></a>. }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#hprop_allpath"><span class="id" title="lemma">hprop_allpath</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">h</span> <span class="id" title="var">p</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><span class="id" title="var">h</span> <span class="id" title="var">q</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#whiskerL"><span class="id" title="definition">whiskerL</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Decidable.html#wconst"><span class="id" title="definition">wconst</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="collapsible_hprop" class="idref" href="#collapsible_hprop"><span class="id" title="definition">collapsible_hprop</span></a> (<a id="A:114" class="idref" href="#A:114"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="IsHProp0:115" class="idref" href="#IsHProp0:115"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:115" class="idref" href="#IsHProp0:115"><span class="id" title="binder">A</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#Collapsible"><span class="id" title="class">Collapsible</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:114"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pathcoll_hset" class="idref" href="#pathcoll_hset"><span class="id" title="definition">pathcoll_hset</span></a> (<a id="A:116" class="idref" href="#A:116"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="IsHSet0:117" class="idref" href="#IsHSet0:117"><span class="id" title="binder">IsHSet</span></a> <a id="IsHSet0:117" class="idref" href="#IsHSet0:117"><span class="id" title="binder">A</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Decidable.html#PathCollapsible"><span class="id" title="class">PathCollapsible</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:116"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Decidable.html#collapsible_hprop"><span class="id" title="definition">collapsible_hprop</span></a>; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Hedberg's Theorem 
+</div>
+<div class="code">
+<span class="id" title="keyword">Corollary</span> <a id="hset_decpaths" class="idref" href="#hset_decpaths"><span class="id" title="lemma">hset_decpaths</span></a> (<a id="A:118" class="idref" href="#A:118"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H:119" class="idref" href="#H:119"><span class="id" title="binder">DecidablePaths</span></a> <a id="H:119" class="idref" href="#H:119"><span class="id" title="binder">A</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:118"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can use Hedberg's Theorem to simplify a goal of the form <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.d"><span class="id" title="variable">d</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#Reflective_Subuniverse.Decidable"><span class="id" title="section">Decidable</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">:&gt;</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a>)),</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#BoolForall.P"><span class="id" title="variable">P</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.d"><span class="id" title="variable">d</span></a></span> when <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> has decidable paths. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="decidable_paths_refl" class="idref" href="#decidable_paths_refl"><span class="id" title="definition">decidable_paths_refl</span></a> (<a id="A:120" class="idref" href="#A:120"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H:121" class="idref" href="#H:121"><span class="id" title="binder">DecidablePaths</span></a> <a id="H:121" class="idref" href="#H:121"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;(<a id="x:122" class="idref" href="#x:122"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#A:120"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;(<a id="P:124" class="idref" href="#P:124"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="d:123" class="idref" href="#d:123"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#x:122"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#x:122"><span class="id" title="variable">x</span></a>)<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="Px:125" class="idref" href="#Px:125"><span class="id" title="binder">Px</span></a> : <a class="idref" href="HoTT.Basics.Decidable.html#P:124"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>))<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="d:126" class="idref" href="#d:126"><span class="id" title="binder">d</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#P:124"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#d:126"><span class="id" title="variable">d</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> (<a class="idref" href="HoTT.Basics.Decidable.html#decidable_true"><span class="id" title="definition">decidable_true</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>.<br/>
+</div>
+
+<div class="doc">
+We cannot eliminate <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.p"><span class="id" title="projection">p</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> with path induction, but we can use Hedberg's theorem to replace this with <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">r</span> : (<a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">p</span>)) <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">r</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab283"></a><h2 class="section">Truncation</h2>
+
+<div class="paragraph"> </div>
+
+ Having decidable equality (which implies being an hset, by Hedberg's theorem above) is itself an hprop. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="ishprop_decpaths" class="idref" href="#ishprop_decpaths"><span class="id" title="instance">ishprop_decpaths</span></a> `{<a id="H:127" class="idref" href="#H:127"><span class="id" title="binder">Funext</span></a>} (<a id="A:128" class="idref" href="#A:128"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#DecidablePaths"><span class="id" title="class">DecidablePaths</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:128"><span class="id" title="variable">A</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#hprop_inhabited_contr"><span class="id" title="instance">hprop_inhabited_contr</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">d</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <span class="id" title="var">A</span>) <span class="id" title="tactic">by</span> <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">Build_Contr</span></a> <span class="id" title="var">_</span> <span class="id" title="var">d</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">d'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">funext</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> (<span class="id" title="var">d</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>); <span class="id" title="tactic">clear</span> <span class="id" title="var">d</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">d</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> (<span class="id" title="var">d'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>); <span class="id" title="tactic">clear</span> <span class="id" title="var">d'</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">d'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">d</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">d</span>|<span class="id" title="var">nd</span>]; <span class="id" title="tactic">destruct</span> <span class="id" title="var">d'</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">d'</span>|<span class="id" title="var">nd'</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">elim</span> (<span class="id" title="var">nd'</span> <span class="id" title="var">d</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">elim</span> (<span class="id" title="var">nd</span> <span class="id" title="var">d'</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">elim</span> (<span class="id" title="var">nd</span> <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab284"></a><h2 class="section">Logical Laws</h2>
+
+<div class="paragraph"> </div>
+
+ Various logical laws don't hold constructively as they do classically due to a required use of excluded middle. For us, this means that some laws require further assumptions on the decidability of propositions. 
+<div class="paragraph"> </div>
+
+ Here we give the dual De Morgan's Law which complements the one given in Iff.v.  One direction requires that one of the two propositions be decidable, while the other direction needs no assumption.  We state the latter property first, to avoid duplication in the proof. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="not_prod_sum_not" class="idref" href="#not_prod_sum_not"><span class="id" title="definition">not_prod_sum_not</span></a> <a id="A:129" class="idref" href="#A:129"><span class="id" title="binder">A</span></a> <a id="B:130" class="idref" href="#B:130"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:129"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:130"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Decidable.html#A:129"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:130"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">na</span>|<span class="id" title="var">nb</span>] [<span class="id" title="var">a</span> <span class="id" title="var">b</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="var">na</span> <span class="id" title="var">a</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="var">nb</span> <span class="id" title="var">b</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="iff_not_prod" class="idref" href="#iff_not_prod"><span class="id" title="definition">iff_not_prod</span></a> <a id="A:131" class="idref" href="#A:131"><span class="id" title="binder">A</span></a> <a id="B:132" class="idref" href="#B:132"><span class="id" title="binder">B</span></a> `{<a id="H:133" class="idref" href="#H:133"><span class="id" title="binder">Decidable</span></a> <a id="H:133" class="idref" href="#H:133"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Decidable.html#A:131"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:132"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:131"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:132"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">np</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">A</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">a</span>|<span class="id" title="var">na</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> (<span class="id" title="keyword">fun</span> <a id="b:134" class="idref" href="#b:134"><span class="id" title="binder"><span id="b:135" class="id">b</span></span></a> ⇒ <span class="id" title="var">np</span> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">a</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#b:134"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">na</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Decidable.html#not_prod_sum_not"><span class="id" title="definition">not_prod_sum_not</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="iff_not_prod'" class="idref" href="#iff_not_prod'"><span class="id" title="definition">iff_not_prod'</span></a> <a id="A:136" class="idref" href="#A:136"><span class="id" title="binder">A</span></a> <a id="B:137" class="idref" href="#B:137"><span class="id" title="binder">B</span></a> `{<a id="H:138" class="idref" href="#H:138"><span class="id" title="binder">Decidable</span></a> <a id="H:138" class="idref" href="#H:138"><span class="id" title="binder">B</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Decidable.html#A:136"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:137"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#A:136"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#B:137"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">np</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">B</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">b</span>|<span class="id" title="var">nb</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> (<span class="id" title="keyword">fun</span> <a id="a:139" class="idref" href="#a:139"><span class="id" title="binder"><span id="a:140" class="id">a</span></span></a> ⇒ <span class="id" title="var">np</span> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Decidable.html#a:139"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">b</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">nb</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Decidable.html#not_prod_sum_not"><span class="id" title="definition">not_prod_sum_not</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

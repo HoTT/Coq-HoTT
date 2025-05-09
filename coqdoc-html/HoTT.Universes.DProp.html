@@ -1,0 +1,490 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Universes.DProp</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Universes.DProp</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1891"></a><h1 class="section">Decidable propositions</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Universes.TruncType.html#"><span class="id" title="library">TruncType</span></a> <a class="idref" href="HoTT.Universes.HProp.html#"><span class="id" title="library">HProp</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#"><span class="id" title="library">Modalities.ReflectiveSubuniverse</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1892"></a><h2 class="section">Definitions</h2>
+
+<div class="paragraph"> </div>
+
+ A decidable proposition is, morally speaking, an HProp that is decidable.  However, we only require that it be an HProp under the additional assumption of <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="axiom">Funext</span></a></span>; this enables decidable propositions to usually be used without <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="axiom">Funext</span></a></span> hypotheses. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="DProp" class="idref" href="#DProp"><span class="id" title="definition, record"><span id="DProp_rect" class="id"><span id="DProp_ind" class="id"><span id="DProp_rec" class="id"><span id="DProp_sind" class="id">DProp</span></span></span></span></span></a> := {<br/>
+&nbsp;&nbsp;<a id="dprop_type" class="idref" href="#dprop_type"><span class="id" title="projection">dprop_type</span></a> : <span class="id" title="keyword">Type</span> ;<br/>
+&nbsp;&nbsp;<a id="ishprop_dprop" class="idref" href="#ishprop_dprop"><span class="id" title="projection">ishprop_dprop</span></a> :: <a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="class">Funext</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_type:2"><span class="id" title="method">dprop_type</span></a> ;<br/>
+&nbsp;&nbsp;<a id="dec_dprop" class="idref" href="#dec_dprop"><span class="id" title="projection">dec_dprop</span></a> :: <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_type:2"><span class="id" title="method">dprop_type</span></a><br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A fancier definition, which would have the property that negation is judgmentally involutive, would be
+
+<div class="paragraph"> </div>
+
+<pre>
+Record DProp :=
+  { dprop_holds : Type ;
+    ishprop_holds : Funext -&gt; IsHProp dprop_holds ;
+    dprop_denies : Type ;
+    ishprop_denies : Funext -&gt; IsHProp dprop_denies ;
+    holds_or_denies : dprop_holds + dprop_denies ;
+    denies_or_holds : dprop_denies + dprop_holds ;
+    not_holds_and_denies : dprop_holds -&gt; dprop_denies -&gt; Empty
+  }.
+</pre>
+
+<div class="paragraph"> </div>
+
+At some point we may want to go that route, but it would be more work.  In particular, <span class="inlinecode"><span class="id" title="keyword">Instance</span></span>s of <span class="inlinecode"><a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#Reflective_Subuniverse.Decidable"><span class="id" title="section">Decidable</span></a></span> wouldn't be automatically computed for us, and the characterization of the homotopy type of <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a></span> itself would be a lot harder. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_type"><span class="id" title="projection">dprop_type</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_type"><span class="id" title="projection">:</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_type"><span class="id" title="projection">DProp</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_type"><span class="id" title="projection">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_type"><span class="id" title="projection">Sortclass</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Sometimes, however, we have decidable props that are hprops without funext, and we want to remember that. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="DHProp" class="idref" href="#DHProp"><span class="id" title="definition, record"><span id="DHProp_rect" class="id"><span id="DHProp_ind" class="id"><span id="DHProp_rec" class="id"><span id="DHProp_sind" class="id">DHProp</span></span></span></span></span></a> :=<br/>
+&nbsp;&nbsp;{ <a id="dhprop_hprop" class="idref" href="#dhprop_hprop"><span class="id" title="projection">dhprop_hprop</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> ;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="dec_dhprop" class="idref" href="#dec_dhprop"><span class="id" title="projection">dec_dhprop</span></a> :: <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_hprop:6"><span class="id" title="method">dhprop_hprop</span></a><br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_hprop"><span class="id" title="projection">dhprop_hprop</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_hprop"><span class="id" title="projection">:</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_hprop"><span class="id" title="projection">DHProp</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_hprop"><span class="id" title="projection">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_hprop"><span class="id" title="projection">HProp</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dhprop_to_dprop" class="idref" href="#dhprop_to_dprop"><span class="id" title="definition">dhprop_to_dprop</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="P:8" class="idref" href="#P:8"><span class="id" title="binder">P</span></a> ⇒ <a class="idref" href="HoTT.Universes.DProp.html#Build_DProp"><span class="id" title="constructor">Build_DProp</span></a> <a class="idref" href="HoTT.Universes.DProp.html#P:8"><span class="id" title="variable">P</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">_</span>) <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_to_dprop"><span class="id" title="definition">dhprop_to_dprop</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_to_dprop"><span class="id" title="definition">:</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_to_dprop"><span class="id" title="definition">DHProp</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_to_dprop"><span class="id" title="definition">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dhprop_to_dprop"><span class="id" title="definition">DProp</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In particular, <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#True"><span class="id" title="definition">True</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#False"><span class="id" title="definition">False</span></a></span> are always hprops. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="True" class="idref" href="#True"><span class="id" title="definition">True</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#Build_DHProp"><span class="id" title="constructor">Build_DHProp</span></a> <a class="idref" href="HoTT.Universes.TruncType.html#Unit_hp"><span class="id" title="definition">Unit_hp</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="False" class="idref" href="#False"><span class="id" title="definition">False</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#Build_DHProp"><span class="id" title="constructor">Build_DHProp</span></a> <a class="idref" href="HoTT.Universes.TruncType.html#False_hp"><span class="id" title="definition">False_hp</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Decidable props can be coerced to <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dprop_to_bool" class="idref" href="#dprop_to_bool"><span class="id" title="definition">dprop_to_bool</span></a> (<a id="P:9" class="idref" href="#P:9"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>) : <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">if</span> <a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <a class="idref" href="HoTT.Universes.DProp.html#P:9"><span class="id" title="variable">P</span></a> <span class="id" title="keyword">then</span> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a> <span class="id" title="keyword">else</span> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">dprop_to_bool</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">:</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">DProp</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">Bool</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And back again, but we don't declare that as a coercion. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="bool_to_dhprop" class="idref" href="#bool_to_dhprop"><span class="id" title="definition">bool_to_dhprop</span></a> (<a id="b:10" class="idref" href="#b:10"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>) : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">if</span> <a class="idref" href="HoTT.Universes.DProp.html#b:10"><span class="id" title="variable">b</span></a> <span class="id" title="keyword">then</span> <a class="idref" href="HoTT.Universes.DProp.html#True"><span class="id" title="definition">True</span></a> <span class="id" title="keyword">else</span> <a class="idref" href="HoTT.Universes.DProp.html#False"><span class="id" title="definition">False</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1893"></a><h2 class="section">The type of decidable props</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="issig_dprop" class="idref" href="#issig_dprop"><span class="id" title="definition">issig_dprop</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="X:11" class="idref" href="#X:11"><span class="id" title="binder">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <span class="id" title="keyword">Type</span> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="class">Funext</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.Universes.DProp.html#X:11"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Universes.DProp.html#X:11"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">issig</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_path_dprop" class="idref" href="#equiv_path_dprop"><span class="id" title="definition">equiv_path_dprop</span></a> `{<a id="H:12" class="idref" href="#H:12"><span class="id" title="binder">Funext</span></a>} (<a id="P:13" class="idref" href="#P:13"><span class="id" title="binder">P</span></a> <a id="Q:14" class="idref" href="#Q:14"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>)<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:13"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:14"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <span class="id" title="keyword">Type</span><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:13"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:14"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">P</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">P</span> <span class="id" title="var">hP</span> <span class="id" title="var">dP</span>]. <span class="id" title="tactic">destruct</span> <span class="id" title="var">Q</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">Q</span> <span class="id" title="var">hQ</span> <span class="id" title="var">dQ</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#equiv_ap'"><span class="id" title="definition">equiv_ap'</span></a> <a class="idref" href="HoTT.Universes.DProp.html#issig_dprop"><span class="id" title="definition">issig_dprop</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">^-1</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>); <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#equiv_ap'"><span class="id" title="definition">equiv_ap'</span></a> <a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Types.Sigma.html#equiv_sigma_assoc'"><span class="id" title="definition">equiv_sigma_assoc'</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">((</span></a><span class="id" title="var">P</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a><span class="id" title="var">hP</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">);</span></a><span class="id" title="var">dP</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">((</span></a><span class="id" title="var">Q</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a><span class="id" title="var">hQ</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">);</span></a><span class="id" title="var">dQ</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Types.Sigma.html#equiv_path_sigma_hprop"><span class="id" title="definition">equiv_path_sigma_hprop</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>); <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intros</span> [<span class="id" title="var">X</span> <span class="id" title="var">hX</span>]; <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>. }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Types.Sigma.html#equiv_path_sigma_hprop"><span class="id" title="definition">equiv_path_sigma_hprop</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">P</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a><span class="id" title="var">hP</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">Q</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a><span class="id" title="var">hQ</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="path_dprop" class="idref" href="#path_dprop"><span class="id" title="definition">path_dprop</span></a> `{<a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">Funext</span></a>} {<a id="P:16" class="idref" href="#P:16"><span class="id" title="binder">P</span></a> <a id="Q:17" class="idref" href="#Q:17"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:16"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:17"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <span class="id" title="keyword">Type</span><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:16"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:17"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#equiv_path_dprop"><span class="id" title="definition">equiv_path_dprop</span></a> <a class="idref" href="HoTT.Universes.DProp.html#P:16"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:17"><span class="id" title="variable">Q</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="issig_dhprop" class="idref" href="#issig_dhprop"><span class="id" title="definition">issig_dhprop</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="X:18" class="idref" href="#X:18"><span class="id" title="binder">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> <a class="idref" href="HoTT.Universes.DProp.html#X:18"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">issig</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_path_dhprop'" class="idref" href="#equiv_path_dhprop'"><span class="id" title="definition">equiv_path_dhprop'</span></a> `{<a id="H:19" class="idref" href="#H:19"><span class="id" title="binder">Funext</span></a>} (<a id="P:20" class="idref" href="#P:20"><span class="id" title="binder">P</span></a> <a id="Q:21" class="idref" href="#Q:21"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>)<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:20"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:21"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:20"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:21"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">P</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">P</span> <span class="id" title="var">dP</span>]. <span class="id" title="tactic">destruct</span> <span class="id" title="var">Q</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">Q</span> <span class="id" title="var">dQ</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#equiv_ap'"><span class="id" title="definition">equiv_ap'</span></a> <a class="idref" href="HoTT.Universes.DProp.html#issig_dhprop"><span class="id" title="definition">issig_dhprop</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">^-1</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>); <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> ((<a class="idref" href="HoTT.Types.Sigma.html#equiv_path_sigma_hprop"><span class="id" title="definition">equiv_path_sigma_hprop</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">P</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <span class="id" title="var">dP</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">Q</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <span class="id" title="var">dQ</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_path_dhprop" class="idref" href="#equiv_path_dhprop"><span class="id" title="definition">equiv_path_dhprop</span></a> `{<a id="H:22" class="idref" href="#H:22"><span class="id" title="binder">Univalence</span></a>} (<a id="P:23" class="idref" href="#P:23"><span class="id" title="binder">P</span></a> <a id="Q:24" class="idref" href="#Q:24"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>)<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:23"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:24"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <span class="id" title="keyword">Type</span><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:23"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:24"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">eq_type_hprop</span> : <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><span class="id" title="var">P</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <span class="id" title="var">Q</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <span class="id" title="keyword">Type</span><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><span class="id" title="var">P</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <span class="id" title="var">Q</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>) <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#equiv_path_trunctype'"><span class="id" title="definition">equiv_path_trunctype'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">eq_hprop_dhprop</span> : <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><span class="id" title="var">P</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <span class="id" title="var">Q</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><span class="id" title="var">P</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <span class="id" title="var">Q</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>) <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.DProp.html#equiv_path_dhprop'"><span class="id" title="definition">equiv_path_dhprop'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">eq_hprop_dhprop</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">eq_type_hprop</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="path_dhprop" class="idref" href="#path_dhprop"><span class="id" title="definition">path_dhprop</span></a> `{<a id="H:25" class="idref" href="#H:25"><span class="id" title="binder">Univalence</span></a>} {<a id="P:26" class="idref" href="#P:26"><span class="id" title="binder">P</span></a> <a id="Q:27" class="idref" href="#Q:27"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:26"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:27"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <span class="id" title="keyword">Type</span><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#P:26"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:27"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#equiv_path_dhprop"><span class="id" title="definition">equiv_path_dhprop</span></a> <a class="idref" href="HoTT.Universes.DProp.html#P:26"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:27"><span class="id" title="variable">Q</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="ishset_dprop" class="idref" href="#ishset_dprop"><span class="id" title="instance">ishset_dprop</span></a> `{<a id="H:28" class="idref" href="#H:28"><span class="id" title="binder">Univalence</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> <span class="id" title="var">_</span> (<span class="id" title="var">n</span> := -1) (<a class="idref" href="HoTT.Universes.DProp.html#equiv_path_dprop"><span class="id" title="definition">equiv_path_dprop</span></a> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_dprop_to_bool" class="idref" href="#isequiv_dprop_to_bool"><span class="id" title="instance">isequiv_dprop_to_bool</span></a> `{<a id="H:29" class="idref" href="#H:29"><span class="id" title="binder">Univalence</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">dprop_to_bool</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">dprop_to_bool</span></a> <a class="idref" href="HoTT.Universes.DProp.html#bool_to_dhprop"><span class="id" title="definition">bool_to_dhprop</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> []; <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">P</span>; <span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">dprop_to_bool</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">P</span>); <span class="id" title="tactic">symmetry</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.DProp.html#path_dprop"><span class="id" title="definition">path_dprop</span></a>, <a class="idref" href="HoTT.Types.Universe.html#path_universe_uncurried"><span class="id" title="definition">path_universe_uncurried</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.HProp.html#if_hprop_then_equiv_Unit"><span class="id" title="lemma">if_hprop_then_equiv_Unit</span></a>; [ <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span> | <span class="id" title="tactic">assumption</span> ].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.HProp.html#if_not_hprop_then_equiv_Empty"><span class="id" title="lemma">if_not_hprop_then_equiv_Empty</span></a>; [ <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span> | <span class="id" title="tactic">assumption</span> ].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_dprop_to_bool" class="idref" href="#equiv_dprop_to_bool"><span class="id" title="definition">equiv_dprop_to_bool</span></a> `{<a id="H:30" class="idref" href="#H:30"><span class="id" title="binder">Univalence</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_to_bool"><span class="id" title="definition">dprop_to_bool</span></a> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1894"></a><h2 class="section">Operations</h2>
+
+<div class="paragraph"> </div>
+
+ We define the logical operations on decidable hprops to be the operations on ordinary hprops, with decidability carrying over.  For the operations which preserve hprops without funext, we define separate versions that act on <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dand" class="idref" href="#dand"><span class="id" title="definition">dand</span></a> (<a id="b1:31" class="idref" href="#b1:31"><span class="id" title="binder">b1</span></a> <a id="b2:32" class="idref" href="#b2:32"><span class="id" title="binder">b2</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>) : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#Build_DProp"><span class="id" title="constructor">Build_DProp</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#b1:31"><span class="id" title="variable">b1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Universes.DProp.html#b2:32"><span class="id" title="variable">b2</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dhand" class="idref" href="#dhand"><span class="id" title="definition">dhand</span></a> (<a id="b1:33" class="idref" href="#b1:33"><span class="id" title="binder">b1</span></a> <a id="b2:34" class="idref" href="#b2:34"><span class="id" title="binder">b2</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>) : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#Build_DHProp"><span class="id" title="constructor">Build_DHProp</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HProp"><span class="id" title="abbreviation">Build_HProp</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#b1:33"><span class="id" title="variable">b1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Universes.DProp.html#b2:34"><span class="id" title="variable">b2</span></a>)) <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dor" class="idref" href="#dor"><span class="id" title="definition">dor</span></a> (<a id="b1:35" class="idref" href="#b1:35"><span class="id" title="binder">b1</span></a> <a id="b2:36" class="idref" href="#b2:36"><span class="id" title="binder">b2</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>) : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#Build_DProp"><span class="id" title="constructor">Build_DProp</span></a> (<a class="idref" href="HoTT.Truncations.Core.html#hor"><span class="id" title="definition">hor</span></a> <a class="idref" href="HoTT.Universes.DProp.html#b1:35"><span class="id" title="variable">b1</span></a> <a class="idref" href="HoTT.Universes.DProp.html#b2:36"><span class="id" title="variable">b2</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dhor" class="idref" href="#dhor"><span class="id" title="definition">dhor</span></a> (<a id="b1:37" class="idref" href="#b1:37"><span class="id" title="binder">b1</span></a> <a id="b2:38" class="idref" href="#b2:38"><span class="id" title="binder">b2</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>) : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#Build_DHProp"><span class="id" title="constructor">Build_DHProp</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#Build_HProp"><span class="id" title="abbreviation">Build_HProp</span></a> (<a class="idref" href="HoTT.Truncations.Core.html#hor"><span class="id" title="definition">hor</span></a> <a class="idref" href="HoTT.Universes.DProp.html#b1:37"><span class="id" title="variable">b1</span></a> <a class="idref" href="HoTT.Universes.DProp.html#b2:38"><span class="id" title="variable">b2</span></a>)) <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dneg" class="idref" href="#dneg"><span class="id" title="definition">dneg</span></a> (<a id="b:39" class="idref" href="#b:39"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>) : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#Build_DProp"><span class="id" title="constructor">Build_DProp</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><a class="idref" href="HoTT.Universes.DProp.html#b:39"><span class="id" title="variable">b</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dimpl" class="idref" href="#dimpl"><span class="id" title="definition">dimpl</span></a> (<a id="b1:40" class="idref" href="#b1:40"><span class="id" title="binder">b1</span></a> <a id="b2:41" class="idref" href="#b2:41"><span class="id" title="binder">b2</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>) : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Universes.DProp.html#Build_DProp"><span class="id" title="constructor">Build_DProp</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#b1:40"><span class="id" title="variable">b1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Universes.DProp.html#b2:41"><span class="id" title="variable">b2</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">dprop_scope</span>.<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">dprop_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">dprop</span>.<br/>
+<span class="id" title="keyword">Bind Scope</span> <span class="id" title="var">dprop_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">DProp</span>.<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">dhprop_scope</span>.<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">dhprop_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">dhprop</span>.<br/>
+<span class="id" title="keyword">Bind Scope</span> <span class="id" title="var">dhprop_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">DHProp</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="::dprop_scope:x_'&amp;&amp;'_x" class="idref" href="#::dprop_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&quot;</span></a>&amp;&amp;" := <a class="idref" href="HoTT.Universes.DProp.html#dand"><span class="id" title="definition">dand</span></a> : <span class="id" title="var">dprop_scope</span>.<br/>
+<span class="id" title="keyword">Infix</span> <a id="::dhprop_scope:x_'&amp;&amp;'_x" class="idref" href="#::dhprop_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&quot;</span></a>&amp;&amp;" := <a class="idref" href="HoTT.Universes.DProp.html#dhand"><span class="id" title="definition">dhand</span></a> : <span class="id" title="var">dhprop_scope</span>.<br/>
+<span class="id" title="keyword">Infix</span> <a id="e8293e77d18dc73ff20225329400d1bc" class="idref" href="#e8293e77d18dc73ff20225329400d1bc"><span class="id" title="notation">&quot;</span></a>||" := <a class="idref" href="HoTT.Universes.DProp.html#dor"><span class="id" title="definition">dor</span></a> : <span class="id" title="var">dprop_scope</span>.<br/>
+<span class="id" title="keyword">Infix</span> <a id="139758d6c72ad323c0edc45ee557fa23" class="idref" href="#139758d6c72ad323c0edc45ee557fa23"><span class="id" title="notation">&quot;</span></a>||" := <a class="idref" href="HoTT.Universes.DProp.html#dhor"><span class="id" title="definition">dhor</span></a> : <span class="id" title="var">dhprop_scope</span>.<br/>
+<span class="id" title="keyword">Infix</span> <a id="::dprop_scope:x_'-&gt;'_x" class="idref" href="#::dprop_scope:x_'-&gt;'_x"><span class="id" title="notation">&quot;</span></a>→" := <a class="idref" href="HoTT.Universes.DProp.html#dimpl"><span class="id" title="definition">dimpl</span></a> : <span class="id" title="var">dprop_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="e68ebaf4d32fb01983cd8e9233d51223" class="idref" href="#e68ebaf4d32fb01983cd8e9233d51223"><span class="id" title="notation">&quot;</span></a>!! P" := (<a class="idref" href="HoTT.Universes.DProp.html#dneg"><span class="id" title="definition">dneg</span></a> <span class="id" title="var">P</span>) : <span class="id" title="var">dprop_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">dprop_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1895"></a><h2 class="section">Computation</h2>
+
+<div class="paragraph"> </div>
+
+ In order to be able to "compute" with <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a></span>s like booleans, we define a couple of typeclasses. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="IsTrue" class="idref" href="#IsTrue"><span class="id" title="inductive, record"><span id="IsTrue" class="id">IsTrue</span></span></a> (<a id="P:42" class="idref" href="#P:42"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>) :=<br/>
+&nbsp;&nbsp;<a id="dprop_istrue" class="idref" href="#dprop_istrue"><span class="id" title="constructor, projection"><span id="dprop_istrue" class="id">dprop_istrue</span></span></a> : <a class="idref" href="HoTT.Universes.DProp.html#P:42"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="IsFalse" class="idref" href="#IsFalse"><span class="id" title="inductive, record"><span id="IsFalse" class="id">IsFalse</span></span></a> (<a id="P:45" class="idref" href="#P:45"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a>) :=<br/>
+&nbsp;&nbsp;<a id="dprop_isfalse" class="idref" href="#dprop_isfalse"><span class="id" title="constructor, projection"><span id="dprop_isfalse" class="id">dprop_isfalse</span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Universes.DProp.html#P:45"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Note that we are not using <span class="inlinecode"><span class="id" title="keyword">Typeclasses</span></span> <span class="inlinecode"><span class="id" title="keyword">Strict</span></span> <span class="inlinecode"><span class="id" title="var">Resolution</span></span> for <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="record">IsTrue</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="record">IsFalse</span></a></span>; this enables us to write simply <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="projection">dprop_istrue</span></a></span> as a proof of some true dprop, and Coq will infer from context what the dprop is that we're proving. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="true_istrue" class="idref" href="#true_istrue"><span class="id" title="instance">true_istrue</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> <a class="idref" href="HoTT.Universes.DProp.html#True"><span class="id" title="definition">True</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="false_isfalse" class="idref" href="#false_isfalse"><span class="id" title="instance">false_isfalse</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> <a class="idref" href="HoTT.Universes.DProp.html#False"><span class="id" title="definition">False</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dand_true_true" class="idref" href="#dand_true_true"><span class="id" title="instance">dand_true_true</span></a> {<a id="P:48" class="idref" href="#P:48"><span class="id" title="binder">P</span></a> <a id="Q:49" class="idref" href="#Q:49"><span class="id" title="binder">Q</span></a>} `{<a id="H:50" class="idref" href="#H:50"><span class="id" title="binder">IsTrue</span></a> <a id="H:50" class="idref" href="#H:50"><span class="id" title="binder">P</span></a>} `{<a id="H0:51" class="idref" href="#H0:51"><span class="id" title="binder">IsTrue</span></a> <a id="H0:51" class="idref" href="#H0:51"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:48"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dprop_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&amp;&amp;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:49"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dand_false_l" class="idref" href="#dand_false_l"><span class="id" title="instance">dand_false_l</span></a> {<a id="P:52" class="idref" href="#P:52"><span class="id" title="binder">P</span></a> <a id="Q:53" class="idref" href="#Q:53"><span class="id" title="binder">Q</span></a>} `{<a id="H:54" class="idref" href="#H:54"><span class="id" title="binder">IsFalse</span></a> <a id="H:54" class="idref" href="#H:54"><span class="id" title="binder">P</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:52"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dprop_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&amp;&amp;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:53"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dand_false_r" class="idref" href="#dand_false_r"><span class="id" title="instance">dand_false_r</span></a> {<a id="P:55" class="idref" href="#P:55"><span class="id" title="binder">P</span></a> <a id="Q:56" class="idref" href="#Q:56"><span class="id" title="binder">Q</span></a>} `{<a id="H:57" class="idref" href="#H:57"><span class="id" title="binder">IsFalse</span></a> <a id="H:57" class="idref" href="#H:57"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:55"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dprop_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&amp;&amp;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:56"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">q</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dhand_true_true" class="idref" href="#dhand_true_true"><span class="id" title="instance">dhand_true_true</span></a> {<a id="P:58" class="idref" href="#P:58"><span class="id" title="binder">P</span></a> <a id="Q:59" class="idref" href="#Q:59"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>} `{<a id="H:60" class="idref" href="#H:60"><span class="id" title="binder">IsTrue</span></a> <a id="H:60" class="idref" href="#H:60"><span class="id" title="binder">P</span></a>} `{<a id="H0:61" class="idref" href="#H0:61"><span class="id" title="binder">IsTrue</span></a> <a id="H0:61" class="idref" href="#H0:61"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:58"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dhprop_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&amp;&amp;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:59"><span class="id" title="variable">Q</span></a>)%<span class="id" title="var">dhprop</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+</div>
+
+<div class="doc">
+We have to give <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#BoolForall.P"><span class="id" title="variable">P</span></a></span> as an explicit argument here.  This is apparently because with two <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="record">IsTrue</span></a></span> instances in the context, when we write simply <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="projection">dprop_istrue</span></a></span>, Coq guesses one of them during typeclass resolution, and isn't willing to backtrack once it realizes that that choice fails to be what's needed to solve the goal.  Coq currently seems to consistently guess <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#Q"><span class="id" title="definition">Q</span></a></span> rather than <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#BoolForall.P"><span class="id" title="variable">P</span></a></span>, so that we don't have to give the argument <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#Q"><span class="id" title="definition">Q</span></a></span> to the second call to <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="projection">dprop_istrue</span></a></span>; but rather than depend on such behavior, we give both arguments explicitly.  (The problem doesn't arise with <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#dand_true_true"><span class="id" title="instance">dand_true_true</span></a></span> because in that case, unification, which fires before typeclass search, is able to guess that the argument must be <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#BoolForall.P"><span class="id" title="variable">P</span></a></span>.) 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>@<a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a> <span class="id" title="var">P</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> @<a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a> <span class="id" title="var">Q</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dhand_false_l" class="idref" href="#dhand_false_l"><span class="id" title="instance">dhand_false_l</span></a> {<a id="P:62" class="idref" href="#P:62"><span class="id" title="binder">P</span></a> <a id="Q:63" class="idref" href="#Q:63"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>} `{<a id="H:64" class="idref" href="#H:64"><span class="id" title="binder">IsFalse</span></a> <a id="H:64" class="idref" href="#H:64"><span class="id" title="binder">P</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:62"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dhprop_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&amp;&amp;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:63"><span class="id" title="variable">Q</span></a>)%<span class="id" title="var">dhprop</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dhand_false_r" class="idref" href="#dhand_false_r"><span class="id" title="instance">dhand_false_r</span></a> {<a id="P:65" class="idref" href="#P:65"><span class="id" title="binder">P</span></a> <a id="Q:66" class="idref" href="#Q:66"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>} `{<a id="H:67" class="idref" href="#H:67"><span class="id" title="binder">IsFalse</span></a> <a id="H:67" class="idref" href="#H:67"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:65"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dhprop_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&amp;&amp;</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:66"><span class="id" title="variable">Q</span></a>)%<span class="id" title="var">dhprop</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">q</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dor_true_l" class="idref" href="#dor_true_l"><span class="id" title="instance">dor_true_l</span></a> {<a id="P:68" class="idref" href="#P:68"><span class="id" title="binder">P</span></a> <a id="Q:69" class="idref" href="#Q:69"><span class="id" title="binder">Q</span></a>} `{<a id="H:70" class="idref" href="#H:70"><span class="id" title="binder">IsTrue</span></a> <a id="H:70" class="idref" href="#H:70"><span class="id" title="binder">P</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:68"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#e8293e77d18dc73ff20225329400d1bc"><span class="id" title="notation">||</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:69"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">Q</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dor_true_r" class="idref" href="#dor_true_r"><span class="id" title="instance">dor_true_r</span></a> {<a id="P:71" class="idref" href="#P:71"><span class="id" title="binder">P</span></a> <a id="Q:72" class="idref" href="#Q:72"><span class="id" title="binder">Q</span></a>} `{<a id="H:73" class="idref" href="#H:73"><span class="id" title="binder">IsTrue</span></a> <a id="H:73" class="idref" href="#H:73"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:71"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#e8293e77d18dc73ff20225329400d1bc"><span class="id" title="notation">||</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:72"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">P</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dor_false_false" class="idref" href="#dor_false_false"><span class="id" title="instance">dor_false_false</span></a> {<a id="P:74" class="idref" href="#P:74"><span class="id" title="binder">P</span></a> <a id="Q:75" class="idref" href="#Q:75"><span class="id" title="binder">Q</span></a>} `{<a id="H:76" class="idref" href="#H:76"><span class="id" title="binder">IsFalse</span></a> <a id="H:76" class="idref" href="#H:76"><span class="id" title="binder">P</span></a>} `{<a id="H0:77" class="idref" href="#H0:77"><span class="id" title="binder">IsFalse</span></a> <a id="H0:77" class="idref" href="#H0:77"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:74"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#e8293e77d18dc73ff20225329400d1bc"><span class="id" title="notation">||</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:75"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">pq</span>. <span class="id" title="var">strip_truncations</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">pq</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span>|<span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">q</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dhor_true_l" class="idref" href="#dhor_true_l"><span class="id" title="instance">dhor_true_l</span></a> {<a id="P:78" class="idref" href="#P:78"><span class="id" title="binder">P</span></a> <a id="Q:79" class="idref" href="#Q:79"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>} `{<a id="H:80" class="idref" href="#H:80"><span class="id" title="binder">IsTrue</span></a> <a id="H:80" class="idref" href="#H:80"><span class="id" title="binder">P</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:78"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#139758d6c72ad323c0edc45ee557fa23"><span class="id" title="notation">||</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:79"><span class="id" title="variable">Q</span></a>)%<span class="id" title="var">dhprop</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">Q</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dhor_true_r" class="idref" href="#dhor_true_r"><span class="id" title="instance">dhor_true_r</span></a> {<a id="P:81" class="idref" href="#P:81"><span class="id" title="binder">P</span></a> <a id="Q:82" class="idref" href="#Q:82"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>} `{<a id="H:83" class="idref" href="#H:83"><span class="id" title="binder">IsTrue</span></a> <a id="H:83" class="idref" href="#H:83"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:81"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#139758d6c72ad323c0edc45ee557fa23"><span class="id" title="notation">||</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:82"><span class="id" title="variable">Q</span></a>)%<span class="id" title="var">dhprop</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">P</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dhor_false_false" class="idref" href="#dhor_false_false"><span class="id" title="instance">dhor_false_false</span></a> {<a id="P:84" class="idref" href="#P:84"><span class="id" title="binder">P</span></a> <a id="Q:85" class="idref" href="#Q:85"><span class="id" title="binder">Q</span></a> : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp</span></a>} `{<a id="H:86" class="idref" href="#H:86"><span class="id" title="binder">IsFalse</span></a> <a id="H:86" class="idref" href="#H:86"><span class="id" title="binder">P</span></a>} `{<a id="H0:87" class="idref" href="#H0:87"><span class="id" title="binder">IsFalse</span></a> <a id="H0:87" class="idref" href="#H0:87"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:84"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#139758d6c72ad323c0edc45ee557fa23"><span class="id" title="notation">||</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:85"><span class="id" title="variable">Q</span></a>)%<span class="id" title="var">dhprop</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">pq</span>. <span class="id" title="var">strip_truncations</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">pq</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span>|<span class="id" title="var">q</span>].<br/>
+</div>
+
+<div class="doc">
+See comment in the proof of <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#dhand_true_true"><span class="id" title="instance">dhand_true_true</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">P</span> <span class="id" title="var">_</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">Q</span> <span class="id" title="var">_</span> <span class="id" title="var">q</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dneg_true" class="idref" href="#dneg_true"><span class="id" title="instance">dneg_true</span></a> {<a id="P:88" class="idref" href="#P:88"><span class="id" title="binder">P</span></a>} `{<a id="H:89" class="idref" href="#H:89"><span class="id" title="binder">IsTrue</span></a> <a id="H:89" class="idref" href="#H:89"><span class="id" title="binder">P</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#e68ebaf4d32fb01983cd8e9233d51223"><span class="id" title="notation">!!</span></a> <a class="idref" href="HoTT.Universes.DProp.html#P:88"><span class="id" title="variable">P</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">np</span>; <span class="id" title="tactic">exact</span> (<span class="id" title="var">np</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dneg_false" class="idref" href="#dneg_false"><span class="id" title="instance">dneg_false</span></a> {<a id="P:90" class="idref" href="#P:90"><span class="id" title="binder">P</span></a>} `{<a id="H:91" class="idref" href="#H:91"><span class="id" title="binder">IsFalse</span></a> <a id="H:91" class="idref" href="#H:91"><span class="id" title="binder">P</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#e68ebaf4d32fb01983cd8e9233d51223"><span class="id" title="notation">!!</span></a> <a class="idref" href="HoTT.Universes.DProp.html#P:90"><span class="id" title="variable">P</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dimpl_true_r" class="idref" href="#dimpl_true_r"><span class="id" title="instance">dimpl_true_r</span></a> {<a id="P:92" class="idref" href="#P:92"><span class="id" title="binder">P</span></a> <a id="Q:93" class="idref" href="#Q:93"><span class="id" title="binder">Q</span></a>} `{<a id="H:94" class="idref" href="#H:94"><span class="id" title="binder">IsTrue</span></a> <a id="H:94" class="idref" href="#H:94"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:92"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dprop_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:93"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dimpl_false_l" class="idref" href="#dimpl_false_l"><span class="id" title="instance">dimpl_false_l</span></a> {<a id="P:95" class="idref" href="#P:95"><span class="id" title="binder">P</span></a> <a id="Q:96" class="idref" href="#Q:96"><span class="id" title="binder">Q</span></a>} `{<a id="H:97" class="idref" href="#H:97"><span class="id" title="binder">IsFalse</span></a> <a id="H:97" class="idref" href="#H:97"><span class="id" title="binder">P</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsTrue"><span class="id" title="class">IsTrue</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:95"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dprop_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:96"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">elim</span> (<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="dimpl_true_false" class="idref" href="#dimpl_true_false"><span class="id" title="instance">dimpl_true_false</span></a> {<a id="P:98" class="idref" href="#P:98"><span class="id" title="binder">P</span></a> <a id="Q:99" class="idref" href="#Q:99"><span class="id" title="binder">Q</span></a>} `{<a id="H:100" class="idref" href="#H:100"><span class="id" title="binder">IsTrue</span></a> <a id="H:100" class="idref" href="#H:100"><span class="id" title="binder">P</span></a>} `{<a id="H0:101" class="idref" href="#H0:101"><span class="id" title="binder">IsFalse</span></a> <a id="H0:101" class="idref" href="#H0:101"><span class="id" title="binder">Q</span></a>}<br/>
+: <a class="idref" href="HoTT.Universes.DProp.html#IsFalse"><span class="id" title="class">IsFalse</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#P:98"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Universes.DProp.html#::dprop_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Universes.DProp.html#Q:99"><span class="id" title="variable">Q</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Universes.DProp.html#dprop_isfalse"><span class="id" title="definition">dprop_isfalse</span></a> (<span class="id" title="var">f</span> <a class="idref" href="HoTT.Universes.DProp.html#dprop_istrue"><span class="id" title="definition">dprop_istrue</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="path_dec" class="idref" href="#path_dec"><span class="id" title="lemma">path_dec</span></a> (<a id="A:102" class="idref" href="#A:102"><span class="id" title="binder">A</span></a> :<span class="id" title="keyword">Type</span>) `{<a id="IsHProp0:103" class="idref" href="#IsHProp0:103"><span class="id" title="binder">IsHProp</span></a> <a id="IsHProp0:103" class="idref" href="#IsHProp0:103"><span class="id" title="binder">A</span></a>} `{<a id="H:104" class="idref" href="#H:104"><span class="id" title="binder">Decidable</span></a> <a id="H:104" class="idref" href="#H:104"><span class="id" title="binder">A</span></a>} `{<a id="H0:105" class="idref" href="#H0:105"><span class="id" title="binder">Univalence</span></a>} : <a class="idref" href="HoTT.Universes.DProp.html#A:102"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Types.Sum.html#is_inl"><span class="id" title="definition">is_inl</span></a> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <a class="idref" href="HoTT.Universes.DProp.html#A:102"><span class="id" title="variable">A</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Types.Universe.html#path_universe_uncurried"><span class="id" title="definition">path_universe_uncurried</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#equiv_iff_hprop_uncurried"><span class="id" title="definition">equiv_iff_hprop_uncurried</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">b</span>. <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">A</span>); <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Decidable.html#dec"><span class="id" title="definition">dec</span></a> <span class="id" title="var">A</span>); <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

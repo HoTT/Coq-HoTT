@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Rings.ChineseRemainder</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Rings.ChineseRemainder</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#"><span class="id" title="library">Classes.interfaces.canonical_names</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.html#"><span class="id" title="library">WildCat</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#"><span class="id" title="library">Modalities.ReflectiveSubuniverse</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.html#"><span class="id" title="library">Algebra.AbGroups</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#"><span class="id" title="library">Algebra.Rings.Ring</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#"><span class="id" title="library">Algebra.Rings.Ideal</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#"><span class="id" title="library">Algebra.Rings.QuotientRing</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#"><span class="id" title="library">Algebra.Rings.CRing</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab166"></a><h1 class="section">Chinese remainder theorem</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#Notation"><span class="id" title="module">Ideal.Notation</span></a>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">ring_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">wc_iso_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="ChineseRemainderTheorem" class="idref" href="#ChineseRemainderTheorem"><span class="id" title="section">ChineseRemainderTheorem</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We assume <span class="inlinecode"><a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="section">Univalence</span></a></span> in order to work with quotients. We also need it for <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="axiom">Funext</span></a></span> in a few places.
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Univalence</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+<div class="doc">
+We need two coprime ideals <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.I"><span class="id" title="definition">I</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.J"><span class="id" title="definition">J</span></a></span> to state the theorem. We don't introduce the coprimeness assumption as of yet in order to show something slightly stronger. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;{<a id="R:2" class="idref" href="#R:2"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} (<a id="I:3" class="idref" href="#I:3"><span class="id" title="binder">I</span></a> <a id="J:4" class="idref" href="#J:4"><span class="id" title="binder">J</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#Ideal"><span class="id" title="record">Ideal</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#R:2"><span class="id" title="variable">R</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We begin with the homomorphism which will show to be a surjection. Using the first isomorphism theorem for rings we can improve this to be the isomorphism we want.  This is the corecursion of the two quotient maps 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rng_homo_crt" class="idref" href="#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#ring_product_corec"><span class="id" title="definition">ring_product_corec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#rng_quotient_map"><span class="id" title="definition">rng_quotient_map</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Since we are working with quotients, we make the following notation to make working with the proof somewhat easier. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Notation</span> <a id="bef6e98d2e39ae5ee88c28550e9e418d" class="idref" href="#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">&quot;</span></a>[ x ]" := (<a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#rng_quotient_map"><span class="id" title="definition">rng_quotient_map</span></a> <span class="id" title="var">_</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We then need to prove the following lemma. The hypotheses here can be derived by coprimality of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.I"><span class="id" title="definition">I</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.J"><span class="id" title="definition">J</span></a></span>. But we don't need that here. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="issurjection_rng_homo_crt'" class="idref" href="#issurjection_rng_homo_crt'"><span class="id" title="lemma">issurjection_rng_homo_crt'</span></a> (<a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a> <a id="y:6" class="idref" href="#y:6"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="q1:7" class="idref" href="#q1:7"><span class="id" title="binder">q1</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#x:5"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> 1<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>) (<a id="q2:8" class="idref" href="#q2:8"><span class="id" title="binder">q2</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#y:6"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>1<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> 0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Truncations.Core.html#IsSurjection"><span class="id" title="abbreviation">IsSurjection</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+</div>
+
+<div class="doc">
+In order to show that <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a></span> is a surjection, we need to show that its propositional truncation of the fiber at any point is contractible. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span> <span class="id" title="var">b</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">a</span>; <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#QuotientRing_ind_hprop"><span class="id" title="definition">QuotientRing_ind_hprop</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">b</span>; <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#QuotientRing_ind_hprop"><span class="id" title="definition">QuotientRing_ind_hprop</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">b</span>.<br/>
+</div>
+
+<div class="doc">
+We can think of <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a></span> as the pair <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.a"><span class="id" title="variable">a</span></a></span> <span class="inlinecode"><span class="id" title="var">mod</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.I"><span class="id" title="definition">I</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Monoidal.MonoidalCategory.html#MonoidalStructure.MonoidalCategoryConcepts.coherence_laws.b"><span class="id" title="variable">b</span></a></span> <span class="inlinecode"><span class="id" title="var">mod</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.J"><span class="id" title="definition">J</span></a>)</span>. We need to show that there merely exists some element in <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> that gets mapped by  <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a></span> to the pair. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">Build_Contr</span></a>; [|<span class="id" title="tactic">intros</span> <span class="id" title="var">z</span>; <span class="id" title="var">strip_truncations</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>].<br/>
+</div>
+
+<div class="doc">
+We make this choice and show it maps as desired. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>; <span class="id" title="tactic">∃</span> (<span class="id" title="var">b</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <span class="id" title="var">a</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <span class="id" title="var">y</span>).<br/>
+</div>
+
+<div class="doc">
+Finally using some simple ring laws we can show it maps to our pair. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_plus"><span class="id" title="definition">rng_homo_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">q1</span>, <span class="id" title="var">q2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#path_prod"><span class="id" title="definition">path_prod</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">[</span></a><span class="id" title="var">b</span><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> 0 <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">[</span></a><span class="id" title="var">a</span><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> 1 <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">[</span></a><span class="id" title="var">a</span><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_zero_r"><span class="id" title="definition">rng_mult_zero_r</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_zero_l"><span class="id" title="definition">rng_plus_zero_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">[</span></a><span class="id" title="var">b</span><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> 1 <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">[</span></a><span class="id" title="var">a</span><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> 0 <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">[</span></a><span class="id" title="var">b</span><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#bef6e98d2e39ae5ee88c28550e9e418d"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_zero_r"><span class="id" title="definition">rng_mult_zero_r</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_zero_r"><span class="id" title="definition">rng_plus_zero_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we show that if <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">+</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode">1</span> for <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.I"><span class="id" title="definition">I</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.J"><span class="id" title="definition">J</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> then we can satisfy the hypotheses of the previous lemma. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="ChineseRemainderTheorem.rng_homo_crt_beta" class="idref" href="#ChineseRemainderTheorem.rng_homo_crt_beta"><span class="id" title="section">rng_homo_crt_beta</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="x:9" class="idref" href="#x:9"><span class="id" title="binder">x</span></a> <a id="y:10" class="idref" href="#y:10"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a>) (<a id="ix:11" class="idref" href="#ix:11"><span class="id" title="binder">ix</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#x:9"><span class="id" title="variable">x</span></a>) (<a id="iy:12" class="idref" href="#iy:12"><span class="id" title="binder">iy</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#y:10"><span class="id" title="variable">y</span></a>) (<a id="p:13" class="idref" href="#p:13"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#x:9"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#y:10"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="rng_homo_crt_beta_left" class="idref" href="#rng_homo_crt_beta_left"><span class="id" title="lemma">rng_homo_crt_beta_left</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> 1<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_moveR_Mr"><span class="id" title="definition">rng_moveR_Mr</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_comm"><span class="id" title="definition">rng_plus_comm</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#path_prod"><span class="id" title="definition">path_prod</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 0)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#ideal_in_negate_plus"><span class="id" title="definition">ideal_in_negate_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#ideal_in_zero"><span class="id" title="definition">ideal_in_zero</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 1)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_comm"><span class="id" title="definition">rng_plus_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta.p"><span class="id" title="variable">p</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="rng_homo_crt_beta_right" class="idref" href="#rng_homo_crt_beta_right"><span class="id" title="lemma">rng_homo_crt_beta_right</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta.y"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>1<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> 0<a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_moveR_rM"><span class="id" title="definition">rng_moveR_rM</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_comm"><span class="id" title="definition">rng_plus_comm</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#path_prod"><span class="id" title="definition">path_prod</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta.y"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 1)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta.p"><span class="id" title="variable">p</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta.y"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 0)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#ideal_in_negate_plus"><span class="id" title="definition">ideal_in_negate_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#ideal_in_zero"><span class="id" title="definition">ideal_in_zero</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.rng_homo_crt_beta"><span class="id" title="section">rng_homo_crt_beta</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can now show the map is surjective from coprimality of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.I"><span class="id" title="definition">I</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.J"><span class="id" title="definition">J</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="issurjection_rng_homo_crt" class="idref" href="#issurjection_rng_homo_crt"><span class="id" title="instance">issurjection_rng_homo_crt</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#Coprime"><span class="id" title="class">Coprime</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Truncations.Core.html#IsSurjection"><span class="id" title="abbreviation">IsSurjection</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">c</span>.<br/>
+</div>
+
+<div class="doc">
+First we turn the coprimality assumption into an equivalent assumption about the mere existence of two elements of each ideal which sum to one. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#equiv_coprime_sum"><span class="id" title="lemma">equiv_coprime_sum</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">c</span>.<br/>
+</div>
+
+<div class="doc">
+Since the goal is a hprop we may strip the truncations. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+</div>
+
+<div class="doc">
+Now we can break apart the data of this witness. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="keyword">as</span> [[[<span class="id" title="var">x</span> <span class="id" title="var">ix</span>] [<span class="id" title="var">y</span> <span class="id" title="var">jy</span>]] <span class="id" title="var">p</span>];<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <span class="id" title="var">y</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1) <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+</div>
+
+<div class="doc">
+Now we apply all our previous lemmas 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#issurjection_rng_homo_crt'"><span class="id" title="lemma">issurjection_rng_homo_crt'</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt_beta_left"><span class="id" title="lemma">rng_homo_crt_beta_left</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">ix</span> <span class="id" title="var">jy</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt_beta_right"><span class="id" title="lemma">rng_homo_crt_beta_right</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">ix</span> <span class="id" title="var">jy</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now suppose <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.I"><span class="id" title="definition">I</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Cantor.html#BAut_Cantor_Idempotent.J"><span class="id" title="definition">J</span></a></span> are coprime. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="c:14" class="idref" href="#c:14"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#Coprime"><span class="id" title="class">Coprime</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The Chinese Remainder Theorem 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="chinese_remainder" class="idref" href="#chinese_remainder"><span class="id" title="lemma">chinese_remainder</span></a> : <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#49069ef2b0d48b87a8050767762d9bb6"><span class="id" title="notation">∩</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a>)%<span class="id" title="var">ideal</span> <a class="idref" href="HoTT.WildCat.Equiv.html#44d93ed1077fb87ba02f52390cc2a7bb"><span class="id" title="notation">≅</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+</div>
+
+<div class="doc">
+We use the first isomorphism theorem. Coq can already infer which map we wish to use, so for clarity we tell it not to do so. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#rng_first_iso'"><span class="id" title="definition">rng_first_iso'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#rng_homo_crt"><span class="id" title="definition">rng_homo_crt</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+</div>
+
+<div class="doc">
+Finally we must show the ideal of this map is the intersection. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#ideal_subset_antisymm"><span class="id" title="lemma">ideal_subset_antisymm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">r</span> [<span class="id" title="var">i</span> <span class="id" title="var">j</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#path_prod"><span class="id" title="definition">path_prod</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.I"><span class="id" title="variable">I</span></a> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a> <span class="id" title="var">r</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 0)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem.J"><span class="id" title="variable">J</span></a> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a> <span class="id" title="var">r</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 0)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_comm"><span class="id" title="definition">rng_plus_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#ideal_in_plus_negate"><span class="id" title="definition">ideal_in_plus_negate</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,3: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#ideal_in_zero"><span class="id" title="definition">ideal_in_zero</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#equiv_path_prod"><span class="id" title="definition">equiv_path_prod</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#ideal_in_negate'"><span class="id" title="definition">ideal_in_negate'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_zero_r"><span class="id" title="definition">rng_plus_zero_r</span></a>.<br/>
+</div>
+
+<div class="doc">
+Here we need to derive the relation from paths in the quotient. This is what requires univalence. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#related_quotient_paths"><span class="id" title="lemma">related_quotient_paths</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#related_quotient_paths"><span class="id" title="lemma">related_quotient_paths</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#ChineseRemainderTheorem"><span class="id" title="section">ChineseRemainderTheorem</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We also have the same for products of ideals when in a commutative ring. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <a id="chinese_remainder_prod" class="idref" href="#chinese_remainder_prod"><span class="id" title="lemma">chinese_remainder_prod</span></a> `{<a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">Univalence</span></a>}<br/>
+&nbsp;&nbsp;{<a id="R:16" class="idref" href="#R:16"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>} (<a id="I:17" class="idref" href="#I:17"><span class="id" title="binder">I</span></a> <a id="J:18" class="idref" href="#J:18"><span class="id" title="binder">J</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#Ideal"><span class="id" title="record">Ideal</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#R:16"><span class="id" title="variable">R</span></a>) (<a id="c:19" class="idref" href="#c:19"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#Coprime"><span class="id" title="class">Coprime</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#I:17"><span class="id" title="variable">I</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#J:18"><span class="id" title="variable">J</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#R:16"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> (<a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#I:17"><span class="id" title="variable">I</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ideal.html#e8241c35a52a9f330afd6e07e5ec47e0"><span class="id" title="notation">⋅</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#J:18"><span class="id" title="variable">J</span></a>)%<span class="id" title="var">ideal</span> <a class="idref" href="HoTT.WildCat.Equiv.html#44d93ed1077fb87ba02f52390cc2a7bb"><span class="id" title="notation">≅</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#R:16"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#I:17"><span class="id" title="variable">I</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#R:16"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#69c431a9c94f6f30a655bd7ddb59037b"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#J:18"><span class="id" title="variable">J</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#2bc9961475daf12c7c95e447dcdbd629"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">etransitivity</span>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#rng_quotient_invar"><span class="id" title="lemma">rng_quotient_invar</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#ideal_intersection_is_product"><span class="id" title="lemma">ideal_intersection_is_product</span></a>. }<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Rings.ChineseRemainder.html#chinese_remainder"><span class="id" title="lemma">chinese_remainder</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

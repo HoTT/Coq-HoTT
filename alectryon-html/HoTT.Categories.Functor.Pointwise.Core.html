@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Functors between functor categories constructed pointwise *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc5e" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc5e"><span class="kn">Require Import</span> Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Composition.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This is the on-objects part of the functor-category construction as a functor. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">pointwise</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">C&#39;</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C&#39; C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">D</span> <span class="nv">D&#39;</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D D&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">pointwise_object_of</span> H := (G o H o F : object (C&#39; -&gt; D&#39;)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">pointwise_whiskerL_object_of</span> H := (G o H : object (C -&gt; D&#39;)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">pointwise_whiskerR_object_of</span> H := (H o F : object (C&#39; -&gt; D)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="c">(*  Definition pointwise_object_of : (C -&gt; D) -&gt; (C&#39; -&gt; D&#39;)</span>
+<span class="c">    := fun H =&gt; G o H o F.*)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pointwise_morphism_of</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism (C -&gt; D) s d)
+  : morphism (C&#39; -&gt; D&#39;)
+             (pointwise_object_of s)
+             (pointwise_object_of d)
+      := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="kr">in</span> G oL m oR F.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pointwise_whiskerL_morphism_of</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism (C -&gt; D) s d)
+  : morphism (C -&gt; D&#39;)
+             (pointwise_whiskerL_object_of s)
+             (pointwise_whiskerL_object_of d)
+      := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="kr">in</span> G oL m.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pointwise_whiskerR_morphism_of</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism (C -&gt; D) s d)
+  : morphism (C&#39; -&gt; D)
+             (pointwise_whiskerR_object_of s)
+             (pointwise_whiskerR_object_of d)
+      := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="kr">in</span> m oR F.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> pointwise_morphism_of _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> pointwise_whiskerL_morphism_of _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> pointwise_whiskerR_morphism_of _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Construction of [pointwise : (C → D) → (C&#39; → D&#39;)] from [C&#39; → C] and [D → D&#39;] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc5f" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc5f"><span class="kn">Definition</span> <span class="nf">pointwise</span> : Functor (C -&gt; D) (C&#39; -&gt; D&#39;).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, C'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C&#39; C</span></span></span><br><span><var>D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C -&gt; D) (C&#39; -&gt; D&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc60" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc60"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, C'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C&#39; C</span></span></span><br><span><var>D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C -&gt; D) (C&#39; -&gt; D&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+              (C -&gt; D) (C&#39; -&gt; D&#39;)
+              (<span class="kr">fun</span> <span class="nv">x</span> =&gt; pointwise_object_of x)
+              pointwise_morphism_of
+              _
+              _);
+    <span class="kp">abstract</span> (<span class="nb">intros</span>; <span class="nb">simpl</span>; path_natural_transformation; <span class="nb">auto with</span> functor).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Construction of [(C → D) → (C → D&#39;)] from [D → D&#39;] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc61" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc61"><span class="kn">Definition</span> <span class="nf">pointwise_whiskerL</span> : Functor (C -&gt; D) (C -&gt; D&#39;).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, C'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C&#39; C</span></span></span><br><span><var>D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C -&gt; D) (C -&gt; D&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc62" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc62"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, C'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C&#39; C</span></span></span><br><span><var>D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C -&gt; D) (C -&gt; D&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+              (C -&gt; D) (C -&gt; D&#39;)
+              (<span class="kr">fun</span> <span class="nv">x</span> =&gt; pointwise_whiskerL_object_of x)
+              pointwise_whiskerL_morphism_of
+              _
+              _);
+    <span class="kp">abstract</span> (<span class="nb">intros</span>; <span class="nb">simpl</span>; path_natural_transformation; <span class="nb">auto with</span> functor).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Construction of [(C → D) → (C&#39; → D)] from [C&#39; → C] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc63" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc63"><span class="kn">Definition</span> <span class="nf">pointwise_whiskerR</span> : Functor (C -&gt; D) (C&#39; -&gt; D).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, C'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C&#39; C</span></span></span><br><span><var>D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C -&gt; D) (C&#39; -&gt; D)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc64" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc64"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, C'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C&#39; C</span></span></span><br><span><var>D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C -&gt; D) (C&#39; -&gt; D)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+              (C -&gt; D) (C&#39; -&gt; D)
+              (<span class="kr">fun</span> <span class="nv">x</span> =&gt; pointwise_whiskerR_object_of x)
+              pointwise_whiskerR_morphism_of
+              _
+              _);
+    <span class="kp">abstract</span> (<span class="nb">intros</span>; <span class="nb">simpl</span>; path_natural_transformation; <span class="nb">auto with</span> functor).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">pointwise</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

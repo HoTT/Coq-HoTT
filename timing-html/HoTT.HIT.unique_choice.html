@@ -1,0 +1,209 @@
+<html>
+<head>
+<title>unique_choice.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for unique_choice.v</h1>
+
+<div class="code" title="File: unique_choice.v
+Line: 1
+Time: 0.057s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Truncations.Core.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition atmost1 X:=(forall x1 x2:X, (x1 = x2)).</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition atmost1P {X} (P:X-&gt;Type):=
+    (forall x1 x2:X, P x1 -&gt; P x2 -&gt; (x1 = x2)).</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition hunique {X} (P:X-&gt;Type):=(hexists P) * (atmost1P P).</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma atmost {X} {P : X -&gt; Type}:
+  (forall x, IsHProp (P x)) -&gt; (atmost1P P) -&gt; atmost1 (sig  P).</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros H H0 [x p] [y q].</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+specialize (H0 x y p q).</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+induction H0.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+assert (H0: (p =q)) by apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+by induction H0.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma iota {X} (P:X-&gt; Type):
+  (forall x, IsHProp (P x)) -&gt; (hunique P) -&gt; sig P.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros H1 [H H0].</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply (@Trunc_rec (-1) (sig P) );auto.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+by apply hprop_allpath, atmost.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma unique_choice {X Y} (R:X-&gt;Y-&gt;Type) :
+ (forall x y, IsHProp (R x y)) -&gt; (forall x, (hunique (R x)))
+   -&gt; {f : X -&gt; Y &amp; forall x, (R x (f x))}.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros X0 X1.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+exists (fun x:X =&gt; (pr1 (iota _ (X0 x) (X1 x)))).</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intro x.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pr2 (iota _ (X0 x) (X1 x))).</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: unique_choice.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

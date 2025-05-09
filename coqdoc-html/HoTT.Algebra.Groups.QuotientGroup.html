@@ -1,0 +1,611 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Groups.QuotientGroup</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Groups.QuotientGroup</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Congruence.html#"><span class="id" title="library">Algebra.Congruence</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#"><span class="id" title="library">Algebra.Groups.Group</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#"><span class="id" title="library">Algebra.Groups.Subgroup</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Colimits.Quotient.html#"><span class="id" title="library">Colimits.Quotient</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Universes.HSet.html#"><span class="id" title="library">HSet</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#"><span class="id" title="library">Spaces.Finite.Finite</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.html#"><span class="id" title="library">WildCat</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Modalities.Modality.html#"><span class="id" title="library">Modalities.Modality</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab128"></a><h1 class="section">Quotient groups</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_mult_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">wc_iso_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab129"></a><h2 class="section">Congruence quotients</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="GroupCongruenceQuotient" class="idref" href="#GroupCongruenceQuotient"><span class="id" title="section">GroupCongruenceQuotient</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A congruence on a group is a relation satisfying <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode"><span class="id" title="var">x'</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode"><span class="id" title="var">y'</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> <span class="inlinecode">(<span class="id" title="var">x'</span></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">y'</span>)</span>.  Because we also require that <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> is reflexive, we also know that <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode"><span class="id" title="var">y'</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">y'</span>)</span> for any <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span>, and similarly for multiplication on the right by <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span>.  We don't need to assume that <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> is symmetric or transitive. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="G:1" class="idref" href="#G:1"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} {<a id="R:2" class="idref" href="#R:2"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Relation"><span class="id" title="definition">Relation</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:1"><span class="id" title="variable">G</span></a>} `{<a id="IsCongruence0:3" class="idref" href="#IsCongruence0:3"><span class="id" title="binder">!</span></a><a id="IsCongruence0:3" class="idref" href="#IsCongruence0:3"><span class="id" title="binder">IsCongruence</span></a> <a id="IsCongruence0:3" class="idref" href="#IsCongruence0:3"><span class="id" title="binder">R</span></a>, <a id="Reflexive0:4" class="idref" href="#Reflexive0:4"><span class="id" title="binder">!</span></a><a id="Reflexive0:4" class="idref" href="#Reflexive0:4"><span class="id" title="binder">Reflexive</span></a> <a id="Reflexive0:4" class="idref" href="#Reflexive0:4"><span class="id" title="binder">R</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The type underlying the quotient group is <span class="inlinecode"><a class="idref" href="HoTT.HIT.quotient.html#Quotient"><span class="id" title="module">Quotient</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="CongruenceQuotient" class="idref" href="#CongruenceQuotient"><span class="id" title="definition">CongruenceQuotient</span></a> := <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Colimits.Quotient.html#1c4ece0ba90889d0c90919c0be32d918"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="congquot_sgop" class="idref" href="#congquot_sgop"><span class="id" title="instance">congquot_sgop</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#SgOp"><span class="id" title="class">SgOp</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#CongruenceQuotient"><span class="id" title="definition">CongruenceQuotient</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_rec2"><span class="id" title="definition">Quotient_rec2</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <span class="id" title="var">_</span> (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <span class="id" title="var">y</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">x'</span> <span class="id" title="var">y</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Congruence.html#iscong"><span class="id" title="method">iscong</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">y'</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Congruence.html#iscong"><span class="id" title="method">iscong</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="congquot_mon_unit" class="idref" href="#congquot_mon_unit"><span class="id" title="instance">congquot_mon_unit</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#MonUnit"><span class="id" title="class">MonUnit</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#CongruenceQuotient"><span class="id" title="definition">CongruenceQuotient</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a>, <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="congquot_inverse" class="idref" href="#congquot_inverse"><span class="id" title="instance">congquot_inverse</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Inverse"><span class="id" title="class">Inverse</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#CongruenceQuotient"><span class="id" title="definition">CongruenceQuotient</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_rec"><span class="id" title="definition">Quotient_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#212dfbac5eed0e1087cd7755be1a542b"><span class="id" title="notation">(^)</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">p</span>; <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">transitivity</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a> (<span class="id" title="var">y</span><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">(</span></a><span class="id" title="var">y</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <span class="id" title="var">x</span><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_assoc"><span class="id" title="definition">grp_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_inv_l"><span class="id" title="definition">grp_inv_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_unit_l"><span class="id" title="definition">grp_unit_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">transitivity</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a> (<span class="id" title="var">y</span><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <span class="id" title="var">x</span><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">)</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">symmetry</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>; <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Congruence.html#iscong"><span class="id" title="method">iscong</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,3: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_inv_r"><span class="id" title="definition">grp_inv_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_unit_r"><span class="id" title="definition">grp_unit_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="congquot_sgop_associative" class="idref" href="#congquot_sgop_associative"><span class="id" title="instance">congquot_sgop_associative</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#congquot_sgop"><span class="id" title="instance">congquot_sgop</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind3_hprop"><span class="id" title="definition">Quotient_ind3_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#associativity"><span class="id" title="definition">associativity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Opaque</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#congquot_sgop_associative"><span class="id" title="instance">congquot_sgop_associative</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="issemigroup_congquot" class="idref" href="#issemigroup_congquot"><span class="id" title="instance">issemigroup_congquot</span></a> : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsSemiGroup"><span class="id" title="class">IsSemiGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#CongruenceQuotient"><span class="id" title="definition">CongruenceQuotient</span></a> := {}.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="congquot_leftidentity" class="idref" href="#congquot_leftidentity"><span class="id" title="instance">congquot_leftidentity</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f022ceacf061b73b559b9e748556662a"><span class="id" title="notation">(.*.)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#left_identity"><span class="id" title="definition">left_identity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Opaque</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#congquot_leftidentity"><span class="id" title="instance">congquot_leftidentity</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="congquot_rightidentity" class="idref" href="#congquot_rightidentity"><span class="id" title="instance">congquot_rightidentity</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightIdentity"><span class="id" title="class">RightIdentity</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f022ceacf061b73b559b9e748556662a"><span class="id" title="notation">(.*.)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#right_identity"><span class="id" title="definition">right_identity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Opaque</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#congquot_rightidentity"><span class="id" title="instance">congquot_rightidentity</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="ismonoid_quotientgroup" class="idref" href="#ismonoid_quotientgroup"><span class="id" title="instance">ismonoid_quotientgroup</span></a> : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsMonoid"><span class="id" title="class">IsMonoid</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#CongruenceQuotient"><span class="id" title="definition">CongruenceQuotient</span></a> := {}.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="quotientgroup_leftinverse" class="idref" href="#quotientgroup_leftinverse"><span class="id" title="instance">quotientgroup_leftinverse</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftInverse"><span class="id" title="class">LeftInverse</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f022ceacf061b73b559b9e748556662a"><span class="id" title="notation">(.*.)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#212dfbac5eed0e1087cd7755be1a542b"><span class="id" title="notation">(^)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#left_inverse"><span class="id" title="definition">left_inverse</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Opaque</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#quotientgroup_leftinverse"><span class="id" title="instance">quotientgroup_leftinverse</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="quotientgroup_rightinverse" class="idref" href="#quotientgroup_rightinverse"><span class="id" title="instance">quotientgroup_rightinverse</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightInverse"><span class="id" title="class">RightInverse</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f022ceacf061b73b559b9e748556662a"><span class="id" title="notation">(.*.)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#212dfbac5eed0e1087cd7755be1a542b"><span class="id" title="notation">(^)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient.R"><span class="id" title="variable">R</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#right_inverse"><span class="id" title="definition">right_inverse</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Opaque</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#quotientgroup_rightinverse"><span class="id" title="instance">quotientgroup_rightinverse</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isgroup_quotientgroup" class="idref" href="#isgroup_quotientgroup"><span class="id" title="instance">isgroup_quotientgroup</span></a> : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsGroup"><span class="id" title="class">IsGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#CongruenceQuotient"><span class="id" title="definition">CongruenceQuotient</span></a> := {}.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#GroupCongruenceQuotient"><span class="id" title="section">GroupCongruenceQuotient</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab130"></a><h2 class="section">Sets of cosets</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Cosets" class="idref" href="#Cosets"><span class="id" title="section">Cosets</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="G:5" class="idref" href="#G:5"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#Subgroup"><span class="id" title="record">Subgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:5"><span class="id" title="variable">G</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="LeftCoset" class="idref" href="#LeftCoset"><span class="id" title="definition">LeftCoset</span></a> := <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#Cosets.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Colimits.Quotient.html#1c4ece0ba90889d0c90919c0be32d918"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#in_cosetL"><span class="id" title="definition">in_cosetL</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#Cosets.H"><span class="id" title="variable">H</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO: Way too many universes, needs fixing  The set of left cosets of a finite subgroup of a finite group is finite. 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="finite_leftcoset" class="idref" href="#finite_leftcoset"><span class="id" title="instance">finite_leftcoset</span></a> `{<a id="H0:7" class="idref" href="#H0:7"><span class="id" title="binder">Univalence</span></a>, <a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">Finite</span></a> <a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">G</span></a>, <a id="H2:9" class="idref" href="#H2:9"><span class="id" title="binder">Finite</span></a> <a id="H2:9" class="idref" href="#H2:9"><span class="id" title="binder">H</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#LeftCoset"><span class="id" title="definition">LeftCoset</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#finite_quotient"><span class="id" title="instance">finite_quotient</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1-5: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Spaces.Finite.Finite.html#detachable_finite_subset"><span class="id" title="definition">detachable_finite_subset</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#Cosets.H"><span class="id" title="variable">H</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The index of a subgroup is the number of cosets of the subgroup. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="subgroup_index" class="idref" href="#subgroup_index"><span class="id" title="definition">subgroup_index</span></a> `{<a id="H0:10" class="idref" href="#H0:10"><span class="id" title="binder">Univalence</span></a>, <a id="H1:11" class="idref" href="#H1:11"><span class="id" title="binder">Finite</span></a> <a id="H1:11" class="idref" href="#H1:11"><span class="id" title="binder">G</span></a>, <a id="H2:12" class="idref" href="#H2:12"><span class="id" title="binder">Finite</span></a> <a id="H2:12" class="idref" href="#H2:12"><span class="id" title="binder">H</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#LeftCoset"><span class="id" title="definition">LeftCoset</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="RightCoset" class="idref" href="#RightCoset"><span class="id" title="definition">RightCoset</span></a> := <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#Cosets.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Colimits.Quotient.html#1c4ece0ba90889d0c90919c0be32d918"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#in_cosetR"><span class="id" title="definition">in_cosetR</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#Cosets.H"><span class="id" title="variable">H</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The set of left cosets is equivalent to the set of right coset. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="equiv_leftcoset_rightcoset" class="idref" href="#equiv_leftcoset_rightcoset"><span class="id" title="definition">equiv_leftcoset_rightcoset</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#LeftCoset"><span class="id" title="definition">LeftCoset</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#RightCoset"><span class="id" title="definition">RightCoset</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#equiv_quotient_functor"><span class="id" title="definition">equiv_quotient_functor</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#inv"><span class="id" title="definition">inv</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_inv_inv"><span class="id" title="definition">grp_inv_inv</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The set of right cosets of a finite subgroup of a finite group is finite since it is equivalent to the set of left cosets. 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="finite_rightcoset" class="idref" href="#finite_rightcoset"><span class="id" title="instance">finite_rightcoset</span></a> `{<a id="H0:13" class="idref" href="#H0:13"><span class="id" title="binder">Univalence</span></a>, <a id="H1:14" class="idref" href="#H1:14"><span class="id" title="binder">Finite</span></a> <a id="H1:14" class="idref" href="#H1:14"><span class="id" title="binder">G</span></a>, <a id="H2:15" class="idref" href="#H2:15"><span class="id" title="binder">Finite</span></a> <a id="H2:15" class="idref" href="#H2:15"><span class="id" title="binder">H</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#RightCoset"><span class="id" title="definition">RightCoset</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#finite_equiv'"><span class="id" title="definition">finite_equiv'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#equiv_leftcoset_rightcoset"><span class="id" title="definition">equiv_leftcoset_rightcoset</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#Cosets"><span class="id" title="section">Cosets</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab131"></a><h2 class="section">Quotient groups</h2>
+
+<div class="paragraph"> </div>
+
+ Now we can define the quotient group by a normal subgroup. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="QuotientGroup" class="idref" href="#QuotientGroup"><span class="id" title="section">QuotientGroup</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="G:16" class="idref" href="#G:16"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="N:17" class="idref" href="#N:17"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:16"><span class="id" title="variable">G</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="iscongruence_in_cosetL" class="idref" href="#iscongruence_in_cosetL"><span class="id" title="instance">iscongruence_in_cosetL</span></a> : <a class="idref" href="HoTT.Algebra.Congruence.html#IsCongruence"><span class="id" title="class">IsCongruence</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#in_cosetL"><span class="id" title="definition">in_cosetL</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup.N"><span class="id" title="variable">N</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Congruence.html#Build_IsCongruence"><span class="id" title="constructor">Build_IsCongruence</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#in_cosetL_cong"><span class="id" title="definition">in_cosetL_cong</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="iscongruence_in_cosetR" class="idref" href="#iscongruence_in_cosetR"><span class="id" title="instance">iscongruence_in_cosetR</span></a>: <a class="idref" href="HoTT.Algebra.Congruence.html#IsCongruence"><span class="id" title="class">IsCongruence</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#in_cosetR"><span class="id" title="definition">in_cosetR</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup.N"><span class="id" title="variable">N</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Congruence.html#Build_IsCongruence"><span class="id" title="constructor">Build_IsCongruence</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#in_cosetR_cong"><span class="id" title="definition">in_cosetR_cong</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we have to make a choice whether to pick the left or right cosets. Due to existing convention we shall pick left cosets but we note that we could equally have picked right. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="QuotientGroup" class="idref" href="#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_Group"><span class="id" title="definition">Build_Group</span></a> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#LeftCoset"><span class="id" title="definition">LeftCoset</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup.N"><span class="id" title="variable">N</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="grp_quotient_map" class="idref" href="#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_GroupHomomorphism"><span class="id" title="constructor">Build_GroupHomomorphism</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ??; <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="grp_quotient_rec" class="idref" href="#grp_quotient_rec"><span class="id" title="definition">grp_quotient_rec</span></a> {<a id="A:18" class="idref" href="#A:18"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} (<a id="f:19" class="idref" href="#f:19"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#A:18"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="h:21" class="idref" href="#h:21"><span class="id" title="binder">h</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:20" class="idref" href="#n:20"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup.G"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup.N"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#n:20"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#f:19"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#n:20"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#A:18"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_GroupHomomorphism"><span class="id" title="constructor">Build_GroupHomomorphism</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_rec"><span class="id" title="definition">Quotient_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_moveR_M1"><span class="id" title="definition">grp_moveR_M1</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#88d5a430de4386acb8c608871d35c9fd"><span class="id" title="notation">(.*</span></a> <span class="id" title="var">f</span> <span class="id" title="var">y</span><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#88d5a430de4386acb8c608871d35c9fd"><span class="id" title="notation">)</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_inv"><span class="id" title="definition">grp_homo_inv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_op"><span class="id" title="definition">grp_homo_op</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">h</span>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">y</span>. <span class="id" title="var">revert</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_op"><span class="id" title="definition">grp_homo_op</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="grp_quotient_ind_hprop" class="idref" href="#grp_quotient_ind_hprop"><span class="id" title="definition">grp_quotient_ind_hprop</span></a> (<a id="P:22" class="idref" href="#P:22"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H:24" class="idref" href="#H:24"><span class="id" title="binder">∀</span></a> <a id="x:23" class="idref" href="#x:23"><span class="id" title="binder"><span id="H:24" class="id">x</span></span></a><a id="H:24" class="idref" href="#H:24"><span class="id" title="binder">,</span></a> <a id="H:24" class="idref" href="#H:24"><span class="id" title="binder">IsHProp</span></a> <a id="H:24" class="idref" href="#H:24"><span class="id" title="binder">(</span></a><a id="H:24" class="idref" href="#H:24"><span class="id" title="binder">P</span></a> <a id="H:24" class="idref" href="#H:24"><span class="id" title="binder">x</span></a><a id="H:24" class="idref" href="#H:24"><span class="id" title="binder">)</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="H1:26" class="idref" href="#H1:26"><span class="id" title="binder">H1</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:25" class="idref" href="#x:25"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#P:22"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#x:25"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:27" class="idref" href="#x:27"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#P:22"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#x:27"><span class="id" title="variable">x</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="section">QuotientGroup</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a> <span class="id" title="var">G</span> <span class="id" title="var">N</span> : <span class="id" title="tactic">simpl</span> <span class="id" title="var">never</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> {<span class="id" title="var">_</span> <span class="id" title="var">_</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="3e65ad3edf5f7fb3ea6bc63a878112a8" class="idref" href="#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">&quot;</span></a>G / N" := (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a> <span class="id" title="var">G</span> <span class="id" title="var">N</span>) : <span class="id" title="var">group_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Rephrasing that lets you specify the normality proof 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="QuotientGroup'" class="idref" href="#QuotientGroup'"><span class="id" title="definition">QuotientGroup'</span></a> (<a id="G:28" class="idref" href="#G:28"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="N:29" class="idref" href="#N:29"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#Subgroup"><span class="id" title="record">Subgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:28"><span class="id" title="variable">G</span></a>) (<a id="H:30" class="idref" href="#H:30"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsNormalSubgroup"><span class="id" title="class">IsNormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:29"><span class="id" title="variable">N</span></a>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:28"><span class="id" title="variable">G</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#Build_NormalSubgroup"><span class="id" title="constructor">Build_NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:28"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:29"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#H:30"><span class="id" title="variable">H</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">group_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Computation rule for <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_rec"><span class="id" title="definition">grp_quotient_rec</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Corollary</span> <a id="grp_quotient_rec_beta" class="idref" href="#grp_quotient_rec_beta"><span class="id" title="lemma">grp_quotient_rec_beta</span></a> `{<a id="F:31" class="idref" href="#F:31"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="class">Funext</span></a>} {<a id="G:32" class="idref" href="#G:32"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="N:33" class="idref" href="#N:33"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:32"><span class="id" title="variable">G</span></a>) (<a id="H:34" class="idref" href="#H:34"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<a id="A:35" class="idref" href="#A:35"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} (<a id="f:36" class="idref" href="#f:36"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:32"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#A:35"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="h:38" class="idref" href="#h:38"><span class="id" title="binder">h</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:37" class="idref" href="#n:37"><span class="id" title="binder">n</span></a>:<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:32"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:33"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#n:37"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#f:36"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#n:37"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_rec"><span class="id" title="definition">grp_quotient_rec</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:32"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:33"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#f:36"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#h:38"><span class="id" title="variable">h</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#f:36"><span class="id" title="variable">f</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#equiv_path_grouphomomorphism"><span class="id" title="definition">equiv_path_grouphomomorphism</span></a>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Computation rule for <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_rec"><span class="id" title="definition">grp_quotient_rec</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="grp_quotient_rec_beta'" class="idref" href="#grp_quotient_rec_beta'"><span class="id" title="definition">grp_quotient_rec_beta'</span></a> {<a id="G:39" class="idref" href="#G:39"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="N:40" class="idref" href="#N:40"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:39"><span class="id" title="variable">G</span></a>) (<a id="H:41" class="idref" href="#H:41"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<a id="A:42" class="idref" href="#A:42"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} (<a id="f:43" class="idref" href="#f:43"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:39"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#A:42"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="h:45" class="idref" href="#h:45"><span class="id" title="binder">h</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:44" class="idref" href="#n:44"><span class="id" title="binder">n</span></a>:<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:39"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:40"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#n:44"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#f:43"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#n:44"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_rec"><span class="id" title="definition">grp_quotient_rec</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:39"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:40"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#f:43"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#h:45"><span class="id" title="variable">h</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#f:43"><span class="id" title="variable">f</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The proof of normality is irrelevant up to equivalence. It is unfortunate that it doesn't hold definitionally. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="grp_iso_quotient_normal" class="idref" href="#grp_iso_quotient_normal"><span class="id" title="definition">grp_iso_quotient_normal</span></a> (<a id="G:46" class="idref" href="#G:46"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="H:47" class="idref" href="#H:47"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#Subgroup"><span class="id" title="record">Subgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:46"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;{<a id="k:48" class="idref" href="#k:48"><span class="id" title="binder">k</span></a> <a id="k':49" class="idref" href="#k':49"><span class="id" title="binder">k'</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsNormalSubgroup"><span class="id" title="class">IsNormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#H:47"><span class="id" title="variable">H</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup'"><span class="id" title="definition">QuotientGroup'</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:46"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#H:47"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#k:48"><span class="id" title="variable">k</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#44d93ed1077fb87ba02f52390cc2a7bb"><span class="id" title="notation">≅</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup'"><span class="id" title="definition">QuotientGroup'</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:46"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#H:47"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#k':49"><span class="id" title="variable">k'</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_GroupIsomorphism'"><span class="id" title="definition">Build_GroupIsomorphism'</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">y</span>; <span class="id" title="var">revert</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The universal mapping property for groups 
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <a id="equiv_grp_quotient_ump" class="idref" href="#equiv_grp_quotient_ump"><span class="id" title="lemma">equiv_grp_quotient_ump</span></a> {<a id="F:50" class="idref" href="#F:50"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="class">Funext</span></a>} {<a id="G:51" class="idref" href="#G:51"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} (<a id="N:52" class="idref" href="#N:52"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:51"><span class="id" title="variable">G</span></a>) (<a id="H:53" class="idref" href="#H:53"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="f:54" class="idref" href="#f:54"><span class="id" title="binder">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:51"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#H:53"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="n:55" class="idref" href="#n:55"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:51"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:52"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#n:55"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#f:54"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#n:55"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:51"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:52"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#H:53"><span class="id" title="variable">H</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#equiv_adjointify"><span class="id" title="definition">equiv_adjointify</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">f</span> <span class="id" title="var">p</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_rec"><span class="id" title="definition">grp_quotient_rec</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">f</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<span class="id" title="var">f</span> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">h</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_unit"><span class="id" title="definition">grp_homo_unit</span></a> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#right_identity"><span class="id" title="definition">right_identity</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#issubgroup_in_inv"><span class="id" title="method">issubgroup_in_inv</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#equiv_path_grouphomomorphism"><span class="id" title="definition">equiv_path_grouphomomorphism</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">f</span> <span class="id" title="var">p</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">path_sigma_hprop</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_rec_beta"><span class="id" title="lemma">grp_quotient_rec_beta</span></a> <span class="id" title="var">N</span> <span class="id" title="var">H</span> <span class="id" title="var">f</span> <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="FirstIso" class="idref" href="#FirstIso"><span class="id" title="section">FirstIso</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:56" class="idref" href="#H:56"><span class="id" title="binder">Funext</span></a>} {<a id="A:57" class="idref" href="#A:57"><span class="id" title="binder">A</span></a> <a id="B:58" class="idref" href="#B:58"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} (<a id="phi:59" class="idref" href="#phi:59"><span class="id" title="binder">phi</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#A:57"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#B:58"><span class="id" title="variable">B</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+First we define a map from the quotient by the kernel of phi into the image of phi 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="grp_image_quotient" class="idref" href="#grp_image_quotient"><span class="id" title="definition">grp_image_quotient</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#FirstIso.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_kernel"><span class="id" title="definition">grp_kernel</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#FirstIso.phi"><span class="id" title="variable">phi</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_image"><span class="id" title="definition">grp_image</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#FirstIso.phi"><span class="id" title="variable">phi</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_rec"><span class="id" title="definition">grp_quotient_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_homo_image_in"><span class="id" title="definition">grp_homo_image_in</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">path_sigma_hprop</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The underlying map of this homomorphism is an equivalence 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isequiv_grp_image_quotient" class="idref" href="#isequiv_grp_image_quotient"><span class="id" title="instance">isequiv_grp_image_quotient</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_image_quotient"><span class="id" title="definition">grp_image_quotient</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Truncations.Core.html#isequiv_surj_emb"><span class="id" title="definition">isequiv_surj_emb</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#cancelR_conn_map"><span class="id" title="definition">cancelR_conn_map</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Universes.HSet.html#isembedding_isinj_hset"><span class="id" title="lemma">isembedding_isinj_hset</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind2_hprop"><span class="id" title="definition">Quotient_ind2_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">h</span>; <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Types.Sigma.html#equiv_path_sigma_hprop"><span class="id" title="definition">equiv_path_sigma_hprop</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a>%<span class="id" title="var">equiv</span> <span class="id" title="tactic">in</span> <span class="id" title="var">h</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_op"><span class="id" title="definition">grp_homo_op</span></a>, <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_inv"><span class="id" title="definition">grp_homo_inv</span></a>, <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_inv_l"><span class="id" title="definition">grp_inv_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+First isomorphism theorem for groups 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="grp_first_iso" class="idref" href="#grp_first_iso"><span class="id" title="lemma">grp_first_iso</span></a> : <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#FirstIso.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_kernel"><span class="id" title="definition">grp_kernel</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#FirstIso.phi"><span class="id" title="variable">phi</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#44d93ed1077fb87ba02f52390cc2a7bb"><span class="id" title="notation">≅</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_image"><span class="id" title="definition">grp_image</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#FirstIso.phi"><span class="id" title="variable">phi</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_GroupIsomorphism"><span class="id" title="constructor">Build_GroupIsomorphism</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_image_quotient"><span class="id" title="definition">grp_image_quotient</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#FirstIso"><span class="id" title="section">FirstIso</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Quotient groups are finite.  Note that we cannot constructively conclude that the normal subgroup <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> must be finite since <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> is, therefore we keep it as an assumption. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="finite_quotientgroup" class="idref" href="#finite_quotientgroup"><span class="id" title="instance">finite_quotientgroup</span></a> {<a id="U:60" class="idref" href="#U:60"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>} (<a id="G:61" class="idref" href="#G:61"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="H:62" class="idref" href="#H:62"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:61"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;(<a id="fin_G:63" class="idref" href="#fin_G:63"><span class="id" title="binder">fin_G</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:61"><span class="id" title="variable">G</span></a>) (<a id="fin_H:64" class="idref" href="#fin_H:64"><span class="id" title="binder">fin_H</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#H:62"><span class="id" title="variable">H</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:61"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#H:62"><span class="id" title="variable">H</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#finite_quotient"><span class="id" title="instance">finite_quotient</span></a>.<br/>
+&nbsp;&nbsp;1-5: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">dec_H</span> := <a class="idref" href="HoTT.Spaces.Finite.Finite.html#detachable_finite_subset"><span class="id" title="definition">detachable_finite_subset</span></a> <span class="id" title="var">H</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">dec_H</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="grp_kernel_quotient_iso" class="idref" href="#grp_kernel_quotient_iso"><span class="id" title="definition">grp_kernel_quotient_iso</span></a> `{<a id="H:65" class="idref" href="#H:65"><span class="id" title="binder">Univalence</span></a>} {<a id="G:66" class="idref" href="#G:66"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} (<a id="N:67" class="idref" href="#N:67"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:66"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Group.html#GroupIsomorphism"><span class="id" title="record">GroupIsomorphism</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:67"><span class="id" title="variable">N</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_kernel"><span class="id" title="definition">grp_kernel</span></a> (@<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:66"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:67"><span class="id" title="variable">N</span></a>)).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_GroupIsomorphism"><span class="id" title="constructor">Build_GroupIsomorphism</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_kernel_corec"><span class="id" title="definition">grp_kernel_corec</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#subgroup_incl"><span class="id" title="definition">subgroup_incl</span></a> <span class="id" title="var">N</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#issubgroup_in_op"><span class="id" title="method">issubgroup_in_op</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#issubgroup_in_inv"><span class="id" title="method">issubgroup_in_inv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">.2</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#issubgroup_in_unit"><span class="id" title="method">issubgroup_in_unit</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#isequiv_surj_emb"><span class="id" title="definition">isequiv_surj_emb</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Universes.HSet.html#cancelL_isembedding"><span class="id" title="lemma">cancelL_isembedding</span></a> (<span class="id" title="var">g</span>:=<a class="idref" href="HoTT.Basics.Overture.html#pr1"><span class="id" title="abbreviation">pr1</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">g</span> <span class="id" title="var">p</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#contr_inhabited_hprop"><span class="id" title="lemma">contr_inhabited_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srefine</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">((</span></a><span class="id" title="var">g</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">);</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_unit_l"><span class="id" title="definition">grp_unit_l</span></a>, &lt;- <a class="idref" href="HoTT.Classes.theory.groups.html#inverse_mon_unit"><span class="id" title="lemma">inverse_mon_unit</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#related_quotient_paths"><span class="id" title="lemma">related_quotient_paths</span></a> (<span class="id" title="keyword">fun</span> <a id="x:68" class="idref" href="#x:68"><span class="id" title="binder"><span id="x:70" class="id">x</span></span></a> <a id="y:69" class="idref" href="#y:69"><span class="id" title="binder"><span id="y:71" class="id">y</span></span></a> ⇒ <span class="id" title="var">N</span> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#x:68"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#y:69"><span class="id" title="variable">y</span></a>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">p</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a>%<span class="id" title="var">path</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">path_sigma_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+When the normal subgroup <span class="inlinecode"><a class="idref" href="HoTT.Metatheory.Nat.html#N"><span class="id" title="definition">N</span></a></span> is trivial, the inclusion map <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> <span class="inlinecode">$-&gt;</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> <span class="inlinecode">/</span> <span class="inlinecode"><a class="idref" href="HoTT.Metatheory.Nat.html#N"><span class="id" title="definition">N</span></a></span> is an isomorphism. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="catie_grp_quotient_map_trivial" class="idref" href="#catie_grp_quotient_map_trivial"><span class="id" title="instance">catie_grp_quotient_map_trivial</span></a> {<a id="G:72" class="idref" href="#G:72"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} (<a id="N:73" class="idref" href="#N:73"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:72"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;(<a id="triv:74" class="idref" href="#triv:74"><span class="id" title="binder">triv</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsTrivialGroup"><span class="id" title="class">IsTrivialGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:73"><span class="id" title="variable">N</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Equiv.html#CatIsEquiv"><span class="id" title="class">CatIsEquiv</span></a> (@<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:72"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:73"><span class="id" title="variable">N</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#catie_adjointify"><span class="id" title="definition">catie_adjointify</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_rec"><span class="id" title="definition">grp_quotient_rec</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.WildCat.Core.html#Id"><span class="id" title="method">Id</span></a> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">triv</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">by</span> <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_ind_hprop"><span class="id" title="definition">grp_quotient_ind_hprop</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The group quotient by a trivial group is isomorphic to the original group. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="grp_quotient_trivial" class="idref" href="#grp_quotient_trivial"><span class="id" title="definition">grp_quotient_trivial</span></a> (<a id="G:75" class="idref" href="#G:75"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="N:76" class="idref" href="#N:76"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:75"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;(<a id="triv:77" class="idref" href="#triv:77"><span class="id" title="binder">triv</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsTrivialGroup"><span class="id" title="class">IsTrivialGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:76"><span class="id" title="variable">N</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:75"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#53abe9e5a667eb1e98048ced5c0b4484"><span class="id" title="notation">$&lt;~&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:75"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:76"><span class="id" title="variable">N</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.WildCat.Equiv.html#Build_CatEquiv"><span class="id" title="definition">Build_CatEquiv</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A quotient by a maximal subgroup is trivial. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="istrivial_grp_quotient_maximal" class="idref" href="#istrivial_grp_quotient_maximal"><span class="id" title="instance">istrivial_grp_quotient_maximal</span></a><br/>
+&nbsp;&nbsp;(<a id="G:78" class="idref" href="#G:78"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="N:79" class="idref" href="#N:79"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:78"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsMaximalSubgroup"><span class="id" title="class">IsMaximalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:79"><span class="id" title="variable">N</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsTrivialGroup"><span class="id" title="class">IsTrivialGroup</span></a> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:78"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:79"><span class="id" title="variable">N</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">max</span> <span class="id" title="var">x</span> <span class="id" title="var">_</span>; <span class="id" title="var">revert</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_ind_hprop"><span class="id" title="definition">grp_quotient_ind_hprop</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <span class="id" title="var">max</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Conversely, a trivial quotient means the subgroup is maximal. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="ismaximalsubgroup_istrivial_grp_quotient" class="idref" href="#ismaximalsubgroup_istrivial_grp_quotient"><span class="id" title="definition">ismaximalsubgroup_istrivial_grp_quotient</span></a> `{<a id="H:80" class="idref" href="#H:80"><span class="id" title="binder">Univalence</span></a>}<br/>
+&nbsp;&nbsp;(<a id="G:81" class="idref" href="#G:81"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="N:82" class="idref" href="#N:82"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:81"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsTrivialGroup"><span class="id" title="class">IsTrivialGroup</span></a> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#G:81"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:82"><span class="id" title="variable">N</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsMaximalSubgroup"><span class="id" title="class">IsMaximalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#N:82"><span class="id" title="variable">N</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">triv</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">triv</span> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> <span class="id" title="var">x</span>) <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">triv</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#related_quotient_paths"><span class="id" title="lemma">related_quotient_paths</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">triv</span>.<br/>
+&nbsp;&nbsp;2-5: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#equiv_subgroup_inv"><span class="id" title="definition">equiv_subgroup_inv</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#subgroup_in_op_l"><span class="id" title="definition">subgroup_in_op_l</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> 1 <span class="id" title="var">triv</span>) .<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#subgroup_in_unit"><span class="id" title="definition">subgroup_in_unit</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

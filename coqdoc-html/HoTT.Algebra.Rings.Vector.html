@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Rings.Vector</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Rings.Vector</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.Sigma.html#"><span class="id" title="library">Types.Sigma</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#"><span class="id" title="library">Algebra.AbGroups.AbelianGroup</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#"><span class="id" title="library">Algebra.Rings.Ring</span></a> <a class="idref" href="HoTT.Algebra.Rings.Module.html#"><span class="id" title="library">Algebra.Rings.Module</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.List.Core.html#"><span class="id" title="library">Spaces.List.Core</span></a> <a class="idref" href="HoTT.Spaces.List.Theory.html#"><span class="id" title="library">Spaces.List.Theory</span></a> <a class="idref" href="HoTT.Spaces.List.Paths.html#"><span class="id" title="library">Spaces.List.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">abstract_algebra</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Polymorphic</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Cumulativity</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab256"></a><h1 class="section">Vectors</h1>
+
+<div class="paragraph"> </div>
+
+ A vector is simply a list with a specified length. This data structure has many uses, but here we will focus on lists of left module elements. 
+<div class="paragraph"> </div>
+
+<a id="lab257"></a><h2 class="section">Definition</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Vector" class="idref" href="#Vector"><span class="id" title="definition">Vector@</span></a>{<span class="id" title="var">i</span>|} (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}) (<a id="n:2" class="idref" href="#n:2"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="l:3" class="idref" href="#l:3"><span class="id" title="binder">l</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#length"><span class="id" title="definition">length</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#l:3"><span class="id" title="variable">l</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:2"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab258"></a><h3 class="section">Constructors</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Build_Vector" class="idref" href="#Build_Vector"><span class="id" title="definition">Build_Vector</span></a> (<a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) (<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;(<a id="f:7" class="idref" href="#f:7"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="i:6" class="idref" href="#i:6"><span class="id" title="binder">i</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:6"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:5"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">nat</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:4"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:4"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:5"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.List.Theory.html#Build_list"><span class="id" title="definition">Build_list</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#f:7"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Spaces.List.Theory.html#length_Build_list"><span class="id" title="definition">length_Build_list</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#f:7"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab259"></a><h3 class="section">Projections</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="entry" class="idref" href="#entry"><span class="id" title="definition">entry</span></a> {<a id="A:8" class="idref" href="#A:8"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} {<a id="n:9" class="idref" href="#n:9"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>} (<a id="v:10" class="idref" href="#v:10"><span class="id" title="binder">v</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:8"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:9"><span class="id" title="variable">n</span></a>) <a id="i:11" class="idref" href="#i:11"><span class="id" title="binder">i</span></a> {<a id="Hi:12" class="idref" href="#Hi:12"><span class="id" title="binder">Hi</span></a> : (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:11"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:9"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">nat</span>} : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:8"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.List.Theory.html#nth'"><span class="id" title="definition">nth'</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#pr1"><span class="id" title="abbreviation">pr1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v:10"><span class="id" title="variable">v</span></a>) <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:11"><span class="id" title="variable">i</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#pr2"><span class="id" title="abbreviation">pr2</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v:10"><span class="id" title="variable">v</span></a><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Hi:12"><span class="id" title="variable">Hi</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab260"></a><h3 class="section">Basic properties</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="entry_Build_Vector" class="idref" href="#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a> {<a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} {<a id="n:14" class="idref" href="#n:14"><span class="id" title="binder">n</span></a>}<br/>
+&nbsp;&nbsp;(<a id="f:16" class="idref" href="#f:16"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="i:15" class="idref" href="#i:15"><span class="id" title="binder">i</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:15"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:14"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">nat</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:13"><span class="id" title="variable">A</span></a>) <a id="i:17" class="idref" href="#i:17"><span class="id" title="binder">i</span></a> {<a id="Hi:18" class="idref" href="#Hi:18"><span class="id" title="binder">Hi</span></a> : (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:17"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:14"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">nat</span>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry"><span class="id" title="definition">entry</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#Build_Vector"><span class="id" title="definition">Build_Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:14"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#f:16"><span class="id" title="variable">f</span></a>) <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:17"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#f:16"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:17"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Hi:18"><span class="id" title="variable">Hi</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Spaces.List.Theory.html#nth'_Build_list"><span class="id" title="definition">nth'_Build_list</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="istrunc_vector" class="idref" href="#istrunc_vector"><span class="id" title="instance">istrunc_vector@</span></a>{<span class="id" title="var">i</span>} (<a id="A:19" class="idref" href="#A:19"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}) (<a id="n:20" class="idref" href="#n:20"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) <a id="k:21" class="idref" href="#k:21"><span class="id" title="binder">k</span></a> `{<a id="IsTrunc0:22" class="idref" href="#IsTrunc0:22"><span class="id" title="binder">IsTrunc</span></a> <a id="IsTrunc0:22" class="idref" href="#IsTrunc0:22"><span class="id" title="binder">k</span></a><a id="IsTrunc0:22" class="idref" href="#IsTrunc0:22"><span class="id" title="binder">.+2</span></a> <a id="IsTrunc0:22" class="idref" href="#IsTrunc0:22"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#k:21"><span class="id" title="variable">k</span></a><a class="idref" href="HoTT.Basics.Overture.html#ca42b5f7240c4d2bdbfa8417567961e4"><span class="id" title="notation">.+2</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:19"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:20"><span class="id" title="variable">n</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Types.Sigma.html#istrunc_sigma"><span class="id" title="instance">istrunc_sigma@</span></a><a class="idref" href="HoTT.Types.Sigma.html#istrunc_sigma"><span class="id" title="instance">{</span></a><a class="idref" href="HoTT.Types.Sigma.html#istrunc_sigma"><span class="id" title="instance">i</span></a> <a class="idref" href="HoTT.Types.Sigma.html#istrunc_sigma"><span class="id" title="instance">i</span></a> <a class="idref" href="HoTT.Types.Sigma.html#istrunc_sigma"><span class="id" title="instance">i</span></a><a class="idref" href="HoTT.Types.Sigma.html#istrunc_sigma"><span class="id" title="instance">}</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="path_vector" class="idref" href="#path_vector"><span class="id" title="definition">path_vector@</span></a>{<span class="id" title="var">i</span>} (<a id="A:23" class="idref" href="#A:23"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>}) {<a id="n:24" class="idref" href="#n:24"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>} (<a id="v1:25" class="idref" href="#v1:25"><span class="id" title="binder">v1</span></a> <a id="v2:26" class="idref" href="#v2:26"><span class="id" title="binder">v2</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector@</span></a><a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">i</span></a><a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">}</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:23"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:24"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;(<a id="H:29" class="idref" href="#H:29"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="i:27" class="idref" href="#i:27"><span class="id" title="binder">i</span></a> (<a id="H:28" class="idref" href="#H:28"><span class="id" title="binder">H</span></a> : (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:27"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:24"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">nat</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v1:25"><span class="id" title="variable">v1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:27"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v2:26"><span class="id" title="variable">v2</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:27"><span class="id" title="variable">i</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v1:25"><span class="id" title="variable">v1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v2:26"><span class="id" title="variable">v2</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">path_sigma_hprop@</span></a><a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">i</span></a> <a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">i</span></a> <a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">i</span></a><a class="idref" href="HoTT.Types.Sigma.html#path_sigma_hprop"><span class="id" title="definition">}</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Spaces.List.Theory.html#path_list_nth'"><span class="id" title="definition">path_list_nth'</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#pr2"><span class="id" title="abbreviation">pr2</span></a> <span class="id" title="var">v1</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#pr2"><span class="id" title="abbreviation">pr2</span></a> <span class="id" title="var">v2</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snrefine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">H</span> <span class="id" title="var">i</span> (<a class="idref" href="HoTT.Basics.Overture.html#pr2"><span class="id" title="abbreviation">pr2</span></a> <span class="id" title="var">v1</span> <a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a> <span class="id" title="var">Hi</span>) <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;1, 2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.List.Theory.html#nth'_nth'"><span class="id" title="definition">nth'_nth'</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="path_entry_vector" class="idref" href="#path_entry_vector"><span class="id" title="definition">path_entry_vector</span></a> {<a id="A:30" class="idref" href="#A:30"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} {<a id="n:31" class="idref" href="#n:31"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>} (<a id="v:32" class="idref" href="#v:32"><span class="id" title="binder">v</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:30"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:31"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;(<a id="i:33" class="idref" href="#i:33"><span class="id" title="binder">i</span></a> <a id="j:34" class="idref" href="#j:34"><span class="id" title="binder">j</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="Hi:35" class="idref" href="#Hi:35"><span class="id" title="binder">Hi</span></a> : (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:33"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:31"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">nat</span>) (<a id="Hj:36" class="idref" href="#Hj:36"><span class="id" title="binder">Hj</span></a> : (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#j:34"><span class="id" title="variable">j</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:31"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">nat</span>) (<a id="p:37" class="idref" href="#p:37"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:33"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#j:34"><span class="id" title="variable">j</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v:32"><span class="id" title="variable">v</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:33"><span class="id" title="variable">i</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v:32"><span class="id" title="variable">v</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#j:34"><span class="id" title="variable">j</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.List.Theory.html#nth'_nth'"><span class="id" title="definition">nth'_nth'</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab261"></a><h2 class="section">Operations</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="vector_map" class="idref" href="#vector_map"><span class="id" title="definition">vector_map</span></a> {<a id="A:38" class="idref" href="#A:38"><span class="id" title="binder">A</span></a> <a id="B:39" class="idref" href="#B:39"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} {<a id="n:40" class="idref" href="#n:40"><span class="id" title="binder">n</span></a>} (<a id="f:41" class="idref" href="#f:41"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:38"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#B:39"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:38"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:40"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#B:39"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:40"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="v:42" class="idref" href="#v:42"><span class="id" title="binder">v</span></a> ⇒ <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Build_Vector"><span class="id" title="definition">Build_Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#B:39"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:40"><span class="id" title="variable">n</span></a> (<span class="id" title="keyword">fun</span> <a id="i:43" class="idref" href="#i:43"><span class="id" title="binder">i</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Algebra.Rings.Vector.html#f:41"><span class="id" title="variable">f</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v:42"><span class="id" title="variable">v</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:43"><span class="id" title="variable">i</span></a>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="vector_map2" class="idref" href="#vector_map2"><span class="id" title="definition">vector_map2</span></a> {<a id="A:44" class="idref" href="#A:44"><span class="id" title="binder">A</span></a> <a id="B:45" class="idref" href="#B:45"><span class="id" title="binder">B</span></a> <a id="C:46" class="idref" href="#C:46"><span class="id" title="binder">C</span></a> : <span class="id" title="keyword">Type</span>} {<a id="n:47" class="idref" href="#n:47"><span class="id" title="binder">n</span></a>} (<a id="f:48" class="idref" href="#f:48"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:44"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#B:45"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#C:46"><span class="id" title="variable">C</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#A:44"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:47"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#B:45"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:47"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#C:46"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:47"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="v1:49" class="idref" href="#v1:49"><span class="id" title="binder">v1</span></a> <a id="v2:50" class="idref" href="#v2:50"><span class="id" title="binder">v2</span></a> ⇒ <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Build_Vector"><span class="id" title="definition">Build_Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#C:46"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#n:47"><span class="id" title="variable">n</span></a> (<span class="id" title="keyword">fun</span> <a id="i:51" class="idref" href="#i:51"><span class="id" title="binder">i</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Algebra.Rings.Vector.html#f:48"><span class="id" title="variable">f</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v1:49"><span class="id" title="variable">v1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:51"><span class="id" title="variable">i</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry"><span class="id" title="definition">entry</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#v2:50"><span class="id" title="variable">v2</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#i:51"><span class="id" title="variable">i</span></a>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab262"></a><h2 class="section">Abelian group structure</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="VectorAddition" class="idref" href="#VectorAddition"><span class="id" title="section">VectorAddition</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="A:52" class="idref" href="#A:52"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup</span></a>) (<a id="n:53" class="idref" href="#n:53"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="vector_plus" class="idref" href="#vector_plus"><span class="id" title="definition">vector_plus</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Plus"><span class="id" title="class">Plus</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.n"><span class="id" title="variable">n</span></a>) := <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_map2"><span class="id" title="definition">vector_map2</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bb6dec3b123b2c29c8eeeac472582eca"><span class="id" title="notation">(+)</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="vector_zero" class="idref" href="#vector_zero"><span class="id" title="definition">vector_zero</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Zero"><span class="id" title="class">Zero</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.n"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Build_Vector"><span class="id" title="definition">Build_Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.n"><span class="id" title="variable">n</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ 0).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="vector_neg" class="idref" href="#vector_neg"><span class="id" title="definition">vector_neg</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Negate"><span class="id" title="class">Negate</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.n"><span class="id" title="variable">n</span></a>) := <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_map"><span class="id" title="definition">vector_map</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#acb8f0d169dd7675507b07652d21f422"><span class="id" title="notation">(-)</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="associative_vector_plus" class="idref" href="#associative_vector_plus"><span class="id" title="definition">associative_vector_plus</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">v1</span> <span class="id" title="var">v2</span> <span class="id" title="var">v3</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 4 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#associativity"><span class="id" title="definition">associativity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="commutative_vector_plus" class="idref" href="#commutative_vector_plus"><span class="id" title="definition">commutative_vector_plus</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Commutative"><span class="id" title="class">Commutative</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">v1</span> <span class="id" title="var">v2</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#commutativity"><span class="id" title="definition">commutativity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="left_identity_vector_plus" class="idref" href="#left_identity_vector_plus"><span class="id" title="definition">left_identity_vector_plus</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_zero"><span class="id" title="definition">vector_zero</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">v</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#left_identity"><span class="id" title="definition">left_identity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="right_identity_vector_plus" class="idref" href="#right_identity_vector_plus"><span class="id" title="definition">right_identity_vector_plus</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightIdentity"><span class="id" title="class">RightIdentity</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_zero"><span class="id" title="definition">vector_zero</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">v</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#right_identity"><span class="id" title="definition">right_identity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="left_inverse_vector_plus" class="idref" href="#left_inverse_vector_plus"><span class="id" title="definition">left_inverse_vector_plus</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftInverse"><span class="id" title="class">LeftInverse</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_neg"><span class="id" title="definition">vector_neg</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_zero"><span class="id" title="definition">vector_zero</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">v</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 3 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#left_inverse"><span class="id" title="definition">left_inverse</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="right_inverse_vector_plus" class="idref" href="#right_inverse_vector_plus"><span class="id" title="definition">right_inverse_vector_plus</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightInverse"><span class="id" title="class">RightInverse</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_neg"><span class="id" title="definition">vector_neg</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_zero"><span class="id" title="definition">vector_zero</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">v</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 3 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#right_inverse"><span class="id" title="definition">right_inverse</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="abgroup_vector" class="idref" href="#abgroup_vector"><span class="id" title="definition">abgroup_vector</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#Build_AbGroup"><span class="id" title="constructor">Build_AbGroup</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_Group"><span class="id" title="definition">Build_Group</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;5: <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition.n"><span class="id" title="variable">n</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_zero"><span class="id" title="definition">vector_zero</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_neg"><span class="id" title="definition">vector_neg</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#associative_vector_plus"><span class="id" title="definition">associative_vector_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#left_identity_vector_plus"><span class="id" title="definition">left_identity_vector_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#right_identity_vector_plus"><span class="id" title="definition">right_identity_vector_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#left_inverse_vector_plus"><span class="id" title="definition">left_inverse_vector_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#right_inverse_vector_plus"><span class="id" title="definition">right_inverse_vector_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#commutative_vector_plus"><span class="id" title="definition">commutative_vector_plus</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorAddition"><span class="id" title="section">VectorAddition</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">n</span>} <span class="id" title="var">v1</span> <span class="id" title="var">v2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab263"></a><h2 class="section">Module structure</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="VectorScale" class="idref" href="#VectorScale"><span class="id" title="section">VectorScale</span></a>.<br/>
+</div>
+
+<div class="doc">
+A vector of elements of an R-module is itself an R-module. A special case is when the R-module is the ring R itself. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="M:54" class="idref" href="#M:54"><span class="id" title="binder">M</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup</span></a>) (<a id="n:55" class="idref" href="#n:55"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) {<a id="R:56" class="idref" href="#R:56"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} `{<a id="H:57" class="idref" href="#H:57"><span class="id" title="binder">IsLeftModule</span></a> <a id="H:57" class="idref" href="#H:57"><span class="id" title="binder">R</span></a> <a id="H:57" class="idref" href="#H:57"><span class="id" title="binder">M</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="vector_lact" class="idref" href="#vector_lact"><span class="id" title="definition">vector_lact</span></a> (<a id="r:58" class="idref" href="#r:58"><span class="id" title="binder">r</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale.R"><span class="id" title="variable">R</span></a>) : <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale.M"><span class="id" title="variable">M</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale.n"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#Vector"><span class="id" title="definition">Vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale.M"><span class="id" title="variable">M</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale.n"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_map"><span class="id" title="definition">vector_map</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Module.html#lact"><span class="id" title="method">lact</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#r:58"><span class="id" title="variable">r</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="left_heterodistribute_vector_lact_plus" class="idref" href="#left_heterodistribute_vector_lact_plus"><span class="id" title="definition">left_heterodistribute_vector_lact_plus</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftHeteroDistribute"><span class="id" title="class">LeftHeteroDistribute</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_lact"><span class="id" title="definition">vector_lact</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">r</span> <span class="id" title="var">v1</span> <span class="id" title="var">v2</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 5 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#distribute_l"><span class="id" title="definition">distribute_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="right_heterodistribute_vector_lact_plus" class="idref" href="#right_heterodistribute_vector_lact_plus"><span class="id" title="definition">right_heterodistribute_vector_lact_plus</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightHeteroDistribute"><span class="id" title="class">RightHeteroDistribute</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_lact"><span class="id" title="definition">vector_lact</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bb6dec3b123b2c29c8eeeac472582eca"><span class="id" title="notation">(+)</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_plus"><span class="id" title="definition">vector_plus</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> <span class="id" title="var">v</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 4 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#distribute_r"><span class="id" title="definition">distribute_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="heteroassociative_vector_lact_plus" class="idref" href="#heteroassociative_vector_lact_plus"><span class="id" title="definition">heteroassociative_vector_lact_plus</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#HeteroAssociative"><span class="id" title="class">HeteroAssociative</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_lact"><span class="id" title="definition">vector_lact</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_lact"><span class="id" title="definition">vector_lact</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_lact"><span class="id" title="definition">vector_lact</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#2bb6684825e11a22369a7f84a08d3711"><span class="id" title="notation">(.*.)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">r</span> <span class="id" title="var">s</span> <span class="id" title="var">v</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 3 <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#associativity"><span class="id" title="definition">associativity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="left_identity_vector_lact" class="idref" href="#left_identity_vector_lact"><span class="id" title="definition">left_identity_vector_lact</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_lact"><span class="id" title="definition">vector_lact</span></a> 1.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">v</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#path_vector"><span class="id" title="definition">path_vector</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">Hi</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#entry_Build_Vector"><span class="id" title="definition">entry_Build_Vector</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#left_identity"><span class="id" title="definition">left_identity</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="isleftmodule_isleftmodule_vector" class="idref" href="#isleftmodule_isleftmodule_vector"><span class="id" title="definition">isleftmodule_isleftmodule_vector</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Module.html#IsLeftModule"><span class="id" title="class">IsLeftModule</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale.R"><span class="id" title="variable">R</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Vector.html#abgroup_vector"><span class="id" title="definition">abgroup_vector</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale.M"><span class="id" title="variable">M</span></a> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale.n"><span class="id" title="variable">n</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.Module.html#Build_IsLeftModule"><span class="id" title="constructor">Build_IsLeftModule</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_lact"><span class="id" title="definition">vector_lact</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#left_heterodistribute_vector_lact_plus"><span class="id" title="definition">left_heterodistribute_vector_lact_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#right_heterodistribute_vector_lact_plus"><span class="id" title="definition">right_heterodistribute_vector_lact_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#heteroassociative_vector_lact_plus"><span class="id" title="definition">heteroassociative_vector_lact_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#left_identity_vector_lact"><span class="id" title="definition">left_identity_vector_lact</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#VectorScale"><span class="id" title="section">VectorScale</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Algebra.Rings.Vector.html#vector_lact"><span class="id" title="definition">vector_lact</span></a> {<span class="id" title="var">M</span> <span class="id" title="var">n</span> <span class="id" title="var">R</span> <span class="id" title="var">_</span>} <span class="id" title="var">r</span> <span class="id" title="var">v</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

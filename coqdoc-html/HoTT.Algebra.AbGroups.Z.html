@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.AbGroups.Z</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.AbGroups.Z</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Pos.Core.html#"><span class="id" title="library">Spaces.Pos.Core</span></a> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#"><span class="id" title="library">Algebra.AbGroups.AbelianGroup</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">int_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_add_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab44"></a><h1 class="section">The group of integers</h1>
+
+<div class="paragraph"> </div>
+
+ See also Cyclic.v for a definition of the integers as the free group on one generator. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="abgroup_Z" class="idref" href="#abgroup_Z"><span class="id" title="definition">abgroup_Z@</span></a>{} : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup@</span></a><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">{</span></a><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">Set</span></a><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">}</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#Build_AbGroup'"><span class="id" title="definition">Build_AbGroup'</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> 0%<span class="id" title="var">int</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_neg"><span class="id" title="definition">int_neg</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_add"><span class="id" title="definition">int_add</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_add_comm"><span class="id" title="definition">int_add_comm</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_add_assoc"><span class="id" title="definition">int_add_assoc</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_add_0_l"><span class="id" title="definition">int_add_0_l</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_add_neg_l"><span class="id" title="definition">int_add_neg_l</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For every group <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> and element <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.g"><span class="id" title="variable">g</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span>, the map sending an integer to that power of <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.g"><span class="id" title="variable">g</span></a></span> is a homomorphism.  See <span class="inlinecode"><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#ab_mul"><span class="id" title="definition">ab_mul</span></a></span> for the homomorphism <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> when <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> is abelian. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="grp_pow_homo" class="idref" href="#grp_pow_homo"><span class="id" title="definition">grp_pow_homo</span></a> {<a id="G:1" class="idref" href="#G:1"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>} (<a id="g:2" class="idref" href="#g:2"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#G:1"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Group.html#GroupHomomorphism"><span class="id" title="record">GroupHomomorphism</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#G:1"><span class="id" title="variable">G</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#Build_GroupHomomorphism"><span class="id" title="constructor">Build_GroupHomomorphism</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow"><span class="id" title="definition">grp_pow</span></a> <span class="id" title="var">g</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow_add"><span class="id" title="definition">grp_pow_add</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#ab_mul"><span class="id" title="definition">ab_mul</span></a></span> (and <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow"><span class="id" title="definition">grp_pow</span></a></span>) give multiplication in <span class="inlinecode"><a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="abgroup_Z_ab_mul" class="idref" href="#abgroup_Z_ab_mul"><span class="id" title="definition">abgroup_Z_ab_mul</span></a> (<a id="z:3" class="idref" href="#z:3"><span class="id" title="binder">z</span></a> <a id="z':4" class="idref" href="#z':4"><span class="id" title="binder">z'</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#ab_mul"><span class="id" title="definition">ab_mul</span></a> (<span class="id" title="var">A</span>:=<a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>) <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#z:3"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#z':4"><span class="id" title="variable">z'</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#z:3"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Spaces.Int.html#f957f03f82d81f8d3648cb35791a36c5"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#z':4"><span class="id" title="variable">z'</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow_succ"><span class="id" title="definition">grp_pow_succ</span></a> (<span class="id" title="var">G</span>:=<a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Int.html#int_mul_succ_l"><span class="id" title="definition">int_mul_succ_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow_pred"><span class="id" title="definition">grp_pow_pred</span></a> (<span class="id" title="var">G</span>:=<a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Int.html#int_mul_pred_l"><span class="id" title="definition">int_mul_pred_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

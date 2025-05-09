@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>ZeroGroupoid.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk0"><span class="kn">Require Import</span> Basics.Overture Basics.Tactics
+               Basics.PathGroupoids.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> WildCat.Core WildCat.Equiv WildCat.EquivGpd
+               WildCat.Forall WildCat.Graph WildCat.Induced WildCat.FunctorCat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * The wild 1-category of 0-groupoids. *)</span>
+
+<span class="sd">(** Here we define a wild 1-category structure on the type of 0-groupoids.  We think of the 1-cells [g $== h] in a 0-groupoid [G] as a substitute for the paths [g = h], and so we closely follow the definitions used for the 1-category of types with [=] replaced by [$==].  In fact, the 1-category structure on types should be the pullback of the 1-category structure on 0-groupoids along a natural map [Type -&gt; ZeroGpd] which sends [A] to [A] equipped with its path types.  A second motivating example is the 0-groupoid with underlying type [A -&gt; B] and homotopies as the 1-cells.  The definitions chosen here exactly make the Yoneda lemma [opyon_equiv_0gpd] go through. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">ZeroGpd</span> := {
+  carrier :&gt; <span class="kt">Type</span>;
+  isgraph_carrier :: IsGraph carrier;
+  is01cat_carrier :: Is01Cat carrier;
+  is0gpd_carrier :: Is0Gpd carrier;
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">zerogpd_graph</span> (<span class="nv">C</span> : ZeroGpd) : Graph := {|
+    graph_carrier := carrier C;
+    isgraph_graph_carrier := isgraph_carrier C
+  |}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isgraph_0gpd</span> : IsGraph ZeroGpd := isgraph_induced zerogpd_graph.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">is01cat_0gpd</span> : Is01Cat ZeroGpd := is01cat_induced zerogpd_graph.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">is2graph_0gpd</span> : Is2Graph ZeroGpd := is2graph_induced zerogpd_graph.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk1"><span class="kn">Instance</span> <span class="nf">is1cat_0gpd</span> : Is1Cat ZeroGpd.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Is1Cat ZeroGpd</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Is1Cat ZeroGpd</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk3">snapply Build_Is1Cat.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : ZeroGpd, Is01Cat (a $-&gt; b)</div></blockquote><div class="alectryon-extra-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : ZeroGpd, Is0Gpd (a $-&gt; b)</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> : ZeroGpd) (<span class="nv">g</span> : b $-&gt; c),
+Is0Functor (cat_postcomp a g)</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b),
+Is0Functor (cat_precomp c f)</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b) (<span class="nv">g</span> : b $-&gt; c)
+(<span class="nv">h</span> : c $-&gt; d), h $o g $o f $== h $o (g $o f)</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b) (<span class="nv">g</span> : b $-&gt; c)
+(<span class="nv">h</span> : c $-&gt; d), h $o (g $o f) $== h $o g $o f</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b), Id b $o f $== f</div></blockquote><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b), f $o Id a $== f</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk4">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : ZeroGpd, Is01Cat (a $-&gt; b)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk5"><span class="nb">intros</span> G H.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Is01Cat (G $-&gt; H)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk6">srapply Build_Is01Cat.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> : G $-&gt; H, a $-&gt; a</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk7" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk7"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> : G $-&gt; H,
+(b $-&gt; c) -&gt; (a $-&gt; b) -&gt; a $-&gt; c</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk8">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> : G $-&gt; H, a $-&gt; a</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk9"><span class="nb">intro</span> f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f $-&gt; f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">x</span> =&gt; Id (f x)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chka">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> : G $-&gt; H,
+(b $-&gt; c) -&gt; (a $-&gt; b) -&gt; a $-&gt; c</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chkb"><span class="nb">intros</span> f g h p q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f, g, h</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>f $-&gt; g</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f $-&gt; h</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">x</span> =&gt; q x $@ p x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chkc">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : ZeroGpd, Is0Gpd (a $-&gt; b)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chkd"><span class="nb">intros</span> G H.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Is0Gpd (G $-&gt; H)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chke">srapply Build_Is0Gpd.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : G $-&gt; H, (a $-&gt; b) -&gt; b $-&gt; a</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chkf"><span class="nb">intros</span> f g p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>f $-&gt; g</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">g $-&gt; f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">x</span> =&gt; (p x)^$).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk10">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> : ZeroGpd) (<span class="nv">g</span> : b $-&gt; c),
+Is0Functor (cat_postcomp a g)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk11"><span class="nb">intros</span> G H K f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H, K</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>H $-&gt; K</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Is0Functor (cat_postcomp G f)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk12">srapply Build_Is0Functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H, K</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>H $-&gt; K</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : G $-&gt; H,
+(a $-&gt; b) -&gt; cat_postcomp G f a $-&gt; cat_postcomp G f b</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk13"><span class="nb">intros</span> g h p x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H, K</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>H $-&gt; K</span></span></span><br><span><var>g, h</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>zerogpd_graph G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cat_postcomp G f g x $-&gt; cat_postcomp G f h x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk14"><span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H, K</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>H $-&gt; K</span></span></span><br><span><var>g, h</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>zerogpd_graph G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f (g x) $-&gt; f (h x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (fmap f (p x)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk15">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b),
+Is0Functor (cat_precomp c f)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk16"><span class="nb">intros</span> G H K f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H, K</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Is0Functor (cat_precomp K f)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk17">srapply Build_Is0Functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H, K</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : H $-&gt; K,
+(a $-&gt; b) -&gt; cat_precomp K f a $-&gt; cat_precomp K f b</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk18"><span class="nb">intros</span> g h p x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H, K</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>g, h</var><span class="hyp-type"><b>: </b><span>H $-&gt; K</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>zerogpd_graph G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cat_precomp K f g x $-&gt; cat_precomp K f h x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk19"><span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H, K</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>g, h</var><span class="hyp-type"><b>: </b><span>H $-&gt; K</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>zerogpd_graph G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">g (f x) $-&gt; h (f x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (p (f x)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk1a">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b) (<span class="nv">g</span> : b $-&gt; c)
+(<span class="nv">h</span> : c $-&gt; d), h $o g $o f $== h $o (g $o f)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>. <span class="c">(* Associativity. *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk1b">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b) (<span class="nv">g</span> : b $-&gt; c)
+(<span class="nv">h</span> : c $-&gt; d), h $o (g $o f) $== h $o g $o f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>. <span class="c">(* Associativity in opposite direction. *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk1c">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b), Id b $o f $== f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>. <span class="c">(* Left identity. *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk1d">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : ZeroGpd) (<span class="nv">f</span> : a $-&gt; b), f $o Id a $== f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>. <span class="c">(* Right identity. *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We define equivalences of 0-groupoids as the bi-invertible maps, using [Cat_BiInv] and [Cat_IsBiInv].  This definition is chosen to provide what is needed for the Yoneda lemma, and because it specializes to one of the correct definitions for types. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">hasequivs_0gpd</span> : HasEquivs ZeroGpd
+  := cat_hasequivs ZeroGpd.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Coq can&#39;t find the composite of the coercions [cate_fun : G $&lt;~&gt; H &gt;-&gt; G $-&gt; H] and [fun_0gpd : Morphism_0Gpd G H &gt;-&gt; G -&gt; H], probably because it passes through the definitional equality of [G $-&gt; H] and [Morphism_0Gpd G H].  I couldn&#39;t find a solution, so instead here is a helper function to manually do the coercion when needed. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_fun_0gpd</span> {<span class="nv">G</span> <span class="nv">H</span> : ZeroGpd} (<span class="nv">f</span> : G $&lt;~&gt; H) : G -&gt; H
+  := fun01_F (cat_equiv_fun _ _ _ f).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Tools for manipulating equivalences of 0-groupoids</span>
+
+<span class="sd">  Even though the proofs are easy, in certain contexts Coq gets confused about [$==] vs [$-&gt;], which makes it hard to prove this inline.  So we record them here. *)</span>
+
+<span class="sd">(** Every equivalence is injective. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk1e"><span class="kn">Definition</span> <span class="nf">isinj_equiv_0gpd</span> {<span class="nv">G</span> <span class="nv">H</span> : ZeroGpd} (<span class="nv">f</span> : G $&lt;~&gt; H)
+  {<span class="nv">x</span> <span class="nv">y</span> : G} (<span class="nv">h</span> : equiv_fun_0gpd f x $== equiv_fun_0gpd f y)
+  : x $== y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>equiv_fun_0gpd f x $== equiv_fun_0gpd f y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">x $== y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk1f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>equiv_fun_0gpd f x $== equiv_fun_0gpd f y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">x $== y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> ((cat_eissect f x)^$ $@ fmap (equiv_fun_0gpd f^-<span class="mi">1</span>$) h $@ cat_eissect f y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This is one example of many things that could be ported from Basics/Equivalences.v. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">moveR_equiv_V_0gpd</span> {<span class="nv">G</span> <span class="nv">H</span> : ZeroGpd} (<span class="nv">f</span> : G $&lt;~&gt; H) (<span class="nv">x</span> : H) (<span class="nv">y</span> : G) (<span class="nv">p</span> : x $== equiv_fun_0gpd f y)
+  : equiv_fun_0gpd f^-<span class="mi">1</span>$ x $== y
+  := fmap (equiv_fun_0gpd f^-<span class="mi">1</span>$) p $@ cat_eissect f y.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">moveL_equiv_V_0gpd</span> {<span class="nv">G</span> <span class="nv">H</span> : ZeroGpd} (<span class="nv">f</span> : G $&lt;~&gt; H) (<span class="nv">x</span> : H) (<span class="nv">y</span> : G) (<span class="nv">p</span> : equiv_fun_0gpd f y $== x)
+  : y $== equiv_fun_0gpd f^-<span class="mi">1</span>$ x
+  := (cat_eissect f y)^$ $@ fmap (equiv_fun_0gpd f^-<span class="mi">1</span>$) p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** [f] is an equivalence of 0-groupoids iff [IsSurjInj f]</span>
+
+<span class="sd">  We now give a different characterization of the equivalences of 0-groupoids, as the injective split essentially surjective 0-functors, which are defined in EquivGpd.  Advantages of this logically equivalent formulation are that it tends to be easier to prove in examples and that in some cases it is definitionally equal to [ExtensionAlong], which is convenient.  See Homotopy/Suspension.v and Algebra/AbGroups/Abelianization for examples. Advantages of the bi-invertible definition are that it reproduces a definition that is equivalent to [IsEquiv] when applied to types, assuming [Funext].  It also works in any 1-category. *)</span>
+
+<span class="sd">(** Every equivalence is injective and split essentially surjective. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk20"><span class="kn">Instance</span> <span class="nf">issurjinj_equiv_0gpd</span> {<span class="nv">G</span> <span class="nv">H</span> : ZeroGpd} (<span class="nv">f</span> : G $&lt;~&gt; H)
+  : IsSurjInj (equiv_fun_0gpd f).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsSurjInj (equiv_fun_0gpd f)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk21"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsSurjInj (equiv_fun_0gpd f)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk22"><span class="nb">econstructor</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">SplEssSurj (equiv_fun_0gpd f)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk23" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk23"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : G,
+equiv_fun_0gpd f x $== equiv_fun_0gpd f y -&gt; x $== y</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk24">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">SplEssSurj (equiv_fun_0gpd f)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk25"><span class="nb">intro</span> y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{a : G &amp; equiv_fun_0gpd f a $== y}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk26"><span class="kr">exists</span> (<span class="nv">equiv_fun_0gpd</span> <span class="nv">f</span>^-<span class="mi">1</span>$ y).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">equiv_fun_0gpd f (equiv_fun_0gpd f^-<span class="mi">1</span>$ y) $== y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">tapply cat_eisretr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk27">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $&lt;~&gt; H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : G,
+equiv_fun_0gpd f x $== equiv_fun_0gpd f y -&gt; x $== y</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> isinj_equiv_0gpd.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Conversely, every injective split essentially surjective 0-functor is an equivalence.  In practice, this is often the easiest way to prove that a functor is an equivalence. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk28"><span class="kn">Definition</span> <span class="nf">isequiv_0gpd_issurjinj</span> {<span class="nv">G</span> <span class="nv">H</span> : ZeroGpd} (<span class="nv">F</span> : G $-&gt; H)
+  {<span class="nv">e</span> : IsSurjInj F}
+  : Cat_IsBiInv F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>IsSurjInj F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Cat_IsBiInv F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk29"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>IsSurjInj F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Cat_IsBiInv F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk2a"><span class="nb">destruct</span> e <span class="kr">as</span> [e0 e1]; <span class="nb">unfold</span> SplEssSurj <span class="kr">in</span> e0.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Cat_IsBiInv F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk2b">stapply catie_adjointify.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">H $-&gt; G</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk2c" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk2c"><hr></label><div class="goal-conclusion">F $o <span class="nl">?g</span> $== Id H</div></blockquote><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk2d" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk2d"><hr></label><div class="goal-conclusion"><span class="nl">?g</span> $o F $== Id G</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk2e" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk2e">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">H $-&gt; G</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk2f">snapply Build_Fun01.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">zerogpd_graph H -&gt; zerogpd_graph G</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk30" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk30"><hr></label><div class="goal-conclusion">Is0Functor <span class="nl">?F</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk31"><span class="mi">1</span>: <span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">y</span> =&gt; (e0 y).<span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Is0Functor (<span class="kr">fun</span> <span class="nv">y</span> : zerogpd_graph H =&gt; (e0 y).<span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk32" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk32">snapply Build_Is0Functor; <span class="nb">cbn</span> beta.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph H,
+(a $-&gt; b) -&gt; (e0 a).<span class="mi">1</span> $-&gt; (e0 b).<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk33" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk33"><span class="nb">intros</span> y1 y2 m.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br><span><var>y1, y2</var><span class="hyp-type"><b>: </b><span>zerogpd_graph H</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>y1 $-&gt; y2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(e0 y1).<span class="mi">1</span> $-&gt; (e0 y2).<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk34" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk34"><span class="nb">apply</span> e1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br><span><var>y1, y2</var><span class="hyp-type"><b>: </b><span>zerogpd_graph H</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>y1 $-&gt; y2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">F (e0 y1).<span class="mi">1</span> $== F (e0 y2).<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> ((e0 y1).<span class="mi">2</span> $@ m $@ ((e0 y2).<span class="mi">2</span>)^$).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk35" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk35">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">F $o
+{|
+  fun01_F := <span class="kr">fun</span> <span class="nv">y</span> : zerogpd_graph H =&gt; (e0 y).<span class="mi">1</span>;
+  fun01_is0functor :=
+    {|
+      fmap :=
+        (<span class="kr">fun</span> (<span class="nv">y1</span> <span class="nv">y2</span> : zerogpd_graph H) (<span class="nv">m</span> : y1 $-&gt; y2)
+         =&gt;
+         e1 (e0 y1).<span class="mi">1</span> (e0 y2).<span class="mi">1</span>
+           (((e0 y1).<span class="mi">2</span> $@ m) $@ ((e0 y2).<span class="mi">2</span>)^$))
+        :
+        <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph H,
+        (a $-&gt; b) -&gt;
+        (<span class="kr">fun</span> <span class="nv">y</span> : zerogpd_graph H =&gt; (e0 y).<span class="mi">1</span>) a $-&gt;
+        (<span class="kr">fun</span> <span class="nv">y</span> : zerogpd_graph H =&gt; (e0 y).<span class="mi">1</span>) b
+    |}
+|} $== Id H</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk36" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk36"><span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NatTrans.Transformation (<span class="kr">fun</span> <span class="nv">x</span> : H =&gt; F (e0 x).<span class="mi">1</span>)
+  idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">a</span> =&gt; (e0 a).<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk37" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk37">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  fun01_F := <span class="kr">fun</span> <span class="nv">y</span> : zerogpd_graph H =&gt; (e0 y).<span class="mi">1</span>;
+  fun01_is0functor :=
+    {|
+      fmap :=
+        (<span class="kr">fun</span> (<span class="nv">y1</span> <span class="nv">y2</span> : zerogpd_graph H) (<span class="nv">m</span> : y1 $-&gt; y2)
+         =&gt;
+         e1 (e0 y1).<span class="mi">1</span> (e0 y2).<span class="mi">1</span>
+           (((e0 y1).<span class="mi">2</span> $@ m) $@ ((e0 y2).<span class="mi">2</span>)^$))
+        :
+        <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph H,
+        (a $-&gt; b) -&gt;
+        (<span class="kr">fun</span> <span class="nv">y</span> : zerogpd_graph H =&gt; (e0 y).<span class="mi">1</span>) a $-&gt;
+        (<span class="kr">fun</span> <span class="nv">y</span> : zerogpd_graph H =&gt; (e0 y).<span class="mi">1</span>) b
+    |}
+|} $o F $== Id G</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk38" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk38"><span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NatTrans.Transformation (<span class="kr">fun</span> <span class="nv">x</span> : G =&gt; (e0 (F x)).<span class="mi">1</span>)
+  idmap</div></blockquote></div></div></small><span class="alectryon-wsp">  </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk39" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk39"><span class="nb">intro</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(e0 (F x)).<span class="mi">1</span> $-&gt; x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk3a" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk3a"><span class="nb">apply</span> e1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>G, H</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>G $-&gt; H</span></span></span><br><span><var>e0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : zerogpd_graph H,
+{a : zerogpd_graph G &amp; F a $== b}</span></span></span><br><span><var>e1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G,
+F x $== F y -&gt; x $== y</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">F (e0 (F x)).<span class="mi">1</span> $== F x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> e0.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [I]-indexed products for an [I]-indexed family of 0-groupoids. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk3b" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk3b"><span class="kn">Definition</span> <span class="nf">prod_0gpd</span> (<span class="nv">I</span> : <span class="kt">Type</span>) (<span class="nv">G</span> : I -&gt; ZeroGpd) : ZeroGpd.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ZeroGpd</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk3c" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk3c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ZeroGpd</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">rapply (Build_ZeroGpd (<span class="kr">forall</span> <span class="nv">i</span>, G i)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The [i]-th projection from the [I]-indexed product of 0-groupoids. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk3d" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk3d"><span class="kn">Definition</span> <span class="nf">prod_0gpd_pr</span> {<span class="nv">I</span> : <span class="kt">Type</span>} {<span class="nv">G</span> : I -&gt; ZeroGpd}
+  : <span class="kr">forall</span> <span class="nv">i</span>, prod_0gpd I G $-&gt; G i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : I, prod_0gpd I G $-&gt; G i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk3e" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk3e"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : I, prod_0gpd I G $-&gt; G i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk3f" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk3f"><span class="nb">intros</span> i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_0gpd I G $-&gt; G i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk40" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk40">snapply Build_Fun01.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">zerogpd_graph (prod_0gpd I G) -&gt; zerogpd_graph (G i)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk41" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk41"><hr></label><div class="goal-conclusion">Is0Functor <span class="nl">?F</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk42" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk42"><span class="mi">1</span>: <span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">f</span> =&gt; f i).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Is0Functor
+  (<span class="kr">fun</span> <span class="nv">f</span> : zerogpd_graph (prod_0gpd I G) =&gt; f i)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk43" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk43">snapply Build_Is0Functor; <span class="nb">cbn</span> beta.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph (prod_0gpd I G),
+(a $-&gt; b) -&gt; a i $-&gt; b i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk44" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk44"><span class="nb">intros</span> f g p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>f $-&gt; g</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f i $-&gt; g i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (p i).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The universal property of the product of 0-groupoids holds almost definitionally. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk45" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk45"><span class="kn">Definition</span> <span class="nf">equiv_prod_0gpd_corec</span> {<span class="nv">I</span> : <span class="kt">Type</span>} {<span class="nv">G</span> : ZeroGpd} {<span class="nv">H</span> : I -&gt; ZeroGpd}
+  : (<span class="kr">forall</span> <span class="nv">i</span>, G $-&gt; H i) &lt;~&gt; (G $-&gt; prod_0gpd I H).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i) &lt;~&gt; (G $-&gt; prod_0gpd I H)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk46" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk46"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i) &lt;~&gt; (G $-&gt; prod_0gpd I H)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk47" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk47">snapply Build_Equiv.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i) -&gt; G $-&gt; prod_0gpd I H</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk48" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk48"><hr></label><div class="goal-conclusion">IsEquiv <span class="nl">?equiv_fun</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk49" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk49">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i) -&gt; G $-&gt; prod_0gpd I H</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk4a" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk4a"><span class="nb">intro</span> f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">G $-&gt; prod_0gpd I H</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk4b" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk4b">snapply Build_Fun01.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">zerogpd_graph G -&gt; zerogpd_graph (prod_0gpd I H)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk4c" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk4c"><hr></label><div class="goal-conclusion">Is0Functor <span class="nl">?F</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk4d" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk4d"><span class="mi">1</span>: <span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">i</span> =&gt; f i x).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Is0Functor
+  (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk4e" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk4e">snapply Build_Is0Functor; <span class="nb">cbn</span> beta.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+(a $-&gt; b) -&gt;
+(<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i a) $-&gt; (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i b)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk4f" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk4f"><span class="nb">intros</span> x y p i; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>zerogpd_graph G</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>x $-&gt; y</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f i x $-&gt; f i y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (fmap (f i) p).</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk50" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk50">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+   {|
+     fun01_F :=
+       <span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x;
+     fun01_is0functor :=
+       {|
+         fmap :=
+           (<span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G) (<span class="nv">p</span> : x $-&gt; y)
+            =&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+             fmap (f i) p : f i x $-&gt; f i y)
+            :
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x) $-&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+           :
+           <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+           (a $-&gt; b) -&gt;
+           (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+             a $-&gt;
+           (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+             b
+       |}
+   |})</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk51" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk51">snapply Build_IsEquiv.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(G $-&gt; prod_0gpd I H) -&gt; <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk52" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk52"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+ {|
+   fun01_F :=
+     <span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x;
+   fun01_is0functor :=
+     {|
+       fmap :=
+         (<span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G) (<span class="nv">p</span> : x $-&gt; y) =&gt;
+          (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; fmap (f i) p : f i x $-&gt; f i y)
+          :
+          (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x) $-&gt;
+          (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+         :
+         <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+         (a $-&gt; b) -&gt;
+         (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+           a $-&gt;
+         (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+           b
+     |}
+ |}) o <span class="nl">?equiv_inv</span> == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk53" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk53"><hr></label><div class="goal-conclusion"><span class="nl">?equiv_inv</span>
+o (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+   {|
+     fun01_F :=
+       <span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x;
+     fun01_is0functor :=
+       {|
+         fmap :=
+           (<span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G) (<span class="nv">p</span> : x $-&gt; y)
+            =&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+             fmap (f i) p : f i x $-&gt; f i y)
+            :
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x) $-&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+           :
+           <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+           (a $-&gt; b) -&gt;
+           (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+             a $-&gt;
+           (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+             b
+       |}
+   |}) == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk54" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk54"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i,
+<span class="nl">?eisretr</span>
+  ((<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+    {|
+      fun01_F :=
+        <span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x0;
+      fun01_is0functor :=
+        {|
+          fmap :=
+            (<span class="kr">fun</span> (<span class="nv">x0</span> <span class="nv">y</span> : zerogpd_graph G)
+               (<span class="nv">p</span> : x0 $-&gt; y) =&gt;
+             (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+              fmap (f i) p : f i x0 $-&gt; f i y)
+             :
+             (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x0) $-&gt;
+             (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+            :
+            <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+            (a $-&gt; b) -&gt;
+            (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+             f i x0) a $-&gt;
+            (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+             f i x0) b
+        |}
+    |}) x) =
+ap
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+   {|
+     fun01_F :=
+       <span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x0;
+     fun01_is0functor :=
+       {|
+         fmap :=
+           (<span class="kr">fun</span> (<span class="nv">x0</span> <span class="nv">y</span> : zerogpd_graph G)
+              (<span class="nv">p</span> : x0 $-&gt; y) =&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+             fmap (f i) p : f i x0 $-&gt; f i y)
+            :
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x0) $-&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+           :
+           <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+           (a $-&gt; b) -&gt;
+           (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+            f i x0) a $-&gt;
+           (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+            f i x0) b
+       |}
+   |}) (<span class="nl">?eissect</span> x)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk55" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk55">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(G $-&gt; prod_0gpd I H) -&gt; <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk56" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk56"><span class="nb">intro</span> f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $-&gt; prod_0gpd I H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk57" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk57"><span class="nb">intros</span> i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $-&gt; prod_0gpd I H</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">G $-&gt; H i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (prod_0gpd_pr i $o f).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk58" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk58">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+ {|
+   fun01_F :=
+     <span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x;
+   fun01_is0functor :=
+     {|
+       fmap :=
+         (<span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G) (<span class="nv">p</span> : x $-&gt; y) =&gt;
+          (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; fmap (f i) p : f i x $-&gt; f i y)
+          :
+          (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x) $-&gt;
+          (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+         :
+         <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+         (a $-&gt; b) -&gt;
+         (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+           a $-&gt;
+         (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+           b
+     |}
+ |})
+o (<span class="kr">fun</span> (<span class="nv">f</span> : G $-&gt; prod_0gpd I H) (<span class="nv">i</span> : I) =&gt;
+   prod_0gpd_pr i $o f) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk59" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk59"><span class="nb">intro</span> f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G $-&gt; prod_0gpd I H</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  fun01_F :=
+    <span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+    (prod_0gpd_pr i $o f) x;
+  fun01_is0functor :=
+    {|
+      fmap :=
+        <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G) (<span class="nv">p</span> : x $-&gt; y)
+          (<span class="nv">i</span> : I) =&gt; fmap (prod_0gpd_pr i $o f) p
+    |}
+|} = f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk5a" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk5a">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> (<span class="nv">f</span> : G $-&gt; prod_0gpd I H) (<span class="nv">i</span> : I) =&gt;
+ prod_0gpd_pr i $o f)
+o (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+   {|
+     fun01_F :=
+       <span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x;
+     fun01_is0functor :=
+       {|
+         fmap :=
+           (<span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G) (<span class="nv">p</span> : x $-&gt; y)
+            =&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+             fmap (f i) p : f i x $-&gt; f i y)
+            :
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x) $-&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+           :
+           <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+           (a $-&gt; b) -&gt;
+           (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+             a $-&gt;
+           (<span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x)
+             b
+       |}
+   |}) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk5b" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk5b"><span class="nb">intro</span> f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+ prod_0gpd_pr i $o
+ {|
+   fun01_F :=
+     <span class="kr">fun</span> (<span class="nv">x</span> : zerogpd_graph G) (<span class="nv">i0</span> : I) =&gt; f i0 x;
+   fun01_is0functor :=
+     {|
+       fmap :=
+         <span class="kr">fun</span> (<span class="nv">x</span> <span class="nv">y</span> : zerogpd_graph G) (<span class="nv">p</span> : x $-&gt; y)
+           (<span class="nv">i0</span> : I) =&gt; fmap (f i0) p
+     |}
+ |}) = f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk5c" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk5c">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i,
+((<span class="kr">fun</span> <span class="nv">f</span> : G $-&gt; prod_0gpd I H =&gt; <span class="mi">1</span>)
+ :
+ (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+  {|
+    fun01_F :=
+      <span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x0;
+    fun01_is0functor :=
+      {|
+        fmap :=
+          (<span class="kr">fun</span> (<span class="nv">x0</span> <span class="nv">y</span> : zerogpd_graph G) (<span class="nv">p</span> : x0 $-&gt; y)
+           =&gt;
+           (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+            fmap (f i) p : f i x0 $-&gt; f i y)
+           :
+           (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x0) $-&gt;
+           (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+          :
+          <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+          (a $-&gt; b) -&gt;
+          (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+           f i x0) a $-&gt;
+          (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+           f i x0) b
+      |}
+  |})
+ o (<span class="kr">fun</span> (<span class="nv">f</span> : G $-&gt; prod_0gpd I H) (<span class="nv">i</span> : I) =&gt;
+    prod_0gpd_pr i $o f) == idmap)
+  ((<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+    {|
+      fun01_F :=
+        <span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x0;
+      fun01_is0functor :=
+        {|
+          fmap :=
+            (<span class="kr">fun</span> (<span class="nv">x0</span> <span class="nv">y</span> : zerogpd_graph G)
+               (<span class="nv">p</span> : x0 $-&gt; y) =&gt;
+             (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+              fmap (f i) p : f i x0 $-&gt; f i y)
+             :
+             (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x0) $-&gt;
+             (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+            :
+            <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+            (a $-&gt; b) -&gt;
+            (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+             f i x0) a $-&gt;
+            (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+             f i x0) b
+        |}
+    |}) x) =
+ap
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+   {|
+     fun01_F :=
+       <span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt; f i x0;
+     fun01_is0functor :=
+       {|
+         fmap :=
+           (<span class="kr">fun</span> (<span class="nv">x0</span> <span class="nv">y</span> : zerogpd_graph G)
+              (<span class="nv">p</span> : x0 $-&gt; y) =&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+             fmap (f i) p : f i x0 $-&gt; f i y)
+            :
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x0) $-&gt;
+            (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+           :
+           <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+           (a $-&gt; b) -&gt;
+           (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+            f i x0) a $-&gt;
+           (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+            f i x0) b
+       |}
+   |})
+  (((<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt; <span class="mi">1</span>)
+    :
+    (<span class="kr">fun</span> (<span class="nv">f</span> : G $-&gt; prod_0gpd I H) (<span class="nv">i</span> : I) =&gt;
+     prod_0gpd_pr i $o f)
+    o (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">i</span> : I, G $-&gt; H i =&gt;
+       {|
+         fun01_F :=
+           <span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+           f i x0;
+         fun01_is0functor :=
+           {|
+             fmap :=
+               (<span class="kr">fun</span> (<span class="nv">x0</span> <span class="nv">y</span> : zerogpd_graph G)
+                  (<span class="nv">p</span> : x0 $-&gt; y) =&gt;
+                (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt;
+                 fmap (f i) p : f i x0 $-&gt; f i y)
+                :
+                (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i x0) $-&gt;
+                (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; f i y))
+               :
+               <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph G,
+               (a $-&gt; b) -&gt;
+               (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+                f i x0) a $-&gt;
+               (<span class="kr">fun</span> (<span class="nv">x0</span> : zerogpd_graph G) (<span class="nv">i</span> : I) =&gt;
+                f i x0) b
+           |}
+       |}) == idmap) x)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Indexed products of groupoids with equivalent indices and fiberwise equivalent factors are equivalent. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk5d" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk5d"><span class="kn">Definition</span> <span class="nf">cate_prod_0gpd</span> {<span class="nv">I</span> <span class="nv">J</span> : <span class="kt">Type</span>} (<span class="nv">ie</span> : I &lt;~&gt; J)
+  (<span class="nv">G</span> : I -&gt; ZeroGpd) (<span class="nv">H</span> : J -&gt; ZeroGpd)
+  (<span class="nv">f</span> : <span class="kr">forall</span> (<span class="nv">i</span> : I), G i $&lt;~&gt; H (ie i))
+  : prod_0gpd I G $&lt;~&gt; prod_0gpd J H.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_0gpd I G $&lt;~&gt; prod_0gpd J H</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk5e" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk5e"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_0gpd I G $&lt;~&gt; prod_0gpd J H</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk5f" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk5f">snapply cate_adjointify.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_0gpd I G $-&gt; prod_0gpd J H</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk60" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk60"><hr></label><div class="goal-conclusion">prod_0gpd J H $-&gt; prod_0gpd I G</div></blockquote><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk61" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk61"><hr></label><div class="goal-conclusion"><span class="nl">?f</span> $o <span class="nl">?g</span> $== Id (prod_0gpd J H)</div></blockquote><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk62" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk62"><hr></label><div class="goal-conclusion"><span class="nl">?g</span> $o <span class="nl">?f</span> $== Id (prod_0gpd I G)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk63" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk63">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_0gpd I G $-&gt; prod_0gpd J H</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk64" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk64">snapply Build_Fun01.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">zerogpd_graph (prod_0gpd I G) -&gt;
+zerogpd_graph (prod_0gpd J H)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zerogroupoid-v-chk65" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><label class="goal-separator" for="zerogroupoid-v-chk65"><hr></label><div class="goal-conclusion">Is0Functor <span class="nl">?F</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk66" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk66">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">zerogpd_graph (prod_0gpd I G) -&gt;
+zerogpd_graph (prod_0gpd J H)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk67" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk67"><span class="nb">intros</span> h j.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>j</var><span class="hyp-type"><b>: </b><span>J</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">H j</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (transport H (eisretr ie j) (cate_fun (f (ie^-<span class="mi">1</span> j)) (h _))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk68" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk68">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Is0Functor
+  (<span class="kr">fun</span> <span class="nv">h</span> : zerogpd_graph (prod_0gpd I G) =&gt;
+   (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+    transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+      (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+   :
+   zerogpd_graph (prod_0gpd J H))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk69" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk69">napply Build_Is0Functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : zerogpd_graph (prod_0gpd I G),
+(a $-&gt; b) -&gt;
+(<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+ transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+   (f (ie^-<span class="mi">1</span> j) (a (ie^-<span class="mi">1</span> j)))) $-&gt;
+(<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+ transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+   (f (ie^-<span class="mi">1</span> j) (b (ie^-<span class="mi">1</span> j))))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk6a" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk6a"><span class="nb">intros</span> g h p j.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>g, h</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>j</var><span class="hyp-type"><b>: </b><span>J</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+  (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))) $-&gt;
+transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+  (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk6b" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk6b"><span class="nb">destruct</span> (eisretr ie j).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>g, h</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>j</var><span class="hyp-type"><b>: </b><span>J</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) <span class="mi">1</span>
+  (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))) $-&gt;
+transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) <span class="mi">1</span>
+  (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk6c" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk6c"><span class="nb">refine</span> (_ $o Hom_path (transport_1 _ _)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>g, h</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>j</var><span class="hyp-type"><b>: </b><span>J</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j)) $-&gt;
+transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) <span class="mi">1</span>
+  (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk6d" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk6d"><span class="nb">apply</span> Build_Fun01.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>g, h</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>g $-&gt; h</span></span></span><br><span><var>j</var><span class="hyp-type"><b>: </b><span>J</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">g (ie^-<span class="mi">1</span> j) $-&gt; h (ie^-<span class="mi">1</span> j)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (p _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk6e" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk6e">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">prod_0gpd J H $-&gt; prod_0gpd I G</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (equiv_prod_0gpd_corec (<span class="kr">fun</span> <span class="nv">i</span> =&gt; (f i)^-<span class="mi">1</span>$ $o prod_0gpd_pr (ie i))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk6f" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk6f">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  fun01_F :=
+    <span class="kr">fun</span> <span class="nv">h</span> : zerogpd_graph (prod_0gpd I G) =&gt;
+    (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+     transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+       (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+    :
+    zerogpd_graph (prod_0gpd J H);
+  fun01_is0functor :=
+    {|
+      fmap :=
+        <span class="kr">fun</span> (<span class="nv">g</span> <span class="nv">h</span> : zerogpd_graph (prod_0gpd I G))
+          (<span class="nv">p</span> : g $-&gt; h) =&gt;
+        (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+         <span class="kr">let</span> <span class="nv">p0</span> := eisretr ie j <span class="kr">in</span>
+         <span class="kr">match</span>
+           p0 <span class="kr">as</span> p1 <span class="kr">in</span> (_ = j0)
+           <span class="kr">return</span>
+             (transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) p1
+                (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))) $-&gt;
+              transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) p1
+                (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+         <span class="kr">with</span>
+         | <span class="mi">1</span> =&gt;
+             (<span class="kr">let</span> <span class="nv">X</span> :=
+                <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+                  (<span class="nv">isgraph_A</span> : IsGraph A)
+                  (<span class="nv">isgraph_B</span> : IsGraph B) (<span class="nv">F</span> : A -&gt; B)
+                  (<span class="nv">fun01_is0functor</span> : Is0Functor F) =&gt;
+                FunctorCat.fun01_is0functor A B
+                  {|
+                    fun01_F := F;
+                    fun01_is0functor :=
+                      fun01_is0functor
+                  |} <span class="kr">in</span>
+              <span class="kr">let</span> <span class="nv">X0</span> :=
+                <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+                  (<span class="nv">isgraph_A</span> : IsGraph A)
+                  (<span class="nv">isgraph_B</span> : IsGraph B) (<span class="nv">F</span> : A -&gt; B)
+                  (<span class="nv">fun01_is0functor</span> : Is0Functor F) =&gt;
+                @fmap A B isgraph_A isgraph_B
+                  {|
+                    fun01_F := F;
+                    fun01_is0functor :=
+                      fun01_is0functor
+                  |}
+                  (X A B isgraph_A isgraph_B F
+                     fun01_is0functor) <span class="kr">in</span>
+              X0 (zerogpd_graph (G (ie^-<span class="mi">1</span> j)))
+                (zerogpd_graph (H (ie (...))))
+                (isgraph_graph_carrier
+                   (zerogpd_graph (G (...))))
+                (isgraph_graph_carrier
+                   (zerogpd_graph (H (...))))
+                (f (ie^-<span class="mi">1</span> j))
+                (fun01_is0functor
+                   (zerogpd_graph (G (...)))
+                   (zerogpd_graph (H (...)))
+                   (f (ie^-<span class="mi">1</span> j))) (g (ie^-<span class="mi">1</span> j))
+                (h (ie^-<span class="mi">1</span> j)) (p (ie^-<span class="mi">1</span> j))) $o
+             Hom_path
+               (transport_1 carrier
+                  (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))))
+         <span class="kr">end</span>)
+        :
+        (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+         transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+           (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j)))) $-&gt;
+        (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+         transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+           (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+    |}
+|} $o
+equiv_prod_0gpd_corec
+  (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; (f i)^-<span class="mi">1</span>$ $o prod_0gpd_pr (ie i)) $==
+Id (prod_0gpd J H)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk70" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk70"><span class="nb">intros</span> h j.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd J H)</span></span></span><br><span><var>j</var><span class="hyp-type"><b>: </b><span>J</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">({|
+   fun01_F :=
+     <span class="kr">fun</span> (<span class="nv">h</span> : zerogpd_graph (prod_0gpd I G)) (<span class="nv">j</span> : J)
+     =&gt;
+     transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+       (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j)));
+   fun01_is0functor :=
+     {|
+       fmap :=
+         <span class="kr">fun</span> (<span class="nv">g</span> <span class="nv">h</span> : zerogpd_graph (prod_0gpd I G))
+           (<span class="nv">p</span> : g $-&gt; h) (<span class="nv">j</span> : J) =&gt;
+         <span class="kr">let</span> <span class="nv">p0</span> := eisretr ie j <span class="kr">in</span>
+         <span class="kr">match</span>
+           p0 <span class="kr">as</span> p1 <span class="kr">in</span> (_ = j0)
+           <span class="kr">return</span>
+             (transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) p1
+                (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))) $-&gt;
+              transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) p1
+                (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+         <span class="kr">with</span>
+         | <span class="mi">1</span> =&gt;
+             (<span class="kr">let</span> <span class="nv">X</span> :=
+                <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+                  (<span class="nv">isgraph_A</span> : IsGraph A)
+                  (<span class="nv">isgraph_B</span> : IsGraph B) (<span class="nv">F</span> : A -&gt; B)
+                  (<span class="nv">fun01_is0functor</span> : Is0Functor F) =&gt;
+                FunctorCat.fun01_is0functor A B
+                  {|
+                    fun01_F := F;
+                    fun01_is0functor :=
+                      fun01_is0functor
+                  |} <span class="kr">in</span>
+              <span class="kr">let</span> <span class="nv">X0</span> :=
+                <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+                  (<span class="nv">isgraph_A</span> : IsGraph A)
+                  (<span class="nv">isgraph_B</span> : IsGraph B) (<span class="nv">F</span> : A -&gt; B)
+                  (<span class="nv">fun01_is0functor</span> : Is0Functor F) =&gt;
+                @fmap A B isgraph_A isgraph_B
+                  {|
+                    fun01_F := F;
+                    fun01_is0functor :=
+                      fun01_is0functor
+                  |}
+                  (X A B isgraph_A isgraph_B F
+                     fun01_is0functor) <span class="kr">in</span>
+              X0 (zerogpd_graph (G (ie^-<span class="mi">1</span> j)))
+                (zerogpd_graph (H (ie (ie^-<span class="mi">1</span> j))))
+                (isgraph_graph_carrier
+                   (zerogpd_graph (G (ie^-<span class="mi">1</span> j))))
+                (isgraph_graph_carrier
+                   (zerogpd_graph (H (ie ...))))
+                (f (ie^-<span class="mi">1</span> j))
+                (fun01_is0functor
+                   (zerogpd_graph (G (ie^-<span class="mi">1</span> j)))
+                   (zerogpd_graph (H (ie ...)))
+                   (f (ie^-<span class="mi">1</span> j))) (g (ie^-<span class="mi">1</span> j))
+                (h (ie^-<span class="mi">1</span> j)) (p (ie^-<span class="mi">1</span> j))) $o
+             Hom_path
+               (transport_1 carrier
+                  (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))))
+         <span class="kr">end</span>
+     |}
+ |} $o
+ equiv_prod_0gpd_corec
+   (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; (f i)^-<span class="mi">1</span>$ $o prod_0gpd_pr (ie i))) h
+  j $-&gt; Id (prod_0gpd J H) h j</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk71" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk71"><span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd J H)</span></span></span><br><span><var>j</var><span class="hyp-type"><b>: </b><span>J</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+  (f (ie^-<span class="mi">1</span> j)
+     (cat_equiv_inv (f (ie^-<span class="mi">1</span> j)) (h (ie (ie^-<span class="mi">1</span> j))))) $-&gt;
+h j</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk72" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk72"><span class="nb">destruct</span> (eisretr ie j).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd J H)</span></span></span><br><span><var>j</var><span class="hyp-type"><b>: </b><span>J</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) <span class="mi">1</span>
+  (f (ie^-<span class="mi">1</span> j)
+     (cat_equiv_inv (f (ie^-<span class="mi">1</span> j)) (h (ie (ie^-<span class="mi">1</span> j))))) $-&gt;
+h (ie (ie^-<span class="mi">1</span> j))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (cate_isretr (f _) _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk73" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk73">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">equiv_prod_0gpd_corec
+  (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; (f i)^-<span class="mi">1</span>$ $o prod_0gpd_pr (ie i)) $o
+{|
+  fun01_F :=
+    <span class="kr">fun</span> <span class="nv">h</span> : zerogpd_graph (prod_0gpd I G) =&gt;
+    (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+     transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+       (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+    :
+    zerogpd_graph (prod_0gpd J H);
+  fun01_is0functor :=
+    {|
+      fmap :=
+        <span class="kr">fun</span> (<span class="nv">g</span> <span class="nv">h</span> : zerogpd_graph (prod_0gpd I G))
+          (<span class="nv">p</span> : g $-&gt; h) =&gt;
+        (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+         <span class="kr">let</span> <span class="nv">p0</span> := eisretr ie j <span class="kr">in</span>
+         <span class="kr">match</span>
+           p0 <span class="kr">as</span> p1 <span class="kr">in</span> (_ = j0)
+           <span class="kr">return</span>
+             (transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) p1
+                (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))) $-&gt;
+              transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) p1
+                (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+         <span class="kr">with</span>
+         | <span class="mi">1</span> =&gt;
+             (<span class="kr">let</span> <span class="nv">X</span> :=
+                <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+                  (<span class="nv">isgraph_A</span> : IsGraph A)
+                  (<span class="nv">isgraph_B</span> : IsGraph B) (<span class="nv">F</span> : A -&gt; B)
+                  (<span class="nv">fun01_is0functor</span> : Is0Functor F) =&gt;
+                FunctorCat.fun01_is0functor A B
+                  {|
+                    fun01_F := F;
+                    fun01_is0functor :=
+                      fun01_is0functor
+                  |} <span class="kr">in</span>
+              <span class="kr">let</span> <span class="nv">X0</span> :=
+                <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+                  (<span class="nv">isgraph_A</span> : IsGraph A)
+                  (<span class="nv">isgraph_B</span> : IsGraph B) (<span class="nv">F</span> : A -&gt; B)
+                  (<span class="nv">fun01_is0functor</span> : Is0Functor F) =&gt;
+                @fmap A B isgraph_A isgraph_B
+                  {|
+                    fun01_F := F;
+                    fun01_is0functor :=
+                      fun01_is0functor
+                  |}
+                  (X A B isgraph_A isgraph_B F
+                     fun01_is0functor) <span class="kr">in</span>
+              X0 (zerogpd_graph (G (ie^-<span class="mi">1</span> j)))
+                (zerogpd_graph (H (ie (...))))
+                (isgraph_graph_carrier
+                   (zerogpd_graph (G (...))))
+                (isgraph_graph_carrier
+                   (zerogpd_graph (H (...))))
+                (f (ie^-<span class="mi">1</span> j))
+                (fun01_is0functor
+                   (zerogpd_graph (G (...)))
+                   (zerogpd_graph (H (...)))
+                   (f (ie^-<span class="mi">1</span> j))) (g (ie^-<span class="mi">1</span> j))
+                (h (ie^-<span class="mi">1</span> j)) (p (ie^-<span class="mi">1</span> j))) $o
+             Hom_path
+               (transport_1 carrier
+                  (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))))
+         <span class="kr">end</span>)
+        :
+        (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+         transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+           (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j)))) $-&gt;
+        (<span class="kr">fun</span> <span class="nv">j</span> : J =&gt;
+         transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+           (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+    |}
+|} $== Id (prod_0gpd I G)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk74" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk74"><span class="nb">intros</span> g i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(equiv_prod_0gpd_corec
+   (<span class="kr">fun</span> <span class="nv">i</span> : I =&gt; (f i)^-<span class="mi">1</span>$ $o prod_0gpd_pr (ie i)) $o
+ {|
+   fun01_F :=
+     <span class="kr">fun</span> (<span class="nv">h</span> : zerogpd_graph (prod_0gpd I G)) (<span class="nv">j</span> : J)
+     =&gt;
+     transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie j)
+       (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j)));
+   fun01_is0functor :=
+     {|
+       fmap :=
+         <span class="kr">fun</span> (<span class="nv">g</span> <span class="nv">h</span> : zerogpd_graph (prod_0gpd I G))
+           (<span class="nv">p</span> : g $-&gt; h) (<span class="nv">j</span> : J) =&gt;
+         <span class="kr">let</span> <span class="nv">p0</span> := eisretr ie j <span class="kr">in</span>
+         <span class="kr">match</span>
+           p0 <span class="kr">as</span> p1 <span class="kr">in</span> (_ = j0)
+           <span class="kr">return</span>
+             (transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) p1
+                (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))) $-&gt;
+              transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) p1
+                (f (ie^-<span class="mi">1</span> j) (h (ie^-<span class="mi">1</span> j))))
+         <span class="kr">with</span>
+         | <span class="mi">1</span> =&gt;
+             (<span class="kr">let</span> <span class="nv">X</span> :=
+                <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+                  (<span class="nv">isgraph_A</span> : IsGraph A)
+                  (<span class="nv">isgraph_B</span> : IsGraph B) (<span class="nv">F</span> : A -&gt; B)
+                  (<span class="nv">fun01_is0functor</span> : Is0Functor F) =&gt;
+                FunctorCat.fun01_is0functor A B
+                  {|
+                    fun01_F := F;
+                    fun01_is0functor :=
+                      fun01_is0functor
+                  |} <span class="kr">in</span>
+              <span class="kr">let</span> <span class="nv">X0</span> :=
+                <span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+                  (<span class="nv">isgraph_A</span> : IsGraph A)
+                  (<span class="nv">isgraph_B</span> : IsGraph B) (<span class="nv">F</span> : A -&gt; B)
+                  (<span class="nv">fun01_is0functor</span> : Is0Functor F) =&gt;
+                @fmap A B isgraph_A isgraph_B
+                  {|
+                    fun01_F := F;
+                    fun01_is0functor :=
+                      fun01_is0functor
+                  |}
+                  (X A B isgraph_A isgraph_B F
+                     fun01_is0functor) <span class="kr">in</span>
+              X0 (zerogpd_graph (G (ie^-<span class="mi">1</span> j)))
+                (zerogpd_graph (H (ie (ie^-<span class="mi">1</span> j))))
+                (isgraph_graph_carrier
+                   (zerogpd_graph (G (ie^-<span class="mi">1</span> j))))
+                (isgraph_graph_carrier
+                   (zerogpd_graph (H (ie ...))))
+                (f (ie^-<span class="mi">1</span> j))
+                (fun01_is0functor
+                   (zerogpd_graph (G (ie^-<span class="mi">1</span> j)))
+                   (zerogpd_graph (H (ie ...)))
+                   (f (ie^-<span class="mi">1</span> j))) (g (ie^-<span class="mi">1</span> j))
+                (h (ie^-<span class="mi">1</span> j)) (p (ie^-<span class="mi">1</span> j))) $o
+             Hom_path
+               (transport_1 carrier
+                  (f (ie^-<span class="mi">1</span> j) (g (ie^-<span class="mi">1</span> j))))
+         <span class="kr">end</span>
+     |}
+ |}) g i $-&gt; Id (prod_0gpd I G) g i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk75" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk75"><span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cat_equiv_inv (f i)
+  (transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (eisretr ie (ie i))
+     (f (ie^-<span class="mi">1</span> (ie i)) (g (ie^-<span class="mi">1</span> (ie i))))) $-&gt; g i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk76" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk76"><span class="nb">refine</span> (_ $o Hom_path
+            (ap (cate_fun (f i)^-<span class="mi">1</span>$) (transport2 _ (eisadj ie i) _))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(f i)^-<span class="mi">1</span>$
+  (transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (ap ie (eissect ie i))
+     (f (ie^-<span class="mi">1</span> (ie i)) (g (ie^-<span class="mi">1</span> (ie i))))) $-&gt; g i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zerogroupoid-v-chk77" style="display: none" type="checkbox"><label class="alectryon-input" for="zerogroupoid-v-chk77"><span class="nb">destruct</span> (eissect ie i).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>I, J</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>ie</var><span class="hyp-type"><b>: </b><span>I &lt;~&gt; J</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>I -&gt; ZeroGpd</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>J -&gt; ZeroGpd</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : I, G i $&lt;~&gt; H (ie i)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>zerogpd_graph (prod_0gpd I G)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>I</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(f (ie^-<span class="mi">1</span> (ie i)))^-<span class="mi">1</span>$
+  (transport (<span class="kr">fun</span> <span class="nv">x</span> : J =&gt; H x) (ap ie <span class="mi">1</span>)
+     (f (ie^-<span class="mi">1</span> (ie i)) (g (ie^-<span class="mi">1</span> (ie i))))) $-&gt;
+g (ie^-<span class="mi">1</span> (ie i))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (cate_issect (f _) _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

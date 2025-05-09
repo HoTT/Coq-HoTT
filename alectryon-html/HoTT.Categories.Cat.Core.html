@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Cat, the precategory of strict categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc13" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc13"><span class="kn">Require Import</span> Category.Objects InitialTerminalCategory.Core InitialTerminalCategory.Functors Functor.Core Category.Strict Functor.Paths.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity Functor.Composition.Core Functor.Composition.Laws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">sub_pre_cat</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** We use a slight generalization; we look at a full 1-precategory</span>
+<span class="sd">      of the 2-precategory Cat, such that all types of functors are</span>
+<span class="sd">      hSets.  It might be possible to prove that this doesn&#39;t buy you</span>
+<span class="sd">      anything, because it&#39;s probably the case that [IsHSet (Functor C</span>
+<span class="sd">      C) → IsStrictCategory C]. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">P</span> : PreCategory -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** There is a precategory of precategories which satisfy the proposition P *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sub_pre_cat</span> : PreCategory
+    := @Build_PreCategory
+         { C : PreCategory | P C }
+         (<span class="kr">fun</span> <span class="nv">C</span> <span class="nv">D</span> =&gt; Functor C.<span class="mi">1</span> D.<span class="mi">1</span>)
+         (<span class="kr">fun</span> <span class="nv">C</span> =&gt; identity C.<span class="mi">1</span>)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">F</span> <span class="nv">G</span> =&gt; F o G)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; associativity _ _ _)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; left_identity _)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; right_identity _)
+         (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> =&gt; HF s.<span class="mi">2</span> d.<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">sub_pre_cat</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> sub_pre_cat {_} P {_}, {_} P _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[local] <span class="kn">Hint Extern</span> <span class="mi">4</span> =&gt; <span class="kp">progress</span> (<span class="nb">cbv</span> beta iota) : typeclass_instances.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">strict_cat</span> `{Funext} : PreCategory
+  := sub_pre_cat (<span class="kr">fun</span> <span class="nv">C</span> =&gt; IsStrictCategory C).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(*Definition Cat `{Funext} : PreCategory.</span>
+<span class="c">  refine (@sub_pre_cat _ (fun C =&gt; IsCategory C) _).</span>
+<span class="c">  *)</span>
+
+<span class="sd">(** ** The initial and terminal categories are initial and terminal objects in cat *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">objects</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">P</span> : PreCategory -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{<span class="kr">forall</span> <span class="nv">C</span>, IsHProp (P C)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc14" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc14"><span class="kn">Lemma</span> <span class="nf">is_terminal_object__is_terminal_category</span>
+        `(IsTerminalCategory one)
+        (HT : P one)
+  : IsTerminalObject (sub_pre_cat P HF) (one; HT).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Contr0</var><span class="hyp-type"><b>: </b><span>Contr one</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : one, Contr (morphism one s d)</span></span></span><br><span><var>H2</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory one</span></span></span><br><span><var>HT</var><span class="hyp-type"><b>: </b><span>P one</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTerminalObject (sub_pre_cat P) (one; HT)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc15" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc15"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Contr0</var><span class="hyp-type"><b>: </b><span>Contr one</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : one, Contr (morphism one s d)</span></span></span><br><span><var>H2</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory one</span></span></span><br><span><var>HT</var><span class="hyp-type"><b>: </b><span>P one</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTerminalObject (sub_pre_cat P) (one; HT)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc16" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc16"><span class="kn">Lemma</span> <span class="nf">is_initial_object__is_initial_category</span>
+        `(IsInitialCategory zero)
+        (HI : P zero)
+  : IsInitialObject (sub_pre_cat P HF) (zero; HI).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>zero</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsInitialCategory zero</span></span></span><br><span><var>HI</var><span class="hyp-type"><b>: </b><span>P zero</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsInitialObject (sub_pre_cat P) (zero; HI)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc17" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc17"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>zero</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsInitialCategory zero</span></span></span><br><span><var>HI</var><span class="hyp-type"><b>: </b><span>P zero</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsInitialObject (sub_pre_cat P) (zero; HI)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">objects</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

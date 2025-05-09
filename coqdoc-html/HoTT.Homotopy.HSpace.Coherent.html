@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Homotopy.HSpace.Coherent</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Homotopy.HSpace.Coherent</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Core.html#"><span class="id" title="library">HSpace.Core</span></a> <a class="idref" href="HoTT.Pointed.Core.html#"><span class="id" title="library">Pointed.Core</span></a> <a class="idref" href="HoTT.Pointed.Loops.html#"><span class="id" title="library">Pointed.Loops</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_mult_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pointed_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1177"></a><h2 class="section">Coherent H-space structures</h2>
+
+<div class="paragraph"> </div>
+
+ An H-space is coherent when the left and right identities agree at the base point. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="IsCoherent" class="idref" href="#IsCoherent"><span class="id" title="inductive, record"><span id="IsCoherent" class="id">IsCoherent</span></span></a> (<a id="X:1" class="idref" href="#X:1"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>) `{<a id="H:2" class="idref" href="#H:2"><span class="id" title="binder">IsHSpace</span></a> <a id="H:2" class="idref" href="#H:2"><span class="id" title="binder">X</span></a>} :=<br/>
+&nbsp;&nbsp;<a id="iscoherent" class="idref" href="#iscoherent"><span class="id" title="constructor, projection"><span id="iscoherent" class="id">iscoherent</span></span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#left_identity"><span class="id" title="definition">left_identity</span></a> <a class="idref" href="HoTT.Pointed.Core.html#::pointed_scope:'pt'"><span class="id" title="notation">pt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#right_identity"><span class="id" title="definition">right_identity</span></a> <a class="idref" href="HoTT.Pointed.Core.html#::pointed_scope:'pt'"><span class="id" title="notation">pt</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="IsCohHSpace" class="idref" href="#IsCohHSpace"><span class="id" title="definition, record"><span id="IsCohHSpace_rect" class="id"><span id="IsCohHSpace_ind" class="id"><span id="IsCohHSpace_rec" class="id"><span id="IsCohHSpace_sind" class="id">IsCohHSpace</span></span></span></span></span></a> (<a id="A:5" class="idref" href="#A:5"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>) := {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="ishspace_cohhspace" class="idref" href="#ishspace_cohhspace"><span class="id" title="projection">ishspace_cohhspace</span></a> :: <a class="idref" href="HoTT.Homotopy.HSpace.Core.html#IsHSpace"><span class="id" title="class">IsHSpace</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#A:5"><span class="id" title="variable">A</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="iscoherent_cohhspace" class="idref" href="#iscoherent_cohhspace"><span class="id" title="projection">iscoherent_cohhspace</span></a> :: <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#IsCoherent"><span class="id" title="class">IsCoherent</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#A:5"><span class="id" title="variable">A</span></a>;<br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="issig_iscohhspace" class="idref" href="#issig_iscohhspace"><span class="id" title="definition">issig_iscohhspace</span></a> (<a id="A:9" class="idref" href="#A:9"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="hspace_op:10" class="idref" href="#hspace_op:10"><span class="id" title="binder">hspace_op</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#SgOp"><span class="id" title="class">SgOp</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#A:9"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="hspace_left_identity:11" class="idref" href="#hspace_left_identity:11"><span class="id" title="binder">hspace_left_identity</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#hspace_op:10"><span class="id" title="variable">hspace_op</span></a> <a class="idref" href="HoTT.Pointed.Core.html#::pointed_scope:'pt'"><span class="id" title="notation">pt</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="hspace_right_identity:12" class="idref" href="#hspace_right_identity:12"><span class="id" title="binder">hspace_right_identity</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightIdentity"><span class="id" title="class">RightIdentity</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#hspace_op:10"><span class="id" title="variable">hspace_op</span></a> <a class="idref" href="HoTT.Pointed.Core.html#::pointed_scope:'pt'"><span class="id" title="notation">pt</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#hspace_left_identity:11"><span class="id" title="variable">hspace_left_identity</span></a> <a class="idref" href="HoTT.Pointed.Core.html#::pointed_scope:'pt'"><span class="id" title="notation">pt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#hspace_right_identity:12"><span class="id" title="variable">hspace_right_identity</span></a> <a class="idref" href="HoTT.Pointed.Core.html#::pointed_scope:'pt'"><span class="id" title="notation">pt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#IsCohHSpace"><span class="id" title="record">IsCohHSpace</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#A:9"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">make_equiv</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A type equivalent to a coherent H-space is a coherent H-space. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="iscohhspace_equiv_cohhspace" class="idref" href="#iscohhspace_equiv_cohhspace"><span class="id" title="definition">iscohhspace_equiv_cohhspace</span></a> {<a id="X:13" class="idref" href="#X:13"><span class="id" title="binder">X</span></a> <a id="Y:14" class="idref" href="#Y:14"><span class="id" title="binder">Y</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>} `{<a id="IsCohHSpace0:15" class="idref" href="#IsCohHSpace0:15"><span class="id" title="binder">IsCohHSpace</span></a> <a id="IsCohHSpace0:15" class="idref" href="#IsCohHSpace0:15"><span class="id" title="binder">Y</span></a>} (<a id="f:16" class="idref" href="#f:16"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#X:13"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Pointed.Core.html#103880150f1b8a9c385f8c09ab3e01b0"><span class="id" title="notation">&lt;~&gt;*</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#Y:14"><span class="id" title="variable">Y</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#IsCohHSpace"><span class="id" title="record">IsCohHSpace</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#X:13"><span class="id" title="variable">X</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#Build_IsCohHSpace"><span class="id" title="constructor">Build_IsCohHSpace</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">rapply</span> (<a class="idref" href="HoTT.Homotopy.HSpace.Core.html#ishspace_equiv_hspace"><span class="id" title="definition">ishspace_equiv_hspace</span></a> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#ishspace_cohhspace"><span class="id" title="projection">ishspace_cohhspace</span></a>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#IsCoherent"><span class="id" title="class">IsCoherent</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#3b607a272444a2e3acbecfa52b796d2a"><span class="id" title="notation">@@</span></a> 1).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">f</span><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a>) <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pelim</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (1 <a class="idref" href="HoTT.Basics.PathGroupoids.html#3b607a272444a2e3acbecfa52b796d2a"><span class="id" title="notation">@@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#iscoherent"><span class="id" title="definition">iscoherent</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Every loop space is a coherent H-space. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="iscohhspace_loops" class="idref" href="#iscohhspace_loops"><span class="id" title="definition">iscohhspace_loops</span></a> {<a id="X:17" class="idref" href="#X:17"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>} : <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#IsCohHSpace"><span class="id" title="record">IsCohHSpace</span></a> (<a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#X:17"><span class="id" title="variable">X</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Homotopy.HSpace.Coherent.html#Build_IsCohHSpace"><span class="id" title="constructor">Build_IsCohHSpace</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.HSpace.Core.html#ishspace_loops"><span class="id" title="definition">ishspace_loops</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

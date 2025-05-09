@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>IncoherentIdempotent.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk0"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Equiv.BiInv Idempotents.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Universes.BAut Spaces.BAut.Bool.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * An incoherent quasi-idempotent on [BAut (BAut Bool)]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">IncoherentQuasiIdempotent</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Univalence}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** We use the identity map, and the nontrivial 2-central element of [BAut (BAut Bool)]. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">nontrivial_qidem_baut_baut_bool</span>
+  : IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool)))
+    := negb_center2_baut_baut_bool.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">ret</span> := splitting_preidem_retractof_qidem (preidem_idmap (BAut (BAut Bool))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">s</span> := retract_sect ret.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">r</span> := retract_retr ret.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">issect</span> := retract_issect ret : r o s == idmap.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Since the space of splittings of the identity pre-idempotent is contractible, nontriviality of this 2-central element implies that not every quasi-idempotence witness of the identity is recoverable from its own splitting. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk1"><span class="kn">Definition</span> <span class="nf">splitting_preidem_notequiv_qidem_baut_baut_bool</span>
+  : ~ (s o r == idmap).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">~ (s o r == idmap)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">~ (s o r == idmap)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk3"><span class="nb">intros</span> oops.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) == idmap</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk4"><span class="nb">assert</span> (p := oops nontrivial_qidem_baut_baut_bool).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) == idmap</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) nontrivial_qidem_baut_baut_bool =
+idmap nontrivial_qidem_baut_baut_bool</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk5"><span class="nb">assert</span> (q := oops (isqidem_idmap (BAut (BAut Bool)))); <span class="nb">clear</span> oops.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) nontrivial_qidem_baut_baut_bool =
+idmap nontrivial_qidem_baut_baut_bool</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) (isqidem_idmap (BAut (BAut Bool))) =
+idmap (isqidem_idmap (BAut (BAut Bool)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk6"><span class="nb">apply</span> nontrivial_negb_center_baut_baut_bool.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) nontrivial_qidem_baut_baut_bool =
+idmap nontrivial_qidem_baut_baut_bool</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) (isqidem_idmap (BAut (BAut Bool))) =
+idmap (isqidem_idmap (BAut (BAut Bool)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">negb_center2_baut_baut_bool =
+(<span class="kr">fun</span> <span class="nv">Z</span> : BAut (BAut Bool) =&gt; <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk7"><span class="nb">refine</span> (p^ @ ap s _ @ q).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) nontrivial_qidem_baut_baut_bool =
+idmap nontrivial_qidem_baut_baut_bool</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) (isqidem_idmap (BAut (BAut Bool))) =
+idmap (isqidem_idmap (BAut (BAut Bool)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">r nontrivial_qidem_baut_baut_bool =
+r (isqidem_idmap (BAut (BAut Bool)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk8"><span class="nb">pose</span> (contr_splitting_preidem_idmap (BAut (BAut Bool))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) nontrivial_qidem_baut_baut_bool =
+idmap nontrivial_qidem_baut_baut_bool</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (r x)) (isqidem_idmap (BAut (BAut Bool))) =
+idmap (isqidem_idmap (BAut (BAut Bool)))</span></span></span><br><span><var>i</var><span><span class="hyp-body"><b>:= </b><span>contr_splitting_preidem_idmap (BAut (BAut Bool))</span></span><span class="hyp-type"><b>: </b><span>Contr
+  (Splitting_PreIdempotent
+     (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">r nontrivial_qidem_baut_baut_bool =
+r (isqidem_idmap (BAut (BAut Bool)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_contr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Therefore, not every quasi-idempotence witness is obtainable from *any* splitting, i.e. it may not have any coherentification. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk9"><span class="kn">Definition</span> <span class="nf">not_all_coherent_qidem_baut_baut_bool</span>
+  : ~ (<span class="kr">forall</span> <span class="nv">q</span> : IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))),
+         { S : Splitting_PreIdempotent (preidem_idmap _) &amp; s S = q }).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">~
+(<span class="kr">forall</span>
+ <span class="nv">q</span> : IsQuasiIdempotent
+       (preidem_idmap (BAut (BAut Bool))),
+ {S
+ : Splitting_PreIdempotent
+     (preidem_idmap (BAut (BAut Bool))) &amp; s S = q})</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chka"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">~
+(<span class="kr">forall</span>
+ <span class="nv">q</span> : IsQuasiIdempotent
+       (preidem_idmap (BAut (BAut Bool))),
+ {S
+ : Splitting_PreIdempotent
+     (preidem_idmap (BAut (BAut Bool))) &amp; s S = q})</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chkb"><span class="nb">intros</span> oops.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chkc"><span class="nb">assert</span> (IsEquiv s).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv s</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="incoherentidempotent-v-chkd" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf
+  (IsQuasiIdempotent
+     (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>IsEquiv s</span></span></span><br></div><label class="goal-separator" for="incoherentidempotent-v-chkd"><hr></label><div class="goal-conclusion">Empty</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chke">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv s</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chkf"><span class="nb">apply</span> isequiv_biinv; <span class="nb">split</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{g
+: IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))) -&gt;
+  retract_type ret &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : retract_type ret =&gt; g (s x)) == idmap}</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="incoherentidempotent-v-chk10" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf
+  (IsQuasiIdempotent
+     (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br></div><label class="goal-separator" for="incoherentidempotent-v-chk10"><hr></label><div class="goal-conclusion">{h
+: IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))) -&gt;
+  retract_type ret &amp;
+(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt; 
+ s (h x)) == idmap}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk11">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{g
+: IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))) -&gt;
+  retract_type ret &amp;
+(<span class="kr">fun</span> <span class="nv">x</span> : retract_type ret =&gt; g (s x)) == idmap}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kr">exists</span> <span class="nv">r</span>; <span class="bp">exact</span> issect.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk12">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{h
+: IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))) -&gt;
+  retract_type ret &amp;
+(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt; s (h x)) ==
+idmap}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk13"><span class="kr">exists</span> (<span class="nv">fun</span> <span class="nv">q</span> =&gt; (oops q).<span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">x</span> : IsQuasiIdempotent
+         (preidem_idmap (BAut (BAut Bool))) =&gt;
+ s (oops x).<span class="mi">1</span>) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">q</span> =&gt; (oops q).<span class="mi">2</span>).</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk14">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>IsEquiv s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk15"><span class="nb">apply</span> splitting_preidem_notequiv_qidem_baut_baut_bool; <span class="nb">intros</span> q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>IsEquiv s</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">s (r q) = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk16"><span class="nb">refine</span> (ap s (ap r (eisretr s q)^) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>IsEquiv s</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">s (r (s (s^-<span class="mi">1</span> q))) = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="incoherentidempotent-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="incoherentidempotent-v-chk17"><span class="nb">refine</span> (ap s (issect (s^-<span class="mi">1</span> q)) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>ret</var><span><span class="hyp-body"><b>:= </b><span>splitting_preidem_retractof_qidem
+  (preidem_idmap (BAut (BAut Bool)))</span></span><span class="hyp-type"><b>: </b><span>RetractOf (IsQuasiIdempotent (preidem_idmap (BAut (BAut Bool))))</span></span></span></span><br><span><var>s</var><span><span class="hyp-body"><b>:= </b><span>retract_sect ret</span></span><span class="hyp-type"><b>: </b><span>retract_type ret -&gt;
+IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span></span><br><span><var>r</var><span><span class="hyp-body"><b>:= </b><span>retract_retr ret</span></span><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool))) -&gt;
+retract_type ret</span></span></span></span><br><span><var>issect</var><span><span class="hyp-body"><b>:= </b><span>retract_issect ret</span></span><span class="hyp-type"><b>: </b><span>r o s == idmap</span></span></span></span><br><span><var>oops</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">q</span> : IsQuasiIdempotent
+      (preidem_idmap (BAut (BAut Bool))),
+{S
+: Splitting_PreIdempotent
+    (preidem_idmap (BAut (BAut Bool))) &amp;
+s S = q}</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>IsEquiv s</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>IsQuasiIdempotent
+  (preidem_idmap (BAut (BAut Bool)))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">s (s^-<span class="mi">1</span> q) = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> eisretr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** These results show only that not *every* quasi-idempotence witness is coherent.  &quot;Clearly&quot; the nontrivial quasi-idempotence witness [nontrivial_qidem_baut_baut_bool] should be the one that is not coherent.  To show this, we would probably need to show that [isqidem_idmap] *is* in the image of [s], and this seems rather annoying to do based on our construction of [splitting_preidem_retractof_qidem]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">IncoherentQuasiIdempotent</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

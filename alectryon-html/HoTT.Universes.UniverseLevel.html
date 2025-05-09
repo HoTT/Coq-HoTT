@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>UniverseLevel.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="universelevel-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="universelevel-v-chk0"><span class="kn">From</span> HoTT <span class="kn">Require Import</span> Basics.Overture Basics.PathGroupoids.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Universe Levels *)</span>
+
+<span class="sd">(** We provide casting definitions for raising universe levels. *)</span>
+
+<span class="sd">(** Because we have cumulativity (that [T : U@{i}] gives us [T : U@{j}] when [i &lt; j]), we may define [Lift : U@{i} → U@{j}] to be the identity function. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Lift</span>@{i j | i &lt; j} (A : <span class="kt">Type</span>@{i}) : <span class="kt">Type</span>@{j}
+  := A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lift</span> {<span class="nv">A</span>} : A -&gt; Lift A := <span class="kr">fun</span> <span class="nv">x</span> =&gt; x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lower</span> {<span class="nv">A</span>} : Lift A -&gt; A := <span class="kr">fun</span> <span class="nv">x</span> =&gt; x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lift2</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">x</span> : A, B x) : <span class="kr">forall</span> <span class="nv">x</span> : Lift A, Lift (B (lower x))
+  := f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lower2</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">x</span> : Lift A, Lift (B (lower x))) : <span class="kr">forall</span> <span class="nv">x</span> : A, B x
+  := f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We make [lift] and [lower] opaque so that typeclass resolution doesn&#39;t pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreak havoc. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[<span class="kn">global</span>] <span class="kn">Typeclasses Opaque</span> lift lower lift2 lower2.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isequiv_lift</span> <span class="nv">T</span> : IsEquiv (@lift T)
+  := @Build_IsEquiv
+       _ _
+       (@lift T)
+       (@lower T)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isequiv_lift2</span> <span class="nv">A</span> <span class="nv">B</span> : IsEquiv (@lift2 A B)
+  := @Build_IsEquiv
+       _ _
+       (@lift2 A B)
+       (@lower2 A B)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">lift_isequiv</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : A -&gt; B) {<span class="nv">H</span> : IsEquiv f} : @IsEquiv (Lift A) (Lift B) (lift2 f)
+  := @Build_IsEquiv
+       (Lift A) (Lift B)
+       (lift2 f)
+       (lift2 (f^-<span class="mi">1</span>))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap lift (eisretr f (lower x)))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap lift (eissect f (lower x)))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ((ap (ap lift) (eisadj f (lower x)))
+                    @ (ap_compose f lift _)^)
+                   @ (@ap_compose A (Lift A) (Lift B) lift (lift2 f) _ _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">lower_isequiv</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : Lift A -&gt; Lift B) {<span class="nv">H</span> : IsEquiv f} : @IsEquiv A B (lower2 f)
+  := @Build_IsEquiv
+       _ _
+       (lower2 f)
+       (lower2 (f^-<span class="mi">1</span>))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap lower (eisretr f (lift x)))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap lower (eissect f (lift x)))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ((ap (ap lower) (eisadj f (lift x)))
+                    @ (ap_compose f lower _)^)
+                   @ (@ap_compose (Lift A) A B lower (lower2 f) _ _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lower_equiv</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">e</span> : Equiv (Lift A) (Lift B)) : Equiv A B
+  := @Build_Equiv A B (lower2 e) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This version doesn&#39;t force strict containment, i.e. it allows the two universes to possibly be the same. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Lift&#39;</span>@{i j | i &lt;= j} (A : <span class="kt">Type</span>@{i}) : <span class="kt">Type</span>@{j} := A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** However, if we don&#39;t give the universes as explicit arguments here, then Coq collapses them. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lift&#39;</span>@{i j} {A : <span class="kt">Type</span>@{i}} : A -&gt; Lift&#39;@{i j} A := <span class="kr">fun</span> <span class="nv">x</span> =&gt; x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lower&#39;</span>@{i j} {A : <span class="kt">Type</span>@{i}} : Lift&#39;@{i j} A -&gt; A := <span class="kr">fun</span> <span class="nv">x</span> =&gt; x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lift&#39;2</span>@{i i&#39; j j&#39;} {A : <span class="kt">Type</span>@{i}} {B : A -&gt; <span class="kt">Type</span>@{i&#39;}} (f : <span class="kr">forall</span> <span class="nv">x</span> : A, B x)
+  : <span class="kr">forall</span> <span class="nv">x</span> : Lift&#39;@{i j} A, Lift&#39;@{i&#39; j&#39;} (B (lower&#39; x))
+  := f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lower&#39;2</span>@{i i&#39; j j&#39;} {A : <span class="kt">Type</span>@{i}} {B : A -&gt; <span class="kt">Type</span>@{i&#39;}}
+           (f : <span class="kr">forall</span> <span class="nv">x</span> : Lift&#39;@{i j} A, Lift&#39;@{i&#39; j&#39;} (B (lower&#39; x)))
+  : <span class="kr">forall</span> <span class="nv">x</span> : A, B x
+  := f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We make [lift] and [lower] opaque so that typeclass resolution doesn&#39;t pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreak havoc. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[<span class="kn">global</span>] <span class="kn">Typeclasses Opaque</span> lift&#39; lower&#39; lift&#39;2 lower&#39;2.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isequiv_lift&#39;</span>@{i j} (T : <span class="kt">Type</span>@{i})
+  : IsEquiv (@lift&#39;@{i j} T)
+  := @Build_IsEquiv
+       _ _
+       (@lift&#39; T)
+       (@lower&#39; T)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isequiv_lift&#39;2</span>@{e0 e1 i i&#39; j j&#39;} (A : <span class="kt">Type</span>@{i}) (B : A -&gt; <span class="kt">Type</span>@{j})
+  : IsEquiv@{e0 e1} (@lift&#39;2@{i i&#39; j j&#39;} A B)
+  := @Build_IsEquiv
+       _ _
+       (@lift&#39;2 A B)
+       (@lower&#39;2 A B)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath)
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">lift&#39;_isequiv</span>@{a b i j i&#39; j&#39;}  {A : <span class="kt">Type</span>@{a}} {B : <span class="kt">Type</span>@{b}}
+  (f : A -&gt; B) {H : IsEquiv f}
+  : @IsEquiv (Lift&#39;@{i j} A) (Lift&#39;@{i&#39; j&#39;} B) (lift&#39;2 f)
+  := @Build_IsEquiv
+       (Lift&#39; A) (Lift&#39; B)
+       (lift&#39;2 f)
+       (lift&#39;2 (f^-<span class="mi">1</span>))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap lift&#39; (eisretr f (lower&#39; x)))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap lift&#39; (eissect f (lower&#39; x)))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ((ap (ap lift&#39;) (eisadj f (lower&#39; x)))
+                    @ (ap_compose f lift&#39; _)^)
+                   @ (@ap_compose A (Lift&#39; A) (Lift&#39; B) lift&#39; (lift&#39;2 f) _ _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">lower&#39;_isequiv</span>@{i j i&#39; j&#39;} {A : <span class="kt">Type</span>@{i}} {B : <span class="kt">Type</span>@{j}}
+  (f : Lift&#39;@{i j} A -&gt; Lift&#39;@{i&#39; j&#39;} B) {H : IsEquiv f}
+  : @IsEquiv A B (lower&#39;2 f)
+  := @Build_IsEquiv
+       _ _
+       (lower&#39;2 f)
+       (lower&#39;2 (f^-<span class="mi">1</span>))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap lower&#39; (eisretr f (lift&#39; x)))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ap lower&#39; (eissect f (lift&#39; x)))
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; ((ap (ap lower&#39;) (eisadj f (lift&#39; x)))
+                    @ (ap_compose f lower&#39; _)^)
+                   @ (@ap_compose (Lift&#39; A) A B lower&#39; (lower&#39;2 f) _ _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lower&#39;_equiv</span>@{i j i&#39; j&#39;} {A : <span class="kt">Type</span>@{i}} {B : <span class="kt">Type</span>@{j}}
+  (e : Equiv (Lift&#39;@{i j} A) (Lift&#39;@{i&#39; j&#39;} B))
+  : Equiv A B
+  := @Build_Equiv A B (lower&#39;2 e) _.</span></span></pre>
+</div>
+</div></body>
+</html>

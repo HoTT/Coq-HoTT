@@ -1,0 +1,32 @@
+digraph HoTT_Classes_orders_nat_int {
+  graph [ratio=0.5]
+  node [style=filled]
+nat_int_nat_morphism_order_embedding [label="nat_morphism_order_embedding", URL=<nat_int.html#nat_morphism_order_embedding>, peripheries=3, fillcolor="#F070D1"] ;
+nat_int_strictlyorderpreserving_semiring_homomorphism [label="strictlyorderpreserving_semiring_homomorphism", URL=<nat_int.html#strictlyorderpreserving_semiring_homomorphism>, fillcolor="#F070D1"] ;
+nat_int_orderpreserving_semiring_homomorphism [label="orderpreserving_semiring_homomorphism", URL=<nat_int.html#orderpreserving_semiring_homomorphism>, fillcolor="#F070D1"] ;
+nat_int_le_iff_lt_S [label="le_iff_lt_S", URL=<nat_int.html#le_iff_lt_S>, peripheries=3, fillcolor="#F070D1"] ;
+nat_int_le_iff_lt_plus_1 [label="le_iff_lt_plus_1", URL=<nat_int.html#le_iff_lt_plus_1>, fillcolor="#F070D1"] ;
+nat_int_pos_ge_1 [label="pos_ge_1", URL=<nat_int.html#pos_ge_1>, peripheries=3, fillcolor="#F070D1"] ;
+nat_int_lt_iff_S_le [label="lt_iff_S_le", URL=<nat_int.html#lt_iff_S_le>, peripheries=3, fillcolor="#F070D1"] ;
+nat_int_lt_iff_plus_1_le [label="lt_iff_plus_1_le", URL=<nat_int.html#lt_iff_plus_1_le>, fillcolor="#F070D1"] ;
+nat_int_nat_int_lt_plus [label="nat_int_lt_plus", URL=<nat_int.html#nat_int_lt_plus>, fillcolor="#F070D1"] ;
+nat_int_nat_int_le_plus [label="nat_int_le_plus", URL=<nat_int.html#nat_int_le_plus>, fillcolor="#F070D1"] ;
+nat_int_nat_int_nonneg_decompose [label="nat_int_nonneg_decompose", URL=<nat_int.html#nat_int_nonneg_decompose>, fillcolor="#F070D1"] ;
+nat_int_nat_int_to_semiring [label="nat_int_to_semiring", URL=<nat_int.html#nat_int_to_semiring>, fillcolor="#F070D1"] ;
+nat_int_to_semiring_nonneg [label="to_semiring_nonneg", URL=<nat_int.html#to_semiring_nonneg>, fillcolor="#F070D1"] ;
+  nat_int_nat_morphism_order_embedding -> nat_int_strictlyorderpreserving_semiring_homomorphism [] ;
+  nat_int_nat_morphism_order_embedding -> nat_int_orderpreserving_semiring_homomorphism [] ;
+  nat_int_strictlyorderpreserving_semiring_homomorphism -> nat_int_nat_int_lt_plus [] ;
+  nat_int_orderpreserving_semiring_homomorphism -> nat_int_nat_int_le_plus [] ;
+  nat_int_le_iff_lt_S -> nat_int_le_iff_lt_plus_1 [] ;
+  nat_int_le_iff_lt_plus_1 -> nat_int_lt_iff_plus_1_le [] ;
+  nat_int_pos_ge_1 -> nat_int_lt_iff_plus_1_le [] ;
+  nat_int_lt_iff_S_le -> nat_int_lt_iff_plus_1_le [] ;
+  nat_int_lt_iff_plus_1_le -> nat_int_nat_int_lt_plus [] ;
+  nat_int_nat_int_lt_plus -> nat_int_nat_int_le_plus [] ;
+  nat_int_nat_int_le_plus -> nat_int_nat_int_nonneg_decompose [] ;
+  nat_int_nat_int_nonneg_decompose -> nat_int_nat_int_to_semiring [] ;
+  nat_int_nat_int_nonneg_decompose -> nat_int_to_semiring_nonneg [] ;
+subgraph cluster_nat_int { label="nat_int"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+nat_int_to_semiring_nonneg; nat_int_nat_int_to_semiring; nat_int_nat_int_nonneg_decompose; nat_int_nat_int_le_plus; nat_int_nat_int_lt_plus; nat_int_lt_iff_plus_1_le; nat_int_lt_iff_S_le; nat_int_pos_ge_1; nat_int_le_iff_lt_plus_1; nat_int_le_iff_lt_S; nat_int_orderpreserving_semiring_homomorphism; nat_int_strictlyorderpreserving_semiring_homomorphism; nat_int_nat_morphism_order_embedding; };
+} /* END */

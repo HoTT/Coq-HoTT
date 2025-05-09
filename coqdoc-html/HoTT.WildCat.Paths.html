@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.WildCat.Paths</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.WildCat.Paths</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a> <a class="idref" href="HoTT.WildCat.TwoOneCat.html#"><span class="id" title="library">WildCat.TwoOneCat</span></a> <a class="idref" href="HoTT.WildCat.NatTrans.html#"><span class="id" title="library">WildCat.NatTrans</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab2020"></a><h1 class="section">Path groupoids as wild categories</h1>
+
+<div class="paragraph"> </div>
+
+ Not global instances for now 
+<div class="paragraph"> </div>
+
+ These are written so that they can be augmented with an existing wildcat structure. For instance, you may partially define a wildcat and ask for paths for the higher cells. 
+<div class="paragraph"> </div>
+
+ Any type is a graph with morphisms given by the identity type. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="isgraph_paths" class="idref" href="#isgraph_paths"><span class="id" title="definition">isgraph_paths</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#A:1"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= {| <a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="method">Hom</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#paths"><span class="id" title="inductive">paths</span></a> |}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any graph is a 2-graph with 2-cells given by the identity type. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="is2graph_paths" class="idref" href="#is2graph_paths"><span class="id" title="definition">is2graph_paths</span></a> (<a id="A:2" class="idref" href="#A:2"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H:3" class="idref" href="#H:3"><span class="id" title="binder">IsGraph</span></a> <a id="H:3" class="idref" href="#H:3"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#Is2Graph"><span class="id" title="class">Is2Graph</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#A:2"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.WildCat.Paths.html#isgraph_paths"><span class="id" title="definition">isgraph_paths</span></a> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any 2-graph is a 3-graph with 3-cells given by the identity type. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="is3graph_paths" class="idref" href="#is3graph_paths"><span class="id" title="definition">is3graph_paths</span></a> (<a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">Is2Graph</span></a> <a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#Is3Graph"><span class="id" title="class">Is3Graph</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#A:4"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.WildCat.Paths.html#is2graph_paths"><span class="id" title="definition">is2graph_paths</span></a> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We assume these as instances for the rest of the file with a low priority. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Existing Instances</span> <a class="idref" href="HoTT.WildCat.Paths.html#isgraph_paths"><span class="id" title="definition">isgraph_paths</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#is2graph_paths"><span class="id" title="definition">is2graph_paths</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#is3graph_paths"><span class="id" title="definition">is3graph_paths</span></a> | 10.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any type has composition and identity morphisms given by path concatenation and reflexivity. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is01cat_paths" class="idref" href="#is01cat_paths"><span class="id" title="instance">is01cat_paths</span></a> (<a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.WildCat.Core.html#Is01Cat"><span class="id" title="class">Is01Cat</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#A:7"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= {| <a class="idref" href="HoTT.WildCat.Core.html#Id"><span class="id" title="method">Id</span></a> := @<a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <span class="id" title="var">_</span> ; <a class="idref" href="HoTT.WildCat.Core.html#cat_comp"><span class="id" title="method">cat_comp</span></a> := <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a> <a id="y:9" class="idref" href="#y:9"><span class="id" title="binder">y</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#y:9"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#x:8"><span class="id" title="variable">x</span></a> |}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any type has a 0-groupoid structure with inverse morphisms given by path inversion. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is0gpd_paths" class="idref" href="#is0gpd_paths"><span class="id" title="instance">is0gpd_paths</span></a> (<a id="A:10" class="idref" href="#A:10"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.WildCat.Core.html#Is0Gpd"><span class="id" title="class">Is0Gpd</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#A:10"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;:= { <a class="idref" href="HoTT.WildCat.Core.html#gpd_rev"><span class="id" title="method">gpd_rev</span></a> := @<a class="idref" href="HoTT.Basics.Overture.html#inverse"><span class="id" title="definition">inverse</span></a> <span class="id" title="var">_</span> }.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Postcomposition is a 0-functor when the 2-cells are paths. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is0functor_cat_postcomp_paths" class="idref" href="#is0functor_cat_postcomp_paths"><span class="id" title="instance">is0functor_cat_postcomp_paths</span></a> (<a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H0:13" class="idref" href="#H0:13"><span class="id" title="binder">Is01Cat</span></a> <a id="H0:13" class="idref" href="#H0:13"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;(<a id="a:14" class="idref" href="#a:14"><span class="id" title="binder">a</span></a> <a id="b:15" class="idref" href="#b:15"><span class="id" title="binder">b</span></a> <a id="c:16" class="idref" href="#c:16"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.WildCat.Paths.html#A:11"><span class="id" title="variable">A</span></a>) (<a id="g:17" class="idref" href="#g:17"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.WildCat.Paths.html#b:15"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#c:16"><span class="id" title="variable">c</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#Is0Functor"><span class="id" title="class">Is0Functor</span></a> (<a class="idref" href="HoTT.WildCat.Core.html#cat_postcomp"><span class="id" title="definition">cat_postcomp</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#a:14"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#g:17"><span class="id" title="variable">g</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is0Functor"><span class="id" title="constructor">Build_Is0Functor</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.WildCat.Core.html#cat_postcomp"><span class="id" title="definition">cat_postcomp</span></a> <span class="id" title="var">a</span> <span class="id" title="var">g</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Precomposition is a 0-functor when the 2-cells are paths. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is0functor_cat_precomp_paths" class="idref" href="#is0functor_cat_precomp_paths"><span class="id" title="instance">is0functor_cat_precomp_paths</span></a> (<a id="A:18" class="idref" href="#A:18"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H0:20" class="idref" href="#H0:20"><span class="id" title="binder">Is01Cat</span></a> <a id="H0:20" class="idref" href="#H0:20"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;(<a id="a:21" class="idref" href="#a:21"><span class="id" title="binder">a</span></a> <a id="b:22" class="idref" href="#b:22"><span class="id" title="binder">b</span></a> <a id="c:23" class="idref" href="#c:23"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.WildCat.Paths.html#A:18"><span class="id" title="variable">A</span></a>) (<a id="f:24" class="idref" href="#f:24"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.WildCat.Paths.html#a:21"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#b:22"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#Is0Functor"><span class="id" title="class">Is0Functor</span></a> (<a class="idref" href="HoTT.WildCat.Core.html#cat_precomp"><span class="id" title="definition">cat_precomp</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#c:23"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#f:24"><span class="id" title="variable">f</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is0Functor"><span class="id" title="constructor">Build_Is0Functor</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.WildCat.Core.html#cat_precomp"><span class="id" title="definition">cat_precomp</span></a> <span class="id" title="var">c</span> <span class="id" title="var">f</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any type is a 1-category with n-morphisms given by paths. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is1cat_paths" class="idref" href="#is1cat_paths"><span class="id" title="instance">is1cat_paths</span></a> {<a id="A:25" class="idref" href="#A:25"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} : <a class="idref" href="HoTT.WildCat.Core.html#Is1Cat"><span class="id" title="class">Is1Cat</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#A:25"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is1Cat"><span class="id" title="constructor">Build_Is1Cat</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p_pp"><span class="id" title="definition">concat_p_pp</span></a> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_pp_p"><span class="id" title="definition">concat_pp_p</span></a> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p1"><span class="id" title="definition">concat_p1</span></a> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_1p"><span class="id" title="definition">concat_1p</span></a> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any type is a 1-groupoid with morphisms given by paths. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is1gpd_paths" class="idref" href="#is1gpd_paths"><span class="id" title="instance">is1gpd_paths</span></a> {<a id="A:26" class="idref" href="#A:26"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} : <a class="idref" href="HoTT.WildCat.Core.html#Is1Gpd"><span class="id" title="class">Is1Gpd</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#A:26"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is1Gpd"><span class="id" title="constructor">Build_Is1Gpd</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_pV"><span class="id" title="definition">concat_pV</span></a> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (@<a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_Vp"><span class="id" title="definition">concat_Vp</span></a> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Any type is a 2-category with higher morphisms given by paths. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is21cat_paths" class="idref" href="#is21cat_paths"><span class="id" title="instance">is21cat_paths</span></a> {<a id="A:27" class="idref" href="#A:27"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} : <a class="idref" href="HoTT.WildCat.TwoOneCat.html#Is21Cat"><span class="id" title="class">Is21Cat</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#A:27"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.TwoOneCat.html#Build_Is21Cat"><span class="id" title="constructor">Build_Is21Cat</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is1Functor"><span class="id" title="constructor">Build_Is1Functor</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<span class="id" title="keyword">fun</span> <a id="x:28" class="idref" href="#x:28"><span class="id" title="binder"><span id="x:29" class="id">x</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.PathGroupoids.html#whiskerR"><span class="id" title="definition">whiskerR</span></a> <a class="idref" href="HoTT.WildCat.Paths.html#x:28"><span class="id" title="variable">x</span></a> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#whiskerR_pp"><span class="id" title="definition">whiskerR_pp</span></a> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is1Functor"><span class="id" title="constructor">Build_Is1Functor</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#whiskerL"><span class="id" title="definition">whiskerL</span></a> <span class="id" title="var">p</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#whiskerL_pp"><span class="id" title="definition">whiskerL_pp</span></a> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span> <span class="id" title="var">s</span> <span class="id" title="var">t</span> <span class="id" title="var">h</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_whisker"><span class="id" title="definition">concat_whisker</span></a> <span class="id" title="var">q</span> <span class="id" title="var">r</span> <span class="id" title="var">s</span> <span class="id" title="var">t</span> <span class="id" title="var">h</span> <span class="id" title="var">g</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.NatTrans.html#Build_Is1Natural"><span class="id" title="definition">Build_Is1Natural</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">s</span> <span class="id" title="var">t</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p_pp_nat_r"><span class="id" title="definition">concat_p_pp_nat_r</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.NatTrans.html#Build_Is1Natural"><span class="id" title="definition">Build_Is1Natural</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">s</span> <span class="id" title="var">t</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p_pp_nat_m"><span class="id" title="definition">concat_p_pp_nat_m</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.NatTrans.html#Build_Is1Natural"><span class="id" title="definition">Build_Is1Natural</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">s</span> <span class="id" title="var">t</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p_pp_nat_l"><span class="id" title="definition">concat_p_pp_nat_l</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.NatTrans.html#Build_Is1Natural"><span class="id" title="definition">Build_Is1Natural</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span> <span class="id" title="var">h</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#moveL_Mp"><span class="id" title="definition">moveL_Mp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p_pp"><span class="id" title="definition">concat_p_pp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#whiskerR_p1"><span class="id" title="definition">whiskerR_p1</span></a> <span class="id" title="var">h</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.NatTrans.html#Build_Is1Natural"><span class="id" title="definition">Build_Is1Natural</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#moveL_Mp"><span class="id" title="definition">moveL_Mp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p_pp"><span class="id" title="definition">concat_p_pp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#whiskerL_1p"><span class="id" title="definition">whiskerL_1p</span></a> <span class="id" title="var">h</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span> <span class="id" title="var">e</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p_pp"><span class="id" title="definition">concat_p_pp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#pentagon"><span class="id" title="definition">pentagon</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span> <span class="id" title="var">s</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#triangulator"><span class="id" title="definition">triangulator</span></a> <span class="id" title="var">p</span> <span class="id" title="var">q</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

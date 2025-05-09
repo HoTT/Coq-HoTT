@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spectra.Spectrum</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spectra.Spectrum</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1705"></a><h1 class="section">Spectra</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Pointed.html#"><span class="id" title="library">Pointed</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">equiv_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pointed_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1706"></a><h2 class="section">Basic Definitions of Spectra</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="Prespectrum" class="idref" href="#Prespectrum"><span class="id" title="definition, record"><span id="Prespectrum_rect" class="id"><span id="Prespectrum_ind" class="id"><span id="Prespectrum_rec" class="id"><span id="Prespectrum_sind" class="id">Prespectrum</span></span></span></span></span></a> :=<br/>
+&nbsp;&nbsp;{ <a id="deloop" class="idref" href="#deloop"><span class="id" title="projection">deloop</span></a> :&gt; <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;; <a id="glue" class="idref" href="#glue"><span class="id" title="projection">glue</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:3" class="idref" href="#n:3"><span class="id" title="binder">n</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#deloop:2"><span class="id" title="method">deloop</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#n:3"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Pointed.Core.html#dce20fa1e59aa814d0a053d0ce7a8a86"><span class="id" title="notation">-&gt;*</span></a> <a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> (<a class="idref" href="HoTT.Spectra.Spectrum.html#deloop:2"><span class="id" title="method">deloop</span></a> (<a class="idref" href="HoTT.Spectra.Spectrum.html#n:3"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>)) }.<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="IsSpectrum" class="idref" href="#IsSpectrum"><span class="id" title="inductive, record"><span id="IsSpectrum" class="id">IsSpectrum</span></span></a> (<a id="E:5" class="idref" href="#E:5"><span class="id" title="binder">E</span></a> : <a class="idref" href="HoTT.Spectra.Spectrum.html#Prespectrum"><span class="id" title="record">Prespectrum</span></a>) :=<br/>
+&nbsp;&nbsp;<a id="is_equiv_glue" class="idref" href="#is_equiv_glue"><span class="id" title="constructor, projection"><span id="is_equiv_glue" class="id">is_equiv_glue</span></span></a> :: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (<a class="idref" href="HoTT.Spectra.Spectrum.html#glue"><span class="id" title="projection">glue</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#E:5"><span class="id" title="variable">E</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#n:7"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_glue" class="idref" href="#equiv_glue"><span class="id" title="definition">equiv_glue</span></a> (<a id="E:9" class="idref" href="#E:9"><span class="id" title="binder">E</span></a> : <a class="idref" href="HoTT.Spectra.Spectrum.html#Prespectrum"><span class="id" title="record">Prespectrum</span></a>) `{<a id="H:10" class="idref" href="#H:10"><span class="id" title="binder">IsSpectrum</span></a> <a id="H:10" class="idref" href="#H:10"><span class="id" title="binder">E</span></a>}<br/>
+: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#E:9"><span class="id" title="variable">E</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#n:11"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Pointed.Core.html#103880150f1b8a9c385f8c09ab3e01b0"><span class="id" title="notation">&lt;~&gt;*</span></a> <a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> (<a class="idref" href="HoTT.Spectra.Spectrum.html#E:9"><span class="id" title="variable">E</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#n:11"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>)<br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> ⇒ <a class="idref" href="HoTT.Pointed.Core.html#Build_pEquiv"><span class="id" title="constructor">Build_pEquiv</span></a> (<a class="idref" href="HoTT.Spectra.Spectrum.html#glue"><span class="id" title="projection">glue</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#E:9"><span class="id" title="variable">E</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#n:12"><span class="id" title="variable">n</span></a>) <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="Spectrum" class="idref" href="#Spectrum"><span class="id" title="definition, record"><span id="Spectrum_rect" class="id"><span id="Spectrum_ind" class="id"><span id="Spectrum_rec" class="id"><span id="Spectrum_sind" class="id">Spectrum</span></span></span></span></span></a> :=<br/>
+&nbsp;&nbsp;{ <a id="to_prespectrum" class="idref" href="#to_prespectrum"><span class="id" title="projection">to_prespectrum</span></a> :&gt; <a class="idref" href="HoTT.Spectra.Spectrum.html#Prespectrum"><span class="id" title="record">Prespectrum</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;; <a id="to_is_spectrum" class="idref" href="#to_is_spectrum"><span class="id" title="projection">to_is_spectrum</span></a> :: <a class="idref" href="HoTT.Spectra.Spectrum.html#IsSpectrum"><span class="id" title="class">IsSpectrum</span></a> <a class="idref" href="HoTT.Spectra.Spectrum.html#to_prespectrum:14"><span class="id" title="method">to_prespectrum</span></a> }.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1707"></a><h2 class="section">Truncations of spectra</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="strunc" class="idref" href="#strunc"><span class="id" title="definition">strunc</span></a> `{<a id="H:16" class="idref" href="#H:16"><span class="id" title="binder">Univalence</span></a>} (<a id="k:17" class="idref" href="#k:17"><span class="id" title="binder">k</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) (<a id="E:18" class="idref" href="#E:18"><span class="id" title="binder">E</span></a> : <a class="idref" href="HoTT.Spectra.Spectrum.html#Spectrum"><span class="id" title="record">Spectrum</span></a>) : <a class="idref" href="HoTT.Spectra.Spectrum.html#Spectrum"><span class="id" title="record">Spectrum</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">simple</span> <span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Spectra.Spectrum.html#Build_Spectrum"><span class="id" title="constructor">Build_Spectrum</span></a> (<a class="idref" href="HoTT.Spectra.Spectrum.html#Build_Prespectrum"><span class="id" title="constructor">Build_Prespectrum</span></a> (<span class="id" title="keyword">fun</span> <a id="n:19" class="idref" href="#n:19"><span class="id" title="binder"><span id="n:20" class="id">n</span></span></a> ⇒ <a class="idref" href="HoTT.Pointed.pTrunc.html#pTr"><span class="id" title="definition">pTr</span></a> (<a class="idref" href="HoTT.Basics.Trunc.html#trunc_index_inc"><span class="id" title="definition">trunc_index_inc</span></a> <span class="id" title="var">k</span> <a class="idref" href="HoTT.Spectra.Spectrum.html#n:19"><span class="id" title="variable">n</span></a>) (<span class="id" title="var">E</span> <a class="idref" href="HoTT.Spectra.Spectrum.html#n:19"><span class="id" title="variable">n</span></a>)) <span class="id" title="var">_</span>) <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Pointed.pTrunc.html#ptr_loops"><span class="id" title="definition">ptr_loops</span></a> <span class="id" title="var">_</span> (<span class="id" title="var">E</span> <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>)<a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">o</span></a><a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">×</span></a><a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">E</span></a> <a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Pointed.pTrunc.html#pequiv_ptr_functor"><span class="id" title="definition">pequiv_ptr_functor</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spectra.Spectrum.html#equiv_glue"><span class="id" title="definition">equiv_glue</span></a> <span class="id" title="var">E</span> <span class="id" title="var">n</span>)<a class="idref" href="HoTT.Pointed.pEquiv.html#2879376cadffadabc69839ab63eb581d"><span class="id" title="notation">)</span></a>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spectra.Spectrum.html#glue"><span class="id" title="projection">glue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_compose"><span class="id" title="instance">isequiv_compose</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
