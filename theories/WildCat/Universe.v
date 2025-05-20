@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.PathGroupoids.
 Require Import Types.Equiv.
-Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat.
+Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat WildCat.Bifunctor.
 
 (** ** The (1-)category of types *)
 
@@ -42,6 +42,13 @@ Instance is0functor_type_precomp {A B C : Type} (h : A $-> B):
 Proof.
   apply Build_Is0Functor.
   intros f g p a; exact (p (h a)).
+Defined.
+
+Instance is1bicat_type : Is1Bicat Type.
+Proof.
+  srapply Build_Is1Bicat.
+  1-2: exact(fun a b c d f g h x => idpath).
+  all: exact (fun a b f x => idpath).
 Defined.
 
 Instance is1cat_strong_type : Is1Cat_Strong Type.
@@ -147,25 +154,50 @@ Proof.
   intros ? ? ? ? p ?; exact (p _).
 Defined.
 
-Instance is21cat_type : Is21Cat Type.
+Local Notation hcomp := (fmap11 compose (Is0Bifunctor0:=is0bifunctor_bicat_comp Type _ _ _)).
+Lemma Type_associator_natural (A B C D: Type)
+  (f f': A -> B) (g g': B -> C) (h h': C -> D)
+  (p : f == f') (q : g == g') (r : h == h') (x : A)
+  : hcomp (hcomp r q) p x @ 1 = 1 @ hcomp r (hcomp q p) x.
 Proof.
-  snapply Build_Is21Cat.
-  1-4, 6-7: exact _.
-  - intros a b c f g h k p q x; cbn.
+  unfold Bifunctor.fmap11, Prod.fmap_pair; simpl.
+  refine (concat_p1 _ @ _ @ (concat_1p _)^).
+  refine (whiskerR (ap_compose _ _ _) _ @ _).
+  exact (concat_p_pp _ _ _ @ (whiskerR (ap_pp _ _ _)^ _)).
+Defined.
+
+Lemma Type_left_unitor_natural (A B: Type) (f f': A -> B) (p : f == f')
+  : (fun a0 : A => ap idmap (p a0) @ 1) == (fun a0 : A => 1 @ p a0).
+Proof.
+  intro x.
+  exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
+Defined.
+
+Definition Type_right_unitor_natural
+  (A B: Type) (f f': A -> B) (p : f == f')
+  := fun a => concat_p1_1p (p a).
+
+Instance isbicat_type : IsBicat Type.
+Proof.
+  snapply Build_IsBicat.
+  11-12: reflexivity.
+  1-3: exact _.
+  - intros A B C f f' g g' p p' x. simpl.
     symmetry.
     apply concat_Ap.
-  - intros a b c d f g.
+  - intros a b c d.
     snapply Build_Is1Natural.
-    intros h i p x; cbn.
-    exact (concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
-  - intros a b.
-    snapply Build_Is1Natural.
-    intros f g p x; cbn.
-    exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
-  - intros a b.
-    snapply Build_Is1Natural.
-    intros f g p x; cbn.
-    exact (concat_p1 _ @ (concat_1p _)^).
-  - reflexivity.
-  - reflexivity.
+    intros [[f g] h] [[f' g'] h'] [[p q] r] x; simpl in *.
+    apply Type_associator_natural.
+  - intros; constructor; reflexivity.
+  - intros; constructor; reflexivity.
+  - intros; constructor; reflexivity.
+  - intros A B; apply Build_Is1Natural.
+    simpl.
+    intros f g h a; exact (concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
+  - intros A B; apply Build_Is1Natural.
+    intros f g p a. apply Type_right_unitor_natural.
 Defined.
+
+Instance is21cat_type : Is21Cat Type
+  := Build_Is21Cat _ _ _ _ _ _ _ _ _.

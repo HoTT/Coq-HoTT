@@ -581,6 +581,25 @@ Proof.
   - intros ? ? f; exact (pmap_precompose_idmap f).
 Defined.
 
+(** [pType] is a 1-coherent bicategory *)
+Instance is1bicat_ptype : Is1Bicat pType.
+Proof.
+  snapply Build_Is1Bicat.
+  - exact _.
+  - intros A B C h; rapply Build_Is0Functor.
+    intros f g p; cbn.
+    apply pmap_postwhisker; assumption.
+  - intros A B C h; rapply Build_Is0Functor.
+    intros f g p; cbn.
+    apply pmap_prewhisker; assumption.
+  - intros ? ? ? ? f g h; exact (pmap_compose_assoc h g f).
+  - intros ? ? ? ? f g h; exact ((pmap_compose_assoc h g f)^* ).
+  - intros ? ? f; exact (pmap_postcompose_idmap f).
+  - intros ? ? f; exact ((pmap_postcompose_idmap f)^* ).
+  - intros ? ? f; exact (pmap_precompose_idmap f).
+  - intros ? ? f; exact ((pmap_precompose_idmap f)^* ).
+Defined.
+
 (** [pType] is a pointed category *)
 Instance ispointedcat_ptype : IsPointedCat pType.
 Proof.
@@ -623,10 +642,12 @@ Defined.
 Instance is3graph_ptype : Is3Graph pType
   := fun f g => is2graph_pforall _ _.
 
-Instance is21cat_ptype : Is21Cat pType.
+Instance isbicat_ptype : IsBicat pType.
 Proof.
-  unshelve econstructor.
-  - exact _.
+  econstructor.
+  5-7: intros; constructor; [
+          apply phomotopy_compose_pV
+        | apply phomotopy_compose_Vp].
   - intros A B C f; napply Build_Is1Functor.
     + intros g h p q r.
       srapply Build_pHomotopy.
@@ -658,45 +679,37 @@ Proof.
     + intros x.
       exact (concat_Ap q _)^.
     + by pelim p f g q h k.
-  - intros A B C D f g.
-    snapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
-    by pelim f g s1 r1 r2.
-  - intros A B C D f g.
-    snapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
-    by pelim f s1 r1 r2 g.
-  - intros A B C D f g.
-    snapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: cbn; exact (fun _ => concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).
-    by pelim s1 r1 r2 f g.
-  - intros A B.
-    snapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: exact (fun _ => concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).
-    by pelim s1 r1 r2.
-  - intros A B.
-    snapply Build_Is1Natural.
-    intros r1 r2 s1.
-    srapply Build_pHomotopy.
-    1: exact (fun _ => concat_p1 _ @ (concat_1p _)^).
-    simpl; by pelim s1 r1 r2.
-  - intros A B C D E f g h j.
-    srapply Build_pHomotopy.
-    1: reflexivity.
-    by pelim f g h j.
-  - intros A B C f g.
-    srapply Build_pHomotopy.
-    1: reflexivity.
-    by pelim f g.
+  - intros A B C D; snapply Build_Is1Natural.
+    (* TODO: It would be nice if this naturality proof could reuse the proof in the
+       definition of the bicategory Type. *)
+    intros [[f g] h] [[f' g'] h'] [[p q] r]; simpl in *.
+    snapply Build_pHomotopy.
+    + intro x; apply (Type_associator_natural A B C D).
+    + unfold Type_associator_natural.
+      pelim p f f' q g g' r; pelim h h'.
+      exact idpath.
+  - intros A B. snapply Build_Is1Natural.
+    intros f g p; srapply Build_pHomotopy.
+    + (* The proof is very simple, but it seems preferable to explicitly link it to the corresponding construction in Type. *)
+      exact (isnat _ (alnat:=isnatural_bicat_idl (A:=Type)) p).
+    + by pelim p f g.
+  - intros A B. snapply Build_Is1Natural.
+    intros f g p; srapply Build_pHomotopy.
+    + (* Same comment as above. *)
+      exact (isnat _ (alnat:=isnatural_bicat_idr (A:=Type)) p).
+    + simpl; unfold Type_right_unitor_natural.
+      by pelim p f g.
+  - intros A B C D E f g h k. simpl.
+    snapply Build_pHomotopy.
+    + exact (bicat_pentagon (A:=Type) f g h k).
+    + by pelim f g h k.
+  - intros A B C f g. snapply Build_pHomotopy.
+    + exact (bicat_tril (A:=Type) f g).
+    + by pelim f g.
 Defined.
+
+Instance Is21Cat_ptype : Is21Cat pType
+  := Build_Is21Cat _ _ _ _ _ _ _ _ _ .
 
 (** The forgetful map from [pType] to [Type] is a 0-functor *)
 Instance is0functor_pointed_type : Is0Functor pointed_type.

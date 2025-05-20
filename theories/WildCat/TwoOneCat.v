@@ -1,79 +1,129 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 Require Import WildCat.NatTrans.
+Require Import WildCat.Prod.
+Require Import WildCat.Bifunctor.
+
+Declare Scope twocat.
+Notation "f $=> g" := (Hom (A:=Hom _ _) f g) : twocat.
+Local Open Scope twocat.
 
 (** * Wild (2,1)-categories *)
 
-Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=
+(** ** Wild 1-categorical structures *)
+Class Is1Bicat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
+{
+  is01bicat_hom :: forall (a b : A), Is01Cat (a $-> b) ;
+  is0functor_bicat_postcomp :: forall (a b c : A) (g : b $-> c), Is0Functor (cat_postcomp a g) ;
+  is0functor_bicat_precomp :: forall (a b c : A) (f : a $-> b), Is0Functor (cat_precomp c f) ;
+  bicat_assoc : forall {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d),
+    (h $o g) $o f $=> h $o (g $o f);
+  bicat_assoc_opp : forall {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d),
+    h $o (g $o f) $=> (h $o g) $o f;
+  bicat_idl : forall {a b : A} (f : a $-> b), Id b $o f $=> f;
+  bicat_idl_opp : forall {a b : A} (f : a $-> b), f $=> Id b $o f;
+  bicat_idr : forall {a b : A} (f : a $-> b), f $o Id a $=> f;
+  bicat_idr_opp : forall {a b : A} (f : a $-> b), f $=> f $o Id a;
+}.
+Notation "p $@R h" := (fmap (cat_precomp _ h) p) : twocat.
+Notation "h $@L p" := (fmap (cat_postcomp _ h) p) : twocat.
+Notation "a $| b" := (cat_comp (A:=Hom _ _) b a) : twocat.
+
+Instance is0bifunctor_bicat_comp (A : Type) `{Is1Bicat A} (a b c : A)
+  : Is0Bifunctor (cat_comp (a:=a) (b:=b) (c:=c))
+  := Build_Is0Bifunctor'' _.
+
+Instance Is0Functor_swap (A: Type) `{Is1Bicat A} (a b c : A)
+  : Is0Functor (fun '(f,g) => cat_comp (a:=a) (b:=b) (c:=c) g f).
+Proof.
+  change (fun p => snd p $o fst p) with (fun p => (Types.Forall.flip (cat_comp (a:=a) (b:=b) (c:=c)) (fst p) (snd p))).
+  rapply (is0functor_bifunctor_uncurried (Forall.flip (cat_comp))).
+  rapply is0bifunctor_flip.
+Defined.
+
+Notation "alpha $@@ beta" := (fmap11 cat_comp beta alpha) : twocat.
+
+Instance Is0Functor_left_assoc (A: Type) `{Is1Bicat A} (a b c d : A):
+  Is0Functor (fun p : (a $-> b) * (b $-> c) * (c $-> d) =>
+                let '(f,g,h) := p in (h $o g) $o f).
+Proof.
+  simpl.
+  constructor.
+  intros ? ? [[alpha beta] gamma].
+  exact (alpha $@@ (beta $@@ gamma)).
+Defined.
+
+Instance Is0Functor_right_assoc (A: Type) `{Is1Bicat A} (a b c d : A):
+  Is0Functor (fun p : (a $-> b) * (b $-> c) * (c $-> d) =>
+                let '(f,g,h) := p in h $o (g $o f)).
+Proof.
+  simpl.
+  constructor.
+  intros ? ? [[alpha beta] gamma].
+  exact ((alpha $@@ beta) $@@ gamma).
+Defined.
+
+Class IsBicat (A : Type) `{H: Is1Bicat A} `{!Is3Graph A} :=
 {
   is1cat_hom :: forall (a b : A), Is1Cat (a $-> b) ;
-  is1gpd_hom :: forall (a b : A), Is1Gpd (a $-> b) ;
   is1functor_postcomp :: forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) ;
   is1functor_precomp :: forall (a b c : A) (f : a $-> b), Is1Functor (cat_precomp c f) ;
   bifunctor_coh_comp : forall {a b c : A} {f f' : a $-> b}  {g g' : b $-> c}
-    (p : f $== f') (p' : g $== g'),
-    (p' $@R f) $@ (g' $@L p) $== (g $@L p) $@ (p' $@R f') ;
+    (p : f $=> f') (p' : g $=> g'),
+    (p' $@R f) $| (g' $@L p) $== (g $@L p) $| (p' $@R f');
+  isnatural_bicat_assoc :: forall {a b c d : A},
+    Is1Natural
+      (fun '(f,g,h) => (h $o g) $o f)
+      (fun '(f,g,h) => h $o (g $o f))
+      (fun '(f,g,h) => bicat_assoc (Is1Bicat:=H) (a:=a) (b:=b) (c:=c) (d:=d) f g h);
+  areinv_bicat_assoc :: forall {a b c d : A} (f : a $-> b) (g : b $-> c) (h : c $-> d),
+    AreInverse (bicat_assoc f g h) (bicat_assoc_opp f g h);
+  areinv_bicat_idl :: forall {a b : A} (f : a $-> b),
+    AreInverse (bicat_idl f) (bicat_idl_opp f);
+  areinv_bicat_idr :: forall {a b : A} (f : a $-> b),
+    AreInverse (bicat_idr f) (bicat_idr_opp f);
+  isnatural_bicat_idl :: forall {a b : A}, Is1Natural _ _ (bicat_idl (a:=a) (b:=b));
+  isnatural_bicat_idr :: forall {a b : A}, Is1Natural _ _ (bicat_idr (a:=a) (b:=b));
+  bicat_pentagon : forall {a b c d e : A}
+                     (f : a $-> b) (g : b $-> c) (h : c $-> d) (k : d $-> e),
+      (k $@L bicat_assoc f g h) $o (bicat_assoc f (h $o g) k) $o (bicat_assoc g h k $@R f)
+      $== (bicat_assoc (g $o f) h k) $o (bicat_assoc f g (k $o h)) ;
+  bicat_tril : forall {a b c : A} (f : a $-> b) (g : b $-> c),
+      (g $@L bicat_idl f) $o (bicat_assoc f (Id b) g) $== (bicat_idr g $@R f)
+}.
 
-  (** Naturality of the associator in each variable separately *)
-  is1natural_cat_assoc_l :: forall (a b c d : A) (f : a $-> b) (g : b $-> c),
-      Is1Natural (cat_precomp d f o cat_precomp d g) (cat_precomp d (g $o f))
-                 (cat_assoc f g);
-  is1natural_cat_assoc_m :: forall (a b c d : A) (f : a $-> b) (h : c $-> d),
-      Is1Natural (cat_precomp d f o cat_postcomp b h) (cat_postcomp a h o cat_precomp c f)
-                 (fun g => cat_assoc f g h);
-  is1natural_cat_assoc_r :: forall (a b c d : A) (g : b $-> c) (h : c $-> d),
-      Is1Natural (cat_postcomp a (h $o g)) (cat_postcomp a h o cat_postcomp a g)
-                 (fun f => cat_assoc f g h);
-
-  (** Naturality of the unitors *)
-  is1natural_cat_idl :: forall (a b : A),
-      Is1Natural (cat_postcomp a (Id b)) idmap
-                 cat_idl ;
-
-  is1natural_cat_idr :: forall (a b : A),
-      Is1Natural (cat_precomp b (Id a)) idmap
-                 cat_idr;
-
-  (** Coherence *)
-  cat_pentagon : forall (a b c d e : A)
-                        (f : a $-> b) (g : b $-> c) (h : c $-> d) (k : d $-> e),
-      (k $@L cat_assoc f g h) $o (cat_assoc f (h $o g) k) $o (cat_assoc g h k $@R f)
-      $== (cat_assoc (g $o f) h k) $o (cat_assoc f g (k $o h)) ;
-
-  cat_tril : forall (a b c : A) (f : a $-> b) (g : b $-> c),
-      (g $@L cat_idl f) $o (cat_assoc f (Id b) g) $== (cat_idr g $@R f)
+Class Is21Cat (A : Type) `{IsBicat A} :=
+{
+  is0gpd_hom :: forall (a b : A), Is0Gpd (a $-> b) ;
+  is1gpd_hom :: forall (a b : A), Is1Gpd (a $-> b) ;
 }.
 
 (** *** Whiskering functoriality *)
 
-Definition cat_postwhisker_pp {A} `{Is21Cat A} {a b c : A}
-  {f g h : a $-> b} (k : b $-> c) (p : f $== g) (q : g $== h)
-  : k $@L (p $@ q) $== (k $@L p) $@ (k $@L q)
+Definition cat_postwhisker_pp {A} `{IsBicat A} {a b c : A}
+  {f g h : a $-> b} (k : b $-> c) (p : f $=> g) (q : g $=> h)
+  : k $@L (p $| q) $== (k $@L p) $| (k $@L q).
+Proof.
+  rapply fmap_comp.
+Defined.
+
+Definition cat_prewhisker_pp {A} `{IsBicat A} {a b c : A}
+  {f g h : b $-> c} (k : a $-> b) (p : f $=> g) (q : g $=> h)
+  : (p $| q) $@R k $== (p $@R k) $| (q $@R k)
   := fmap_comp _ _ _.
 
-Definition cat_prewhisker_pp {A} `{Is21Cat A} {a b c : A}
-  {f g h : b $-> c} (k : a $-> b) (p : f $== g) (q : g $== h)
-  : (p $@ q) $@R k $== (p $@R k) $@ (q $@R k)
-  := fmap_comp _ _ _.
+Instance is1bifunctor_bicat_comp {A: Type} `{IsBicat A} {a b c : A} :
+  Is1Bifunctor (cat_comp (a:=a) (b:=b) (c:=c)).
+Proof.
+  rapply Build_Is1Bifunctor''.
+  intros.
+  apply bifunctor_coh_comp.
+Defined.
 
 (** *** Exchange law *)
 
-Definition cat_exchange {A : Type} `{Is21Cat A} {a b c : A}
+Definition cat_exchange {A : Type} `{IsBicat A} {a b c : A}
   {f f' f'' : a $-> b} {g g' g'' : b $-> c}
-  (p : f $== f') (q : f' $== f'') (r : g $== g') (s : g' $== g'')
-  : (p $@ q) $@@ (r $@ s) $== (p $@@ r) $@ (q $@@ s).
-Proof.
-  unfold "$@@".
-  (** We use the distributivity of [$@R] and [$@L] in a (2,1)-category (since they are functors) to see that we have the same data on both sides of the 3-morphism. *)
-  nrefine ((_ $@L cat_prewhisker_pp _ _ _ ) $@ _).
-  nrefine ((cat_postwhisker_pp _ _ _ $@R _) $@ _).
-  (** Now we reassociate and whisker on the left and right. *)
-  nrefine (cat_assoc _ _ _ $@ _).
-  refine (_ $@ (cat_assoc _ _ _)^$).
-  nrefine (_ $@L _).
-  refine (_ $@ cat_assoc _ _ _).
-  refine ((cat_assoc _ _ _)^$ $@ _).
-  nrefine (_ $@R _).
-  (** Finally we are left with the bifunctoriality condition for left and right whiskering which is part of the data of the (2,1)-cat. *)
-  apply bifunctor_coh_comp.
-Defined.
+  (p : f $=> f') (q : f' $=> f'') (r : g $=> g') (s : g' $=> g'')
+  : (p $| q) $@@ (r $| s) $== (p $@@ r) $| (q $@@ s)
+  := fmap11_comp _ _ _ _ _.
