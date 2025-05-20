@@ -9,12 +9,15 @@ Notation "A ^op" := (op A).
 (** This stops typeclass search from trying to unfold op. *)
 #[global] Typeclasses Opaque op.
 
-Instance isgraph_op {A : Type} `{IsGraph A}
+Definition isgraph_op {A : Type} `{IsGraph A}
   : IsGraph A^op.
 Proof.
   apply Build_IsGraph.
   unfold op; exact (fun a b => b $-> a).
 Defined.
+
+(** If [isgraph_op] is made an instance, typeclass search can loop if the typeclass goal is [IsGraph ?A] with [?A] unknown.  So we make it an immediate hint instead.  Since the later instances below all depend on [IsGraph A], this should also prevent most loops involving those instances. *)
+Hint Immediate isgraph_op : typeclass_instances.
 
 Instance is01cat_op {A : Type} `{Is01Cat A} : Is01Cat A^op.
 Proof.
