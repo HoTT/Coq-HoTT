@@ -1,6 +1,6 @@
 Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.PathGroupoids.
 Require Import Types.Equiv.
-Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat WildCat.Bifunctor.
+Require Import WildCat.Core WildCat.Equiv WildCat.NatTrans WildCat.TwoOneCat WildCat.Bifunctor WildCat.Prod.
 
 (** ** The (1-)category of types *)
 
@@ -160,7 +160,7 @@ Lemma Type_associator_natural (A B C D: Type)
   (p : f == f') (q : g == g') (r : h == h') (x : A)
   : hcomp (hcomp r q) p x @ 1 = 1 @ hcomp r (hcomp q p) x.
 Proof.
-  unfold Bifunctor.fmap11, Prod.fmap_pair; simpl.
+  unfold fmap11, fmap_pair; simpl.
   refine (concat_p1 _ @ _ @ (concat_1p _)^).
   refine (whiskerR (ap_compose _ _ _) _ @ _).
   exact (concat_p_pp _ _ _ @ (whiskerR (ap_pp _ _ _)^ _)).

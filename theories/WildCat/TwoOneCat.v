@@ -1,4 +1,5 @@
 Require Import Basics.Overture Basics.Tactics.
+Require Import Types.Forall.
 Require Import WildCat.Core.
 Require Import WildCat.NatTrans.
 Require Import WildCat.Prod.
@@ -10,7 +11,11 @@ Local Open Scope twocat.
 
 (** * Wild (2,1)-categories *)
 
+(** This file introduces two basic 2-dimensional structures, (2,1)-categories and bicategories. Bicategories classically have 0-cells, 1-cells and 2-cells; our presentation includes 3-cells expressing coherence relations between 2-cells, that would classically be expressed as truncated equalities. The paradigmatic example of a bicategory is the bicategory of categories, functors and natural transformations. Other common bicategories are the bicategory of sets and spans, the bicategory of rings and ring bimodules, and the bicategory of categories and profunctors. A (2,1)-category is a bicategory where all 2-cells are invertible; a (2,1)-category can also be seen as an ordinary category extended with coherence conditions on 2-cells, expressed as 3-cells. *)
+
 (** ** Wild 1-categorical structures *)
+
+(** We start by introducing the common core of the theory of 1-categories and the theory of bicategories. A wild 1-bicategory is like a wild 1-category, but without the requirement that the 2-cells are invertible in general. The theory of 1-bicategories is the fragment of the theory of bicategories containing all 0-cells, 1-cells and 2-cells, but subject to no coherence conditions between 2-cells (which would require 3-cells to express.) *)
 Class Is1Bicat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
 {
   is01bicat_hom :: forall (a b : A), Is01Cat (a $-> b) ;
@@ -26,6 +31,7 @@ Class Is1Bicat (A : Type) `{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
   bicat_idr_opp : forall {a b : A} (f : a $-> b), f $=> f $o Id a;
 }.
 
+(** A wild 1-category is precisely a wild 1-bicategory such that the 2-cells are invertible. *)
 Definition is1cat_is1bicat (A : Type) `{Is1Bicat A}
   (p : forall a b : A, Is0Gpd (Hom a b))
   : Is1Cat A.
@@ -37,6 +43,7 @@ Proof.
   - exact (@bicat_idr _ _ _ _ _).
 Defined.
 
+(** Conversely, forgetting the inverses of 2-cells, one recovers a 1-bicategory from a 1-category. *)
 Definition is1bicat_is1cat (A : Type) `{Is1Cat A}
   : Is1Bicat A.
 Proof.
@@ -60,8 +67,8 @@ Instance is0bifunctor_bicat_comp (A : Type) `{Is1Bicat A} (a b c : A)
 Instance Is0Functor_swap (A: Type) `{Is1Bicat A} (a b c : A)
   : Is0Functor (fun '(f,g) => cat_comp (a:=a) (b:=b) (c:=c) g f).
 Proof.
-  change (fun p => snd p $o fst p) with (fun p => (Types.Forall.flip (cat_comp (a:=a) (b:=b) (c:=c)) (fst p) (snd p))).
-  rapply (is0functor_bifunctor_uncurried (Forall.flip (cat_comp))).
+  change (fun p => snd p $o fst p) with (fun p => (flip (cat_comp (a:=a) (b:=b) (c:=c)) (fst p) (snd p))).
+  rapply (is0functor_bifunctor_uncurried (flip (cat_comp))).
   rapply is0bifunctor_flip.
 Defined.
 
@@ -87,6 +94,7 @@ Proof.
   exact ((alpha $@@ beta) $@@ gamma).
 Defined.
 
+(** The full structure of a bicategory, incorporating all appropriate coherence conditions. *)
 Class IsBicat (A : Type) `{H: Is1Bicat A} `{!Is3Graph A} :=
 {
   is1cat_hom :: forall (a b : A), Is1Cat (a $-> b) ;
@@ -116,6 +124,7 @@ Class IsBicat (A : Type) `{H: Is1Bicat A} `{!Is3Graph A} :=
       (g $@L bicat_idl f) $o (bicat_assoc f (Id b) g) $== (bicat_idr g $@R f)
 }.
 
+(** A (2,1)-category is a bicategory such that all 2-cells have a unique inverse. Here we have chosen to define (2,1)-categories as extending the theory of bicategories, but the theory of (2,1)-categories also extends the theory of 1-categories with coherence conditions on 2-cells. TODO: Give a constructor to upgrade a 1-category to a (2,1)-category by adding appropriate coherence conditions. *)
 Class Is21Cat (A : Type) `{IsBicat A} :=
 {
   is0gpd_hom :: forall (a b : A), Is0Gpd (a $-> b) ;

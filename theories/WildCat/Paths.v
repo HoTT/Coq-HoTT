@@ -71,8 +71,8 @@ Instance is1cat_paths {A : Type} : Is1Cat A
 Instance is1gpd_paths {A : Type} : Is1Gpd A.
 Proof.
   intros a b f; constructor.
-  - exact (@concat_pV A _ _ _).
-  - exact (@concat_Vp A _ _ _).
+  - apply concat_pV.
+  - apply concat_Vp.
 Defined.
 
 (** Any type is a 2-category with higher morphisms given by paths. *)
@@ -104,8 +104,8 @@ Proof.
     unfold cat_precomp; simpl in p, q, r.
     destruct r, q, p. simpl. exact (concat_1p_p1 _ ).
   - intros a b c d f g h; constructor.
-    + exact (concat_assoc_inv f g h).
-    + exact (concat_assoc_inv' f g h).
+    + apply concat_pV.
+    + apply concat_Vp.
   - intros a b f; constructor.
     + exact (concat_pV _).
     + exact (concat_Vp _).
@@ -124,3 +124,7 @@ Proof.
   - intros a b c p q.
     exact (triangulator p q).
 Defined.
+
+Instance is21cat_paths {A : Type}
+  : Is21Cat A
+  := Build_Is21Cat _ _ _ _ _ _ _ _ _.
