@@ -139,6 +139,30 @@ Section Lemmata.
     by napply cat_prod_corec_eta.
   Defined.
 
+  (** A categorical equivalence into a product induces a product structure on the domain. *)
+  Definition cat_prod_equiv_prod `{!HasEquivs A} (y : A) (f : y $<~> cat_prod I x)
+    : Product I x.
+  Proof.
+    snapply Build_Product.
+    - exact y.
+    - intro i.
+      exact (cat_pr i $o f).
+    - intros z D.
+      exact (f^-1$ $o cat_prod_corec D).
+    - intros z D i.
+      refine (cat_assoc _ _ _ $@ _).
+      refine (cat_postwhisker _ _ $@ _).
+      + napply compose_h_Vh.
+      + napply cat_prod_beta.
+    - intros z g g' e.
+      napply (cate_monic_equiv f).
+      napply cat_prod_pr_eta.
+      intro i.
+      refine (cat_assoc_opp _ _ _ $@ _).
+      refine (_ $@ cat_assoc _ _ _).
+      exact (e i).
+  Defined.
+
 End Lemmata.
 
 (** *** Diagonal map *)
