@@ -28,54 +28,11 @@ Section Biproducts.
   Definition cat_biprod : A
     := cat_prod I x.
 
-  Definition cat_biprod_in : forall (i : I), x i $-> cat_biprod
-    := fun i => cate_coprod_prod $o cat_in i.
-
-  Definition cat_biprod_rec {z : A}
-    : (forall i, x i $-> z) -> cat_biprod $-> z
-    := fun f => cat_coprod_rec I f $o cate_coprod_prod^-1$.
-
-  Definition cat_biprod_rec_beta {z : A} (f : forall i, x i $-> z)
-    : forall i, cat_biprod_rec f $o cat_biprod_in i $== f i.
-  Proof.
-    intros i.
-    unfold cat_biprod_rec, cat_biprod_in.
-    refine (_ $@ cat_coprod_beta I f i).
-    nrefine (cat_assoc _ _ _ $@ (_ $@L _)).
-    napply compose_V_hh.
-  Defined.
-
-  Definition cat_biprod_rec_eta {z : A} (f : cat_biprod $-> z)
-    : cat_biprod_rec (fun i => f $o cat_biprod_in i) $== f.
-  Proof.
-    unfold cat_biprod_rec, cat_biprod_in.
-    napply cate_moveR_eV.
-    napply (cat_coprod_rec_eta _ (fun i => cat_assoc_opp _ _ _) $@ _).
-    napply cat_coprod_eta.
-  Defined.
-
-  Definition cat_biprod_rec_eta' {z : A} {f f' : forall i, x i $-> z}
-    : (forall i, f i $== f' i) -> cat_biprod_rec f $== cat_biprod_rec f'.
-  Proof.
-    intros p.
-    unfold cat_biprod_rec.
-    exact (cat_coprod_rec_eta I p $@R _).
-  Defined.
-
-  Definition cat_biprod_in_eta {z : A} {f f' : cat_biprod $-> z}
-    : (forall i, f $o cat_biprod_in i $== f' $o cat_biprod_in i) -> f $== f'.
-  Proof.
-    intros p.
-    napply (cate_epic_equiv cate_coprod_prod).
-    napply cat_coprod_in_eta.
-    intros i.
-    exact (cat_assoc _ _ _ $@ p i $@ cat_assoc_opp _ _ _).
-  Defined.
-
+  #[export] Instance cat_biprod_coprod : Coproduct I x
+    := cat_coprod_coprod_equiv _ cat_biprod cate_coprod_prod.
 End Biproducts.
 
 Arguments cat_biprod I {A} x {_ _ _ _ _ _ _ _}.
-Arguments cat_biprod_in {I A x _ _ _ _ _ _ _ _} i.
 Arguments cate_coprod_prod {I A} x {_ _ _ _ _ _ _ _}.
 
 (** A smart constructor for biproducts. *)
@@ -113,17 +70,18 @@ Proof.
     * exact (cat_pr_in_ne i j np).
 Defined.
 
+(** A biproduct is a product. *)
+
 (** An inclusion followed by a projection of the same index is the identity. *)
 Definition cat_biprod_pr_in (I : Type) {A : Type} (x : I -> A)
   `{Biproduct I A x} (i : I)
-  : cat_pr i $o cat_biprod_in i $== Id _.
+  : cat_pr i $o cat_in i $== Id _.
 Proof.
-  unfold cat_biprod_in.
+  unfold cat_in.
   refine ((_ $@L _) $@ _).
   { refine ((cate_buildequiv_fun _ $@R _) $@ _).
     napply cat_coprod_beta. }
   refine (cat_prod_beta _ _ _ $@ _).
-  simpl.
   generalize (dec_paths i i).
   by napply decidable_paths_refl.
 Defined.
@@ -131,9 +89,9 @@ Defined.
 (** An inclusion followed by a projection of a different index is zero. *)
 Definition cat_biprod_pr_in_ne (I : Type) {A : Type} (x : I -> A)
   `{Biproduct I A x} {i j : I} (p : i <> j)
-  : cat_pr j $o cat_biprod_in i $== zero_morphism.
+  : cat_pr j $o (cat_in i) $== zero_morphism.
 Proof.
-  unfold cat_biprod_in.
+  unfold cat_in.
   refine ((_ $@L _) $@ _).
   { refine ((cate_buildequiv_fun _ $@R _) $@ _).
     napply cat_coprod_beta. }
@@ -149,22 +107,22 @@ Definition cat_biprod_diag I {A} (x : A) `{Biproduct I A (fun _ => x)}
 
 Definition cat_biprod_codiag I {A} (x : A) `{Biproduct I A (fun _ => x)}
   : cat_biprod I (fun _ => x) $-> x
-  := cat_coprod_codiag x $o (cate_coprod_prod (fun _ => x))^-1$.
+  := cat_coprod_codiag x.
 
 (** Compatability of [cat_biprod_rec] and [cat_prod_corec]. *)
 Definition cat_biprod_corec_rec I `{DecidablePaths I} {A : Type}
   `{HasEquivs A, !IsPointedCat A} {x y : I -> A}
   `{!Biproduct I x, !Biproduct I y}
   (f : forall i, x i $-> y i)
-  : cat_prod_corec I (fun i => f i $o cat_pr i)
-    $== cat_biprod_rec x (fun i => cat_biprod_in i $o f i).
+  : cat_prod_corec _ (fun i => f i $o cat_pr i)
+    $== cat_coprod_rec _ (fun i => cat_in i $o f i).
 Proof.
   napply cat_prod_pr_eta.
   intros i.
-  refine (cat_prod_beta _ _ i $@ _).
-  napply cat_biprod_in_eta.
+  refine (cat_prod_beta _ _ _ $@ _).
+  tapply (cat_coprod_in_eta (x:=x) I).
   intros j.
-  refine (_ $@ (_ $@L (cat_biprod_rec_beta _ _ _)^$) $@ (cat_assoc _ _ _)^$).
+  refine (_ $@ (_ $@L (cat_coprod_beta _ _ _)^$) $@ (cat_assoc _ _ _)^$).
   refine (cat_assoc _ _ _ $@ _ $@ cat_assoc _ _ _).
   destruct (dec_paths j i) as [p | np].
   - destruct p.
@@ -332,13 +290,13 @@ Section BinaryBiproducts.
     - exact q.
   Defined.
 
-  Definition cat_binbiprod_inl : x $-> cat_binbiprod := cat_biprod_in true.
-  Definition cat_binbiprod_inr : y $-> cat_binbiprod := cat_biprod_in false.
+  Definition cat_binbiprod_inl : x $-> cat_binbiprod := cat_in true.
+  Definition cat_binbiprod_inr : y $-> cat_binbiprod := cat_in false.
 
   Definition cat_binbiprod_rec {z : A} (f : x $-> z) (g : y $-> z)
     : cat_binbiprod $-> z.
   Proof.
-    napply cat_biprod_rec.
+    tapply cat_coprod_rec.
     intros [|].
     - exact f.
     - exact g.
@@ -346,16 +304,16 @@ Section BinaryBiproducts.
 
   Definition cat_binbiprod_rec_beta_inl {z : A} (f : x $-> z) (g : y $-> z)
     : cat_binbiprod_rec f g $o cat_binbiprod_inl $== f
-    := cat_biprod_rec_beta _ _ true.
+    := cat_coprod_beta _ _ true.
 
   Definition cat_binbiprod_rec_beta_inr {z : A} (f : x $-> z) (g : y $-> z)
     : cat_binbiprod_rec f g $o cat_binbiprod_inr $== g
-    := cat_biprod_rec_beta _ _ false.
+    := cat_coprod_beta _ _ false.
 
   Definition cat_binbiprod_rec_eta {z : A} (f : cat_binbiprod $-> z)
     : cat_binbiprod_rec (f $o cat_binbiprod_inl) (f $o cat_binbiprod_inr) $== f.
   Proof.
-    napply cat_biprod_in_eta.
+    tapply cat_coprod_in_eta.
     intros [|].
     - exact (cat_binbiprod_rec_beta_inl _ _).
     - exact (cat_binbiprod_rec_beta_inr _ _).
@@ -366,7 +324,7 @@ Section BinaryBiproducts.
       -> cat_binbiprod_rec f g $== cat_binbiprod_rec f' g'.
   Proof.
     intros p q.
-    napply cat_biprod_rec_eta'.
+    napply cat_coprod_rec_eta.
     intros [|].
     - exact p.
     - exact q.
@@ -378,7 +336,7 @@ Section BinaryBiproducts.
       -> f $== f'.
   Proof.
     intros p q.
-    napply cat_biprod_in_eta.
+    tapply cat_coprod_in_eta.
     intros [|].
     - exact p.
     - exact q.
@@ -457,7 +415,7 @@ Proof.
   nrefine (_ $@ _ $@ _).
   2: snapply cat_biprod_corec_rec; by intros [|].
   1: snapply cat_prod_corec_eta; by intros [|].
-  snapply cat_biprod_rec_eta'; by intros [|].
+  snapply cat_coprod_rec_eta; by intros [|].
 Defined.
 
 (** *** Binary biproduct bifunctor *)
