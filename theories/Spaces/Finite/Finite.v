@@ -100,8 +100,8 @@ Definition finite_decidable_hprop X `{IsHProp X} `{Decidable X}
 : Finite X.
 Proof.
   destruct (dec X) as [x|nx].
-  - assert (Contr X) by exact (contr_inhabited_hprop X x).
-    exact _.
+  - apply finite_contr.
+    by apply contr_inhabited_hprop.
   - refine (finite_equiv Empty nx^-1 _).
 Defined.
 
