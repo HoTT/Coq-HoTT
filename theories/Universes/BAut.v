@@ -218,12 +218,11 @@ Section Center2BAut.
     apply path_forall; intros Z.
     assert (IsHSet (idpath Z.1 = idpath Z.1)) by exact _.
     baut_reduce.
-    cbn. unfold functor_forall, sig_rect, merely_rec_hset. cbn.
+    cbn.
     rewrite equiv_path2_universe_1.
-    rewrite !concat_p1, !concat_Vp.
-    simpl.
-    rewrite !concat_p1, !concat_Vp.
-    reflexivity.
+    rewrite concat_p1, concat_Vp.
+    cbn.
+    rewrite concat_p1; apply concat_Vp.
   Defined.
 
 End Center2BAut.
