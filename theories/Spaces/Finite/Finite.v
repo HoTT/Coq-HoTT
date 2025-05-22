@@ -171,11 +171,9 @@ Proof.
 Defined.
 
 (** It follows that if [X] is finite, then its propositional truncation is decidable. *)
-Instance decidable_merely_finite X {fX : Finite X}
-: Decidable (merely X).
-Proof.
-  exact _.
-Defined.
+Definition decidable_merely_finite X {fX : Finite X}
+  : Decidable (merely X)
+  := _.
 
 (** From this, it follows that any finite set is *merely* decidable. *)
 Definition merely_decidable_finite X `{Finite X}
