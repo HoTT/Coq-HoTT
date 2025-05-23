@@ -25,11 +25,19 @@ Section Biproducts.
   Definition cate_coprod_prod : cat_coprod I x $<~> cat_prod I x
     := Build_CatEquiv (cat_coprod_prod x).
 
+  (** We define [cat_biprod] to be the object underlying the product structure given by [biproduct_product]. *)
   Definition cat_biprod : A
     := cat_prod I x.
 
+  (** Because of the equivalence [cate_coprod_prod], [cat_biprod] also carries a coproduct structure. *)
   #[export] Instance cat_biprod_coprod : Coproduct I x
     := cat_coprod_coprod_equiv _ cat_biprod cate_coprod_prod.
+
+  (** The inclusion map for this new coproduct structure is defined using [cate_coprod_prod], which computes to [cat_coprod_prod], giving the following. *)
+  Definition cat_in_comp (i : I)
+    : cat_in (H0:=cat_biprod_coprod) i $== cat_coprod_prod x $o cat_in (H0:=biproduct_coproduct) i
+    := cate_buildequiv_fun _ $@R _.
+
 End Biproducts.
 
 Arguments cat_biprod I {A} x {_ _ _ _ _ _ _ _}.
@@ -64,6 +72,7 @@ Proof.
     refine (cat_idl _ $@ _ $@ (rec_beta _ _ _)^$).
     napply corec_eta; intros j.
     refine (_ $@ (corec_beta _ _ _)^$).
+    unfold cat_coprod_prod_component.
     destruct (dec_paths i j) as [p|np]; cbn.
     * destruct p.
       exact (cat_pr_in i).
@@ -72,16 +81,24 @@ Defined.
 
 (** A biproduct is a product. *)
 
-(** An inclusion followed by a projection of the same index is the identity. *)
+(** An inclusion followed by a projection has a computation law. *)
 Definition cat_biprod_pr_in (I : Type) {A : Type} (x : I -> A)
+  `{Biproduct I A x} (i j : I)
+  : cat_pr j $o cat_in i $== cat_coprod_prod_component x i j.
+Proof.
+  refine ((_ $@L _) $@ _).
+  { refine (cat_in_comp _ _ $@ _).
+    apply cat_coprod_beta. }
+  apply cat_prod_beta.
+Defined.
+
+(** An inclusion followed by a projection of the same index is the identity. *)
+Definition cat_biprod_pr_in_eq (I : Type) {A : Type} (x : I -> A)
   `{Biproduct I A x} (i : I)
   : cat_pr i $o cat_in i $== Id _.
 Proof.
-  unfold cat_in.
-  refine ((_ $@L _) $@ _).
-  { refine ((cate_buildequiv_fun _ $@R _) $@ _).
-    napply cat_coprod_beta. }
-  refine (cat_prod_beta _ _ _ $@ _).
+  refine (cat_biprod_pr_in I x i i $@ _).
+  unfold cat_coprod_prod_component.
   generalize (dec_paths i i).
   by napply decidable_paths_refl.
 Defined.
@@ -91,13 +108,9 @@ Definition cat_biprod_pr_in_ne (I : Type) {A : Type} (x : I -> A)
   `{Biproduct I A x} {i j : I} (p : i <> j)
   : cat_pr j $o cat_in i $== zero_morphism.
 Proof.
-  unfold cat_in.
-  refine ((_ $@L _) $@ _).
-  { refine ((cate_buildequiv_fun _ $@R _) $@ _).
-    napply cat_coprod_beta. }
-  refine (cat_prod_beta _ _ _ $@ _).
+  refine (cat_biprod_pr_in I x i j $@ _).
+  unfold cat_coprod_prod_component.
   decidable_false (dec_paths i j) p.
-  simpl.
   reflexivity.
 Defined.
 
@@ -127,7 +140,7 @@ Proof.
   destruct (dec_paths j i) as [p | np].
   - destruct p.
     refine ((_ $@L _) $@ cat_idr _ $@ (cat_idl _)^$ $@ (_^$ $@R _)).
-    1,2: napply cat_biprod_pr_in.
+    1,2: napply cat_biprod_pr_in_eq.
   - refine ((_ $@L _) $@ cat_zero_r _ $@ (cat_zero_l _)^$ $@ (_^$ $@R _)).
     1,2: napply cat_biprod_pr_in_ne; assumption.
 Defined.
@@ -344,11 +357,11 @@ Section BinaryBiproducts.
 
   Definition cat_binbiprod_pr1_inl
     : cat_binbiprod_pr1 $o cat_binbiprod_inl $== Id _
-    := cat_biprod_pr_in Bool _ true.
+    := cat_biprod_pr_in_eq Bool _ true.
 
   Definition cat_binbiprod_pr2_inr
     : cat_binbiprod_pr2 $o cat_binbiprod_inr $== Id _
-    := cat_biprod_pr_in Bool _ false.
+    := cat_biprod_pr_in_eq Bool _ false.
 
   Definition cat_binbiprod_pr2_inl
     : cat_binbiprod_pr2 $o cat_binbiprod_inl $== zero_morphism.
@@ -821,7 +834,7 @@ Proof.
       1: napply cat_prod_beta.
       refine (_ $@ _).
       1: napply cat_coprod_beta.
-      simpl.
+      unfold cat_coprod_prod_component.
       generalize (dec_paths j i).
       generalize (dec_paths i j).
       intros [p|np].
