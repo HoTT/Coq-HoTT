@@ -149,12 +149,12 @@ Section Lemmata.
       exact (cat_pr i $o f).
     - intros z D.
       exact (f^-1$ $o cat_prod_corec D).
-    - intros z D i.
+    - intros z D i; cbn beta.
+      refine (_ $@ cat_prod_beta _ _).
       refine (cat_assoc _ _ _ $@ _).
-      refine (cat_postwhisker _ _ $@ _).
-      + napply compose_h_Vh.
-      + napply cat_prod_beta.
-    - intros z g g' e.
+      apply cat_postwhisker.
+      apply compose_h_Vh.
+    - cbn beta; intros z g g' e.
       napply (cate_monic_equiv f).
       napply cat_prod_pr_eta.
       intro i.
