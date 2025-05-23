@@ -426,7 +426,18 @@ Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
 
 (** ** Canonical coproduct-product map *)
 
-(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed. *)
+(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed.  We factor out the components of this map into a separate definition to make goals involving [cat_coprod_prod] easier to read. *)
+Definition cat_coprod_prod_component {I : Type} `{DecidablePaths I} {A : Type}
+  `{IsPointedCat A}
+  (x : I -> A) (i j : I)
+  : x i $-> x j.
+Proof.
+  destruct (dec_paths i j) as [p|].
+  - destruct p.
+    exact (Id _).
+  - exact zero_morphism.
+Defined.
+
 Definition cat_coprod_prod {I : Type} `{DecidablePaths I} {A : Type}
   `{Is1Cat A, !IsPointedCat A}
   (x : I -> A) `{!Coproduct I x, !Product I x}
@@ -435,11 +446,8 @@ Proof.
   apply cat_coprod_rec.
   intros i.
   apply cat_prod_corec.
-  intros a.
-  destruct (dec_paths i a) as [p|].
-  - destruct p.
-    exact (Id _).
-  - exact zero_morphism.
+  intros j.
+  exact (cat_coprod_prod_component x i j).
 Defined.
 
 Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}
