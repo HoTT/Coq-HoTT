@@ -89,7 +89,7 @@ Defined.
 (** An inclusion followed by a projection of a different index is zero. *)
 Definition cat_biprod_pr_in_ne (I : Type) {A : Type} (x : I -> A)
   `{Biproduct I A x} {i j : I} (p : i <> j)
-  : cat_pr j $o (cat_in i) $== zero_morphism.
+  : cat_pr j $o cat_in i $== zero_morphism.
 Proof.
   unfold cat_in.
   refine ((_ $@L _) $@ _).
@@ -122,7 +122,7 @@ Proof.
   refine (cat_prod_beta _ _ _ $@ _).
   tapply (cat_coprod_in_eta (x:=x) I).
   intros j.
-  refine (_ $@ (_ $@L (cat_coprod_beta _ _ _)^$) $@ (cat_assoc _ _ _)^$).
+  refine (_ $@ (_ $@L (cat_coprod_beta _ _ _)^$) $@ cat_assoc_opp _ _ _).
   refine (cat_assoc _ _ _ $@ _ $@ cat_assoc _ _ _).
   destruct (dec_paths j i) as [p | np].
   - destruct p.
@@ -612,7 +612,7 @@ Section Symmetry.
 
 End Symmetry.
 
-(** *** Associativity of binary products *)
+(** *** Associativity of binary biproducts *)
 
 Section Associativity.
 
