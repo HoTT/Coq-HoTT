@@ -1,6 +1,7 @@
 (** * Connectedness *)
 Require Import Basics.
 Require Import Types.
+Require Import HFiber.
 
 Require Import Extensions.
 Require Import Factorization.
@@ -58,6 +59,37 @@ Instance isconnected_paths `{Univalence} {n A}
   : IsConnected n (x = y).
 Proof.
   exact (contr_equiv' _ (equiv_path_Tr x y)^-1).
+Defined.
+
+(** As a consequence, we have that [ap f] is n-connected when [f] is (n+1)-connected.  See HFiber.v and Loops.v for similar results about truncated maps. *)
+Instance isconnmap_ap_isconnmap `{Univalence} (n : trunc_index) {A B : Type}
+  (f : A -> B) `{!IsConnMap n.+1 f} (x y : A)
+  : IsConnMap n (@ap _ _ f x y)
+  := fun p => isconnected_equiv (Tr n) _ (hfiber_ap p)^-1 _.
+
+(** The converse to [isconnected_paths] holds when [A] is merely inhabited. *)
+Definition isconnected_isconnected_allpath `{Univalence} (n : trunc_index)
+  (A : Type) `{mA : merely A}
+  (isc : forall x y : A, IsConnected n (x = y))
+  : IsConnected n.+1 A.
+Proof.
+  strip_truncations; hnf.
+  apply (Build_Contr _ (tr mA)); intro a.
+  strip_truncations.
+  apply equiv_path_Tr, center, isc.
+Defined.
+
+(** As a consequence, we get a converse to [isconnmap_ap_isconnmap] for (-1)-connected maps. *)
+Definition isconnmap_isconnmap_ap_surj `{Univalence} (n : trunc_index) {A B : Type}
+  (f : A -> B) {surj : IsConnMap (-1) f}
+  (isc : forall x y : A, IsConnMap n (@ap _ _ f x y))
+  : IsConnMap n.+1 f.
+Proof.
+  intro b.
+  apply isconnected_isconnected_allpath.
+  1: apply center, surj.
+  intros [x p] [y q]; destruct q.
+  exact (isconnected_equiv _ _ (hfiber_ap p) _).
 Defined.
 
 (** ** Connectivity of pointed types *)
@@ -186,17 +218,15 @@ Proof.
   rapply center.
 Defined.
 
+(** The converse holds when [A] is merely inhabited. *)
 Definition is0connected_merely_allpath `{Univalence}
-           (A : Type) `{merely A}
+           (A : Type) `{mA : merely A}
            (p : forall (x y:A), merely (x = y))
   : IsConnected 0 A.
 Proof.
-  strip_truncations.
-  apply contr_inhabited_hprop.
-  - apply hprop_allpath; intros z w.
-    strip_truncations.
-    exact (equiv_path_Tr z w (p z w)).
-  - apply tr; assumption.
+  apply (isconnected_isconnected_allpath _ _ (mA:=mA)).
+  intros x y; hnf.
+  exact (contr_inhabited_hprop _ (p x y)).
 Defined.
 
 (** The path component of a point [x : X] is connected. *)

@@ -1652,6 +1652,15 @@ Section ConnectedMaps.
     exact istrunc_forall.
   Defined.
 
+  (** A map which is both connected and modal is an equivalence. *)
+  Definition isequiv_conn_ino_map {A B : Type} (f : A -> B)
+             `{IsConnMap O _ _ f} `{MapIn O _ _ f}
+  : IsEquiv f.
+  Proof.
+    apply isequiv_contr_map. intros b.
+    exact (contr_trunc_conn O).
+  Defined.
+
   (** Connected maps are orthogonal to modal maps (i.e. families of modal types). *)
   Definition conn_map_elim
              {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
@@ -1677,15 +1686,6 @@ Section ConnectedMaps.
     destruct (isconnected_elim O (P (f a)) fibermap) as [x e].
     change (d a) with (fibermap (a;1)).
     apply inverse, e.
-  Defined.
-
-  (** A map which is both connected and modal is an equivalence. *)
-  Definition isequiv_conn_ino_map {A B : Type} (f : A -> B)
-             `{IsConnMap O _ _ f} `{MapIn O _ _ f}
-  : IsEquiv f.
-  Proof.
-    apply isequiv_contr_map. intros b.
-    exact (contr_trunc_conn O).
   Defined.
 
   (** We can re-express this in terms of extensions. *)

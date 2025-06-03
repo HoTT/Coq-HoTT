@@ -33,21 +33,22 @@ Arguments reflexive_equiv /.
 Instance isequiv_compose {A B C : Type}
   (f : A -> B) `{IsEquiv A B f}
   (g : B -> C) `{IsEquiv B C g}
-  : IsEquiv (g o f) | 1000
-  := Build_IsEquiv A C (g o f)
-    (f^-1 o g^-1)
-    (fun c => ap g (eisretr f (g^-1 c)) @ eisretr g c)
-    (fun a => ap (f^-1) (eissect g (f a)) @ eissect f a)
-    (fun a =>
-      (whiskerL _ (eisadj g (f a))) @
-      (ap_pp g _ _)^ @
-      ap02 g
-      ( (concat_A1p (eisretr f) (eissect g (f a)))^ @
-        (ap_compose f^-1 f _ @@ eisadj f a) @
-        (ap_pp f _ _)^
-      ) @
-      (ap_compose f g _)^
-    ).
+  : IsEquiv (g o f) | 1000.
+Proof.
+  snapply Build_IsEquiv.
+  - exact (f^-1 o g^-1).
+  - intro c. exact (ap g (eisretr f (g^-1 c)) @ eisretr g c).
+  - intro a. exact (ap (f^-1) (eissect g (f a)) @ eissect f a).
+  - intro a; cbn.
+    lhs napply (1 @@ eisadj g _).
+    symmetry.
+    lhs napply (ap_compose f).
+    rhs_V napply ap_pp.
+    apply ap02.
+    lhs napply ap_pp.
+    rhs_V napply (concat_A1p (eisretr f) (eissect g (f a))).
+    exact (ap_compose f^-1 f _ @@ eisadj f a)^.
+Defined.
 
 Definition equiv_compose {A B C : Type} (g : B -> C) (f : A -> B)
   `{IsEquiv B C g} `{IsEquiv A B f}
