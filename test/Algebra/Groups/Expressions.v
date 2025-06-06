@@ -1,4 +1,6 @@
-From HoTT Require Import Basics.Overture Groups.Group AbGroups.AbelianGroup.
+From HoTT Require Import Basics.Overture.
+From HoTT Require Import Algebra.Groups.Group.
+From HoTT Require Import Algebra.AbGroups.AbelianGroup.
 
 Set Universe Minimization ToSet.
 
