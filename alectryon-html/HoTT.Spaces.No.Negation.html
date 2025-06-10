@@ -1,0 +1,994 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Negation.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk0"><span class="kn">Require Import</span> HoTT.Basics.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Spaces.No.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> surreal_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Negation of surreal numbers *)</span>
+
+<span class="sd">(** Negation requires the option sorts to be symmetric. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">HasNegation</span> (<span class="nv">S</span> : OptionSort) 
+  := symmetric_options :: <span class="kr">forall</span> <span class="nv">L</span> <span class="nv">R</span>, InSort S L R -&gt; InSort S R L.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">hasnegation_maxsort</span> : HasNegation MaxSort
+  := <span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk1"><span class="kn">Instance</span> <span class="nf">hasnegation_decsort</span> : HasNegation DecSort.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">HasNegation DecSort</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">HasNegation DecSort</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> L R [? ?]; <span class="nb">split</span>; <span class="bp">assumption</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">HasNegation</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Universe</span> <span class="nf">i</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">S</span> : OptionSort@{i}} `{HasNegation S}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">No</span> := GenNo S.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk3"><span class="kn">Definition</span> <span class="nf">negate</span> : No -&gt; No.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">No -&gt; No</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">No -&gt; No</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk5"><span class="nb">simple refine</span> (No_rec No (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> =&gt; y &lt;= x) (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> =&gt; y &lt; x)
+                          _ _ _ _ _); <span class="nb">intros</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">No</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="negation-v-chk6" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>No</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x) a b</span></span></span><br><span><var>X0</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x) b a</span></span></span><br></div><label class="goal-separator" for="negation-v-chk6"><hr></label><div class="goal-conclusion">a = b</div></blockquote><input class="alectryon-extra-goal-toggle" id="negation-v-chk7" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r)</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fyL l) (fyR r)</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">l</span> : L, xL l &lt; {{ yL | yR//ycut }}</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">l</span> : L,
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) 
+              (<span class="nv">r</span> : R), xL l0 &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) 
+                 (fxL l0) 
+                 (fxR r)) =&gt; 
+    <span class="nl">?Goal</span>) L&#39; R&#39; s&#39; yL yR ycut fyL fyR fycut)</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">r</span> : R&#39;, {{ xL | xR//xcut }} &lt; yR r</span></span></span><br><span><var>dq</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">r</span> : R&#39;,
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+              (<span class="nv">r0</span> : R), xL l &lt; xR r0)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r0</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) 
+                 (fxL l) 
+                 (fxR r0)) =&gt; 
+    <span class="nl">?Goal</span>) L R s xL xR xcut fxL fxR fxcut)
+  (fyR r)</span></span></span><br></div><label class="goal-separator" for="negation-v-chk7"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt; <span class="nl">?Goal</span>) L R s xL xR xcut fxL fxR fxcut)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt; <span class="nl">?Goal</span>) L&#39; R&#39; s&#39; yL yR ycut fyL fyR fycut)</div></blockquote><input class="alectryon-extra-goal-toggle" id="negation-v-chk8" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r)</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fyL l) (fyR r)</span></span></span><br><span><var>l</var><span class="hyp-type"><b>: </b><span>L&#39;</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>{{ xL | xR//xcut }} &lt;= yL l</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) 
+                 (fxL l) 
+                 (fxR r)) =&gt; 
+    <span class="nl">?Goal</span>) L R s xL xR xcut fxL fxR fxcut)
+  (fyL l)</span></span></span><br></div><label class="goal-separator" for="negation-v-chk8"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt; <span class="nl">?Goal</span>) L R s xL xR xcut fxL fxR fxcut)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt; <span class="nl">?Goal</span>) L&#39; R&#39; s&#39; yL yR ycut fyL fyR fycut)</div></blockquote><input class="alectryon-extra-goal-toggle" id="negation-v-chk9" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r)</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fyL l) (fyR r)</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>R</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>xR r &lt;= {{ yL | yR//ycut }}</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x) 
+  (fxR r)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) 
+                 (fxL l) 
+                 (fxR r)) =&gt; 
+    <span class="nl">?Goal</span>) L&#39; R&#39; s&#39; yL yR ycut fyL fyR fycut)</span></span></span><br></div><label class="goal-separator" for="negation-v-chk9"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt; <span class="nl">?Goal</span>) L R s xL xR xcut fxL fxR fxcut)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt; <span class="nl">?Goal</span>) L&#39; R&#39; s&#39; yL yR ycut fyL fyR fycut)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chka">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">No</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> {{ fxR | fxL // <span class="kr">fun</span> <span class="nv">r</span> <span class="nv">l</span> =&gt; fxcut l r }}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chkb">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>No</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x) a b</span></span></span><br><span><var>X0</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x) b a</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">a = b</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_No; <span class="bp">assumption</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chkc">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r)</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fyL l) (fyR r)</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">l</span> : L, xL l &lt; {{ yL | yR//ycut }}</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">l</span> : L,
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R), xL l0 &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) 
+                 (fxL l0) 
+                 (fxR r)) =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l0</span> : L) =&gt;
+                  fxcut l0 r }}) L&#39; R&#39; s&#39; yL yR
+     ycut fyL fyR fycut)</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">r</span> : R&#39;, {{ xL | xR//xcut }} &lt; yR r</span></span></span><br><span><var>dq</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">r</span> : R&#39;,
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R), xL l &lt; xR r0)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r0</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) 
+                 (fxL l) 
+                 (fxR r0)) =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r0</span> : R) (<span class="nv">l</span> : L) =&gt;
+                  fxcut l r0 }}) L R s xL xR xcut
+     fxL fxR fxcut) (fyR r)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }})
+     L R s xL xR xcut fxL fxR fxcut)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }})
+     L&#39; R&#39; s&#39; yL yR ycut fyL fyR fycut)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chkd"><span class="nb">cbn</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), fxR r &lt; fxL l</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), fyR r &lt; fyL l</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">l</span> : L, xL l &lt; {{ yL | yR//ycut }}</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">l</span> : L,
+{{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r</span> : R&#39;) (<span class="nv">l0</span> : L&#39;) =&gt;
+              fycut l0 r }} &lt; 
+fxL l</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">r</span> : R&#39;, {{ xL | xR//xcut }} &lt; yR r</span></span></span><br><span><var>dq</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">r</span> : R&#39;,
+fyR r &lt;
+{{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r0</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r0 }}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r</span> : R&#39;) (<span class="nv">l</span> : L&#39;) =&gt; fycut l r }} &lt;=
+{{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> le_lr; <span class="nb">intros</span>; [ <span class="nb">apply</span> dq | <span class="nb">apply</span> dp ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chke">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r)</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fyL l) (fyR r)</span></span></span><br><span><var>l</var><span class="hyp-type"><b>: </b><span>L&#39;</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>{{ xL | xR//xcut }} &lt;= yL l</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) 
+                 (fxL l) 
+                 (fxR r)) =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt;
+                  fxcut l r }}) L R s xL xR xcut
+     fxL fxR fxcut) (fyL l)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }})
+     L R s xL xR xcut fxL fxR fxcut)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }})
+     L&#39; R&#39; s&#39; yL yR ycut fyL fyR fycut)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chkf"><span class="nb">cbn</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), fxR r &lt; fxL l</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), fyR r &lt; fyL l</span></span></span><br><span><var>l</var><span class="hyp-type"><b>: </b><span>L&#39;</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>{{ xL | xR//xcut }} &lt;= yL l</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span>fyL l &lt;=
+{{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r</span> : R&#39;) (<span class="nv">l</span> : L&#39;) =&gt; fycut l r }} &lt;
+{{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> lt_r <span class="kr">with</span> l; <span class="nb">intros</span>; <span class="bp">assumption</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk10">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r)</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fyL l) (fyR r)</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>R</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>xR r &lt;= {{ yL | yR//ycut }}</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x) 
+  (fxR r)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) 
+      (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) 
+               (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) 
+                 (fxL l) 
+                 (fxR r)) =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt;
+                  fxcut l r }}) L&#39; R&#39; s&#39; yL yR
+     ycut fyL fyR fycut)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }})
+     L R s xL xR xcut fxL fxR fxcut)
+  ((<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+      (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+      (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+      (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R),
+               (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x) (fxL l) (fxR r))
+    =&gt;
+    {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }})
+     L&#39; R&#39; s&#39; yL yR ycut fyL fyR fycut)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk11"><span class="nb">cbn</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; GenNo S</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; GenNo S</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br><span><var>fxL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>fxR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>fxcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), fxR r &lt; fxL l</span></span></span><br><span><var>L', R'</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>s'</var><span class="hyp-type"><b>: </b><span>InSort S L&#39; R&#39;</span></span></span><br><span><var>yL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; GenNo S</span></span></span><br><span><var>yR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; GenNo S</span></span></span><br><span><var>ycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), yL l &lt; yR r</span></span></span><br><span><var>fyL</var><span class="hyp-type"><b>: </b><span>L&#39; -&gt; No</span></span></span><br><span><var>fyR</var><span class="hyp-type"><b>: </b><span>R&#39; -&gt; No</span></span></span><br><span><var>fycut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r</span> : R&#39;), fyR r &lt; fyL l</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>R</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>xR r &lt;= {{ yL | yR//ycut }}</span></span></span><br><span><var>dp</var><span class="hyp-type"><b>: </b><span>{{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r</span> : R&#39;) (<span class="nv">l</span> : L&#39;) =&gt; fycut l r }} &lt;=
+fxR r</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r</span> : R&#39;) (<span class="nv">l</span> : L&#39;) =&gt; fycut l r }} &lt;
+{{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r }}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> lt_l <span class="kr">with</span> r; <span class="nb">intros</span>; <span class="bp">assumption</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** More useful is the following rewriting lemma. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk12"><span class="kn">Definition</span> <span class="nf">negate_cut</span>
+             {<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>@{i} } {<span class="nv">Sx</span> : InSort S L R}
+             (<span class="nv">xL</span> : L -&gt; No) (<span class="nv">xR</span> : R -&gt; No)
+             (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r)
+    : { nxcut : <span class="kr">forall</span> <span class="nv">r</span> <span class="nv">l</span>, negate (xR r) &lt; negate (xL l) &amp;
+        negate {{ xL | xR // xcut }} =
+        {{ (<span class="kr">fun</span> <span class="nv">r</span> =&gt; negate (xR r)) | (<span class="kr">fun</span> <span class="nv">l</span> =&gt; negate (xL l)) // nxcut }} }.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>Sx</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{nxcut
+: <span class="kr">forall</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L),
+  negate (xR r) &lt; negate (xL l) &amp;
+negate {{ xL | xR//xcut }} =
+{{ <span class="kr">fun</span> <span class="nv">r</span> : R =&gt; negate (xR r) | (<span class="kr">fun</span> <span class="nv">l</span> : L =&gt;
+                                 negate (xL l))//nxcut }}}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk13"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>Sx</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{nxcut
+: <span class="kr">forall</span> (<span class="nv">r</span> : R) (<span class="nv">l</span> : L),
+  negate (xR r) &lt; negate (xL l) &amp;
+negate {{ xL | xR//xcut }} =
+{{ <span class="kr">fun</span> <span class="nv">r</span> : R =&gt; negate (xR r) | (<span class="kr">fun</span> <span class="nv">l</span> : L =&gt;
+                                 negate (xL l))//nxcut }}}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk14"><span class="nb">eexists</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>Sx</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">negate {{ xL | xR//xcut }} =
+{{ <span class="kr">fun</span> <span class="nv">r</span> : R =&gt; negate (xR r) | (<span class="kr">fun</span> <span class="nv">l</span> : L =&gt;
+                                 negate (xL l))//<span class="nl">?nxcut</span> }}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk15"><span class="nb">unfold</span> negate <span class="nb">at</span> <span class="mi">1</span>; <span class="nb">rewrite</span> No_rec_cut.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>L, R</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>Sx</var><span class="hyp-type"><b>: </b><span>InSort S L R</span></span></span><br><span><var>xL</var><span class="hyp-type"><b>: </b><span>L -&gt; No</span></span></span><br><span><var>xR</var><span class="hyp-type"><b>: </b><span>R -&gt; No</span></span></span><br><span><var>xcut</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r</span> : R), xL l &lt; xR r</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ <span class="kr">fun</span> <span class="nv">r</span> : R =&gt;
+   No_rec No (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x)
+     (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x)
+     (<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+        (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+        (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R), xL l &lt; xR r0)
+        (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+        (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R),
+                 fxR r0 &lt; fxL l) =&gt;
+      {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r0</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r0 }})
+     (<span class="kr">fun</span> (<span class="nv">a</span> <span class="nv">b</span> : No) (<span class="nv">H</span> : b &lt;= a) (<span class="nv">H0</span> : a &lt;= b) =&gt;
+      path_No a b H0 H)
+     (<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+        (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+        (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R), xL l &lt; xR r0)
+        (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+        (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R),
+                 fxR r0 &lt; fxL l) (<span class="nv">L&#39;</span> <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+        (<span class="nv">s&#39;</span> : InSort S L&#39; R&#39;) (<span class="nv">yL</span> : L&#39; -&gt; GenNo S)
+        (<span class="nv">yR</span> : R&#39; -&gt; GenNo S)
+        (<span class="nv">ycut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r0</span> : R&#39;),
+                yL l &lt; yR r0) (<span class="nv">fyL</span> : L&#39; -&gt; No)
+        (<span class="nv">fyR</span> : R&#39; -&gt; No)
+        (<span class="nv">fycut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r0</span> : R&#39;),
+                 fyR r0 &lt; fyL l)
+        (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">l</span> : L, xL l &lt; {{ yL | yR//ycut }})
+        (<span class="nv">dp</span> : <span class="kr">forall</span> <span class="nv">l</span> : L,
+              {{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r0</span> : R&#39;) (<span class="nv">l0</span> : L&#39;) =&gt;
+                            fycut l0 r0 }} &lt; fxL l)
+        (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">r0</span> : R&#39;,
+             {{ xL | xR//xcut }} &lt; yR r0)
+        (<span class="nv">dq</span> : <span class="kr">forall</span> <span class="nv">r0</span> : R&#39;,
+              fyR r0 &lt;
+              {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r1</span> : R) (<span class="nv">l</span> : L) =&gt;
+                            fxcut l r1 }}) =&gt;
+      le_lr fyR fyL
+        (<span class="kr">fun</span> (<span class="nv">r0</span> : R&#39;) (<span class="nv">l</span> : L&#39;) =&gt; fycut l r0) fxR fxL
+        (<span class="kr">fun</span> (<span class="nv">r0</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r0)
+        (<span class="kr">fun</span> <span class="nv">l</span> : R&#39; =&gt; dq l) (<span class="kr">fun</span> <span class="nv">r0</span> : L =&gt; dp r0))
+     (<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+        (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+        (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R), xL l &lt; xR r0)
+        (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+        (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R),
+                 fxR r0 &lt; fxL l) (<span class="nv">L&#39;</span> <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+        (<span class="nv">s&#39;</span> : InSort S L&#39; R&#39;) (<span class="nv">yL</span> : L&#39; -&gt; GenNo S)
+        (<span class="nv">yR</span> : R&#39; -&gt; GenNo S)
+        (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r0</span> : R&#39;), yL l &lt; yR r0)
+        (<span class="nv">fyL</span> : L&#39; -&gt; No) (<span class="nv">fyR</span> : R&#39; -&gt; No)
+        (<span class="nv">fycut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r0</span> : R&#39;),
+                 fyR r0 &lt; fyL l) (<span class="nv">l</span> : L&#39;)
+        (<span class="nv">_</span> : {{ xL | xR//xcut }} &lt;= yL l)
+        (<span class="nv">dp</span> : fyL l &lt;=
+              {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r0</span> : R) (<span class="nv">l0</span> : L) =&gt;
+                            fxcut l0 r0 }}) =&gt;
+      lt_r fyR fyL
+        (<span class="kr">fun</span> (<span class="nv">r0</span> : R&#39;) (<span class="nv">l0</span> : L&#39;) =&gt; fycut l0 r0) fxR
+        fxL (<span class="kr">fun</span> (<span class="nv">r0</span> : R) (<span class="nv">l0</span> : L) =&gt; fxcut l0 r0) l
+        dp)
+     (<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+        (<span class="nv">xL</span> : L -&gt; GenNo S) (<span class="nv">xR</span> : R -&gt; GenNo S)
+        (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R), xL l &lt; xR r0)
+        (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+        (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L) (<span class="nv">r0</span> : R),
+                 fxR r0 &lt; fxL l) (<span class="nv">L&#39;</span> <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+        (<span class="nv">s&#39;</span> : InSort S L&#39; R&#39;) (<span class="nv">yL</span> : L&#39; -&gt; GenNo S)
+        (<span class="nv">yR</span> : R&#39; -&gt; GenNo S)
+        (<span class="nv">ycut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r0</span> : R&#39;),
+                yL l &lt; yR r0) (<span class="nv">fyL</span> : L&#39; -&gt; No)
+        (<span class="nv">fyR</span> : R&#39; -&gt; No)
+        (<span class="nv">fycut</span> : <span class="kr">forall</span> (<span class="nv">l</span> : L&#39;) (<span class="nv">r0</span> : R&#39;),
+                 fyR r0 &lt; fyL l) (<span class="nv">r0</span> : R)
+        (<span class="nv">_</span> : xR r0 &lt;= {{ yL | yR//ycut }})
+        (<span class="nv">dp</span> : {{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r1</span> : R&#39;) (<span class="nv">l</span> : L&#39;) =&gt;
+                            fycut l r1 }} &lt;= fxR r0)
+      =&gt;
+      lt_l fyR fyL
+        (<span class="kr">fun</span> (<span class="nv">r1</span> : R&#39;) (<span class="nv">l</span> : L&#39;) =&gt; fycut l r1) fxR fxL
+        (<span class="kr">fun</span> (<span class="nv">r1</span> : R) (<span class="nv">l</span> : L) =&gt; fxcut l r1) r0 dp)
+     (xR r) | (<span class="kr">fun</span> <span class="nv">l</span> : L =&gt;
+               No_rec No (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt;= x)
+                 (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> : No =&gt; y &lt; x)
+                 (<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+                    (<span class="nv">xL</span> : L -&gt; GenNo S)
+                    (<span class="nv">xR</span> : R -&gt; GenNo S)
+                    (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R),
+                         xL l0 &lt; xR r) (<span class="nv">fxL</span> : L -&gt; No)
+                    (<span class="nv">fxR</span> : R -&gt; No)
+                    (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R),
+                             fxR r &lt; fxL l0) =&gt;
+                  {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l0</span> : L)
+                                =&gt; fxcut l0 r }})
+                 (<span class="kr">fun</span> (<span class="nv">a</span> <span class="nv">b</span> : No) (<span class="nv">H</span> : b &lt;= a)
+                    (<span class="nv">H0</span> : a &lt;= b) =&gt; path_No a b H0 H)
+                 (<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+                    (<span class="nv">xL</span> : L -&gt; GenNo S)
+                    (<span class="nv">xR</span> : R -&gt; GenNo S)
+                    (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R),
+                            xL l0 &lt; xR r)
+                    (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+                    (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R),
+                             fxR r &lt; fxL l0)
+                    (<span class="nv">L&#39;</span> <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+                    (<span class="nv">s&#39;</span> : InSort S L&#39; R&#39;)
+                    (<span class="nv">yL</span> : L&#39; -&gt; GenNo S)
+                    (<span class="nv">yR</span> : R&#39; -&gt; GenNo S)
+                    (<span class="nv">ycut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+                            yL l0 &lt; yR r)
+                    (<span class="nv">fyL</span> : L&#39; -&gt; No) (<span class="nv">fyR</span> : R&#39; -&gt; No)
+                    (<span class="nv">fycut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L&#39;)
+                             (<span class="nv">r</span> : R&#39;), fyR r &lt; fyL l0)
+                    (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">l0</span> : L,
+                         xL l0 &lt; {{ yL | yR//ycut }})
+                    (<span class="nv">dp</span> : <span class="kr">forall</span> <span class="nv">l0</span> : L,
+                          {{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r</span> : R&#39;)
+                                          (<span class="nv">l1</span> : L&#39;) =&gt;
+                                        fycut l1 r }} &lt;
+                          fxL l0)
+                    (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">r</span> : R&#39;,
+                         {{ xL | xR//xcut }} &lt; yR r)
+                    (<span class="nv">dq</span> : <span class="kr">forall</span> <span class="nv">r</span> : R&#39;,
+                          fyR r &lt;
+                          {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r0</span> : R)
+                                          (<span class="nv">l0</span> : L) =&gt;
+                                        fxcut l0 r0 }})
+                  =&gt;
+                  le_lr fyR fyL
+                    (<span class="kr">fun</span> (<span class="nv">r</span> : R&#39;) (<span class="nv">l0</span> : L&#39;) =&gt;
+                     fycut l0 r) fxR fxL
+                    (<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l0</span> : L) =&gt;
+                     fxcut l0 r)
+                    (<span class="kr">fun</span> <span class="nv">l0</span> : R&#39; =&gt; dq l0)
+                    (<span class="kr">fun</span> <span class="nv">r</span> : L =&gt; dp r))
+                 (<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+                    (<span class="nv">xL</span> : L -&gt; GenNo S)
+                    (<span class="nv">xR</span> : R -&gt; GenNo S)
+                    (<span class="nv">xcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R),
+                            xL l0 &lt; xR r)
+                    (<span class="nv">fxL</span> : L -&gt; No) (<span class="nv">fxR</span> : R -&gt; No)
+                    (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R),
+                             fxR r &lt; fxL l0)
+                    (<span class="nv">L&#39;</span> <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+                    (<span class="nv">s&#39;</span> : InSort S L&#39; R&#39;)
+                    (<span class="nv">yL</span> : L&#39; -&gt; GenNo S)
+                    (<span class="nv">yR</span> : R&#39; -&gt; GenNo S)
+                    (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+                         yL l0 &lt; yR r)
+                    (<span class="nv">fyL</span> : L&#39; -&gt; No) (<span class="nv">fyR</span> : R&#39; -&gt; No)
+                    (<span class="nv">fycut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L&#39;)
+                             (<span class="nv">r</span> : R&#39;), fyR r &lt; fyL l0)
+                    (<span class="nv">l0</span> : L&#39;)
+                    (<span class="nv">_</span> : {{ xL | xR//xcut }} &lt;= yL l0)
+                    (<span class="nv">dp</span> : fyL l0 &lt;=
+                          {{ fxR | fxL//<span class="kr">fun</span> (<span class="nv">r</span> : R)
+                                          (<span class="nv">l1</span> : L) =&gt;
+                                        fxcut l1 r }})
+                  =&gt;
+                  lt_r fyR fyL
+                    (<span class="kr">fun</span> (<span class="nv">r</span> : R&#39;) (<span class="nv">l1</span> : L&#39;) =&gt;
+                     fycut l1 r) fxR fxL
+                    (<span class="kr">fun</span> (<span class="nv">r</span> : R) (<span class="nv">l1</span> : L) =&gt;
+                     fxcut l1 r) l0 dp)
+                 (<span class="kr">fun</span> (<span class="nv">L</span> <span class="nv">R</span> : <span class="kt">Type</span>) (<span class="nv">s</span> : InSort S L R)
+                    (<span class="nv">xL</span> : L -&gt; GenNo S)
+                    (<span class="nv">xR</span> : R -&gt; GenNo S)
+                    (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R),
+                         xL l0 &lt; xR r) (<span class="nv">fxL</span> : L -&gt; No)
+                    (<span class="nv">fxR</span> : R -&gt; No)
+                    (<span class="nv">fxcut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L) (<span class="nv">r</span> : R),
+                             fxR r &lt; fxL l0)
+                    (<span class="nv">L&#39;</span> <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+                    (<span class="nv">s&#39;</span> : InSort S L&#39; R&#39;)
+                    (<span class="nv">yL</span> : L&#39; -&gt; GenNo S)
+                    (<span class="nv">yR</span> : R&#39; -&gt; GenNo S)
+                    (<span class="nv">ycut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L&#39;) (<span class="nv">r</span> : R&#39;),
+                            yL l0 &lt; yR r)
+                    (<span class="nv">fyL</span> : L&#39; -&gt; No) (<span class="nv">fyR</span> : R&#39; -&gt; No)
+                    (<span class="nv">fycut</span> : <span class="kr">forall</span> (<span class="nv">l0</span> : L&#39;)
+                             (<span class="nv">r</span> : R&#39;), fyR r &lt; fyL l0)
+                    (<span class="nv">r</span> : R)
+                    (<span class="nv">_</span> : xR r &lt;= {{ yL | yR//ycut }})
+                    (<span class="nv">dp</span> : {{ fyR | fyL//<span class="kr">fun</span> (<span class="nv">r0</span> : R&#39;)
+                                          (<span class="nv">l0</span> : L&#39;) =&gt;
+                                        fycut l0 r0 }} &lt;=
+                          fxR r) =&gt;
+                  lt_l fyR fyL
+                    (<span class="kr">fun</span> (<span class="nv">r0</span> : R&#39;) (<span class="nv">l0</span> : L&#39;) =&gt;
+                     fycut l0 r0) fxR fxL
+                    (<span class="kr">fun</span> (<span class="nv">r0</span> : R) (<span class="nv">l0</span> : L) =&gt;
+                     fxcut l0 r0) r dp) (xL l))//<span class="kr">fun</span>
+                                                 (<span class="nv">r</span> : R)
+                                                 (<span class="nv">l</span> : L)
+                                                 =&gt;
+                                                 No_rec_lt
+                                                 No
+                                                 (<span class="kr">fun</span>
+                                                 <span class="nv">x</span>
+                                                 <span class="nv">y</span> : No
+                                                 =&gt;
+                                                 y &lt;=
+                                                 x)
+                                                 (<span class="kr">fun</span>
+                                                 <span class="nv">x</span>
+                                                 <span class="nv">y</span> : No
+                                                 =&gt;
+                                                 y &lt; x)
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">L</span>
+                                                 <span class="nv">R</span> : <span class="kt">Type</span>)
+                                                 (<span class="nv">s</span> : 
+                                                 InSort
+                                                 S L R)
+                                                 (<span class="nv">xL</span> : 
+                                                 L -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">xR</span> : 
+                                                 R -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">_</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L)
+                                                 (<span class="nv">r0</span> : R),
+                                                 xL l0 &lt;
+                                                 xR r0)
+                                                 (<span class="nv">fxL</span> : 
+                                                 L -&gt;
+                                                 No)
+                                                 (<span class="nv">fxR</span> : 
+                                                 R -&gt;
+                                                 No)
+                                                 (<span class="nv">fxcut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L)
+                                                 (<span class="nv">r0</span> : R),
+                                                 fxR
+                                                 r0 &lt;
+                                                 fxL
+                                                 l0)
+                                                 =&gt;
+                                                 {{ fxR | fxL//
+                                                 <span class="kr">fun</span>
+                                                 (<span class="nv">r0</span> : R)
+                                                 (<span class="nv">l0</span> : L)
+                                                 =&gt;
+                                                 fxcut
+                                                 l0 r0 }})
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">a</span>
+                                                 <span class="nv">b</span> : No)
+                                                 (<span class="nv">H</span> : 
+                                                 b &lt;=
+                                                 a)
+                                                 (<span class="nv">H0</span> : 
+                                                 a &lt;=
+                                                 b) =&gt;
+                                                 path_No
+                                                 a b
+                                                 H0 H)
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">L</span>
+                                                 <span class="nv">R</span> : <span class="kt">Type</span>)
+                                                 (<span class="nv">s</span> : 
+                                                 InSort
+                                                 S L R)
+                                                 (<span class="nv">xL</span> : 
+                                                 L -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">xR</span> : 
+                                                 R -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">xcut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L)
+                                                 (<span class="nv">r0</span> : R),
+                                                 xL l0 &lt;
+                                                 xR r0)
+                                                 (<span class="nv">fxL</span> : 
+                                                 L -&gt;
+                                                 No)
+                                                 (<span class="nv">fxR</span> : 
+                                                 R -&gt;
+                                                 No)
+                                                 (<span class="nv">fxcut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L)
+                                                 (<span class="nv">r0</span> : R),
+                                                 fxR
+                                                 r0 &lt;
+                                                 fxL
+                                                 l0)
+                                                 (<span class="nv">L&#39;</span>
+                                                 <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+                                                 (<span class="nv">s&#39;</span> : 
+                                                 InSort
+                                                 S L&#39;
+                                                 R&#39;)
+                                                 (<span class="nv">yL</span> : 
+                                                 L&#39; -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">yR</span> : 
+                                                 R&#39; -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">ycut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 (<span class="nv">r0</span> : R&#39;),
+                                                 yL l0 &lt;
+                                                 yR r0)
+                                                 (<span class="nv">fyL</span> : 
+                                                 L&#39; -&gt;
+                                                 No)
+                                                 (<span class="nv">fyR</span> : 
+                                                 R&#39; -&gt;
+                                                 No)
+                                                 (<span class="nv">fycut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 (<span class="nv">r0</span> : R&#39;),
+                                                 fyR
+                                                 r0 &lt;
+                                                 fyL
+                                                 l0)
+                                                 (<span class="nv">_</span> : 
+                                                 <span class="kr">forall</span>
+                                                 <span class="nv">l0</span> : L,
+                                                 xL l0 &lt;
+                                                 {{ yL | yR//ycut }})
+                                                 (<span class="nv">dp</span> : 
+                                                 <span class="kr">forall</span>
+                                                 <span class="nv">l0</span> : L,
+                                                 {{ fyR | fyL//
+                                                 <span class="kr">fun</span>
+                                                 (<span class="nv">r0</span> : R&#39;)
+                                                 (<span class="nv">l1</span> : L&#39;)
+                                                 =&gt;
+                                                 fycut
+                                                 l1 r0 }} &lt;
+                                                 fxL
+                                                 l0)
+                                                 (<span class="nv">_</span> : 
+                                                 <span class="kr">forall</span>
+                                                 <span class="nv">r0</span> : R&#39;,
+                                                 {{ xL | xR//xcut }} &lt;
+                                                 yR r0)
+                                                 (<span class="nv">dq</span> : 
+                                                 <span class="kr">forall</span>
+                                                 <span class="nv">r0</span> : R&#39;,
+                                                 fyR
+                                                 r0 &lt;
+                                                 {{ fxR | fxL//
+                                                 <span class="kr">fun</span>
+                                                 (<span class="nv">r1</span> : R)
+                                                 (<span class="nv">l0</span> : L)
+                                                 =&gt;
+                                                 fxcut
+                                                 l0 r1 }})
+                                                 =&gt;
+                                                 le_lr
+                                                 fyR
+                                                 fyL
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">r0</span> : R&#39;)
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 =&gt;
+                                                 fycut
+                                                 l0 r0)
+                                                 fxR
+                                                 fxL
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">r0</span> : R)
+                                                 (<span class="nv">l0</span> : L)
+                                                 =&gt;
+                                                 fxcut
+                                                 l0 r0)
+                                                 (<span class="kr">fun</span>
+                                                 <span class="nv">l0</span> : R&#39;
+                                                 =&gt;
+                                                 dq l0)
+                                                 (<span class="kr">fun</span>
+                                                 <span class="nv">r0</span> : L
+                                                 =&gt;
+                                                 dp r0))
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">L</span>
+                                                 <span class="nv">R</span> : <span class="kt">Type</span>)
+                                                 (<span class="nv">s</span> : 
+                                                 InSort
+                                                 S L R)
+                                                 (<span class="nv">xL</span> : 
+                                                 L -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">xR</span> : 
+                                                 R -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">xcut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L)
+                                                 (<span class="nv">r0</span> : R),
+                                                 xL l0 &lt;
+                                                 xR r0)
+                                                 (<span class="nv">fxL</span> : 
+                                                 L -&gt;
+                                                 No)
+                                                 (<span class="nv">fxR</span> : 
+                                                 R -&gt;
+                                                 No)
+                                                 (<span class="nv">fxcut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L)
+                                                 (<span class="nv">r0</span> : R),
+                                                 fxR
+                                                 r0 &lt;
+                                                 fxL
+                                                 l0)
+                                                 (<span class="nv">L&#39;</span>
+                                                 <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+                                                 (<span class="nv">s&#39;</span> : 
+                                                 InSort
+                                                 S L&#39;
+                                                 R&#39;)
+                                                 (<span class="nv">yL</span> : 
+                                                 L&#39; -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">yR</span> : 
+                                                 R&#39; -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">_</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 (<span class="nv">r0</span> : R&#39;),
+                                                 yL l0 &lt;
+                                                 yR r0)
+                                                 (<span class="nv">fyL</span> : 
+                                                 L&#39; -&gt;
+                                                 No)
+                                                 (<span class="nv">fyR</span> : 
+                                                 R&#39; -&gt;
+                                                 No)
+                                                 (<span class="nv">fycut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 (<span class="nv">r0</span> : R&#39;),
+                                                 fyR
+                                                 r0 &lt;
+                                                 fyL
+                                                 l0)
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 (<span class="nv">_</span> : 
+                                                 {{ xL | xR//xcut }} &lt;=
+                                                 yL l0)
+                                                 (<span class="nv">dp</span> : 
+                                                 fyL
+                                                 l0 &lt;=
+                                                 {{ fxR | fxL//
+                                                 <span class="kr">fun</span>
+                                                 (<span class="nv">r0</span> : R)
+                                                 (<span class="nv">l1</span> : L)
+                                                 =&gt;
+                                                 fxcut
+                                                 l1 r0 }})
+                                                 =&gt;
+                                                 lt_r
+                                                 fyR
+                                                 fyL
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">r0</span> : R&#39;)
+                                                 (<span class="nv">l1</span> : L&#39;)
+                                                 =&gt;
+                                                 fycut
+                                                 l1 r0)
+                                                 fxR
+                                                 fxL
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">r0</span> : R)
+                                                 (<span class="nv">l1</span> : L)
+                                                 =&gt;
+                                                 fxcut
+                                                 l1 r0)
+                                                 l0 dp)
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">L</span>
+                                                 <span class="nv">R</span> : <span class="kt">Type</span>)
+                                                 (<span class="nv">s</span> : 
+                                                 InSort
+                                                 S L R)
+                                                 (<span class="nv">xL</span> : 
+                                                 L -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">xR</span> : 
+                                                 R -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">_</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L)
+                                                 (<span class="nv">r0</span> : R),
+                                                 xL l0 &lt;
+                                                 xR r0)
+                                                 (<span class="nv">fxL</span> : 
+                                                 L -&gt;
+                                                 No)
+                                                 (<span class="nv">fxR</span> : 
+                                                 R -&gt;
+                                                 No)
+                                                 (<span class="nv">fxcut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L)
+                                                 (<span class="nv">r0</span> : R),
+                                                 fxR
+                                                 r0 &lt;
+                                                 fxL
+                                                 l0)
+                                                 (<span class="nv">L&#39;</span>
+                                                 <span class="nv">R&#39;</span> : <span class="kt">Type</span>)
+                                                 (<span class="nv">s&#39;</span> : 
+                                                 InSort
+                                                 S L&#39;
+                                                 R&#39;)
+                                                 (<span class="nv">yL</span> : 
+                                                 L&#39; -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">yR</span> : 
+                                                 R&#39; -&gt;
+                                                 GenNo
+                                                 S)
+                                                 (<span class="nv">ycut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 (<span class="nv">r0</span> : R&#39;),
+                                                 yL l0 &lt;
+                                                 yR r0)
+                                                 (<span class="nv">fyL</span> : 
+                                                 L&#39; -&gt;
+                                                 No)
+                                                 (<span class="nv">fyR</span> : 
+                                                 R&#39; -&gt;
+                                                 No)
+                                                 (<span class="nv">fycut</span> : 
+                                                 <span class="kr">forall</span>
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 (<span class="nv">r0</span> : R&#39;),
+                                                 fyR
+                                                 r0 &lt;
+                                                 fyL
+                                                 l0)
+                                                 (<span class="nv">r0</span> : R)
+                                                 (<span class="nv">_</span> : 
+                                                 xR r0 &lt;=
+                                                 {{ yL | yR//ycut }})
+                                                 (<span class="nv">dp</span> : 
+                                                 {{ fyR | fyL//
+                                                 <span class="kr">fun</span>
+                                                 (<span class="nv">r1</span> : R&#39;)
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 =&gt;
+                                                 fycut
+                                                 l0 r1 }} &lt;=
+                                                 fxR
+                                                 r0)
+                                                 =&gt;
+                                                 lt_l
+                                                 fyR
+                                                 fyL
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">r1</span> : R&#39;)
+                                                 (<span class="nv">l0</span> : L&#39;)
+                                                 =&gt;
+                                                 fycut
+                                                 l0 r1)
+                                                 fxR
+                                                 fxL
+                                                 (<span class="kr">fun</span>
+                                                 (<span class="nv">r1</span> : R)
+                                                 (<span class="nv">l0</span> : L)
+                                                 =&gt;
+                                                 fxcut
+                                                 l0 r1)
+                                                 r0 dp)
+                                                 (xL l)
+                                                 (xR r)
+                                                 (xcut
+                                                 l r) }} =
+{{ <span class="kr">fun</span> <span class="nv">r</span> : R =&gt; negate (xR r) | (<span class="kr">fun</span> <span class="nv">l</span> : L =&gt;
+                                 negate (xL l))//<span class="nl">?nxcut</span> }}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** The following proof verifies that [No_rec] applied to a cut reduces definitionally to a cut with the expected options (although it does produce quite a large term). *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{InSort S Empty Empty} `{InSort S Unit Empty}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk16"><span class="kn">Goal</span> negate one = minusone.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">negate one = minusone</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk17"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">negate one = minusone</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk18"><span class="nb">unfold</span> one; <span class="nb">rewrite</span> (negate_cut _ _ _).<span class="mi">2</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ <span class="kr">fun</span> <span class="nv">r</span> : Empty =&gt; negate (Empty.Empty_rec r) | (<span class="kr">fun</span>
+                                                 <span class="nv">_</span> : Unit
+                                                 =&gt;
+                                                 negate
+                                                 zero)//
+(negate_cut (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero) Empty.Empty_rec
+   rempty_cut).<span class="mi">1</span> }} = minusone</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk19"><span class="nb">apply</span> path_No; <span class="nb">apply</span> le_lr; <span class="nb">intros</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>l</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">negate (Empty.Empty_rec l) &lt;
+{{ Empty.Empty_rec | (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero)//lempty_cut }}</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="negation-v-chk1a" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><label class="goal-separator" for="negation-v-chk1a"><hr></label><div class="goal-conclusion">{{ <span class="kr">fun</span> <span class="nv">r</span> : Empty =&gt; negate (Empty.Empty_rec r) | (<span class="kr">fun</span>
+                                                 <span class="nv">_</span> : Unit
+                                                 =&gt;
+                                                 negate
+                                                 zero)//
+(negate_cut (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero) Empty.Empty_rec
+   rempty_cut).<span class="mi">1</span> }} &lt; zero</div></blockquote><input class="alectryon-extra-goal-toggle" id="negation-v-chk1b" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>l</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br></div><label class="goal-separator" for="negation-v-chk1b"><hr></label><div class="goal-conclusion">Empty.Empty_rec l &lt;
+{{ <span class="kr">fun</span> <span class="nv">r</span> : Empty =&gt; negate (Empty.Empty_rec r) | (<span class="kr">fun</span>
+                                                 <span class="nv">_</span> : Unit
+                                                 =&gt;
+                                                 negate
+                                                 zero)//
+(negate_cut (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero) Empty.Empty_rec
+   rempty_cut).<span class="mi">1</span> }}</div></blockquote><input class="alectryon-extra-goal-toggle" id="negation-v-chk1c" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><label class="goal-separator" for="negation-v-chk1c"><hr></label><div class="goal-conclusion">{{ Empty.Empty_rec | (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero)//lempty_cut }} &lt;
+negate zero</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** Since [le_lr] only proves inequality of cuts, this would not work if [negate] didn&#39;t compute to a cut when applied to a cut. *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk1d">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>l</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">negate (Empty.Empty_rec l) &lt;
+{{ Empty.Empty_rec | (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero)//lempty_cut }}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">elim</span> l.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk1e">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ <span class="kr">fun</span> <span class="nv">r</span> : Empty =&gt; negate (Empty.Empty_rec r) | (<span class="kr">fun</span>
+                                                 <span class="nv">_</span> : Unit
+                                                 =&gt;
+                                                 negate
+                                                 zero)//
+(negate_cut (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero) Empty.Empty_rec
+   rempty_cut).<span class="mi">1</span> }} &lt; zero</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk1f"><span class="nb">apply</span> lt_r <span class="kr">with</span> r.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">negate zero &lt;=
+{{ Empty.Empty_rec | Empty.Empty_rec//lempty_cut }}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk20"><span class="nb">unfold</span> zero; <span class="nb">rewrite</span> (negate_cut _ _ _).<span class="mi">2</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ <span class="kr">fun</span> <span class="nv">r</span> : Empty =&gt; negate (Empty.Empty_rec r) | (<span class="kr">fun</span>
+                                                 <span class="nv">l</span> : Empty
+                                                 =&gt;
+                                                 negate
+                                                 (Empty.Empty_rec
+                                                 l))//
+(negate_cut Empty.Empty_rec Empty.Empty_rec lempty_cut).<span class="mi">1</span> }} &lt;=
+{{ Empty.Empty_rec | Empty.Empty_rec//lempty_cut }}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> le_lr; <span class="nb">apply</span> Empty_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk21">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>l</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty.Empty_rec l &lt;
+{{ <span class="kr">fun</span> <span class="nv">r</span> : Empty =&gt; negate (Empty.Empty_rec r) | (<span class="kr">fun</span>
+                                                 <span class="nv">_</span> : Unit
+                                                 =&gt;
+                                                 negate
+                                                 zero)//
+(negate_cut (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero) Empty.Empty_rec
+   rempty_cut).<span class="mi">1</span> }}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">elim</span> l.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk22">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ Empty.Empty_rec | (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt; zero)//lempty_cut }} &lt;
+negate zero</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk23"><span class="nb">unfold</span> zero; <span class="nb">rewrite</span> (negate_cut _ _ _).<span class="mi">2</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ Empty.Empty_rec | (<span class="kr">fun</span> <span class="nv">_</span> : Unit =&gt;
+                      {{ Empty.Empty_rec | Empty.Empty_rec//lempty_cut }})//lempty_cut }} &lt;
+{{ <span class="kr">fun</span> <span class="nv">r</span> : Empty =&gt; negate (Empty.Empty_rec r) | (<span class="kr">fun</span>
+                                                 <span class="nv">l</span> : Empty
+                                                 =&gt;
+                                                 negate
+                                                 (Empty.Empty_rec
+                                                 l))//
+(negate_cut Empty.Empty_rec Empty.Empty_rec lempty_cut).<span class="mi">1</span> }}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="negation-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="negation-v-chk24"><span class="nb">apply</span> lt_r <span class="kr">with</span> r.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>OptionSort</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>HasNegation S</span></span></span><br><span><var>No</var><span><span class="hyp-body"><b>:= </b><span>GenNo S</span></span><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>InSort S Empty Empty</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>InSort S Unit Empty</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{{ Empty.Empty_rec | Empty.Empty_rec//lempty_cut }} &lt;=
+{{ <span class="kr">fun</span> <span class="nv">r</span> : Empty =&gt; negate (Empty.Empty_rec r) | (<span class="kr">fun</span>
+                                                 <span class="nv">l</span> : Empty
+                                                 =&gt;
+                                                 negate
+                                                 (Empty.Empty_rec
+                                                 l))//
+(negate_cut Empty.Empty_rec Empty.Empty_rec lempty_cut).<span class="mi">1</span> }}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> le_lr; <span class="nb">apply</span> Empty_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">HasNegation</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Adjoint.Paths</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Adjoint.Paths</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab434"></a><h1 class="section">Classify the path space of adjunctions</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#"><span class="id" title="library">NaturalTransformation.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="library">Functor.Identity</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#"><span class="id" title="library">Adjoint.UnitCounit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#"><span class="id" title="library">Adjoint.Core</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Paths.html#"><span class="id" title="library">NaturalTransformation.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Trunc</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">natural_transformation_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="path_adjunction" class="idref" href="#path_adjunction"><span class="id" title="section">path_adjunction</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="path_adjunction.C" class="idref" href="#path_adjunction.C"><span class="id" title="variable">C</span></a> <a id="path_adjunction.D" class="idref" href="#path_adjunction.D"><span class="id" title="variable">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="path_adjunction.F" class="idref" href="#path_adjunction.F"><span class="id" title="variable">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.D"><span class="id" title="variable">D</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="path_adjunction.G" class="idref" href="#path_adjunction.G"><span class="id" title="variable">G</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.C"><span class="id" title="variable">C</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="adjunction_sig" class="idref" href="#adjunction_sig"><span class="id" title="abbreviation">adjunction_sig</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="eta:6" class="idref" href="#eta:6"><span class="id" title="binder">eta</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> 1 (<a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.F"><span class="id" title="variable">F</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="eps:7" class="idref" href="#eps:7"><span class="id" title="binder">eps</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#NaturalTransformation"><span class="id" title="record">NaturalTransformation</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.G"><span class="id" title="variable">G</span></a>) 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="equ1:9" class="idref" href="#equ1:9"><span class="id" title="binder">equ1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="Y:8" class="idref" href="#Y:8"><span class="id" title="binder">Y</span></a> : <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.C"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.Paths.html#eps:7"><span class="id" title="variable">eps</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#Y:8"><span class="id" title="variable">Y</span></a>) <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">_1</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Adjoint.Paths.html#eta:6"><span class="id" title="variable">eta</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#Y:8"><span class="id" title="variable">Y</span></a><a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">)</span></a>)%<span class="id" title="var">morphism</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1%<span class="id" title="var">morphism</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="X:10" class="idref" href="#X:10"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.D"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">_1</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Adjoint.Paths.html#eps:7"><span class="id" title="variable">eps</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#X:10"><span class="id" title="variable">X</span></a><a class="idref" href="HoTT.Categories.Functor.Core.html#FunctorCoreNotations.::morphism_scope:x_'_1'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#eta:6"><span class="id" title="variable">eta</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#X:10"><span class="id" title="variable">X</span></a>))%<span class="id" title="var">morphism</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1%<span class="id" title="var">morphism</span> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}}}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab435"></a><h2 class="section">Equivalence between record and nested sigma for unit+counit adjunctions</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="equiv_sig_adjunction" class="idref" href="#equiv_sig_adjunction"><span class="id" title="lemma">equiv_sig_adjunction</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#adjunction_sig"><span class="id" title="abbreviation">adjunction_sig</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.G"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">issig</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab436"></a><h2 class="section">Adjunctions are an hSet</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="trunc_adjunction" class="idref" href="#trunc_adjunction"><span class="id" title="instance">trunc_adjunction</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.G"><span class="id" title="variable">G</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a>; [ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#equiv_sig_adjunction"><span class="id" title="lemma">equiv_sig_adjunction</span></a> | ].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab437"></a><h2 class="section">Equality of adjunctions follows from equality of unit+counit</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="path_adjunction'" class="idref" href="#path_adjunction'"><span class="id" title="lemma">path_adjunction'</span></a> (<a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a> <a id="A':12" class="idref" href="#A':12"><span class="id" title="binder">A'</span></a> : <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.G"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#unit"><span class="id" title="projection">unit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A:11"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#unit"><span class="id" title="projection">unit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A':12"><span class="id" title="variable">A'</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#counit"><span class="id" title="projection">counit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A:11"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#counit"><span class="id" title="projection">counit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A':12"><span class="id" title="variable">A'</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A:11"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A':12"><span class="id" title="variable">A'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">A</span>, <span class="id" title="var">A'</span>; <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path_induction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab438"></a><h2 class="section">Equality of adjunctions follows from equality of action of unit+counit on objects</h2>
+
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="path_adjunction" class="idref" href="#path_adjunction"><span class="id" title="lemma">path_adjunction</span></a> (<a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a> <a id="A':14" class="idref" href="#A':14"><span class="id" title="binder">A'</span></a> : <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction.G"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#components_of"><span class="id" title="projection">components_of</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#unit"><span class="id" title="projection">unit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A:13"><span class="id" title="variable">A</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#components_of"><span class="id" title="projection">components_of</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#unit"><span class="id" title="projection">unit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A':14"><span class="id" title="variable">A'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#components_of"><span class="id" title="projection">components_of</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#counit"><span class="id" title="projection">counit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A:13"><span class="id" title="variable">A</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Categories.NaturalTransformation.Core.html#components_of"><span class="id" title="projection">components_of</span></a> (<a class="idref" href="HoTT.Categories.Adjoint.UnitCounit.html#counit"><span class="id" title="projection">counit</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A':14"><span class="id" title="variable">A'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#A':14"><span class="id" title="variable">A'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction'"><span class="id" title="lemma">path_adjunction'</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.NaturalTransformation.Paths.html#path_natural_transformation"><span class="id" title="lemma">path_natural_transformation</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In fact, it suffices to show that either the units are equal, or
+      the counits are equal, by the UMP of the (co)unit.  And if we
+      are working in a <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Category.html#Category"><span class="id" title="record">Category</span></a></span>, rather than a <span class="inlinecode"><a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a></span>, then
+      <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Adjoint.html#Adjunction"><span class="id" title="record">Adjunction</span></a></span> is, in fact, an hProp, because the (co)unit is
+      unique up to unique isomorphism.
+
+<div class="paragraph"> </div>
+
+      TODO: Formalize this. 
+</div>
+<div class="code">
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction"><span class="id" title="section">path_adjunction</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">path_adjunction</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">intro</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">reflexivity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.Adjoint.Paths.html#path_adjunction"><span class="id" title="lemma">path_adjunction</span></a>; <span class="id" title="tactic">simpl</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

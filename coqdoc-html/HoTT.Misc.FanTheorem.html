@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Misc.FanTheorem</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Misc.FanTheorem</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1292"></a><h1 class="section">The fan theorem</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Misc.UStructures.html#"><span class="id" title="library">Misc.UStructures</span></a> <a class="idref" href="HoTT.Misc.BarInduction.html#"><span class="id" title="library">BarInduction</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.NatSeq.Core.html#"><span class="id" title="library">Spaces.NatSeq.Core</span></a> <a class="idref" href="HoTT.Spaces.NatSeq.UStructure.html#"><span class="id" title="library">Spaces.NatSeq.UStructure</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.List.Core.html#"><span class="id" title="library">Spaces.List.Core</span></a> <a class="idref" href="HoTT.Spaces.List.Theory.html#"><span class="id" title="library">Spaces.List.Theory</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">list_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="DecidableFanTheorem" class="idref" href="#DecidableFanTheorem"><span class="id" title="definition">DecidableFanTheorem</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="B:2" class="idref" href="#B:2"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="dec:4" class="idref" href="#dec:4"><span class="id" title="binder">dec</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="l:3" class="idref" href="#l:3"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:1"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#Decidable"><span class="id" title="class">Decidable</span></a> (<a class="idref" href="HoTT.Misc.FanTheorem.html#B:2"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#l:3"><span class="id" title="variable">l</span></a>))<br/>
+&nbsp;&nbsp;(<a id="bar:5" class="idref" href="#bar:5"><span class="id" title="binder">bar</span></a> : <a class="idref" href="HoTT.Misc.BarInduction.html#IsBar"><span class="id" title="definition">IsBar</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#B:2"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Misc.BarInduction.html#IsUniformBar"><span class="id" title="definition">IsUniformBar</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#B:2"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="MonotoneFanTheorem" class="idref" href="#MonotoneFanTheorem"><span class="id" title="definition">MonotoneFanTheorem</span></a> (<a id="A:6" class="idref" href="#A:6"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="B:7" class="idref" href="#B:7"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:6"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="mon:8" class="idref" href="#mon:8"><span class="id" title="binder">mon</span></a> : <a class="idref" href="HoTT.Misc.BarInduction.html#IsMonotone"><span class="id" title="definition">IsMonotone</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#B:7"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;(<a id="bar:9" class="idref" href="#bar:9"><span class="id" title="binder">bar</span></a> : <a class="idref" href="HoTT.Misc.BarInduction.html#IsBar"><span class="id" title="definition">IsBar</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#B:7"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Misc.BarInduction.html#IsUniformBar"><span class="id" title="definition">IsUniformBar</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#B:7"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="FanTheorem" class="idref" href="#FanTheorem"><span class="id" title="definition">FanTheorem</span></a> (<a id="A:10" class="idref" href="#A:10"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="B:11" class="idref" href="#B:11"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:10"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="bar:12" class="idref" href="#bar:12"><span class="id" title="binder">bar</span></a> : <a class="idref" href="HoTT.Misc.BarInduction.html#IsBar"><span class="id" title="definition">IsBar</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#B:11"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Misc.BarInduction.html#IsUniformBar"><span class="id" title="definition">IsUniformBar</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#B:11"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="fantheorem_empty" class="idref" href="#fantheorem_empty"><span class="id" title="definition">fantheorem_empty</span></a> : <a class="idref" href="HoTT.Misc.FanTheorem.html#FanTheorem"><span class="id" title="definition">FanTheorem</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">B</span> <span class="id" title="var">bB</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> 0.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">contradiction</span> (<span class="id" title="var">s</span> 0).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="fantheorem_contr" class="idref" href="#fantheorem_contr"><span class="id" title="definition">fantheorem_contr</span></a> (<a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="Contr0:14" class="idref" href="#Contr0:14"><span class="id" title="binder">Contr</span></a> <a id="Contr0:14" class="idref" href="#Contr0:14"><span class="id" title="binder">A</span></a>} : <a class="idref" href="HoTT.Misc.FanTheorem.html#FanTheorem"><span class="id" title="definition">FanTheorem</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:13"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">B</span> <span class="id" title="var">bB</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">c</span> := <span class="id" title="keyword">fun</span> (<span class="id" title="var">_</span> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) ⇒ <a class="idref" href="HoTT.Basics.Overture.html#center"><span class="id" title="definition">center</span></a> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">(</span></a><span class="id" title="var">bB</span> <span class="id" title="var">c</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">).1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">p</span> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:15" class="idref" href="#n:15"><span class="id" title="binder"><span id="n:16" class="id">n</span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.List.Theory.html#list_restrict"><span class="id" title="definition">list_restrict</span></a> <span class="id" title="var">s</span> <a class="idref" href="HoTT.Misc.FanTheorem.html#n:15"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.List.Theory.html#list_restrict"><span class="id" title="definition">list_restrict</span></a> <span class="id" title="var">c</span> <a class="idref" href="HoTT.Misc.FanTheorem.html#n:15"><span class="id" title="variable">n</span></a>).<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Spaces.List.Theory.html#path_list_nth'"><span class="id" title="definition">path_list_nth'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> !<a class="idref" href="HoTT.Spaces.List.Theory.html#length_list_restrict"><span class="id" title="definition">length_list_restrict</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Contractible.html#path_contr"><span class="id" title="definition">path_contr</span></a>. }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">(</span></a><span class="id" title="var">bB</span> <span class="id" title="var">c</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">).1</span></a>; <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">(</span></a><span class="id" title="var">bB</span> <span class="id" title="var">c</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">).2</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The family we use when applying the fan theorem in our proof that continuity implies uniform continuity. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="uc_theorem_family" class="idref" href="#uc_theorem_family"><span class="id" title="definition">uc_theorem_family</span></a> {<a id="A:17" class="idref" href="#A:17"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="p:18" class="idref" href="#p:18"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:17"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.List.Core.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:17"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="l:19" class="idref" href="#l:19"><span class="id" title="binder">l</span></a> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="u:20" class="idref" href="#u:20"><span class="id" title="binder">u</span></a> <a id="v:21" class="idref" href="#v:21"><span class="id" title="binder">v</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:17"><span class="id" title="variable">A</span></a>) (<a id="h:22" class="idref" href="#h:22"><span class="id" title="binder">h</span></a> : <a class="idref" href="HoTT.Spaces.List.Theory.html#list_restrict"><span class="id" title="definition">list_restrict</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#u:20"><span class="id" title="variable">u</span></a> (<a class="idref" href="HoTT.Spaces.List.Core.html#length"><span class="id" title="definition">length</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#l:19"><span class="id" title="variable">l</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#l:19"><span class="id" title="variable">l</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="h':23" class="idref" href="#h':23"><span class="id" title="binder">h'</span></a> : <a class="idref" href="HoTT.Spaces.List.Theory.html#list_restrict"><span class="id" title="definition">list_restrict</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#v:21"><span class="id" title="variable">v</span></a> (<a class="idref" href="HoTT.Spaces.List.Core.html#length"><span class="id" title="definition">length</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#l:19"><span class="id" title="variable">l</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#l:19"><span class="id" title="variable">l</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#p:18"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#u:20"><span class="id" title="variable">u</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#p:18"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#v:21"><span class="id" title="variable">v</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="is_bar_uc_theorem_family" class="idref" href="#is_bar_uc_theorem_family"><span class="id" title="definition">is_bar_uc_theorem_family</span></a> {<a id="A:24" class="idref" href="#A:24"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<a id="p:25" class="idref" href="#p:25"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:24"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>) (<a id="cont:26" class="idref" href="#cont:26"><span class="id" title="binder">cont</span></a> : <a class="idref" href="HoTT.Misc.UStructures.html#IsContinuous"><span class="id" title="definition">IsContinuous</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#p:25"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Misc.BarInduction.html#IsBar"><span class="id" title="definition">IsBar</span></a> (<a class="idref" href="HoTT.Misc.FanTheorem.html#uc_theorem_family"><span class="id" title="definition">uc_theorem_family</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#p:25"><span class="id" title="variable">p</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">cont</span> <span class="id" title="var">s</span> 0) <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">H</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">u</span> <span class="id" title="var">v</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span> <span class="id" title="tactic">in</span> <span class="id" title="var">h</span>,<span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.List.Theory.html#length_list_restrict"><span class="id" title="definition">length_list_restrict</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">h</span>, <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.NatSeq.UStructure.html#list_restrict_eq_iff_seq_agree_lt"><span class="id" title="definition">list_restrict_eq_iff_seq_agree_lt</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">h</span>, <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><span class="id" title="var">H</span> <span class="id" title="var">_</span> <span class="id" title="var">h</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">(</span></a><span class="id" title="var">H</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span><a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">)</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The fan theorem implies that every continuous function is uniformly continuous. The current proof uses the full fan theorem. Less powerful versions might be enough. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="uniform_continuity_fantheorem" class="idref" href="#uniform_continuity_fantheorem"><span class="id" title="definition">uniform_continuity_fantheorem</span></a> {<a id="A:27" class="idref" href="#A:27"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="fan:28" class="idref" href="#fan:28"><span class="id" title="binder">fan</span></a> : <a class="idref" href="HoTT.Misc.FanTheorem.html#FanTheorem"><span class="id" title="definition">FanTheorem</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:27"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;(<a id="p:29" class="idref" href="#p:29"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#A:27"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>) (<a id="c:30" class="idref" href="#c:30"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Misc.UStructures.html#IsContinuous"><span class="id" title="definition">IsContinuous</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#p:29"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Misc.UStructures.html#uniformly_continuous"><span class="id" title="definition">uniformly_continuous</span></a> <a class="idref" href="HoTT.Misc.FanTheorem.html#p:29"><span class="id" title="variable">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">proof</span> (<span class="id" title="var">fan'</span> := <span class="id" title="var">fan</span> (<a class="idref" href="HoTT.Misc.FanTheorem.html#uc_theorem_family"><span class="id" title="definition">uc_theorem_family</span></a> <span class="id" title="var">p</span>) (<a class="idref" href="HoTT.Misc.FanTheorem.html#is_bar_uc_theorem_family"><span class="id" title="definition">is_bar_uc_theorem_family</span></a> <span class="id" title="var">p</span> <span class="id" title="var">c</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">fan'</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">ub</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">u</span> <span class="id" title="var">v</span> <span class="id" title="var">h</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">ub</span> <span class="id" title="var">v</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">k</span> [<span class="id" title="var">bound</span> <span class="id" title="var">uctf</span>]].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">uctf</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.List.Theory.html#length_list_restrict"><span class="id" title="definition">length_list_restrict</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Spaces.NatSeq.UStructure.html#list_restrict_eq_iff_seq_agree_lt"><span class="id" title="definition">list_restrict_eq_iff_seq_agree_lt</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Misc.UStructures.html#us_rel_leq"><span class="id" title="definition">us_rel_leq</span></a> <span class="id" title="var">bound</span> <span class="id" title="var">h</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spaces.List.Theory.html#length_list_restrict"><span class="id" title="definition">length_list_restrict</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1792 @@
+<html>
+<head>
+<title>Tactics.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Tactics.v</h1>
+
+<div class="code" title="File: Tactics.v
+Line: 1
+Time: 0.019s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: Clean up *)
+
+(** * Basic tactics *)
+
+(** This module implements various tactics used in the library. *)
+
+(** If the goal is [x = z], [path_via y] will replace this with two goals, [x = y] and [y = z]. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac path_via mid :=
+  apply @concat with (y := mid); auto with path_hints.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. It works if [n] is in the context or in the goal. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac simple_induction n n' IH :=
+  try generalize dependent n;
+  fix IH 1;
+  intros [| n'];
+  [ clear IH | specialize (IH n') ].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac simple_induction' n :=
+  let IH := fresh "IH" in
+  simple_induction n n IH.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Debugging tactics to show the goal during evaluation. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac show_goal := match goal with [ |- ?T ] =&gt; idtac T end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac show_hyp id :=
+  match goal with
+    | [ H := ?b : ?T |- _ ] =&gt;
+      match H with
+        | id =&gt; idtac id ":=" b ":" T
+      end
+    | [ H : ?T |- _ ] =&gt;
+      match H with
+        | id =&gt; idtac id  ":"  T
+      end
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac show_hyps :=
+  try match reverse goal with
+        | [ H : ?T |- _ ] =&gt; show_hyp H ; fail
+      end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Do something on the last hypothesis, or fail *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac on_last_hyp tac :=
+  match goal with [ H : _ |- _ ] =&gt; first [ tac H | fail 1 ] end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Revert the last hypothesis. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac revert_last :=
+  match goal with
+    [ H : _ |- _ ] =&gt; revert H
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Repeatedly reverse the last hypothesis, putting everything in the goal. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac reverse := repeat revert_last.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Reverse everything up to hypothesis id (not included). *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac revert_until id :=
+  on_last_hyp ltac:(fun id' =&gt;
+    match id' with
+      | id =&gt; idtac
+      | _ =&gt; revert id' ; revert_until id
+    end).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Clear duplicated hypotheses *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac clear_dup :=
+  match goal with
+    | [ H : ?X |- _ ] =&gt;
+      match goal with
+        | [ H' : ?Y |- _ ] =&gt;
+          match H with
+            | H' =&gt; fail 2
+            | _ =&gt; unify X Y ; (clear H' || clear H)
+          end
+      end
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac clear_dups := repeat clear_dup.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Try to clear everything except some hypothesis *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac clear_except hyp :=
+  repeat match goal with [ H : _ |- _ ] =&gt;
+           match H with
+             | hyp =&gt; fail 1
+             | _ =&gt; clear H
+           end
+         end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+
+Ltac on_application f tac T :=
+  match T with
+    | context [f ?x ?y ?z ?w ?v ?u ?a ?b ?c] =&gt; tac (f x y z w v u a b c)
+    | context [f ?x ?y ?z ?w ?v ?u ?a ?b] =&gt; tac (f x y z w v u a b)
+    | context [f ?x ?y ?z ?w ?v ?u ?a] =&gt; tac (f x y z w v u a)
+    | context [f ?x ?y ?z ?w ?v ?u] =&gt; tac (f x y z w v u)
+    | context [f ?x ?y ?z ?w ?v] =&gt; tac (f x y z w v)
+    | context [f ?x ?y ?z ?w] =&gt; tac (f x y z w)
+    | context [f ?x ?y ?z] =&gt; tac (f x y z)
+    | context [f ?x ?y] =&gt; tac (f x y)
+    | context [f ?x] =&gt; tac (f x)
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Tactical [on_call f tac] applies [tac] on any application of [f] in the hypothesis or goal. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac on_call f tac :=
+  match goal with
+    | |- ?T  =&gt; on_application f tac T
+    | H : ?T |- _  =&gt; on_application f tac T
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Destructs calls to f in hypothesis or conclusion, useful if f creates a subset object. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac destruct_call f :=
+  let tac t := (destruct t) in on_call f tac.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac destruct_calls f := repeat destruct_call f.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac destruct_call_in f H :=
+  let tac t := (destruct t) in
+  let T := type of H in
+    on_application f tac T.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac destruct_call_as f l :=
+  let tac t := (destruct t as l) in on_call f tac.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac destruct_call_as_in f l H :=
+  let tac t := (destruct t as l) in
+  let T := type of H in
+    on_application f tac T.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "destruct_call" constr(f) := destruct_call f.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Permit to name the results of destructing the call to [f]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "destruct_call" constr(f) "as" simple_intropattern(l) :=
+  destruct_call_as f l.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Specify the hypothesis in which the call occurs as well. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "destruct_call" constr(f) "in" hyp(id) :=
+  destruct_call_in f id.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "destruct_call" constr(f) "as" simple_intropattern(l) "in" hyp(id) :=
+  destruct_call_as_in f l id.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A marker for prototypes to destruct. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fix_proto {A : Type} (a : A) := a.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac destruct_rec_calls :=
+  match goal with
+    | [ H : fix_proto _ |- _ ] =&gt; destruct_calls H ; clear H
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac destruct_all_rec_calls :=
+  repeat destruct_rec_calls ; unfold fix_proto in *.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Try to inject any potential constructor equality hypothesis. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac inject H := progress (inversion H ; clear_dups) ; clear H.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac autoinjections := repeat (clear_dups ; ltac:(inject)).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Destruct an hypothesis by first copying it to avoid dependencies. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac destruct_nondep H := let H0 := fresh "H" in assert(H0 := H); destruct H0.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A tactic to show contradiction by first asserting an automatically provable hypothesis. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "contradiction" "by" constr(t) :=
+  let H := fresh in assert t as H by auto with * ; contradiction.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A tactic that adds [H:=p:typeof(p)] to the context if no hypothesis of the same type appears in the goal.
+   Useful to do saturation using tactics. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac add_hypothesis H' p :=
+  match type of p with
+    ?X =&gt;
+    match goal with
+      | [ H : X |- _ ] =&gt; fail 1
+      | _ =&gt; set (H':=p) ; try (change p with H') ; clearbody H'
+    end
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A tactic to replace an hypothesis by another term. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac replace_hyp H c :=
+  let H' := fresh "H" in
+    assert(H' := c) ; clear H ; rename H' into H.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A tactic to refine an hypothesis by supplying some of its arguments. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac refine_hyp c :=
+  let tac H := replace_hyp H c in
+    match c with
+      | ?H _ =&gt; tac H
+      | ?H _ _ =&gt; tac H
+      | ?H _ _ _ =&gt; tac H
+      | ?H _ _ _ _ =&gt; tac H
+      | ?H _ _ _ _ _ =&gt; tac H
+      | ?H _ _ _ _ _ _ =&gt; tac H
+      | ?H _ _ _ _ _ _ _ =&gt; tac H
+      | ?H _ _ _ _ _ _ _ _ =&gt; tac H
+    end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: From here comes from Overture.v *)
+
+(** Clear a hypothesis and also its dependencies.  Taken from Coq Stdlib, with the performance-enhancing change to [lazymatch] suggested at [https://github.com/coq/coq/issues/11689]. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "clear" "dependent" hyp(h) :=
+  let rec depclear h :=
+  clear h ||
+  lazymatch goal with
+   | H : context [ h ] |- _ =&gt; depclear H; depclear h
+  end ||
+  fail "hypothesis to clear is used in the conclusion (maybe indirectly)"
+ in depclear h.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** A version of [generalize dependent] that applies only to a hypothesis.  Taken from Coq Stdlib. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "revert" "dependent" hyp(h) :=
+  generalize dependent h.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Applying a tactic to a term with increasingly many arguments *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 206
+Time: 0.002s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>Tactic Notation "do_with_holes" tactic3(x) uconstr(p) :=
+  x uconstr:(p) ||
+  x uconstr:(p _) ||
+  x uconstr:(p _ _) ||
+  x uconstr:(p _ _ _) ||
+  x uconstr:(p _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Same thing but starting with many holes first *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 239
+Time: 0.002s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>Tactic Notation "do_with_holes'" tactic3(x) uconstr(p) :=
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _ _) ||
+  x uconstr:(p _ _ _ _) ||
+  x uconstr:(p _ _ _) ||
+  x uconstr:(p _ _) ||
+  x uconstr:(p _) ||
+  x uconstr:(p).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We keep a list of global axioms that we will solve automatically, even when not using typeclass search. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Unset Primitive Projections.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Class IsGlobalAxiom (A : Type) : Type0 := {}.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Set Primitive Projections.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Hint Mode IsGlobalAxiom + : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We add [Funext] to the list here, and will later add [Univalence]. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is_global_axiom_funext : IsGlobalAxiom Funext := {}.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Add [PropResizing] to the list of global axioms. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is_global_axiom_propresizing : IsGlobalAxiom PropResizing := {}.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac is_global_axiom A := let _ := constr:(_ : IsGlobalAxiom A) in idtac.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac global_axiom := try match goal with
+    | |- ?G  =&gt; is_global_axiom G; exact _
+end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A shorter name for [simple refine]. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "srefine" uconstr(term) := simple refine term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** A shorter name for [notypeclasses refine]; also handles global axioms. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "nrefine" uconstr(term) := notypeclasses refine term; global_axiom.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** A shorter name for [simple notypeclasses refine]; also handles global axioms. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "snrefine" uconstr(term) := simple notypeclasses refine term; global_axiom.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The tactics [napply], [rapply] and [tapply] are similar but they differ in their reliance on typeclass search. [napply t] tries [nrefine t], [nrefine (t _)], [nrefine (t _ _)], so on until it succeeds in unifying with the goal. At each iteration, [nrefine] computes the type of the given term and tries to unify it with the goal; if it succeeds, all holes remaining in the term after unification are new goals. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "napply" uconstr(term)
+  := do_with_holes ltac:(fun x =&gt; nrefine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "napply'" uconstr(term)
+  := do_with_holes' ltac:(fun x =&gt; nrefine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: remove when min Coq/Rocq version is 9.1 (~ end of 2026). *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[deprecated(note="nrapply was renamed to napply and will be removed soon",
+  since="2025-03-11")]
+Tactic Notation "nrapply" uconstr(term) := napply term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [rapply] is equivalent in strength to [napply], i.e., it should succeed iff [napply] succeeds, but it solves all possible typeclasses after successful unification with the goal. The implementation is: try [nrefine t, t _, t _ _], ... until success; upon success, revert the last (successful) application of [nrefine] and call [refine (t _ _ _)]. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "rapply" uconstr(term)
+  := do_with_holes ltac:(fun x =&gt; assert_succeeds (nrefine x); refine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "rapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x =&gt; assert_succeeds (nrefine x); refine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [tapply] tactic is strictly stronger than [rapply], because if the type of the argument term [t] (with holes) cannot be successfully computed or unified with the goal type, it calls typeclass search on all typeclass holes within [t] (independently of the goal) and then tries to unify with the goal again. Our implementation of [rapply] requires that the type (with holes) of the argument term unifies with the goal directly, without any help from typeclass search to fill in the holes in the type. The typeclass search after unification is more robust than the typeclass search before unification, because there is more information available to guide the typeclass search. If [rapply] succeeds, then [tapply] succeeds and their outcomes are equivalent. Note that the Coq standard library has a [rapply], of these six tactics it is closest to our [tapply'] with many-holes first. We prefer fewer-holes first, for instance so that a theorem producing an equivalence will by preference be used to produce an equivalence rather than to apply the coercion of that equivalence to a function. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "tapply" uconstr(term)
+  := do_with_holes ltac:(fun x =&gt; refine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "tapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x =&gt; refine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Each of the tactics [napply], [rapply], [tapply] has a "simple" variant prefixed with s. The simple variants do not perform beta reduction when unifying with the goal, and they do not shelve any of the holes created by unification with the goal. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "snapply" uconstr(term)
+  := do_with_holes ltac:(fun x =&gt; snrefine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "snapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x =&gt; snrefine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: remove when min Coq/Rocq version is 9.1 (~ end of 2026). *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[deprecated(note="snrapply was renamed to snapply and will be removed soon",
+  since="2025-03-11")]
+Tactic Notation "snrapply" uconstr(term) := snapply term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** See comment for [rapply]. This cannot be simplified to [snrefine x] because we don't want the [global_axiom] tactic to run here. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "srapply" uconstr(term)
+  := do_with_holes ltac:(fun x =&gt; assert_succeeds (simple notypeclasses refine x); srefine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "srapply'" uconstr(term)
+:= do_with_holes' ltac:(fun x =&gt; assert_succeeds (simple notypeclasses refine x); srefine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "stapply" uconstr(term)
+  := do_with_holes ltac:(fun x =&gt; srefine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "stapply'" uconstr(term)
+  := do_with_holes' ltac:(fun x =&gt; srefine x) term.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Apply a tactic to one side of an equation.  For example, [lhs rapply lemma].  [tac] should produce a path. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "lhs" tactic3(tac) := nrefine (ltac:(tac) @ _).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "lhs_V" tactic3(tac) := nrefine (ltac:(tac)^ @ _).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "rhs" tactic3(tac) := nrefine (_ @ ltac:(tac)^).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "rhs_V" tactic3(tac) := nrefine (_ @ ltac:(tac)).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here are versions that work for a general relation.  The relation needs to be transitive and, in two cases, symmetric.  These versions also work for paths in most cases, but due to slightly different behaviours, don't work quite as well as the previous versions. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "lhs'" tactic3(tac) := etransitivity; [tac|].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "lhs_V'" tactic3(tac) := etransitivity; [symmetry; tac|].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "rhs'" tactic3(tac) := etransitivity; [|symmetry; tac].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "rhs_V'" tactic3(tac) := etransitivity; [|tac].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** SSReflect tactics, adapted by Robbert Krebbers *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac done :=
+  trivial; intros; solve
+    [ repeat first
+      [ solve [trivial]
+      | solve [symmetry; trivial]
+      | reflexivity
+      (* Discriminate should be here, but it doesn't work yet *)
+      (* | discriminate *)
+      | contradiction
+      | split ]
+    | match goal with
+      H : ~ _ |- _ =&gt; solve [destruct H; trivial]
+      end ].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "by" tactic(tac) :=
+  tac; done.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Apply using the same opacity information as typeclass proof search. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac class_apply c := autoapply c with typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A convenient tactic for using function extensionality. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac by_extensionality x :=
+  intros;
+  match goal with
+  | [ |- ?f = ?g ] =&gt; eapply path_forall; intro x;
+      match goal with
+        | [ |- forall (_ : prod _ _), _ ] =&gt; intros [? ?]
+        | [ |- forall (_ : sig _ _), _ ] =&gt; intros [? ?]
+        | _ =&gt; intros
+    end;
+    simpl; auto with path_hints
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [funext] apply functional extensionality ([path_forall]) to the goal and the introduce the arguments in the context. *)
+(** For instance, if you have to prove [f = g] where [f] and [g] take two arguments, you can use [funext x y], and the goal become [f x y = g x y]. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "funext" simple_intropattern(a)
+  := apply path_forall; intros a.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "funext" simple_intropattern(a)  simple_intropattern(b)
+  := funext a; funext b.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c)
+  := funext a; funext b; funext c.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d)
+  := funext a; funext b; funext c; funext d.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e)
+  := funext a; funext b; funext c; funext d; funext e.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "funext" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e) simple_intropattern(f)
+  := funext a; funext b; funext c; funext d; funext e; funext f.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Test whether a tactic fails or succeeds, without actually doing anything.  Taken from Coq Stdlib. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac assert_fails tac :=
+  tryif (once tac) then gfail 0 tac "succeeds" else idtac.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "assert_succeeds" tactic3(tac) :=
+  tryif (assert_fails tac) then gfail 0 tac "fails" else idtac.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "assert_succeeds" tactic3(tac) :=
+  assert_succeeds tac.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "assert_fails" tactic3(tac) :=
+  assert_fails tac.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This tactic doesn't end with [auto], but you can always write "by (path_induction;auto with path_hints)" if you want.*)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac path_induction :=
+  intros; repeat progress (
+    match goal with
+      | [ p : ?x = ?y  |- _ ] =&gt; assert_fails constr_eq x y; induction p
+    end
+  ).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The tactic [f_ap] is a replacement for the previously existing standard library tactic [f_equal].  This tactic works by repeatedly applying the fact that [f = g -&gt; x = y -&gt; f x = g y] to turn, e.g., [f x y = f z w] first into [f x = f z] and [y = w], and then turns the first of these into [f = f] and [x = z].  The [done] tactic is used to detect the [f = f] case and finish, and the [trivial] is used to solve, e.g., [x = x] when using [f_ap] on [f y x = f z x].  This tactic only works for non-dependently-typed functions; we cannot express [y = w] in the first example if [y] and [w] have different types.  If and when Arnaud's new-tacticals branch lands, and we can have a goal which depends on the term used to discharge another goal, then this tactic should probably be generalized to deal with dependent functions. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac f_ap :=
+  idtac;
+  lazymatch goal with
+    | [ |- ?f ?x = ?g ?x ] =&gt; apply (@apD10 _ _ f g);
+                             try (done || f_ap)
+    | _ =&gt; apply ap11;
+          [ done || f_ap
+          | trivial ]
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [expand] replaces both terms of an equality (either [paths] or [pointwise_paths] in the goal with their head normal forms *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac expand :=
+  idtac;
+  match goal with
+    | [ |- ?X = ?Y ] =&gt;
+      let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' = Y')
+    | [ |- ?X == ?Y ] =&gt;
+      let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' == Y')
+  end; simpl.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure.  This is useful, for example, to easily destruct all variables that show up as the discriminees of [match] statements, without destructing more complicated terms whose structures might matter. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac atomic x :=
+  idtac;
+  match x with
+    | _ =&gt; is_evar x; fail 1 x "is not atomic (evar)"
+    | ?f _ =&gt; fail 1 x "is not atomic (application)"
+    | (fun _ =&gt; _) =&gt; fail 1 x "is not atomic (fun)"
+    | forall _, _ =&gt; fail 1 x "is not atomic (forall)"
+    | let x := _ in _ =&gt; fail 1 x "is not atomic (let in)"
+    | match _ with _ =&gt; _ end =&gt; fail 1 x "is not atomic (match)"
+    | _ =&gt; is_fix x; fail 1 x "is not atomic (fix)"
+    | _ =&gt; is_cofix x; fail 1 x "is not atomic (cofix)"
+    | context[?E] =&gt; (* catch-all *) (assert_fails constr_eq E x); fail 1 x "is not atomic (has subterm" E ")"
+    | _ =&gt; idtac
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Find the head of the given expression. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac head expr :=
+  match expr with
+    | ?f _ =&gt; head f
+    | _ =&gt; expr
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This tactic gets the constructor of any one-constructor inductive type. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac get_constructor_head T :=
+  let x := fresh in
+  let x' := fresh in
+  let h := open_constr:(_) in
+  let __ := constr:(fun (x : T)
+                    =&gt; let x' := x in
+                       ltac:(destruct x;
+                             let x' := (eval cbv delta [x'] in x') in
+                             let x' := head x' in
+                             unify h x';
+                             exact tt)) in
+  h.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* A version of econstructor that doesn't resolve typeclasses. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac ntc_constructor :=
+  lazymatch goal with
+  | [ |- ?G ] =&gt; let build := get_constructor_head G in
+                 napply build
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [case_path] is a HoTT replacement for [case_eq]; [case_path x] is like [destruct x], but it remembers the original value of [x] in an equation to be introduced. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac case_path x :=
+  let x' := fresh "x" in
+  set (x' := x);
+    generalize (idpath : x' = x);
+    clearbody x';
+    destruct x'.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [revert_opaque x] is like [revert x], except that it fails if [x] is not an opaque variable (i.e. if it has a [:=] definition rather than just a type). *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac revert_opaque x :=
+  revert x;
+  match goal with
+    | [ |- forall _, _ ] =&gt; idtac
+    | _ =&gt; fail 1 "Reverted constant is not an opaque variable"
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [transparent assert (H : T)] is like [assert (H : T)], but leaves the body transparent. *)
+(** Since binders don't respect [fresh], we use a name unlikely to be reused. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "transparent" "assert" "(" ident(name) ":" constr(type) ")" :=
+  simple refine (let __transparent_assert_hypothesis := (_ : type) in _);
+  [
+  | ((* We cannot use the name [__transparent_assert_hypothesis], due to some infelicities in the naming of bound variables.  So instead we pull the bottommost hypothesis. *)
+    let H := match goal with H := _ |- _ =&gt; constr:(H) end in
+    rename H into name) ].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [transparent eassert] is like [transparent assert], but allows holes in the type, which will be turned into evars. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Tactic Notation "transparent" "assert" "(" ident(name) ":" constr(type) ")" "by" tactic3(tac) := let name := fresh "H" in transparent assert (name : type); [ solve [ tac ] | ].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "transparent" "eassert" "(" ident(name) ":" open_constr(type) ")" := transparent assert (name : type).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "transparent" "eassert" "(" ident(name) ":" open_constr(type) ")" "by" tactic3(tac) := transparent assert (name : type) by tac.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A version of Coq's [remember] that uses our equality. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac remember_as term name eqname :=
+  set (name := term) in *;
+  pose (eqname := idpath : term = name);
+  clearbody eqname name.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "remember" constr(term) "as" ident(name) "eqn:" ident(eqname) :=
+  remember_as term name eqname.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A variant that doesn't substitute in the goal and hypotheses. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac recall_as term name eqname :=
+  pose (name := term);
+  pose (eqname := idpath : term = name);
+  clearbody eqname name.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "recall" constr(term) "as" ident(name) "eqn:" ident(eqname) :=
+  recall_as term name eqname.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [rel_hnf], when given a goal of the form [R x y] for any relation [R], puts [x] and [y] in head normal form. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac rel_hnf :=
+  idtac;
+  match goal with
+    | [ |- ?R ?x ?y ] =&gt; let x' := (eval hnf in x) in
+                         let y' := (eval hnf in y) in
+                         change (R x' y')
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This tactic is a version of [tryif require () then if_yes () else if_no ()] which is suitable for use in constructing constrs by virtue of being evaluated during the Ltac expression evaluation phase rather than during the tactic running phase.
+All three arguments are expected to be tactic thunks which will be passed a dummy unit argument.*)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac tryif_cps require if_yes if_no :=
+  let res := match constr:(Set) with
+             | _ =&gt; let __ := match constr:(Set) with _ =&gt; require () end in
+                    ltac:(if_yes)
+             | _ =&gt; ltac:(if_no)
+             end in res ().</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following tactic [issig] proves automatically that a record type is equivalent to a nested Sigma-type. Specifically, it proves a goal that looks like
+
+&lt;&lt;
+   { x : A &amp; B x } &lt;~&gt; Some_Record
+&gt;&gt;
+
+In fact you don't even have to write down the sigma type. Though it is good practice to write it out anyway, this tactic can work out the sigma type and tell you what it should look like.
+
+The following should generate the desired equivalence. You can check the definition to see what type it has and therefore what the sigma type should be.
+
+&lt;&lt;
+  Definition issig_myrecord
+    : _ &lt;~&gt; MyRecord := ltac:(issig).
+
+  Check issig_myrecord.
+&gt;&gt;
+
+In order to define this tactic we have many helper tactics.
+
+*)
+
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Ltac peel_evars term :=
+  lazymatch term with
+  | ?f ?x
+    =&gt; tryif_cps
+         ltac:(fun _ =&gt; has_evar x)
+         ltac:(fun _ =&gt; peel_evars f)
+         ltac:(fun _ =&gt; term)
+  | _ =&gt; term
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Ltac pi_to_sig ty :=
+  lazymatch (eval cbv beta in ty) with
+  | forall (x : ?T) (y : @?A x), @?P x y
+    =&gt; let x' := fresh in
+       constr:(@sig T (fun x' : T =&gt;
+        ltac:(let res := pi_to_sig
+          (forall y : A x', P x' y) in exact res)))
+  | ?T -&gt; _ =&gt; T
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Ltac ctor_to_sig ctor :=
+  let ctor := peel_evars ctor in
+  let t := type of ctor in
+  pi_to_sig t.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Ltac unify_first_evar_with term u :=
+  lazymatch term with
+  | ?f ?x
+    =&gt; tryif has_evar f
+    then unify_first_evar_with f u
+    else unify x u
+  end.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Ltac unify_with_projections term u :=
+  (unify_first_evar_with term u.1; unify_with_projections term u.2) +
+  (unify_first_evar_with term u;
+   tryif has_evar term then fail 0 term "has evars remaining" else idtac).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Completely destroys [v] into its pieces and tries to put pieces in a sigma type. *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Ltac refine_with_exist_as_much_as_needed_then_destruct v :=
+  ((destruct v; shelve) +
+   (snrefine (_ ; _);
+    [ destruct v; shelve
+    | refine_with_exist_as_much_as_needed_then_destruct v ])).</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(* Finally we can define our issig tactic: *)</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac issig :=
+  hnf; (* First we make sure things are normalised. *)
+  (* We get the types either side of the equivalence. *)
+  let A := match goal with |- ?sigma &lt;~&gt; ?record =&gt; constr:(sigma) end in
+  let B := match goal with |- ?sigma &lt;~&gt; ?record =&gt; constr:(record) end in
+  let u := fresh "u" in
+  let v := fresh "v" in
+  (** We build an equivalence with 5 holes. *)
+  snrefine  (* We don't want typeclass search running. *)
+    (Build_Equiv A B _ (Build_IsEquiv A B (fun u =&gt; _) (fun v =&gt; _)
+      (fun v =&gt; _) (fun u =&gt; _) (fun _ =&gt; _)));
+  (** Going from a sigma type to a record *)
+  [ (* let built be the constructor of T *)
+    let T := match goal with |- ?T =&gt; T end in
+    (* We want to get the constructor of the record. Note that we use [ntc_constructor] instead of [econstructor] since we don't want to resolve typeclasses. If we used [econstructor] then the constructor would be wrong for many records whose fields are classes. [ntc_constructor] is defined in Overture.v. *)
+    let built := open_constr:(ltac:(ntc_constructor) : T) in
+    let A' := ctor_to_sig built in
+    unify A A';
+    unify_with_projections built u;
+    refine built
+  (** Going from a record to a sigma type *)
+  | refine_with_exist_as_much_as_needed_then_destruct v
+  (** Proving [eissect] *)
+  | destruct v; cbn [pr1 pr2]; reflexivity
+  (** Proving [eisretr] *)
+  | reflexivity
+  (** Proving [eisadj] *)
+  | reflexivity ].</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We show how the tactic works in a couple of examples. *)
+
+</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issig_equiv (A B : Type)
+  : {f : A -&gt; B &amp; IsEquiv f} &lt;~&gt; Equiv A B.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 616
+Time: 0.003s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+  issig.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 618
+Time: 0.001s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+
+Definition issig_isequiv {A B : Type} (f : A -&gt; B)
+  : {g : B -&gt; A &amp; {r : f o g == idmap &amp; { s : g o f == idmap
+    &amp; forall x : A, r (f x) = ap f (s x)}}}
+  &lt;~&gt; IsEquiv f.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 624
+Time: 0.013s">
+<div class="time" style="width: 68.421052631579%"></div>
+<pre>
+  issig.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 625
+Time: 0.007s">
+<div class="time" style="width: 36.842105263158%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Tactics.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The general reasoning behind the [issig] tactic is: if we know the type of the record, [econstructor] will give us the constructor applied to evars for each field. If we assume that there are no evars in the type, we can unify the first evar with [u.1], the next evar with [u.2.1], the next with [u.2.2.1], etc, and if we run out of evars or projections, we backtrack and instead fill the final evar with [u.2.2....2]. (Note that if we strip the trailing evars from the constructor before unifying them, we get a term with a Pi type, and if we drop the final codomain and turn the Pi type into a Sigma, this lets us autogenerate the Sigma type we should be using; this is how the versions that don't need a hand-crafted Sigma type work: they unify the generated type with the term in the goal that should be the Sigma type.)
+
+Generating the function the other way is a bit trickier, because there's no easy way to get our hands on all the projections of the record, and moreover we don't even know how many pairings we'll need. The thing we want to do is introduce the right number of pairings, destruct the variable of record type in the goal for each component, and then magically use the right projection. I'll get back to the magic in a moment; first we need to take care of the "right number" of pairings. We could pull a trick where we infer the number by looking at the term we get from [econstructor] in a goal whose type is the record. Instead, I chose the more concise route of coding a tactic that introduces the minimum number of pairings needed to make the magic work. How does it know the minimum number? It doesn't need to! The wonder of (recursive) multisuccess tactics is that you can say "try no pairings, and if that makes any future tactic fail, backtrack and try one pairing, and if that doesn't work, backtrack and try two pairings, etc". (The downside is that the error messages you get when you set things up wrong are truly incomprehensible, because if you make a typo in any of the fields of the Sigma type the error message you end up getting is something like "(_; _) is a Sigma type but it was expected to have the type of the final field" (and it's always about the final field, regardless of which field you made a typo in). So plausibly it's worth it to still do the small [issig] tactics by hand, and only use this tactic for &gt;= 5 fields or something.)
+
+Okay, now onto the magic. How do we know which field is the right one? Well, there's only one answer that lets us prove the section and retraction by [destruct] + [reflexivity], so we can let unification solve this problem for us. It's important to have destructed the record variable in each of the pair-component evars, because unification is not (yet) smart enough to invert records for us; this is what the [destruct] before [shelve] in the inverse function generation tactic is. We [cbn] [pr1] and [pr2] to make the unification problem be completely syntactic (no need to unfold anything during unification). This is probably not strictly necessary, but seems like good form to me.
+
+Finally, we can prove the other one of the section/retraction pair (I can never recall which is which), and the adjoint, by [reflexivity]. (Perhaps it would be better to use [exact idpath], if we want to not have to unfold [reflexivity] when using equivalences generated by these tactics.) *)
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Empty.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Theorems about the empty type *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk0"><span class="kn">Require Import</span> Basics.Overture Basics.Equivalences Basics.Trunc.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Universe Minimization ToSet</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Unpacking *)</span>
+<span class="sd">(** ** Eta conversion *)</span>
+<span class="sd">(** ** Paths *)</span>
+<span class="sd">(** ** Transport *)</span>
+<span class="sd">(** ** Functorial action *)</span>
+<span class="sd">(** ** Equivalences *)</span>
+<span class="sd">(** ** Universal mapping properties *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk1"><span class="kn">Instance</span> <span class="nf">contr_from_Empty</span>@{u} {_ : Funext} (A : Empty -&gt; <span class="kt">Type</span>@{u})
+  : Contr@{u} (<span class="kr">forall</span> <span class="nv">x</span>:Empty, A x).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Empty -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (<span class="kr">forall</span> <span class="nv">x</span> : Empty, A x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Empty -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (<span class="kr">forall</span> <span class="nv">x</span> : Empty, A x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk3"><span class="nb">refine</span> (Build_Contr@{u} _ (Empty_ind A) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Empty -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : <span class="kr">forall</span> <span class="nv">e</span> : Empty, A e, Empty_ind A = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> f; <span class="nb">apply</span> path_forall@{<span class="kt">Set</span> u u}; <span class="nb">intros</span> x; <span class="nb">elim</span> x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk4"><span class="kn">Lemma</span> <span class="nf">Empty_rec</span> {<span class="nv">T</span> : <span class="kt">Type</span>} (<span class="nv">falso</span>: Empty) : T.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>T</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>falso</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">T</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>T</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>falso</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">T</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">case</span> falso.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isequiv_empty_rec</span>@{u} `{Funext} (A : <span class="kt">Type</span>@{u})
+  : IsEquiv@{<span class="kt">Set</span> u} (<span class="kr">fun</span> (<span class="nv">_</span> : Unit) =&gt; @Empty_rec A) | <span class="mi">0</span>
+  := isequiv_adjointify@{<span class="kt">Set</span> u} _
+  (<span class="kr">fun</span> <span class="nv">_</span> =&gt; tt)
+  (<span class="kr">fun</span> <span class="nv">f</span> =&gt; path_forall@{<span class="kt">Set</span> u u} _ _ (<span class="kr">fun</span> <span class="nv">x</span> =&gt; Empty_rec x))
+  (<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">match</span> x <span class="kr">with</span> tt =&gt; idpath <span class="kr">end</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_empty_rec</span>@{u} `{Funext} (A : <span class="kt">Type</span>@{u})
+  : Unit &lt;~&gt; ((Empty -&gt; A) : <span class="kt">Type</span>@{u})
+  := (Build_Equiv@{<span class="kt">Set</span> u} _ _ (<span class="kr">fun</span> (<span class="nv">_</span> : Unit) =&gt; @Empty_rec A) _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Behavior with respect to truncation *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk6"><span class="kn">Instance</span> <span class="nf">istrunc_Empty</span>@{} (n : trunc_index) : IsTrunc n.+<span class="mi">1</span> Empty.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n.+<span class="mi">1</span> Empty</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk7"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n.+<span class="mi">1</span> Empty</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk8"><span class="nb">refine</span> (@istrunc_leq (-<span class="mi">1</span>) n.+<span class="mi">1</span> tt _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp Empty</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chk9"><span class="nb">apply</span> istrunc_S.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : Empty, Contr (x = y)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chka"><span class="kn">Instance</span> <span class="nf">isequiv_all_to_empty</span> (<span class="nv">T</span> : <span class="kt">Type</span>) (<span class="nv">f</span> : T -&gt; Empty) : IsEquiv f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>T</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>T -&gt; Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chkb"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>T</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>T -&gt; Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chkc"><span class="nb">refine</span> (Build_IsEquiv _ _ _ 
+    (Empty_ind (<span class="kr">fun</span> <span class="nv">_</span> =&gt; T))                <span class="c">(* := equiv_inv *)</span>
+    (<span class="kr">fun</span> <span class="nv">fals</span>:Empty =&gt; <span class="kr">match</span> fals <span class="kr">with</span> <span class="kr">end</span>) <span class="c">(* : f o equiv_inv == idmap *)</span>
+    (<span class="kr">fun</span> <span class="nv">t</span>:T =&gt; <span class="kr">match</span> (f t) <span class="kr">with</span> <span class="kr">end</span>)       <span class="c">(* : equiv_inv o f == idmap *)</span>
+    (_)                                     <span class="c">(* adjointify part *)</span>  ).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>T</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>T -&gt; Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : T,
+<span class="kr">match</span>
+  f x <span class="kr">as</span> fals
+  <span class="kr">return</span>
+    (f (Empty_ind (<span class="kr">fun</span> <span class="nv">_</span> : Empty =&gt; T) fals) = fals)
+<span class="kr">with</span>
+<span class="kr">end</span> =
+ap f
+  <span class="kr">match</span>
+    f x
+    <span class="kr">return</span> (Empty_ind (<span class="kr">fun</span> <span class="nv">_</span> : Empty =&gt; T) (f x) = x)
+  <span class="kr">with</span>
+  <span class="kr">end</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="empty-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="empty-v-chkd"><span class="nb">intro</span> t.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>T</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>T -&gt; Empty</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span>T</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">match</span>
+  f t <span class="kr">as</span> fals
+  <span class="kr">return</span>
+    (f (Empty_ind (<span class="kr">fun</span> <span class="nv">_</span> : Empty =&gt; T) fals) = fals)
+<span class="kr">with</span>
+<span class="kr">end</span> =
+ap f
+  <span class="kr">match</span>
+    f t
+    <span class="kr">return</span> (Empty_ind (<span class="kr">fun</span> <span class="nv">_</span> : Empty =&gt; T) (f t) = t)
+  <span class="kr">with</span>
+  <span class="kr">end</span></div></blockquote></div></div></small><span class="alectryon-wsp"> 
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (Empty_rec (f t)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_to_empty</span> {<span class="nv">T</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : T -&gt; Empty) : T &lt;~&gt; Empty
+  := Build_Equiv T Empty f _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Paths *)</span>
+
+<span class="sd">(** We could probably prove some theorems about non-existing paths in [Empty], but this is really quite useless. As soon as an element of [Empty] is hypothesized, we can prove whatever we like with a simple elimination. *)</span></span></pre>
+</div>
+</div></body>
+</html>

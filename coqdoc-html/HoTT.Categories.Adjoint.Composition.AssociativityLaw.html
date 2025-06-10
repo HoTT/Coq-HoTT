@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Adjoint.Composition.AssociativityLaw</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Adjoint.Composition.AssociativityLaw</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab407"></a><h1 class="section">Associativity of adjunction composition</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#"><span class="id" title="library">Adjoint.Composition.Core</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#"><span class="id" title="library">Adjoint.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <a class="idref" href="HoTT.Categories.Adjoint.Composition.LawsTactic.html#"><span class="id" title="library">Adjoint.Composition.LawsTactic</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.Sigma.html#"><span class="id" title="library">Types.Sigma</span></a> <a class="idref" href="HoTT.Types.Prod.html#"><span class="id" title="library">Types.Prod</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">adjunction_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="composition_lemmas" class="idref" href="#composition_lemmas"><span class="id" title="section">composition_lemmas</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Notation</span> <a id="AdjunctionWithFunctors" class="idref" href="#AdjunctionWithFunctors"><span class="id" title="abbreviation">AdjunctionWithFunctors</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="fg:1" class="idref" href="#fg:1"><span class="id" title="binder">fg</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <span class="id" title="var">D</span> <span class="id" title="var">C</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#fg:1"><span class="id" title="variable">fg</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#fg:1"><span class="id" title="variable">fg</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H0:2" class="idref" href="#H0:2"><span class="id" title="binder">H0</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="class">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="composition_lemmas.B" class="idref" href="#composition_lemmas.B"><span class="id" title="variable">B</span></a> <a id="composition_lemmas.C" class="idref" href="#composition_lemmas.C"><span class="id" title="variable">C</span></a> <a id="composition_lemmas.D" class="idref" href="#composition_lemmas.D"><span class="id" title="variable">D</span></a> <a id="composition_lemmas.E" class="idref" href="#composition_lemmas.E"><span class="id" title="variable">E</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.F" class="idref" href="#composition_lemmas.F"><span class="id" title="variable">F</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.C"><span class="id" title="variable">C</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.F'" class="idref" href="#composition_lemmas.F'"><span class="id" title="variable">F'</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.B"><span class="id" title="variable">B</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.G" class="idref" href="#composition_lemmas.G"><span class="id" title="variable">G</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.C"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.D"><span class="id" title="variable">D</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.G'" class="idref" href="#composition_lemmas.G'"><span class="id" title="variable">G'</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.C"><span class="id" title="variable">C</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.H" class="idref" href="#composition_lemmas.H"><span class="id" title="variable">H</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.E"><span class="id" title="variable">E</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.H'" class="idref" href="#composition_lemmas.H'"><span class="id" title="variable">H'</span></a> : <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.E"><span class="id" title="variable">E</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.D"><span class="id" title="variable">D</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.AF" class="idref" href="#composition_lemmas.AF"><span class="id" title="variable">AF</span></a> : <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.F"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.F'"><span class="id" title="variable">F'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.AG" class="idref" href="#composition_lemmas.AG"><span class="id" title="variable">AG</span></a> : <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.G"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.G'"><span class="id" title="variable">G'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="composition_lemmas.AH" class="idref" href="#composition_lemmas.AH"><span class="id" title="variable">AH</span></a> : <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.H"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Core.html#429fa44ea2422e33e9f148820f0ac87b"><span class="id" title="notation">-|</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.H'"><span class="id" title="variable">H'</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">adjunction_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="associativity" class="idref" href="#associativity"><span class="id" title="lemma">associativity</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#AdjointCompositionCoreNotations.::adjunction_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.AH"><span class="id" title="variable">AH</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#AdjointCompositionCoreNotations.::adjunction_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.AG"><span class="id" title="variable">AG</span></a><a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#AdjointCompositionCoreNotations.::adjunction_scope:x_'o'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#AdjointCompositionCoreNotations.::adjunction_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.AF"><span class="id" title="variable">AF</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.AH"><span class="id" title="variable">AH</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#AdjointCompositionCoreNotations.::adjunction_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#AdjointCompositionCoreNotations.::adjunction_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.AG"><span class="id" title="variable">AG</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#AdjointCompositionCoreNotations.::adjunction_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.AF"><span class="id" title="variable">AF</span></a><a class="idref" href="HoTT.Categories.Adjoint.Composition.Core.html#AdjointCompositionCoreNotations.::adjunction_scope:x_'o'_x"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#AdjunctionWithFunctors"><span class="id" title="abbreviation">AdjunctionWithFunctors</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas.E"><span class="id" title="variable">E</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sigma.html#path_sigma_uncurried"><span class="id" title="definition">path_sigma_uncurried</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Types.Prod.html#path_prod'"><span class="id" title="definition">path_prod'</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Categories.Functor.Composition.Laws.html#associativity"><span class="id" title="lemma">Functor.Composition.Laws.associativity</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Overture.html#symmetry"><span class="id" title="definition">symmetry</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Categories.Functor.Composition.Laws.html#associativity"><span class="id" title="lemma">Functor.Composition.Laws.associativity</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>))));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Adjoint.Composition.LawsTactic.law_t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Adjoint.Composition.AssociativityLaw.html#composition_lemmas"><span class="id" title="section">composition_lemmas</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="keyword">associativity</span> : <span class="id" title="var">category</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

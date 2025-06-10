@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Rings.Z</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Rings.Z</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#"><span class="id" title="library">Classes.interfaces.canonical_names</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.html#"><span class="id" title="library">Algebra.AbGroups</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#"><span class="id" title="library">Algebra.Rings.CRing</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a> <a class="idref" href="HoTT.Spaces.Pos.html#"><span class="id" title="library">Spaces.Pos</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab264"></a><h1 class="section">In this file we define the ring <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a></span> of integers with underlying abelian group <span class="inlinecode"><a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a></span> defined in Algebra.AbGroups.Z. We also define multiplication by an integer in a general ring, and show that <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a></span> is initial.</h1>
+
+<div class="paragraph"> </div>
+
+ The ring of integers 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="cring_Z" class="idref" href="#cring_Z"><span class="id" title="definition">cring_Z</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#Build_CRing'"><span class="id" title="definition">Build_CRing'</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> 1%<span class="id" title="var">int</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_mul"><span class="id" title="definition">int_mul</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_mul_comm"><span class="id" title="definition">int_mul_comm</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_mul_assoc"><span class="id" title="definition">int_mul_assoc</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_dist_l"><span class="id" title="definition">int_dist_l</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.Int.html#int_mul_1_l"><span class="id" title="definition">int_mul_1_l</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Given a ring element <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a></span>, we get a map <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> sending an integer to that multiple of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="rng_int_mult" class="idref" href="#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a> (<a id="R:1" class="idref" href="#R:1"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) := <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#grp_pow_homo"><span class="id" title="definition">grp_pow_homo</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:1"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:1"><span class="id" title="variable">R</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Multiplying a ring element <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a></span> by an integer <span class="inlinecode"><span class="id" title="var">n</span></span> is equivalent to first multiplying the unit <span class="inlinecode">1</span> of the ring by <span class="inlinecode"><span class="id" title="var">n</span></span>, and then multiplying the result by <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a></span>.  This is distributivity of right multiplication by <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a></span> over the sum. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="rng_int_mult_dist_r" class="idref" href="#rng_int_mult_dist_r"><span class="id" title="definition">rng_int_mult_dist_r</span></a> {<a id="R:2" class="idref" href="#R:2"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} (<a id="r:3" class="idref" href="#r:3"><span class="id" title="binder">r</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:2"><span class="id" title="variable">R</span></a>) (<a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:2"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#r:3"><span class="id" title="variable">r</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#n:4"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:2"><span class="id" title="variable">R</span></a> 1 <a class="idref" href="HoTT.Algebra.Rings.Z.html#n:4"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#r:3"><span class="id" title="variable">r</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow_natural"><span class="id" title="lemma">grp_pow_natural</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#grp_homo_rng_right_mult"><span class="id" title="definition">grp_homo_rng_right_mult</span></a> <span class="id" title="var">r</span>)); <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_l"><span class="id" title="definition">rng_mult_one_l</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Similarly, there is a left-distributive law. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="rng_int_mult_dist_l" class="idref" href="#rng_int_mult_dist_l"><span class="id" title="definition">rng_int_mult_dist_l</span></a> {<a id="R:5" class="idref" href="#R:5"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>} (<a id="r:6" class="idref" href="#r:6"><span class="id" title="binder">r</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:5"><span class="id" title="variable">R</span></a>) (<a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:5"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#r:6"><span class="id" title="variable">r</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#n:7"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#r:6"><span class="id" title="variable">r</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:5"><span class="id" title="variable">R</span></a> 1 <a class="idref" href="HoTT.Algebra.Rings.Z.html#n:7"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow_natural"><span class="id" title="lemma">grp_pow_natural</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#grp_homo_rng_left_mult"><span class="id" title="definition">grp_homo_rng_left_mult</span></a> <span class="id" title="var">r</span>)); <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode">1</span> preserves multiplication.  This requires that the specified ring element is the unit. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="issemigrouppreserving_mult_rng_int_mult" class="idref" href="#issemigrouppreserving_mult_rng_int_mult"><span class="id" title="instance">issemigrouppreserving_mult_rng_int_mult</span></a> (<a id="R:8" class="idref" href="#R:8"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsSemiGroupPreserving"><span class="id" title="class">IsSemiGroupPreserving</span></a> (<span class="id" title="var">A</span>:=<a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a>) (<span class="id" title="var">Aop</span>:=<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#2bb6684825e11a22369a7f84a08d3711"><span class="id" title="notation">(.*.)</span></a>) (<span class="id" title="var">Bop</span>:=<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#2bb6684825e11a22369a7f84a08d3711"><span class="id" title="notation">(.*.)</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:8"><span class="id" title="variable">R</span></a> 1).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#sg_op"><span class="id" title="definition">sg_op</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow_int_mul"><span class="id" title="definition">grp_pow_int_mul</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult_dist_l"><span class="id" title="definition">rng_int_mult_dist_l</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode">1</span> is a ring homomorphism 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="rng_homo_int" class="idref" href="#rng_homo_int"><span class="id" title="definition">rng_homo_int</span></a> (<a id="R:9" class="idref" href="#R:9"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a>) : <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a><a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#R:9"><span class="id" title="variable">R</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Build_RingHomomorphism"><span class="id" title="constructor">Build_RingHomomorphism</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a> <span class="id" title="var">R</span> 1).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_zero_r"><span class="id" title="definition">rng_plus_zero_r</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The integers are the initial commutative ring 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isinitial_cring_Z" class="idref" href="#isinitial_cring_Z"><span class="id" title="instance">isinitial_cring_Z</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#IsInitial"><span class="id" title="class">IsInitial</span></a> <a class="idref" href="HoTT.Algebra.Rings.Z.html#cring_Z"><span class="id" title="definition">cring_Z</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.WildCat.Core.html#IsInitial"><span class="id" title="class">IsInitial</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">R</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_homo_int"><span class="id" title="definition">rng_homo_int</span></a> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">g</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_homo_int"><span class="id" title="definition">rng_homo_int</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Z.html#rng_int_mult"><span class="id" title="definition">rng_int_mult</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">x</span>|<span class="id" title="var">x</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">by</span> <span class="id" title="var">rhs</span> <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_unit"><span class="id" title="definition">grp_homo_unit</span></a> <span class="id" title="var">g</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow_succ"><span class="id" title="definition">grp_pow_succ</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<span class="id" title="var">x</span><a class="idref" href="HoTT.Spaces.Int.html#2775fbf917a0f7e38e437cba6fd439e6"><span class="id" title="notation">.+1</span></a>%<span class="id" title="var">int</span>) <span class="id" title="keyword">with</span> (1 <a class="idref" href="HoTT.Spaces.Int.html#eb485f4cd55d957aba496ff444892245"><span class="id" title="notation">+</span></a> <span class="id" title="var">x</span>)%<span class="id" title="var">int</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_plus"><span class="id" title="definition">rng_homo_plus</span></a> <span class="id" title="var">g</span> 1 <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_one"><span class="id" title="definition">rng_homo_one</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_pow_pred"><span class="id" title="definition">grp_pow_pred</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHx</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">IHx</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (-1 <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <span class="id" title="var">g</span> (<a class="idref" href="HoTT.Spaces.Int.html#::int_scope:'-'_x"><span class="id" title="notation">-</span></a><span class="id" title="var">x</span>)%<span class="id" title="var">int</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">g</span> <a class="idref" href="HoTT.Spaces.Int.html#::int_scope:x_'.-1'"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Int.html#::int_scope:'-'_x"><span class="id" title="notation">-</span></a><span class="id" title="var">x</span><a class="idref" href="HoTT.Spaces.Int.html#::int_scope:x_'.-1'"><span class="id" title="notation">).-1</span></a>%<span class="id" title="var">int</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_minus_one"><span class="id" title="definition">rng_homo_minus_one</span></a> <span class="id" title="var">g</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_plus"><span class="id" title="definition">rng_homo_plus</span></a> <span class="id" title="var">g</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

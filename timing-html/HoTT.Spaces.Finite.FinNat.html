@@ -1,0 +1,949 @@
+<html>
+<head>
+<title>FinNat.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for FinNat.v</h1>
+
+<div class="code" title="File: FinNat.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.PathGroupoids
+  Basics.Equivalences Basics.Decidable Basics.Classes.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 2
+Time: 0.007s">
+<div class="time" style="width: 26.923076923077%"></div>
+<pre>
+Require Import Types.Empty Types.Sigma Types.Sum Types.Prod Types.Equiv.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 3
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 4
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Require Import Finite.Fin.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition FinNat@{} (n : nat) : Type0 := {x : nat | x &lt; n}.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Definition zero_finnat@{} (n : nat) : FinNat n.+1
+  := (0; _ : 0 &lt; n.+1).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition succ_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1
+  := (u.1.+1; leq_succ u.2).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_succ_finnat {n : nat} (x : nat) (h : x.+1 &lt; n.+1)
+  : succ_finnat (x; leq_pred' h) = (x.+1; h).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 21
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  by apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition last_finnat@{} (n : nat) : FinNat n.+1
+  := exist (fun x =&gt; x &lt; n.+1) n (leq_refl n.+1).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition incl_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1
+  := (u.1; leq_trans u.2 (leq_succ_r (leq_refl n))).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition finnat_ind@{u} (P : forall n : nat, FinNat n -&gt; Type@{u})
+  (z : forall n : nat, P n.+1 (zero_finnat n))
+  (s : forall (n : nat) (u : FinNat n), P n u -&gt; P n.+1 (succ_finnat u))
+  {n : nat} (u : FinNat n)
+  : P n u.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn; intro u.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (not_lt_zero_r u.1 u.2).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct u as [x h].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct x as [| x].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (transport (P n.+1) _ (z _)).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (transport (P n.+1) (path_succ_finnat _ _) _).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply s.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHn.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition finnat_ind_beta_zero@{u} (P : forall n : nat, FinNat n -&gt; Type@{u})
+  (z : forall n : nat, P n.+1 (zero_finnat n))
+  (s : forall (n : nat) (u : FinNat n), P n u -&gt; P n.+1 (succ_finnat u))
+  (n : nat)
+  : finnat_ind P z s (zero_finnat n) = z n.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (transport2 _ (q:=idpath@{Set})).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 53
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  rapply path_ishprop.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition finnat_ind_beta_succ@{u} (P : forall n : nat, FinNat n -&gt; Type@{u})
+  (z : forall n : nat, P n.+1 (zero_finnat n))
+  (s : forall (n : nat) (u : FinNat n),
+       P n u -&gt; P n.+1 (succ_finnat u))
+  {n : nat} (u : FinNat n)
+  : finnat_ind P z s (succ_finnat u) = s n u (finnat_ind P z s u).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 63
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  destruct u as [u1 u2]; simpl; unfold path_succ_finnat.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 64
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  destruct (path_ishprop u2 (leq_pred' (leq_succ u2))).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport2 _ (q:=idpath@{Set}) _ _).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 66
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  rapply path_ishprop.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition is_bounded_fin_to_nat@{} {n} (k : Fin n)
+  : fin_to_nat k &lt; n.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [| n IHn].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim k.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k as [k | []].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply lt_succ_r.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Typeclass search finds a different solution, but we want this one. *)
+   </pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>+</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_to_finnat {n} (k : Fin n) : FinNat n
+  := (fin_to_nat k; is_bounded_fin_to_nat k).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Because the proof of [is_bounded_fin_to_nat] was chosen carefully, we have the following definitional equality. *)</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat {n} (k : Fin n)
+  : fin_to_finnat (fin_incl k) = incl_finnat (fin_to_finnat k)
+  := idpath.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Fixpoint finnat_to_fin@{} {n : nat} : FinNat n -&gt; Fin n
+  := match n with
+     | 0 =&gt; fun u =&gt; Empty_rec (not_lt_zero_r _ u.2)
+     | n.+1 =&gt; fun u =&gt;
+        match u with
+        | (0; _) =&gt; fin_zero
+        | (x.+1; h) =&gt; fsucc (finnat_to_fin (x; leq_pred' h))
+        end
+     end.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_fin_to_finnat_fsucc@{} {n : nat} (k : Fin n)
+  : fin_to_finnat (fsucc k) = succ_finnat (fin_to_finnat k).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_nat_fsucc.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_fin_to_finnat_fin_zero@{} (n : nat)
+  : fin_to_finnat (@fin_zero n) = zero_finnat n.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact path_nat_fin_zero.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_finnat_to_fin_succ@{} {n : nat} (u : FinNat n)
+  : finnat_to_fin (succ_finnat u) = fsucc (finnat_to_fin u).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> do 2 f_ap.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_finnat_to_fin_incl@{} {n : nat} (u : FinNat n)
+  : finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n u.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply finnat_ind.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n u; cbn beta; intros p.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs exact (path_finnat_to_fin_succ (incl_finnat u)).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs exact (ap fsucc p).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap fin_incl (path_finnat_to_fin_succ _))^.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_finnat_to_fin_last@{} (n : nat)
+  : finnat_to_fin (last_finnat n) = fin_last.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [| n IHn].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap fsucc IHn).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_finnat_to_fin_to_finnat@{} {n : nat} (u : FinNat n)
+  : fin_to_finnat (finnat_to_fin u) = u.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [| n IHn].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (not_lt_zero_r _ u.2).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct u as [x h].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct x as [| x].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap pr1 (path_fin_to_finnat_fin_zero n)).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine ((path_fin_to_finnat_fsucc _)..1 @ _).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap S (IHn (x; leq_pred' h))..1).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_fin_to_finnat_to_fin@{} {n : nat} (k : Fin n)
+  : finnat_to_fin (fin_to_finnat k) = k.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [| n IHn].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim k.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k as [k | []].</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> specialize (IHn k).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (path_finnat_to_fin_incl (fin_to_finnat k) @ _).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap fin_incl IHn).</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_finnat_to_fin_last.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_fin_finnat@{} (n : nat) : Fin n &lt;~&gt; FinNat n
+  := equiv_adjointify fin_to_finnat finnat_to_fin
+      path_finnat_to_fin_to_finnat
+      path_fin_to_finnat_to_fin.</pre>
+</div>
+<div class="code" title="File: FinNat.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

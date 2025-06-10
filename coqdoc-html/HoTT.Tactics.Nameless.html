@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tactics.Nameless</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tactics.Nameless</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab1717"></a><h1 class="section">Building blocks for a globally nameless style of tactic reasoning</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1718"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">hyp</span></span> returns any hypothesis, with subsequent failures backtracking through all hypotheses</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">hyp</span> := <span class="id" title="var">multimatch</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> <span class="id" title="var">H</span> : <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ⇒ <span class="id" title="keyword">constr</span>:(<span class="id" title="var">H</span>) <span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1719"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">enforce</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Tests.bugs.github1759.html#foo"><span class="id" title="definition">foo</span></a></span> ensures that <span class="inlinecode"><a class="idref" href="HoTT.Tests.bugs.github1759.html#foo"><span class="id" title="definition">foo</span></a></span> is well-typed</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Tactic Notation</span> "enforce" <span class="id" title="var">open_constr</span>(<span class="id" title="var">term</span>) := <span class="id" title="tactic">idtac</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1720"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">syntax_enforce</span></span> <span class="inlinecode">[</span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">body</span></span> <span class="inlinecode">]</span> ensures that <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> has a body which is syntactically equal to <span class="inlinecode"><span class="id" title="var">body</span></span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Tactic Notation</span> "syntax_enforce" "[" <span class="id" title="keyword">constr</span>(<span class="id" title="var">H</span>) ":=" <span class="id" title="var">open_constr</span>(<span class="id" title="var">body</span>) "]" := <span class="id" title="keyword">let</span> <span class="id" title="var">H'</span> := (<span class="id" title="tactic">eval</span> <span class="id" title="tactic">unfold</span> <span class="id" title="var">H</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">constr_eq</span> <span class="id" title="var">H'</span> <span class="id" title="var">body</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1721"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">enforce</span></span> <span class="inlinecode">[</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode">]</span> ensures that two terms, possibly containing holes, are judgmentally equal</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Tactic Notation</span> "enforce" "[" <span class="id" title="var">open_constr</span>(<span class="id" title="var">x</span>) "=" <span class="id" title="var">open_constr</span>(<span class="id" title="var">y</span>) "]" := <span class="id" title="var">unify</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+An example 
+</div>
+<div class="code">
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Empty</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">let</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="binder, definition"><span id="X0:1" class="id">X0</span></span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">:=</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">tt</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">in</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Empty</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H</span> := <span class="id" title="var">hyp</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">enforce</span> (<span class="id" title="var">H</span> : <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">syntax_enforce</span> [ <span class="id" title="var">H</span> := <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a> ];<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">enforce</span> [ <span class="id" title="var">H</span> = <span class="id" title="var">_</span> ];<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">enforce</span> [ <span class="id" title="var">_</span> = <span class="id" title="var">H</span> ];<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">enforce</span> [ <span class="id" title="var">H</span> = <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a> ].<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

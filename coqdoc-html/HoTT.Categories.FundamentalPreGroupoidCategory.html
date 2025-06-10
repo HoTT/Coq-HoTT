@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.FundamentalPreGroupoidCategory</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.FundamentalPreGroupoidCategory</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab765"></a><h1 class="section">Fundamental Pregroupoids</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">HoTT.Truncations.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Quoting the HoTT Book:
+
+<div class="paragraph"> </div>
+
+    Example. For <i>any</i> type <span class="inlinecode"><a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span>, there is a precategory with <span class="inlinecode"><a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span> as
+    its type of objects and with <span class="inlinecode"><span class="id" title="var">hom</span>(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>,<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> <span class="inlinecode">:</span> <span class="inlinecode">∥<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>∥<span class="id" title="var">₀</span></span>. The
+    composition operation <span class="inlinecode">∥<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">z</span>∥<span class="id" title="var">₀</span></span> <span class="inlinecode">→</span> <span class="inlinecode">∥<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>∥<span class="id" title="var">₀</span></span> <span class="inlinecode">→</span> <span class="inlinecode">∥<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">z</span>∥<span class="id" title="var">₀</span></span> is defined
+    by induction on truncation from concatenation <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">z</span>)</span> <span class="inlinecode">→</span> <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> <span class="inlinecode">→</span>
+    <span class="inlinecode">(<a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">z</span>)</span>. We call this the fundamental pregroupoid of <span class="inlinecode"><a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span>. 
+<div class="paragraph"> </div>
+
+ We don't want access to all of the internals of a groupoid category at top level. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Module</span> <a id="FundamentalPreGroupoidCategoryInternals" class="idref" href="#FundamentalPreGroupoidCategoryInternals"><span class="id" title="module">FundamentalPreGroupoidCategoryInternals</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="FundamentalPreGroupoidCategoryInternals.fundamental_pregroupoid_category" class="idref" href="#FundamentalPreGroupoidCategoryInternals.fundamental_pregroupoid_category"><span class="id" title="section">fundamental_pregroupoid_category</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="FundamentalPreGroupoidCategoryInternals.fundamental_pregroupoid_category.X" class="idref" href="#FundamentalPreGroupoidCategoryInternals.fundamental_pregroupoid_category.X"><span class="id" title="variable">X</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Local Notation</span> <a id="FundamentalPreGroupoidCategoryInternals.object" class="idref" href="#FundamentalPreGroupoidCategoryInternals.object"><span class="id" title="abbreviation">object</span></a> := <span class="id" title="var">X</span> (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Local Notation</span> <a id="FundamentalPreGroupoidCategoryInternals.morphism" class="idref" href="#FundamentalPreGroupoidCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <span class="id" title="var">s</span> <span class="id" title="var">d</span> := (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> 0 (<span class="id" title="var">s</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> <span class="id" title="var">d</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals.fundamental_pregroupoid_category.X"><span class="id" title="variable">X</span></a>)) (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="FundamentalPreGroupoidCategoryInternals.compose" class="idref" href="#FundamentalPreGroupoidCategoryInternals.compose"><span class="id" title="definition">compose</span></a> <a id="s:2" class="idref" href="#s:2"><span class="id" title="binder">s</span></a> <a id="d:3" class="idref" href="#d:3"><span class="id" title="binder">d</span></a> <a id="d':4" class="idref" href="#d':4"><span class="id" title="binder">d'</span></a> (<a id="m:5" class="idref" href="#m:5"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#d:3"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#d':4"><span class="id" title="variable">d'</span></a>) (<a id="m':6" class="idref" href="#m':6"><span class="id" title="binder">m'</span></a> : <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#s:2"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#d:3"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#s:2"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#d':4"><span class="id" title="variable">d'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m'</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc_rec"><span class="id" title="definition">Trunc_rec</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">m'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc_rec"><span class="id" title="definition">Trunc_rec</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">m'</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="FundamentalPreGroupoidCategoryInternals.identity" class="idref" href="#FundamentalPreGroupoidCategoryInternals.identity"><span class="id" title="definition">identity</span></a> <a id="x:7" class="idref" href="#x:7"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals.morphism"><span class="id" title="abbreviation">morphism</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#x:7"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#x:7"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#reflexivity"><span class="id" title="definition">reflexivity</span></a> <span class="id" title="var">_</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals.compose"><span class="id" title="definition">compose</span></a> [<span class="id" title="var">s</span> <span class="id" title="var">d</span> <span class="id" title="var">d'</span>] <span class="id" title="var">m</span> <span class="id" title="var">m'</span> / .<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals.identity"><span class="id" title="definition">identity</span></a> <span class="id" title="var">x</span> / .<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals.fundamental_pregroupoid_category"><span class="id" title="section">fundamental_pregroupoid_category</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#FundamentalPreGroupoidCategoryInternals"><span class="id" title="module">FundamentalPreGroupoidCategoryInternals</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab766"></a><h2 class="section">Categorification of the fundamental pregroupoid of a type</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="fundamental_pregroupoid_category" class="idref" href="#fundamental_pregroupoid_category"><span class="id" title="definition">fundamental_pregroupoid_category</span></a> (<a id="X:8" class="idref" href="#X:8"><span class="id" title="binder">X</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<a class="idref" href="HoTT.Categories.Category.Core.html#Build_PreCategory"><span class="id" title="definition">Build_PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">X</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#identity"><span class="id" title="definition">FundamentalPreGroupoidCategoryInternals.identity</span></a> <span class="id" title="var">X</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#compose"><span class="id" title="definition">FundamentalPreGroupoidCategoryInternals.compose</span></a> <span class="id" title="var">X</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">intros</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ <span class="id" title="var">m</span> : <a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="var">revert</span> <span class="id" title="var">m</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc_ind"><span class="id" title="definition">Trunc_ind</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" title="tactic">intro</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [ |- <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> (?<span class="id" title="var">a</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">=</span></a> ?<span class="id" title="var">b</span> <a class="idref" href="HoTT.Basics.Overture.html#b8b2ebc8e1a8b9aa935c0702efb5dccf"><span class="id" title="notation">:&gt;</span></a> ?<span class="id" title="var">T</span>) ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="tactic">generalize</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">intros</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:9" class="idref" href="#x:9"><span class="id" title="binder"><span id="x:11" class="id"><span id="x:13" class="id"><span id="x:15" class="id"><span id="x:17" class="id"><span id="x:19" class="id">x</span></span></span></span></span></span></a> <a id="y:10" class="idref" href="#y:10"><span class="id" title="binder"><span id="y:12" class="id"><span id="y:14" class="id"><span id="y:16" class="id"><span id="y:18" class="id"><span id="y:20" class="id">y</span></span></span></span></span></span></a> : <span class="id" title="var">T</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#x:9"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.FundamentalPreGroupoidCategory.html#y:10"><span class="id" title="variable">y</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">intro</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">first</span> [ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p_pp"><span class="id" title="definition">concat_p_pp</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_1p"><span class="id" title="definition">concat_1p</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p1"><span class="id" title="definition">concat_p1</span></a> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Homotopy.Bouquet</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Homotopy.Bouquet</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Pointed.html#"><span class="id" title="library">Pointed</span></a> <a class="idref" href="HoTT.WildCat.html#"><span class="id" title="library">WildCat</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.html#"><span class="id" title="library">Algebra.Groups</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#"><span class="id" title="library">Modalities.ReflectiveSubuniverse</span></a> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.Suspension.html#"><span class="id" title="library">Homotopy.Suspension</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#"><span class="id" title="library">Homotopy.ClassifyingSpace</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#"><span class="id" title="library">Homotopy.HomotopyGroup</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">trunc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pointed_scope</span>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation"><span class="id" title="module">ClassifyingSpaceNotation</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In this file we show that the fundamental group of a bouquet of circles indexed by a type S is the free group on that type S. We begin by defining S-indexed wedges of circles as the suspension of the pointification of S. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="AssumeUnivalence" class="idref" href="#AssumeUnivalence"><span class="id" title="section">AssumeUnivalence</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Univalence</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+An S-indexed wedge of circles a.k.a a bouquet can be defined as the suspension of the pointification of S. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Bouquet" class="idref" href="#Bouquet"><span class="id" title="definition">Bouquet</span></a> (<a id="S:2" class="idref" href="#S:2"><span class="id" title="binder">S</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a> := <a class="idref" href="HoTT.Pointed.pSusp.html#psusp"><span class="id" title="definition">psusp</span></a> (<a class="idref" href="HoTT.Pointed.Core.html#pointify"><span class="id" title="definition">pointify</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:2"><span class="id" title="variable">S</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isconnected_bouquet" class="idref" href="#isconnected_bouquet"><span class="id" title="instance">isconnected_bouquet</span></a> (<a id="S:3" class="idref" href="#S:3"><span class="id" title="binder">S</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#IsConnected"><span class="id" title="class">IsConnected</span></a> 0 (<a class="idref" href="HoTT.Homotopy.Bouquet.html#Bouquet"><span class="id" title="definition">Bouquet</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:3"><span class="id" title="variable">S</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Homotopy.Suspension.html#isconnected_susp"><span class="id" title="instance">isconnected_susp</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can directly prove that it satisfies the desired equivalence together with naturality in the second argument. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="natequiv_pi1bouquet_rec" class="idref" href="#natequiv_pi1bouquet_rec"><span class="id" title="lemma">natequiv_pi1bouquet_rec</span></a> (<a id="S:4" class="idref" href="#S:4"><span class="id" title="binder">S</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.NatTrans.html#NatEquiv"><span class="id" title="record">NatEquiv</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.WildCat.Yoneda.html#opyon"><span class="id" title="definition">opyon</span></a> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 (<a class="idref" href="HoTT.Homotopy.Bouquet.html#Bouquet"><span class="id" title="definition">Bouquet</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:4"><span class="id" title="variable">S</span></a>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.WildCat.Yoneda.html#opyon"><span class="id" title="definition">opyon</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:4"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Groups.Group.html#group_type"><span class="id" title="projection">group_type</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+</div>
+
+<div class="doc">
+Pointify 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nrefine</span> (<a class="idref" href="HoTT.WildCat.NatTrans.html#natequiv_compose"><span class="id" title="definition">natequiv_compose</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.NatTrans.html#natequiv_prewhisker"><span class="id" title="definition">natequiv_prewhisker</span></a> (<a class="idref" href="HoTT.Pointed.Core.html#natequiv_pointify_r"><span class="id" title="lemma">natequiv_pointify_r</span></a> <span class="id" title="var">S</span>) <a class="idref" href="HoTT.Algebra.Groups.Group.html#ptype_group"><span class="id" title="definition">ptype_group</span></a>).<br/>
+</div>
+
+<div class="doc">
+Post-compose with <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#pequiv_loops_bg_g"><span class="id" title="definition">pequiv_loops_bg_g</span></a></span> 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nrefine</span> (<a class="idref" href="HoTT.WildCat.NatTrans.html#natequiv_compose"><span class="id" title="definition">natequiv_compose</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.NatTrans.html#natequiv_postwhisker"><span class="id" title="definition">natequiv_postwhisker</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.WildCat.NatTrans.html#natequiv_inverse"><span class="id" title="definition">natequiv_inverse</span></a> <a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#natequiv_g_loops_bg"><span class="id" title="definition">natequiv_g_loops_bg</span></a>)).<br/>
+</div>
+
+<div class="doc">
+Loop space-suspension adjunction 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nrefine</span> (<a class="idref" href="HoTT.WildCat.NatTrans.html#natequiv_compose"><span class="id" title="definition">natequiv_compose</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.NatTrans.html#natequiv_prewhisker"><span class="id" title="definition">natequiv_prewhisker</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Pointed.pSusp.html#natequiv_loop_susp_adjoint_r"><span class="id" title="lemma">natequiv_loop_susp_adjoint_r</span></a> (<a class="idref" href="HoTT.Pointed.Core.html#pointify"><span class="id" title="definition">pointify</span></a> <span class="id" title="var">S</span>)) <a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a>).<br/>
+</div>
+
+<div class="doc">
+Pi1-BG adjunction 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#natequiv_bg_pi1_adjoint"><span class="id" title="lemma">natequiv_bg_pi1_adjoint</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For the rest of this file, we don't need to unfold this. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Opaque</span> <a class="idref" href="HoTT.Homotopy.Bouquet.html#natequiv_pi1bouquet_rec"><span class="id" title="lemma">natequiv_pi1bouquet_rec</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="equiv_pi1bouquet_rec" class="idref" href="#equiv_pi1bouquet_rec"><span class="id" title="lemma">equiv_pi1bouquet_rec</span></a> (<a id="S:5" class="idref" href="#S:5"><span class="id" title="binder">S</span></a> : <span class="id" title="keyword">Type</span>) (<a id="G:6" class="idref" href="#G:6"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 (<a class="idref" href="HoTT.Homotopy.Bouquet.html#Bouquet"><span class="id" title="definition">Bouquet</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:5"><span class="id" title="variable">S</span></a>) <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#G:6"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Homotopy.Bouquet.html#S:5"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#G:6"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Homotopy.Bouquet.html#natequiv_pi1bouquet_rec"><span class="id" title="lemma">natequiv_pi1bouquet_rec</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="is1natural_equiv_pi1bouquet_rec" class="idref" href="#is1natural_equiv_pi1bouquet_rec"><span class="id" title="instance">is1natural_equiv_pi1bouquet_rec</span></a> (<a id="S:7" class="idref" href="#S:7"><span class="id" title="binder">S</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.NatTrans.html#Is1Natural"><span class="id" title="class">Is1Natural</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.WildCat.Yoneda.html#opyon"><span class="id" title="definition">opyon</span></a> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 (<a class="idref" href="HoTT.Homotopy.Bouquet.html#Bouquet"><span class="id" title="definition">Bouquet</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:7"><span class="id" title="variable">S</span></a>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.WildCat.Yoneda.html#opyon"><span class="id" title="definition">opyon</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:7"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Groups.Group.html#group_type"><span class="id" title="projection">group_type</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="G:8" class="idref" href="#G:8"><span class="id" title="binder">G</span></a> ⇒ <a class="idref" href="HoTT.Homotopy.Bouquet.html#equiv_pi1bouquet_rec"><span class="id" title="lemma">equiv_pi1bouquet_rec</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:7"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#G:8"><span class="id" title="variable">G</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.NatTrans.html#is1natural_natequiv"><span class="id" title="projection">is1natural_natequiv</span></a> (<a class="idref" href="HoTT.Homotopy.Bouquet.html#natequiv_pi1bouquet_rec"><span class="id" title="lemma">natequiv_pi1bouquet_rec</span></a> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can define the inclusion map by using the previous equivalence on the identity group homomorphism. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="pi1bouquet_incl" class="idref" href="#pi1bouquet_incl"><span class="id" title="definition">pi1bouquet_incl</span></a> (<a id="S:9" class="idref" href="#S:9"><span class="id" title="binder">S</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:9"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 (<a class="idref" href="HoTT.Homotopy.Bouquet.html#Bouquet"><span class="id" title="definition">Bouquet</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:9"><span class="id" title="variable">S</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Homotopy.Bouquet.html#equiv_pi1bouquet_rec"><span class="id" title="lemma">equiv_pi1bouquet_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_id"><span class="id" title="definition">grp_homo_id</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The fundamental group of an S-bouquet is the free group on S. 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isfreegroupon_pi1bouquet" class="idref" href="#isfreegroupon_pi1bouquet"><span class="id" title="instance">isfreegroupon_pi1bouquet</span></a> (<a id="S:10" class="idref" href="#S:10"><span class="id" title="binder">S</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Group.html#IsFreeGroupOn"><span class="id" title="class">IsFreeGroupOn</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:10"><span class="id" title="variable">S</span></a> (<a class="idref" href="HoTT.Homotopy.HomotopyGroup.html#Pi"><span class="id" title="definition">Pi</span></a> 1 (<a class="idref" href="HoTT.Homotopy.Bouquet.html#Bouquet"><span class="id" title="definition">Bouquet</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:10"><span class="id" title="variable">S</span></a>)) (<a class="idref" href="HoTT.Homotopy.Bouquet.html#pi1bouquet_incl"><span class="id" title="definition">pi1bouquet_incl</span></a> <a class="idref" href="HoTT.Homotopy.Bouquet.html#S:10"><span class="id" title="variable">S</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#equiv_isfreegroupon_isequiv_precomp"><span class="id" title="definition">equiv_isfreegroupon_isequiv_precomp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">G</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_homotopic'"><span class="id" title="definition">isequiv_homotopic'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Homotopy.Bouquet.html#equiv_pi1bouquet_rec"><span class="id" title="lemma">equiv_pi1bouquet_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> @<a class="idref" href="HoTT.Homotopy.Bouquet.html#is1natural_equiv_pi1bouquet_rec"><span class="id" title="instance">is1natural_equiv_pi1bouquet_rec</span></a> <span class="id" title="var">S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">f</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_homo_id"><span class="id" title="definition">grp_homo_id</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="var">f_ap</span>; <span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Core.html#cat_idr_strong"><span class="id" title="method">cat_idr_strong</span></a> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Homotopy.Bouquet.html#AssumeUnivalence"><span class="id" title="section">AssumeUnivalence</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

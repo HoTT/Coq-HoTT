@@ -1,0 +1,452 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Circle</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Circle</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Pointed.Core.html#"><span class="id" title="library">Pointed.Core</span></a> <a class="idref" href="HoTT.Pointed.Loops.html#"><span class="id" title="library">Pointed.Loops</span></a> <a class="idref" href="HoTT.Pointed.pEquiv.html#"><span class="id" title="library">Pointed.pEquiv</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Universes.HSet.html#"><span class="id" title="library">HSet</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Colimits.Coeq.html#"><span class="id" title="library">Colimits.Coeq</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a> <a class="idref" href="HoTT.Truncations.Connectedness.html#"><span class="id" title="library">Truncations.Connectedness</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1482"></a><h1 class="section">Theorems about the <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a></span>.</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">pointed_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Generalizable Variables</span> <span class="id" title="var">X</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;**&nbsp;Definition&nbsp;of&nbsp;the&nbsp;<span class="inlinecode"><span class="id" title="var">Circle</span></span>.&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We define the circle as the coequalizer of two copies of the identity map of <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a></span>.  This is easily equivalent to the naive definition
+
+<div class="paragraph"> </div>
+
+<pre>
+Private Inductive Circle : Type0 :=
+| base : Circle
+| loop : base = base.
+</pre>
+
+<div class="paragraph"> </div>
+
+but it allows us to apply the flattening lemma directly rather than having to pass across that equivalence.  
+<div class="paragraph"> </div>
+
+ The circle is defined to be the coequalizer of two copies of the identity map on <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Circle" class="idref" href="#Circle"><span class="id" title="definition">Circle</span></a> := @<a class="idref" href="HoTT.Colimits.Coeq.html#Coeq"><span class="id" title="definition">Coeq</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It has a basepoint. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="base" class="idref" href="#base"><span class="id" title="definition">base</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> := <a class="idref" href="HoTT.Colimits.Coeq.html#coeq"><span class="id" title="definition">coeq</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+And a non-trivial path. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="loop" class="idref" href="#loop"><span class="id" title="definition">loop</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> := <a class="idref" href="HoTT.Colimits.Coeq.html#cglue"><span class="id" title="definition">cglue</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here is a notation for the circle that can be imported. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Module</span> <a id="CircleNotation" class="idref" href="#CircleNotation"><span class="id" title="module">CircleNotation</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="CircleNotation.S1" class="idref" href="#CircleNotation.S1"><span class="id" title="abbreviation">S1</span></a> := <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Spaces.Circle.html#CircleNotation"><span class="id" title="module">CircleNotation</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Circle induction 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Circle_ind" class="idref" href="#Circle_ind"><span class="id" title="definition">Circle_ind</span></a> (<a id="P:1" class="idref" href="#P:1"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="b:2" class="idref" href="#b:2"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#P:1"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a>) (<a id="l:3" class="idref" href="#l:3"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:2"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:2"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:1"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:4"><span class="id" title="variable">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Colimits.Coeq.html#Coeq_ind"><span class="id" title="definition">Coeq_ind</span></a> <span class="id" title="var">P</span> (<span class="id" title="keyword">fun</span> <a id="u:5" class="idref" href="#u:5"><span class="id" title="binder"><span id="u:6" class="id">u</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <span class="id" title="var">P</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Colimits.Coeq.html#coeq"><span class="id" title="definition">coeq</span></a> (<a class="idref" href="HoTT.Types.Unit.html#path_unit"><span class="id" title="definition">path_unit</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#u:5"><span class="id" title="variable">u</span></a>)) <span class="id" title="var">b</span>) <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> []; <span class="id" title="tactic">exact</span> <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Computation rule for circle induction. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Circle_ind_beta_loop" class="idref" href="#Circle_ind_beta_loop"><span class="id" title="definition">Circle_ind_beta_loop</span></a> (<a id="P:7" class="idref" href="#P:7"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="b:8" class="idref" href="#b:8"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#P:7"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a>) (<a id="l:9" class="idref" href="#l:9"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:8"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:8"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#apD"><span class="id" title="definition">apD</span></a> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind"><span class="id" title="definition">Circle_ind</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:7"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:8"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#l:9"><span class="id" title="variable">l</span></a>) <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#l:9"><span class="id" title="variable">l</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Colimits.Coeq.html#Coeq_ind_beta_cglue"><span class="id" title="lemma">Coeq_ind_beta_cglue</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:7"><span class="id" title="variable">P</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We mark <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a></span>, <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a></span> to never be simplified by <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> or <span class="inlinecode"><span class="id" title="var">cbn</span></span> in order to hide how we defined it from the user. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> : <span class="id" title="tactic">simpl</span> <span class="id" title="var">never</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> : <span class="id" title="tactic">simpl</span> <span class="id" title="var">never</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> : <span class="id" title="tactic">simpl</span> <span class="id" title="var">never</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind_beta_loop"><span class="id" title="definition">Circle_ind_beta_loop</span></a> : <span class="id" title="tactic">simpl</span> <span class="id" title="var">never</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The recursion principle or non-dependent eliminator. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Circle_rec" class="idref" href="#Circle_rec"><span class="id" title="definition">Circle_rec</span></a> (<a id="P:10" class="idref" href="#P:10"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) (<a id="b:11" class="idref" href="#b:11"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#P:10"><span class="id" title="variable">P</span></a>) (<a id="l:12" class="idref" href="#l:12"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#b:11"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:11"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:10"><span class="id" title="variable">P</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind"><span class="id" title="definition">Circle_ind</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Spaces.Circle.html#P:10"><span class="id" title="variable">P</span></a>) <a class="idref" href="HoTT.Spaces.Circle.html#b:11"><span class="id" title="variable">b</span></a> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_const"><span class="id" title="definition">transport_const</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#l:12"><span class="id" title="variable">l</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Computation rule for non-dependent eliminator. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Circle_rec_beta_loop" class="idref" href="#Circle_rec_beta_loop"><span class="id" title="definition">Circle_rec_beta_loop</span></a> (<a id="P:13" class="idref" href="#P:13"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) (<a id="b:14" class="idref" href="#b:14"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#P:13"><span class="id" title="variable">P</span></a>) (<a id="l:15" class="idref" href="#l:15"><span class="id" title="binder">l</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#b:14"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:14"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec"><span class="id" title="definition">Circle_rec</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:13"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:14"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#l:15"><span class="id" title="variable">l</span></a>) <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#l:15"><span class="id" title="variable">l</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec"><span class="id" title="definition">Circle_rec</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#cancelL"><span class="id" title="definition">cancelL</span></a> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_const"><span class="id" title="definition">transport_const</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <span class="id" title="var">b</span>) <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.PathGroupoids.html#apD_const"><span class="id" title="lemma">apD_const</span></a> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind"><span class="id" title="definition">Circle_ind</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">P</span>) <span class="id" title="var">b</span> <span class="id" title="var">_</span>) <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind_beta_loop"><span class="id" title="definition">Circle_ind_beta_loop</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">P</span>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a></span> is pointed by <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span>. 
+</div>
+<div class="code">
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="ispointed_Circle" class="idref" href="#ispointed_Circle"><span class="id" title="instance">ispointed_Circle</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#IsPointed"><span class="id" title="class">IsPointed</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> := <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="pCircle" class="idref" href="#pCircle"><span class="id" title="definition">pCircle</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a> := <a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">[</span></a><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a><a class="idref" href="HoTT.Pointed.Core.html#ec8fb74a88265bee6162a02b6481b4f8"><span class="id" title="notation">]</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1483"></a><h2 class="section">The loop space of the <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a></span> is the Integers <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a></span></h2>
+
+
+<div class="paragraph"> </div>
+
+  This is the encode-decode style proof a la Licata-Shulman. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="EncodeDecode" class="idref" href="#EncodeDecode"><span class="id" title="section">EncodeDecode</span></a>.<br/>
+</div>
+
+<div class="doc">
+We assume univalence throughout this section. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:16" class="idref" href="#H:16"><span class="id" title="binder">Univalence</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+First we define the type of codes, this is a type family over the circle. This can be thought of as the covering space by the homotopical real numbers. It is defined by mapping loop to the path given by univalence applied to the automorphism of the integers. We will show that the section of this family at <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span> is equivalent to the loop space of the circle. Giving us an equivalence <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span> <span class="inlinecode">&lt;~&gt;</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Circle_code" class="idref" href="#Circle_code"><span class="id" title="definition">Circle_code</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec"><span class="id" title="definition">Circle_rec</span></a> <span class="id" title="keyword">Type</span> <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a> (<a class="idref" href="HoTT.Types.Universe.html#path_universe"><span class="id" title="definition">path_universe</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_succ"><span class="id" title="definition">int_succ</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Transporting along <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a></span> gives us the successor automorphism on <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="transport_Circle_code_loop" class="idref" href="#transport_Circle_code_loop"><span class="id" title="definition">transport_Circle_code_loop</span></a> (<a id="z:17" class="idref" href="#z:17"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#z:17"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_succ"><span class="id" title="definition">int_succ</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#z:17"><span class="id" title="variable">z</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_compose"><span class="id" title="lemma">transport_compose</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <span class="id" title="var">z</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a>; <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec_beta_loop"><span class="id" title="definition">Circle_rec_beta_loop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Universe.html#transport_path_universe"><span class="id" title="definition">transport_path_universe</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Transporting along <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a>^</span> gives us the predecessor on <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="transport_Circle_code_loopV" class="idref" href="#transport_Circle_code_loopV"><span class="id" title="definition">transport_Circle_code_loopV</span></a> (<a id="z:18" class="idref" href="#z:18"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#z:18"><span class="id" title="variable">z</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_pred"><span class="id" title="definition">int_pred</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#z:18"><span class="id" title="variable">z</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_compose"><span class="id" title="lemma">transport_compose</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a> <span class="id" title="var">z</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#ap_V"><span class="id" title="definition">ap_V</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a>; <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec_beta_loop"><span class="id" title="definition">Circle_rec_beta_loop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Types.Universe.html#path_universe_V"><span class="id" title="definition">path_universe_V</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_succ"><span class="id" title="definition">int_succ</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Universe.html#transport_path_universe"><span class="id" title="definition">transport_path_universe</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+To turn a path in <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a></span> based at <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span> into a code we transport along it. We call this encoding. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Circle_encode" class="idref" href="#Circle_encode"><span class="id" title="definition">Circle_encode</span></a> (<a id="x:19" class="idref" href="#x:19"><span class="id" title="binder">x</span></a>:<a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:19"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:19"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="p:20" class="idref" href="#p:20"><span class="id" title="binder">p</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Circle.html#p:20"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a> <a class="idref" href="HoTT.Spaces.Int.html#zero"><span class="id" title="constructor">zero</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO: explain this proof in more detail.  Turning a code into a path based at <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span>. We call this decoding. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Circle_decode" class="idref" href="#Circle_decode"><span class="id" title="definition">Circle_decode</span></a> (<a id="x:21" class="idref" href="#x:21"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a>) : <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:21"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:21"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind"><span class="id" title="definition">Circle_ind</span></a> (<span class="id" title="keyword">fun</span> <a id="x:22" class="idref" href="#x:22"><span class="id" title="binder"><span id="x:23" class="id">x</span></span></a> ⇒ <a class="idref" href="HoTT.Spaces.Circle.html#Circle_code"><span class="id" title="definition">Circle_code</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:22"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:22"><span class="id" title="variable">x</span></a>) (<a class="idref" href="HoTT.Spaces.Int.html#loopexp"><span class="id" title="definition">loopexp</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a>) <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">z</span>; <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Types.Arrow.html#transport_arrow"><span class="id" title="definition">transport_arrow</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Types.Paths.html#transport_paths_r"><span class="id" title="definition">transport_paths_r</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Circle.html#transport_Circle_code_loopV"><span class="id" title="definition">transport_Circle_code_loopV</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Int.html#loopexp_pred_r"><span class="id" title="definition">loopexp_pred_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_pV_p"><span class="id" title="definition">concat_pV_p</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The non-trivial part of the proof that decode and encode are equivalences is showing that decoding followed by encoding is the identity on the fibers over <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Circle_encode_loopexp" class="idref" href="#Circle_encode_loopexp"><span class="id" title="definition">Circle_encode_loopexp</span></a> (<a id="z:24" class="idref" href="#z:24"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode"><span class="id" title="definition">Circle_encode</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#loopexp"><span class="id" title="definition">loopexp</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#z:24"><span class="id" title="variable">z</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#z:24"><span class="id" title="variable">z</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">z</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> | <span class="id" title="var">n</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Int.html#loopexp_succ_r"><span class="id" title="definition">loopexp_succ_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode"><span class="id" title="definition">Circle_encode</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">IHz</span> |- ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_pp"><span class="id" title="definition">transport_pp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHz</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Circle.html#transport_Circle_code_loop"><span class="id" title="definition">transport_Circle_code_loop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Int.html#loopexp_pred_r"><span class="id" title="definition">loopexp_pred_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode"><span class="id" title="definition">Circle_encode</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">IHz</span> |- ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_pp"><span class="id" title="definition">transport_pp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHz</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Circle.html#transport_Circle_code_loopV"><span class="id" title="definition">transport_Circle_code_loopV</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we put it together. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Circle_encode_isequiv" class="idref" href="#Circle_encode_isequiv"><span class="id" title="definition">Circle_encode_isequiv</span></a> (<a id="x:25" class="idref" href="#x:25"><span class="id" title="binder">x</span></a>:<a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode"><span class="id" title="definition">Circle_encode</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:25"><span class="id" title="variable">x</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode"><span class="id" title="definition">Circle_encode</span></a> <span class="id" title="var">x</span>) (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_decode"><span class="id" title="definition">Circle_decode</span></a> <span class="id" title="var">x</span>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;Here&nbsp;we&nbsp;induct&nbsp;on&nbsp;<span class="inlinecode"><span class="id" title="var">x</span>:<span class="id" title="var">Circle</span></span>.&nbsp;&nbsp;We&nbsp;just&nbsp;did&nbsp;the&nbsp;case&nbsp;when&nbsp;<span class="inlinecode"><span class="id" title="var">x</span></span>&nbsp;is&nbsp;<span class="inlinecode"><span class="id" title="var">base</span></span>.&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind"><span class="id" title="definition">Circle_ind</span></a> (<span class="id" title="keyword">fun</span> <a id="x:26" class="idref" href="#x:26"><span class="id" title="binder"><span id="x:27" class="id">x</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode"><span class="id" title="definition">Circle_encode</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:26"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#Circle_decode"><span class="id" title="definition">Circle_decode</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:26"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode_loopexp"><span class="id" title="definition">Circle_encode_loopexp</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;What&nbsp;remains&nbsp;is&nbsp;easy&nbsp;since&nbsp;<span class="inlinecode"><span class="id" title="var">Int</span></span>&nbsp;is&nbsp;known&nbsp;to&nbsp;be&nbsp;a&nbsp;set.&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">z</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.HSet.html#hset_path2"><span class="id" title="lemma">hset_path2</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;other&nbsp;side&nbsp;is&nbsp;trivial&nbsp;by&nbsp;path&nbsp;induction.&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> []; <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Finally giving us an equivalence between the loop space of the <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="equiv_loopCircle_int" class="idref" href="#equiv_loopCircle_int"><span class="id" title="definition">equiv_loopCircle_int</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode"><span class="id" title="definition">Circle_encode</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a>) (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_encode_isequiv"><span class="id" title="definition">Circle_encode_isequiv</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Spaces.Circle.html#EncodeDecode"><span class="id" title="section">EncodeDecode</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1484"></a><h2 class="section">Connectedness and truncatedness of the <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a></span></h2>
+
+<div class="paragraph"> </div>
+
+ The circle is 0-connected. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isconnected_Circle" class="idref" href="#isconnected_Circle"><span class="id" title="instance">isconnected_Circle</span></a> `{<a id="H:28" class="idref" href="#H:28"><span class="id" title="binder">Univalence</span></a>} : <a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#IsConnected"><span class="id" title="class">IsConnected</span></a> 0 <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Connectedness.html#is0connected_merely_allpath"><span class="id" title="definition">is0connected_merely_allpath</span></a>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">srefine</span> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind"><span class="id" title="definition">Circle_ind</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">simple</span> <span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind"><span class="id" title="definition">Circle_ind</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> 1).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It follows that the circle is a 1-type. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="istrunc_Circle" class="idref" href="#istrunc_Circle"><span class="id" title="instance">istrunc_Circle</span></a> `{<a id="H:29" class="idref" href="#H:29"><span class="id" title="binder">Univalence</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> 1 <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">p</span> := <a class="idref" href="HoTT.Truncations.Connectedness.html#merely_path_is0connected"><span class="id" title="definition">merely_path_is0connected</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">q</span> := <a class="idref" href="HoTT.Truncations.Connectedness.html#merely_path_is0connected"><span class="id" title="definition">merely_path_is0connected</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>, <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_equiv_istrunc"><span class="id" title="definition">istrunc_equiv_istrunc</span></a> (<span class="id" title="var">n</span> := 0) <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#equiv_loopCircle_int"><span class="id" title="definition">equiv_loopCircle_int</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">^-1</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1485"></a><h2 class="section">Iteration of equivalences</h2>
+
+<div class="paragraph"> </div>
+
+ If <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#BoolForall.P"><span class="id" title="variable">P</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> is defined by a type <span class="inlinecode"><a class="idref" href="HoTT.Sets.GCH.html#LEM.X"><span class="id" title="variable">X</span></a></span> and an auto-equivalence <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span>, then the image of <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a></span> regarded as in <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.base"><span class="id" title="constructor">base</span></a></span> is <span class="inlinecode"><span class="id" title="var">iter_int</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Circle_action_is_iter" class="idref" href="#Circle_action_is_iter"><span class="id" title="definition">Circle_action_is_iter</span></a> `{<a id="H:30" class="idref" href="#H:30"><span class="id" title="binder">Univalence</span></a>} <a id="X:31" class="idref" href="#X:31"><span class="id" title="binder">X</span></a> (<a id="f:32" class="idref" href="#f:32"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#X:31"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#X:31"><span class="id" title="variable">X</span></a>) (<a id="n:33" class="idref" href="#n:33"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#Int"><span class="id" title="inductive">Int</span></a>) (<a id="x:34" class="idref" href="#x:34"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.Circle.html#X:31"><span class="id" title="variable">X</span></a>)<br/>
+: <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec"><span class="id" title="definition">Circle_rec</span></a> <span class="id" title="keyword">Type</span> <a class="idref" href="HoTT.Spaces.Circle.html#X:31"><span class="id" title="variable">X</span></a> (<a class="idref" href="HoTT.Types.Universe.html#path_universe"><span class="id" title="definition">path_universe</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#f:32"><span class="id" title="variable">f</span></a>)) (<a class="idref" href="HoTT.Spaces.Circle.html#equiv_loopCircle_int"><span class="id" title="definition">equiv_loopCircle_int</span></a><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">n</span></a>) <a class="idref" href="HoTT.Spaces.Circle.html#x:34"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#int_iter"><span class="id" title="definition">int_iter</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#f:32"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#n:33"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:34"><span class="id" title="variable">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Spaces.Int.html#loopexp_path_universe"><span class="id" title="definition">loopexp_path_universe</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_compose"><span class="id" title="lemma">transport_compose</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<span class="id" title="keyword">fun</span> <a id="p:35" class="idref" href="#p:35"><span class="id" title="binder"><span id="p:36" class="id">p</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#p:35"><span class="id" title="variable">p</span></a> <span class="id" title="var">x</span>) <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Circle.html#equiv_loopCircle_int"><span class="id" title="definition">equiv_loopCircle_int</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_decode"><span class="id" title="definition">Circle_decode</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Int.html#ap_loopexp"><span class="id" title="definition">ap_loopexp</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<span class="id" title="keyword">fun</span> <a id="p:37" class="idref" href="#p:37"><span class="id" title="binder"><span id="p:38" class="id">p</span></span></a> ⇒ <a class="idref" href="HoTT.Spaces.Int.html#loopexp"><span class="id" title="definition">loopexp</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#p:37"><span class="id" title="variable">p</span></a> <span class="id" title="var">n</span>) <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec_beta_loop"><span class="id" title="definition">Circle_rec_beta_loop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The universal property of the circle (Lemma 6.2.9 in the Book).  We could deduce this from <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Coeq.html#isequiv_Coeq_rec"><span class="id" title="definition">isequiv_Coeq_rec</span></a></span>, but it's nice to see a direct proof too. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="Circle_rec_uncurried" class="idref" href="#Circle_rec_uncurried"><span class="id" title="definition">Circle_rec_uncurried</span></a> (<a id="P:39" class="idref" href="#P:39"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="b:40" class="idref" href="#b:40"><span class="id" title="binder">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:39"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:40"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:40"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:39"><span class="id" title="variable">P</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="x:41" class="idref" href="#x:41"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec"><span class="id" title="definition">Circle_rec</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:39"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#pr1"><span class="id" title="abbreviation">pr1</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:41"><span class="id" title="variable">x</span></a>) (<a class="idref" href="HoTT.Basics.Overture.html#pr2"><span class="id" title="abbreviation">pr2</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:41"><span class="id" title="variable">x</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_Circle_rec_uncurried" class="idref" href="#isequiv_Circle_rec_uncurried"><span class="id" title="instance">isequiv_Circle_rec_uncurried</span></a> `{<a id="H:42" class="idref" href="#H:42"><span class="id" title="binder">Funext</span></a>} (<a id="P:43" class="idref" href="#P:43"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (<a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec_uncurried"><span class="id" title="definition">Circle_rec_uncurried</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:43"><span class="id" title="variable">P</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <a id="g:44" class="idref" href="#g:44"><span class="id" title="binder"><span id="g:45" class="id">g</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#g:44"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#base"><span class="id" title="definition">base</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#g:44"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#loop"><span class="id" title="definition">loop</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Arrow.html#path_arrow"><span class="id" title="definition">path_arrow</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_ind"><span class="id" title="definition">Circle_ind</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">transport_paths</span> <span class="id" title="var">FlFr</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Paths.html#equiv_p1_1q"><span class="id" title="definition">equiv_p1_1q</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec_beta_loop"><span class="id" title="definition">Circle_rec_beta_loop</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">b</span> <span class="id" title="var">p</span>]; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Circle.html#Circle_rec_beta_loop"><span class="id" title="definition">Circle_rec_beta_loop</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_Circle_rec" class="idref" href="#equiv_Circle_rec"><span class="id" title="definition">equiv_Circle_rec</span></a> `{<a id="H:46" class="idref" href="#H:46"><span class="id" title="binder">Funext</span></a>} (<a id="P:47" class="idref" href="#P:47"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="b:48" class="idref" href="#b:48"><span class="id" title="binder">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:47"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:48"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#b:48"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:47"><span class="id" title="variable">P</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Spaces.Circle.html#isequiv_Circle_rec_uncurried"><span class="id" title="instance">isequiv_Circle_rec_uncurried</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#P:47"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A pointed version of the universal property of the circle. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="pmap_from_circle_loops" class="idref" href="#pmap_from_circle_loops"><span class="id" title="definition">pmap_from_circle_loops</span></a> `{<a id="H:49" class="idref" href="#H:49"><span class="id" title="binder">Funext</span></a>} (<a id="X:50" class="idref" href="#X:50"><span class="id" title="binder">X</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#pType"><span class="id" title="record">pType</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Pointed.Core.html#103880150f1b8a9c385f8c09ab3e01b0"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#pCircle"><span class="id" title="definition">pCircle</span></a> <a class="idref" href="HoTT.Pointed.Core.html#865ec0a379df1361e67bf390bca0cd82"><span class="id" title="notation">-&gt;**</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#X:50"><span class="id" title="variable">X</span></a><a class="idref" href="HoTT.Pointed.Core.html#103880150f1b8a9c385f8c09ab3e01b0"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Pointed.Core.html#103880150f1b8a9c385f8c09ab3e01b0"><span class="id" title="notation">&lt;~&gt;*</span></a> <a class="idref" href="HoTT.Pointed.Loops.html#loops"><span class="id" title="definition">loops</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#X:50"><span class="id" title="variable">X</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Pointed.pEquiv.html#Build_pEquiv'"><span class="id" title="definition">Build_pEquiv'</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Pointed.Core.html#issig_pmap"><span class="id" title="definition">issig_pmap</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a>%<span class="id" title="var">equiv</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">equiv_via</span> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="xp:52" class="idref" href="#xp:52"><span class="id" title="binder"><span id="xp:54" class="id">xp</span></span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="x:51" class="idref" href="#x:51"><span class="id" title="binder"><span id="x:53" class="id">x</span></span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <span class="id" title="var">X</span> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:51"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#x:51"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.Circle.html#xp:52"><span class="id" title="variable">xp</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Pointed.Core.html#::pointed_scope:'pt'"><span class="id" title="notation">pt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="var">make_equiv_contr_basedpaths</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> ((<a class="idref" href="HoTT.Types.Sigma.html#equiv_functor_sigma_pb"><span class="id" title="definition">equiv_functor_sigma_pb</span></a> <a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Circle.html#equiv_Circle_rec"><span class="id" title="definition">equiv_Circle_rec</span></a> <span class="id" title="var">X</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a>%<span class="id" title="var">equiv</span>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#ap_const"><span class="id" title="definition">ap_const</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

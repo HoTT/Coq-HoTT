@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Rings.Localization</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Rings.Localization</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Colimits.Quotient.html#"><span class="id" title="library">Colimits.Quotient</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">abstract_algebra</span></a> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#"><span class="id" title="library">Rings.CRing</span></a> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Nat.Core</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Rings.QuotientRing.html#"><span class="id" title="library">Rings.QuotientRing</span></a> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#"><span class="id" title="library">WildCat.Equiv</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab198"></a><h1 class="section">Localization of commutative rings</h1>
+
+<div class="paragraph"> </div>
+
+ Localization is a way to make elements in a commutative ring invertible by adding inverses, in the most minimal way possible. It generalizes the familiar operation of a field of fractions. 
+<div class="paragraph"> </div>
+
+<a id="lab199"></a><h2 class="section">Multiplicative subsets</h2>
+
+<div class="paragraph"> </div>
+
+ A multiplicative subset is formally a submonoid of the multiplicative monoid of a ring. Essentially it is a subset closed under finite products. 
+<div class="paragraph"> </div>
+
+<a id="lab200"></a><h3 class="section">Definition</h3>
+
+<div class="paragraph"> </div>
+
+ Multiplicative subsets of a ring <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> consist of: 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="IsMultiplicativeSubset" class="idref" href="#IsMultiplicativeSubset"><span class="id" title="definition, record"><span id="IsMultiplicativeSubset_rect" class="id"><span id="IsMultiplicativeSubset_ind" class="id"><span id="IsMultiplicativeSubset_rec" class="id"><span id="IsMultiplicativeSubset_sind" class="id">IsMultiplicativeSubset</span></span></span></span></span></a> {<a id="R:1" class="idref" href="#R:1"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>} (<a id="S:2" class="idref" href="#S:2"><span class="id" title="binder">S</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#R:1"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> := {<br/>
+&nbsp;&nbsp;</div>
+
+<div class="doc">
+Contains one 
+</div>
+<div class="code">
+&nbsp;&nbsp;<a id="mss_one" class="idref" href="#mss_one"><span class="id" title="projection">mss_one</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#S:2"><span class="id" title="variable">S</span></a> 1 ;<br/>
+&nbsp;&nbsp;</div>
+
+<div class="doc">
+Closed under multiplication 
+</div>
+<div class="code">
+&nbsp;&nbsp;<a id="mss_mult" class="idref" href="#mss_mult"><span class="id" title="projection">mss_mult</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a> <a id="y:6" class="idref" href="#y:6"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#S:2"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:5"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#S:2"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#y:6"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#S:2"><span class="id" title="variable">S</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:5"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#y:6"><span class="id" title="variable">y</span></a>) ;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_one"><span class="id" title="method">mss_one</span></a> {<span class="id" title="var">R</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_mult"><span class="id" title="method">mss_mult</span></a> {<span class="id" title="var">R</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab201"></a><h3 class="section">Examples</h3>
+
+<div class="paragraph"> </div>
+
+ The multiplicative subset of powers of a ring element. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="ismultiplicative_powers" class="idref" href="#ismultiplicative_powers"><span class="id" title="instance">ismultiplicative_powers</span></a> (<a id="R:8" class="idref" href="#R:8"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>) (<a id="x:9" class="idref" href="#x:9"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#R:8"><span class="id" title="variable">R</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#IsMultiplicativeSubset"><span class="id" title="class">IsMultiplicativeSubset</span></a> (<span class="id" title="keyword">fun</span> <a id="r:10" class="idref" href="#r:10"><span class="id" title="binder">r</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_power"><span class="id" title="definition">rng_power</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:9"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#n:11"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#r:10"><span class="id" title="variable">r</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Build_IsMultiplicativeSubset"><span class="id" title="constructor">Build_IsMultiplicativeSubset</span></a>; <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;1: <span class="id" title="tactic">by</span> <span class="id" title="tactic">∃</span> 0%<span class="id" title="var">nat</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">np</span> <span class="id" title="var">mq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">np</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">p</span>], <span class="id" title="var">mq</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">m</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<span class="id" title="var">n</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <span class="id" title="var">m</span>)%<span class="id" title="var">nat</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_power_mult_law"><span class="id" title="lemma">rng_power_mult_law</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Invertible elements of a ring form a multiplicative subset. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="ismultiplicative_isinvertible" class="idref" href="#ismultiplicative_isinvertible"><span class="id" title="instance">ismultiplicative_isinvertible</span></a> (<a id="R:12" class="idref" href="#R:12"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#IsMultiplicativeSubset"><span class="id" title="class">IsMultiplicativeSubset</span></a> (@<a class="idref" href="HoTT.Algebra.Rings.Ring.html#IsInvertible"><span class="id" title="class">IsInvertible</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#R:12"><span class="id" title="variable">R</span></a>) := {}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO: Property of being a localization. 
+<div class="paragraph"> </div>
+
+<a id="lab202"></a><h2 class="section">Construction of localization</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Localization" class="idref" href="#Localization"><span class="id" title="section">Localization</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We now construct the localization of a ring at a multiplicative subset as the following HIT:
+
+<div class="paragraph"> </div>
+
+<pre>
+  HIT (Quotient fraction_eq) (R : CRing) (S : R -&gt; Type)
+    `{IsMultiplicativeSubset R} :=
+  | loc_frac (n d : R) (p : S d) : Localization R S
+  | loc_frac_eq (n1 d1 n2 d2 : R) (p1 : S d1) (p2 : S d2)
+      (x : R) (q : S x) (r : x * (d2 * n1 - n2 * d1) = 0)
+      : loc_frac n1 d1 p1 = loc_frac n2 d2 p2
+  .
+</pre>
+
+<div class="paragraph"> </div>
+
+  along with the condition that this HIT be a set.
+
+<div class="paragraph"> </div>
+
+  We will implement this HIT by writing it as a set quotient. From now on, <span class="inlinecode"><span class="id" title="var">loc_frac</span></span> will be implemented as <span class="inlinecode"><a class="idref" href="HoTT.HIT.quotient.html#Quotient.class_of"><span class="id" title="constructor">class_of</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a></span> and <span class="inlinecode"><span class="id" title="var">loc_frac_eq</span></span> will be implemented as <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="R:13" class="idref" href="#R:13"><span class="id" title="binder">R</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>) (<a id="S:14" class="idref" href="#S:14"><span class="id" title="binder">S</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#R:13"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) `{<a id="IsMultiplicativeSubset0:15" class="idref" href="#IsMultiplicativeSubset0:15"><span class="id" title="binder">!</span></a><a id="IsMultiplicativeSubset0:15" class="idref" href="#IsMultiplicativeSubset0:15"><span class="id" title="binder">IsMultiplicativeSubset</span></a> <a id="IsMultiplicativeSubset0:15" class="idref" href="#IsMultiplicativeSubset0:15"><span class="id" title="binder">S</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab203"></a><h3 class="section">Construction of underlying Localization type</h3>
+
+<div class="paragraph"> </div>
+
+ The base type will be the type of fractions with respect to a multiplicative subset. This consists of pairs of elements of a ring <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> where the <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a></span> is in the multiplicative subset <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.lax_comma_category_parts.S"><span class="id" title="variable">S</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Record</span> <a id="Fraction" class="idref" href="#Fraction"><span class="id" title="definition, record"><span id="Fraction_rect" class="id"><span id="Fraction_ind" class="id"><span id="Fraction_rec" class="id"><span id="Fraction_sind" class="id">Fraction</span></span></span></span></span></a> := {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="numerator" class="idref" href="#numerator"><span class="id" title="projection">numerator</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a> ;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="denominator" class="idref" href="#denominator"><span class="id" title="projection">denominator</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a> ;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="in_mult_subset_denominator" class="idref" href="#in_mult_subset_denominator"><span class="id" title="projection">in_mult_subset_denominator</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.S"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator:18"><span class="id" title="method">denominator</span></a> ;<br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We consider two fractions to be equal if we can rearrange the fractions as products and ask for equality up to some scaling factor from the multiplicative subset <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.lax_comma_category_parts.S"><span class="id" title="variable">S</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="fraction_eq" class="idref" href="#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Relation"><span class="id" title="definition">Relation</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">n1</span> <span class="id" title="var">d1</span> ?] [<span class="id" title="var">n2</span> <span class="id" title="var">d2</span> ?].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">(</span></a><a id="x:20" class="idref" href="#x:20"><span class="id" title="binder"><span id="x:21" class="id">x</span></span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a><a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.S"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:20"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <span class="id" title="var">n1</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <span class="id" title="var">d2</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <span class="id" title="var">n2</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <span class="id" title="var">d1</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+It is convenient to produce elements of this relation specialized to when the scaling factor is <span class="inlinecode">1</span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="fraction_eq_simple" class="idref" href="#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a> <a id="f1:22" class="idref" href="#f1:22"><span class="id" title="binder">f1</span></a> <a id="f2:23" class="idref" href="#f2:23"><span class="id" title="binder">f2</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="p:24" class="idref" href="#p:24"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#numerator"><span class="id" title="projection">numerator</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:22"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:23"><span class="id" title="variable">f2</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#numerator"><span class="id" title="projection">numerator</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:23"><span class="id" title="variable">f2</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:22"><span class="id" title="variable">f1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:22"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:23"><span class="id" title="variable">f2</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_one"><span class="id" title="method">mss_one</span></a><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#e89b8696f6779e42374ab72b22e44d19"><span class="id" title="notation">(</span></a>1 <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#e89b8696f6779e42374ab72b22e44d19"><span class="id" title="notation">*.)</span></a> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Fraction equality is a reflexive relation. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="fraction_eq_refl" class="idref" href="#fraction_eq_refl"><span class="id" title="definition">fraction_eq_refl</span></a> <a id="f1:25" class="idref" href="#f1:25"><span class="id" title="binder">f1</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:25"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:25"><span class="id" title="variable">f1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Elements of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> can be considered fractions. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_in" class="idref" href="#frac_in"><span class="id" title="definition">frac_in</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="r:26" class="idref" href="#r:26"><span class="id" title="binder">r</span></a> ⇒ <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Build_Fraction"><span class="id" title="constructor">Build_Fraction</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#r:26"><span class="id" title="variable">r</span></a> 1 <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_one"><span class="id" title="method">mss_one</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now that we have defined the HIT as above, we can define the ring structure. 
+<div class="paragraph"> </div>
+
+<a id="lab204"></a><h3 class="section">Addition operation</h3>
+
+<div class="paragraph"> </div>
+
+ Fraction addition is the usual addition of fractions. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_add" class="idref" href="#frac_add"><span class="id" title="definition">frac_add</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> '(<a id="pat:30" class="idref" href="#pat:30"><span class="id" title="binder">Build_Fraction</span></a> <a id="n1:29" class="idref" href="#n1:29"><span class="id" title="binder"><span id="pat:30" class="id">n1</span></span></a> <a id="d1:28" class="idref" href="#d1:28"><span class="id" title="binder"><span id="pat:30" class="id">d1</span></span></a> <a id="p1:27" class="idref" href="#p1:27"><span class="id" title="binder"><span id="pat:30" class="id">p1</span></span></a>) '(<a id="pat:34" class="idref" href="#pat:34"><span class="id" title="binder">Build_Fraction</span></a> <a id="n2:33" class="idref" href="#n2:33"><span class="id" title="binder"><span id="pat:34" class="id">n2</span></span></a> <a id="d2:32" class="idref" href="#d2:32"><span class="id" title="binder"><span id="pat:34" class="id">d2</span></span></a> <a id="p2:31" class="idref" href="#p2:31"><span class="id" title="binder"><span id="pat:34" class="id">p2</span></span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Build_Fraction"><span class="id" title="constructor">Build_Fraction</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#n1:29"><span class="id" title="variable">n1</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#d2:32"><span class="id" title="variable">d2</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#n2:33"><span class="id" title="variable">n2</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#d1:28"><span class="id" title="variable">d1</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#d1:28"><span class="id" title="variable">d1</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#d2:32"><span class="id" title="variable">d2</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_mult"><span class="id" title="method">mss_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#p1:27"><span class="id" title="variable">p1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#p2:31"><span class="id" title="variable">p2</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Fraction addition is well-defined up to equality of fractions. 
+<div class="paragraph"> </div>
+
+ It is easier to prove well-definedness as a function of both arguments at once. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_add_wd" class="idref" href="#frac_add_wd"><span class="id" title="definition">frac_add_wd</span></a> (<a id="f1:35" class="idref" href="#f1:35"><span class="id" title="binder">f1</span></a> <a id="f1':36" class="idref" href="#f1':36"><span class="id" title="binder">f1'</span></a> <a id="f2:37" class="idref" href="#f2:37"><span class="id" title="binder">f2</span></a> <a id="f2':38" class="idref" href="#f2':38"><span class="id" title="binder">f2'</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="p:39" class="idref" href="#p:39"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:35"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1':36"><span class="id" title="variable">f1'</span></a>) (<a id="q:40" class="idref" href="#q:40"><span class="id" title="binder">q</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:37"><span class="id" title="variable">f2</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2':38"><span class="id" title="variable">f2'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add"><span class="id" title="definition">frac_add</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:35"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:37"><span class="id" title="variable">f2</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add"><span class="id" title="definition">frac_add</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1':36"><span class="id" title="variable">f1'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2':38"><span class="id" title="variable">f2'</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">f1</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">a</span> <span class="id" title="var">s</span> <span class="id" title="var">ss</span>], <span class="id" title="var">f1'</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">a'</span> <span class="id" title="var">s'</span> <span class="id" title="var">ss'</span>],<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f2</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">b</span> <span class="id" title="var">t</span> <span class="id" title="var">st</span>], <span class="id" title="var">f2'</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">b'</span> <span class="id" title="var">t'</span> <span class="id" title="var">st'</span>],<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">p</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> [<span class="id" title="var">sx</span> <span class="id" title="var">p</span>]], <span class="id" title="var">q</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">y</span> [<span class="id" title="var">sy</span> <span class="id" title="var">q</span>]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <span class="id" title="var">y</span> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_mult"><span class="id" title="method">mss_mult</span></a> <span class="id" title="var">sx</span> <span class="id" title="var">sy</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_l"><span class="id" title="definition">rng_dist_l</span></a>, 2 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_r"><span class="id" title="definition">rng_dist_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#ap011"><span class="id" title="definition">ap011</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bb6dec3b123b2c29c8eeeac472582eca"><span class="id" title="notation">(+)</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> 4 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 8 (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#2340616218427edcd72079258c165cc3"><span class="id" title="notation">(.*</span></a> <span class="id" title="var">y</span><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#2340616218427edcd72079258c165cc3"><span class="id" title="notation">)</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">t</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#2340616218427edcd72079258c165cc3"><span class="id" title="notation">(.*</span></a> <span class="id" title="var">t</span><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#2340616218427edcd72079258c165cc3"><span class="id" title="notation">)</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">t'</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">do</span> 2 <span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 6 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">t'</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_add_wd_l" class="idref" href="#frac_add_wd_l"><span class="id" title="definition">frac_add_wd_l</span></a> (<a id="f1:41" class="idref" href="#f1:41"><span class="id" title="binder">f1</span></a> <a id="f1':42" class="idref" href="#f1':42"><span class="id" title="binder">f1'</span></a> <a id="f2:43" class="idref" href="#f2:43"><span class="id" title="binder">f2</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a>) (<a id="p:44" class="idref" href="#p:44"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:41"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1':42"><span class="id" title="variable">f1'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add"><span class="id" title="definition">frac_add</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:41"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:43"><span class="id" title="variable">f2</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add"><span class="id" title="definition">frac_add</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1':42"><span class="id" title="variable">f1'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:43"><span class="id" title="variable">f2</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_refl"><span class="id" title="definition">fraction_eq_refl</span></a> <span class="id" title="var">f2</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add_wd"><span class="id" title="definition">frac_add_wd</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_add_wd_r" class="idref" href="#frac_add_wd_r"><span class="id" title="definition">frac_add_wd_r</span></a> (<a id="f1:45" class="idref" href="#f1:45"><span class="id" title="binder">f1</span></a> <a id="f2:46" class="idref" href="#f2:46"><span class="id" title="binder">f2</span></a> <a id="f2':47" class="idref" href="#f2':47"><span class="id" title="binder">f2'</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a>) (<a id="p:48" class="idref" href="#p:48"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:46"><span class="id" title="variable">f2</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2':47"><span class="id" title="variable">f2'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add"><span class="id" title="definition">frac_add</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:45"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:46"><span class="id" title="variable">f2</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add"><span class="id" title="definition">frac_add</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:45"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2':47"><span class="id" title="variable">f2'</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_refl"><span class="id" title="definition">fraction_eq_refl</span></a> <span class="id" title="var">f1</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add_wd"><span class="id" title="definition">frac_add_wd</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The addition operation on the localization is induced from the addition operation for fractions. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="plus_rng_localization" class="idref" href="#plus_rng_localization"><span class="id" title="instance">plus_rng_localization</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Plus"><span class="id" title="class">Plus</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#Quotient"><span class="id" title="definition">Quotient</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_rec2"><span class="id" title="definition">Quotient_rec2</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f1</span> <span class="id" title="var">f2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add"><span class="id" title="definition">frac_add</span></a> <span class="id" title="var">f1</span> <span class="id" title="var">f2</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f1</span> <span class="id" title="var">f1'</span> <span class="id" title="var">f2</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add_wd_l"><span class="id" title="definition">frac_add_wd_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f1</span> <span class="id" title="var">f2</span> <span class="id" title="var">f2'</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_add_wd_r"><span class="id" title="definition">frac_add_wd_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab205"></a><h3 class="section">Multiplication operation</h3>
+
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_mult" class="idref" href="#frac_mult"><span class="id" title="definition">frac_mult</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> '(<a id="pat:52" class="idref" href="#pat:52"><span class="id" title="binder">Build_Fraction</span></a> <a id="n1:51" class="idref" href="#n1:51"><span class="id" title="binder"><span id="pat:52" class="id">n1</span></span></a> <a id="d1:50" class="idref" href="#d1:50"><span class="id" title="binder"><span id="pat:52" class="id">d1</span></span></a> <a id="p1:49" class="idref" href="#p1:49"><span class="id" title="binder"><span id="pat:52" class="id">p1</span></span></a>) '(<a id="pat:56" class="idref" href="#pat:56"><span class="id" title="binder">Build_Fraction</span></a> <a id="n2:55" class="idref" href="#n2:55"><span class="id" title="binder"><span id="pat:56" class="id">n2</span></span></a> <a id="d2:54" class="idref" href="#d2:54"><span class="id" title="binder"><span id="pat:56" class="id">d2</span></span></a> <a id="p2:53" class="idref" href="#p2:53"><span class="id" title="binder"><span id="pat:56" class="id">p2</span></span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Build_Fraction"><span class="id" title="constructor">Build_Fraction</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#n1:51"><span class="id" title="variable">n1</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#n2:55"><span class="id" title="variable">n2</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#d1:50"><span class="id" title="variable">d1</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#d2:54"><span class="id" title="variable">d2</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_mult"><span class="id" title="method">mss_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#p1:49"><span class="id" title="variable">p1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#p2:53"><span class="id" title="variable">p2</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_mult_wd_l" class="idref" href="#frac_mult_wd_l"><span class="id" title="definition">frac_mult_wd_l</span></a> <a id="f1:57" class="idref" href="#f1:57"><span class="id" title="binder">f1</span></a> <a id="f1':58" class="idref" href="#f1':58"><span class="id" title="binder">f1'</span></a> <a id="f2:59" class="idref" href="#f2:59"><span class="id" title="binder">f2</span></a> (<a id="p:60" class="idref" href="#p:60"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:57"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1':58"><span class="id" title="variable">f1'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_mult"><span class="id" title="definition">frac_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:57"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:59"><span class="id" title="variable">f2</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_mult"><span class="id" title="definition">frac_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1':58"><span class="id" title="variable">f1'</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:59"><span class="id" title="variable">f2</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> [<span class="id" title="var">s</span> <span class="id" title="var">p</span>]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">s</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 4 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <span class="id" title="var">f1'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <span class="id" title="var">f1</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_mult_wd_r" class="idref" href="#frac_mult_wd_r"><span class="id" title="definition">frac_mult_wd_r</span></a> <a id="f1:61" class="idref" href="#f1:61"><span class="id" title="binder">f1</span></a> <a id="f2:62" class="idref" href="#f2:62"><span class="id" title="binder">f2</span></a> <a id="f2':63" class="idref" href="#f2':63"><span class="id" title="binder">f2'</span></a> (<a id="p:64" class="idref" href="#p:64"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:62"><span class="id" title="variable">f2</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2':63"><span class="id" title="variable">f2'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_mult"><span class="id" title="definition">frac_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:61"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:62"><span class="id" title="variable">f2</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_mult"><span class="id" title="definition">frac_mult</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:61"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2':63"><span class="id" title="variable">f2'</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> [<span class="id" title="var">s</span> <span class="id" title="var">p</span>]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">s</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 4 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#numerator"><span class="id" title="projection">numerator</span></a> <span class="id" title="var">f2</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <span class="id" title="var">f2'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#numerator"><span class="id" title="projection">numerator</span></a> <span class="id" title="var">f2'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <span class="id" title="var">f2</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="mult_rng_localization" class="idref" href="#mult_rng_localization"><span class="id" title="instance">mult_rng_localization</span></a>: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Mult"><span class="id" title="class">Mult</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#Quotient"><span class="id" title="definition">Quotient</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_rec2"><span class="id" title="definition">Quotient_rec2</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f1</span> <span class="id" title="var">f2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_mult"><span class="id" title="definition">frac_mult</span></a> <span class="id" title="var">f1</span> <span class="id" title="var">f2</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f1</span> <span class="id" title="var">f1'</span> <span class="id" title="var">f2</span> <span class="id" title="var">p</span>; <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_mult_wd_l"><span class="id" title="definition">frac_mult_wd_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f1</span> <span class="id" title="var">f2</span> <span class="id" title="var">f2'</span> <span class="id" title="var">q</span>; <span class="id" title="var">cbn</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_mult_wd_r"><span class="id" title="definition">frac_mult_wd_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab206"></a><h3 class="section">Zero element</h3>
+
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="zero_rng_localization" class="idref" href="#zero_rng_localization"><span class="id" title="instance">zero_rng_localization</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Zero"><span class="id" title="class">Zero</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#Quotient"><span class="id" title="definition">Quotient</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#Build_Fraction"><span class="id" title="constructor">Build_Fraction</span></a> 0 1 <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_one"><span class="id" title="method">mss_one</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab207"></a><h3 class="section">One element</h3>
+
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="one_rng_localization" class="idref" href="#one_rng_localization"><span class="id" title="instance">one_rng_localization</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#One"><span class="id" title="class">One</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#Quotient"><span class="id" title="definition">Quotient</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <span class="id" title="var">_</span>(<a class="idref" href="HoTT.Algebra.Rings.Localization.html#Build_Fraction"><span class="id" title="constructor">Build_Fraction</span></a> 1 1 <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mss_one"><span class="id" title="method">mss_one</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab208"></a><h3 class="section">Negation operation</h3>
+
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_negate" class="idref" href="#frac_negate"><span class="id" title="definition">frac_negate</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:=  <span class="id" title="keyword">fun</span> '(<a id="pat:68" class="idref" href="#pat:68"><span class="id" title="binder">Build_Fraction</span></a> <a id="n:67" class="idref" href="#n:67"><span class="id" title="binder"><span id="pat:68" class="id">n</span></span></a> <a id="d:66" class="idref" href="#d:66"><span class="id" title="binder"><span id="pat:68" class="id">d</span></span></a> <a id="p:65" class="idref" href="#p:65"><span class="id" title="binder"><span id="pat:68" class="id">p</span></span></a>) ⇒ <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Build_Fraction"><span class="id" title="constructor">Build_Fraction</span></a> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#n:67"><span class="id" title="variable">n</span></a>) <a class="idref" href="HoTT.Algebra.Rings.Localization.html#d:66"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#p:65"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="frac_negate_wd" class="idref" href="#frac_negate_wd"><span class="id" title="definition">frac_negate_wd</span></a> <a id="f1:69" class="idref" href="#f1:69"><span class="id" title="binder">f1</span></a> <a id="f2:70" class="idref" href="#f2:70"><span class="id" title="binder">f2</span></a> (<a id="p:71" class="idref" href="#p:71"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:69"><span class="id" title="variable">f1</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:70"><span class="id" title="variable">f2</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_negate"><span class="id" title="definition">frac_negate</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f1:69"><span class="id" title="variable">f1</span></a>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_negate"><span class="id" title="definition">frac_negate</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f2:70"><span class="id" title="variable">f2</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> [<span class="id" title="var">s</span> <span class="id" title="var">p</span>]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">s</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a><span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_negate_r"><span class="id" title="definition">rng_mult_negate_r</span></a>, 2 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_negate_l"><span class="id" title="definition">rng_mult_negate_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="negate_rng_localization" class="idref" href="#negate_rng_localization"><span class="id" title="instance">negate_rng_localization</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Negate"><span class="id" title="class">Negate</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#Quotient"><span class="id" title="definition">Quotient</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_rec"><span class="id" title="definition">Quotient_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_negate"><span class="id" title="definition">frac_negate</span></a> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f1</span> <span class="id" title="var">f2</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_negate_wd"><span class="id" title="definition">frac_negate_wd</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab209"></a><h3 class="section">Ring laws</h3>
+
+<div class="paragraph"> </div>
+
+ Commutativity of addition 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="commutative_plus_rng_localization" class="idref" href="#commutative_plus_rng_localization"><span class="id" title="instance">commutative_plus_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Commutative"><span class="id" title="class">Commutative</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#plus_rng_localization"><span class="id" title="instance">plus_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind2_hprop"><span class="id" title="definition">Quotient_ind2_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <span class="id" title="var">y</span>) (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <span class="id" title="var">x</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_comm"><span class="id" title="definition">rng_plus_comm</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Left additive identity 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="leftidentity_plus_rng_localization" class="idref" href="#leftidentity_plus_rng_localization"><span class="id" title="instance">leftidentity_plus_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#plus_rng_localization"><span class="id" title="instance">plus_rng_localization</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#zero_rng_localization"><span class="id" title="instance">zero_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_zero_l"><span class="id" title="definition">rng_mult_zero_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_zero_l"><span class="id" title="definition">rng_plus_zero_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_l"><span class="id" title="definition">rng_mult_one_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="leftinverse_plus_rng_localization" class="idref" href="#leftinverse_plus_rng_localization"><span class="id" title="instance">leftinverse_plus_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftInverse"><span class="id" title="class">LeftInverse</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#plus_rng_localization"><span class="id" title="instance">plus_rng_localization</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#negate_rng_localization"><span class="id" title="instance">negate_rng_localization</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#zero_rng_localization"><span class="id" title="instance">zero_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_zero_l"><span class="id" title="definition">rng_mult_zero_l</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_negate_l"><span class="id" title="definition">rng_mult_negate_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_negate_l"><span class="id" title="definition">rng_plus_negate_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="associative_plus_rng_localization" class="idref" href="#associative_plus_rng_localization"><span class="id" title="instance">associative_plus_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#plus_rng_localization"><span class="id" title="instance">plus_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind3_hprop"><span class="id" title="definition">Quotient_ind3_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_r"><span class="id" title="definition">rng_dist_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_plus_assoc"><span class="id" title="definition">rng_plus_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 4 <span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">rewrite</span> &lt;- ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="leftidentity_mult_rng_localization" class="idref" href="#leftidentity_mult_rng_localization"><span class="id" title="instance">leftidentity_mult_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mult_rng_localization"><span class="id" title="instance">mult_rng_localization</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#one_rng_localization"><span class="id" title="instance">one_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>; [|<span class="id" title="tactic">symmetry</span>]; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_l"><span class="id" title="definition">rng_mult_one_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="associative_mult_rng_localization" class="idref" href="#associative_mult_rng_localization"><span class="id" title="instance">associative_mult_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mult_rng_localization"><span class="id" title="instance">mult_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind3_hprop"><span class="id" title="definition">Quotient_ind3_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>; [|<span class="id" title="tactic">symmetry</span>]; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="commutative_mult_rng_localization" class="idref" href="#commutative_mult_rng_localization"><span class="id" title="instance">commutative_mult_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Commutative"><span class="id" title="class">Commutative</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mult_rng_localization"><span class="id" title="instance">mult_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind2_hprop"><span class="id" title="definition">Quotient_ind2_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>; <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="leftdistribute_rng_localization" class="idref" href="#leftdistribute_rng_localization"><span class="id" title="instance">leftdistribute_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftDistribute"><span class="id" title="class">LeftDistribute</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#mult_rng_localization"><span class="id" title="instance">mult_rng_localization</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#plus_rng_localization"><span class="id" title="instance">plus_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind3_hprop"><span class="id" title="definition">Quotient_ind3_hprop</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_l"><span class="id" title="definition">rng_dist_l</span></a>, ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_r"><span class="id" title="definition">rng_dist_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">rewrite</span> &lt;- ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">do</span> 2 <span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">rewrite</span> ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a> (<span class="id" title="var">_</span> <span class="id" title="var">x</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">rewrite</span> &lt;- ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a> <span class="id" title="var">_</span> (<span class="id" title="var">_</span> <span class="id" title="var">y</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">rewrite</span> &lt;- ? <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rng_localization" class="idref" href="#rng_localization"><span class="id" title="definition">rng_localization</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#Build_CRing'"><span class="id" title="definition">Build_CRing'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;All&nbsp;of&nbsp;the&nbsp;laws&nbsp;can&nbsp;be&nbsp;found&nbsp;by&nbsp;typeclass&nbsp;search,&nbsp;but&nbsp;it's&nbsp;slightly&nbsp;faster&nbsp;if&nbsp;we&nbsp;fill&nbsp;them&nbsp;in:&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#Build_AbGroup'"><span class="id" title="definition">Build_AbGroup'</span></a> (<a class="idref" href="HoTT.Colimits.Quotient.html#Quotient"><span class="id" title="definition">Quotient</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Rings.Localization.html#commutative_plus_rng_localization"><span class="id" title="instance">commutative_plus_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Rings.Localization.html#associative_plus_rng_localization"><span class="id" title="instance">associative_plus_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Rings.Localization.html#leftidentity_plus_rng_localization"><span class="id" title="instance">leftidentity_plus_rng_localization</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Rings.Localization.html#leftinverse_plus_rng_localization"><span class="id" title="instance">leftinverse_plus_rng_localization</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="loc_in" class="idref" href="#loc_in"><span class="id" title="definition">loc_in</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Build_RingHomomorphism"><span class="id" title="constructor">Build_RingHomomorphism</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#frac_in"><span class="id" title="definition">frac_in</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#Build_IsSemiRingPreserving"><span class="id" title="constructor">Build_IsSemiRingPreserving</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#Build_IsMonoidPreserving"><span class="id" title="constructor">Build_IsMonoidPreserving</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">rewrite</span> 5 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#Build_IsMonoidPreserving"><span class="id" title="constructor">Build_IsMonoidPreserving</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">rewrite</span> 3 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="Localization.Rec" class="idref" href="#Localization.Rec"><span class="id" title="section">Rec</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="T:72" class="idref" href="#T:72"><span class="id" title="binder">T</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>) (<a id="f:73" class="idref" href="#f:73"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#T:72"><span class="id" title="variable">T</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="H:75" class="idref" href="#H:75"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:74" class="idref" href="#x:74"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.S"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:74"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#IsInvertible"><span class="id" title="class">IsInvertible</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#T:72"><span class="id" title="variable">T</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#f:73"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:74"><span class="id" title="variable">x</span></a>)).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rng_localization_rec_map" class="idref" href="#rng_localization_rec_map"><span class="id" title="definition">rng_localization_rec_map</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.T"><span class="id" title="variable">T</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_rec"><span class="id" title="definition">Quotient_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">n</span> <span class="id" title="var">d</span> <span class="id" title="var">sd</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.f"><span class="id" title="variable">f</span></a> <span class="id" title="var">n</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#inverse_elem"><span class="id" title="definition">inverse_elem</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.f"><span class="id" title="variable">f</span></a> <span class="id" title="var">d</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.H"><span class="id" title="variable">H</span></a> <span class="id" title="var">d</span> <span class="id" title="var">sd</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_moveR_rV"><span class="id" title="definition">rng_inv_moveR_rV</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_move_left_assoc"><span class="id" title="definition">rng_mult_move_left_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_moveL_Vr"><span class="id" title="definition">rng_inv_moveL_Vr</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#equiv_inj"><span class="id" title="definition">equiv_inj</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#e89b8696f6779e42374ab72b22e44d19"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.f"><span class="id" title="variable">f</span></a> <span class="id" title="var">z</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#e89b8696f6779e42374ab72b22e44d19"><span class="id" title="notation">*.)</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#isequiv_rng_inv_mult_l"><span class="id" title="instance">isequiv_rng_inv_mult_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.H"><span class="id" title="variable">H</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> <span class="id" title="var">z</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">.2</span></a>)). }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1: <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_permute_2_3"><span class="id" title="definition">rng_mult_permute_2_3</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.f"><span class="id" title="variable">f</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#snd"><span class="id" title="projection">snd</span></a> <span class="id" title="var">z</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">.2</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="issemiringpreserving_rng_localization_rec_map" class="idref" href="#issemiringpreserving_rng_localization_rec_map"><span class="id" title="instance">issemiringpreserving_rng_localization_rec_map</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsSemiRingPreserving"><span class="id" title="class">IsSemiRingPreserving</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization_rec_map"><span class="id" title="definition">rng_localization_rec_map</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#Build_IsSemiRingPreserving"><span class="id" title="constructor">Build_IsSemiRingPreserving</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#Build_IsMonoidPreserving"><span class="id" title="constructor">Build_IsMonoidPreserving</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind2_hprop"><span class="id" title="definition">Quotient_ind2_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_moveR_rV"><span class="id" title="definition">rng_inv_moveR_rV</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_dist_r"><span class="id" title="definition">rng_dist_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_plus"><span class="id" title="definition">rng_homo_plus</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 3 <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_l"><span class="id" title="definition">rng_mult_one_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1,2: <span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_l"><span class="id" title="definition">rng_inv_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_r"><span class="id" title="definition">rng_inv_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">hnf</span>; <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_zero"><span class="id" title="definition">rng_homo_zero</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_zero_l"><span class="id" title="definition">rng_mult_zero_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#Build_IsMonoidPreserving"><span class="id" title="constructor">Build_IsMonoidPreserving</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind2_hprop"><span class="id" title="definition">Quotient_ind2_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_moveR_rV"><span class="id" title="definition">rng_inv_moveR_rV</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_moveL_Vr"><span class="id" title="definition">rng_inv_moveL_Vr</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_moveL_Vr"><span class="id" title="definition">rng_inv_moveL_Vr</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#rng_mult_comm"><span class="id" title="definition">rng_mult_comm</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_moveR_rV"><span class="id" title="definition">rng_inv_moveR_rV</span></a>; <span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_l"><span class="id" title="definition">rng_mult_one_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rng_localization_rec" class="idref" href="#rng_localization_rec"><span class="id" title="definition">rng_localization_rec</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.T"><span class="id" title="variable">T</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Rings.Ring.html#Build_RingHomomorphism"><span class="id" title="constructor">Build_RingHomomorphism</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization_rec_map"><span class="id" title="definition">rng_localization_rec_map</span></a> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rng_localization_rec_beta" class="idref" href="#rng_localization_rec_beta"><span class="id" title="definition">rng_localization_rec_beta</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization_rec"><span class="id" title="definition">rng_localization_rec</span></a> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec.f"><span class="id" title="variable">f</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_inv_moveR_rV"><span class="id" title="definition">rng_inv_moveR_rV</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_one_r"><span class="id" title="definition">rng_mult_one_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>; <span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_one"><span class="id" title="definition">rng_homo_one</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.Rec"><span class="id" title="section">Rec</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Elements belonging to the multiplicative subset <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.lax_comma_category_parts.S"><span class="id" title="variable">S</span></a></span> of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> become invertible in <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.lax_comma_category_parts.S"><span class="id" title="variable">S</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isinvertible_rng_localization" class="idref" href="#isinvertible_rng_localization"><span class="id" title="instance">isinvertible_rng_localization</span></a> (<a id="x:76" class="idref" href="#x:76"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a>) (<a id="Sx:77" class="idref" href="#Sx:77"><span class="id" title="binder">Sx</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.S"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:76"><span class="id" title="variable">x</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Ring.html#IsInvertible"><span class="id" title="class">IsInvertible</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:76"><span class="id" title="variable">x</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.CRing.html#isinvertible_cring"><span class="id" title="definition">isinvertible_cring</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#Build_Fraction"><span class="id" title="constructor">Build_Fraction</span></a> 1 <span class="id" title="var">x</span> <span class="id" title="var">Sx</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#ring_mult_assoc_opp"><span class="id" title="projection">ring_mult_assoc_opp</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+As a special case, any denominator of a fraction must necessarily be invertible. 
+</div>
+<div class="code">
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isinvertible_denominator" class="idref" href="#isinvertible_denominator"><span class="id" title="instance">isinvertible_denominator</span></a> (<a id="f:78" class="idref" href="#f:78"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Ring.html#IsInvertible"><span class="id" title="class">IsInvertible</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f:78"><span class="id" title="variable">f</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#isinvertible_rng_localization"><span class="id" title="instance">isinvertible_rng_localization</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#in_mult_subset_denominator"><span class="id" title="projection">in_mult_subset_denominator</span></a> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Elements that were invertible in the original ring <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span>, continue to be invertible in <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#R"><span class="id" title="definition">R</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.LaxComma.CoreParts.html#LaxCommaCategoryParts.lax_comma_category_parts.S"><span class="id" title="variable">S</span></a></span>. Since <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a></span> is a ring homomorphism this is automatic. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="isinvertible_rng_localization_preserved" class="idref" href="#isinvertible_rng_localization_preserved"><span class="id" title="definition">isinvertible_rng_localization_preserved</span></a> (<a id="x:79" class="idref" href="#x:79"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Ring.html#IsInvertible"><span class="id" title="class">IsInvertible</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization.R"><span class="id" title="variable">R</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:79"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#IsInvertible"><span class="id" title="class">IsInvertible</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:79"><span class="id" title="variable">x</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can factor any fraction as the multiplication of the numerator and the inverse of the denominator. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="fraction_decompose" class="idref" href="#fraction_decompose"><span class="id" title="definition">fraction_decompose</span></a> (<a id="f:80" class="idref" href="#f:80"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Fraction"><span class="id" title="record">Fraction</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Colimits.Quotient.html#class_of"><span class="id" title="definition">class_of</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq"><span class="id" title="definition">fraction_eq</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f:80"><span class="id" title="variable">f</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#numerator"><span class="id" title="projection">numerator</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f:80"><span class="id" title="variable">f</span></a>) <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#inverse_elem"><span class="id" title="definition">inverse_elem</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#denominator"><span class="id" title="projection">denominator</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f:80"><span class="id" title="variable">f</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#qglue"><span class="id" title="definition">qglue</span></a>, <a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_eq_simple"><span class="id" title="definition">fraction_eq_simple</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_mult_assoc"><span class="id" title="definition">rng_mult_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rng_localization_ind" class="idref" href="#rng_localization_ind"><span class="id" title="definition">rng_localization_ind</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="P:81" class="idref" href="#P:81"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="H:83" class="idref" href="#H:83"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:82" class="idref" href="#x:82"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#P:81"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:82"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Hin:85" class="idref" href="#Hin:85"><span class="id" title="binder">Hin</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:84" class="idref" href="#x:84"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#P:81"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:84"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Hinv:88" class="idref" href="#Hinv:88"><span class="id" title="binder">Hinv</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:86" class="idref" href="#x:86"><span class="id" title="binder">x</span></a> (<a id="H:87" class="idref" href="#H:87"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Ring.html#IsInvertible"><span class="id" title="class">IsInvertible</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:86"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Rings.Localization.html#P:81"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:86"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#P:81"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#inverse_elem"><span class="id" title="definition">inverse_elem</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:86"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Hmul:91" class="idref" href="#Hmul:91"><span class="id" title="binder">Hmul</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:89" class="idref" href="#x:89"><span class="id" title="binder">x</span></a> <a id="y:90" class="idref" href="#y:90"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#P:81"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:89"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#P:81"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#y:90"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#P:81"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:89"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#y:90"><span class="id" title="variable">y</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:92" class="idref" href="#x:92"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#P:81"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#x:92"><span class="id" title="variable">x</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind"><span class="id" title="definition">Quotient_ind</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> <span class="id" title="var">P</span> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Rings.Localization.html#fraction_decompose"><span class="id" title="definition">fraction_decompose</span></a> <span class="id" title="var">f</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Hmul</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <span class="id" title="var">Hin</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <span class="id" title="var">Hinv</span>, <span class="id" title="var">Hin</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f1</span> <span class="id" title="var">f2</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rng_localization_ind_homotopy" class="idref" href="#rng_localization_ind_homotopy"><span class="id" title="definition">rng_localization_ind_homotopy</span></a> {<a id="T:93" class="idref" href="#T:93"><span class="id" title="binder">T</span></a> : <a class="idref" href="HoTT.Algebra.Rings.CRing.html#CRing"><span class="id" title="record">CRing</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<a id="f:94" class="idref" href="#f:94"><span class="id" title="binder">f</span></a> <a id="g:95" class="idref" href="#g:95"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization"><span class="id" title="definition">rng_localization</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#T:93"><span class="id" title="variable">T</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="p:96" class="idref" href="#p:96"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f:94"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#g:95"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#loc_in"><span class="id" title="definition">loc_in</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Rings.Localization.html#f:94"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#g:95"><span class="id" title="variable">g</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#rng_localization_ind"><span class="id" title="definition">rng_localization_ind</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">hnf</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">H</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Rings.Ring.html#inverse_elem"><span class="id" title="definition">inverse_elem</span></a> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#inverse_elem"><span class="id" title="definition">inverse_elem</span></a> (<span class="id" title="var">g</span> <span class="id" title="var">x</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#isinvertible_unique"><span class="id" title="definition">isinvertible_unique</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">hnf</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">q</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Rings.Ring.html#rng_homo_mult"><span class="id" title="definition">rng_homo_mult</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_ap</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Rings.Localization.html#Localization"><span class="id" title="section">Localization</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO: Show construction is a localization. 
+</div>
+<div class="code">
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

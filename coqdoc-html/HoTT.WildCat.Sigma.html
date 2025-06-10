@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.WildCat.Sigma</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.WildCat.Sigma</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab2037"></a><h2 class="section">Indexed sum of categories</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Sigma" class="idref" href="#Sigma"><span class="id" title="section">Sigma</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) (<a id="B:2" class="idref" href="#B:2"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.WildCat.Sigma.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">∀</span></a> <a id="a:3" class="idref" href="#a:3"><span class="id" title="binder"><span id="H:4" class="id">a</span></span></a><a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">,</span></a> <a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">IsGraph</span></a> <a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">(</span></a><a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">B</span></a> <a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">a</span></a><a id="H:4" class="idref" href="#H:4"><span class="id" title="binder">)</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">∀</span></a> <a id="a:5" class="idref" href="#a:5"><span class="id" title="binder"><span id="H0:6" class="id">a</span></span></a><a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">,</span></a> <a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">Is01Cat</span></a> <a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">(</span></a><a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">B</span></a> <a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">a</span></a><a id="H0:6" class="idref" href="#H0:6"><span class="id" title="binder">)</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">∀</span></a> <a id="a:7" class="idref" href="#a:7"><span class="id" title="binder"><span id="H1:8" class="id">a</span></span></a><a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">,</span></a> <a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">Is0Gpd</span></a> <a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">(</span></a><a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">B</span></a> <a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">a</span></a><a id="H1:8" class="idref" href="#H1:8"><span class="id" title="binder">)</span></a>}.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isgraph_sigma" class="idref" href="#isgraph_sigma"><span class="id" title="instance">isgraph_sigma</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#sig"><span class="id" title="record">sig</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#Sigma.B"><span class="id" title="variable">B</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_IsGraph"><span class="id" title="constructor">Build_IsGraph</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span> <span class="id" title="var">u</span>] [<span class="id" title="var">y</span> <span class="id" title="var">v</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="p:9" class="idref" href="#p:9"><span class="id" title="binder"><span id="p:10" class="id">p</span></span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">y</span> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#p:9"><span class="id" title="variable">p</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a> <span class="id" title="var">u</span> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <span class="id" title="var">v</span><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="is01cat_sigma" class="idref" href="#is01cat_sigma"><span class="id" title="instance">is01cat_sigma</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is01Cat"><span class="id" title="class">Is01Cat</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#sig"><span class="id" title="record">sig</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#Sigma.B"><span class="id" title="variable">B</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is01Cat"><span class="id" title="constructor">Build_Is01Cat</span></a>.<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span> <span class="id" title="var">u</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>. <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Core.html#Id"><span class="id" title="method">Id</span></a> <span class="id" title="var">u</span>).<br/>
+&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span> <span class="id" title="var">u</span>] [<span class="id" title="var">y</span> <span class="id" title="var">v</span>] [<span class="id" title="var">z</span> <span class="id" title="var">w</span>] [<span class="id" title="var">q</span> <span class="id" title="var">g</span>] [<span class="id" title="var">p</span> <span class="id" title="var">f</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<span class="id" title="var">p</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">q</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>, <span class="id" title="var">q</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">g</span> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <span class="id" title="var">f</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="is0gpd_sigma" class="idref" href="#is0gpd_sigma"><span class="id" title="instance">is0gpd_sigma</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is0Gpd"><span class="id" title="class">Is0Gpd</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#sig"><span class="id" title="record">sig</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#Sigma.B"><span class="id" title="variable">B</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span> <span class="id" title="var">u</span>] [<span class="id" title="var">y</span> <span class="id" title="var">v</span>] [<span class="id" title="var">p</span> <span class="id" title="var">f</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<span class="id" title="var">p</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">f</span><a class="idref" href="HoTT.WildCat.Core.html#8ee154f795cff7ee80397472b84ea7a8"><span class="id" title="notation">^$</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.WildCat.Sigma.html#Sigma"><span class="id" title="section">Sigma</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="is0functor_sigma" class="idref" href="#is0functor_sigma"><span class="id" title="instance">is0functor_sigma</span></a> {<a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>} (<a id="B:12" class="idref" href="#B:12"><span class="id" title="binder">B</span></a> <a id="C:13" class="idref" href="#C:13"><span class="id" title="binder">C</span></a> : <a class="idref" href="HoTT.WildCat.Sigma.html#A:11"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">∀</span></a> <a id="a:14" class="idref" href="#a:14"><span class="id" title="binder"><span id="H:15" class="id">a</span></span></a><a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">,</span></a> <a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">IsGraph</span></a> <a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">(</span></a><a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">B</span></a> <a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">a</span></a><a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">)</span></a>} `{<a id="H0:17" class="idref" href="#H0:17"><span class="id" title="binder">∀</span></a> <a id="a:16" class="idref" href="#a:16"><span class="id" title="binder"><span id="H0:17" class="id">a</span></span></a><a id="H0:17" class="idref" href="#H0:17"><span class="id" title="binder">,</span></a> <a id="H0:17" class="idref" href="#H0:17"><span class="id" title="binder">IsGraph</span></a> <a id="H0:17" class="idref" href="#H0:17"><span class="id" title="binder">(</span></a><a id="H0:17" class="idref" href="#H0:17"><span class="id" title="binder">C</span></a> <a id="H0:17" class="idref" href="#H0:17"><span class="id" title="binder">a</span></a><a id="H0:17" class="idref" href="#H0:17"><span class="id" title="binder">)</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H1:19" class="idref" href="#H1:19"><span class="id" title="binder">∀</span></a> <a id="a:18" class="idref" href="#a:18"><span class="id" title="binder"><span id="H1:19" class="id">a</span></span></a><a id="H1:19" class="idref" href="#H1:19"><span class="id" title="binder">,</span></a> <a id="H1:19" class="idref" href="#H1:19"><span class="id" title="binder">Is01Cat</span></a> <a id="H1:19" class="idref" href="#H1:19"><span class="id" title="binder">(</span></a><a id="H1:19" class="idref" href="#H1:19"><span class="id" title="binder">B</span></a> <a id="H1:19" class="idref" href="#H1:19"><span class="id" title="binder">a</span></a><a id="H1:19" class="idref" href="#H1:19"><span class="id" title="binder">)</span></a>} `{<a id="H2:21" class="idref" href="#H2:21"><span class="id" title="binder">∀</span></a> <a id="a:20" class="idref" href="#a:20"><span class="id" title="binder"><span id="H2:21" class="id">a</span></span></a><a id="H2:21" class="idref" href="#H2:21"><span class="id" title="binder">,</span></a> <a id="H2:21" class="idref" href="#H2:21"><span class="id" title="binder">Is01Cat</span></a> <a id="H2:21" class="idref" href="#H2:21"><span class="id" title="binder">(</span></a><a id="H2:21" class="idref" href="#H2:21"><span class="id" title="binder">C</span></a> <a id="H2:21" class="idref" href="#H2:21"><span class="id" title="binder">a</span></a><a id="H2:21" class="idref" href="#H2:21"><span class="id" title="binder">)</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="F:23" class="idref" href="#F:23"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="a:22" class="idref" href="#a:22"><span class="id" title="binder">a</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#B:12"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#a:22"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#C:13"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#a:22"><span class="id" title="variable">a</span></a>) {<a id="ff:25" class="idref" href="#ff:25"><span class="id" title="binder">ff</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="a:24" class="idref" href="#a:24"><span class="id" title="binder">a</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.WildCat.Core.html#Is0Functor"><span class="id" title="class">Is0Functor</span></a> (<a class="idref" href="HoTT.WildCat.Sigma.html#F:23"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#a:24"><span class="id" title="variable">a</span></a>)}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.WildCat.Core.html#Is0Functor"><span class="id" title="class">Is0Functor</span></a> (<span class="id" title="keyword">fun</span> (<a id="x:26" class="idref" href="#x:26"><span class="id" title="binder">x</span></a>:<a class="idref" href="HoTT.Basics.Overture.html#sig"><span class="id" title="record">sig</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#B:12"><span class="id" title="variable">B</span></a>) ⇒ <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.WildCat.Sigma.html#x:26"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#F:23"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#x:26"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a> <a class="idref" href="HoTT.WildCat.Sigma.html#x:26"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">.2</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">intros</span> [<span class="id" title="var">a1</span> <span class="id" title="var">b1</span>] [<span class="id" title="var">a2</span> <span class="id" title="var">b2</span>] [<span class="id" title="var">p</span> <span class="id" title="var">f</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Core.html#fmap"><span class="id" title="method">fmap</span></a> (<span class="id" title="var">F</span> <span class="id" title="var">a1</span>) <span class="id" title="var">f</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

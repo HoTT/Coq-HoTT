@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.WildCat.Induced</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.WildCat.Induced</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Equiv.html#"><span class="id" title="library">WildCat.Equiv</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1983"></a><h1 class="section">Induced wild categories</h1>
+
+<div class="paragraph"> </div>
+
+ A map <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> of types, where <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> is some type of wild category, induces the same level of structure on <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>, via taking everything to be defined on the image.
+
+<div class="paragraph"> </div>
+
+This needs to be separate from Core because of <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Equiv.html#HasEquivs"><span class="id" title="record">HasEquivs</span></a></span> usage.  We don't make these definitions (exported) <span class="inlinecode"><span class="id" title="keyword">Instance</span></span>s because we only want to apply them manually, but we make them <span class="inlinecode"><span class="id" title="keyword">Local</span></span> <span class="inlinecode"><span class="id" title="keyword">Instance</span></span>s so that subsequent ones can pick up the previous ones automatically. 
+<div class="paragraph"> </div>
+
+ In most of the proofs, we only want to use <span class="inlinecode"><span class="id" title="tactic">intro</span></span> on variables of type <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span>, so this will be handy. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">intros_of_type</span> <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="a:1" class="idref" href="#a:1"><span class="id" title="binder"><span id="a:2" class="id">a</span></span></a> : <span class="id" title="var">A</span><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">intro</span> <span class="id" title="var">a</span> <span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Induced_category" class="idref" href="#Induced_category"><span class="id" title="section">Induced_category</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="A:3" class="idref" href="#A:3"><span class="id" title="binder">A</span></a> <a id="B:4" class="idref" href="#B:4"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:5" class="idref" href="#f:5"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.WildCat.Induced.html#A:3"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#B:4"><span class="id" title="variable">B</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Instance</span> <a id="isgraph_induced" class="idref" href="#isgraph_induced"><span class="id" title="instance">isgraph_induced</span></a> `{<a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">IsGraph</span></a> <a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_IsGraph"><span class="id" title="constructor">Build_IsGraph</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.f"><span class="id" title="variable">f</span></a> <span class="id" title="var">a1</span> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.f"><span class="id" title="variable">f</span></a> <span class="id" title="var">a2</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Instance</span> <a id="is01cat_induced" class="idref" href="#is01cat_induced"><span class="id" title="instance">is01cat_induced</span></a> `{<a id="H0:8" class="idref" href="#H0:8"><span class="id" title="binder">Is01Cat</span></a> <a id="H0:8" class="idref" href="#H0:8"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#Is01Cat"><span class="id" title="class">Is01Cat</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is01Cat"><span class="id" title="constructor">Build_Is01Cat</span></a>; <span class="id" title="var">intros_of_type</span> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.WildCat.Core.html#Id"><span class="id" title="method">Id</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.WildCat.Core.html#cat_comp"><span class="id" title="method">cat_comp</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Instance</span> <a id="is0gpd_induced" class="idref" href="#is0gpd_induced"><span class="id" title="instance">is0gpd_induced</span></a> `{<a id="H1:11" class="idref" href="#H1:11"><span class="id" title="binder">Is0Gpd</span></a> <a id="H1:11" class="idref" href="#H1:11"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#Is0Gpd"><span class="id" title="class">Is0Gpd</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is0Gpd"><span class="id" title="constructor">Build_Is0Gpd</span></a>; <span class="id" title="var">intros_of_type</span> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.WildCat.Core.html#gpd_rev"><span class="id" title="method">gpd_rev</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The structure map along which we induce the category structure becomes a functor with respect to the induced structure. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Instance</span> <a id="is0functor_induced" class="idref" href="#is0functor_induced"><span class="id" title="instance">is0functor_induced</span></a> `{<a id="H:12" class="idref" href="#H:12"><span class="id" title="binder">IsGraph</span></a> <a id="H:12" class="idref" href="#H:12"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#Is0Functor"><span class="id" title="class">Is0Functor</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.f"><span class="id" title="variable">f</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is0Functor"><span class="id" title="constructor">Build_Is0Functor</span></a>; <span class="id" title="var">intros_of_type</span> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Instance</span> <a id="is2graph_induced" class="idref" href="#is2graph_induced"><span class="id" title="instance">is2graph_induced</span></a> `{<a id="H0:14" class="idref" href="#H0:14"><span class="id" title="binder">Is2Graph</span></a> <a id="H0:14" class="idref" href="#H0:14"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#Is2Graph"><span class="id" title="class">Is2Graph</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>; <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.WildCat.Core.html#isgraph_hom"><span class="id" title="definition">isgraph_hom</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Instance</span> <a id="is1cat_induced" class="idref" href="#is1cat_induced"><span class="id" title="instance">is1cat_induced</span></a> `{<a id="H:18" class="idref" href="#H:18"><span class="id" title="binder">Is1Cat</span></a> <a id="H:18" class="idref" href="#H:18"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#Is1Cat"><span class="id" title="class">Is1Cat</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is1Cat"><span class="id" title="constructor">Build_Is1Cat</span></a>; <span class="id" title="var">intros_of_type</span> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.WildCat.Core.html#is01cat_hom"><span class="id" title="method">is01cat_hom</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Core.html#is0gpd_hom"><span class="id" title="method">is0gpd_hom</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.WildCat.Core.html#is0functor_postcomp"><span class="id" title="method">is0functor_postcomp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.WildCat.Core.html#is0functor_precomp"><span class="id" title="method">is0functor_precomp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.WildCat.Core.html#cat_assoc"><span class="id" title="method">cat_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.WildCat.Core.html#cat_assoc_opp"><span class="id" title="method">cat_assoc_opp</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.WildCat.Core.html#cat_idl"><span class="id" title="method">cat_idl</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.WildCat.Core.html#cat_idr"><span class="id" title="method">cat_idr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Instance</span> <a id="is1functor_induced" class="idref" href="#is1functor_induced"><span class="id" title="instance">is1functor_induced</span></a> `{<a id="H:22" class="idref" href="#H:22"><span class="id" title="binder">Is1Cat</span></a> <a id="H:22" class="idref" href="#H:22"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#Is1Functor"><span class="id" title="class">Is1Functor</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.f"><span class="id" title="variable">f</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.WildCat.Core.html#Build_Is1Functor"><span class="id" title="constructor">Build_Is1Functor</span></a>; <span class="id" title="var">intros_of_type</span> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">g</span> <span class="id" title="var">h</span>. <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Core.html#Id"><span class="id" title="method">Id</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">g</span> <span class="id" title="var">h</span>. <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Core.html#Id"><span class="id" title="method">Id</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="hasmorext_induced" class="idref" href="#hasmorext_induced"><span class="id" title="instance">hasmorext_induced</span></a> `{<a id="H0:27" class="idref" href="#H0:27"><span class="id" title="binder">HasMorExt</span></a> <a id="H0:27" class="idref" href="#H0:27"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Core.html#HasMorExt"><span class="id" title="class">HasMorExt</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>; <span class="id" title="var">cbn</span>. <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.WildCat.Core.html#isequiv_Htpy_path"><span class="id" title="definition">isequiv_Htpy_path</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="hasequivs_induced" class="idref" href="#hasequivs_induced"><span class="id" title="definition">hasequivs_induced</span></a> `{<a id="H0:32" class="idref" href="#H0:32"><span class="id" title="binder">HasEquivs</span></a> <a id="H0:32" class="idref" href="#H0:32"><span class="id" title="binder">B</span></a>} : <a class="idref" href="HoTT.WildCat.Equiv.html#HasEquivs"><span class="id" title="class">HasEquivs</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#Build_HasEquivs"><span class="id" title="constructor">Build_HasEquivs</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.f"><span class="id" title="variable">f</span></a> <span class="id" title="var">a</span> <a class="idref" href="HoTT.WildCat.Equiv.html#53abe9e5a667eb1e98048ced5c0b4484"><span class="id" title="notation">$&lt;~&gt;</span></a> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category.f"><span class="id" title="variable">f</span></a> <span class="id" title="var">b</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#CatIsEquiv'"><span class="id" title="method">CatIsEquiv'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.WildCat.Equiv.html#cate_fun"><span class="id" title="definition">cate_fun</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#cate_isequiv'"><span class="id" title="method">cate_isequiv'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#cate_buildequiv'"><span class="id" title="method">cate_buildequiv'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#cate_buildequiv_fun'"><span class="id" title="method">cate_buildequiv_fun'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#cate_inv'"><span class="id" title="method">cate_inv'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#cate_issect'"><span class="id" title="method">cate_issect'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#cate_isretr'"><span class="id" title="method">cate_isretr'</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">napply</span> <a class="idref" href="HoTT.WildCat.Equiv.html#catie_adjointify'"><span class="id" title="method">catie_adjointify'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.WildCat.Induced.html#Induced_category"><span class="id" title="section">Induced_category</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

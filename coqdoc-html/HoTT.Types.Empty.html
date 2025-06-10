@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Types.Empty</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Types.Empty</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1761"></a><h1 class="section">Theorems about the empty type</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Equivalences.html#"><span class="id" title="library">Basics.Equivalences</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#"><span class="id" title="library">Basics.Trunc</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1762"></a><h2 class="section">Unpacking</h2>
+<a id="lab1763"></a><h2 class="section">Eta conversion</h2>
+<a id="lab1764"></a><h2 class="section">Paths</h2>
+<a id="lab1765"></a><h2 class="section">Transport</h2>
+<a id="lab1766"></a><h2 class="section">Functorial action</h2>
+<a id="lab1767"></a><h2 class="section">Equivalences</h2>
+<a id="lab1768"></a><h2 class="section">Universal mapping properties</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="contr_from_Empty" class="idref" href="#contr_from_Empty"><span class="id" title="instance">contr_from_Empty@</span></a>{<span class="id" title="var">u</span>} {<span class="id" title="var">_</span> : <a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="class">Funext</span></a>} (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">Type@</span>{<span class="id" title="var">u</span>})<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr@</span></a><a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">{</span></a><a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">u</span></a><a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">}</span></a> (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:2" class="idref" href="#x:2"><span class="id" title="binder">x</span></a>:<a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Types.Empty.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Types.Empty.html#x:2"><span class="id" title="variable">x</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">Build_Contr@</span></a><a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">{</span></a><a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">u</span></a><a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">}</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Basics.Overture.html#Empty_ind"><span class="id" title="definition">Empty_ind</span></a> <span class="id" title="var">A</span>) <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall@</span></a><a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">Set</span></a> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">u</span></a> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">u</span></a><a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">}</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">elim</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Empty_rec" class="idref" href="#Empty_rec"><span class="id" title="lemma">Empty_rec</span></a> {<a id="T:3" class="idref" href="#T:3"><span class="id" title="binder">T</span></a> : <span class="id" title="keyword">Type</span>} (<a id="falso:4" class="idref" href="#falso:4"><span class="id" title="binder">falso</span></a>: <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>) : <a class="idref" href="HoTT.Types.Empty.html#T:3"><span class="id" title="variable">T</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">case</span> <span class="id" title="var">falso</span>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_empty_rec" class="idref" href="#isequiv_empty_rec"><span class="id" title="instance">isequiv_empty_rec@</span></a>{<span class="id" title="var">u</span>} `{<a id="H:5" class="idref" href="#H:5"><span class="id" title="binder">Funext</span></a>} (<a id="A:6" class="idref" href="#A:6"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">u</span>})<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv@</span></a><a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">u</span></a><a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">}</span></a> (<span class="id" title="keyword">fun</span> (<span class="id" title="var">_</span> : <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a>) ⇒ @<a class="idref" href="HoTT.Types.Empty.html#Empty_rec"><span class="id" title="lemma">Empty_rec</span></a> <a class="idref" href="HoTT.Types.Empty.html#A:6"><span class="id" title="variable">A</span></a>) | 0<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify@</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">Set</span></a> <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">u</span></a><a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">}</span></a> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>)<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="f:9" class="idref" href="#f:9"><span class="id" title="binder">f</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall@</span></a><a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">Set</span></a> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">u</span></a> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">u</span></a><a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">}</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> <a id="x:10" class="idref" href="#x:10"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="HoTT.Types.Empty.html#Empty_rec"><span class="id" title="lemma">Empty_rec</span></a> <a class="idref" href="HoTT.Types.Empty.html#x:10"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:7" class="idref" href="#x:7"><span class="id" title="binder">x</span></a> ⇒ <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Types.Empty.html#x:7"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <span class="id" title="keyword">end</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_empty_rec" class="idref" href="#equiv_empty_rec"><span class="id" title="definition">equiv_empty_rec@</span></a>{<span class="id" title="var">u</span>} `{<a id="H:11" class="idref" href="#H:11"><span class="id" title="binder">Funext</span></a>} (<a id="A:12" class="idref" href="#A:12"><span class="id" title="binder">A</span></a> : <span class="id" title="var">Type@</span>{<span class="id" title="var">u</span>})<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a>(<a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Types.Empty.html#A:12"><span class="id" title="variable">A</span></a>) : <span class="id" title="var">Type@</span>{<span class="id" title="var">u</span>}<a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= (<a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv@</span></a><a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">{</span></a><a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Set</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">u</span></a><a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">}</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> (<span class="id" title="var">_</span> : <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a>) ⇒ @<a class="idref" href="HoTT.Types.Empty.html#Empty_rec"><span class="id" title="lemma">Empty_rec</span></a> <a class="idref" href="HoTT.Types.Empty.html#A:12"><span class="id" title="variable">A</span></a>) <span class="id" title="var">_</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1769"></a><h2 class="section">Behavior with respect to truncation</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="istrunc_Empty" class="idref" href="#istrunc_Empty"><span class="id" title="instance">istrunc_Empty@</span></a>{} (<a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Types.Empty.html#n:13"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<a class="idref" href="HoTT.Basics.Trunc.html#istrunc_leq"><span class="id" title="definition">istrunc_leq</span></a> (-1) <span class="id" title="var">n</span><a class="idref" href="HoTT.Basics.Overture.html#b76e54fb8c8bc6b885dddb77bd7d01b8"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#istrunc_S"><span class="id" title="constructor">istrunc_S</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_all_to_empty" class="idref" href="#isequiv_all_to_empty"><span class="id" title="instance">isequiv_all_to_empty</span></a> (<a id="T:14" class="idref" href="#T:14"><span class="id" title="binder">T</span></a> : <span class="id" title="keyword">Type</span>) (<a id="f:15" class="idref" href="#f:15"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Types.Empty.html#T:14"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>) : <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> <a class="idref" href="HoTT.Types.Empty.html#f:15"><span class="id" title="variable">f</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_IsEquiv"><span class="id" title="constructor">Build_IsEquiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Overture.html#Empty_ind"><span class="id" title="definition">Empty_ind</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">T</span>))                <span class="comment">(*&nbsp;:=&nbsp;equiv_inv&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="fals:16" class="idref" href="#fals:16"><span class="id" title="binder"><span id="fals:19" class="id">fals</span></span></a>:<a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> ⇒ <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Types.Empty.html#fals:16"><span class="id" title="variable">fals</span></a> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span>) <span class="comment">(*&nbsp;:&nbsp;f&nbsp;o&nbsp;equiv_inv&nbsp;==&nbsp;idmap&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="t:18" class="idref" href="#t:18"><span class="id" title="binder"><span id="t:21" class="id">t</span></span></a>:<span class="id" title="var">T</span> ⇒ <span class="id" title="keyword">match</span> (<span class="id" title="var">f</span> <a class="idref" href="HoTT.Types.Empty.html#t:18"><span class="id" title="variable">t</span></a>) <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span>)       <span class="comment">(*&nbsp;:&nbsp;equiv_inv&nbsp;o&nbsp;f&nbsp;==&nbsp;idmap&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">_</span>)                                     <span class="comment">(*&nbsp;adjointify&nbsp;part&nbsp;*)</span>  ).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Types.Empty.html#Empty_rec"><span class="id" title="lemma">Empty_rec</span></a> (<span class="id" title="var">f</span> <span class="id" title="var">t</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_to_empty" class="idref" href="#equiv_to_empty"><span class="id" title="definition">equiv_to_empty</span></a> {<a id="T:22" class="idref" href="#T:22"><span class="id" title="binder">T</span></a> : <span class="id" title="keyword">Type</span>} (<a id="f:23" class="idref" href="#f:23"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Types.Empty.html#T:22"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>) : <a class="idref" href="HoTT.Types.Empty.html#T:22"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <a class="idref" href="HoTT.Types.Empty.html#T:22"><span class="id" title="variable">T</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a> <a class="idref" href="HoTT.Types.Empty.html#f:23"><span class="id" title="variable">f</span></a> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1770"></a><h2 class="section">Paths</h2>
+
+<div class="paragraph"> </div>
+
+ We could probably prove some theorems about non-existing paths in <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a></span>, but this is really quite useless. As soon as an element of <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a></span> is hypothesized, we can prove whatever we like with a simple elimination. 
+</div>
+<div class="code">
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

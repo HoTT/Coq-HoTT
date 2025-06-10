@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.WildCat.Graph</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.WildCat.Graph</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a> <a class="idref" href="HoTT.WildCat.NatTrans.html#"><span class="id" title="library">WildCat.NatTrans</span></a> <a class="idref" href="HoTT.WildCat.FunctorCat.html#"><span class="id" title="library">WildCat.FunctorCat</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1980"></a><h1 class="section">Category of graphs</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1981"></a><h2 class="section">Definition</h2>
+
+<div class="paragraph"> </div>
+
+ A graph is a <span class="inlinecode"><span class="id" title="keyword">Type</span></span> together with a relation <span class="inlinecode">$-&gt;</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Record</span> <a id="Graph" class="idref" href="#Graph"><span class="id" title="definition, record"><span id="Graph_rect" class="id"><span id="Graph_ind" class="id"><span id="Graph_rec" class="id"><span id="Graph_sind" class="id">Graph</span></span></span></span></span></a> := {<br/>
+&nbsp;&nbsp;<a id="graph_carrier" class="idref" href="#graph_carrier"><span class="id" title="projection">graph_carrier</span></a> :&gt; <span class="id" title="keyword">Type</span>;<br/>
+&nbsp;&nbsp;<a id="isgraph_graph_carrier" class="idref" href="#isgraph_graph_carrier"><span class="id" title="projection">isgraph_graph_carrier</span></a> :: <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#graph_carrier:2"><span class="id" title="method">graph_carrier</span></a><br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1982"></a><h2 class="section">Category of graphs</h2>
+
+<div class="paragraph"> </div>
+
+ Morphisms of graphs are 0-coherent 1-functors, i.e., maps between the underlying types of the graphs together with an <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#fmap"><span class="id" title="projection">fmap</span></a></span> functorial map taking arrows to appropriate arrows. This is known as a graph homomorphism. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="isgraph_graph" class="idref" href="#isgraph_graph"><span class="id" title="instance">isgraph_graph</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#IsGraph"><span class="id" title="class">IsGraph</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#Graph"><span class="id" title="record">Graph</span></a><br/>
+&nbsp;&nbsp;:= { <a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="method">Hom</span></a> <a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> <a id="B:5" class="idref" href="#B:5"><span class="id" title="binder">B</span></a> := <a class="idref" href="HoTT.WildCat.FunctorCat.html#Fun01"><span class="id" title="record">Fun01</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#A:4"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#B:5"><span class="id" title="variable">B</span></a> }.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A 2-cell between graph homomorphisms <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">$-&gt;</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> is a wild <span class="inlinecode"><a class="idref" href="HoTT.WildCat.NatTrans.html#Transformation"><span class="id" title="definition">Transformation</span></a></span>, i.e., a family of 1-cells <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#F"><span class="id" title="definition">F</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">$-&gt;</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> subject to no coherence conditions. When <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> have more structure (e.g., they are 1-categories or bicategories) a stronger notion of 2-cell is appropriate, such as a (possibly lax or oplax) natural transformation.
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is2graph_graph" class="idref" href="#is2graph_graph"><span class="id" title="instance">is2graph_graph</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is2Graph"><span class="id" title="class">Is2Graph</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#Graph"><span class="id" title="record">Graph</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="A:6" class="idref" href="#A:6"><span class="id" title="binder">A</span></a> <a id="B:7" class="idref" href="#B:7"><span class="id" title="binder">B</span></a> ⇒ {| <a class="idref" href="HoTT.WildCat.Core.html#Hom"><span class="id" title="method">Hom</span></a> <a id="F:8" class="idref" href="#F:8"><span class="id" title="binder">F</span></a> <a id="G:9" class="idref" href="#G:9"><span class="id" title="binder">G</span></a> := <a class="idref" href="HoTT.WildCat.NatTrans.html#Transformation"><span class="id" title="definition">Transformation</span></a> (<a class="idref" href="HoTT.WildCat.FunctorCat.html#fun01_F"><span class="id" title="projection">fun01_F</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#F:8"><span class="id" title="variable">F</span></a>) (<a class="idref" href="HoTT.WildCat.FunctorCat.html#fun01_F"><span class="id" title="projection">fun01_F</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#G:9"><span class="id" title="variable">G</span></a>) |}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We have identity graph homomorphisms together with compositions of graph homomorphisms. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="is01cat_graph" class="idref" href="#is01cat_graph"><span class="id" title="instance">is01cat_graph</span></a> : <a class="idref" href="HoTT.WildCat.Core.html#Is01Cat"><span class="id" title="class">Is01Cat</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#Graph"><span class="id" title="record">Graph</span></a> := {<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.WildCat.Core.html#Id"><span class="id" title="method">Id</span></a> <a id="A:10" class="idref" href="#A:10"><span class="id" title="binder">A</span></a> := <a class="idref" href="HoTT.WildCat.FunctorCat.html#fun01_id"><span class="id" title="definition">fun01_id</span></a>;<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.WildCat.Core.html#cat_comp"><span class="id" title="method">cat_comp</span></a> <a id="A:11" class="idref" href="#A:11"><span class="id" title="binder">A</span></a> <a id="B:12" class="idref" href="#B:12"><span class="id" title="binder">B</span></a> <a id="C:13" class="idref" href="#C:13"><span class="id" title="binder">C</span></a> <a id="G:14" class="idref" href="#G:14"><span class="id" title="binder">G</span></a> <a id="F:15" class="idref" href="#F:15"><span class="id" title="binder">F</span></a> := <a class="idref" href="HoTT.WildCat.FunctorCat.html#fun01_compose"><span class="id" title="definition">fun01_compose</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#G:14"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.WildCat.Graph.html#F:15"><span class="id" title="variable">F</span></a><br/>
+}.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Utf8Minimal</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Utf8Minimal</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Basics.Utf8.html#"><span class="id" title="library">Basics.Utf8</span></a> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Iff.html#"><span class="id" title="library">Basics.Iff</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1921"></a><h1 class="section">Just enough UTF8/Unicode for the Classes library to build, without depending on everything that HoTT.Utf8 depends on.</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Logic&nbsp;*)</span><br/>
+<span class="id" title="keyword">Notation</span> <a id="e15f3fa8414cf45e36c73a91b3f5f2c2" class="idref" href="#e15f3fa8414cf45e36c73a91b3f5f2c2"><span class="id" title="notation">&quot;</span></a>∀  x .. y , P" := (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:1" class="idref" href="#x:1"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> .. (<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="y:2" class="idref" href="#y:2"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <span class="id" title="var">P</span>) ..) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="94e052c6337a815c52cda44eea9df276" class="idref" href="#94e052c6337a815c52cda44eea9df276"><span class="id" title="notation">&quot;</span></a>∃  x .. y , P" := (<a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="x:3" class="idref" href="#x:3"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> .. (<a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="y:4" class="idref" href="#y:4"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Basics.Overture.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <span class="id" title="var">P</span>) ..) : <span class="id" title="var">type_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="3668992ecc3e95973d304a75a28051a2" class="idref" href="#3668992ecc3e95973d304a75a28051a2"><span class="id" title="notation">&quot;</span></a>x ∧ y" := (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <span class="id" title="var">y</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="c41c566ddac4c1298b9e7dd2bae1c794" class="idref" href="#c41c566ddac4c1298b9e7dd2bae1c794"><span class="id" title="notation">&quot;</span></a>x → y" := (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">y</span>) : <span class="id" title="var">type_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="d9d5c539a07c7350478e89358d1fe520" class="idref" href="#d9d5c539a07c7350478e89358d1fe520"><span class="id" title="notation">&quot;</span></a>x ↔ y" := (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Iff.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <span class="id" title="var">y</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="comment">(*Notation&nbsp;"¬&nbsp;x"&nbsp;:=&nbsp;(not&nbsp;x)&nbsp;:&nbsp;type_scope.*)</span><br/>
+<span class="comment">(*Notation&nbsp;"x&nbsp;≠&nbsp;y"&nbsp;:=&nbsp;(x&nbsp;&lt;&gt;&nbsp;y)&nbsp;:&nbsp;type_scope.*)</span><br/>
+
+<br/>
+<span class="comment">(*&nbsp;Abstraction&nbsp;*)</span><br/>
+<span class="id" title="keyword">Notation</span> <a id="bc1ad27deabe143d39d35abe6be2c1a4" class="idref" href="#bc1ad27deabe143d39d35abe6be2c1a4"><span class="id" title="notation">&quot;</span></a>'λ'  x .. y , t" := (<span class="id" title="keyword">fun</span> <a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a> ⇒ .. (<span class="id" title="keyword">fun</span> <a id="y:6" class="idref" href="#y:6"><span class="id" title="binder">y</span></a> ⇒ <span class="id" title="var">t</span>) ..).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

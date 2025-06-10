@@ -1,0 +1,614 @@
+<html>
+<head>
+<title>ring_tac.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ring_tac.v</h1>
+
+<div class="code" title="File: ring_tac.v
+Line: 1
+Time: 0.074s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.tactics.ring_quote
+  HoTT.Classes.tactics.ring_pol
+  HoTT.Classes.theory.rings
+  HoTT.Classes.orders.sum
+  HoTT.Classes.interfaces.naturals
+  HoTT.Classes.interfaces.integers.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A B C R V f l n m Vlt.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Import Quoting.Instances.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section content.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{DecidablePaths C}.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 15
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Context `(phi : C -&gt; R) `{AlmostRingPreserving C R phi}
+  `{!AlmostRing C} `{!AlmostRing R}.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 18
+Time: 0.004s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+
+Lemma normalize_eq `{Q : @Quoting.EqQuote R _ _ _ _ _ V l n m V' l'}
+  `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}
+  : eval phi (Quoting.merge R l l')
+  (toPol (Quoting.expr_map inl (Quoting.eqquote_l R)))
+  = eval phi (Quoting.merge R l l') (toPol (Quoting.eqquote_r R))
+  -&gt; n = m.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros E.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+eapply Quoting.eval_eqquote.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 28
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre>
+etransitivity;[symmetry;apply (eval_toPol _)|].</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 29
+Time: 0.004s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+etransitivity;[|apply (eval_toPol _)].</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+exact E.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 32
+Time: 0.004s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+
+Lemma by_quoting `{Q : @Quoting.EqQuote R _ _ _ _ _ V l n m V' l'}
+  `{Trichotomy V Vlt} `{Trichotomy V' Vlt'}
+  : toPol (Quoting.expr_map inl (@Quoting.eqquote_l R _ _ _ _ _ _ _ _ _ _ _ Q))
+  =? toPol (@Quoting.eqquote_r R  _ _ _ _ _ _ _ _ _ _ _ Q) = true
+  -&gt; n = m.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros E.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply normalize_eq.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+apply eval_eqb,E.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 43
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+Lemma normalize_prequoted `{Trichotomy V Vlt} (a b : Quoting.Expr V) vs
+  : eval phi vs (toPol a) = eval phi vs (toPol b) -&gt;
+  Quoting.eval _ vs a = Quoting.eval _ vs b.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 48
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+rewrite !(eval_toPol _).</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+trivial.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 51
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+Lemma prove_prequoted `{Trichotomy V Vlt} (a b : Quoting.Expr V) vs
+  : toPol a =? toPol b = true -&gt; Quoting.eval _ vs a = Quoting.eval _ vs b.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply normalize_prequoted.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply eval_eqb;trivial.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+End content.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance default_almostneg `{Zero A} : AlmostNegate A | 20
+  := fun _ =&gt; 0.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments default_almostneg _ _ _ /.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance negate_almostneg `{Aneg : Negate A} : AlmostNegate A
+  := (-).</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments negate_almostneg _ _ _ /.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance semiring_almostring `{IsSemiCRing A} : AlmostRing A | 10.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split;try exact _.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold almost_negate;simpl.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+symmetry;apply mult_0_l.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ring_almostring `{IsCRing A} : AlmostRing A.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split;try exact _.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold almost_negate;simpl.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply negate_mult_l.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Instance sr_mor_almostring_mor `{IsSemiRingPreserving A B f}
+  : AlmostRingPreserving f | 10.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split;try exact _.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+unfold almost_negate;simpl.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros _.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact preserves_0.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section VarSec.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Context `{IsCRing A} `{IsCRing B} {f : A -&gt; B} `{!IsSemiRingPreserving f}.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance ring_mor_almostring_mor : AlmostRingPreserving f.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split;try exact _.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+unfold almost_negate;simpl.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact preserves_negate.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End VarSec.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments normalize_eq {C _ R} phi
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments by_quoting {C _ R} phi
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} _.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac ring_with_nat :=
+  match goal with
+  |- @paths ?R _ _ =&gt;
+    ((pose proof (_ : IsSemiCRing R)) || fail "target equality not on a semiring");
+    apply (by_quoting (naturals_to_semiring nat R));
+    reflexivity
+  end.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac ring_with_integers Z :=
+  match goal with
+  |- @paths ?R _ _ =&gt;
+    ((pose proof (_ : IsCRing R)) || fail "target equality not on a ring");
+    apply (by_quoting (integers_to_ring Z R));
+    reflexivity
+  end.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac ring_with_self :=
+  match goal with
+  |- @paths ?R _ _ =&gt;
+    ((pose proof (_ : IsSemiCRing R)) || fail "target equality not on a ring");
+    apply (by_quoting (@id R));
+    reflexivity
+  end.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac ring_repl a b :=
+  let Hrw := fresh "Hrw" in
+  assert (Hrw : a = b);[ring_with_nat|rewrite Hrw;clear Hrw].</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "ring_replace" constr(x) "with" constr(y) := ring_repl x y.</pre>
+</div>
+<div class="code" title="File: ring_tac.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

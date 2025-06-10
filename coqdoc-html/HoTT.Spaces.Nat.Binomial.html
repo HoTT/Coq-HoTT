@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Nat.Binomial</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Nat.Binomial</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Decidable.html#"><span class="id" title="library">Basics.Decidable</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#"><span class="id" title="library">Spaces.Nat.Division</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#"><span class="id" title="library">Spaces.Nat.Factorial</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Tactics.EvalIn.html#"><span class="id" title="library">Tactics.EvalIn</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Unset</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1564"></a><h1 class="section">Binomial coefficients</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1565"></a><h2 class="section">Definition</h2>
+
+<div class="paragraph"> </div>
+
+ The binomial coefficient <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a></span> is the number of ways to choose <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a></span> elements from a set of <span class="inlinecode"><span class="id" title="var">n</span></span> elements. We define it recursively using Pascal's identity. We use nested <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>s in order to get a function that computes definitionally on the edge cases as well as the inductive case. 
+<div class="paragraph"> </div>
+
+ We separate out this helper result to prevent Coq from unfolding things into a larger term. This computes <span class="inlinecode"><span class="id" title="var">n</span></span> choose <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a>.+1</span> given a function <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> that computes <span class="inlinecode"><span class="id" title="var">n</span></span> choose <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="nat_choose_step" class="idref" href="#nat_choose_step"><span class="id" title="definition">nat_choose_step</span></a> <a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> <a id="f:2" class="idref" href="#f:2"><span class="id" title="binder">f</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0 ⇒ 0<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n'</span> ⇒ <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#f:2"><span class="id" title="variable">f</span></a> <span class="id" title="var">n'</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_step:3"><span class="id" title="definition">nat_choose_step</span></a> <span class="id" title="var">n'</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#f:2"><span class="id" title="variable">f</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="nat_choose" class="idref" href="#nat_choose"><span class="id" title="definition">nat_choose</span></a> (<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> <a id="m:6" class="idref" href="#m:6"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">m</span>} : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:6"><span class="id" title="variable">m</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0 ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m'</span> ⇒ <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_step"><span class="id" title="definition">nat_choose_step</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:5"><span class="id" title="variable">n</span></a> (<span class="id" title="keyword">fun</span> <a id="n:9" class="idref" href="#n:9"><span class="id" title="binder">n</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose:7"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:9"><span class="id" title="variable">n</span></a> <span class="id" title="var">m'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We make sure we never unfold binomial coefficients with <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> or <span class="inlinecode"><span class="id" title="var">cbn</span></span> since the terms do not look good. Instead, we should use lemmas we prove about it to make proofs clearer to read. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="tactic">simpl</span> <span class="id" title="var">never</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1566"></a><h2 class="section">Properties</h2>
+
+<div class="paragraph"> </div>
+
+ The three defining properties of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a></span> hold definitionally. 
+<div class="paragraph"> </div>
+
+ By definition, we have Pascal's identity. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_succ" class="idref" href="#nat_choose_succ"><span class="id" title="definition">nat_choose_succ@</span></a>{} <a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> <a id="m:11" class="idref" href="#m:11"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:10"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:11"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:11"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:11"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+There is only one way to choose <span class="inlinecode">0</span> elements from any number of elements. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_zero_r" class="idref" href="#nat_choose_zero_r"><span class="id" title="definition">nat_choose_zero_r@</span></a>{} <a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:12"><span class="id" title="variable">n</span></a> 0 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+There are no ways to choose a non-zero number of elements from <span class="inlinecode">0</span> elements. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_zero_l" class="idref" href="#nat_choose_zero_l"><span class="id" title="definition">nat_choose_zero_l@</span></a>{} <a id="m:13" class="idref" href="#m:13"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> 0 <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:13"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0<br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The binomial coefficient is zero if <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a></span> is greater than <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_lt" class="idref" href="#nat_choose_lt"><span class="id" title="definition">nat_choose_lt@</span></a>{} <a id="n:14" class="idref" href="#n:14"><span class="id" title="binder">n</span></a> <a id="m:15" class="idref" href="#m:15"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:14"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:15"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:14"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:15"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">hnf</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;1, 2: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;1, 2: <span class="id" title="var">rewrite_refl</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_succ"><span class="id" title="definition">nat_choose_succ</span></a>; <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#ap011"><span class="id" title="definition">ap011</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add"><span class="id" title="definition">nat_add</span></a> (<span class="id" title="var">IHn</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>) (<span class="id" title="var">IHn</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+There is only one way to choose <span class="inlinecode"><span class="id" title="var">n</span></span> elements from <span class="inlinecode"><span class="id" title="var">n</span></span> elements. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_diag" class="idref" href="#nat_choose_diag"><span class="id" title="definition">nat_choose_diag@</span></a>{} <a id="n:16" class="idref" href="#n:16"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:16"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:16"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>]; <span class="id" title="var">only</span> 1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rewrite_refl</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_succ"><span class="id" title="definition">nat_choose_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add_zero_r"><span class="id" title="definition">nat_add_zero_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#ap011"><span class="id" title="definition">ap011</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">IHn</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_lt"><span class="id" title="definition">nat_choose_lt</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+There are <span class="inlinecode"><span class="id" title="var">n</span></span> ways to choose <span class="inlinecode">1</span> element from <span class="inlinecode"><span class="id" title="var">n</span></span> elements. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_one_r" class="idref" href="#nat_choose_one_r"><span class="id" title="definition">nat_choose_one_r@</span></a>{} <a id="n:17" class="idref" href="#n:17"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:17"><span class="id" title="variable">n</span></a> 1 <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:17"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>]; <span class="id" title="var">only</span> 1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rewrite_refl</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_succ"><span class="id" title="definition">nat_choose_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_succ"><span class="id" title="abbreviation">nat_succ</span></a> <span class="id" title="var">IHn</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+There are <span class="inlinecode"><span class="id" title="var">n</span>.+1</span> ways to choose <span class="inlinecode"><span class="id" title="var">n</span></span> elements from <span class="inlinecode"><span class="id" title="var">n</span>.+1</span> elements. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_succ_l_diag" class="idref" href="#nat_choose_succ_l_diag"><span class="id" title="definition">nat_choose_succ_l_diag@</span></a>{} <a id="n:18" class="idref" href="#n:18"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:18"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:18"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:18"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IHn</span>]; <span class="id" title="var">only</span> 1: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rewrite_refl</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_succ"><span class="id" title="definition">nat_choose_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add_comm"><span class="id" title="definition">nat_add_comm</span></a> <span class="id" title="var">_</span> 1).<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#ap011"><span class="id" title="definition">ap011</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">IHn</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_diag"><span class="id" title="definition">nat_choose_diag</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The binomial coefficients can be written as a quotient of factorials. This is typically used as a definition of the binomial coefficients. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_factorial" class="idref" href="#nat_choose_factorial"><span class="id" title="definition">nat_choose_factorial@</span></a>{} <a id="n:19" class="idref" href="#n:19"><span class="id" title="binder">n</span></a> <a id="m:20" class="idref" href="#m:20"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:20"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:19"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:19"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:20"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:19"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#2e0d8202c5a48097752d760d3a1db6a7"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#2e0d8202c5a48097752d760d3a1db6a7"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:20"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:19"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:20"><span class="id" title="variable">m</span></a>)<a class="idref" href="HoTT.Spaces.Nat.Core.html#2e0d8202c5a48097752d760d3a1db6a7"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_double_ind_leq"><span class="id" title="definition">nat_double_ind_leq</span></a>; <span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;case&nbsp;when&nbsp;<span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>.&nbsp;*)</span><br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_one_l"><span class="id" title="definition">nat_mul_one_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_sub_zero_r"><span class="id" title="definition">nat_sub_zero_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>; <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_cancel"><span class="id" title="definition">nat_div_cancel</span></a>. }<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;case&nbsp;when&nbsp;<span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span>.&nbsp;*)</span><br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_sub_cancel"><span class="id" title="definition">nat_sub_cancel</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_one_r"><span class="id" title="definition">nat_mul_one_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rhs</span> <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_cancel"><span class="id" title="definition">nat_div_cancel</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_diag"><span class="id" title="definition">nat_choose_diag</span></a>. }<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;case&nbsp;with&nbsp;<span class="inlinecode"><span class="id" title="var">n</span>.+1</span>&nbsp;and&nbsp;<span class="inlinecode"><span class="id" title="var">m</span>.+1</span>&nbsp;with&nbsp;<span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span>&nbsp;and&nbsp;an&nbsp;induction&nbsp;hypothesis.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span> <span class="id" title="var">IHn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rewrite_refl</span> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_succ"><span class="id" title="definition">nat_choose_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <span class="id" title="var">IHn</span>.<br/>
+&nbsp;&nbsp;2,3: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_cancel_mul_l"><span class="id" title="definition">nat_div_cancel_mul_l</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">m</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>).<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_assoc"><span class="id" title="definition">nat_mul_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_succ"><span class="id" title="definition">nat_factorial_succ</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_cancel_mul_l"><span class="id" title="definition">nat_div_cancel_mul_l</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <span class="id" title="var">n</span>) <span class="id" title="var">_</span> (<span class="id" title="var">n</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <span class="id" title="var">m</span>)).<br/>
+&nbsp;&nbsp;2: <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#equiv_lt_lt_sub"><span class="id" title="definition">equiv_lt_lt_sub</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_assoc"><span class="id" title="definition">nat_mul_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_comm"><span class="id" title="definition">nat_mul_comm</span></a> (<span class="id" title="var">n</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <span class="id" title="var">m</span>) (<a class="idref" href="HoTT.Spaces.Nat.Factorial.html#factorial"><span class="id" title="definition">factorial</span></a> <span class="id" title="var">m</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_assoc"><span class="id" title="definition">nat_mul_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_sub_succ_r"><span class="id" title="definition">nat_sub_succ_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_pred"><span class="id" title="definition">nat_factorial_pred</span></a>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#equiv_lt_lt_sub"><span class="id" title="definition">equiv_lt_lt_sub</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_dist"><span class="id" title="definition">nat_div_dist</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_succ"><span class="id" title="definition">nat_factorial_succ</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_assoc"><span class="id" title="definition">nat_mul_assoc</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_dist_r"><span class="id" title="definition">nat_dist_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add_succ_l"><span class="id" title="definition">nat_add_succ_l</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_add_sub_r_cancel"><span class="id" title="definition">nat_add_sub_r_cancel</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Spaces.Nat.Factorial.html#nat_factorial_succ"><span class="id" title="definition">nat_factorial_succ</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Another recursive property of the binomial coefficients.  To choose <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a>+1</span> elements from a set of size <span class="inlinecode"><span class="id" title="var">n</span>+1</span>, one has <span class="inlinecode"><span class="id" title="var">n</span>+1</span> choices for the first element and then can make the remaining <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a></span> choices from the remaining <span class="inlinecode"><span class="id" title="var">n</span></span> elements.  This overcounts by a factor of <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a>+1</span>, since there are <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.m"><span class="id" title="variable">m</span></a>+1</span> elements that could have been called the "first" element. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_succ_mul" class="idref" href="#nat_choose_succ_mul"><span class="id" title="definition">nat_choose_succ_mul@</span></a>{} <a id="n:21" class="idref" href="#n:21"><span class="id" title="binder">n</span></a> <a id="m:22" class="idref" href="#m:22"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:21"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:22"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#2e0d8202c5a48097752d760d3a1db6a7"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:21"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:21"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:22"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Spaces.Nat.Core.html#2e0d8202c5a48097752d760d3a1db6a7"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#2e0d8202c5a48097752d760d3a1db6a7"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:22"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#leq_dichotomy"><span class="id" title="definition">leq_dichotomy</span></a> <span class="id" title="var">m</span> <span class="id" title="var">n</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">H</span> | <span class="id" title="var">H</span>].<br/>
+&nbsp;&nbsp;2: { <span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_lt"><span class="id" title="definition">nat_choose_lt</span></a>; <span class="id" title="var">only</span> 2, 3: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_zero_r"><span class="id" title="definition">nat_mul_zero_r</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_zero_l"><span class="id" title="definition">nat_div_zero_l</span></a>. }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_factorial"><span class="id" title="definition">nat_choose_factorial</span></a>.<br/>
+&nbsp;&nbsp;2,3: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_mul_l"><span class="id" title="definition">nat_div_mul_l</span></a>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_div_l"><span class="id" title="definition">nat_div_div_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_comm"><span class="id" title="definition">nat_mul_comm</span></a> <span class="id" title="var">_</span> <span class="id" title="var">m</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>), <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_assoc"><span class="id" title="definition">nat_mul_assoc</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The binomial coefficients are symmetric about the middle of the range <span class="inlinecode">0</span> <span class="inlinecode">≤</span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="nat_choose_sub" class="idref" href="#nat_choose_sub"><span class="id" title="definition">nat_choose_sub@</span></a>{} <a id="n:23" class="idref" href="#n:23"><span class="id" title="binder">n</span></a> <a id="m:24" class="idref" href="#m:24"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:24"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:24"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose"><span class="id" title="definition">nat_choose</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:23"><span class="id" title="variable">n</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Binomial.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#m:24"><span class="id" title="variable">m</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2 <a class="idref" href="HoTT.Spaces.Nat.Binomial.html#nat_choose_factorial"><span class="id" title="definition">nat_choose_factorial</span></a>.<br/>
+&nbsp;&nbsp;2,3: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_sub_sub_cancel_r"><span class="id" title="definition">nat_sub_sub_cancel_r</span></a>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#nat_mul_comm"><span class="id" title="definition">nat_mul_comm</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

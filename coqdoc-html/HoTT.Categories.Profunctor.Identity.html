@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Profunctor.Identity</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Profunctor.Identity</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab943"></a><h1 class="section">Identity profunctor</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Profunctor.Core.html#"><span class="id" title="library">Profunctor.Core</span></a> <a class="idref" href="HoTT.Categories.HomFunctor.html#"><span class="id" title="library">HomFunctor</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">profunctor_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="identity" class="idref" href="#identity"><span class="id" title="section">identity</span></a>.<br/>
+</div>
+
+<div class="doc">
+Quoting nLab:
+
+<div class="paragraph"> </div>
+
+      In particular the identity profunctor <span class="inlinecode"><a class="idref" href="HoTT.WildCat.Core.html#Id"><span class="id" title="projection">Id</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">⇸</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> is represented by the identity functor and hence is given by the hom-functor <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a>(−,−)</span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a>ᵒᵖ</span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="identity" class="idref" href="#identity"><span class="id" title="definition">identity</span></a> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>} (<a id="C:2" class="idref" href="#C:2"><span class="id" title="binder">C</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>) : <a class="idref" href="HoTT.Categories.Profunctor.Identity.html#C:2"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Profunctor.Core.html#3d8269e13d9b9f084f98c01d09a45943"><span class="id" title="notation">-|-&gt;</span></a> <a class="idref" href="HoTT.Categories.Profunctor.Identity.html#C:2"><span class="id" title="variable">C</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.HomFunctor.html#hom_functor"><span class="id" title="definition">hom_functor</span></a> <a class="idref" href="HoTT.Categories.Profunctor.Identity.html#C:2"><span class="id" title="variable">C</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Profunctor.Identity.html#identity"><span class="id" title="section">identity</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="ProfunctorIdentityNotations" class="idref" href="#ProfunctorIdentityNotations"><span class="id" title="module">ProfunctorIdentityNotations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="ProfunctorIdentityNotations.::profunctor_scope:'1'" class="idref" href="#ProfunctorIdentityNotations.::profunctor_scope:'1'"><span class="id" title="notation">&quot;</span></a>1" := (<a class="idref" href="HoTT.Categories.Profunctor.Identity.html#identity"><span class="id" title="definition">identity</span></a> <span class="id" title="var">_</span>) : <span class="id" title="var">profunctor_scope</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Profunctor.Identity.html#ProfunctorIdentityNotations"><span class="id" title="module">ProfunctorIdentityNotations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

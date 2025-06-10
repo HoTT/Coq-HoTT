@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.ExponentialLaws.Law4.Law</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.ExponentialLaws.Law4.Law</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab658"></a><h1 class="section">Law about currying</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Paths.html#"><span class="id" title="library">Functor.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="library">Functor.Identity</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#"><span class="id" title="library">ExponentialLaws.Law4.Functors</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Tactics.html#"><span class="id" title="library">ExponentialLaws.Tactics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab659"></a><h2 class="section"><span class="inlinecode">(<span class="id" title="var">C₁</span></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">C₂</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>)</span> <span class="inlinecode">≅</span> <span class="inlinecode">(<span class="id" title="var">C₁</span></span> <span class="inlinecode">→</span> <span class="inlinecode">(<span class="id" title="var">C₂</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.D"><span class="id" title="variable">D</span></a>))</span></h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="Law4" class="idref" href="#Law4"><span class="id" title="section">Law4</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="Law4.C1" class="idref" href="#Law4.C1"><span class="id" title="variable">C1</span></a> <a id="Law4.C2" class="idref" href="#Law4.C2"><span class="id" title="variable">C2</span></a> <a id="Law4.D" class="idref" href="#Law4.D"><span class="id" title="variable">D</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="helper1" class="idref" href="#helper1"><span class="id" title="lemma">helper1</span></a> <a id="c:5" class="idref" href="#c:5"><span class="id" title="binder">c</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#functor"><span class="id" title="definition">functor</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> (<a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#inverse"><span class="id" title="definition">inverse</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#c:5"><span class="id" title="variable">c</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#c:5"><span class="id" title="variable">c</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path_functor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">exp_laws_t</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <a class="idref" href="HoTT.Categories.Functor.Core.html#composition_of"><span class="id" title="projection">composition_of</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">exp_laws_t</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="helper2_helper" class="idref" href="#helper2_helper"><span class="id" title="lemma">helper2_helper</span></a> <a id="c:6" class="idref" href="#c:6"><span class="id" title="binder">c</span></a> <a id="x:7" class="idref" href="#x:7"><span class="id" title="binder">x</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#inverse"><span class="id" title="definition">inverse</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> (<a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#functor"><span class="id" title="definition">functor</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#c:6"><span class="id" title="variable">c</span></a>) <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#x:7"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#c:6"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#x:7"><span class="id" title="variable">x</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path_functor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> <span class="id" title="var">exp_laws_t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="helper2" class="idref" href="#helper2"><span class="id" title="lemma">helper2</span></a> <a id="c:8" class="idref" href="#c:8"><span class="id" title="binder">c</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#inverse"><span class="id" title="definition">inverse</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> (<a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#functor"><span class="id" title="definition">functor</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#c:8"><span class="id" title="variable">c</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#c:8"><span class="id" title="variable">c</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path_functor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#helper2_helper"><span class="id" title="lemma">helper2_helper</span></a> <span class="id" title="var">c</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> (<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#helper2_helper"><span class="id" title="lemma">helper2_helper</span></a>; <span class="id" title="var">exp_laws_t</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="law" class="idref" href="#law"><span class="id" title="lemma">law</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#functor"><span class="id" title="definition">functor</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#inverse"><span class="id" title="definition">inverse</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#inverse"><span class="id" title="definition">inverse</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Functors.html#functor"><span class="id" title="definition">functor</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.C2"><span class="id" title="variable">C2</span></a> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4.D"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path_functor</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[ (<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#helper1"><span class="id" title="lemma">helper1</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| (<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#helper2"><span class="id" title="lemma">helper2</span></a>)) ];<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#helper1"><span class="id" title="lemma">helper1</span></a>, <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#helper2"><span class="id" title="lemma">helper2</span></a>, <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#helper2_helper"><span class="id" title="lemma">helper2_helper</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">exp_laws_t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.ExponentialLaws.Law4.Law.html#Law4"><span class="id" title="section">Law4</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

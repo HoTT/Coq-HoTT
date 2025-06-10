@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.HIT.Interval</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.HIT.Interval</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1125"></a><h1 class="section">Theorems about the homotopical interval.</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#"><span class="id" title="library">Basics.PathGroupoids</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.Paths.html#"><span class="id" title="library">Types.Paths</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">Export</span> <a id="Interval" class="idref" href="#Interval"><span class="id" title="module">Interval</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Private Inductive</span> <a id="Interval.interval" class="idref" href="#Interval.interval"><span class="id" title="inductive">interval</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> :=<br/>
+&nbsp;&nbsp;| <a id="Interval.zero" class="idref" href="#Interval.zero"><span class="id" title="constructor">zero</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#interval:1"><span class="id" title="inductive">interval</span></a><br/>
+&nbsp;&nbsp;| <a id="Interval.one" class="idref" href="#Interval.one"><span class="id" title="constructor">one</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#interval:1"><span class="id" title="inductive">interval</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a id="Interval.seg" class="idref" href="#Interval.seg"><span class="id" title="axiom">seg</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#Interval.zero"><span class="id" title="constructor">zero</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.HIT.Interval.html#Interval.one"><span class="id" title="constructor">one</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Interval.interval_ind" class="idref" href="#Interval.interval_ind"><span class="id" title="definition">interval_ind</span></a> (<a id="P:4" class="idref" href="#P:4"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#Interval.interval"><span class="id" title="inductive">interval</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="a:5" class="idref" href="#a:5"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#P:4"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.HIT.Interval.html#Interval.zero"><span class="id" title="constructor">zero</span></a>) (<a id="b:6" class="idref" href="#b:6"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#P:4"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.HIT.Interval.html#Interval.one"><span class="id" title="constructor">one</span></a>) (<a id="p:7" class="idref" href="#p:7"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#Interval.seg"><span class="id" title="axiom">seg</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a> <a class="idref" href="HoTT.HIT.Interval.html#a:5"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.HIT.Interval.html#b:6"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a>:<a class="idref" href="HoTT.HIT.Interval.html#Interval.interval"><span class="id" title="inductive">interval</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.HIT.Interval.html#P:4"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.HIT.Interval.html#x:8"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="x:9" class="idref" href="#x:9"><span class="id" title="binder">x</span></a> ⇒ (<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.HIT.Interval.html#x:9"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">return</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.HIT.Interval.html#P:4"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.HIT.Interval.html#x:10"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.HIT.Interval.html#Interval.zero"><span class="id" title="constructor">zero</span></a> ⇒ <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.HIT.Interval.html#a:5"><span class="id" title="variable">a</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.HIT.Interval.html#Interval.one"><span class="id" title="constructor">one</span></a>  ⇒ <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.HIT.Interval.html#b:6"><span class="id" title="variable">b</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>) <a class="idref" href="HoTT.HIT.Interval.html#p:7"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a id="Interval.interval_ind_beta_seg" class="idref" href="#Interval.interval_ind_beta_seg"><span class="id" title="axiom">interval_ind_beta_seg</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="P:11" class="idref" href="#P:11"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#Interval.interval"><span class="id" title="inductive">interval</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<a id="a:12" class="idref" href="#a:12"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#P:11"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.HIT.Interval.html#Interval.zero"><span class="id" title="constructor">zero</span></a>) (<a id="b:13" class="idref" href="#b:13"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#P:11"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.HIT.Interval.html#Interval.one"><span class="id" title="constructor">one</span></a>) (<a id="p:14" class="idref" href="#p:14"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#Interval.seg"><span class="id" title="axiom">seg</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a> <a class="idref" href="HoTT.HIT.Interval.html#a:12"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.HIT.Interval.html#b:13"><span class="id" title="variable">b</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#apD"><span class="id" title="definition">apD</span></a> (<a class="idref" href="HoTT.HIT.Interval.html#Interval.interval_ind"><span class="id" title="definition">interval_ind</span></a> <a class="idref" href="HoTT.HIT.Interval.html#P:11"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.HIT.Interval.html#a:12"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.HIT.Interval.html#b:13"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.HIT.Interval.html#p:14"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.HIT.Interval.html#Interval.seg"><span class="id" title="axiom">seg</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.HIT.Interval.html#p:14"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.HIT.Interval.html#Interval"><span class="id" title="module">Interval</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="interval_rec" class="idref" href="#interval_rec"><span class="id" title="definition">interval_rec</span></a> (<a id="P:16" class="idref" href="#P:16"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) (<a id="a:17" class="idref" href="#a:17"><span class="id" title="binder">a</span></a> <a id="b:18" class="idref" href="#b:18"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#P:16"><span class="id" title="variable">P</span></a>) (<a id="p:19" class="idref" href="#p:19"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#a:17"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.HIT.Interval.html#b:18"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.HIT.Interval.html#interval"><span class="id" title="inductive">interval</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.HIT.Interval.html#P:16"><span class="id" title="variable">P</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.HIT.Interval.html#interval_ind"><span class="id" title="definition">interval_ind</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.HIT.Interval.html#P:16"><span class="id" title="variable">P</span></a>) <a class="idref" href="HoTT.HIT.Interval.html#a:17"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.HIT.Interval.html#b:18"><span class="id" title="variable">b</span></a> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_const"><span class="id" title="definition">transport_const</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.HIT.Interval.html#p:19"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="interval_rec_beta_seg" class="idref" href="#interval_rec_beta_seg"><span class="id" title="definition">interval_rec_beta_seg</span></a> (<a id="P:20" class="idref" href="#P:20"><span class="id" title="binder">P</span></a> : <span class="id" title="keyword">Type</span>) (<a id="a:21" class="idref" href="#a:21"><span class="id" title="binder">a</span></a> <a id="b:22" class="idref" href="#b:22"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#P:20"><span class="id" title="variable">P</span></a>) (<a id="p:23" class="idref" href="#p:23"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.HIT.Interval.html#a:21"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.HIT.Interval.html#b:22"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.HIT.Interval.html#interval_rec"><span class="id" title="definition">interval_rec</span></a> <a class="idref" href="HoTT.HIT.Interval.html#P:20"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.HIT.Interval.html#a:21"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.HIT.Interval.html#b:22"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.HIT.Interval.html#p:23"><span class="id" title="variable">p</span></a>) <a class="idref" href="HoTT.HIT.Interval.html#seg"><span class="id" title="axiom">seg</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.HIT.Interval.html#p:23"><span class="id" title="variable">p</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#cancelL"><span class="id" title="definition">cancelL</span></a> (<a class="idref" href="HoTT.Basics.PathGroupoids.html#transport_const"><span class="id" title="definition">transport_const</span></a> <a class="idref" href="HoTT.HIT.Interval.html#seg"><span class="id" title="axiom">seg</span></a> <span class="id" title="var">a</span>) <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.PathGroupoids.html#apD_const"><span class="id" title="lemma">apD_const</span></a> (<a class="idref" href="HoTT.HIT.Interval.html#interval_ind"><span class="id" title="definition">interval_ind</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">P</span>) <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">_</span>) <a class="idref" href="HoTT.HIT.Interval.html#seg"><span class="id" title="axiom">seg</span></a><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.HIT.Interval.html#interval_ind_beta_seg"><span class="id" title="axiom">interval_ind_beta_seg</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">P</span>) <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1126"></a><h2 class="section">The interval is contractible.</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="contr_interval" class="idref" href="#contr_interval"><span class="id" title="instance">contr_interval</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Contr"><span class="id" title="abbreviation">Contr</span></a> <a class="idref" href="HoTT.HIT.Interval.html#interval"><span class="id" title="inductive">interval</span></a> | 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#Build_Contr"><span class="id" title="constructor">Build_Contr</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.HIT.Interval.html#zero"><span class="id" title="constructor">zero</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.HIT.Interval.html#interval_ind"><span class="id" title="definition">interval_ind</span></a> <span class="id" title="var">_</span> 1 <a class="idref" href="HoTT.HIT.Interval.html#seg"><span class="id" title="axiom">seg</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Types.Paths.html#transport_paths_r"><span class="id" title="definition">transport_paths_r</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_1p"><span class="id" title="definition">concat_1p</span></a> <span class="id" title="var">_</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

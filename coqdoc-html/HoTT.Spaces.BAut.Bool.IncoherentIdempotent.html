@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.BAut.Bool.IncoherentIdempotent</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.BAut.Bool.IncoherentIdempotent</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Equiv.BiInv.html#"><span class="id" title="library">Equiv.BiInv</span></a> <a class="idref" href="HoTT.Idempotents.html#"><span class="id" title="library">Idempotents</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Universes.BAut.html#"><span class="id" title="library">Universes.BAut</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.html#"><span class="id" title="library">Spaces.BAut.Bool</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1431"></a><h1 class="section">An incoherent quasi-idempotent on <span class="inlinecode"><a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>)</span>.</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="IncoherentQuasiIdempotent" class="idref" href="#IncoherentQuasiIdempotent"><span class="id" title="section">IncoherentQuasiIdempotent</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Univalence</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We use the identity map, and the nontrivial 2-central element of <span class="inlinecode"><a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>)</span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="nontrivial_qidem_baut_baut_bool" class="idref" href="#nontrivial_qidem_baut_baut_bool"><span class="id" title="definition">nontrivial_qidem_baut_baut_bool</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Idempotents.html#IsQuasiIdempotent"><span class="id" title="class">IsQuasiIdempotent</span></a> (<a class="idref" href="HoTT.Idempotents.html#preidem_idmap"><span class="id" title="definition">preidem_idmap</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Spaces.BAut.Bool.html#negb_center2_baut_baut_bool"><span class="id" title="definition">negb_center2_baut_baut_bool</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="IncoherentQuasiIdempotent.ret" class="idref" href="#IncoherentQuasiIdempotent.ret"><span class="id" title="variable">ret</span></a> := <a class="idref" href="HoTT.Idempotents.html#splitting_preidem_retractof_qidem"><span class="id" title="definition">splitting_preidem_retractof_qidem</span></a> (<a class="idref" href="HoTT.Idempotents.html#preidem_idmap"><span class="id" title="definition">preidem_idmap</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>))).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="IncoherentQuasiIdempotent.s" class="idref" href="#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a> := <a class="idref" href="HoTT.Idempotents.html#retract_sect"><span class="id" title="projection">retract_sect</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.ret"><span class="id" title="variable">ret</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="IncoherentQuasiIdempotent.r" class="idref" href="#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a> := <a class="idref" href="HoTT.Idempotents.html#retract_retr"><span class="id" title="projection">retract_retr</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.ret"><span class="id" title="variable">ret</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="IncoherentQuasiIdempotent.issect" class="idref" href="#IncoherentQuasiIdempotent.issect"><span class="id" title="variable">issect</span></a> := <a class="idref" href="HoTT.Idempotents.html#retract_issect"><span class="id" title="projection">retract_issect</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.ret"><span class="id" title="variable">ret</span></a> : <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Since the space of splittings of the identity pre-idempotent is contractible, nontriviality of this 2-central element implies that not every quasi-idempotence witness of the identity is recoverable from its own splitting. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="splitting_preidem_notequiv_qidem_baut_baut_bool" class="idref" href="#splitting_preidem_notequiv_qidem_baut_baut_bool"><span class="id" title="definition">splitting_preidem_notequiv_qidem_baut_baut_bool</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a> <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idmap"><span class="id" title="abbreviation">idmap</span></a><a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">oops</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">p</span> := <span class="id" title="var">oops</span> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#nontrivial_qidem_baut_baut_bool"><span class="id" title="definition">nontrivial_qidem_baut_baut_bool</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">q</span> := <span class="id" title="var">oops</span> (<a class="idref" href="HoTT.Idempotents.html#isqidem_idmap"><span class="id" title="instance">isqidem_idmap</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>)))); <span class="id" title="tactic">clear</span> <span class="id" title="var">oops</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BAut.Bool.html#nontrivial_negb_center_baut_baut_bool"><span class="id" title="definition">nontrivial_negb_center_baut_baut_bool</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">p</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">q</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<a class="idref" href="HoTT.Idempotents.html#contr_splitting_preidem_idmap"><span class="id" title="definition">contr_splitting_preidem_idmap</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Contractible.html#path_contr"><span class="id" title="definition">path_contr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Therefore, not every quasi-idempotence witness is obtainable from *any* splitting, i.e. it may not have any coherentification. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="not_all_coherent_qidem_baut_baut_bool" class="idref" href="#not_all_coherent_qidem_baut_baut_bool"><span class="id" title="definition">not_all_coherent_qidem_baut_baut_bool</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="q:2" class="idref" href="#q:2"><span class="id" title="binder">q</span></a> : <a class="idref" href="HoTT.Idempotents.html#IsQuasiIdempotent"><span class="id" title="class">IsQuasiIdempotent</span></a> (<a class="idref" href="HoTT.Idempotents.html#preidem_idmap"><span class="id" title="definition">preidem_idmap</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> (<a class="idref" href="HoTT.Universes.BAut.html#BAut"><span class="id" title="definition">BAut</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>)))<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a> <a id="S:3" class="idref" href="#S:3"><span class="id" title="binder">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Idempotents.html#Splitting_PreIdempotent"><span class="id" title="definition">Splitting_PreIdempotent</span></a> (<a class="idref" href="HoTT.Idempotents.html#preidem_idmap"><span class="id" title="definition">preidem_idmap</span></a> <span class="id" title="var">_</span>) <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#S:3"><span class="id" title="variable">S</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#q:2"><span class="id" title="variable">q</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a><a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">oops</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Equiv.BiInv.html#isequiv_biinv"><span class="id" title="definition">isequiv_biinv</span></a>; <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">∃</span> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a>; <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.issect"><span class="id" title="variable">issect</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">∃</span> (<span class="id" title="keyword">fun</span> <a id="q:4" class="idref" href="#q:4"><span class="id" title="binder"><span id="q:5" class="id">q</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">(</span></a><span class="id" title="var">oops</span> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#q:4"><span class="id" title="variable">q</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">).1</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <a id="q:6" class="idref" href="#q:6"><span class="id" title="binder"><span id="q:7" class="id">q</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">(</span></a><span class="id" title="var">oops</span> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#q:6"><span class="id" title="variable">q</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">).2</span></a>). }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#splitting_preidem_notequiv_qidem_baut_baut_bool"><span class="id" title="definition">splitting_preidem_notequiv_qidem_baut_baut_bool</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.r"><span class="id" title="variable">r</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Overture.html#eisretr"><span class="id" title="method">eisretr</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a> <span class="id" title="var">q</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a> (<a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.issect"><span class="id" title="variable">issect</span></a> (<a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">q</span></a>)) <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#eisretr"><span class="id" title="method">eisretr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+These results show only that not *every* quasi-idempotence witness is coherent.  "Clearly" the nontrivial quasi-idempotence witness <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#nontrivial_qidem_baut_baut_bool"><span class="id" title="definition">nontrivial_qidem_baut_baut_bool</span></a></span> should be the one that is not coherent.  To show this, we would probably need to show that <span class="inlinecode"><a class="idref" href="HoTT.Idempotents.html#isqidem_idmap"><span class="id" title="instance">isqidem_idmap</span></a></span> *is* in the image of <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a></span>, and this seems rather annoying to do based on our construction of <span class="inlinecode"><a class="idref" href="HoTT.Idempotents.html#splitting_preidem_retractof_qidem"><span class="id" title="definition">splitting_preidem_retractof_qidem</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent"><span class="id" title="section">IncoherentQuasiIdempotent</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

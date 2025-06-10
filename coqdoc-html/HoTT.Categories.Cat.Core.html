@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Cat.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Cat.Core</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab461"></a><h1 class="section">Cat, the precategory of strict categories</h1>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Objects.html#"><span class="id" title="library">Category.Objects</span></a> <a class="idref" href="HoTT.Categories.InitialTerminalCategory.Core.html#"><span class="id" title="library">InitialTerminalCategory.Core</span></a> <a class="idref" href="HoTT.Categories.InitialTerminalCategory.Functors.html#"><span class="id" title="library">InitialTerminalCategory.Functors</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a> <a class="idref" href="HoTT.Categories.Category.Strict.html#"><span class="id" title="library">Category.Strict</span></a> <a class="idref" href="HoTT.Categories.Functor.Paths.html#"><span class="id" title="library">Functor.Paths</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="library">Functor.Identity</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Functor.Composition.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Laws.html#"><span class="id" title="library">Functor.Composition.Laws</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Polymorphism</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Asymmetric</span> <span class="id" title="var">Patterns</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">functor_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="sub_pre_cat" class="idref" href="#sub_pre_cat"><span class="id" title="section">sub_pre_cat</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We use a slight generalization; we look at a full 1-precategory
+      of the 2-precategory Cat, such that all types of functors are
+      hSets.  It might be possible to prove that this doesn't buy you
+      anything, because it's probably the case that <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a></span> <span class="inlinecode">(<a class="idref" href="HoTT.Modalities.ReflectiveSubuniverse.html#Reflective_Subuniverse.Functor"><span class="id" title="section">Functor</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span>
+      <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Category.Strict.html#IsStrictCategory"><span class="id" title="abbreviation">IsStrictCategory</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Factorization.html#FactSys.C"><span class="id" title="variable">C</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="sub_pre_cat.P" class="idref" href="#sub_pre_cat.P"><span class="id" title="variable">P</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="HF:5" class="idref" href="#HF:5"><span class="id" title="binder">HF</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="C:3" class="idref" href="#C:3"><span class="id" title="binder">C</span></a> <a id="D:4" class="idref" href="#D:4"><span class="id" title="binder">D</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#C:3"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#D:4"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> (<a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#C:3"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#D:4"><span class="id" title="variable">D</span></a>)}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+There is a precategory of precategories which satisfy the proposition P 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="sub_pre_cat" class="idref" href="#sub_pre_cat"><span class="id" title="definition">sub_pre_cat</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Categories.Category.Core.html#Build_PreCategory"><span class="id" title="definition">Build_PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a> <a id="C:6" class="idref" href="#C:6"><span class="id" title="binder">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#C:6"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="C:7" class="idref" href="#C:7"><span class="id" title="binder">C</span></a> <a id="D:8" class="idref" href="#D:8"><span class="id" title="binder">D</span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#C:7"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#D:8"><span class="id" title="variable">D</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="C:9" class="idref" href="#C:9"><span class="id" title="binder">C</span></a> ⇒ <a class="idref" href="HoTT.Categories.Functor.Identity.html#identity"><span class="id" title="definition">identity</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#C:9"><span class="id" title="variable">C</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a id="F:10" class="idref" href="#F:10"><span class="id" title="binder">F</span></a> <a id="G:11" class="idref" href="#G:11"><span class="id" title="binder">G</span></a> ⇒ <a class="idref" href="HoTT.Categories.Cat.Core.html#F:10"><span class="id" title="variable">F</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#G:11"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Categories.Functor.Composition.Laws.html#associativity"><span class="id" title="lemma">associativity</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Categories.Functor.Composition.Laws.html#left_identity"><span class="id" title="lemma">left_identity</span></a> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Categories.Functor.Composition.Laws.html#right_identity"><span class="id" title="lemma">right_identity</span></a> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="s:12" class="idref" href="#s:12"><span class="id" title="binder">s</span></a> <a id="d:13" class="idref" href="#d:13"><span class="id" title="binder">d</span></a> ⇒ <a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat.HF"><span class="id" title="variable">HF</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#s:12"><span class="id" title="variable">s</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">.2</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#d:13"><span class="id" title="variable">d</span></a><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">.2</span></a>).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat"><span class="id" title="section">sub_pre_cat</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat"><span class="id" title="definition">sub_pre_cat</span></a> {<span class="id" title="var">_</span>} <span class="id" title="var">P</span> {<span class="id" title="var">_</span>}, {<span class="id" title="var">_</span>} <span class="id" title="var">P</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Extern</span> 4 ⇒ <span class="id" title="tactic">progress</span> (<span class="id" title="tactic">cbv</span> <span class="id" title="keyword">beta</span> <span class="id" title="keyword">iota</span>) : <span class="id" title="var">typeclass_instances</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="strict_cat" class="idref" href="#strict_cat"><span class="id" title="definition">strict_cat</span></a> `{<a id="H:14" class="idref" href="#H:14"><span class="id" title="binder">Funext</span></a>} : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat"><span class="id" title="definition">sub_pre_cat</span></a> (<span class="id" title="keyword">fun</span> <a id="C:15" class="idref" href="#C:15"><span class="id" title="binder">C</span></a> ⇒ <a class="idref" href="HoTT.Categories.Category.Strict.html#IsStrictCategory"><span class="id" title="abbreviation">IsStrictCategory</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#C:15"><span class="id" title="variable">C</span></a>).<br/>
+
+<br/>
+<span class="comment">(*Definition&nbsp;Cat&nbsp;`{Funext}&nbsp;:&nbsp;PreCategory.<br/>
+&nbsp;&nbsp;refine&nbsp;(@sub_pre_cat&nbsp;_&nbsp;(fun&nbsp;C&nbsp;=&gt;&nbsp;IsCategory&nbsp;C)&nbsp;_).<br/>
+&nbsp;&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab462"></a><h2 class="section">The initial and terminal categories are initial and terminal objects in cat</h2>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="objects" class="idref" href="#objects"><span class="id" title="section">objects</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:16" class="idref" href="#H:16"><span class="id" title="binder">Funext</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="objects.P" class="idref" href="#objects.P"><span class="id" title="variable">P</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H0:19" class="idref" href="#H0:19"><span class="id" title="binder">∀</span></a> <a id="C:18" class="idref" href="#C:18"><span class="id" title="binder"><span id="H0:19" class="id">C</span></span></a><a id="H0:19" class="idref" href="#H0:19"><span class="id" title="binder">,</span></a> <a id="H0:19" class="idref" href="#H0:19"><span class="id" title="binder">IsHProp</span></a> <a id="H0:19" class="idref" href="#H0:19"><span class="id" title="binder">(</span></a><a id="H0:19" class="idref" href="#H0:19"><span class="id" title="binder">P</span></a> <a id="H0:19" class="idref" href="#H0:19"><span class="id" title="binder">C</span></a><a id="H0:19" class="idref" href="#H0:19"><span class="id" title="binder">)</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="HF:22" class="idref" href="#HF:22"><span class="id" title="binder">HF</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="C:20" class="idref" href="#C:20"><span class="id" title="binder">C</span></a> <a id="D:21" class="idref" href="#D:21"><span class="id" title="binder">D</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#objects.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#C:20"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#objects.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#D:21"><span class="id" title="variable">D</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> (<a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#C:20"><span class="id" title="variable">C</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#D:21"><span class="id" title="variable">D</span></a>)}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="is_terminal_object__is_terminal_category" class="idref" href="#is_terminal_object__is_terminal_category"><span class="id" title="lemma">is_terminal_object__is_terminal_category</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`(<a id="H2:26" class="idref" href="#H2:26"><span class="id" title="binder">IsTerminalCategory</span></a> <a id="one:23" class="idref" href="#one:23"><span class="id" title="binder"><span id="H2:26" class="id">one</span></span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="HT:27" class="idref" href="#HT:27"><span class="id" title="binder">HT</span></a> : <a class="idref" href="HoTT.Categories.Cat.Core.html#objects.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#one:23"><span class="id" title="variable">one</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Objects.html#IsTerminalObject"><span class="id" title="abbreviation">IsTerminalObject</span></a> (<a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat"><span class="id" title="definition">sub_pre_cat</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#objects.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#objects.HF"><span class="id" title="variable">HF</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Cat.Core.html#one:23"><span class="id" title="variable">one</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#HT:27"><span class="id" title="variable">HT</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="is_initial_object__is_initial_category" class="idref" href="#is_initial_object__is_initial_category"><span class="id" title="lemma">is_initial_object__is_initial_category</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`(<a id="H1:29" class="idref" href="#H1:29"><span class="id" title="binder">IsInitialCategory</span></a> <a id="zero:28" class="idref" href="#zero:28"><span class="id" title="binder"><span id="H1:29" class="id">zero</span></span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="HI:30" class="idref" href="#HI:30"><span class="id" title="binder">HI</span></a> : <a class="idref" href="HoTT.Categories.Cat.Core.html#objects.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#zero:28"><span class="id" title="variable">zero</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Objects.html#IsInitialObject"><span class="id" title="abbreviation">IsInitialObject</span></a> (<a class="idref" href="HoTT.Categories.Cat.Core.html#sub_pre_cat"><span class="id" title="definition">sub_pre_cat</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#objects.P"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#objects.HF"><span class="id" title="variable">HF</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Cat.Core.html#zero:28"><span class="id" title="variable">zero</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">;</span></a> <a class="idref" href="HoTT.Categories.Cat.Core.html#HI:30"><span class="id" title="variable">HI</span></a><a class="idref" href="HoTT.Basics.Overture.html#4887cec9c4a6ccb88dc6b18963c35c8f"><span class="id" title="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">typeclasses</span> <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Cat.Core.html#objects"><span class="id" title="section">objects</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

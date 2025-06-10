@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Cantor</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Cantor</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">path_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1474"></a><h1 class="section">Cantor space 2^N</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Cantor" class="idref" href="#Cantor"><span class="id" title="definition">Cantor</span></a> : <span class="id" title="keyword">Type</span> := <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="cantor_fold" class="idref" href="#cantor_fold"><span class="id" title="definition">cantor_fold</span></a> : <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">c</span>|<span class="id" title="var">c</span>]; <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<span class="id" title="var">c</span> <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<span class="id" title="var">c</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="cantor_unfold" class="idref" href="#cantor_unfold"><span class="id" title="definition">cantor_unfold</span></a> : <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">case</span> (<span class="id" title="var">c</span> 0).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> (<span class="id" title="keyword">fun</span> <a id="n:1" class="idref" href="#n:1"><span class="id" title="binder"><span id="n:2" class="id">n</span></span></a> ⇒ <span class="id" title="var">c</span> <a class="idref" href="HoTT.Spaces.Cantor.html#n:1"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> (<span class="id" title="keyword">fun</span> <a id="n:3" class="idref" href="#n:3"><span class="id" title="binder"><span id="n:4" class="id">n</span></span></a> ⇒ <span class="id" title="var">c</span> <a class="idref" href="HoTT.Spaces.Cantor.html#n:3"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_cantor_fold" class="idref" href="#isequiv_cantor_fold"><span class="id" title="instance">isequiv_cantor_fold</span></a> `{<a id="H:5" class="idref" href="#H:5"><span class="id" title="binder">Funext</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#cantor_fold"><span class="id" title="definition">cantor_fold</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.Cantor.html#cantor_unfold"><span class="id" title="definition">cantor_unfold</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">c</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Arrow.html#path_arrow"><span class="id" title="definition">path_arrow</span></a>; <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">n</span> <span class="id" title="var">IH</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Cantor.html#cantor_unfold"><span class="id" title="definition">cantor_unfold</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">case</span> (<span class="id" title="var">c</span> 0); <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Spaces.Cantor.html#cantor_unfold"><span class="id" title="definition">cantor_unfold</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">case</span> (<span class="id" title="var">c</span> 0); <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">c</span>|<span class="id" title="var">c</span>]; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sum.html#path_sum"><span class="id" title="definition">path_sum</span></a>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_cantor_fold" class="idref" href="#equiv_cantor_fold"><span class="id" title="definition">equiv_cantor_fold</span></a> `{<a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">Funext</span></a>} : <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.Cantor.html#cantor_fold"><span class="id" title="definition">cantor_fold</span></a> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_cantor_unfold" class="idref" href="#equiv_cantor_unfold"><span class="id" title="definition">equiv_cantor_unfold</span></a> `{<a id="H:7" class="idref" href="#H:7"><span class="id" title="binder">Funext</span></a>} : <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#Cantor"><span class="id" title="definition">Cantor</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Spaces.Cantor.html#cantor_unfold"><span class="id" title="definition">cantor_unfold</span></a> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_inverse"><span class="id" title="instance">isequiv_inverse</span></a> <a class="idref" href="HoTT.Spaces.Cantor.html#equiv_cantor_fold"><span class="id" title="definition">equiv_cantor_fold</span></a>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

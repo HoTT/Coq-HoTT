@@ -1,0 +1,1345 @@
+<html>
+<head>
+<title>ua_first_isomorphism.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ua_first_isomorphism.v</h1>
+
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** This file defines the kernel of a homomorphism [cong_ker], the
+    image of a homomorphism [in_image_hom], and it proves the first
+    isomorphism theorem [isomorphic_first_isomorphism]. The first
+    identification theorem [id_first_isomorphism] follows. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 5
+Time: 0.078s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  Basics.Notations
+  HSet
+  Colimits.Quotient
+  Classes.interfaces.canonical_names
+  Classes.theory.ua_isomorphic
+  Classes.theory.ua_subalgebra
+  Classes.theory.ua_quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Import
+  algebra_notations
+  quotient_algebra_notations
+  subalgebra_notations
+  isomorphic_notations.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following section defines the kernel of a homomorphism
+    [cong_ker], and shows that it is a congruence.*)
+
+</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section cong_ker.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Context
+    {σ : Signature} {A B : Algebra σ} `{IsHSetAlgebra B}
+    (f : ∀ s, A s → B s) `{!IsHomomorphism f}.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cong_ker (s : Sort σ) : Relation (A s)
+    := λ (x y : A s), f s x = f s y.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Leave the following results about [cong_ker] opaque because they
+   are h-props. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance equiv_rel_ker (s : Sort σ)
+    : EquivRel (cong_ker s).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    repeat constructor.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact inverse.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact concat.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+
+  Lemma path_ap_operation_ker_related {w : SymbolType σ}
+    (β : Operation B w) (a b : FamilyProd A (dom_symboltype w))
+    (R : for_all_2_family_prod A A cong_ker a b)
+    : ap_operation β (map_family_prod f a)
+      = ap_operation β (map_family_prod f b).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction w.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre> destruct a as [x a], b as [y b], R as [r R].</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct r.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply IHw.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 50
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance ops_compatible_ker : OpsCompatible A cong_ker.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros u a b R.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold cong_ker.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 56
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    destruct (path_homomorphism_ap_operation f u a)^.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    destruct (path_homomorphism_ap_operation f u b)^.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply path_ap_operation_ker_related.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 60
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>
+
+  #[export] Instance is_congruence_ker : IsCongruence A cong_ker
+    := BuildIsCongruence A cong_ker.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End cong_ker.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next section defines an "in image predicate", [in_image_hom].
+    It gives rise to the homomorphic image of a homomorphism. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section in_image_hom.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context
+    `{Funext} {σ : Signature} {A B : Algebra σ}
+    (f : ∀ s, A s → B s) {hom : IsHomomorphism f}.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition in_image_hom (s : Sort σ) (y : B s) : HProp
+    := merely (hfiber (f s) y).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma closed_under_op_in_image_hom {w : SymbolType σ}
+    (α : Operation A w) (β : Operation B w) (P : OpPreserving f α β)
+    : ClosedUnderOp B in_image_hom β.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction w.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (tr (α; P)).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro y.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 83
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+      refine (Trunc_rec _).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x p].</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (IHw (α x)).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by destruct p.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma is_closed_under_ops_in_image_hom
+    : IsClosedUnderOps B in_image_hom.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro u.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply closed_under_op_in_image_hom, hom.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 93
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  #[export] Instance is_subalgebra_predicate_in_image_hom
+    : IsSubalgebraPredicate B in_image_hom
+    := BuildIsSubalgebraPredicate is_closed_under_ops_in_image_hom.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End in_image_hom.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following section proves the first isomorphism theorem,
+    [isomorphic_first_isomorphism] and the first identification
+    theorem [id_first_isomorphism]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section first_isomorphism.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Context
+    `{Univalence} {σ} {A B : Algebra σ} `{IsHSetAlgebra B}
+    (f : ∀ s, A s → B s) {hom : IsHomomorphism f}.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The homomorphism [def_first_isomorphism] is informally given by
+
+&lt;&lt;
+      def_first_isomorphism s (class_of _ x) := f s x.
+&gt;&gt;
+*)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Definition def_first_isomorphism (s : Sort σ)
+    : (A / cong_ker f) s → (B &amp;&amp; in_image_hom f) s.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 117
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+    refine (Quotient_rec (cong_ker f s) _ (λ x, (f s x; tr (x; idpath))) _).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y p.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 119
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    by apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 120
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 121
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+  Lemma oppreserving_first_isomorphism {w : SymbolType σ}
+    (α : Operation A w)
+    (β : Operation B w)
+    (γ : Operation (A / cong_ker f) w)
+    (C : ClosedUnderOp B (in_image_hom f) β)
+    (P : OpPreserving f α β)
+    (G : ComputeOpQuotient A (cong_ker f) α γ)
+    : OpPreserving def_first_isomorphism γ
+        (op_subalgebra B (in_image_hom f) β C).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    induction w.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 134
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      generalize dependent γ.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 135
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre>
+      refine (Quotient_ind_hprop (cong_ker f t) _ _).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x G.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct P.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 137
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+      apply (related_quotient_paths (cong_ker f t) _ _ (G tt)).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 139
+Time: 0.007s">
+<div class="time" style="width: 8.974358974359%"></div>
+<pre> refine (Quotient_ind_hprop (cong_ker f t) _ _).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 139
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+      apply (IHw (α x) (β (f t x)) (γ (class_of _ x))).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (P x).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (G (x,a)).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 142
+Time: 0.006s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Leave [is_homomorphism_first_isomorphism] opaque because
+   [IsHomomorphism] is an hprop when [B] is a set algebra. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance is_homomorphism_first_isomorphism
+    : IsHomomorphism def_first_isomorphism.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro u.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (oppreserving_first_isomorphism u.#A).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply hom.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply compute_op_quotient.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 154
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+  Definition hom_first_isomorphism
+    : Homomorphism (A / cong_ker f) (B &amp;&amp; in_image_hom f)
+    := BuildHomomorphism def_first_isomorphism.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance embedding_first_isomorphism (s : Sort σ)
+    : IsEmbedding (hom_first_isomorphism s).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    apply isembedding_isinj_hset.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 163
+Time: 0.009s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+    refine (Quotient_ind_hprop (cong_ker f s) _ _).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 164
+Time: 0.024s">
+<div class="time" style="width: 30.769230769231%"></div>
+<pre>
+    refine (Quotient_ind_hprop (cong_ker f s) _ _).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y p.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply qglue.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p..1).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 167
+Time: 0.002s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance surjection_first_isomorphism (s : Sort σ)
+    : IsSurjection (hom_first_isomorphism s).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply BuildIsSurjection.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [x M].</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (Trunc_rec _ M).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [y Y].</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (class_of _ y).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+    by apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is_isomorphism_first_isomorphism
+    : IsIsomorphism hom_first_isomorphism.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro s.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_surj_emb; exact _.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 185
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+
+  Theorem isomorphic_first_isomorphism
+    : A / cong_ker f ≅ B &amp;&amp; in_image_hom f.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (BuildIsomorphic def_first_isomorphism).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The first identification theorem [id_first_isomorphism] is an
+   h-prop, so we can leave it opaque. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 196
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Corollary id_first_isomorphism : A / cong_ker f = B &amp;&amp; in_image_hom f.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (id_isomorphic isomorphic_first_isomorphism).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+End first_isomorphism.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next section gives a specialization of the first isomorphism
+    theorem, where the homomorphism is surjective. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section first_isomorphism_surjection.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context
+    `{Univalence} {σ} {A B : Algebra σ} `{IsHSetAlgebra B}
+    (f : ∀ s, A s → B s) `{!IsHomomorphism f} {S : ∀ s, IsSurjection (f s)}.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 207
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+
+  #[export] Instance is_isomorphism_inc_first_isomorphism_surjection
+    : IsIsomorphism (hom_inc_subalgebra B (in_image_hom f)).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply is_isomorphism_inc_improper_subalgebra.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros s x; cbn.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply center, S.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The homomorphism [hom_first_isomorphism_surjection] is the
+    composition of two isomorphisms, so it is an isomorphism. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Definition hom_first_isomorphism_surjection
+    : Homomorphism (A / cong_ker f) B
+    := hom_compose
+          (hom_inc_subalgebra B (in_image_hom f))
+          (hom_first_isomorphism f).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Theorem isomorphic_first_isomorphism_surjection : A / cong_ker f ≅ B.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 227
+Time: 0.004s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    exact (BuildIsomorphic hom_first_isomorphism_surjection).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Corollary id_first_isomorphism_surjection : (A / cong_ker f) = B.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (id_isomorphic isomorphic_first_isomorphism_surjection).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End first_isomorphism_surjection.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next section specializes the first isomorphism theorem to the
+    case where the homomorphism is injective. It proves that an
+    injective homomorphism is an isomorphism between its domain
+    and its image. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section first_isomorphism_inj.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context
+    `{Univalence} {σ} {A B : Algebra σ} `{IsHSetAlgebra B}
+    (f : ∀ s, A s → B s) `{!IsHomomorphism f} (inj : ∀ s, IsInjective (f s)).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 244
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+
+  #[export] Instance is_isomorphism_quotient_first_isomorphism_inj
+    : IsIsomorphism (hom_quotient (cong_ker f)).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply is_isomorphism_quotient.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros s x y p.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inj, p.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The homomorphism [hom_first_isomorphism_inj] is the
+    composition of two isomorphisms, so it is an isomorphism. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 255
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>Definition hom_first_isomorphism_inj
+    : Homomorphism A (B &amp;&amp; in_image_hom f)
+    := hom_compose
+          (hom_first_isomorphism f)
+          (hom_quotient (cong_ker f)).</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 259
+Time: 0.003s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Definition isomorphic_first_isomorphism_inj : A ≅ B &amp;&amp; in_image_hom f
+    := BuildIsomorphic hom_first_isomorphism_inj.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 1.2820512820513%"></div>
+<pre>
+
+  Definition id_first_isomorphism_inj : A = B &amp;&amp; in_image_hom f
+    := id_isomorphic isomorphic_first_isomorphism_inj.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End first_isomorphism_inj.</pre>
+</div>
+<div class="code" title="File: ua_first_isomorphism.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

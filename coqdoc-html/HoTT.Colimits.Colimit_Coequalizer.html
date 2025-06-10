@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Colimits.Colimit_Coequalizer</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Colimits.Colimit_Coequalizer</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.ParallelPair.html#"><span class="id" title="library">Diagrams.ParallelPair</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Diagrams.Cocone.html#"><span class="id" title="library">Diagrams.Cocone</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Colimits.Colimit.html#"><span class="id" title="library">Colimits.Colimit</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Colimits.Coeq.html#"><span class="id" title="library">Colimits.Coeq</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1019"></a><h1 class="section">Coequalizer as a colimit</h1>
+
+<div class="paragraph"> </div>
+
+ In this file, we define <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer"><span class="id" title="definition">Coequalizer</span></a></span> the coequalizer of two maps as the colimit of a particular diagram, and then show that it is equivalent to <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Coeq.html#Coeq"><span class="id" title="definition">Coeq</span></a></span> the primitive coequalizer defined as an HIT. 
+<div class="paragraph"> </div>
+
+<a id="lab1020"></a><h2 class="section"><span class="inlinecode"><a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer"><span class="id" title="definition">Coequalizer</span></a></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Coequalizer" class="idref" href="#Coequalizer"><span class="id" title="section">Coequalizer</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> <a id="B:2" class="idref" href="#B:2"><span class="id" title="binder">B</span></a> : <span class="id" title="keyword">Type</span>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="IsCoequalizer" class="idref" href="#IsCoequalizer"><span class="id" title="definition">IsCoequalizer</span></a> (<a id="f:3" class="idref" href="#f:3"><span class="id" title="binder">f</span></a> <a id="g:4" class="idref" href="#g:4"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.A"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Colimits.Colimit.html#IsColimit"><span class="id" title="class">IsColimit</span></a> (<a class="idref" href="HoTT.Diagrams.ParallelPair.html#parallel_pair"><span class="id" title="definition">parallel_pair</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#f:3"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#g:4"><span class="id" title="variable">g</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Coequalizer" class="idref" href="#Coequalizer"><span class="id" title="definition">Coequalizer</span></a> (<a id="f:5" class="idref" href="#f:5"><span class="id" title="binder">f</span></a> <a id="g:6" class="idref" href="#g:6"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.A"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Colimits.Colimit.html#Colimit"><span class="id" title="definition">Colimit</span></a> (<a class="idref" href="HoTT.Diagrams.ParallelPair.html#parallel_pair"><span class="id" title="definition">parallel_pair</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#f:5"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#g:6"><span class="id" title="variable">g</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1021"></a><h2 class="section">Equivalence with <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Coeq.html#Coeq"><span class="id" title="definition">Coeq</span></a></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="f:7" class="idref" href="#f:7"><span class="id" title="binder">f</span></a> <a id="g:8" class="idref" href="#g:8"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.B"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.A"><span class="id" title="variable">A</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="cocone_Coeq" class="idref" href="#cocone_Coeq"><span class="id" title="definition">cocone_Coeq</span></a> : <a class="idref" href="HoTT.Diagrams.Cocone.html#Cocone"><span class="id" title="class">Cocone</span></a> (<a class="idref" href="HoTT.Diagrams.ParallelPair.html#parallel_pair"><span class="id" title="definition">parallel_pair</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.f"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.g"><span class="id" title="variable">g</span></a>) (<a class="idref" href="HoTT.Colimits.Coeq.html#Coeq"><span class="id" title="definition">Coeq</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.f"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.g"><span class="id" title="variable">g</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Cocone.html#Build_Cocone"><span class="id" title="constructor">Build_Cocone</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> []; [<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Coeq.html#coeq"><span class="id" title="definition">coeq</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.g"><span class="id" title="variable">g</span></a>)| <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Colimits.Coeq.html#coeq"><span class="id" title="definition">coeq</span></a>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">j</span> <span class="id" title="var">phi</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">i</span>, <span class="id" title="var">j</span>, <span class="id" title="var">phi</span>; <span class="id" title="tactic">simpl</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Colimits.Coeq.html#cglue"><span class="id" title="definition">cglue</span></a> <span class="id" title="var">x</span>) | <span class="id" title="tactic">reflexivity</span> ].<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="iscoequalizer_Coeq" class="idref" href="#iscoequalizer_Coeq"><span class="id" title="lemma">iscoequalizer_Coeq</span></a> `{<a id="H:9" class="idref" href="#H:9"><span class="id" title="binder">Funext</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Colimits.Colimit.html#IsColimit"><span class="id" title="class">IsColimit</span></a> (<a class="idref" href="HoTT.Diagrams.ParallelPair.html#parallel_pair"><span class="id" title="definition">parallel_pair</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.f"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.g"><span class="id" title="variable">g</span></a>) (<a class="idref" href="HoTT.Colimits.Coeq.html#Coeq"><span class="id" title="definition">Coeq</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.f"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.g"><span class="id" title="variable">g</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Colimits.Colimit.html#Build_IsColimit"><span class="id" title="constructor">Build_IsColimit</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#cocone_Coeq"><span class="id" title="definition">cocone_Coeq</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Cocone.html#Build_UniversalCocone"><span class="id" title="constructor">Build_UniversalCocone</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">X</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">C</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Coeq.html#Coeq_rec"><span class="id" title="definition">Coeq_rec</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Diagrams.Cocone.html#legs"><span class="id" title="method">legs</span></a> <span class="id" title="var">C</span> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">etransitivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Diagrams.Cocone.html#legs_comm"><span class="id" title="method">legs_comm</span></a> <span class="id" title="var">C</span> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a> <span class="id" title="var">b</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Diagrams.Cocone.html#legs_comm"><span class="id" title="method">legs_comm</span></a> <span class="id" title="var">C</span> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a> <span class="id" title="var">b</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">)^</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">C</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Diagrams.Cocone.html#path_cocone"><span class="id" title="definition">path_cocone</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">i</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Diagrams.Cocone.html#legs_comm"><span class="id" title="method">legs_comm</span></a> <span class="id" title="var">C</span> <a class="idref" href="HoTT.Types.Bool.html#true"><span class="id" title="constructor">true</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a> <a class="idref" href="HoTT.Types.Bool.html#false"><span class="id" title="constructor">false</span></a> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">i</span> <span class="id" title="var">j</span> <span class="id" title="var">phi</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">i</span>, <span class="id" title="var">j</span>, <span class="id" title="var">phi</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="var">hott_simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [|- <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<a class="idref" href="HoTT.Colimits.Coeq.html#Coeq_rec"><span class="id" title="definition">Coeq_rec</span></a> ?<span class="id" title="var">a</span> ?<span class="id" title="var">b</span> ?<span class="id" title="var">c</span>) <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">_</span> ]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="tactic">rewrite</span> (<a class="idref" href="HoTT.Colimits.Coeq.html#Coeq_rec_beta_cglue"><span class="id" title="definition">Coeq_rec_beta_cglue</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hott_simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">F</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [|- ?<span class="id" title="var">G</span> <a class="idref" href="HoTT.Basics.Overture.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <span class="id" title="var">_</span> ] ⇒ <span class="id" title="tactic">simple</span> <span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Colimits.Coeq.html#Coeq_ind"><span class="id" title="definition">Coeq_ind</span></a> (<span class="id" title="keyword">fun</span> <a id="w:10" class="idref" href="#w:10"><span class="id" title="binder"><span id="w:11" class="id">w</span></span></a> ⇒ <span class="id" title="var">G</span> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#w:10"><span class="id" title="variable">w</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">F</span> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#w:10"><span class="id" title="variable">w</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">intros</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">transport_paths</span> <span class="id" title="var">FlFr</span>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Paths.html#equiv_p1_1q"><span class="id" title="definition">equiv_p1_1q</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Colimits.Coeq.html#Coeq_rec_beta_cglue"><span class="id" title="definition">Coeq_rec_beta_cglue</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.PathGroupoids.html#concat_p1"><span class="id" title="definition">concat_p1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="equiv_Coeq_Coequalizer" class="idref" href="#equiv_Coeq_Coequalizer"><span class="id" title="definition">equiv_Coeq_Coequalizer</span></a> `{<a id="H:12" class="idref" href="#H:12"><span class="id" title="binder">Funext</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Colimits.Coeq.html#Coeq"><span class="id" title="definition">Coeq</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.f"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.g"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer"><span class="id" title="definition">Coequalizer</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.f"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer.g"><span class="id" title="variable">g</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Colimit.html#colimit_unicity"><span class="id" title="lemma">colimit_unicity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;3: <span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#iscoequalizer_Coeq"><span class="id" title="lemma">iscoequalizer_Coeq</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <a class="idref" href="HoTT.Colimits.Colimit.html#iscolimit_colimit"><span class="id" title="instance">iscolimit_colimit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Colimits.Colimit_Coequalizer.html#Coequalizer"><span class="id" title="section">Coequalizer</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

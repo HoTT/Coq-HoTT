@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.Nat.Paths</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.Nat.Paths</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Basics.Nat.html#"><span class="id" title="library">Basics.Nat</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Universes.DProp.html#"><span class="id" title="library">HoTT.Universes.DProp</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1630"></a><h1 class="section">Characterization of the path types of <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span></h1>
+
+<div class="paragraph"> </div>
+
+ We characterize the path types of <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span>.  We put this in its own file because it uses <span class="inlinecode"><a class="idref" href="HoTT.Universes.DProp.html#DProp"><span class="id" title="record">DProp</span></a></span>, which has a lot of dependencies. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">trunc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="code_nat" class="idref" href="#code_nat"><span class="id" title="definition">code_nat</span></a> (<a id="m:1" class="idref" href="#m:1"><span class="id" title="binder">m</span></a> <a id="n:2" class="idref" href="#n:2"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">m</span>} : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DHProp@</span></a><a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">{</span></a><a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">Set</span></a><a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">}</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:1"><span class="id" title="variable">m</span></a>, <a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:2"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0, 0 ⇒ <a class="idref" href="HoTT.Universes.DProp.html#True"><span class="id" title="definition">True</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">m'</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>, <span class="id" title="var">n'</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> ⇒ <a class="idref" href="HoTT.Spaces.Nat.Paths.html#code_nat:3"><span class="id" title="definition">code_nat</span></a> <span class="id" title="var">m'</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Universes.DProp.html#False"><span class="id" title="definition">False</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="5a22bfc7cb7971bd0c83812d74ff513a" class="idref" href="#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">&quot;</span></a>=n" := <a class="idref" href="HoTT.Spaces.Nat.Paths.html#code_nat"><span class="id" title="definition">code_nat</span></a> : <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="idcode_nat" class="idref" href="#idcode_nat"><span class="id" title="definition">idcode_nat</span></a> {<a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a>} : (<a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:6"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">=</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:6"><span class="id" title="variable">n</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:6"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">as</span> <span class="id" title="var">n</span> <span class="id" title="keyword">return</span> (<a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">=</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:8"><span class="id" title="variable">n</span></a>) <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0 ⇒ <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n'</span> ⇒ @<a class="idref" href="HoTT.Spaces.Nat.Paths.html#idcode_nat:7"><span class="id" title="definition">idcode_nat</span></a> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="path_nat" class="idref" href="#path_nat"><span class="id" title="definition">path_nat</span></a> {<a id="n:9" class="idref" href="#n:9"><span class="id" title="binder">n</span></a> <a id="m:10" class="idref" href="#m:10"><span class="id" title="binder">m</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:9"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">=</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:10"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:9"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:10"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:10"><span class="id" title="variable">m</span></a> <span class="id" title="keyword">as</span> <span class="id" title="var">m</span>, <a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:9"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">as</span> <span class="id" title="var">n</span> <span class="id" title="keyword">return</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:13"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">=</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:12"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:13"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:12"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0, 0 ⇒ <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">m'</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>, <span class="id" title="var">n'</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> ⇒ <span class="id" title="keyword">fun</span> <a id="H:14" class="idref" href="#H:14"><span class="id" title="binder">H</span></a> : (<span class="id" title="var">n'</span> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">=</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">n</span></a> <span class="id" title="var">m'</span>) ⇒ <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="HoTT.Spaces.Nat.Paths.html#path_nat:11"><span class="id" title="definition">path_nat</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#H:14"><span class="id" title="variable">H</span></a>)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> ⇒ <span class="id" title="keyword">fun</span> <a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">H</span></a> ⇒ <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#H:15"><span class="id" title="variable">H</span></a> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_path_nat" class="idref" href="#isequiv_path_nat"><span class="id" title="instance">isequiv_path_nat</span></a> {<a id="n:17" class="idref" href="#n:17"><span class="id" title="binder">n</span></a> <a id="m:18" class="idref" href="#m:18"><span class="id" title="binder">m</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (@<a class="idref" href="HoTT.Spaces.Nat.Paths.html#path_nat"><span class="id" title="definition">path_nat</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:17"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:18"><span class="id" title="variable">m</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(@<a class="idref" href="HoTT.Spaces.Nat.Paths.html#path_nat"><span class="id" title="definition">path_nat</span></a> <span class="id" title="var">n</span> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="H:19" class="idref" href="#H:19"><span class="id" title="binder"><span id="H:21" class="id">H</span></span></a> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#transport"><span class="id" title="definition">transport</span></a> (<span class="id" title="keyword">fun</span> <a id="m':20" class="idref" href="#m':20"><span class="id" title="binder"><span id="m':22" class="id">m'</span></span></a> ⇒ (<span class="id" title="var">n</span> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">=</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m':20"><span class="id" title="variable">m'</span></a>)) <a class="idref" href="HoTT.Spaces.Nat.Paths.html#H:19"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#idcode_nat"><span class="id" title="definition">idcode_nat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intros</span> []; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">IHn</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a>)%<span class="id" title="var">path</span>. }<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>. }<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="equiv_path_nat" class="idref" href="#equiv_path_nat"><span class="id" title="definition">equiv_path_nat</span></a> {<a id="n:23" class="idref" href="#n:23"><span class="id" title="binder">n</span></a> <a id="m:24" class="idref" href="#m:24"><span class="id" title="binder">m</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">=</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:24"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:24"><span class="id" title="variable">m</span></a><a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Overture.html#Build_Equiv"><span class="id" title="constructor">Build_Equiv</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (@<a class="idref" href="HoTT.Spaces.Nat.Paths.html#path_nat"><span class="id" title="definition">path_nat</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Spaces.Nat.Paths.html#m:24"><span class="id" title="variable">m</span></a>) <span class="id" title="var">_</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
