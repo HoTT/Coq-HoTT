@@ -9,8 +9,8 @@
 # regular expression syntax, e.g.:
 #   export COQC_SEARCH='(^|[^n])(refine|rapply)'
 #   export COQC_REPLACE='\1n\2'
-# This will replace an occurence of 'refine' or 'rapply' that is either
-# at the start of the line or preceeded by a character other than 'n'
+# This will replace an occurrence of 'refine' or 'rapply' that is either
+# at the start of the line or preceded by a character other than 'n'
 # with the same thing with an 'n' inserted.  '\1' and '\2' refer to
 # the parts of the input line that matched the expressions in parentheses.
 # - COQC_SEARCH is matched against each *line* of the file separately,
