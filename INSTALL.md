@@ -121,7 +121,7 @@ possible.
 Windows and OSX users may install `coq` directly using the [installer for the
 appropriate coq release][9].
 
-For OSX users `git` and `make` should be readily availble.
+For OSX users `git` and `make` should be readily available.
 
 Windows users can install [`git` as described here][18] and [`make` as described
 here][17].
@@ -214,7 +214,7 @@ If you installed the library via Coq Platform then [update your version of Coq
 Platform][1].
 
 If you installed the library via `opam` then simply run `opam update` and then
-`opam ugprade`.
+`opam upgrade`.
 
 To upgrade your clone of the GitHub repository as set up in [the instructions on
 using git](#forking-and-obtaining-the-hott-library): Pull the latest version
