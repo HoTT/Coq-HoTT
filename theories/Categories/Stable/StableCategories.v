@@ -15,9 +15,13 @@
     Date: June 16th, 2025
     License: MIT License
     
-    This file was developed and tested with the following environment:
+    Updated and tested with:
+    - Coq 8.20.1
+    - HoTT 8.20
+    
+    Originally developed with:
     - JsCoq (0.10.0~beta1)
-    - Coq 8.10+beta2/8991 (July 2019), compiled on Jul 29 2019 18:54:57
+    - Coq 8.10+beta2/8991 (July 2019)
     - OCaml 4.07.1
     - Js_of_ocaml 3.4.0
 *)
@@ -29,6 +33,7 @@ From HoTT.Categories Require Import Category Functor NaturalTransformation.
 From HoTT.Categories Require Import InitialTerminalCategory.
 From HoTT.Categories.Functor Require Import Identity Composition.
 From HoTT.Spaces Require Import Int.
+
 
 (** ** Zero Objects
     
@@ -1772,7 +1777,6 @@ Proof.
 Qed.
 
 (** *** Distinguished Triangles Under Duality *)
-
 (** How a distinguished triangle appears in the opposite category *)
 Lemma distinguished_triangle_duality {PS : PreStableCategory} 
   (D : @DistinguishedTriangle PS) :
@@ -1792,9 +1796,9 @@ Lemma distinguished_triangle_duality {PS : PreStableCategory}
   (* The triangle pattern reverses:
      Original in PS:     X --f--> Y --g--> Z --h--> ΣX
      In PS^op:          Y <--f-- X,  Z <--g-- Y,  ΩX <--h-- Z *)
-  True.
+  Unit.
 Proof.
-  trivial.
+  exact tt.
 Qed.
 
 (** ** Proper Stable Categories
@@ -2193,15 +2197,14 @@ Definition has_complementary_adjoints (PS : PreStableCategory) : Type :=
     IsIsomorphism (components_of (epsilon PS) (object_of (Susp PS) X)).
 
 (** *** Trivial Implications *)
-
 Theorem eta_iso_everywhere_implies_proper_stable :
   forall (PS : PreStableCategory),
   (forall X, IsIsomorphism (components_of (eta PS) X)) ->
   (forall X, IsIsomorphism (components_of (epsilon PS) X)) ->
-  True.
+  Unit.
 Proof.
   intros PS H_eta H_eps.
-  exact I.
+  exact tt.
 Qed.
 
 (** ** Section IV.8: Preservation of Zero Morphisms
@@ -2619,11 +2622,10 @@ Proof.
 Qed.
 
 (** *** The Complete Hierarchy *)
-
 Definition stability_hierarchy_summary : Type :=
   forall (PS : PreStableCategory),
   (* Level 0: Pre-stable *)
-  True ->
+  Unit ->
   (* Level 1: Semi-stable (one direction) *)
   (is_left_semi_stable PS + is_right_semi_stable PS) ->
   (* Level 2: Almost proper (both directions) *)
@@ -2634,7 +2636,6 @@ Definition stability_hierarchy_summary : Type :=
   almost_proper_stable_strong PS.
 
 (** *** The Hierarchy Theorem *)
-
 Theorem stability_hierarchy_holds :
   stability_hierarchy_summary.
 Proof.
