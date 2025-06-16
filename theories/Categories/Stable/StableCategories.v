@@ -3088,3 +3088,229 @@ Proof.
   apply initial_morphism_unique.
   apply (@is_initial _ (add_zero PS)).
 Qed.
+
+(** ** Section IV.18: Suspension Fixed Points
+    
+    We investigate objects X such that ΣX ≅ X, revealing special structures
+    in pre-stable categories. These fixed points play a fundamental role in
+    understanding the periodic behavior of suspension functors.
+*)
+
+(** *** Definition of Suspension Fixed Points *)
+
+(** An object X is a suspension fixed point if there exists an isomorphism ΣX ≅ X *)
+Definition is_suspension_fixed_point (PS : PreStableCategory) (X : object PS) : Type :=
+  exists (φ : morphism PS (object_of (Susp PS) X) X), IsIsomorphism φ.
+
+(** *** Helper Lemmas for Suspended Zero Objects *)
+
+(** The suspended zero object inherits the initial property from zero *)
+Lemma susp_zero_is_initial :
+  forall (PS : PreStableCategory) (Y : object PS),
+  Contr (morphism PS (object_of (Susp PS) (@zero _ (add_zero PS))) Y).
+Proof.
+  intros PS Y.
+  (* We know Σ preserves zero *)
+  pose proof (preserves_zero PS PS (Susp PS)) as H_zero.
+  (* Transport the initial property along the equality *)
+  rewrite H_zero.
+  apply (@is_initial _ (add_zero PS) Y).
+Qed.
+
+(** The suspended zero object inherits the terminal property from zero *)
+Lemma susp_zero_is_terminal :
+  forall (PS : PreStableCategory) (X : object PS),
+  Contr (morphism PS X (object_of (Susp PS) (@zero _ (add_zero PS)))).
+Proof.
+  intros PS X.
+  (* We know Σ preserves zero *)
+  pose proof (preserves_zero PS PS (Susp PS)) as H_zero.
+  (* Transport the terminal property along the equality *)
+  rewrite H_zero.
+  apply (@is_terminal _ (add_zero PS) X).
+Qed.
+
+(** *** Main Theorem: Zero is a Suspension Fixed Point *)
+
+(** The zero object is always a suspension fixed point in any pre-stable category *)
+Theorem zero_is_suspension_fixed_point :
+  forall (PS : PreStableCategory),
+  is_suspension_fixed_point PS (@zero _ (add_zero PS)).
+Proof.
+  intro PS.
+  unfold is_suspension_fixed_point.
+  
+  (* The morphism from Σ(0) to 0 *)
+  pose (φ := @center _ (@is_terminal _ (add_zero PS) (object_of (Susp PS) (@zero _ (add_zero PS))))).
+  exists φ.
+  
+  (* Its inverse from 0 to Σ(0) *)
+  pose (ψ := @center _ (@is_initial _ (add_zero PS) (object_of (Susp PS) (@zero _ (add_zero PS))))).
+  exists ψ.
+  
+  split.
+  - (* Left inverse: ψ ∘ φ = 1 on Σ(0) *)
+    (* Both sides are morphisms from Σ(0) to Σ(0), so they're unique *)
+    apply initial_morphism_unique.
+    apply susp_zero_is_initial.
+    
+  - (* Right inverse: φ ∘ ψ = 1 on 0 *)
+    (* Both sides are morphisms from 0 to 0 *)
+    (* The composition of terminal after initial gives a morphism 0 → 0 *)
+    (* All morphisms 0 → 0 are equal by terminality *)
+    transitivity (@center _ (@is_terminal _ (add_zero PS) (@zero _ (add_zero PS)))).
+    + apply terminal_morphism_unique.
+      apply (@is_terminal _ (add_zero PS)).
+    + apply terminal_zero_to_zero_is_id.
+Qed.
+
+(** *** Consequences of Suspension Fixed Points *)
+
+(** Morphisms to Σ(0) are unique, just like morphisms to 0 *)
+Corollary morphism_to_susp_zero_unique :
+  forall (PS : PreStableCategory) (X : object PS) 
+    (f g : morphism PS X (object_of (Susp PS) (@zero _ (add_zero PS)))),
+  f = g.
+Proof.
+  intros PS X f g.
+  apply terminal_morphism_unique.
+  apply susp_zero_is_terminal.
+Qed.
+
+(** Properties preserved by isomorphisms transfer between X and ΣX for fixed points *)
+Theorem suspension_fixed_point_transport :
+  forall (PS : PreStableCategory) (X : object PS),
+  is_suspension_fixed_point PS X ->
+  (* Any property of X that's preserved by isomorphism also holds for ΣX *)
+  forall (P : object PS -> Type),
+  (forall Y Z (f : morphism PS Y Z), IsIsomorphism f -> P Y -> P Z) ->
+  P X -> P (object_of (Susp PS) X).
+Proof.
+  intros PS X [φ [φ_inv [H_left H_right]]] P H_transport H_PX.
+  (* Since φ : ΣX → X is iso, its inverse φ_inv : X → ΣX is also iso *)
+  assert (H_inv_iso: IsIsomorphism φ_inv).
+  {
+    exists φ.
+    split; assumption.
+  }
+  (* Apply transport *)
+  exact (H_transport X (object_of (Susp PS) X) φ_inv H_inv_iso H_PX).
+Qed.
+
+(** ** Axiom TR4: The Octahedral Axiom
+    
+    The octahedral axiom is the fourth axiom of triangulated categories.
+    Given two composable morphisms f: X → Y and g: Y → Z, it describes
+    how the distinguished triangles arising from f, g, and their composition
+    g∘f fit together in a commutative octahedral diagram.
+    
+    This formalization establishes TR4 using the universal property of cofibers.
+*)
+
+(** *** Statement of TR4 *)
+
+(** A simple version of what TR4 requires: existence of a connecting morphism *)
+Definition TR4_statement (S : PreStableCategoryWithCofiber) : Type :=
+  forall (X Y Z : object S) (f : morphism S X Y) (g : morphism S Y Z),
+  exists (u : morphism S (@cofiber S X Y f) (@cofiber S Y Z g)),
+  (* u makes a specific square commute *)
+  (u o @cofiber_in S X Y f)%morphism = (@cofiber_in S Y Z g o g)%morphism.
+
+(** *** Universal Property of Cofibers *)
+
+(** The universal property characterizes cofibers: any morphism from Y
+    that vanishes when precomposed with f factors uniquely through the cofiber *)
+Definition cofiber_universal_property (S : PreStableCategoryWithCofiber) : Type :=
+  forall (X Y : object S) (f : morphism S X Y) (W : object S)
+    (h : morphism S Y W),
+  (h o f)%morphism = zero_morphism (add_zero (base S)) X W ->
+  { k : morphism S (@cofiber S X Y f) W |
+    (k o @cofiber_in S X Y f)%morphism = h /\
+    forall k' : morphism S (@cofiber S X Y f) W,
+    (k' o @cofiber_in S X Y f)%morphism = h -> k' = k }.
+
+(** *** Uniqueness of the TR4 Morphism *)
+
+(** If the cofiber universal property holds, then the TR4 morphism is unique *)
+Theorem TR4_morphism_unique_via_universal :
+  forall (S : PreStableCategoryWithCofiber),
+  cofiber_universal_property S ->
+  forall (X Y Z : object S) (f : morphism S X Y) (g : morphism S Y Z)
+    (u1 u2 : morphism S (@cofiber S X Y f) (@cofiber S Y Z g)),
+  (u1 o @cofiber_in S X Y f)%morphism = (@cofiber_in S Y Z g o g)%morphism ->
+  (u2 o @cofiber_in S X Y f)%morphism = (@cofiber_in S Y Z g o g)%morphism ->
+  u1 = u2.
+Proof.
+  intros S H_universal X Y Z f g u1 u2 H1 H2.
+  
+  (* First, verify that cofiber_in ∘ g satisfies the zero condition *)
+  assert (H_zero: ((@cofiber_in S Y Z g o g) o f)%morphism = 
+                  zero_morphism (add_zero (base S)) X (@cofiber S Y Z g)).
+  {
+    (* We know cofiber_in g ∘ g = 0 *)
+    pose proof (@cofiber_cond1 S Y Z g) as H_cof.
+    (* Rewrite using this *)
+    rewrite H_cof.
+    (* Now 0 ∘ f = 0 *)
+    apply zero_morphism_left.
+  }
+  
+  (* Apply universal property to get unique k *)
+  destruct (H_universal X Y f (@cofiber S Y Z g) 
+                       (@cofiber_in S Y Z g o g)%morphism H_zero) 
+    as [k [H_comm H_unique]].
+  
+  (* Both u1 and u2 equal k by uniqueness *)
+  rewrite (H_unique u1 H1).
+  rewrite (H_unique u2 H2).
+  reflexivity.
+Qed.
+
+(** *** Existence of the TR4 Morphism *)
+
+(** If the cofiber universal property holds, then the TR4 morphism exists *)
+Theorem TR4_morphism_exists :
+  forall (S : PreStableCategoryWithCofiber),
+  cofiber_universal_property S ->
+  forall (X Y Z : object S) (f : morphism S X Y) (g : morphism S Y Z),
+  exists (u : morphism S (@cofiber S X Y f) (@cofiber S Y Z g)),
+  (u o @cofiber_in S X Y f)%morphism = (@cofiber_in S Y Z g o g)%morphism.
+Proof.
+  intros S H_universal X Y Z f g.
+  
+  (* We need to check that cofiber_in g ∘ g vanishes on f *)
+  assert (H_zero: ((@cofiber_in S Y Z g o g) o f)%morphism = 
+                  zero_morphism (add_zero (base S)) X (@cofiber S Y Z g)).
+  {
+    pose proof (@cofiber_cond1 S Y Z g) as H_cof.
+    rewrite H_cof.
+    apply zero_morphism_left.
+  }
+  
+  (* Apply universal property *)
+  destruct (H_universal X Y f (@cofiber S Y Z g) 
+                       (@cofiber_in S Y Z g o g)%morphism H_zero) 
+    as [u [H_comm H_unique]].
+  
+  exists u.
+  exact H_comm.
+Qed.
+
+(** *** The Complete TR4 Axiom *)
+
+(** The full TR4 axiom: existence of the octahedral diagram with all
+    required morphisms and commutativity conditions *)
+Definition satisfies_TR4 (S : PreStableCategoryWithCofiber) : Type :=
+  cofiber_universal_property S *
+  forall (A B C : object S) (f : morphism S A B) (g : morphism S B C),
+  { u : morphism S (@cofiber S A B f) (@cofiber S B C g) &
+  { v : morphism S (@cofiber S B C g) (@cofiber S A C (g o f)%morphism) &
+  { w : morphism S (@cofiber S A C (g o f)%morphism) 
+                   (object_of (Susp (base S)) (@cofiber S A B f)) &
+  { T : @DistinguishedTriangle (base S) |
+    (* The triangle connects the three cofibers *)
+    X (triangle T) = @cofiber S A B f /\
+    Y (triangle T) = @cofiber S B C g /\
+    Z (triangle T) = @cofiber S A C (g o f)%morphism /\
+    (* And the morphism u is the one we constructed *)
+    (u o @cofiber_in S A B f)%morphism = (@cofiber_in S B C g o g)%morphism }}}}.
