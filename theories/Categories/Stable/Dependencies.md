@@ -76,7 +76,7 @@
 - **StableTriangulated.v**  
   *Requires: ZeroObjects, ZeroMorphismLemmas, AdditiveCategories, PreStableCategories, PreStableCofiber, Triangles, TriangleMorphisms, TriangleRotation, TriangulatedAxiomsTR123, OctahedralLemmas, OctahedralAxiom, ProperStableCategories*
 
-## ♻️ Duality Theory
+## ☯️ Duality Theory
 
 - **DualityPrinciple.v**  
   *Requires: ZeroObjects, ZeroMorphismLemmas, Biproducts, AdditiveCategories, PreStableCategories, SemiStableCategories, ProperStableCategories, Triangles, TriangleMorphisms, OppositeCategories, OppositePreStable*
