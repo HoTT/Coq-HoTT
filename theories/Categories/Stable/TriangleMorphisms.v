@@ -1,14 +1,7 @@
-(** * Morphisms of Triangles
+(** * Morphisms of triangles
 
-    A morphism between triangles consists of three morphisms between
-    the corresponding objects that make all squares commute.
-    
-    Contents:
-    - Definition of triangle morphisms
-    - Identity and composition of triangle morphisms
-    - Triangle morphisms form a category
-    - Triangle isomorphisms
-    - Properties needed for axioms TR2 and TR3
+    Morphisms between triangles with commuting squares, forming a category
+    with isomorphisms crucial for axioms TR2 and TR3.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -19,7 +12,7 @@ Require Import AdditiveCategories.
 Require Import PreStableCategories.
 Require Import Triangles.
 
-(** * Triangle Morphisms *)
+(** * Triangle morphisms *)
 
 (** A morphism of triangles consists of three morphisms making all squares commute. *)
 Record TriangleMorphism {S : PreStableCategory} (T1 T2 : Triangle S) := {
@@ -27,7 +20,7 @@ Record TriangleMorphism {S : PreStableCategory} (T1 T2 : Triangle S) := {
   mor_Y : morphism S (triangle_Y T1) (triangle_Y T2);
   mor_Z : morphism S (triangle_Z T1) (triangle_Z T2);
   
-  (** Commutativity conditions *)
+  (** Commutativity conditions. *)
   comm_f : (mor_Y o triangle_f T1)%morphism = (triangle_f T2 o mor_X)%morphism;
   comm_g : (mor_Z o triangle_g T1)%morphism = (triangle_g T2 o mor_Y)%morphism;
   comm_h : (morphism_of (Susp S) mor_X o triangle_h T1)%morphism = 
@@ -42,7 +35,7 @@ Arguments comm_f {S T1 T2} φ : rename.
 Arguments comm_g {S T1 T2} φ : rename.
 Arguments comm_h {S T1 T2} φ : rename.
 
-(** * Identity Triangle Morphism *)
+(** * Identity triangle morphism *)
 
 Definition id_triangle_morphism {S : PreStableCategory} (T : Triangle S)
   : TriangleMorphism T T.
@@ -64,7 +57,7 @@ Proof.
     reflexivity.
 Defined.
 
-(** * Composition of Triangle Morphisms *)
+(** * Composition of triangle morphisms *)
 
 Definition triangle_morphism_compose {S : PreStableCategory}
   {T1 T2 T3 : Triangle S}
@@ -99,7 +92,7 @@ Proof.
     reflexivity.
 Defined.
 
-(** * Triangle Morphisms Form a Category *)
+(** * Triangle morphisms form a category *)
 
 Section TriangleMorphismCategory.
   Context {S : PreStableCategory}.
@@ -195,7 +188,7 @@ Definition iso_inverse {C : PreCategory} {X Y : object C} {f : morphism C X Y}
   : morphism C Y X
   := H.1.
 
-(** * Triangle Isomorphisms *)
+(** * Triangle isomorphisms *)
 
 (** A triangle isomorphism is a triangle morphism where all three
     component morphisms are isomorphisms. *)
@@ -237,7 +230,8 @@ Section PropertiesForAxioms.
   Defined.
 
   (** Statement of TR3 for use in later files. *)
-  Definition TR3_statement : Type
+  Definition TR3_statement
+    : Type
     := forall (T : Triangle S) (T' : Triangle S) 
               (φ : TriangleMorphism T T'),
        IsTriangleIsomorphism φ ->
@@ -253,7 +247,7 @@ Notation "φ '∘t' ψ" := (triangle_morphism_compose ψ φ)
 
 Open Scope triangle_scope.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   triangle_morphism_left_id 
@@ -263,7 +257,4 @@ Hint Resolve
 Hint Rewrite 
   @comm_f @comm_g @comm_h
   : triangle_morphism_simplify.
-
-(** The next file in the library will be [TriangleRotation.v] which defines
-    the rotation operation on triangles and shows it preserves the distinguished
-    property. *)
+  

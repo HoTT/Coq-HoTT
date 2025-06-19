@@ -1,14 +1,7 @@
-(** * Triangles in Pre-Stable Categories
+(** * Triangles in pre-stable categories
 
-    Triangles are the fundamental structures in triangulated categories.
-    A triangle consists of three objects and three morphisms forming a
-    specific pattern with the suspension functor.
-    
-    Contents:
-    - Basic triangle structure
-    - Distinguished triangles
-    - The identity triangle
-    - Basic properties of triangles
+    Fundamental structures for triangulated categories: triangles consisting of
+    three objects and morphisms with the suspension functor.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -18,9 +11,9 @@ Require Import ZeroMorphismLemmas.
 Require Import AdditiveCategories.
 Require Import PreStableCategories.
 
-(** * Basic Triangle Structure *)
+(** * Basic triangle structure *)
 
-(** A triangle X → Y → Z → ΣX *)
+(** A triangle X → Y → Z → ΣX. *)
 Record Triangle {S : PreStableCategory} := {
   triangle_X : object S;
   triangle_Y : object S;
@@ -38,23 +31,26 @@ Arguments triangle_f {S} t : rename.
 Arguments triangle_g {S} t : rename.
 Arguments triangle_h {S} t : rename.
 
-(** * Distinguished Triangles *)
+(** * Distinguished triangles *)
 
 (** A distinguished triangle is a triangle where consecutive morphisms compose to zero. *)
 Record DistinguishedTriangle {S : PreStableCategory} := {
   triangle : Triangle S;
   
-  (** g ∘ f = 0 *)
-  zero_comp_1 : (triangle_g triangle o triangle_f triangle)%morphism = 
-                add_zero_morphism S (triangle_X triangle) (triangle_Z triangle);
+  (** g ∘ f = 0. *)
+  zero_comp_1
+    : (triangle_g triangle o triangle_f triangle)%morphism = 
+      add_zero_morphism S (triangle_X triangle) (triangle_Z triangle);
   
-  (** h ∘ g = 0 *)
-  zero_comp_2 : (triangle_h triangle o triangle_g triangle)%morphism = 
-                add_zero_morphism S (triangle_Y triangle) (object_of (Susp S) (triangle_X triangle));
+  (** h ∘ g = 0. *)
+  zero_comp_2
+    : (triangle_h triangle o triangle_g triangle)%morphism = 
+      add_zero_morphism S (triangle_Y triangle) (object_of (Susp S) (triangle_X triangle));
   
-  (** Σf ∘ h = 0 *)
-  zero_comp_3 : (morphism_of (Susp S) (triangle_f triangle) o triangle_h triangle)%morphism = 
-                add_zero_morphism S (triangle_Z triangle) (object_of (Susp S) (triangle_Y triangle))
+  (** Σf ∘ h = 0. *)
+  zero_comp_3
+    : (morphism_of (Susp S) (triangle_f triangle) o triangle_h triangle)%morphism = 
+      add_zero_morphism S (triangle_Z triangle) (object_of (Susp S) (triangle_Y triangle))
 }.
 
 Arguments DistinguishedTriangle S : clear implicits.
@@ -63,13 +59,15 @@ Arguments zero_comp_1 {S} d : rename.
 Arguments zero_comp_2 {S} d : rename.
 Arguments zero_comp_3 {S} d : rename.
 
-(** * The Identity Triangle *)
+(** * The identity triangle *)
 
 Section IdentityTriangle.
   Context {S : PreStableCategory} (X : object S).
 
-  (** Construction of the identity triangle X → X → 0 → ΣX *)
-  Definition id_triangle : Triangle S := {|
+  (** Construction of the identity triangle X → X → 0 → ΣX. *)
+  Definition id_triangle
+    : Triangle S
+    := {|
     triangle_X := X;
     triangle_Y := X;
     triangle_Z := @zero _ (add_zero S);
@@ -79,7 +77,8 @@ Section IdentityTriangle.
   |}.
 
   (** The identity triangle is distinguished. *)
-  Theorem id_triangle_distinguished : DistinguishedTriangle S.
+  Theorem id_triangle_distinguished
+    : DistinguishedTriangle S.
   Proof.
     refine {| triangle := id_triangle |}.
     
@@ -105,7 +104,7 @@ Section IdentityTriangle.
 
 End IdentityTriangle.
 
-(** * Basic Properties *)
+(** * Basic properties *)
 
 Section TriangleProperties.
   Context {S : PreStableCategory}.
@@ -152,13 +151,10 @@ Section TriangleProperties.
 
 End TriangleProperties.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   id_triangle_distinguished
   zero_comp_1 zero_comp_2 zero_comp_3
   : triangle.
-
-(** The next file in the library will be [PreStableCofiber.v] which uses
-    these triangle definitions to construct distinguished triangles from
-    morphisms using the cofiber construction. *)
+  

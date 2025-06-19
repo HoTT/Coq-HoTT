@@ -1,16 +1,7 @@
-(** * Opposite Pre-Stable Categories
+(** * Opposite pre-stable categories
 
-    This file shows how pre-stable structures behave under the opposite
-    construction. The key insight: in the opposite category, suspension 
-    and loop functors swap roles.
-    
-    Contents:
-    - Opposite functors
-    - Opposite additive functors
-    - Opposite natural transformations
-    - Opposite pre-stable categories
-    - Suspension and loop duality
-    - Basic properties
+    Pre-stable structures under the opposite construction: suspension and loop
+    functors swap roles, as do eta and epsilon.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -23,7 +14,7 @@ Require Import AdditiveCategories.
 Require Import PreStableCategories.
 Require Import OppositeCategories.
 
-(** * Opposite Functors *)
+(** * Opposite functors *)
 
 Definition opposite_functor {C D : PreCategory} (F : Functor C D)
   : Functor (opposite_category C) (opposite_category D).
@@ -36,7 +27,7 @@ Proof.
     (fun X => identity_of F X)).
 Defined.
 
-(** * Opposite Additive Functors *)
+(** * Opposite additive functors *)
 
 Section OppositeAdditiveFunctor.
   Context {A B : AdditiveCategory} (F : AdditiveFunctor A B).
@@ -53,7 +44,7 @@ Section OppositeAdditiveFunctor.
 
 End OppositeAdditiveFunctor.
 
-(** * Opposite Natural Transformations *)
+(** * Opposite natural transformations *)
 
 Definition opposite_natural_transformation {C D : PreCategory} 
   {F G : Functor C D} (η : NaturalTransformation F G)
@@ -65,7 +56,7 @@ Proof.
     (fun X Y f => (commutes η Y X f)^)).
 Defined.
 
-(** * Opposite Pre-Stable Categories *)
+(** * Opposite pre-stable categories *)
 
 (** The key insight: in the opposite category, suspension and loop functors swap roles. *)
 Definition opposite_prestable_category (PS : PreStableCategory)
@@ -79,7 +70,7 @@ Proof.
     (opposite_natural_transformation (eta PS))).     (* eta becomes epsilon *)
 Defined.
 
-(** * Basic Properties *)
+(** * Basic properties *)
 
 Section OppositePreStableProperties.
   Context (PS : PreStableCategory).
@@ -135,7 +126,7 @@ Section OppositePreStableProperties.
 
 End OppositePreStableProperties.
 
-(** * Opposite Natural Transformation Components *)
+(** * Opposite natural transformation components *)
 
 Section OppositeNaturalTransformationComponents.
   Context (PS : PreStableCategory).
@@ -167,7 +158,7 @@ Section OppositeNaturalTransformationComponents.
 
 End OppositeNaturalTransformationComponents.
 
-(** * Functor Actions on Morphisms *)
+(** * Functor actions on morphisms *)
 
 Section FunctorActions.
   Context (PS : PreStableCategory).
@@ -190,7 +181,7 @@ Section FunctorActions.
 
 End FunctorActions.
 
-(** * Double Opposite Properties *)
+(** * Double opposite properties *)
 
 Section DoubleOppositePreStable.
   Context (PS : PreStableCategory).
@@ -234,7 +225,7 @@ Section DoubleOppositePreStable.
 
 End DoubleOppositePreStable.
 
-(** * Natural Transformation Preservation *)
+(** * Natural transformation preservation *)
 
 Section NaturalTransformationPreservation.
   Context (PS : PreStableCategory).
@@ -270,7 +261,7 @@ Section NaturalTransformationPreservation.
 
 End NaturalTransformationPreservation.
 
-(** * Summary Theorem *)
+(** * Summary theorem *)
 
 (** The complete duality theorem for pre-stable categories. *)
 Theorem prestable_duality_theorem (PS : PreStableCategory)
@@ -295,7 +286,7 @@ Proof.
   - intro X. reflexivity.
 Qed.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   suspension_loop_swap
@@ -308,7 +299,4 @@ Hint Rewrite
   @opposite_susp_morphism
   @opposite_loop_morphism
   : opposite_simplify.
-
-(** The next file in the library will be [ProperStableCategories.v] which defines
-    proper stable categories where the suspension and loop functors are 
-    inverse equivalences. *)
+  

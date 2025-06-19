@@ -1,21 +1,7 @@
-(** * Biproducts in Categories with Zero Objects
+(** * Biproducts in categories with zero objects
 
-    This file defines biproducts - objects that are simultaneously products
-    and coproducts. In additive categories, finite products and coproducts
-    coincide, yielding biproducts.
-    
-    Contents:
-    - BiproductData: The structural data of a biproduct
-    - IsBiproduct: The axioms that make biproduct data into a true biproduct
-    - HasBiproductUniversal: The universal property characterization
-    - Biproduct: The complete biproduct structure
-    - Helper functions for accessing biproduct components
-    
-    A biproduct of objects X and Y comes with:
-    - Injections: inl : X → X⊕Y and inr : Y → X⊕Y
-    - Projections: outl : X⊕Y → X and outr : X⊕Y → Y
-    - Relations: outl∘inl = 1, outr∘inr = 1
-    - Mixed terms are zero: outl∘inr = 0, outr∘inl = 0
+    Objects that are simultaneously products and coproducts, fundamental
+    to additive category theory.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -23,9 +9,9 @@ From HoTT.Categories Require Import Category Functor.
 Require Import ZeroObjects.
 Require Import ZeroMorphismLemmas.
 
-(** * Biproduct Structures *)
+(** * Biproduct structures *)
 
-(** ** Biproduct Data
+(** ** Biproduct data
     
     The data of a biproduct consists of an object together with injection
     and projection morphisms.
@@ -49,7 +35,7 @@ Arguments inr {C X Y} b : rename.
 Arguments outl {C X Y} b : rename.
 Arguments outr {C X Y} b : rename.
 
-(** ** Biproduct Axioms
+(** ** Biproduct axioms
     
     The axioms that make biproduct data into an actual biproduct.
     These ensure the projection-injection pairs behave correctly.
@@ -71,7 +57,7 @@ Arguments beta_r {C X Y B Z} i : rename.
 Arguments mixed_l {C X Y B Z} i : rename.
 Arguments mixed_r {C X Y B Z} i : rename.
 
-(** ** Universal Property of Biproducts
+(** ** Universal property of biproducts
     
     The universal property states that morphisms into/out of the biproduct
     are uniquely determined by their components.
@@ -97,7 +83,7 @@ Record HasBiproductUniversal {C : PreCategory} {X Y : object C}
 Arguments coprod_universal {C X Y B} u W f g : rename.
 Arguments prod_universal {C X Y B} u W f g : rename.
 
-(** ** Complete Biproduct Structure
+(** ** Complete biproduct structure
     
     A biproduct is biproduct data together with the proof that it satisfies
     the biproduct axioms and universal property.
@@ -113,23 +99,36 @@ Arguments biproduct_data {C X Y Z} b : rename.
 Arguments biproduct_is {C X Y Z} b : rename.
 Arguments biproduct_universal {C X Y Z} b : rename.
 
-(** * Biproduct Operations *)
+(** * Biproduct operations *)
 
 Section BiproductOperations.
   Context {C : PreCategory} {X Y : object C} {Z : ZeroObject C}.
   Variable (B : Biproduct X Y Z).
 
   (** The underlying biproduct object. *)
-  Definition biproduct : object C := biproduct_obj (biproduct_data B).
+  Definition biproduct
+    : object C
+    := biproduct_obj (biproduct_data B).
 
-  (** ** Accessing Morphisms *)
+  (** ** Accessing morphisms *)
   
-  Definition bi_inl : morphism C X biproduct := inl (biproduct_data B).
-  Definition bi_inr : morphism C Y biproduct := inr (biproduct_data B).
-  Definition bi_outl : morphism C biproduct X := outl (biproduct_data B).
-  Definition bi_outr : morphism C biproduct Y := outr (biproduct_data B).
+  Definition bi_inl
+    : morphism C X biproduct
+    := inl (biproduct_data B).
+    
+  Definition bi_inr
+    : morphism C Y biproduct
+    := inr (biproduct_data B).
+    
+  Definition bi_outl
+    : morphism C biproduct X
+    := outl (biproduct_data B).
+    
+  Definition bi_outr
+    : morphism C biproduct Y
+    := outr (biproduct_data B).
 
-  (** ** Uniqueness from Universal Property *)
+  (** ** Uniqueness from universal property *)
 
   (** Extract the unique morphism from the coproduct universal property. *)
   Definition biproduct_coprod_mor (W : object C) 
@@ -187,7 +186,7 @@ Section BiproductOperations.
     exact Hr.
   Qed.
 
-(** ** Uniqueness Properties *)
+  (** ** Uniqueness properties *)
 
   Lemma biproduct_coprod_unique (W : object C) 
     (f : morphism C X W) (g : morphism C Y W)
@@ -219,7 +218,7 @@ Section BiproductOperations.
 
 End BiproductOperations.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   biproduct_coprod_beta_l biproduct_coprod_beta_r
@@ -229,6 +228,4 @@ Hint Resolve
 Hint Rewrite 
   @zero_morphism_left @zero_morphism_right
   : biproduct_simplify.
-
-(** The next file in the library will be [AdditiveCategories.v] which defines
-    additive categories using zero objects and biproducts. *)
+  

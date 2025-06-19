@@ -1,17 +1,7 @@
-(** * Advanced Structural Properties
+(** * Advanced structural properties
 
-    This file explores advanced structural properties of stable categories,
-    including self-dual triangulated categories, conditions under which
-    suspension and loop functors commute, and various special properties
-    that arise in the theory.
-    
-    Contents:
-    - Self-dual triangulated categories
-    - Commuting suspension and loop functors
-    - Functor compositions and identity relations
-    - Inverse objects
-    - Groupoid properties under duality
-    - Biproduct uniqueness
+    Advanced properties of stable categories including self-duality,
+    commuting functors, and groupoid structures under duality.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -27,14 +17,15 @@ Require Import SemiStableCategories.
 Require Import OppositeCategories.
 Require Import OppositePreStable.
 
-(** * Self-Dual Triangulated Categories *)
+(** * Self-dual triangulated categories *)
 
 Section SelfDualTriangulated.
   Context (PS : PreStableCategory).
 
   (** A pre-stable category is self-dual triangulated if the two triangle
       identities are equivalent at every object. *)
-  Definition is_self_dual_triangulated : Type
+  Definition is_self_dual_triangulated
+    : Type
     := forall X : object PS,
        ((components_of (epsilon PS) (object_of (Susp PS) X) o 
          morphism_of (Susp PS) (components_of (eta PS) X))%morphism = 1%morphism) <->
@@ -55,39 +46,43 @@ Section SelfDualTriangulated.
 
 End SelfDualTriangulated.
 
-(** * Commuting Suspension and Loop Functors *)
+(** * Commuting suspension and loop functors *)
 
 Section CommutingSuspLoop.
   Context (PS : PreStableCategory).
 
   (** Suspension and loop commute if there exists a natural isomorphism between
       their compositions. *)
-  Definition has_commuting_susp_loop : Type
+  Definition has_commuting_susp_loop
+    : Type
     := exists (α : NaturalTransformation 
          ((Susp PS) o (Loop PS))%functor
          ((Loop PS) o (Susp PS))%functor),
        forall X, IsIsomorphism (components_of α X).
 
   (** The compositions of suspension and loop coincide at the object level. *)
-  Definition has_coinciding_compositions : Type
+  Definition has_coinciding_compositions
+    : Type
     := forall X : object PS,
        object_of ((Susp PS) o (Loop PS))%functor X = 
        object_of ((Loop PS) o (Susp PS))%functor X.
 
 End CommutingSuspLoop.
 
-(** * Functor Compositions and Identity Relations *)
+(** * Functor compositions and identity relations *)
 
 Section FunctorCompositions.
   Context (PS : PreStableCategory).
 
   (** Suspension composed with loop equals the identity functor. *)
-  Definition susp_loop_is_identity : Type
+  Definition susp_loop_is_identity
+    : Type
     := forall X : object PS,
        object_of ((Susp PS) o (Loop PS))%functor X = X.
 
   (** Loop composed with suspension equals the identity functor. *)
-  Definition loop_susp_is_identity : Type
+  Definition loop_susp_is_identity
+    : Type
     := forall X : object PS,
        object_of ((Loop PS) o (Susp PS))%functor X = X.
 
@@ -105,44 +100,46 @@ Section FunctorCompositions.
 
 End FunctorCompositions.
 
-(** * Inverse Objects *)
+(** * Inverse objects *)
 
 Section InverseObjects.
   Context (PS : PreStableCategory).
 
   (** A category has inverse objects if both functor compositions are identity. *)
-  Definition has_inverse_objects : Type
+  Definition has_inverse_objects
+    : Type
     := susp_loop_is_identity PS * loop_susp_is_identity PS.
 
-(** Inverse objects are preserved under duality. *)
-Theorem inverse_objects_opposite
-  : has_inverse_objects ->
-    (susp_loop_is_identity (opposite_prestable_category PS) * 
-     loop_susp_is_identity (opposite_prestable_category PS)).
-Proof.
-  intros [H_sl H_ls].
-  unfold susp_loop_is_identity, loop_susp_is_identity in *.
-  split.
-  - intro X. 
-    simpl.
-    (* In opposite: Susp^op = Loop, Loop^op = Susp *)
-    (* So (Susp^op o Loop^op) = (Loop o Susp) *)
-    exact (H_ls X).
-  - intro X. 
-    simpl.
-    (* In opposite: (Loop^op o Susp^op) = (Susp o Loop) *)
-    exact (H_sl X).
-Qed.
+  (** Inverse objects are preserved under duality. *)
+  Theorem inverse_objects_opposite
+    : has_inverse_objects ->
+      (susp_loop_is_identity (opposite_prestable_category PS) * 
+       loop_susp_is_identity (opposite_prestable_category PS)).
+  Proof.
+    intros [H_sl H_ls].
+    unfold susp_loop_is_identity, loop_susp_is_identity in *.
+    split.
+    - intro X. 
+      simpl.
+      (* In opposite: Susp^op = Loop, Loop^op = Susp *)
+      (* So (Susp^op o Loop^op) = (Loop o Susp) *)
+      exact (H_ls X).
+    - intro X. 
+      simpl.
+      (* In opposite: (Loop^op o Susp^op) = (Susp o Loop) *)
+      exact (H_sl X).
+  Qed.
 
 End InverseObjects.
 
-(** * Groupoid Properties Under Duality *)
+(** * Groupoid properties under duality *)
 
 Section GroupoidDuality.
   Context (C : PreCategory).
 
   (** A category is a groupoid if all morphisms are isomorphisms. *)
-  Definition is_groupoid : Type
+  Definition is_groupoid
+    : Type
     := forall (X Y : object C) (f : morphism C X Y), IsIsomorphism f.
 
   (** Helper: opposite categories preserve isomorphisms. *)
@@ -158,21 +155,21 @@ Section GroupoidDuality.
     - simpl. exact Hgf.
   Qed.
 
-Theorem opposite_preserves_groupoid_property
-  : is_groupoid ->
-    forall (X Y : object (opposite_category C)) (f : morphism (opposite_category C) X Y), 
-    IsIsomorphism f.
-Proof.
-  intros H_groupoid X Y f.
-  (* f in opposite is a morphism Y -> X in original *)
-  pose proof (H_groupoid Y X f) as H_iso.
-  apply opposite_preserves_iso.
-  exact H_iso.
-Qed.
+  Theorem opposite_preserves_groupoid_property
+    : is_groupoid ->
+      forall (X Y : object (opposite_category C)) (f : morphism (opposite_category C) X Y), 
+      IsIsomorphism f.
+  Proof.
+    intros H_groupoid X Y f.
+    (* f in opposite is a morphism Y -> X in original *)
+    pose proof (H_groupoid Y X f) as H_iso.
+    apply opposite_preserves_iso.
+    exact H_iso.
+  Qed.
 
 End GroupoidDuality.
 
-(** * Preservation of Zero Compositions Under Duality *)
+(** * Preservation of zero compositions under duality *)
 
 Section ZeroCompositionDuality.
   Context (PS : PreStableCategory).
@@ -192,7 +189,7 @@ Section ZeroCompositionDuality.
 
 End ZeroCompositionDuality.
 
-(** * Biproduct Uniqueness *)
+(** * Biproduct uniqueness *)
 
 Section BiproductUniqueness.
   Context (A : AdditiveCategory).
@@ -217,40 +214,40 @@ Section BiproductUniqueness.
   Qed.
 
   (** The biproduct isomorphism is unique. *)
-Theorem biproduct_iso_unique (X Y : object A)
-  (f g : morphism A (add_biproduct_obj A X Y) (add_biproduct_obj A X Y))
-  : IsIsomorphism f ->
-    IsIsomorphism g ->
-    (f o @add_inl A X Y = @add_inl A X Y)%morphism ->
-    (f o @add_inr A X Y = @add_inr A X Y)%morphism ->
-    (g o @add_inl A X Y = @add_inl A X Y)%morphism ->
-    (g o @add_inr A X Y = @add_inr A X Y)%morphism ->
-    f = g.
-Proof.
-  intros Hf_iso Hg_iso Hf_l Hf_r Hg_l Hg_r.
-  
-  (* Both f and g equal the unique morphism determined by the universal property *)
-  transitivity (biproduct_coprod_mor (add_biproduct A X Y) 
-                                     (X ⊕ Y) 
-                                     (@add_inl A X Y) 
-                                     (@add_inr A X Y)).
-  - (* f equals this morphism *)
-    apply (biproduct_coprod_unique (add_biproduct A X Y) (X ⊕ Y) 
-           (@add_inl A X Y) (@add_inr A X Y) f).
-    + exact Hf_l.
-    + exact Hf_r.
+  Theorem biproduct_iso_unique (X Y : object A)
+    (f g : morphism A (add_biproduct_obj A X Y) (add_biproduct_obj A X Y))
+    : IsIsomorphism f ->
+      IsIsomorphism g ->
+      (f o @add_inl A X Y = @add_inl A X Y)%morphism ->
+      (f o @add_inr A X Y = @add_inr A X Y)%morphism ->
+      (g o @add_inl A X Y = @add_inl A X Y)%morphism ->
+      (g o @add_inr A X Y = @add_inr A X Y)%morphism ->
+      f = g.
+  Proof.
+    intros Hf_iso Hg_iso Hf_l Hf_r Hg_l Hg_r.
     
-  - (* g equals this morphism *)
-    symmetry.
-    apply (biproduct_coprod_unique (add_biproduct A X Y) (X ⊕ Y) 
-           (@add_inl A X Y) (@add_inr A X Y) g).
-    + exact Hg_l.
-    + exact Hg_r.
-Qed.
+    (* Both f and g equal the unique morphism determined by the universal property *)
+    transitivity (biproduct_coprod_mor (add_biproduct A X Y) 
+                                       (X ⊕ Y) 
+                                       (@add_inl A X Y) 
+                                       (@add_inr A X Y)).
+    - (* f equals this morphism *)
+      apply (biproduct_coprod_unique (add_biproduct A X Y) (X ⊕ Y) 
+             (@add_inl A X Y) (@add_inr A X Y) f).
+      + exact Hf_l.
+      + exact Hf_r.
+      
+    - (* g equals this morphism *)
+      symmetry.
+      apply (biproduct_coprod_unique (add_biproduct A X Y) (X ⊕ Y) 
+             (@add_inl A X Y) (@add_inr A X Y) g).
+      + exact Hg_l.
+      + exact Hg_r.
+  Qed.
 
 End BiproductUniqueness.
 
-(** * Existence Principles *)
+(** * Existence principles *)
 
 Section ExistencePrinciples.
   
@@ -272,7 +269,7 @@ Section ExistencePrinciples.
 
 End ExistencePrinciples.
 
-(** * The Space of Adjunction Data *)
+(** * The space of adjunction data *)
 
 Section AdjunctionSpace.
   Context (PS : PreStableCategory).
@@ -298,7 +295,7 @@ Section AdjunctionSpace.
 
 End AdjunctionSpace.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   self_dual_gives_both_triangles
@@ -318,6 +315,4 @@ Hint Unfold
   has_inverse_objects
   is_groupoid
   : advanced_structures.
-
-(** The next file in the library will be [DualityPrinciple.v] which establishes
-    the universal duality principle and meta-theorems about dualization. *)
+  

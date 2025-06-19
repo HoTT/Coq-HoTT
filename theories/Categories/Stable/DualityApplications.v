@@ -1,16 +1,7 @@
-(** * Applications of the Duality Principle
+(** * Applications of the duality principle
 
-    This file demonstrates concrete applications of the duality principle
-    to obtain dual theorems and constructions automatically. We show how
-    properties of stable categories systematically dualize, providing a
-    powerful tool for discovering new results.
-    
-    Contents:
-    - Dual constructions for triangles
-    - Dualization of distinguished triangle properties
-    - Dual formulations of stability conditions
-    - Automatic generation of dual theorems
-    - Non-trivial applications
+    Concrete applications of duality to automatically obtain dual theorems
+    and constructions in stable category theory.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -28,7 +19,7 @@ Require Import OppositePreStable.
 Require Import DualityPrinciple.
 Require Import SemiStableCategories.
 
-(** * Dual Constructions for Triangles *)
+(** * Dual constructions for triangles *)
 
 Section DualStability.
 
@@ -40,22 +31,22 @@ Section DualStability.
   Qed.
 
   (** The converse: right semi-stable gives opposite left semi-stable. *)
-Theorem right_stable_gives_opposite_left (PS : PreStableCategory)
-  : is_right_semi_stable PS -> is_left_semi_stable (opposite_prestable_category PS).
-Proof.
-  intro H.
-  unfold is_left_semi_stable.
-  intro X.
-  simpl.
-  (* We need IsIsomorphism of eta in PS^op, which is epsilon in PS *)
-  (* But H X gives IsIsomorphism in PS, we need it in opposite_category PS *)
-  pose proof (H X) as H_iso.
-  destruct H_iso as [g [Hgf Hfg]].
-  exists g.
-  split.
-  - simpl. exact Hfg.
-  - simpl. exact Hgf.
-Qed.
+  Theorem right_stable_gives_opposite_left (PS : PreStableCategory)
+    : is_right_semi_stable PS -> is_left_semi_stable (opposite_prestable_category PS).
+  Proof.
+    intro H.
+    unfold is_left_semi_stable.
+    intro X.
+    simpl.
+    (* We need IsIsomorphism of eta in PS^op, which is epsilon in PS *)
+    (* But H X gives IsIsomorphism in PS, we need it in opposite_category PS *)
+    pose proof (H X) as H_iso.
+    destruct H_iso as [g [Hgf Hfg]].
+    exists g.
+    split.
+    - simpl. exact Hfg.
+    - simpl. exact Hgf.
+  Qed.
 
   (** Proper stability is self-dual. *)
   Theorem proper_stable_self_dual (PS : ProperStableCategory)
@@ -66,26 +57,25 @@ Qed.
 
 End DualStability.
 
-(** * Automatic Generation of Dual Theorems *)
+(** * Automatic generation of dual theorems *)
 
 Section AutomaticDuals.
   Context (PS : PreStableCategory).
 
+  Theorem zero_comp_left {X Y Z : object PS} (f : morphism PS X Y)
+    : (add_zero_morphism PS Y Z o f)%morphism = add_zero_morphism PS X Z.
+  Proof.
+    apply zero_morphism_left.
+  Qed.
 
-Theorem zero_comp_left {X Y Z : object PS} (f : morphism PS X Y)
-  : (add_zero_morphism PS Y Z o f)%morphism = add_zero_morphism PS X Z.
-Proof.
-  apply zero_morphism_left.
-Qed.
-
-Theorem zero_comp_right {X Y Z : object PS} (f : morphism PS Y Z)
-  : (f o add_zero_morphism PS X Y)%morphism = add_zero_morphism PS X Z.
-Proof.
-  apply zero_morphism_right.
-Qed.
+  Theorem zero_comp_right {X Y Z : object PS} (f : morphism PS Y Z)
+    : (f o add_zero_morphism PS X Y)%morphism = add_zero_morphism PS X Z.
+  Proof.
+    apply zero_morphism_right.
+  Qed.
 End AutomaticDuals.
 
-(** * Non-trivial Applications *)
+(** * Non-trivial applications *)
 
 Section NonTrivialApplications.
 
@@ -114,14 +104,15 @@ Section NonTrivialApplications.
 
 End NonTrivialApplications.
 
-(** * Duality for Exact Sequences *)
+(** * Duality for exact sequences *)
 
 Section ExactSequenceDuality.
   Context (PS : PreStableCategory).
 
-Definition is_exact_at {C : PreStableCategory} {X Y Z : object C} 
-  (f : morphism C X Y) (g : morphism C Y Z) : Type
-  := (g o f)%morphism = add_zero_morphism C X Z.
+  Definition is_exact_at {C : PreStableCategory} {X Y Z : object C} 
+    (f : morphism C X Y) (g : morphism C Y Z)
+    : Type
+    := (g o f)%morphism = add_zero_morphism C X Z.
 
   (** Exactness dualizes. *)
   Theorem exact_sequence_dualizes {X Y Z : object PS}
@@ -139,7 +130,7 @@ Definition is_exact_at {C : PreStableCategory} {X Y Z : object C}
 
 End ExactSequenceDuality.
 
-(** * The Power of Duality in Practice *)
+(** * The power of duality in practice *)
 
 Section PowerInPractice.
 
@@ -150,50 +141,51 @@ Section PowerInPractice.
       identities have property P, then right semi-stable categories with 
       (dual) triangle identities have the dual property. *)
   
-Theorem theorem_doubling_principle_correct
-  (P : PreStableCategory -> Type)
-  (Q : PreStableCategory -> Type)
-  (H_dual : forall PS, P PS <-> Q (opposite_prestable_category PS))
-  (H_theorem : forall PS, is_left_semi_stable PS -> satisfies_triangle_1 PS -> P PS)
-  (H_invol : forall PS, opposite_prestable_category (opposite_prestable_category PS) = PS)
-  : forall PS, 
-    is_left_semi_stable (opposite_prestable_category PS) -> 
-    satisfies_triangle_1 (opposite_prestable_category PS) -> 
-    Q PS.
-Proof.
-  intros PS H_left_op H_tri1_op.
-  rewrite <- H_invol.
-  destruct (H_dual (opposite_prestable_category PS)) as [H_forward _].
-  apply H_forward.
-  apply H_theorem; assumption.
-Qed.
+  Theorem theorem_doubling_principle_correct
+    (P : PreStableCategory -> Type)
+    (Q : PreStableCategory -> Type)
+    (H_dual : forall PS, P PS <-> Q (opposite_prestable_category PS))
+    (H_theorem : forall PS, is_left_semi_stable PS -> satisfies_triangle_1 PS -> P PS)
+    (H_invol : forall PS, opposite_prestable_category (opposite_prestable_category PS) = PS)
+    : forall PS, 
+      is_left_semi_stable (opposite_prestable_category PS) -> 
+      satisfies_triangle_1 (opposite_prestable_category PS) -> 
+      Q PS.
+  Proof.
+    intros PS H_left_op H_tri1_op.
+    rewrite <- H_invol.
+    destruct (H_dual (opposite_prestable_category PS)) as [H_forward _].
+    apply H_forward.
+    apply H_theorem; assumption.
+  Qed.
 
-Theorem theorem_doubling_principle_final
-  (P : PreStableCategory -> Type)
-  (Q : PreStableCategory -> Type)
-  (H_dual : forall PS, P PS <-> Q (opposite_prestable_category PS))
-  (H_theorem : forall PS, is_left_semi_stable PS -> satisfies_triangle_1 PS -> P PS)
-  (H_invol : forall PS, opposite_prestable_category (opposite_prestable_category PS) = PS)
-  : forall PS, is_right_semi_stable PS -> satisfies_triangle_2 PS -> Q PS.
-Proof.
-  intros PS H_right H_tri2.
-  
-  apply theorem_doubling_principle_correct with (P := P).
-  - exact H_dual.
-  - exact H_theorem.
-  - exact H_invol.
-  - apply right_stable_gives_opposite_left.
-    exact H_right.
-  - apply triangle_identity_duality.
-    exact H_tri2.
-Qed.
+  Theorem theorem_doubling_principle_final
+    (P : PreStableCategory -> Type)
+    (Q : PreStableCategory -> Type)
+    (H_dual : forall PS, P PS <-> Q (opposite_prestable_category PS))
+    (H_theorem : forall PS, is_left_semi_stable PS -> satisfies_triangle_1 PS -> P PS)
+    (H_invol : forall PS, opposite_prestable_category (opposite_prestable_category PS) = PS)
+    : forall PS, is_right_semi_stable PS -> satisfies_triangle_2 PS -> Q PS.
+  Proof.
+    intros PS H_right H_tri2.
+    
+    apply theorem_doubling_principle_correct with (P := P).
+    - exact H_dual.
+    - exact H_theorem.
+    - exact H_invol.
+    - apply right_stable_gives_opposite_left.
+      exact H_right.
+    - apply triangle_identity_duality.
+      exact H_tri2.
+  Qed.
 
 End PowerInPractice.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve
   left_stable_gives_opposite_right
   right_stable_gives_opposite_left
   exact_sequence_dualizes
   : duality_applications.
+  

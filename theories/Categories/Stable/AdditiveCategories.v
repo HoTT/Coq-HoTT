@@ -1,16 +1,6 @@
-(** * Additive Categories
+(** * Additive categories
 
-    An additive category is a category enriched over abelian groups,
-    with a zero object and biproducts for all pairs of objects.
-    
-    In this file, we focus on the structural aspects:
-    - Categories with zero objects and biproducts
-    - Additive functors that preserve this structure
-    - Basic properties of additive functors
-    
-    Note: We don't yet define the abelian group structure on hom-sets,
-    which would require additional machinery. We focus on the categorical
-    structure that makes a category "additive-like".
+    Categories enriched over abelian groups with zero objects and biproducts.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -19,7 +9,7 @@ Require Import ZeroObjects.
 Require Import ZeroMorphismLemmas.
 Require Import Biproducts.
 
-(** * Additive Categories *)
+(** * Additive categories *)
 
 (** ** Definition
     
@@ -35,10 +25,11 @@ Record AdditiveCategory := {
   add_biproduct : forall (X Y : object cat), Biproduct X Y add_zero
 }.
 
-(** ** Helper Functions *)
+(** ** Helper functions *)
 
 (** Access the zero object. *)
-Definition zero_obj (A : AdditiveCategory) : object A
+Definition zero_obj (A : AdditiveCategory)
+  : object A
   := zero (add_zero A).
 
 (** Zero morphism in an additive category. *)
@@ -76,12 +67,12 @@ Definition add_outr {A : AdditiveCategory} {X Y : object A}
   : morphism A (X ⊕ Y) Y
   := outr (add_biproduct_data A X Y).
 
-(** ** Basic Properties *)
+(** ** Basic properties *)
 
 Section AdditiveProperties.
   Context (A : AdditiveCategory).
 
-(** The biproduct axioms hold. *)
+  (** The biproduct axioms hold. *)
   Lemma add_beta_l {X Y : object A}
     : (@add_outl A X Y o @add_inl A X Y)%morphism = 1%morphism.
   Proof.
@@ -147,7 +138,7 @@ Section AdditiveProperties.
 
 End AdditiveProperties.
 
-(** * Additive Functors *)
+(** * Additive functors *)
 
 (** ** Definition
     
@@ -166,7 +157,7 @@ Record AdditiveFunctor (A B : AdditiveCategory) := {
     (object_of add_functor X ⊕ object_of add_functor Y)
 }.
 
-(** ** Properties of Additive Functors *)
+(** ** Properties of additive functors *)
 
 Section AdditiveFunctorProperties.
   Context {A B : AdditiveCategory} (F : AdditiveFunctor A B).
@@ -193,7 +184,7 @@ Section AdditiveFunctorProperties.
     apply (@path_contr _ (is_terminal (add_zero B) (object_of F X))).
   Qed.
 
-  (** ** Main Theorem: Additive Functors Preserve Zero Morphisms *)
+  (** ** Main theorem: additive functors preserve zero morphisms *)
 
   Theorem additive_functor_preserves_zero_morphisms (X Y : object A)
     : morphism_of F (add_zero_morphism A X Y) = 
@@ -227,7 +218,7 @@ Section AdditiveFunctorProperties.
 
 End AdditiveFunctorProperties.
 
-(** * Examples and Constructions *)
+(** * Examples and constructions *)
 
 (** The identity functor is additive. *)
 Definition id_additive_functor (A : AdditiveCategory) 
@@ -257,7 +248,7 @@ Proof.
     reflexivity.
 Defined.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   add_beta_l add_beta_r
@@ -269,6 +260,4 @@ Hint Rewrite
   @add_mixed_l @add_mixed_r
   @additive_functor_preserves_zero_morphisms
   : additive_simplify.
-
-(** The next file in the library will be [PreStableCategories.v] which introduces
-    suspension and loop functors. *)
+  

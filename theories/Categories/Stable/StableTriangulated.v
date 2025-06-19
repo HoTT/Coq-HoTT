@@ -1,15 +1,7 @@
-(** * Proper Stable Categories are Triangulated
+(** * Proper stable categories are triangulated
 
-    This file establishes the fundamental theorem that proper stable categories
-    with cofibers are triangulated categories. This result shows that the abstract
-    notion of stability (suspension and loop being inverse equivalences) naturally
-    gives rise to the rich structure of a triangulated category.
-    
-    Contents:
-    - ProperStableWithCofiber: combining stable and cofiber structures
-    - Verification of axioms TR1-TR4
-    - The main theorem
-    - Consequences and applications
+    The fundamental theorem that proper stable categories with cofibers
+    naturally form triangulated categories.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -27,7 +19,7 @@ Require Import OctahedralLemmas.
 Require Import OctahedralAxiom.
 Require Import ProperStableCategories.
 
-(** * Combining Stable and Cofiber Structures *)
+(** * Combining stable and cofiber structures *)
 
 (** A proper stable category with cofibers combines the stable adjunction
     structure with the cofiber construction in a compatible way. *)
@@ -37,13 +29,14 @@ Record ProperStableWithCofiber := {
   structures_compatible : base cofiber_structure = pre_stable proper_stable
 }.
 
-(** * Verification of Triangulated Category Axioms *)
+(** * Verification of triangulated category axioms *)
 
 Section VerifyAxioms.
   Context (PSC : ProperStableWithCofiber).
 
   (** The compatibility lemma tells us the base categories are equal. *)
-  Lemma base_eq : base (cofiber_structure PSC) = pre_stable (proper_stable PSC).
+  Lemma base_eq
+    : base (cofiber_structure PSC) = pre_stable (proper_stable PSC).
   Proof.
     exact (structures_compatible PSC).
   Qed.
@@ -89,13 +82,14 @@ Section VerifyAxioms.
 
 End VerifyAxioms.
 
-(** * The Main Theorem *)
+(** * The main theorem *)
 
 Section MainTheorem.
   Context (PSC : ProperStableWithCofiber).
 
   (** A triangulated category is characterized by satisfying all four axioms TR1-TR4. *)
-  Definition is_triangulated_category : Type
+  Definition is_triangulated_category
+    : Type
     := (forall {X Y : object (pre_stable (proper_stable PSC))} 
               (f : morphism (pre_stable (proper_stable PSC)) X Y),
         DistinguishedTriangle (pre_stable (proper_stable PSC))) *  (* TR1 *)
@@ -230,12 +224,10 @@ End Applications.
        homological algebra in a homotopy-invariant way.
 *)
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   suspension_is_exact
   shift_preserves_distinguished
   : stable_triangulated.
-
-(** The next file in the library would be [SuspensionFixedPoints.v] which studies
-    objects X such that ΣX ≅ X in stable categories. *)
+  

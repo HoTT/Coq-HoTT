@@ -1,16 +1,7 @@
-(** * Axioms TR1-TR3 of Triangulated Categories
+(** * Axioms TR1-TR3 of triangulated categories
 
-    This file establishes the first three axioms that characterize triangulated
-    categories. These axioms ensure that:
-    - TR1: Every morphism extends to a distinguished triangle
-    - TR2: Triangle isomorphisms preserve the distinguished property
-    - TR3: Distinguished triangles can be rotated
-    
-    Contents:
-    - Formal statements of TR1, TR2, and TR3
-    - Helper lemmas for isomorphisms
-    - The main TR2 theorem with its proof
-    - Verification that our structures satisfy these axioms
+    The first three axioms characterizing triangulated categories: morphism extension,
+    isomorphism preservation, and triangle rotation.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -24,13 +15,14 @@ Require Import TriangleMorphisms.
 Require Import TriangleRotation.
 Require Import PreStableCofiber.
 
-(** * Axiom TR1: Extension of Morphisms to Distinguished Triangles *)
+(** * Axiom TR1: extension of morphisms to distinguished triangles *)
 
 Section AxiomTR1.
   Context {S : PreStableCategory}.
 
   (** Statement of TR1: Every morphism can be completed to a distinguished triangle. *)
-  Definition TR1_statement : Type
+  Definition TR1_statement
+    : Type
     := forall (X Y : object S) (f : morphism S X Y),
        { Z : object S &
        { g : morphism S Y Z &
@@ -52,7 +44,7 @@ Section AxiomTR1.
 
 End AxiomTR1.
 
-(** * Helper Lemmas for Isomorphisms *)
+(** * Helper lemmas for isomorphisms *)
 
 Section IsomorphismHelpers.
   Context {S : PreStableCategory}.
@@ -99,7 +91,7 @@ Section IsomorphismHelpers.
 
 End IsomorphismHelpers.
 
-(** * Axiom TR2: Isomorphisms Preserve Distinguished Triangles *)
+(** * Axiom TR2: isomorphisms preserve distinguished triangles *)
 
 Section AxiomTR2.
   Context {S : PreStableCategory}.
@@ -319,7 +311,7 @@ Section AxiomTR2.
     exact H.
   Qed.
 
-  (** Main Theorem: TR2 *)
+  (** Main theorem: TR2 *)
   Theorem TR2 {T1 T2 : Triangle S} 
     (φ : TriangleMorphism T1 T2)
     (Hφ : IsTriangleIsomorphism φ)
@@ -345,18 +337,20 @@ Section AxiomTR2.
 
 End AxiomTR2.
 
-(** * Axiom TR3: Rotation of Distinguished Triangles *)
+(** * Axiom TR3: rotation of distinguished triangles *)
 
 Section AxiomTR3.
   Context {S : PreStableCategory}.
 
   (** Statement of TR3: Distinguished triangles can be rotated. *)
-  Definition TR3_statement : Type
+  Definition TR3_statement
+    : Type
     := forall (T : DistinguishedTriangle S),
        DistinguishedTriangle S.
 
   (** TR3 holds using rotation. *)
-  Theorem TR3_holds : TR3_statement.
+  Theorem TR3_holds
+    : TR3_statement.
   Proof.
     intro T.
     exact (rotate_distinguished T).
@@ -371,7 +365,8 @@ Section Summary.
 
   (** All three axioms packaged together. *)
   Definition satisfies_TR1_TR2_TR3 (SC : PreStableCategoryWithCofiber) 
-    (H_base : base SC = S) : Type.
+    (H_base : base SC = S)
+    : Type.
   Proof.
     exact (@TR1_statement S * 
            (forall {T1 T2 : Triangle S} 
@@ -397,7 +392,7 @@ Section Summary.
 
 End Summary.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   iso_identity
@@ -410,6 +405,4 @@ Hint Resolve
   triangle_iso_preserves_zero_comp_2
   triangle_iso_preserves_zero_comp_3
   : tr2.
-
-(** The next file in the library will be [OctahedralLemmas.v] which develops
-    the technical machinery needed for the octahedral axiom TR4. *)
+  

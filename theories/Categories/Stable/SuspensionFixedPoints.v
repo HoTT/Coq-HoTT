@@ -1,16 +1,7 @@
-(** * Suspension Fixed Points and Periodicity
+(** * Suspension fixed points and periodicity
 
-    This file investigates objects that are isomorphic to their suspension,
-    known as suspension fixed points. These special objects reveal deep structural
-    properties of stable categories and lead to periodicity phenomena.
-    
-    Contents:
-    - Definition of suspension fixed points
-    - Basic properties and examples
-    - The zero object as a universal fixed point
-    - Iteration of functors and periodicity
-    - Classification of fixed points
-    - Applications to stable categories
+    Objects isomorphic to their suspension revealing deep structural properties
+    and periodicity phenomena in stable categories.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -23,21 +14,24 @@ Require Import PreStableCategories.
 Require Import ProperStableCategories.
 Require Import SemiStableCategories.
 
-(** * Suspension Fixed Points *)
+(** * Suspension fixed points *)
 
 Section SuspensionFixedPoints.
   Context (PS : PreStableCategory).
 
   (** An object is a suspension fixed point if it is isomorphic to its suspension. *)
-  Definition is_suspension_fixed_point (X : object PS) : Type
+  Definition is_suspension_fixed_point (X : object PS)
+    : Type
     := exists (φ : morphism PS (object_of (Susp PS) X) X), IsIsomorphism φ.
 
   (** Similarly for loop fixed points. *)
-  Definition is_loop_fixed_point (X : object PS) : Type
+  Definition is_loop_fixed_point (X : object PS)
+    : Type
     := exists (φ : morphism PS (object_of (Loop PS) X) X), IsIsomorphism φ.
 
   (** A stronger notion: naturally fixed. *)
-  Definition is_naturally_suspension_fixed (X : object PS) : Type
+  Definition is_naturally_suspension_fixed (X : object PS)
+    : Type
     := exists (φ : morphism PS (object_of (Susp PS) X) X),
        IsIsomorphism φ *
        (* The isomorphism is natural with respect to endomorphisms *)
@@ -46,7 +40,7 @@ Section SuspensionFixedPoints.
 
 End SuspensionFixedPoints.
 
-(** * Zero is a Fixed Point *)
+(** * Zero is a fixed point *)
 
 Section ZeroFixedPoint.
   Context (PS : PreStableCategory).
@@ -117,32 +111,37 @@ Section ZeroFixedPoint.
 
 End ZeroFixedPoint.
 
-(** * Iteration of Functors *)
+(** * Iteration of functors *)
 
 Section IteratedFunctors.
   Context {C : PreCategory} (F : Functor C C).
 
   (** The n-fold iteration of an endofunctor. *)
-  Fixpoint iterate_functor (n : nat) : Functor C C :=
+  Fixpoint iterate_functor (n : nat)
+    : Functor C C
+    :=
     match n with
     | O => 1%functor
     | S n' => (F o iterate_functor n')%functor
     end.
 
   (** Basic properties of iteration. *)
-  Lemma iterate_zero : iterate_functor O = 1%functor.
+  Lemma iterate_zero
+    : iterate_functor O = 1%functor.
   Proof.
     reflexivity.
   Qed.
 
-  Lemma iterate_succ (n : nat) 
+  Lemma iterate_succ (n : nat)
     : iterate_functor (S n) = (F o iterate_functor n)%functor.
   Proof.
     reflexivity.
   Qed.
 
   (** Addition of natural numbers. *)
-  Fixpoint nat_add (m n : nat) : nat :=
+  Fixpoint nat_add (m n : nat)
+    : nat
+    :=
     match m with
     | O => n
     | S m' => S (nat_add m' n)
@@ -168,12 +167,14 @@ Section Periodicity.
   Context (PS : PreStableCategory).
 
   (** A functor has period n if F^n = Id. *)
-  Definition has_period (F : Functor PS PS) (n : nat) : Type
+  Definition has_period (F : Functor PS PS) (n : nat)
+    : Type
     := forall X : object PS, 
        object_of (iterate_functor F n) X = X.
 
   (** The suspension functor has period n. *)
-  Definition suspension_has_period (n : nat) : Type
+  Definition suspension_has_period (n : nat)
+    : Type
     := has_period (Susp PS) n.
 
   (** If suspension has period n, then Σ^n X ≅ X for all X. *)
@@ -191,7 +192,9 @@ Section Periodicity.
   Qed.
 
   (** Multiplication of natural numbers. *)
-  Fixpoint nat_mult (m n : nat) : nat :=
+  Fixpoint nat_mult (m n : nat)
+    : nat
+    :=
     match m with
     | O => O
     | S m' => nat_add n (nat_mult m' n)
@@ -213,7 +216,7 @@ Section Periodicity.
 
 End Periodicity.
 
-(** * Properties of Fixed Points *)
+(** * Properties of fixed points *)
 
 Section FixedPointProperties.
   Context (PS : PreStableCategory).
@@ -275,18 +278,19 @@ Section FixedPointProperties.
 
 End FixedPointProperties.
 
-(** * Classification of Fixed Points *)
+(** * Classification of fixed points *)
 
 Section Classification.
   Context (PS : PreStableCategory).
 
   (** Objects admitting a retraction from zero. *)
-  Definition admits_retraction_from_zero (X : object PS) : Type
+  Definition admits_retraction_from_zero (X : object PS)
+    : Type
     := exists (i : morphism PS (@zero _ (add_zero PS)) X) 
               (r : morphism PS X (@zero _ (add_zero PS))),
        (r o i)%morphism = 1%morphism.
 
-(** Zero always admits a retraction from itself. *)
+  (** Zero always admits a retraction from itself. *)
   Theorem zero_always_retractable
     : admits_retraction_from_zero (@zero _ (add_zero PS)).
   Proof.
@@ -294,7 +298,7 @@ Section Classification.
     apply morphism_left_identity.
   Qed.
 
-(** Classification theorem for suspension fixed points. *)
+  (** Classification theorem for suspension fixed points. *)
   Theorem fixed_point_classification (X : object PS)
     : is_suspension_fixed_point PS X ->
       admits_retraction_from_zero X ->
@@ -311,7 +315,7 @@ Section Classification.
 
 End Classification.
 
-(** * Stable Categories and Fixed Points *)
+(** * Stable categories and fixed points *)
 
 Section StableFixedPoints.
   Context (PS : ProperStableCategory).
@@ -327,7 +331,8 @@ Section StableFixedPoints.
   Qed.
 
   (** The composition ΣΩ has many fixed points. *)
-  Definition is_susp_loop_fixed_point (X : object PS) : Type
+  Definition is_susp_loop_fixed_point (X : object PS)
+    : Type
     := exists (φ : morphism PS 
                    (object_of ((Susp PS) o (Loop PS))%functor X) X),
        IsIsomorphism φ.
@@ -347,8 +352,9 @@ End StableFixedPoints.
 Section Applications.
   Context (PS : PreStableCategory).
 
- (** Periodic categories have special properties. *)
-  Definition is_periodic : Type
+  (** Periodic categories have special properties. *)
+  Definition is_periodic
+    : Type
     := exists n : nat, 
        (match n with O => Empty | S _ => Unit end) * suspension_has_period PS n.
 
@@ -365,7 +371,7 @@ Section Applications.
 
 End Applications.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   zero_is_suspension_fixed_point
@@ -379,6 +385,4 @@ Hint Unfold
   is_loop_fixed_point
   suspension_has_period
   : suspension_fixed.
-
-(** The next file in the library will be [ZeroTransformations.v] which studies
-    the consequences of natural transformations being zero. *)
+  

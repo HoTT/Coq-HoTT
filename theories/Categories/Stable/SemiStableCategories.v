@@ -1,16 +1,7 @@
-(** * Semi-Stable Categories and the Stability Hierarchy
+(** * Semi-stable categories and the stability hierarchy
 
-    Semi-stable categories form an intermediate class between pre-stable and 
-    proper stable categories. They are characterized by having the unit or 
-    counit be an isomorphism in only one direction, providing insight into 
-    the gradual transition from pre-stable to proper stable structures.
-    
-    This file establishes:
-    - Left and right semi-stability definitions
-    - The duality between left and right semi-stability
-    - Balanced categories where η and ε isomorphism properties correlate
-    - The complete hierarchy from pre-stable to proper stable categories
-    - Triangle identities and their consequences
+    Intermediate categories between pre-stable and proper stable, characterized
+    by one-sided isomorphism properties of unit or counit.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -21,7 +12,7 @@ Require Import Biproducts.
 Require Import AdditiveCategories.
 Require Import PreStableCategories.
 
-(** * Isomorphism Definition
+(** * Isomorphism definition
     
     We need a basic definition of isomorphism to work with semi-stability.
     This could later be unified with the HoTT library's definition.
@@ -38,7 +29,7 @@ Definition iso_inverse {C : PreCategory} {X Y : object C} {f : morphism C X Y}
   : morphism C Y X
   := H.1.
 
-(** * Left and Right Semi-Stability *)
+(** * Left and right semi-stability *)
 
 (** A pre-stable category is left semi-stable if the unit natural 
     transformation η is an isomorphism at every object. *)
@@ -52,7 +43,7 @@ Definition is_right_semi_stable (PS : PreStableCategory)
   : Type
   := forall X : object PS, IsIsomorphism (components_of (epsilon PS) X).
 
-(** ** Basic Properties of Semi-Stability *)
+(** ** Basic properties of semi-stability *)
 
 Section SemiStableProperties.
   Context (PS : PreStableCategory).
@@ -86,7 +77,7 @@ Section SemiStableProperties.
 
 End SemiStableProperties.
 
-(** * Almost Proper Stable Categories *)
+(** * Almost proper stable categories *)
 
 (** A category is almost proper stable if it is both left and right 
     semi-stable, but may lack the triangle identities. *)
@@ -94,7 +85,7 @@ Definition is_almost_proper_stable (PS : PreStableCategory)
   : Type
   := is_left_semi_stable PS * is_right_semi_stable PS.
 
-(** * Balanced Categories *)
+(** * Balanced categories *)
 
 (** A pre-stable category is balanced if being an isomorphism at X for η
     is equivalent to being an isomorphism at ΣX for ε. *)
@@ -117,7 +108,7 @@ Proof.
   - intro H. apply H_left.
 Qed.
 
-(** * Triangle Identities *)
+(** * Triangle identities *)
 
 (** The first triangle identity: ε(ΣX) ∘ Σ(ηX) = 1. *)
 Definition satisfies_triangle_1 (PS : PreStableCategory)
@@ -138,7 +129,7 @@ Definition satisfies_triangle_identities (PS : PreStableCategory)
   : Type
   := satisfies_triangle_1 PS * satisfies_triangle_2 PS.
 
-(** * The Complete Stability Hierarchy *)
+(** * The complete stability hierarchy *)
 
 (** Almost proper stable categories with triangle identities. *)
 Definition almost_proper_stable_strong (PS : PreStableCategory)
@@ -198,7 +189,7 @@ Proof.
   exact (H_left, H_right, H_tri1, H_tri2).
 Qed.
 
-(** * One-Sided Inverses from Triangle Identities *)
+(** * One-sided inverses from triangle identities *)
 
 (** The unit has a left inverse when precomposed with suspension. *)
 Definition eta_has_left_inverse (PS : PreStableCategory)
@@ -228,7 +219,7 @@ Proof.
   exact H_tri.
 Qed.
 
-(** * Classification by Semi-Stability *)
+(** * Classification by semi-stability *)
 
 Section Classification.
   Context (PS : PreStableCategory).
@@ -242,7 +233,8 @@ Section Classification.
        (~is_left_semi_stable PS) * (~is_right_semi_stable PS).
 
   (** Helper to determine if a category is in the top class. *)
-  Definition is_both_semi_stable : Type
+  Definition is_both_semi_stable
+    : Type
     := is_left_semi_stable PS * is_right_semi_stable PS.
 
   (** With triangle identities, both semi-stable implies proper stable structure. *)
@@ -257,7 +249,7 @@ Section Classification.
 
 End Classification.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Unfold 
   is_left_semi_stable is_right_semi_stable
@@ -269,6 +261,4 @@ Hint Resolve
   semi_stable_both_directions_implies_balanced
   triangle_identity_1_gives_left_inverse
   : semi_stable.
-
-(** The next file in the library will be [TriangleMorphisms.v] which defines
-    morphisms between triangles and their properties. *)
+  

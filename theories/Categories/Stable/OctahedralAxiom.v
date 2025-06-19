@@ -1,17 +1,7 @@
-(** * The Octahedral Axiom (TR4)
+(** * The octahedral axiom (TR4)
 
-    This file establishes the fourth axiom of triangulated categories, known as
-    the octahedral axiom (TR4). This axiom describes how distinguished triangles
-    arising from composable morphisms fit together in a precise octahedral pattern.
-    
-    The octahedral axiom is the most complex of the triangulated category axioms,
-    requiring careful analysis of how cofiber sequences interact under composition.
-    
-    Contents:
-    - Complete statement of TR4
-    - Existence of octahedral morphisms
-    - The octahedral diagram
-    - Properties and consequences of TR4
+    The fourth triangulated category axiom describing how distinguished triangles
+    from composable morphisms fit together in an octahedral pattern.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -30,14 +20,15 @@ Section TR4Statement.
   Context (S : PreStableCategoryWithCofiber).
 
   (** TR4 requires existence of a morphism making specific diagrams commute. *)
-  Definition TR4_statement : Type
+  Definition TR4_statement
+    : Type
     := forall (X Y Z : object S) (f : morphism S X Y) (g : morphism S Y Z),
        exists (u : morphism S (@cofiber S X Y f) (@cofiber S Y Z g)),
        (u o @cofiber_in S X Y f)%morphism = (@cofiber_in S Y Z g o g)%morphism.
 
 End TR4Statement.
 
-(** * Octahedral Morphisms *)
+(** * Octahedral morphisms *)
 
 Section OctahedralMorphisms.
   Context (S : PreStableCategoryWithCofiber)
@@ -45,7 +36,8 @@ Section OctahedralMorphisms.
 
   (** The third morphism in the octahedral diagram connects cofiber(g∘f) to
       the suspension of cofiber(f). *)
-  Definition octahedral_third_morphism_exists : Type
+  Definition octahedral_third_morphism_exists
+    : Type
     := forall (A B C : object S) (f : morphism S A B) (g : morphism S B C),
        { w : morphism S (@cofiber S A C (g o f)%morphism) 
                         (object_of (Susp S) (@cofiber S A B f)) |
@@ -60,7 +52,8 @@ Section OctahedralMorphisms.
 
   (** The second morphism v : cofiber(g) → cofiber(g∘f) exists and is
       compatible with the suspension structure. *)
-  Definition has_octahedral_morphisms : Type
+  Definition has_octahedral_morphisms
+    : Type
     := forall (A B C : object S) (f : morphism S A B) (g : morphism S B C),
        { v : morphism S (@cofiber S B C g) (@cofiber S A C (g o f)%morphism) |
          (v o @cofiber_in S B C g)%morphism = @cofiber_in S A C (g o f)%morphism /\
@@ -72,7 +65,7 @@ Section OctahedralMorphisms.
 
 End OctahedralMorphisms.
 
-(** * The Complete Octahedral Axiom *)
+(** * The complete octahedral axiom *)
 
 Section CompleteOctahedralAxiom.
   Context (S : PreStableCategoryWithCofiber).
@@ -82,7 +75,8 @@ Section CompleteOctahedralAxiom.
       2. The octahedral morphisms exist
       3. The third morphism exists
       4. The resulting triangle is distinguished *)
-  Definition TR4_octahedral_axiom : Type
+  Definition TR4_octahedral_axiom
+    : Type
     := (cofiber_universal_property S) *
        (has_octahedral_morphisms S) *
        (octahedral_third_morphism_exists S) *
@@ -99,7 +93,8 @@ Section ConsequencesTR4.
           (H_TR4 : TR4_octahedral_axiom S).
 
   (** Extract the universal property. *)
-  Definition TR4_universal : cofiber_universal_property S.
+  Definition TR4_universal
+    : cofiber_universal_property S.
   Proof.
     destruct H_TR4 as [[[H_univ _] _] _].
     exact H_univ.
@@ -181,7 +176,7 @@ Section ConsequencesTR4.
 
 End ConsequencesTR4.
 
-(** * TR4 from Universal Property *)
+(** * TR4 from universal property *)
 
 Section TR4FromUniversal.
   Context (S : PreStableCategoryWithCofiber)
@@ -210,7 +205,8 @@ Section TR4FromUniversal.
   Qed.
 
   (** TR4 holds when the universal property is satisfied. *)
-  Theorem TR4_from_universal : TR4_statement S.
+  Theorem TR4_from_universal
+    : TR4_statement S.
   Proof.
     unfold TR4_statement.
     intros X Y Z f g.
@@ -219,7 +215,7 @@ Section TR4FromUniversal.
 
 End TR4FromUniversal.
 
-(** * Octahedral Properties *)
+(** * Octahedral properties *)
 
 Section OctahedralProperties.
   Context (S : PreStableCategoryWithCofiber)
@@ -338,7 +334,7 @@ Section OctahedralProperties.
 
 End OctahedralProperties.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   TR4_morphism_exists
@@ -351,6 +347,4 @@ Hint Resolve
   octahedral_third_morphism_vanishes
   octahedral_triangle_distinguished
   : octahedral_consequences.
-
-(** The next file in the library will be [OppositeCategories.v] which develops
-    the theory of opposite categories and their relationship to stable structures. *)
+  

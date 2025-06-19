@@ -1,17 +1,7 @@
-(** * Zero Natural Transformations and Forcing Principles
+(** * Zero natural transformations and forcing principles
 
-    This file investigates the consequences of the unit (η) or counit (ε)
-    of the (Σ, Ω) adjunction being trivial (i.e., zero transformations).
-    These results establish fundamental constraints: for a category to satisfy
-    the triangle identities, the adjunction cannot be trivial unless the 
-    category itself is degenerate.
-    
-    Contents:
-    - Zero unit and counit definitions
-    - Zero transformations break triangle identities
-    - Non-triviality conditions
-    - The η-Zero Forcing Principle
-    - Classification of pre-stable categories by zero behavior
+    Consequences of trivial (zero) unit or counit in the (Σ, Ω) adjunction,
+    establishing fundamental constraints on pre-stable categories.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -22,26 +12,28 @@ Require Import AdditiveCategories.
 Require Import PreStableCategories.
 Require Import SemiStableCategories.
 
-(** * Zero Unit and Counit *)
+(** * Zero unit and counit *)
 
 Section ZeroTransformations.
   Context (PS : PreStableCategory).
 
   (** A pre-stable category has zero unit if η is the zero transformation. *)
-  Definition has_zero_eta : Type
+  Definition has_zero_eta
+    : Type
     := forall X : object PS,
        components_of (eta PS) X = 
        add_zero_morphism PS X (object_of ((Loop PS) o (Susp PS))%functor X).
 
   (** A pre-stable category has zero counit if ε is the zero transformation. *)
-  Definition has_zero_epsilon : Type
+  Definition has_zero_epsilon
+    : Type
     := forall X : object PS,
        components_of (epsilon PS) X = 
        add_zero_morphism PS (object_of ((Susp PS) o (Loop PS))%functor X) X.
 
 End ZeroTransformations.
 
-(** * Zero Transformations Break Triangle Identities *)
+(** * Zero transformations break triangle identities *)
 
 Section ZeroBreaksTriangles.
   Context (PS : PreStableCategory).
@@ -86,25 +78,27 @@ Section ZeroBreaksTriangles.
 
 End ZeroBreaksTriangles.
 
-(** * Non-Triviality Conditions *)
+(** * Non-triviality conditions *)
 
 Section NonTriviality.
   Context (PS : PreStableCategory).
 
   (** A category is non-trivial if some object has non-zero identity. *)
-  Definition is_non_trivial : Type
+  Definition is_non_trivial
+    : Type
     := exists (X : object PS), 
        (1%morphism : morphism PS X X) <> add_zero_morphism PS X X.
 
 End NonTriviality.
 
-(** * Retraction Properties *)
+(** * Retraction properties *)
 
 Section RetractionProperties.
   Context (PS : PreStableCategory).
 
   (** An object admits a retraction from zero if it can be split off from zero. *)
-  Definition admits_retraction_from_zero (X : object PS) : Type
+  Definition admits_retraction_from_zero (X : object PS)
+    : Type
     := exists (i : morphism PS (@zero _ (add_zero PS)) X) 
               (r : morphism PS X (@zero _ (add_zero PS))),
        (r o i)%morphism = 1%morphism.
@@ -173,7 +167,7 @@ Section RetractionProperties.
 
 End RetractionProperties.
 
-(** * The η-Zero Forcing Principle *)
+(** * The η-zero forcing principle *)
 
 Section EtaZeroForcing.
   Context (PS : PreStableCategory).
@@ -181,7 +175,7 @@ Section EtaZeroForcing.
   (** If an object X admits a retraction from zero and η vanishes at X,
       then η must also vanish at zero. This reveals a fundamental constraint
       on the vanishing locus of η. *)
-Theorem eta_zero_forcing_principle (X : object PS)
+  Theorem eta_zero_forcing_principle (X : object PS)
     : admits_retraction_from_zero PS X ->
       components_of (eta PS) X = 
       add_zero_morphism PS X (object_of ((Loop PS) o (Susp PS))%functor X) ->
@@ -230,7 +224,7 @@ Theorem eta_zero_forcing_principle (X : object PS)
 
   (** The contrapositive: if η is non-zero at zero, it cannot vanish at any
       retractable object. *)
-Theorem eta_nonzero_propagation
+  Theorem eta_nonzero_propagation
     : components_of (eta PS) (@zero _ (add_zero PS)) <> 
       add_zero_morphism PS (@zero _ (add_zero PS)) 
         (object_of ((Loop PS) o (Susp PS))%functor (@zero _ (add_zero PS))) ->
@@ -250,26 +244,28 @@ Theorem eta_nonzero_propagation
 
 End EtaZeroForcing.
 
-(** * Classification of Pre-Stable Categories *)
+(** * Classification of pre-stable categories *)
 
 Section Classification.
   Context (PS : PreStableCategory).
 
   (** Class I: η vanishes at zero (and hence at all retractable objects). *)
-  Definition class_I_prestable : Type
+  Definition class_I_prestable
+    : Type
     := components_of (eta PS) (@zero _ (add_zero PS)) = 
        add_zero_morphism PS (@zero _ (add_zero PS)) 
          (object_of ((Loop PS) o (Susp PS))%functor (@zero _ (add_zero PS))).
 
- (** Class II: η is non-zero at all retractable objects. *)
-  Definition class_II_prestable : Type
+  (** Class II: η is non-zero at all retractable objects. *)
+  Definition class_II_prestable
+    : Type
     := forall (X : object PS),
        admits_retraction_from_zero PS X ->
        components_of (eta PS) X <> 
        add_zero_morphism PS X (object_of ((Loop PS) o (Susp PS))%functor X).
 
   (** The two classes are mutually exclusive. *)
-Theorem prestable_classes_disjoint
+  Theorem prestable_classes_disjoint
     : class_I_prestable ->
       ~(class_II_prestable).
   Proof.
@@ -300,7 +296,7 @@ Theorem prestable_classes_disjoint
 
 End Classification.
 
-(** * Compatible Pairs *)
+(** * Compatible pairs *)
 
 Section CompatiblePairs.
   Context (PS : PreStableCategory).
@@ -347,7 +343,7 @@ Section CompatiblePairs.
 
 End CompatiblePairs.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Unfold
   has_zero_eta
@@ -361,6 +357,4 @@ Hint Resolve
   eta_zero_forcing_principle
   prestable_classes_disjoint
   : zero_transformations.
-
-(** The next file in the library will be [AdvancedStructures.v] which explores
-    self-dual triangulated categories and other advanced topics. *)
+  

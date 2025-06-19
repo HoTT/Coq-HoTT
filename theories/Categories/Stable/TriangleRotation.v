@@ -1,14 +1,7 @@
-(** * Triangle Rotation
+(** * Triangle rotation
 
-    The rotation operation is fundamental in triangulated categories.
-    It transforms a triangle X → Y → Z → ΣX into Y → Z → ΣX → ΣY.
-    
-    Contents:
-    - Definition of triangle rotation
-    - Proof that rotation preserves distinguished triangles
-    - The shift operation (alternative name for rotation)
-    - Shifting of triangle morphisms
-    - Statement of axiom TR3
+    Rotation operation transforming X → Y → Z → ΣX into Y → Z → ΣX → ΣY,
+    fundamental for triangulated categories.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -20,14 +13,16 @@ Require Import PreStableCategories.
 Require Import Triangles.
 Require Import TriangleMorphisms.
 
-(** * Rotation of Triangles *)
+(** * Rotation of triangles *)
 
 Section TriangleRotation.
   Context {S : PreStableCategory}.
 
   (** The rotation operation transforms a triangle X → Y → Z → ΣX 
       into Y → Z → ΣX → ΣY. *)
-  Definition rotate_triangle (T : Triangle S) : Triangle S := {|
+  Definition rotate_triangle (T : Triangle S)
+    : Triangle S
+    := {|
     triangle_X := triangle_Y T;
     triangle_Y := triangle_Z T;
     triangle_Z := object_of (Susp S) (triangle_X T);
@@ -38,7 +33,7 @@ Section TriangleRotation.
 
 End TriangleRotation.
 
-(** * Rotation Preserves Distinguished Triangles *)
+(** * Rotation preserves distinguished triangles *)
 
 Section RotationPreservesDistinguished.
   Context {S : PreStableCategory}.
@@ -63,13 +58,14 @@ Section RotationPreservesDistinguished.
 
 End RotationPreservesDistinguished.
 
-(** * Shift and Axiom TR3 *)
+(** * Shift and axiom TR3 *)
 
 Section ShiftOperation.
   Context {S : PreStableCategory}.
 
   (** The shift operation is another name for rotation. *)
-  Definition shift_triangle (T : Triangle S) : Triangle S
+  Definition shift_triangle (T : Triangle S)
+    : Triangle S
     := rotate_triangle T.
 
   (** Shifting preserves distinguished triangles. *)
@@ -81,14 +77,15 @@ Section ShiftOperation.
 
 End ShiftOperation.
 
-(** * Helper Lemmas *)
+(** * Helper lemmas *)
 
 Section HelperLemmas.
   Context {C D : PreCategory} (F : Functor C D).
 
   (** Functors preserve isomorphisms. *)
   Lemma functor_preserves_iso {X Y : object C} (f : morphism C X Y) 
-    (H : IsIsomorphism f) : IsIsomorphism (morphism_of F f).
+    (H : IsIsomorphism f)
+    : IsIsomorphism (morphism_of F f).
   Proof.
     destruct H as [g [Hgf Hfg]].
     exists (morphism_of F g).
@@ -103,7 +100,7 @@ Section HelperLemmas.
 
 End HelperLemmas.
 
-(** * Shifting Triangle Morphisms *)
+(** * Shifting triangle morphisms *)
 
 Section ShiftingMorphisms.
   Context {S : PreStableCategory}.
@@ -155,7 +152,8 @@ Section AxiomTR3.
   Context {S : PreStableCategory}.
 
   (** Statement of TR3: Triangle isomorphisms preserve distinguished triangles. *)
-  Definition TR3_statement : Type
+  Definition TR3_statement
+    : Type
     := forall (T T' : Triangle S) 
               (φ : TriangleMorphism T T'),
        IsTriangleIsomorphism φ ->
@@ -163,12 +161,14 @@ Section AxiomTR3.
        DistinguishedTriangle S.
 
   (** TR3 specific to shifted triangles. *)
-  Definition TR3_shift : Type
+  Definition TR3_shift
+    : Type
     := forall (T : DistinguishedTriangle S),
        DistinguishedTriangle S.
 
   (** The shift operation satisfies TR3_shift trivially. *)
-  Theorem TR3_shift_holds : TR3_shift.
+  Theorem TR3_shift_holds
+    : TR3_shift.
   Proof.
     intro T.
     exact (shift_distinguished T).
@@ -176,16 +176,17 @@ Section AxiomTR3.
 
 End AxiomTR3.
 
-(** * Properties of Rotation *)
+(** * Properties of rotation *)
 
 Section RotationProperties.
   Context {S : PreStableCategory}.
 
   (** Double rotation. *)
-  Definition rotate_twice (T : Triangle S) : Triangle S
+  Definition rotate_twice (T : Triangle S)
+    : Triangle S
     := rotate_triangle (rotate_triangle T).
 
-  (** After two rotations, we get a triangle involving Σ² *)
+  (** After two rotations, we get a triangle involving Σ². *)
   Lemma rotate_twice_objects (T : Triangle S)
     : triangle_X (rotate_twice T) = triangle_Z T /\
       triangle_Y (rotate_twice T) = object_of (Susp S) (triangle_X T) /\
@@ -195,7 +196,8 @@ Section RotationProperties.
   Qed.
 
   (** Triple rotation. *)
-  Definition rotate_thrice (T : Triangle S) : Triangle S
+  Definition rotate_thrice (T : Triangle S)
+    : Triangle S
     := rotate_triangle (rotate_triangle (rotate_triangle T)).
 
   (** After three rotations, objects are suspended versions of originals. *)
@@ -228,7 +230,7 @@ Section Utilities.
 
 End Utilities.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   rotate_distinguished
@@ -240,6 +242,4 @@ Hint Resolve
 Hint Rewrite 
   @rotated_first_morphism_is_g
   : triangle_simplify.
-
-(** The next file in the library will be [TriangulatedAxiomsTR123.v] which
-    establishes the first three axioms of triangulated categories. *)
+  

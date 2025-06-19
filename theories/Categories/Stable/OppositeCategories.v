@@ -1,15 +1,7 @@
-(** * Opposite Categories
+(** * Opposite categories
 
-    The opposite category construction reverses all morphisms. This file
-    shows that additive categories have a natural opposite structure where
-    all the additive structure is preserved.
-    
-    Contents:
-    - Basic opposite category construction
-    - Opposite zero objects
-    - Opposite biproducts
-    - Opposite additive categories
-    - Basic properties of opposite constructions
+    The opposite category construction reverses morphisms while preserving
+    additive structure.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -19,9 +11,10 @@ Require Import ZeroMorphismLemmas.
 Require Import Biproducts.
 Require Import AdditiveCategories.
 
-(** * Basic Opposite Category Construction *)
+(** * Basic opposite category construction *)
 
-Definition opposite_category (C : PreCategory) : PreCategory.
+Definition opposite_category (C : PreCategory)
+  : PreCategory.
 Proof.
   exact (@Build_PreCategory
     (object C)
@@ -34,13 +27,14 @@ Proof.
     (fun s d => trunc_morphism C d s)).
 Defined.
 
-(** * Basic Properties *)
+(** * Basic properties *)
 
 Section BasicProperties.
   Context {C : PreCategory}.
 
   (** Objects are the same in both categories. *)
-  Lemma opposite_objects : object (opposite_category C) = object C.
+  Lemma opposite_objects
+    : object (opposite_category C) = object C.
   Proof.
     reflexivity.
   Qed.
@@ -71,12 +65,13 @@ Section BasicProperties.
 
 End BasicProperties.
 
-(** * Opposite Zero Object *)
+(** * Opposite zero object *)
 
 Section OppositeZero.
   Context {C : PreCategory} (Z : ZeroObject C).
 
-  Definition opposite_zero_object : ZeroObject (opposite_category C).
+  Definition opposite_zero_object
+    : ZeroObject (opposite_category C).
   Proof.
     exact (Build_ZeroObject 
       (opposite_category C)
@@ -96,7 +91,7 @@ Section OppositeZero.
 
 End OppositeZero.
 
-(** * Opposite Biproducts *)
+(** * Opposite biproducts *)
 
 Section OppositeBiproducts.
   Context {C : PreCategory} {X Y : object C}.
@@ -166,7 +161,7 @@ Section OppositeBiproducts.
 
 End OppositeBiproducts.
 
-(** * Universal Property of Opposite Biproducts *)
+(** * Universal property of opposite biproducts *)
 
 Section OppositeUniversal.
   Context {C : PreCategory} {X Y : object C}.
@@ -242,9 +237,10 @@ Section OppositeUniversal.
 
 End OppositeUniversal.
 
-(** * Opposite Additive Category *)
+(** * Opposite additive category *)
 
-Definition opposite_additive_category (A : AdditiveCategory) : AdditiveCategory.
+Definition opposite_additive_category (A : AdditiveCategory)
+  : AdditiveCategory.
 Proof.
   refine (Build_AdditiveCategory
     (opposite_category A)
@@ -255,13 +251,14 @@ Defined.
 (** Notation for opposite additive category. *)
 Notation "A ^add_op" := (opposite_additive_category A) (at level 10).
 
-(** * Properties of Opposite Additive Categories *)
+(** * Properties of opposite additive categories *)
 
 Section OppositeAdditiveProperties.
   Context (A : AdditiveCategory).
 
   (** The underlying category of the opposite is the opposite of the underlying category. *)
-  Lemma opposite_additive_underlying : cat (A^add_op) = opposite_category A.
+  Lemma opposite_additive_underlying
+    : cat (A^add_op) = opposite_category A.
   Proof.
     reflexivity.
   Qed.
@@ -283,13 +280,14 @@ Section OppositeAdditiveProperties.
 
 End OppositeAdditiveProperties.
 
-(** * Double Opposite Properties *)
+(** * Double opposite properties *)
 
 Section DoubleOpposite.
   Context (C : PreCategory).
 
   (** Double opposite functor returns to the original category. *)
-  Definition double_opposite_functor : Functor ((opposite_category (opposite_category C))) C.
+  Definition double_opposite_functor
+    : Functor ((opposite_category (opposite_category C))) C.
   Proof.
     exact (Build_Functor
       ((opposite_category (opposite_category C))) C
@@ -299,7 +297,8 @@ Section DoubleOpposite.
       (fun X => idpath)).
   Defined.
 
-  Definition to_double_opposite_functor : Functor C ((opposite_category (opposite_category C))).
+  Definition to_double_opposite_functor
+    : Functor C ((opposite_category (opposite_category C))).
   Proof.
     exact (Build_Functor
       C ((opposite_category (opposite_category C)))
@@ -311,7 +310,8 @@ Section DoubleOpposite.
 
   (** Basic involution properties. *)
   
-  Lemma opposite_involution_objects : object ((opposite_category (opposite_category C))) = object C.
+  Lemma opposite_involution_objects
+    : object ((opposite_category (opposite_category C))) = object C.
   Proof.
     reflexivity.
   Qed.
@@ -324,13 +324,14 @@ Section DoubleOpposite.
 
 End DoubleOpposite.
 
-(** * Isomorphisms in Opposite Categories *)
+(** * Isomorphisms in opposite categories *)
 
 Section OppositeIsomorphisms.
   Context {C : PreCategory}.
 
   (** Basic definition of isomorphism (local to this file). *)
-  Definition IsIsomorphism {X Y : object C} (f : morphism C X Y) : Type
+  Definition IsIsomorphism {X Y : object C} (f : morphism C X Y)
+    : Type
     := { g : morphism C Y X | (g o f = 1)%morphism /\ (f o g = 1)%morphism }.
 
   (** Isomorphisms are preserved by the opposite construction. *)
@@ -349,7 +350,7 @@ Section OppositeIsomorphisms.
 
 End OppositeIsomorphisms.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   opposite_biproduct_beta_l opposite_biproduct_beta_r
@@ -360,6 +361,4 @@ Hint Rewrite
   @opposite_additive_zero_morphism
   @zero_morphism_opposite
   : opposite_simplify.
-
-(** The next file in the library will be [OppositePreStable.v] which shows
-    how pre-stable structures behave under the opposite construction. *)
+  

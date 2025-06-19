@@ -1,16 +1,7 @@
-(** * Pre-Stable Categories with Cofiber
+(** * Pre-stable categories with cofiber
 
-    A pre-stable category with cofiber extends a pre-stable category with
-    a cofiber/mapping cone construction. This provides the foundation for
-    constructing distinguished triangles and establishing the axioms of
-    triangulated categories.
-    
-    Contents:
-    - PreStableCategoryWithCofiber record
-    - Basic properties of cofibers
-    - Triangle construction from morphisms
-    - Proof that cofiber triangles are distinguished
-    - The axiom TR1 for pre-stable categories with cofiber
+    Pre-stable categories extended with cofiber/mapping cone construction,
+    providing foundations for distinguished triangles.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -22,35 +13,40 @@ Require Import AdditiveCategories.
 Require Import PreStableCategories.
 Require Import Triangles.
 
-(** * Pre-Stable Categories with Cofiber *)
+(** * Pre-stable categories with cofiber *)
 
 Record PreStableCategoryWithCofiber := {
   base :> PreStableCategory;
   
-  (** The cofiber of a morphism *)
+  (** The cofiber of a morphism. *)
   cofiber : forall {X Y : object base} (f : morphism base X Y), object base;
   
-  (** Structure morphisms for the cofiber *)
-  cofiber_in : forall {X Y : object base} (f : morphism base X Y), 
-               morphism base Y (cofiber f);
-  cofiber_out : forall {X Y : object base} (f : morphism base X Y), 
-                morphism base (cofiber f) (object_of (Susp base) X);
+  (** Structure morphisms for the cofiber. *)
+  cofiber_in
+    : forall {X Y : object base} (f : morphism base X Y), 
+      morphism base Y (cofiber f);
+  cofiber_out
+    : forall {X Y : object base} (f : morphism base X Y), 
+      morphism base (cofiber f) (object_of (Susp base) X);
   
-  (** The cofiber axioms *)
-  cofiber_cond1 : forall {X Y : object base} (f : morphism base X Y),
-    (cofiber_in f o f)%morphism = 
-    add_zero_morphism base X (cofiber f);
+  (** The cofiber axioms. *)
+  cofiber_cond1
+    : forall {X Y : object base} (f : morphism base X Y),
+      (cofiber_in f o f)%morphism = 
+      add_zero_morphism base X (cofiber f);
     
-  cofiber_cond2 : forall {X Y : object base} (f : morphism base X Y),
-    (cofiber_out f o cofiber_in f)%morphism = 
-    add_zero_morphism base Y (object_of (Susp base) X);
+  cofiber_cond2
+    : forall {X Y : object base} (f : morphism base X Y),
+      (cofiber_out f o cofiber_in f)%morphism = 
+      add_zero_morphism base Y (object_of (Susp base) X);
     
-  cofiber_cond3 : forall {X Y : object base} (f : morphism base X Y),
-    (morphism_of (Susp base) f o cofiber_out f)%morphism = 
-    add_zero_morphism base (cofiber f) (object_of (Susp base) Y)
+  cofiber_cond3
+    : forall {X Y : object base} (f : morphism base X Y),
+      (morphism_of (Susp base) f o cofiber_out f)%morphism = 
+      add_zero_morphism base (cofiber f) (object_of (Susp base) Y)
 }.
 
-(** * Basic Properties of Cofibers *)
+(** * Basic properties of cofibers *)
 
 Section CofiberProperties.
   Context (S : PreStableCategoryWithCofiber).
@@ -95,7 +91,7 @@ Section CofiberProperties.
 
 End CofiberProperties.
 
-(** * Triangles from Morphisms *)
+(** * Triangles from morphisms *)
 
 Section TriangleFromMorphism.
   Context (S : PreStableCategoryWithCofiber).
@@ -124,7 +120,7 @@ Section TriangleFromMorphism.
 
 End TriangleFromMorphism.
 
-(** * The Axiom TR1 *)
+(** * The axiom TR1 *)
 
 Section TR1.
   Context (S : PreStableCategoryWithCofiber).
@@ -165,13 +161,14 @@ Section TR1.
 
 End TR1.
 
-(** * Mapping Cone Construction *)
+(** * Mapping cone construction *)
 
 Section MappingCone.
   Context (S : PreStableCategoryWithCofiber).
 
   (** The cofiber is often called the mapping cone in topology. *)
-  Definition mapping_cone {X Y : object S} (f : morphism S X Y) : object S
+  Definition mapping_cone {X Y : object S} (f : morphism S X Y)
+    : object S
     := @cofiber S X Y f.
 
   (** Alternative names for the structure maps. *)
@@ -185,7 +182,7 @@ Section MappingCone.
 
 End MappingCone.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   cofiber_cond1 cofiber_cond2 cofiber_cond3
@@ -195,6 +192,4 @@ Hint Resolve
 Hint Rewrite 
   @cofiber_in_comp_right @cofiber_out_comp_left @susp_f_cofiber_out
   : cofiber_simplify.
-
-(** The next file in the library will be [SemiStableCategories.v] which defines
-    semi-stable categories and the stability hierarchy. *)
+  

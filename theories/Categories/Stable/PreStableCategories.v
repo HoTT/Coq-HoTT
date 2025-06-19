@@ -1,15 +1,7 @@
-(** * Pre-Stable Categories
+(** * Pre-stable categories
 
-    A pre-stable category is an additive category equipped with
-    suspension and loop functors connected by natural transformations.
-    This is a precursor to the notion of a stable category.
-    
-    Contents:
-    - Definition of pre-stable categories
-    - The suspension functor Σ
-    - The loop functor Ω  
-    - Natural transformations η : 1 → ΩΣ and ε : ΣΩ → 1
-    - Basic properties of suspension and loop functors
+    Additive categories with suspension/loop functors and connecting natural
+    transformations, forming the foundation for stable categories.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -20,25 +12,25 @@ Require Import ZeroMorphismLemmas.
 Require Import Biproducts.
 Require Import AdditiveCategories.
 
-(** * Pre-Stable Categories *)
+(** * Pre-stable categories *)
 
 Record PreStableCategory := {
   A :> AdditiveCategory;
   
-  (** The suspension functor Σ *)
+  (** The suspension functor Σ. *)
   Susp : AdditiveFunctor A A;
   
-  (** The loop functor Ω *)
+  (** The loop functor Ω. *)
   Loop : AdditiveFunctor A A;
   
-  (** Natural transformation 1 → ΩΣ *)
+  (** Natural transformation 1 → ΩΣ. *)
   eta : NaturalTransformation 1%functor (Loop o Susp)%functor;
   
-  (** Natural transformation ΣΩ → 1 *)
+  (** Natural transformation ΣΩ → 1. *)
   epsilon : NaturalTransformation (Susp o Loop)%functor 1%functor
 }.
 
-(** * Basic Properties *)
+(** * Basic properties *)
 
 Section PreStableProperties.
   Context (S : PreStableCategory).
@@ -84,7 +76,7 @@ Section PreStableProperties.
     : morphism S (object_of ((Susp S) o (Loop S))%functor X) X
     := components_of (epsilon S) X.
 
-(** Naturality squares for eta. *)
+  (** Naturality squares for eta. *)
   Lemma eta_natural {X Y : object S} (f : morphism S X Y)
     : (eta_component Y o f)%morphism =
       (morphism_of ((Loop S) o (Susp S))%functor f o eta_component X)%morphism.
@@ -92,7 +84,7 @@ Section PreStableProperties.
     apply (commutes (eta S)).
   Qed.
 
-(** Naturality squares for epsilon. *)
+  (** Naturality squares for epsilon. *)
   Lemma epsilon_natural {X Y : object S} (f : morphism S X Y)
     : (epsilon_component Y o morphism_of ((Susp S) o (Loop S))%functor f)%morphism =
       (f o epsilon_component X)%morphism.
@@ -117,7 +109,7 @@ Section PreStableProperties.
 
 End PreStableProperties.
 
-(** * Notation and Abbreviations *)
+(** * Notation and abbreviations *)
 
 (** Convenient notation for suspended objects. *)
 Notation "'Σ' X" := (object_of (Susp _) X) (at level 30).
@@ -127,10 +119,11 @@ Notation "'Ω' X" := (object_of (Loop _) X) (at level 30).
 Notation "'Σf[' f ']'" := (morphism_of (Susp _) f) (at level 30).
 Notation "'Ωf[' f ']'" := (morphism_of (Loop _) f) (at level 30).
 
-(** * Examples of Pre-Stable Categories *)
+(** * Examples of pre-stable categories *)
 
 (** The identity pre-stable structure on an additive category. *)
-Definition trivial_prestable (A : AdditiveCategory) : PreStableCategory.
+Definition trivial_prestable (A : AdditiveCategory)
+  : PreStableCategory.
 Proof.
   refine {|
     A := A;
@@ -141,20 +134,24 @@ Proof.
   |}.
 Defined.
 
-(** * Basic Constructions *)
+(** * Basic constructions *)
 
 Section Constructions.
   Context (PS : PreStableCategory).
 
   (** The n-fold suspension. *)
-  Fixpoint susp_n (n : nat) : AdditiveFunctor PS PS :=
+  Fixpoint susp_n (n : nat)
+    : AdditiveFunctor PS PS
+    :=
     match n with
     | O => id_additive_functor PS
     | S n' => compose_additive_functors (Susp PS) (susp_n n')
     end.
 
   (** The n-fold loop. *)
-  Fixpoint loop_n (n : nat) : AdditiveFunctor PS PS :=
+  Fixpoint loop_n (n : nat)
+    : AdditiveFunctor PS PS
+    :=
     match n with
     | O => id_additive_functor PS
     | S n' => compose_additive_functors (Loop PS) (loop_n n')
@@ -187,7 +184,7 @@ Section Constructions.
 
 End Constructions.
 
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   susp_preserves_zero_morphisms 
@@ -200,6 +197,4 @@ Hint Rewrite
   @eta_natural @epsilon_natural
   @susp_comp @loop_comp
   : prestable_simplify.
-
-(** The next file in the library will be [PreStableCofiber.v] which introduces
-    pre-stable categories with cofiber structures. *)
+  

@@ -1,14 +1,7 @@
-(** * Proper Stable Categories
+(** * Proper stable categories
 
-    A proper stable category is a pre-stable category where the suspension
-    and loop functors are inverse equivalences.
-    
-    Contents:
-    - Definition of proper stable categories
-    - Triangle identities for the adjunction
-    - Basic properties
-    - Opposite of proper stable is proper stable
-    - Equivalence properties of suspension and loop
+    Pre-stable categories where suspension and loop functors are inverse equivalences,
+    forming the pinnacle of stable category theory.
 *)
 
 From HoTT Require Import Basics Types Categories.
@@ -22,16 +15,16 @@ Require Import SemiStableCategories.
 Require Import OppositeCategories.
 Require Import OppositePreStable.
 
-(** * Proper Stable Categories *)
+(** * Proper stable categories *)
 
 Record ProperStableCategory := {
   pre_stable :> PreStableCategory;
   
-  (** η and ε are isomorphisms at each object *)
+  (** η and ε are isomorphisms at each object. *)
   eta_is_iso : forall X, IsIsomorphism (components_of (eta pre_stable) X);
   epsilon_is_iso : forall X, IsIsomorphism (components_of (epsilon pre_stable) X);
   
-  (** Triangle identities for the adjunction *)
+  (** Triangle identities for the adjunction. *)
   triangle_1 : forall X, 
     (components_of (epsilon pre_stable) (object_of (Susp pre_stable) X) o 
      morphism_of (Susp pre_stable) (components_of (eta pre_stable) X))%morphism = 1%morphism;
@@ -41,7 +34,7 @@ Record ProperStableCategory := {
      components_of (eta pre_stable) (object_of (Loop pre_stable) X))%morphism = 1%morphism
 }.
 
-(** * Basic Properties *)
+(** * Basic properties *)
 
 Section ProperStableProperties.
   Context (PS : ProperStableCategory).
@@ -77,12 +70,14 @@ Section ProperStableProperties.
   Qed.
 
   (** Proper stable categories are both left and right semi-stable. *)
-  Lemma proper_is_left_semi_stable : is_left_semi_stable PS.
+  Lemma proper_is_left_semi_stable
+    : is_left_semi_stable PS.
   Proof.
     exact (eta_is_iso PS).
   Qed.
 
-  Lemma proper_is_right_semi_stable : is_right_semi_stable PS.
+  Lemma proper_is_right_semi_stable
+    : is_right_semi_stable PS.
   Proof.
     exact (epsilon_is_iso PS).
   Qed.
@@ -98,7 +93,7 @@ Section ProperStableProperties.
 
 End ProperStableProperties.
 
-(** * Opposite of Proper Stable Categories *)
+(** * Opposite of proper stable categories *)
 
 Section OppositeProperStable.
   Context (PS : ProperStableCategory).
@@ -172,7 +167,8 @@ Section OppositeProperStable.
   Qed.
 
   (** Main theorem: opposite of proper stable is proper stable. *)
-  Definition opposite_proper_stable_category : ProperStableCategory.
+  Definition opposite_proper_stable_category
+    : ProperStableCategory.
   Proof.
     exact (Build_ProperStableCategory
       (opposite_prestable_category (pre_stable PS))
@@ -184,7 +180,7 @@ Section OppositeProperStable.
 
 End OppositeProperStable.
 
-(** * Main Duality Theorems *)
+(** * Main duality theorems *)
 
 (** The opposite of a proper stable category exists and has the expected form. *)
 Theorem proper_stable_duality_principle
@@ -207,7 +203,7 @@ Proof.
   split; reflexivity.
 Qed.
 
-(** * Connection to Almost Proper Stable Categories *)
+(** * Connection to almost proper stable categories *)
 
 Section ConnectionToSemiStable.
   Context (PS : ProperStableCategory).
@@ -242,21 +238,7 @@ Section ConnectionToSemiStable.
 
 End ConnectionToSemiStable.
 
-(** * The Fundamental Duality Principle *)
-
-(** This completes our formalization of stable categories and their duality theory.
-    The key insights are:
-    
-    1. Pre-stable categories have suspension and loop functors connected by natural transformations
-    2. In the opposite category, these functors swap roles
-    3. Proper stable categories (where Σ and Ω are equivalences) are self-dual
-    4. Every theorem has a dual obtained by passing to the opposite category
-    
-    This duality is fundamental in the theory of triangulated and stable categories,
-    providing a powerful tool for proving theorems and understanding the structure.
-*)
-
-(** * Export Hints *)
+(** * Export hints *)
 
 Hint Resolve 
   proper_is_left_semi_stable
@@ -270,6 +252,4 @@ Hint Resolve
   triangle_1
   triangle_2
   : proper_stable_axioms.
-
-(** The next file in the library will be [StableTriangulated.v] which proves
-    that proper stable categories with cofibers are triangulated categories. *)
+  

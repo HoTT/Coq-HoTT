@@ -1,25 +1,14 @@
-(** * Zero Objects in Categories
+(** * Zero objects in categories
 
-    This file defines zero objects and zero morphisms in categories, establishing
-    the foundational concepts needed for additive and stable category theory.
-    
-    A zero object is an object that is both initial and terminal, serving as
-    the categorical analog of the zero element in an abelian group.
-    
-    Contents:
-    - Definition of zero objects
-    - Zero morphisms between arbitrary objects
-    - Uniqueness properties of initial and terminal morphisms
-    - Basic lemmas about zero morphisms
-    
-    This is part of the stable category theory library in Homotopy Type Theory.
+    Zero objects (both initial and terminal) and zero morphisms, foundational
+    concepts for additive and stable category theory.
 *)
 
 From HoTT Require Import Basics Types Categories.
 From HoTT.Categories Require Import Category Functor NaturalTransformation.
 From HoTT.Categories Require Import InitialTerminalCategory.
 
-(** * Zero Objects
+(** * Zero objects
     
     A zero object in a category is an object that is both initial and terminal.
     This is the categorical analog of the zero element in an abelian group.
@@ -42,9 +31,9 @@ Definition zero_morphism {C : PreCategory} (Z : ZeroObject C) (X Y : object C)
   : morphism C X Y
   := (@center _ (@is_initial _ Z Y) o @center _ (@is_terminal _ Z X))%morphism.
 
-(** * Basic Properties of Zero Objects *)
+(** * Basic properties of zero objects *)
 
-(** ** Uniqueness of Initial and Terminal Morphisms *)
+(** ** Uniqueness of initial and terminal morphisms *)
 
 (** Any two morphisms from an initial object are equal. *)
 Lemma initial_morphism_unique {C : PreCategory} 
@@ -70,7 +59,7 @@ Proof.
   - exact (@contr _ H_terminal g).
 Qed.
 
-(** ** Properties of Zero Morphisms *)
+(** ** Properties of zero morphisms *)
 
 (** Any morphism that factors through a zero object is the zero morphism. *)
 Lemma morphism_through_zero_is_zero {C : PreCategory} 
@@ -87,7 +76,7 @@ Proof.
     apply (is_terminal Z).
 Qed.
 
-(** ** Special Properties of Zero Endomorphisms *)
+(** ** Special properties of zero endomorphisms *)
 
 (** The morphism from zero to itself is the identity. *)
 Lemma zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
@@ -130,7 +119,7 @@ Proof.
   apply Category.Core.right_identity.
 Qed.
 
-(** ** Composition Properties of Zero Morphisms *)
+(** ** Composition properties of zero morphisms *)
 
 (** Composition with zero morphism on the right. *)
 Lemma zero_morphism_right {C : PreCategory} (Z : ZeroObject C) 
@@ -168,12 +157,8 @@ Proof.
   reflexivity.
 Qed.
 
-(** ** Export Hints *)
+(** ** Export hints *)
 
 Arguments zero_morphism {C} Z X Y : simpl never.
 Hint Resolve initial_morphism_unique terminal_morphism_unique : morphism_unique.
 Hint Rewrite @zero_morphism_left @zero_morphism_right : zero_morphism.
-
-(** The next file in the library will be [ZeroMorphismLemmas.v] which contains
-    transport lemmas and additional properties of morphisms in categories with
-    zero objects. *)
