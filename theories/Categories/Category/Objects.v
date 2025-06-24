@@ -46,11 +46,25 @@ Existing Instance isinitial_object_initial.
 
 Arguments unique_up_to_unique_isomorphism [C] P.
 
+(** ** Canonical morphisms *)
+  
+(** The unique morphism from an initial object. *)
+Definition map_from_initial {C : PreCategory} {I : object C}
+  `{IsInitialObject C I} (Y : object C)
+  : morphism C I Y
+  := center (morphism C I Y).
+  
+(** The unique morphism to a terminal object. *)
+Definition map_to_terminal {C : PreCategory} {T : object C}
+  `{IsTerminalObject C T} (X : object C)
+  : morphism C X T
+  := center (morphism C X T).
+
 (** ** Initial and terminal objects are unique up to unique isomorphism *)
 Section CategoryObjectsTheorems.
   Variable C : PreCategory.
 
-  Local Ltac unique :=
+  Ltac unique :=
     repeat first [ intro
                  | exists _
                  | exists (center (morphism C _ _))
@@ -66,6 +80,22 @@ Section CategoryObjectsTheorems.
   (** The initial object is unique up to unique isomorphism. *)
   Theorem initial_object_unique
   : unique_up_to_unique_isomorphism (fun x => IsInitialObject C x).
+  Proof.
+    unique.
+  Qed.
+
+  (** Any two morphisms from an initial object are equal. *)
+  Theorem initial_morphism_unique {I X : object C}
+    `{IsInitialObject C I} (f g : morphism C I X)
+    : f = g.
+  Proof.
+    unique.
+  Qed.
+    
+  (** Any two morphisms to a terminal object are equal. *)
+  Theorem terminal_morphism_unique {T X : object C}
+    `{IsTerminalObject C T} (f g : morphism C X T)
+    : f = g.
   Proof.
     unique.
   Qed.
