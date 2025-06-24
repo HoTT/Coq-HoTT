@@ -4,25 +4,27 @@
     concepts for additive and stable category theory.
 *)
 
-From HoTT Require Import Basics Types Categories.
+From HoTT Require Import Basics Types.
 From HoTT.Categories Require Import Category Functor NaturalTransformation.
 From HoTT.Categories Require Import InitialTerminalCategory.
+From HoTT.Categories.Category Require Import Objects.
 
 (** * Zero objects
     
     A zero object in a category is an object that is both initial and terminal.
-    This is the categorical analog of the zero element in an abelian group.
+    Such objects play a fundamental role in additive and abelian categories,
+    where they enable the definition of zero morphisms and kernels.
 *)
 
 Record ZeroObject (C : PreCategory) := {
   zero : object C;
-  is_initial : forall X, Contr (morphism C zero X);
-  is_terminal : forall X, Contr (morphism C X zero)
+  is_initial :: IsInitialObject C zero;
+  is_terminal :: IsTerminalObject C zero
 }.
 
 Arguments zero {C} z : rename.
-Arguments is_initial {C} z X : rename.
-Arguments is_terminal {C} z X : rename.
+Arguments is_initial {C} z : rename.
+Arguments is_terminal {C} z : rename.
 
 (** The zero morphism between any two objects is the unique morphism
     that factors through the zero object. *)
@@ -70,10 +72,8 @@ Lemma morphism_through_zero_is_zero {C : PreCategory}
 Proof.
   unfold zero_morphism.
   apply ap011.
-  - apply initial_morphism_unique.
-    apply (is_initial Z).
-  - apply terminal_morphism_unique.
-    apply (is_terminal Z).
+  - rapply initial_morphism_unique.
+  - rapply terminal_morphism_unique.
 Qed.
 
 (** ** Special properties of zero endomorphisms *)
@@ -82,7 +82,7 @@ Qed.
 Lemma zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
   : @center _ (is_initial Z (zero Z)) = 1%morphism.
 Proof.
-  apply (@contr _ (is_initial Z (zero Z))).
+  rapply contr.
 Qed.
 
 (** The terminal morphism from zero to itself is the identity. *)
@@ -90,8 +90,7 @@ Lemma terminal_zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
   : @center _ (is_terminal Z (zero Z)) = 
     (1%morphism : morphism C (zero Z) (zero Z)).
 Proof.
-  apply terminal_morphism_unique.
-  apply (is_terminal Z (zero Z)).
+  rapply terminal_morphism_unique.
 Qed.
 
 (** Composition with a terminal morphism to zero gives zero morphism. *)
@@ -113,7 +112,7 @@ Proof.
   assert (H: @center _ (is_terminal Z (zero Z)) = 
             (1%morphism : morphism C (zero Z) (zero Z))).
   { 
-    apply (@contr _ (is_terminal Z (zero Z))).
+    rapply contr.
   }
   rewrite H.
   apply Category.Core.right_identity.
@@ -132,7 +131,7 @@ Proof.
              @center _ (is_initial Z W)).
   {
     symmetry.
-    apply (@contr _ (is_initial Z W)).
+    rapply contr.
   }
   rewrite <- Category.Core.associativity.
   rewrite H.
@@ -150,7 +149,7 @@ Proof.
              @center _ (is_terminal Z X)).
   {
     symmetry.
-    apply (@contr _ (is_terminal Z X)).
+    rapply contr.
   }
   rewrite Category.Core.associativity.
   rewrite H.
