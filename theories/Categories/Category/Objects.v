@@ -1,4 +1,5 @@
 (** * Universal objects *)
+Require Import Basics.Contractible.
 Require Import Category.Core Category.Morphisms.
 
 Set Universe Polymorphism.
@@ -68,35 +69,32 @@ Section CategoryObjectsTheorems.
     repeat first [ intro
                  | exists _
                  | exists (center (morphism C _ _))
-                 | etransitivity; [ symmetry | ]; apply contr ].
+                 | apply path_contr ].
 
   (** The terminal object is unique up to unique isomorphism. *)
   Theorem terminal_object_unique
-  : unique_up_to_unique_isomorphism (fun x => IsTerminalObject C x).
+    : unique_up_to_unique_isomorphism (fun x => IsTerminalObject C x).
   Proof.
     unique.
   Qed.
 
   (** The initial object is unique up to unique isomorphism. *)
   Theorem initial_object_unique
-  : unique_up_to_unique_isomorphism (fun x => IsInitialObject C x).
+    : unique_up_to_unique_isomorphism (fun x => IsInitialObject C x).
   Proof.
     unique.
   Qed.
 
   (** Any two morphisms from an initial object are equal. *)
-  Theorem initial_morphism_unique {I X : object C}
+  Definition initial_morphism_unique {I X : object C}
     `{IsInitialObject C I} (f g : morphism C I X)
-    : f = g.
-  Proof.
-    unique.
-  Qed.
+    : f = g
+    := path_contr f g.
     
   (** Any two morphisms to a terminal object are equal. *)
-  Theorem terminal_morphism_unique {T X : object C}
+  Definition terminal_morphism_unique {T X : object C}
     `{IsTerminalObject C T} (f g : morphism C X T)
-    : f = g.
-  Proof.
-    unique.
-  Qed.
+    : f = g
+    := path_contr f g.
+
 End CategoryObjectsTheorems.
