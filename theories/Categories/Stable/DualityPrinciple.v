@@ -4,7 +4,7 @@
     automatically has a dual in the opposite category.
 *)
 
-From HoTT Require Import Basics Types Categories.
+From HoTT Require Import Basics Types.
 From HoTT.Categories Require Import Category Functor NaturalTransformation.
 From HoTT.Categories.Functor Require Import Identity Composition.
 Require Import ZeroObjects.

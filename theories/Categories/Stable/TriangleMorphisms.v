@@ -4,7 +4,7 @@
     with isomorphisms crucial for axioms TR2 and TR3.
 *)
 
-From HoTT Require Import Basics Types Categories.
+From HoTT Require Import Basics Types.
 From HoTT.Categories Require Import Category Functor.
 Require Import ZeroObjects.
 Require Import ZeroMorphismLemmas.

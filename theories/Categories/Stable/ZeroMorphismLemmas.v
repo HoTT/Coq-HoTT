@@ -4,7 +4,7 @@
     establishing fundamental constraints on pre-stable categories.
 *)
 
-From HoTT Require Import Basics Types Categories.
+From HoTT Require Import Basics Types.
 From HoTT.Categories Require Import Category Functor NaturalTransformation.
 Require Import ZeroObjects.
 Require Import ZeroMorphismLemmas.
