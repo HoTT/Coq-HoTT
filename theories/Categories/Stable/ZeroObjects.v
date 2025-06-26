@@ -30,7 +30,7 @@ Arguments is_terminal {C} z : rename.
 
 Definition zero_morphism {C : PreCategory} (Z : ZeroObject C) (X Y : object C)
   : morphism C X Y
-  := (map_from_initial Y o map_to_terminal X)%morphism.
+  := (map_from_initial (I:=zero Z) Y o map_to_terminal X)%morphism.
 
 (** * Basic properties of zero objects *)
 
@@ -93,7 +93,7 @@ Lemma zero_morphism_right {C : PreCategory} (Z : ZeroObject C)
   : (g o zero_morphism Z X Y)%morphism = zero_morphism Z X W.
 Proof.
   unfold zero_morphism.
-  assert (H: (g o map_from_initial Y)%morphism = map_from_initial W).
+  assert (H: (g o map_from_initial (I:=zero Z) Y)%morphism = map_from_initial W).
   1: symmetry; rapply contr.
   rewrite <- Category.Core.associativity.
   rewrite H.
@@ -107,7 +107,7 @@ Lemma zero_morphism_left {C : PreCategory} (Z : ZeroObject C)
   : (zero_morphism Z Y W o f)%morphism = zero_morphism Z X W.
 Proof.
   unfold zero_morphism.
-  assert (H: (map_to_terminal Y o f)%morphism = map_to_terminal X).
+  assert (H: (map_to_terminal (T:=zero Z) Y o f)%morphism = map_to_terminal X).
   1: symmetry; rapply contr.
   rewrite Category.Core.associativity.
   rewrite H.
