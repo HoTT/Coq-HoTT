@@ -1,24 +1,14 @@
-(** * Transport Lemmas and Morphism Properties for Categories with Zero Objects
+(** * Technical morphism lemmas for categories with zero objects
 
-    This file contains technical lemmas about morphisms in categories with zero
-    objects, particularly focusing on transport along equality proofs and
-    morphism composition properties.
-    
-    Contents:
-    - Transport lemmas for morphisms along object equalities
-    - Interaction of transport with initial/terminal morphisms
-    - Basic morphism identities (included here for completeness)
-    - Helper lemmas for morphism equations
-    
-    These lemmas are essential for working with morphisms in stable category theory,
-    where we frequently need to transport along equivalences.
+    Essential machinery for transporting morphisms and working with
+    zero objects in stable category theory.
 *)
 
 From HoTT Require Import Basics Types.
 From HoTT.Categories Require Import Category Functor.
 Require Import ZeroObjects.
 
-(** * Transport Lemmas for Morphisms
+(** * Transport lemmas for morphisms
     
     These lemmas handle how morphisms behave under transport along
     equality proofs between objects.
@@ -92,7 +82,7 @@ Section TransportLemmas.
 
 End TransportLemmas.
 
-(** * Transport with Zero Objects *)
+(** * Transport with zero objects *)
 
 Section TransportZero.
   Context {C : PreCategory} (Z : ZeroObject C).
@@ -123,7 +113,7 @@ Section TransportZero.
 
 End TransportZero.
 
-(** * Basic Morphism Identities
+(** * Basic morphism identities
     
     These are included here for completeness, as they are used throughout
     the library. They are just the standard category laws.
@@ -202,7 +192,7 @@ Section MorphismHelpers.
 
 End MorphismHelpers.
 
-(** * Export Hints and Notations *)
+(** * Export hints and notations *)
 
 Hint Rewrite 
   @morphism_left_identity 
@@ -214,6 +204,3 @@ Hint Resolve
   @transport_initial_morphism 
   @transport_terminal_morphism 
   : transport_morphism.
-
-(** The next file in the library will be [Biproducts.v] which defines
-    biproduct structures in categories with zero objects. *)

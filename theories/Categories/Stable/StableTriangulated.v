@@ -206,24 +206,6 @@ Section Applications.
 
 End Applications.
 
-(** * Summary *)
-
-(** This completes the proof that proper stable categories with cofibers are
-    triangulated categories. The key insights are:
-    
-    1. The suspension-loop adjunction in proper stable categories provides the
-       shifting structure needed for triangulated categories.
-       
-    2. The cofiber construction gives distinguished triangles satisfying the
-       required axioms.
-       
-    3. The octahedral axiom TR4 is the deepest requirement, describing how
-       triangles arising from compositions fit together.
-       
-    4. Triangulated categories provide a powerful framework for doing
-       homological algebra in a homotopy-invariant way.
-*)
-
 (** * Export hints *)
 
 Hint Resolve 
