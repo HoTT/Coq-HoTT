@@ -38,7 +38,7 @@ Definition zero_morphism {C : PreCategory} (Z : ZeroObject C) (X Y : object C)
 
 (** Any morphism that factors through a zero object is the zero morphism. *)
 Lemma morphism_through_zero_is_zero {C : PreCategory} 
-  (Z : ZeroObject C) (X Y : object C)
+  (Z : ZeroObject C) {X Y : object C}
   (f : morphism C X (zero Z))
   (g : morphism C (zero Z) Y)
   : (g o f)%morphism = zero_morphism Z X Y.
@@ -52,37 +52,27 @@ Qed.
 (** ** Special properties of zero endomorphisms *)
 
 (** The morphism from zero to itself is the identity. *)
-Lemma zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
-  : map_from_initial (zero Z) = 1%morphism.
-Proof.
-  rapply contr.
-Qed.
+Definition zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
+  : map_from_initial (zero Z) = 1%morphism
+  := initial_morphism_unique _ _ _.
 
 (** The terminal morphism from zero to itself is the identity. *)
-Lemma terminal_zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
-  : map_to_terminal (zero Z) = 1%morphism.
-Proof.
-  rapply terminal_morphism_unique.
-Qed.
+Definition terminal_zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
+  : map_to_terminal (zero Z) = 1%morphism
+  := terminal_morphism_unique _ _ _.
 
 (** Composition with a terminal morphism to zero gives zero morphism. *)
-Lemma terminal_comp_is_zero {C : PreCategory} (Z : ZeroObject C) 
+Definition terminal_comp_is_zero {C : PreCategory} (Z : ZeroObject C)
   (X Y : object C) 
   (f : morphism C X (zero Z))
-  : (map_from_initial Y o f)%morphism = zero_morphism Z X Y.
-Proof.
-  apply morphism_through_zero_is_zero.
-Qed.
+  : (map_from_initial Y o f)%morphism = zero_morphism Z X Y
+  := morphism_through_zero_is_zero _ _ _.
 
 (** The zero morphism from zero is the initial morphism. *)
-Lemma zero_morphism_from_zero {C : PreCategory} (Z : ZeroObject C) 
+Definition zero_morphism_from_zero {C : PreCategory} (Z : ZeroObject C)
   (Y : object C)
-  : zero_morphism Z (zero Z) Y = map_from_initial Y.
-Proof.
-  unfold zero_morphism.
-  rewrite terminal_zero_to_zero_is_id.
-  apply Category.Core.right_identity.
-Qed.
+  : zero_morphism Z (zero Z) Y = map_from_initial Y
+  := initial_morphism_unique _ _ _.
 
 (** ** Composition properties of zero morphisms *)
 
@@ -92,12 +82,8 @@ Lemma zero_morphism_right {C : PreCategory} (Z : ZeroObject C)
   (g : morphism C Y W)
   : (g o zero_morphism Z X Y)%morphism = zero_morphism Z X W.
 Proof.
-  unfold zero_morphism.
-  assert (H: (g o map_from_initial (I:=zero Z) Y)%morphism = map_from_initial W).
-  1: symmetry; rapply contr.
   rewrite <- Category.Core.associativity.
-  rewrite H.
-  reflexivity.
+  apply morphism_through_zero_is_zero.
 Qed.
 
 (** Composition with zero morphism on the left. *)
@@ -106,12 +92,8 @@ Lemma zero_morphism_left {C : PreCategory} (Z : ZeroObject C)
   (f : morphism C X Y)
   : (zero_morphism Z Y W o f)%morphism = zero_morphism Z X W.
 Proof.
-  unfold zero_morphism.
-  assert (H: (map_to_terminal (T:=zero Z) Y o f)%morphism = map_to_terminal X).
-  1: symmetry; rapply contr.
   rewrite Category.Core.associativity.
-  rewrite H.
-  reflexivity.
+  apply morphism_through_zero_is_zero.
 Qed.
 
 (** ** Export hints *)
