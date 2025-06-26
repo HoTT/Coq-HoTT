@@ -50,14 +50,14 @@ Arguments unique_up_to_unique_isomorphism [C] P.
 (** ** Canonical morphisms *)
   
 (** The unique morphism from an initial object. *)
-Definition map_from_initial {C : PreCategory} {I : InitialObject C}
+Definition morphism_from_initial {C : PreCategory} {I : InitialObject C}
   (Y : object C)
   : morphism C I Y
   := center (morphism C I Y).
-  
+
 (** The unique morphism to a terminal object. *)
-Definition map_to_terminal {C : PreCategory} {T : object C}
-  `{IsTerminalObject C T} (X : object C)
+Definition morphism_to_terminal {C : PreCategory} {T : TerminalObject C}
+  (X : object C)
   : morphism C X T
   := center (morphism C X T).
 

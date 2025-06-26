@@ -40,7 +40,7 @@ Instance terminalobject_zeroobject {C : PreCategory} (Z : ZeroObject C)
 
 Definition zero_morphism {C : PreCategory} {Z : ZeroObject C} (X Y : object C)
   : morphism C X Y
-  := (map_from_initial Y o map_to_terminal X)%morphism.
+  := (morphism_from_initial Y o morphism_to_terminal X)%morphism.
 
 (** * Basic properties of zero objects *)
 
