@@ -21,6 +21,8 @@ Record ZeroObject (C : PreCategory) := {
   is_terminal :: IsTerminalObject C zero
 }.
 
+Coercion zero : ZeroObject >-> object.
+
 Arguments zero {C} z : rename.
 Arguments is_initial {C} z : rename.
 Arguments is_terminal {C} z : rename.
@@ -30,7 +32,7 @@ Arguments is_terminal {C} z : rename.
 
 Definition zero_morphism {C : PreCategory} (Z : ZeroObject C) (X Y : object C)
   : morphism C X Y
-  := (map_from_initial (I:=zero Z) Y o map_to_terminal X)%morphism.
+  := (map_from_initial (I:=Z) Y o map_to_terminal X)%morphism.
 
 (** * Basic properties of zero objects *)
 
@@ -39,8 +41,8 @@ Definition zero_morphism {C : PreCategory} (Z : ZeroObject C) (X Y : object C)
 (** Any morphism that factors through a zero object is the zero morphism. *)
 Lemma morphism_through_zero_is_zero {C : PreCategory} 
   (Z : ZeroObject C) {X Y : object C}
-  (f : morphism C X (zero Z))
-  (g : morphism C (zero Z) Y)
+  (f : morphism C X Z)
+  (g : morphism C Z Y)
   : (g o f)%morphism = zero_morphism Z X Y.
 Proof.
   unfold zero_morphism.
