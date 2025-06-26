@@ -23,13 +23,13 @@ Definition unique_up_to_unique_isomorphism (C : PreCategory) (P : C -> Type) :=
 Notation IsTerminalObject C x :=
   (forall x' : object C, Contr (morphism C x' x)).
 
-Record TerminalObject (C : PreCategory) :=
+Class TerminalObject (C : PreCategory) :=
   {
-    object_terminal :> C;
-    isterminal_object_terminal :> IsTerminalObject C object_terminal
+    object_terminal : C;
+    isterminal_object_terminal :: IsTerminalObject C object_terminal
   }.
 
-Existing Instance isterminal_object_terminal.
+Coercion object_terminal : TerminalObject >-> object.
 
 (** ** Initial objects *)
 (** An initial object is an object with a unique morphism from every
@@ -37,21 +37,21 @@ Existing Instance isterminal_object_terminal.
 Notation IsInitialObject C x :=
   (forall x' : object C, Contr (morphism C x x')).
 
-Record InitialObject (C : PreCategory) :=
+Class InitialObject (C : PreCategory) :=
   {
-    object_initial :> C;
-    isinitial_object_initial :> IsInitialObject C object_initial
+    object_initial : C;
+    isinitial_object_initial :: IsInitialObject C object_initial
   }.
 
-Existing Instance isinitial_object_initial.
+Coercion object_initial : InitialObject >-> object.
 
 Arguments unique_up_to_unique_isomorphism [C] P.
 
 (** ** Canonical morphisms *)
   
 (** The unique morphism from an initial object. *)
-Definition map_from_initial {C : PreCategory} {I : object C}
-  `{IsInitialObject C I} (Y : object C)
+Definition map_from_initial {C : PreCategory} {I : InitialObject C}
+  (Y : object C)
   : morphism C I Y
   := center (morphism C I Y).
   
