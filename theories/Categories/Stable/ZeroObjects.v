@@ -49,31 +49,6 @@ Proof.
   - rapply terminal_morphism_unique.
 Qed.
 
-(** ** Special properties of zero endomorphisms *)
-
-(** The morphism from zero to itself is the identity. *)
-Definition zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
-  : map_from_initial (zero Z) = 1%morphism
-  := initial_morphism_unique _ _ _.
-
-(** The terminal morphism from zero to itself is the identity. *)
-Definition terminal_zero_to_zero_is_id {C : PreCategory} (Z : ZeroObject C)
-  : map_to_terminal (zero Z) = 1%morphism
-  := terminal_morphism_unique _ _ _.
-
-(** Composition with a terminal morphism to zero gives zero morphism. *)
-Definition terminal_comp_is_zero {C : PreCategory} (Z : ZeroObject C)
-  (X Y : object C) 
-  (f : morphism C X (zero Z))
-  : (map_from_initial Y o f)%morphism = zero_morphism Z X Y
-  := morphism_through_zero_is_zero _ _ _.
-
-(** The zero morphism from zero is the initial morphism. *)
-Definition zero_morphism_from_zero {C : PreCategory} (Z : ZeroObject C)
-  (Y : object C)
-  : zero_morphism Z (zero Z) Y = map_from_initial Y
-  := initial_morphism_unique _ _ _.
-
 (** ** Composition properties of zero morphisms *)
 
 (** Composition with zero morphism on the right. *)
