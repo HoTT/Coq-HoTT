@@ -83,5 +83,5 @@ Qed.
 
 (** ** Export hints *)
 
-Arguments zero_morphism {C} Z X Y : simpl never.
+Arguments zero_morphism {C Z} X Y : simpl never.
 Hint Rewrite @zero_morphism_left @zero_morphism_right : zero_morphism.
