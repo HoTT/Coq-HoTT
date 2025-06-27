@@ -1,0 +1,504 @@
+<html>
+<head>
+<title>NullHomotopy.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for NullHomotopy.v</h1>
+
+<div class="code" title="File: NullHomotopy.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 1
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Require Import Types.Sigma.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * Null homotopies of maps *)</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section NullHomotopy.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext}.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Geometrically, a nullhomotopy of a map [f : X -&gt; Y] is an extension of [f] to a map [Cone X -&gt; Y].  One might more simply call it e.g. [Constant f], but that is a little ambiguous: it could also reasonably mean e.g. a factorisation of [f] through [ Trunc -1 X ].  (Should the unique map [0 -&gt; Y] be constant in one way, or in [Y]-many ways?) *)
+
+ </pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition NullHomotopy {X Y : Type} (f : X -&gt; Y)
+    := {y : Y &amp; forall x:X, f x = y}.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma istrunc_nullhomotopy {n : trunc_index}
+    {X Y : Type} (f : X -&gt; Y) `{IsTrunc n Y}
+    : IsTrunc n (NullHomotopy f).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply @istrunc_sigma; auto.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros y.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (@istrunc_forall _).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply istrunc_paths'.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition nullhomotopy_homotopic {X Y : Type} {f g : X -&gt; Y} (p : f == g)
+    : NullHomotopy f -&gt; NullHomotopy g.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [y e].</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists y.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x; exact ((p x)^ @ e x).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition nullhomotopy_composeR {X Y Z : Type} (f : X -&gt; Y) (g : Y -&gt; Z)
+    : NullHomotopy g -&gt; NullHomotopy (g o f).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [z e].</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists z.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x; exact (e (f x)).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition nullhomotopy_composeL {X Y Z : Type} (f : X -&gt; Y) (g : Y -&gt; Z)
+    : NullHomotopy f -&gt; NullHomotopy (g o f).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [y e].</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (g y).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x; exact (ap g (e x)).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cancelL_nullhomotopy_equiv
+             {X Y Z : Type} (f : X -&gt; Y) (g : Y -&gt; Z) `{IsEquiv _ _ g}
+    : NullHomotopy (g o f) -&gt; NullHomotopy f.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [z e].</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (g^-1 z).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x; apply moveL_equiv_V, e.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cancelR_nullhomotopy_equiv
+             {X Y Z : Type} (f : X -&gt; Y) (g : Y -&gt; Z) `{IsEquiv _ _ f}
+    : NullHomotopy (g o f) -&gt; NullHomotopy g.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [z e].</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists z.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros y; transitivity (g (f (f^-1 y))).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply ap, eisretr.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply e.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition nullhomotopy_ap {X Y : Type} (f : X -&gt; Y) (x1 x2 : X)
+    : NullHomotopy f -&gt; NullHomotopy (@ap _ _ f x1 x2).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [y e].</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unshelve eexists.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (e x1 @ (e x2)^).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveL_pV.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (concat_Ap e p @ _).</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ concat_p1 _); apply ap.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap_const.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End NullHomotopy.</pre>
+</div>
+<div class="code" title="File: NullHomotopy.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Nullification.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Nullification *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk0"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Extensions.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Modality Accessible.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> Modalities.Localization.    <span class="sd">(** Nullification is a special case of localization *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Nullification is the special case of localization where the codomains of the generating maps are all [Unit].  In this case, we get a modality and not just a reflective subuniverse. *)</span>
+
+<span class="sd">(** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk1"><span class="kn">Definition</span> <span class="nf">extendable_over_unit</span> (<span class="nv">n</span> : nat)
+  (<span class="nv">A</span> : <span class="kt">Type</span>@{a}) (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>@{i}) (<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span>, C u -&gt; <span class="kt">Type</span>@{j})
+  (<span class="nv">ext</span> : ExtendableAlong@{a a i k} n (const_tt A) C)
+  (<span class="nv">ext&#39;</span> : <span class="kr">forall</span> (<span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span>, C u),
+            ExtendableAlong@{a a j k} n (const_tt A) (<span class="kr">fun</span> <span class="nv">u</span> =&gt; (D u (c u))))
+  : ExtendableAlong_Over@{a a i j k} n (const_tt A) C D ext.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ExtendableAlong_Over n (const_tt A) C D ext</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ExtendableAlong_Over n (const_tt A) C D ext</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk3"><span class="nb">generalize dependent</span> C; simple_induction n n IH;
+    <span class="nb">intros</span> C D ext ext&#39;; [<span class="bp">exact</span> tt | <span class="nb">split</span>].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">g</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, C (const_tt A a))
+(<span class="nv">g&#39;</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, D (const_tt A a) (g a)),
+{rec : <span class="kr">forall</span> <span class="nv">b</span> : Unit, D b ((fst ext g).<span class="mi">1</span> b) &amp;
+<span class="kr">forall</span> <span class="nv">a</span> : A,
+transport (D (const_tt A a)) ((fst ext g).<span class="mi">2</span> a)
+  (rec (const_tt A a)) = g&#39; a}</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="nullification-v-chk4" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br></div><label class="goal-separator" for="nullification-v-chk4"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">h</span> <span class="nv">k</span> : <span class="kr">forall</span> <span class="nv">b</span> : Unit, C b)
+(<span class="nv">h&#39;</span> : <span class="kr">forall</span> <span class="nv">b</span> : Unit, D b (h b))
+(<span class="nv">k&#39;</span> : <span class="kr">forall</span> <span class="nv">b</span> : Unit, D b (k b)),
+ExtendableAlong_Over n (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">b</span> : Unit =&gt; h b = k b)
+  (<span class="kr">fun</span> (<span class="nv">b</span> : Unit) (<span class="nv">c</span> : h b = k b) =&gt;
+   transport (D b) c (h&#39; b) = k&#39; b) 
+  (snd ext h k)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk5">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">g</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, C (const_tt A a))
+(<span class="nv">g&#39;</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, D (const_tt A a) (g a)),
+{rec : <span class="kr">forall</span> <span class="nv">b</span> : Unit, D b ((fst ext g).<span class="mi">1</span> b) &amp;
+<span class="kr">forall</span> <span class="nv">a</span> : A,
+transport (D (const_tt A a)) ((fst ext g).<span class="mi">2</span> a)
+  (rec (const_tt A a)) = g&#39; a}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk6"><span class="nb">intros</span> g g&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, C (const_tt A a)</span></span></span><br><span><var>g'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, D (const_tt A a) (g a)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{rec : <span class="kr">forall</span> <span class="nv">b</span> : Unit, D b ((fst ext g).<span class="mi">1</span> b) &amp;
+<span class="kr">forall</span> <span class="nv">a</span> : A,
+transport (D (const_tt A a)) ((fst ext g).<span class="mi">2</span> a)
+  (rec (const_tt A a)) = g&#39; a}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk7"><span class="kr">exists</span> ((fst (ext&#39; (fst ext g).<span class="mi">1</span>)
+                 (<span class="kr">fun</span> <span class="nv">a</span> =&gt; ((fst ext g).<span class="mi">2</span> a)^ # (g&#39; a))).<span class="mi">1</span>);
+      <span class="nb">intros</span> a; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, C (const_tt A a)</span></span></span><br><span><var>g'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, D (const_tt A a) (g a)</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (D (const_tt A a)) ((fst ext g).<span class="mi">2</span> a)
+  ((fst (ext&#39; (fst ext g).<span class="mi">1</span>)
+      (<span class="kr">fun</span> <span class="nv">a</span> : A =&gt;
+       transport (D (const_tt A a)) ((fst ext g).<span class="mi">2</span> a)^
+         (g&#39; a))).<span class="mi">1</span> (const_tt A a)) = g&#39; a</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk8"><span class="nb">apply</span> moveR_transport_p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, C (const_tt A a)</span></span></span><br><span><var>g'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, D (const_tt A a) (g a)</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(fst (ext&#39; (fst ext g).<span class="mi">1</span>)
+   (<span class="kr">fun</span> <span class="nv">a</span> : A =&gt;
+    transport (D (const_tt A a)) ((fst ext g).<span class="mi">2</span> a)^
+      (g&#39; a))).<span class="mi">1</span> (const_tt A a) =
+transport (D (const_tt A a)) ((fst ext g).<span class="mi">2</span> a)^ (g&#39; a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> ((fst (ext&#39; (fst ext g).<span class="mi">1</span>)
+                (<span class="kr">fun</span> <span class="nv">a</span> =&gt; ((fst ext g).<span class="mi">2</span> a)^ # (g&#39; a))).<span class="mi">2</span> a).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk9">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">h</span> <span class="nv">k</span> : <span class="kr">forall</span> <span class="nv">b</span> : Unit, C b)
+(<span class="nv">h&#39;</span> : <span class="kr">forall</span> <span class="nv">b</span> : Unit, D b (h b))
+(<span class="nv">k&#39;</span> : <span class="kr">forall</span> <span class="nv">b</span> : Unit, D b (k b)),
+ExtendableAlong_Over n (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">b</span> : Unit =&gt; h b = k b)
+  (<span class="kr">fun</span> (<span class="nv">b</span> : Unit) (<span class="nv">c</span> : h b = k b) =&gt;
+   transport (D b) c (h&#39; b) = k&#39; b) (snd ext h k)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chka"><span class="nb">intros</span> h k h&#39; k&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br><span><var>h, k</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : Unit, C b</span></span></span><br><span><var>h'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : Unit, D b (h b)</span></span></span><br><span><var>k'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : Unit, D b (k b)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ExtendableAlong_Over n (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">b</span> : Unit =&gt; h b = k b)
+  (<span class="kr">fun</span> (<span class="nv">b</span> : Unit) (<span class="nv">c</span> : h b = k b) =&gt;
+   transport (D b) c (h&#39; b) = k&#39; b) (snd ext h k)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chkb"><span class="nb">apply</span> IH; <span class="nb">intros</span> g.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IH</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">C</span> : Unit -&gt; <span class="kt">Type</span>)
+(<span class="nv">D</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span>)
+(<span class="nv">ext</span> : ExtendableAlong n (const_tt A) C),
+(<span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ ExtendableAlong n (const_tt A)
+   (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))) -&gt;
+ExtendableAlong_Over n (const_tt A) C D ext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>Unit -&gt; <span class="kt">Type</span></span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, C u -&gt; <span class="kt">Type</span></span></span></span><br><span><var>ext</var><span class="hyp-type"><b>: </b><span>ExtendableAlong n.+<span class="mi">1</span> (const_tt A) C</span></span></span><br><span><var>ext'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span> : Unit, C u,
+ExtendableAlong n.+<span class="mi">1</span> (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; D u (c u))</span></span></span><br><span><var>h, k</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : Unit, C b</span></span></span><br><span><var>h'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : Unit, D b (h b)</span></span></span><br><span><var>k'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : Unit, D b (k b)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">u</span> : Unit, h u = k u</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ExtendableAlong n (const_tt A)
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; transport (D u) (g u) (h&#39; u) = k&#39; u)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (snd (ext&#39; k) (<span class="kr">fun</span> <span class="nv">u</span> =&gt; g u # h&#39; u) k&#39;).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">ooextendable_over_unit</span>@{i j k l m}
+  (A : <span class="kt">Type</span>@{i}) (C : Unit -&gt; <span class="kt">Type</span>@{j}) (D : <span class="kr">forall</span> <span class="nv">u</span>, C u -&gt; <span class="kt">Type</span>@{k})
+  (ext : ooExtendableAlong@{l l j m} (const_tt A) C)
+  (ext&#39; : <span class="kr">forall</span> (<span class="nv">c</span> : <span class="kr">forall</span> <span class="nv">u</span>, C u),
+            ooExtendableAlong (const_tt A) (<span class="kr">fun</span> <span class="nv">u</span> =&gt; (D u (c u))))
+  : ooExtendableAlong_Over (const_tt A) C D ext
+  := <span class="kr">fun</span> <span class="nv">n</span> =&gt; extendable_over_unit n A C D (ext n) (<span class="kr">fun</span> <span class="nv">c</span> =&gt; ext&#39; c n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[local] <span class="kn">Hint Extern</span> <span class="mi">4</span> =&gt; <span class="kp">progress</span> (<span class="nb">cbv</span> beta iota) : typeclass_instances.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chkc"><span class="kn">Definition</span> <span class="nf">Nul</span>@{a i} (S : NullGenerators@{a}) : Modality@{i}.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Modality</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chkd"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Modality</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** We use the localization reflective subuniverses for most of the necessary data. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chke"><span class="nb">simple refine</span> (Build_Modality&#39; (Loc (null_to_local_generators S)) _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">T</span> : <span class="kt">Type</span>,
+PreReflects (Loc (null_to_local_generators S)) T</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="nullification-v-chkf" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><label class="goal-separator" for="nullification-v-chkf"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">T</span> : <span class="kt">Type</span>,
+ReflectsD (Loc (null_to_local_generators S))
+  (Loc (null_to_local_generators S)) T</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk10">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">T</span> : <span class="kt">Type</span>,
+PreReflects (Loc (null_to_local_generators S)) T</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk11">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">T</span> : <span class="kt">Type</span>,
+ReflectsD (Loc (null_to_local_generators S))
+  (Loc (null_to_local_generators S)) T</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk12"><span class="nb">intros</span> A.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ReflectsD (Loc (null_to_local_generators S))
+  (Loc (null_to_local_generators S)) A</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** We take care with universes. *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk13">snrefine (reflectsD_from_OO_ind@{i} _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">B</span> : O_reflector (Loc (null_to_local_generators S)) A -&gt;
+    <span class="kt">Type</span>,
+(<span class="kr">forall</span>
+ <span class="nv">oa</span> : O_reflector (Loc (null_to_local_generators S)) A,
+ In (Loc (null_to_local_generators S)) (B oa)) -&gt;
+(<span class="kr">forall</span> <span class="nv">a</span> : A,
+ B (to (Loc (null_to_local_generators S)) A a)) -&gt;
+<span class="kr">forall</span>
+<span class="nv">oa</span> : O_reflector (Loc (null_to_local_generators S)) A,
+B oa</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="nullification-v-chk14" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="nullification-v-chk14"><hr></label><div class="goal-conclusion"><span class="kr">forall</span>
+(<span class="nv">B</span> : O_reflector (Loc (null_to_local_generators S)) A -&gt;
+     <span class="kt">Type</span>)
+(<span class="nv">B_inO</span> : <span class="kr">forall</span>
+         <span class="nv">oa</span> : O_reflector
+                (Loc (null_to_local_generators S)) A,
+         In (Loc (null_to_local_generators S)) (B oa))
+(<span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A,
+     B (to (Loc (null_to_local_generators S)) A a))
+(<span class="nv">a</span> : A),
+<span class="nl">?OO_ind&#39;</span> B B_inO f
+  (to (Loc (null_to_local_generators S)) A a) = f a</div></blockquote><input class="alectryon-extra-goal-toggle" id="nullification-v-chk15" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="nullification-v-chk15"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">B</span> : <span class="kt">Type</span>,
+In (Loc (null_to_local_generators S)) B -&gt;
+<span class="kr">forall</span> <span class="nv">z</span> <span class="nv">z&#39;</span> : B,
+In (Loc (null_to_local_generators S)) (z = z&#39;)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk16">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">B</span> : O_reflector (Loc (null_to_local_generators S)) A -&gt;
+    <span class="kt">Type</span>,
+(<span class="kr">forall</span>
+ <span class="nv">oa</span> : O_reflector (Loc (null_to_local_generators S)) A,
+ In (Loc (null_to_local_generators S)) (B oa)) -&gt;
+(<span class="kr">forall</span> <span class="nv">a</span> : A,
+ B (to (Loc (null_to_local_generators S)) A a)) -&gt;
+<span class="kr">forall</span>
+<span class="nv">oa</span> : O_reflector (Loc (null_to_local_generators S)) A,
+B oa</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk17"><span class="nb">intros</span> B B_inO g.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>O_reflector (Loc (null_to_local_generators S)) A -&gt;
+<span class="kt">Type</span></span></span></span><br><span><var>B_inO</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">oa</span> : O_reflector
+       (Loc (null_to_local_generators S)) A,
+In (Loc (null_to_local_generators S)) (B oa)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A,
+B (to (Loc (null_to_local_generators S)) A a)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">oa</span> : O_reflector (Loc (null_to_local_generators S)) A,
+B oa</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk18"><span class="nb">refine</span> (Localize_ind@{a i i i} (null_to_local_generators S) A B g _); <span class="nb">intros</span> i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>O_reflector (Loc (null_to_local_generators S)) A -&gt;
+<span class="kt">Type</span></span></span></span><br><span><var>B_inO</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">oa</span> : O_reflector
+       (Loc (null_to_local_generators S)) A,
+In (Loc (null_to_local_generators S)) (B oa)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A,
+B (to (Loc (null_to_local_generators S)) A a)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>lgen_indices (null_to_local_generators S)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ooExtendableAlong_Over (null_to_local_generators S i)
+  (<span class="kr">fun</span>
+     <span class="nv">_</span> : lgen_codomain (null_to_local_generators S) i
+   =&gt; Localize (null_to_local_generators S) A)
+  (<span class="kr">fun</span>
+     <span class="nv">_</span> : lgen_codomain (null_to_local_generators S) i
+   =&gt; B)
+  (islocal_localize (null_to_local_generators S) A i)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk19"><span class="nb">apply</span> ooextendable_over_unit; <span class="nb">intros</span> c.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>O_reflector (Loc (null_to_local_generators S)) A -&gt;
+<span class="kt">Type</span></span></span></span><br><span><var>B_inO</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">oa</span> : O_reflector
+       (Loc (null_to_local_generators S)) A,
+In (Loc (null_to_local_generators S)) (B oa)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A,
+B (to (Loc (null_to_local_generators S)) A a)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>lgen_indices (null_to_local_generators S)</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Unit -&gt; Localize (null_to_local_generators S) A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ooExtendableAlong
+  (const_tt
+     (lgen_domain (null_to_local_generators S) i))
+  (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; B (c u))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk1a"><span class="nb">refine</span> (ooextendable_postcompose@{a a i i i i i i i i}
+                (<span class="kr">fun</span> (<span class="nv">_</span>:Unit) =&gt; B (c tt)) _ _
+                (<span class="kr">fun</span> <span class="nv">u</span> =&gt; transport B (ap@{<span class="kt">Set</span> _} c (path_unit tt u))) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>O_reflector (Loc (null_to_local_generators S)) A -&gt;
+<span class="kt">Type</span></span></span></span><br><span><var>B_inO</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">oa</span> : O_reflector
+       (Loc (null_to_local_generators S)) A,
+In (Loc (null_to_local_generators S)) (B oa)</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A,
+B (to (Loc (null_to_local_generators S)) A a)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>lgen_indices (null_to_local_generators S)</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Unit -&gt; Localize (null_to_local_generators S) A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ooExtendableAlong
+  (const_tt
+     (lgen_domain (null_to_local_generators S) i))
+  (unit_name (B (c tt)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (ooextendable_islocal _ i).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk1b">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+(<span class="nv">B</span> : O_reflector (Loc (null_to_local_generators S)) A -&gt;
+     <span class="kt">Type</span>)
+(<span class="nv">B_inO</span> : <span class="kr">forall</span>
+         <span class="nv">oa</span> : O_reflector
+                (Loc (null_to_local_generators S)) A,
+         In (Loc (null_to_local_generators S)) (B oa))
+(<span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A,
+     B (to (Loc (null_to_local_generators S)) A a))
+(<span class="nv">a</span> : A),
+(<span class="kr">fun</span>
+   (<span class="nv">B0</span> : O_reflector
+           (Loc (null_to_local_generators S)) A -&gt;
+         <span class="kt">Type</span>)
+   (<span class="nv">B_inO0</span> : <span class="kr">forall</span>
+             <span class="nv">oa</span> : O_reflector
+                    (Loc (null_to_local_generators S))
+                    A,
+             In (Loc (null_to_local_generators S))
+               (B0 oa))
+   (<span class="nv">g</span> : <span class="kr">forall</span> <span class="nv">a0</span> : A,
+        B0
+          (to (Loc (null_to_local_generators S)) A a0))
+ =&gt;
+ Localize_ind (null_to_local_generators S) A B0 g
+   (<span class="kr">fun</span> <span class="nv">i</span> : lgen_indices (null_to_local_generators S)
+    =&gt;
+    ooextendable_over_unit
+      (lgen_domain (null_to_local_generators S) i)
+      (<span class="kr">fun</span>
+         <span class="nv">_</span> : lgen_codomain
+               (null_to_local_generators S) i =&gt;
+       Localize (null_to_local_generators S) A)
+      (<span class="kr">fun</span>
+         <span class="nv">_</span> : lgen_codomain
+               (null_to_local_generators S) i =&gt; B0)
+      (islocal_localize (null_to_local_generators S) A
+         i)
+      (<span class="kr">fun</span>
+         <span class="nv">c</span> : Unit -&gt;
+             Localize (null_to_local_generators S) A
+       =&gt;
+       ooextendable_postcompose
+         (unit_name (B0 (c tt)))
+         (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt; B0 (c u))
+         (const_tt
+            (lgen_domain (null_to_local_generators S)
+               i))
+         (<span class="kr">fun</span> <span class="nv">u</span> : Unit =&gt;
+          transport B0 (ap c (path_unit tt u)))
+         (ooextendable_islocal
+            (null_to_local_generators S) i)))) B B_inO
+  f (to (Loc (null_to_local_generators S)) A a) = 
+f a</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk1c">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">B</span> : <span class="kt">Type</span>,
+In (Loc (null_to_local_generators S)) B -&gt;
+<span class="kr">forall</span> <span class="nv">z</span> <span class="nv">z&#39;</span> : B,
+In (Loc (null_to_local_generators S)) (z = z&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> inO_paths@{i i}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** And here is the &quot;real&quot; definition of the notation [IsNull]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">IsNull</span> f := (In (Nul f)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Nullification and Accessibility *)</span>
+
+<span class="sd">(** Nullification modalities are accessible, essentially by definition. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk1d"><span class="kn">Instance</span> <span class="nf">accmodality_nul</span> (<span class="nv">S</span> : NullGenerators) : IsAccModality (Nul S).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsAccModality (Nul S)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk1e"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsAccModality (Nul S)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk1f"><span class="nb">unshelve</span> <span class="nb">econstructor</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullGenerators</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="nullification-v-chk20" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><label class="goal-separator" for="nullification-v-chk20"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">X</span> : <span class="kt">Type</span>,
+In (Nul S) X &lt;-&gt; IsNull_Internal.IsNull <span class="nl">?acc_ngen</span> X</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk21">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NullGenerators</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> S.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk22">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>S</var><span class="hyp-type"><b>: </b><span>NullGenerators</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">X</span> : <span class="kt">Type</span>,
+In (Nul S) X &lt;-&gt; IsNull_Internal.IsNull S X</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span>; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** And accessible modalities can be lifted to other universes. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lift_accmodality</span>@{a i j} (O : Subuniverse@{i}) `{IsAccModality@{a i} O}
+  : Modality@{j}
+  := Nul@{a j} (acc_ngen O).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk23"><span class="kn">Instance</span> <span class="nf">O_eq_lift_accmodality</span> (<span class="nv">O</span> : Subuniverse@{i}) `{IsAccModality@{a i} O}
+  : O &lt;=&gt; lift_accmodality O.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>O</var><span class="hyp-type"><b>: </b><span>Subuniverse</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsAccModality O</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">O &lt;=&gt; lift_accmodality O</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nullification-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="nullification-v-chk24"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>O</var><span class="hyp-type"><b>: </b><span>Subuniverse</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsAccModality O</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">O &lt;=&gt; lift_accmodality O</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">split</span>; <span class="nb">intros</span> A; <span class="nb">apply</span> inO_iff_isnull.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

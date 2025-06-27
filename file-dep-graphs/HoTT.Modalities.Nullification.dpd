@@ -1,0 +1,11 @@
+N: 4 "Nul" [body=yes, kind=cnst, prop=no, path="Nullification", ];
+N: 1 "O_eq_lift_accmodality" [body=yes, kind=cnst, prop=no, path="Nullification", ];
+N: 3 "accmodality_nul" [body=yes, kind=cnst, prop=no, path="Nullification", ];
+N: 6 "extendable_over_unit" [body=yes, kind=cnst, prop=no, path="Nullification", ];
+N: 2 "lift_accmodality" [body=yes, kind=cnst, prop=no, path="Nullification", ];
+N: 5 "ooextendable_over_unit" [body=yes, kind=cnst, prop=no, path="Nullification", ];
+E: 1 2 [weight=4, ];
+E: 2 4 [weight=1, ];
+E: 3 4 [weight=2, ];
+E: 4 5 [weight=1, ];
+E: 5 6 [weight=1, ];

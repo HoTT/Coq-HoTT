@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Groups.Presentation</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Groups.Presentation</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#"><span class="id" title="library">Algebra.Groups.Group</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#"><span class="id" title="library">Algebra.Groups.FreeGroup</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.GroupCoeq.html#"><span class="id" title="library">Algebra.Groups.GroupCoeq</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Finite.html#"><span class="id" title="library">Spaces.Finite</span></a> <a class="idref" href="HoTT.Spaces.List.Core.html#"><span class="id" title="library">Spaces.List.Core</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.html#"><span class="id" title="library">WildCat</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_mult_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In this file we develop presentations of groups. 
+<div class="paragraph"> </div>
+
+ The data of a group presentation 
+</div>
+<div class="code">
+<span class="id" title="keyword">Record</span> <a id="GroupPresentation" class="idref" href="#GroupPresentation"><span class="id" title="definition, record"><span id="GroupPresentation_rect" class="id"><span id="GroupPresentation_ind" class="id"><span id="GroupPresentation_rec" class="id"><span id="GroupPresentation_sind" class="id">GroupPresentation</span></span></span></span></span></a> := {<br/>
+&nbsp;&nbsp;</div>
+
+<div class="doc">
+We have a type of generators 
+</div>
+<div class="code">
+&nbsp;&nbsp;<a id="gp_generators" class="idref" href="#gp_generators"><span class="id" title="projection">gp_generators</span></a> : <span class="id" title="keyword">Type</span> ;<br/>
+&nbsp;&nbsp;</div>
+
+<div class="doc">
+An indexing type for relators 
+</div>
+<div class="code">
+&nbsp;&nbsp;<a id="gp_rel_index" class="idref" href="#gp_rel_index"><span class="id" title="projection">gp_rel_index</span></a> : <span class="id" title="keyword">Type</span> ;<br/>
+&nbsp;&nbsp;</div>
+
+<div class="doc">
+The relators are picked out amongst elements of the free group on the generators. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<a id="gp_relators" class="idref" href="#gp_relators"><span class="id" title="projection">gp_relators</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#gp_rel_index:3"><span class="id" title="method">gp_rel_index</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#gp_generators:2"><span class="id" title="method">gp_generators</span></a>;<br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Note: A relator is a relation in the form of "w = 1", any relation "w = v" can become a relator "wv^-1 = 1" for words v and w. 
+<div class="paragraph"> </div>
+
+ Given the data of a group presentation we can construct the group. This is sometimes called the presented group. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="group_gp" class="idref" href="#group_gp"><span class="id" title="definition">group_gp</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#GroupPresentation"><span class="id" title="record">GroupPresentation</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">X</span> <span class="id" title="var">I</span> <span class="id" title="var">R</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Algebra.Groups.GroupCoeq.html#GroupCoeq"><span class="id" title="definition">GroupCoeq</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup_rec"><span class="id" title="definition">FreeGroup_rec</span></a> <span class="id" title="var">R</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup_rec"><span class="id" title="definition">FreeGroup_rec</span></a> (<span class="id" title="keyword">fun</span> <a id="x:5" class="idref" href="#x:5"><span class="id" title="binder"><span id="x:6" class="id">x</span></span></a> ⇒ @<a class="idref" href="HoTT.Algebra.Groups.Group.html#group_unit"><span class="id" title="projection">group_unit</span></a> (<a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> <span class="id" title="var">X</span>)))).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A group <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> has a presentation if there exists a group presentation whose presented group is isomorphic to <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="HasPresentation" class="idref" href="#HasPresentation"><span class="id" title="definition, record"><span id="HasPresentation_rect" class="id"><span id="HasPresentation_ind" class="id"><span id="HasPresentation_rec" class="id"><span id="HasPresentation_sind" class="id">HasPresentation</span></span></span></span></span></a> (<a id="G:7" class="idref" href="#G:7"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="presentation" class="idref" href="#presentation"><span class="id" title="projection">presentation</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#GroupPresentation"><span class="id" title="record">GroupPresentation</span></a>;<br/>
+&nbsp;&nbsp;<a id="grp_iso_presentation" class="idref" href="#grp_iso_presentation"><span class="id" title="projection">grp_iso_presentation</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#GroupIsomorphism"><span class="id" title="record">GroupIsomorphism</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#group_gp"><span class="id" title="definition">group_gp</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#presentation:9"><span class="id" title="method">presentation</span></a>) <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#G:7"><span class="id" title="variable">G</span></a>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#presentation"><span class="id" title="method">presentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#presentation"><span class="id" title="method">:</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#presentation"><span class="id" title="method">HasPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#presentation"><span class="id" title="method">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#presentation"><span class="id" title="method">GroupPresentation</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Here are a few finiteness properties of group presentations. 
+<div class="paragraph"> </div>
+
+ A group presentation is finitely generated if its generating set is finite. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="FinitelyGeneratedPresentation" class="idref" href="#FinitelyGeneratedPresentation"><span class="id" title="inductive, record"><span id="FinitelyGeneratedPresentation" class="id">FinitelyGeneratedPresentation</span></span></a> (<a id="P:11" class="idref" href="#P:11"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#GroupPresentation"><span class="id" title="record">GroupPresentation</span></a>)<br/>
+&nbsp;&nbsp;:= <a id="finite_gp_generators" class="idref" href="#finite_gp_generators"><span class="id" title="constructor, projection"><span id="finite_gp_generators" class="id">finite_gp_generators</span></span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#gp_generators"><span class="id" title="projection">gp_generators</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#P:11"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A group presentation is finitely related if its relators indexing set is finite. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="FinitelyRelatedPresentation" class="idref" href="#FinitelyRelatedPresentation"><span class="id" title="inductive, record"><span id="FinitelyRelatedPresentation" class="id">FinitelyRelatedPresentation</span></span></a> (<a id="P:14" class="idref" href="#P:14"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#GroupPresentation"><span class="id" title="record">GroupPresentation</span></a>)<br/>
+&nbsp;&nbsp;:= <a id="finite_gp_relators" class="idref" href="#finite_gp_relators"><span class="id" title="constructor, projection"><span id="finite_gp_relators" class="id">finite_gp_relators</span></span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#gp_rel_index"><span class="id" title="projection">gp_rel_index</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#P:14"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A group presentation is a finite presentation if it is finitely generated and related. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="FinitePresentation" class="idref" href="#FinitePresentation"><span class="id" title="definition, record"><span id="FinitePresentation_rect" class="id"><span id="FinitePresentation_ind" class="id"><span id="FinitePresentation_rec" class="id"><span id="FinitePresentation_sind" class="id">FinitePresentation</span></span></span></span></span></a> (<a id="P:17" class="idref" href="#P:17"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#GroupPresentation"><span class="id" title="record">GroupPresentation</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="fp_generators" class="idref" href="#fp_generators"><span class="id" title="projection">fp_generators</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#FinitelyGeneratedPresentation"><span class="id" title="class">FinitelyGeneratedPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#P:17"><span class="id" title="variable">P</span></a>;<br/>
+&nbsp;&nbsp;<a id="fp_relators" class="idref" href="#fp_relators"><span class="id" title="projection">fp_relators</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#FinitelyRelatedPresentation"><span class="id" title="class">FinitelyRelatedPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#P:17"><span class="id" title="variable">P</span></a>;<br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+These directly translate into properties of groups. 
+<div class="paragraph"> </div>
+
+ A group is finitely generated if it has a finitely generated presentation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="IsFinitelyGenerated" class="idref" href="#IsFinitelyGenerated"><span class="id" title="definition, record"><span id="IsFinitelyGenerated_rect" class="id"><span id="IsFinitelyGenerated_ind" class="id"><span id="IsFinitelyGenerated_rec" class="id"><span id="IsFinitelyGenerated_sind" class="id">IsFinitelyGenerated</span></span></span></span></span></a> (<a id="G:21" class="idref" href="#G:21"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="fg_presentation" class="idref" href="#fg_presentation"><span class="id" title="projection">fg_presentation</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#HasPresentation"><span class="id" title="class">HasPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#G:21"><span class="id" title="variable">G</span></a>;<br/>
+&nbsp;&nbsp;<a id="fg_presentation_fg" class="idref" href="#fg_presentation_fg"><span class="id" title="projection">fg_presentation_fg</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#FinitelyGeneratedPresentation"><span class="id" title="class">FinitelyGeneratedPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#fg_presentation:23"><span class="id" title="method">fg_presentation</span></a>;<br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A group is finitely related if it has a finitely related presentation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="IsFinitelyRelated" class="idref" href="#IsFinitelyRelated"><span class="id" title="definition, record"><span id="IsFinitelyRelated_rect" class="id"><span id="IsFinitelyRelated_ind" class="id"><span id="IsFinitelyRelated_rec" class="id"><span id="IsFinitelyRelated_sind" class="id">IsFinitelyRelated</span></span></span></span></span></a> (<a id="G:25" class="idref" href="#G:25"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="fr_presentation" class="idref" href="#fr_presentation"><span class="id" title="projection">fr_presentation</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#HasPresentation"><span class="id" title="class">HasPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#G:25"><span class="id" title="variable">G</span></a>;<br/>
+&nbsp;&nbsp;<a id="fr_presentation_fr" class="idref" href="#fr_presentation_fr"><span class="id" title="projection">fr_presentation_fr</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#FinitelyRelatedPresentation"><span class="id" title="class">FinitelyRelatedPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#fr_presentation:27"><span class="id" title="method">fr_presentation</span></a>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="IsFinitelyPresented" class="idref" href="#IsFinitelyPresented"><span class="id" title="definition, record"><span id="IsFinitelyPresented_rect" class="id"><span id="IsFinitelyPresented_ind" class="id"><span id="IsFinitelyPresented_rec" class="id"><span id="IsFinitelyPresented_sind" class="id">IsFinitelyPresented</span></span></span></span></span></a> (<a id="G:29" class="idref" href="#G:29"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="fp_presentation" class="idref" href="#fp_presentation"><span class="id" title="projection">fp_presentation</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#HasPresentation"><span class="id" title="class">HasPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#G:29"><span class="id" title="variable">G</span></a>;<br/>
+&nbsp;&nbsp;<a id="fp_presentation_fp" class="idref" href="#fp_presentation_fp"><span class="id" title="projection">fp_presentation_fp</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#FinitePresentation"><span class="id" title="class">FinitePresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#fp_presentation:31"><span class="id" title="method">fp_presentation</span></a>;<br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab125"></a><h2 class="section">Fundamental theorem of presentations of groups</h2>
+
+<div class="paragraph"> </div>
+
+ A group homomorphism from a presented group is determined with how the underlying map acts on generators subject to the condition that relators are sent to the unit. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <a id="grp_pres_rec" class="idref" href="#grp_pres_rec"><span class="id" title="lemma">grp_pres_rec</span></a> {<a id="funext:33" class="idref" href="#funext:33"><span class="id" title="binder">funext</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Funext"><span class="id" title="class">Funext</span></a>} (<a id="G:34" class="idref" href="#G:34"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="P:35" class="idref" href="#P:35"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#HasPresentation"><span class="id" title="class">HasPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#G:34"><span class="id" title="variable">G</span></a>) (<a id="H:36" class="idref" href="#H:36"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="f:37" class="idref" href="#f:37"><span class="id" title="binder">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#gp_generators"><span class="id" title="projection">gp_generators</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#P:35"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#H:36"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="r:38" class="idref" href="#r:38"><span class="id" title="binder">r</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup_rec"><span class="id" title="definition">FreeGroup_rec</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#f:37"><span class="id" title="variable">f</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#gp_relators"><span class="id" title="projection">gp_relators</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#P:35"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#r:38"><span class="id" title="variable">r</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Groups.Group.html#group_unit"><span class="id" title="projection">group_unit</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Algebra.Groups.Group.html#GroupHomomorphism"><span class="id" title="record">GroupHomomorphism</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#G:34"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#H:36"><span class="id" title="variable">H</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.WildCat.Yoneda.html#equiv_precompose_cat_equiv"><span class="id" title="definition">equiv_precompose_cat_equiv</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#grp_iso_presentation"><span class="id" title="method">grp_iso_presentation</span></a> (<span class="id" title="var">z</span>:=<span class="id" title="var">H</span>)<a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">)^-1</span></a> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Algebra.Groups.GroupCoeq.html#equiv_groupcoeq_rec"><span class="id" title="definition">equiv_groupcoeq_rec</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">srefine</span> (<a class="idref" href="HoTT.Types.Sigma.html#equiv_functor_sigma_pb"><span class="id" title="definition">equiv_functor_sigma_pb</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Equivalences.html#::equiv_scope:x_'oE'_x"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#equiv_freegroup_rec"><span class="id" title="definition">equiv_freegroup_rec</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Sigma.html#equiv_functor_sigma_id"><span class="id" title="definition">equiv_functor_sigma_id</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Basics.Trunc.html#equiv_iff_hprop"><span class="id" title="definition">equiv_iff_hprop</span></a>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#equiv_freegroup_rec"><span class="id" title="definition">equiv_freegroup_rec</span></a> <span class="id" title="var">H</span> <span class="id" title="var">_</span> <span class="id" title="var">f</span> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup_rec"><span class="id" title="definition">FreeGroup_rec</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#gp_relators"><span class="id" title="projection">gp_relators</span></a> <span class="id" title="var">P</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#equiv_freegroup_rec"><span class="id" title="definition">equiv_freegroup_rec</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">f</span> <a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Core.html#dccd97e5e8654d6017c4fbeb4597fdb1"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup_rec"><span class="id" title="definition">FreeGroup_rec</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Algebra.Groups.Group.html#group_unit"><span class="id" title="projection">group_unit</span></a>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup_ind_homotopy"><span class="id" title="definition">FreeGroup_ind_homotopy</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">p</span>. }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">hnf</span> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">p</span> (<a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#freegroup_in"><span class="id" title="definition">freegroup_in</span></a> <span class="id" title="var">r</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab126"></a><h2 class="section">Constructors for finite presentations</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Build_Finite_GroupPresentation" class="idref" href="#Build_Finite_GroupPresentation"><span class="id" title="definition">Build_Finite_GroupPresentation</span></a> <a id="n:39" class="idref" href="#n:39"><span class="id" title="binder">n</span></a> <a id="m:40" class="idref" href="#m:40"><span class="id" title="binder">m</span></a><br/>
+&nbsp;&nbsp;(<a id="f:41" class="idref" href="#f:41"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#FinSeq"><span class="id" title="definition">FinSeq</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#m:40"><span class="id" title="variable">m</span></a> (<a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#n:39"><span class="id" title="variable">n</span></a>)))<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#GroupPresentation"><span class="id" title="record">GroupPresentation</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#Build_GroupPresentation"><span class="id" title="constructor">Build_GroupPresentation</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="FinitelyGeneratedPresentation_Build_Finite_GroupPresentation" class="idref" href="#FinitelyGeneratedPresentation_Build_Finite_GroupPresentation"><span class="id" title="instance">FinitelyGeneratedPresentation_Build_Finite_GroupPresentation</span></a><br/>
+&nbsp;&nbsp;{<a id="n:42" class="idref" href="#n:42"><span class="id" title="binder">n</span></a> <a id="m:43" class="idref" href="#m:43"><span class="id" title="binder">m</span></a> <a id="f:44" class="idref" href="#f:44"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#FinitelyGeneratedPresentation"><span class="id" title="class">FinitelyGeneratedPresentation</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#Build_Finite_GroupPresentation"><span class="id" title="definition">Build_Finite_GroupPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#n:42"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#m:43"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#f:44"><span class="id" title="variable">f</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">unshelve</span> <span class="id" title="tactic">econstructor</span>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="FinitelyRelatedPresentation_Build_Finite_GroupPresentation" class="idref" href="#FinitelyRelatedPresentation_Build_Finite_GroupPresentation"><span class="id" title="instance">FinitelyRelatedPresentation_Build_Finite_GroupPresentation</span></a><br/>
+&nbsp;&nbsp;{<a id="n:45" class="idref" href="#n:45"><span class="id" title="binder">n</span></a> <a id="m:46" class="idref" href="#m:46"><span class="id" title="binder">m</span></a> <a id="f:47" class="idref" href="#f:47"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#FinitelyRelatedPresentation"><span class="id" title="class">FinitelyRelatedPresentation</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#Build_Finite_GroupPresentation"><span class="id" title="definition">Build_Finite_GroupPresentation</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#n:45"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#m:46"><span class="id" title="variable">m</span></a> <a class="idref" href="HoTT.Algebra.Groups.Presentation.html#f:47"><span class="id" title="variable">f</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">unshelve</span> <span class="id" title="tactic">econstructor</span>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab127"></a><h2 class="section">Notations for presentations</h2>
+
+<div class="paragraph"> </div>
+
+ Convenient abbreviation when defining notations. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Notation</span> <a id="ff" class="idref" href="#ff"><span class="id" title="abbreviation">ff</span></a> := (<a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#freegroup_in"><span class="id" title="definition">freegroup_in</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Spaces.Finite.Fin.html#fin_nat"><span class="id" title="definition">fin_nat</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO: I haven't worked out how to generalize to any number of binders, so we explicitly list the first few levels. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+One generator 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="c3a9627ad045ab8ee258910e0d815cf0" class="idref" href="#c3a9627ad045ab8ee258910e0d815cf0"><span class="id" title="notation">&quot;</span></a>⟨ x | F , .. , G ⟩" :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#Build_Finite_GroupPresentation"><span class="id" title="definition">Build_Finite_GroupPresentation</span></a> 1 <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fscons"><span class="id" title="definition">fscons</span></a> ((<span class="id" title="keyword">fun</span> (<a id="x:49" class="idref" href="#x:49"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> 1))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="var">F</span> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <span class="id" title="var">_</span>)) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 0%<span class="id" title="var">nat</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.. (<a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fscons"><span class="id" title="definition">fscons</span></a> ((<span class="id" title="keyword">fun</span> (<a id="x:48" class="idref" href="#x:48"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> 1))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="var">G</span> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <span class="id" title="var">_</span>)) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 0)) <a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fsnil"><span class="id" title="definition">fsnil</span></a>) ..))<br/>
+&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 200, <span class="id" title="var">x</span> <span class="id" title="var">binder</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Two generators 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="642f120ec43b56bf2a8d39fd68c430dd" class="idref" href="#642f120ec43b56bf2a8d39fd68c430dd"><span class="id" title="notation">&quot;</span></a>⟨ x , y | F , .. , G ⟩" :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#Build_Finite_GroupPresentation"><span class="id" title="definition">Build_Finite_GroupPresentation</span></a> 2 <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fscons"><span class="id" title="definition">fscons</span></a> ((<span class="id" title="keyword">fun</span> (<a id="x:52" class="idref" href="#x:52"><span class="id" title="binder">x</span></a> <a id="y:53" class="idref" href="#y:53"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> 2))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="var">F</span> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <span class="id" title="var">_</span>)) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 0) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 1))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.. (<a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fscons"><span class="id" title="definition">fscons</span></a> ((<span class="id" title="keyword">fun</span> (<a id="x:50" class="idref" href="#x:50"><span class="id" title="binder">x</span></a> <a id="y:51" class="idref" href="#y:51"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> 2))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="var">G</span> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <span class="id" title="var">_</span>)) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 0) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 1)) <a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fsnil"><span class="id" title="definition">fsnil</span></a>) ..))<br/>
+&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 200, <span class="id" title="var">x</span> <span class="id" title="var">binder</span>, <span class="id" title="var">y</span> <span class="id" title="var">binder</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Three generators 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="cddb9c8c430ec2faa4a88787b0022d25" class="idref" href="#cddb9c8c430ec2faa4a88787b0022d25"><span class="id" title="notation">&quot;</span></a>⟨ x , y , z | F , .. , G ⟩" :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#Build_Finite_GroupPresentation"><span class="id" title="definition">Build_Finite_GroupPresentation</span></a> 3 <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fscons"><span class="id" title="definition">fscons</span></a> ((<span class="id" title="keyword">fun</span> (<a id="x:57" class="idref" href="#x:57"><span class="id" title="binder">x</span></a> <a id="y:58" class="idref" href="#y:58"><span class="id" title="binder">y</span></a> <a id="z:59" class="idref" href="#z:59"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> 3))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="var">F</span> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <span class="id" title="var">_</span>)) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 0) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 1) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 2))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.. (<a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fscons"><span class="id" title="definition">fscons</span></a> ((<span class="id" title="keyword">fun</span> (<a id="x:54" class="idref" href="#x:54"><span class="id" title="binder">x</span></a> <a id="y:55" class="idref" href="#y:55"><span class="id" title="binder">y</span></a> <a id="z:56" class="idref" href="#z:56"><span class="id" title="binder">z</span></a> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> 3))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇒ <span class="id" title="var">G</span> : <a class="idref" href="HoTT.Algebra.Groups.FreeGroup.html#FreeGroup"><span class="id" title="definition">FreeGroup</span></a> (<a class="idref" href="HoTT.Spaces.Finite.Fin.html#Fin"><span class="id" title="definition">Fin</span></a> <span class="id" title="var">_</span>)) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 0) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 1) (<a class="idref" href="HoTT.Algebra.Groups.Presentation.html#ff"><span class="id" title="abbreviation">ff</span></a> 2)) <a class="idref" href="HoTT.Spaces.Finite.FinSeq.html#fsnil"><span class="id" title="definition">fsnil</span></a>) ..))<br/>
+&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 200, <span class="id" title="var">x</span> <span class="id" title="var">binder</span>, <span class="id" title="var">y</span> <span class="id" title="var">binder</span>, <span class="id" title="var">z</span> <span class="id" title="var">binder</span>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

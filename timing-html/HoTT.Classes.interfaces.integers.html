@@ -1,0 +1,137 @@
+<html>
+<head>
+<title>integers.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for integers.v</h1>
+
+<div class="code" title="File: integers.v
+Line: 1
+Time: 0.075s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders
+  HoTT.Classes.interfaces.naturals
+  HoTT.Classes.theory.rings (* for Ring -&gt; SemiRing *).</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+
+Class IntegersToRing@{i j} (A:Type@{i})
+  := integers_to_ring: forall (R:Type@{j}) `{IsCRing R}, A -&gt; R.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments integers_to_ring A {_} R {_ _ _ _ _ _} _.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 9
+Time: 0.008s">
+<div class="time" style="width: 10.666666666667%"></div>
+<pre>
+
+Class Integers A {Aap:Apart A} {Aplus Amult Azero Aone Anegate Ale Alt}
+  `{U : IntegersToRing A} :=
+  { integers_ring :: @IsCRing A Aplus Amult Azero Aone Anegate
+  ; integers_order :: FullPseudoSemiRingOrder Ale Alt
+  ; integers_to_ring_mor :: forall {B} `{IsCRing B}, IsSemiRingPreserving (integers_to_ring A B)
+  ; integers_initial: forall {B} `{IsCRing B} {h : A -&gt; B} `{!IsSemiRingPreserving h} x,
+      integers_to_ring A B x = h x}.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section specializable.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 19
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Context (Z N : Type) `{Integers Z} `{Naturals N}.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 20
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre>
+
+  Class IntAbs := int_abs_sig : forall x,
+    { n : N | naturals_to_semiring N Z n = x } |_|
+    { n : N | naturals_to_semiring N Z n = -x }.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+
+  Definition int_abs `{ia : IntAbs} (x : Z) : N :=
+    match int_abs_sig x with
+    | inl (n;_) =&gt; n
+    | inr (n;_) =&gt; n
+    end.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 30
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+
+  Definition int_to_nat `{Zero N} `{ia : IntAbs} (x : Z) : N :=
+    match int_abs_sig x with
+    | inl (n;_) =&gt; n
+    | inr (n;_) =&gt; 0
+    end.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End specializable.</pre>
+</div>
+<div class="code" title="File: integers.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

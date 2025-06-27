@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.AbGroups.Cyclic</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.AbGroups.Cyclic</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#"><span class="id" title="library">AbelianGroup</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.AbGroups.Z.html#"><span class="id" title="library">AbGroups.Z</span></a> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#"><span class="id" title="library">Groups.QuotientGroup</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab28"></a><h1 class="section">Cyclic groups</h1>
+
+<div class="paragraph"> </div>
+
+ The <span class="inlinecode"><span class="id" title="var">n</span></span>-th cyclic group is the cokernel of <span class="inlinecode"><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#ab_mul"><span class="id" title="definition">ab_mul</span></a></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="cyclic" class="idref" href="#cyclic"><span class="id" title="definition">cyclic</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#ab_cokernel"><span class="id" title="definition">ab_cokernel</span></a> (<a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#ab_mul"><span class="id" title="definition">ab_mul</span></a> (<span class="id" title="var">A</span>:=<a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>) <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#n:1"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="cyclic_in" class="idref" href="#cyclic_in"><span class="id" title="definition">cyclic_in</span></a> (<a id="n:2" class="idref" href="#n:2"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a> <a class="idref" href="HoTT.WildCat.Core.html#c02781df22df625c7b63399d41d90de5"><span class="id" title="notation">$-&gt;</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#cyclic"><span class="id" title="definition">cyclic</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#n:2"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="ab_mul_cyclic_in" class="idref" href="#ab_mul_cyclic_in"><span class="id" title="definition">ab_mul_cyclic_in</span></a> (<a id="n:3" class="idref" href="#n:3"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a> <a id="y:5" class="idref" href="#y:5"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z"><span class="id" title="definition">abgroup_Z</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#ab_mul"><span class="id" title="definition">ab_mul</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#y:5"><span class="id" title="variable">y</span></a> (<a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#cyclic_in"><span class="id" title="definition">cyclic_in</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#n:3"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#x:4"><span class="id" title="variable">x</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#cyclic_in"><span class="id" title="definition">cyclic_in</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#n:3"><span class="id" title="variable">n</span></a> (<a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#y:5"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Spaces.Int.html#f957f03f82d81f8d3648cb35791a36c5"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Cyclic.html#x:4"><span class="id" title="variable">x</span></a>)%<span class="id" title="var">int</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#ab_mul_natural"><span class="id" title="definition">ab_mul_natural</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Algebra.AbGroups.Z.html#abgroup_Z_ab_mul"><span class="id" title="definition">abgroup_Z_ab_mul</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

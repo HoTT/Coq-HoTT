@@ -1,0 +1,878 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Overture.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Basic definitions of homotopy type theory *)</span>
+
+<span class="sd">(** This file defines some of the most basic types and type formers, such as sums, products, Sigma types and path types.  It defines the action of functions on paths [ap], transport, equivalences, and function extensionality.  It also defines truncatedness, and a number of other fundamental definitions used throughout the library. *)</span>
+
+<span class="sd">(** Import the file of reserved notations so we maintain consistent level notations throughout the library. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk0"><span class="kn">Require Export</span> Basics.Settings Basics.Notations.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Polymorphic Inductive Cumulativity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq&#39;s way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Unset Elimination Schemes</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Datatypes *)</span>
+
+<span class="sd">(** *** Functions *)</span>
+
+<span class="sd">(** Notation for non-dependent function types *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;A -&gt; B&quot;</span> := (<span class="kr">forall</span> (<span class="nv">_</span> : A), B) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Option type *)</span>
+
+<span class="sd">(** [option A] is the extension of [A] with an extra element [None] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">option</span> (<span class="nv">A</span> : <span class="kt">Type</span>) : <span class="kt">Type</span> :=
+| Some : A -&gt; option A
+| None : option A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">option_rect</span> := <span class="kn">Induction for</span> option <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> Some {A} a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> None {A}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> option <span class="kr">as</span> core.option.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Sum type *)</span>
+
+<span class="sd">(** [sum A B], written [A + B], is the disjoint sum of [A] and [B] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">sum</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) : <span class="kt">Type</span> :=
+| inl : A -&gt; sum A B
+| inr : B -&gt; sum A B.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">sum_rect</span> := <span class="kn">Induction for</span> sum <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">sum_ind</span> := <span class="kn">Induction for</span> sum <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> sum_ind {A B} P f g : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x + y&quot;</span> := (sum x y) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> inl {A B} _ , [A] B _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> inr {A B} _ , A [B] _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* A notation for coproduct that&#39;s less overloaded than [+] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x |_| y&quot;</span> := (sum x y) (<span class="kn">only parsing</span>) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Product type *)</span>
+
+<span class="sd">(** [prod A B], written [A * B], is the product of [A] and [B];</span>
+<span class="sd">    the pair [pair A B a b] of [a] and [b] is abbreviated [(a,b)] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">prod</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) := pair { fst : A ; snd : B }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">prod_rect</span> := <span class="kn">Induction for</span> prod <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">prod_ind</span> := <span class="kn">Induction for</span> prod <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> prod_ind {A B} P _.</span><span class="alectryon-wsp"> 
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> pair {A B} _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> fst {A B} _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> snd {A B} _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Add Printing Let</span> prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x * y&quot;</span> := (prod x y) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;( x , y , .. , z )&quot;</span> := (pair .. (pair x y) .. z) : core_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;A /\ B&quot;</span> := (prod A B) (<span class="kn">only parsing</span>) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">and</span> := prod (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">conj</span> := pair (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Hint Resolve</span> pair inl inr : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Type classes *)</span>
+
+<span class="sd">(** This command prevents Coq from trying to guess the values of existential variables while doing typeclass resolution.  If you don&#39;t know what that means, ignore it. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Typeclasses Strict Resolution</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Relation</span> (<span class="nv">A</span> : <span class="kt">Type</span>) := A -&gt; A -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">Reflexive</span> {<span class="nv">A</span>} (<span class="nv">R</span> : Relation A) :=
+  <span class="bp">reflexivity</span> : <span class="kr">forall</span> <span class="nv">x</span> : A, R x x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">Symmetric</span> {<span class="nv">A</span>} (<span class="nv">R</span> : Relation A) :=
+  <span class="nb">symmetry</span> : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, R x y -&gt; R y x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">Transitive</span> {<span class="nv">A</span>} (<span class="nv">R</span> : Relation A) :=
+  <span class="nb">transitivity</span> : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span>, R x y -&gt; R y z -&gt; R x z.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A [PreOrder] is both Reflexive and Transitive. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">PreOrder</span> {<span class="nv">A</span>} (<span class="nv">R</span> : Relation A) :=
+  { PreOrder_Reflexive :: Reflexive R | <span class="mi">2</span> ;
+    PreOrder_Transitive :: Transitive R | <span class="mi">2</span> }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> <span class="bp">reflexivity</span> {A R _} / _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> <span class="nb">symmetry</span> {A R _} / _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> <span class="nb">transitivity</span> {A R _} / {_ _ _} _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Above, we have made [reflexivity], [symmetry], and [transitivity] reduce under [cbn]/[simpl] to their underlying instances.  This allows the tactics to build proof terms referencing, e.g., [concat].  We use [change] after the fact to make sure that we didn&#39;t [cbn] away the original form of the relation.</span>
+
+<span class="sd">    If we want to remove the use of [cbn], we can play tricks with [Module Type]s and [Module]s to declare [inverse] directly as an instance of [Symmetric] without changing its type.  Then we can simply [unfold symmetry].  See the comments around the definition of [inverse]. *)</span>
+
+<span class="sd">(** Overwrite [reflexivity] so that we use our version of [Reflexive] rather than having the tactic look for it in the standard library.  We make use of the built-in reflexivity to handle, e.g., single-constructor inductives. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">old_reflexivity</span> := <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;reflexivity&quot;</span> :=
+  old_reflexivity
+|| (<span class="nb">intros</span>;
+  <span class="kr">let</span> <span class="nv">R</span> := <span class="kr">match goal with</span> |- <span class="nl">?R</span> <span class="nl">?x</span> <span class="nl">?y</span> =&gt; <span class="kp">constr</span>:(R) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">pre_proof_term_head</span> := <span class="kp">constr</span>:(@<span class="bp">reflexivity</span> _ R _) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">proof_term_head</span> := (<span class="kp">eval</span> <span class="nb">cbn</span> <span class="kr">in</span> pre_proof_term_head) <span class="kr">in</span>
+  <span class="nb">apply</span> (proof_term_head : <span class="kr">forall</span> <span class="nv">x</span>, R x x)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Even if we weren&#39;t using [cbn], we would have to redefine symmetry, since the built-in Coq version is sometimes too smart for its own good, and will occasionally fail when it should not. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;symmetry&quot;</span> :=
+  <span class="kr">let</span> <span class="nv">R</span> := <span class="kr">match goal with</span> |- <span class="nl">?R</span> <span class="nl">?x</span> <span class="nl">?y</span> =&gt; <span class="kp">constr</span>:(R) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">x</span> := <span class="kr">match goal with</span> |- <span class="nl">?R</span> <span class="nl">?x</span> <span class="nl">?y</span> =&gt; <span class="kp">constr</span>:(x) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">y</span> := <span class="kr">match goal with</span> |- <span class="nl">?R</span> <span class="nl">?x</span> <span class="nl">?y</span> =&gt; <span class="kp">constr</span>:(y) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">pre_proof_term_head</span> := <span class="kp">constr</span>:(@<span class="nb">symmetry</span> _ R _) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">proof_term_head</span> := (<span class="kp">eval</span> <span class="nb">cbn</span> <span class="kr">in</span> pre_proof_term_head) <span class="kr">in</span>
+  <span class="nb">refine</span> (proof_term_head y x _); <span class="nb">change</span> (R y x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;etransitivity&quot;</span> open_constr(y) :=
+  <span class="kr">let</span> <span class="nv">R</span> := <span class="kr">match goal with</span> |- <span class="nl">?R</span> <span class="nl">?x</span> <span class="nl">?z</span> =&gt; <span class="kp">constr</span>:(R) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">x</span> := <span class="kr">match goal with</span> |- <span class="nl">?R</span> <span class="nl">?x</span> <span class="nl">?z</span> =&gt; <span class="kp">constr</span>:(x) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">z</span> := <span class="kr">match goal with</span> |- <span class="nl">?R</span> <span class="nl">?x</span> <span class="nl">?z</span> =&gt; <span class="kp">constr</span>:(z) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">pre_proof_term_head</span> := <span class="kp">constr</span>:(@<span class="nb">transitivity</span> _ R _) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">proof_term_head</span> := (<span class="kp">eval</span> <span class="nb">cbn</span> <span class="kr">in</span> pre_proof_term_head) <span class="kr">in</span>
+  <span class="nb">refine</span> (proof_term_head x y z _ _); [ <span class="nb">change</span> (R x y) | <span class="nb">change</span> (R y z) ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;etransitivity&quot;</span> := <span class="nb">etransitivity</span> _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We redefine [transitivity] to work without needing to include [Setoid] or be using Leibniz equality, and to give proofs that unfold to [concat]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;transitivity&quot;</span> <span class="kp">constr</span>(x) := <span class="nb">etransitivity</span> x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Basic definitions *)</span>
+
+<span class="sd">(** Define an alias for [Set], which is really [Type₀], the smallest universe. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">Type0</span> := <span class="kt">Set</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We make the identity map a notation so we do not have to unfold it,</span>
+<span class="sd">    or complicate matters with its type. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">idmap</span> := (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Constant functions *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">const</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">b</span> : B) := <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; b.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Sigma types *)</span>
+
+<span class="sd">(** [(sig A P)], or more suggestively [{x:A &amp; (P x)}] is a Sigma-type. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">sig</span> {<span class="nv">A</span>} (<span class="nv">P</span> : A -&gt; <span class="kt">Type</span>) := exist {
+  proj1 : A ;
+  proj2 : P proj1 ;
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">sig_rect</span> := <span class="kn">Induction for</span> sig <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">sig_ind</span> := <span class="kn">Induction for</span> sig <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">sig_rec</span> := <span class="kn">Minimality for</span> sig <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> sig_ind {_ _}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> sig_rec {_ _ _}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We make the parameters maximally inserted so that we can pass around [pr1] as a function and have it actually mean &quot;first projection&quot; in, e.g., [ap]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> exist {A}%_type P%_type _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> proj1 {A P} _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> proj2 {A P} _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> sig (A P)%_type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;{ x | P }&quot;</span> := (sig (<span class="kr">fun</span> <span class="nv">x</span> =&gt; P)) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;{ x : A | P }&quot;</span> := (sig (A := A) (<span class="kr">fun</span> <span class="nv">x</span> =&gt; P)) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;&#39;exists&#39; x .. y , p&quot;</span> := (sig (<span class="kr">fun</span> <span class="nv">x</span> =&gt; .. (sig (<span class="kr">fun</span> <span class="nv">y</span> =&gt; p)) ..)) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;{ x : A  &amp; P }&quot;</span> := (sig (<span class="kr">fun</span> <span class="nv">x</span>:A =&gt; P)) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This lets us pattern match sigma types in let expressions *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Add Printing Let</span> sig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> sig <span class="kr">as</span> core.sigT.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> exist <span class="kr">as</span> core.sigT.<span class="nb">intro</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> sig_rect <span class="kr">as</span> core.sigT.rect.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> proj1 <span class="kr">as</span> core.sigT.proj1.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> proj2 <span class="kr">as</span> core.sigT.proj2.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Hint Resolve</span> exist : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We define notation for dependent pairs because it is too annoying to write and see [exist P x y] all the time.  However, we put it in its own scope, because sometimes it is necessary to give the particular dependent type, so we&#39;d like to be able to turn off this notation selectively. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;( x ; y )&quot;</span> := (exist _ x y) : fibration_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;( x ; .. ; y ; z )&quot;</span> := (exist _ x .. (exist _ y z) ..) : fibration_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** We bind [fibration_scope] with [sig] so that we are automatically in [fibration_scope] when we are passing an argument of type [sig]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> fibration_scope <span class="kr">with</span> sig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">pr1</span> := proj1.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">pr2</span> := proj2.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The following notation is very convenient, although it unfortunately clashes with Proof General&#39;s &quot;electric period&quot;.  We have added [format] specifiers in Notations.v so that it will display without an extra space, as [x.1] rather than as [x .1]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x .1&quot;</span> := (pr1 x) : fibration_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x .2&quot;</span> := (pr2 x) : fibration_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">uncurry</span> {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span>} (<span class="nv">f</span> : A -&gt; B -&gt; C) (<span class="nv">p</span> : A * B) : C := f (fst p) (snd p).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> uncurry {A B C} f%_function_scope p /.</span><span class="alectryon-wsp"> 
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Composition of functions. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">compose</span> := (<span class="kr">fun</span> <span class="nv">g</span> <span class="nv">f</span> <span class="nv">x</span> =&gt; g (f x)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We put the following notation in a scope because leaving it unscoped causes it to override identical notations in other scopes.  It&#39;s convenient to use the same notation for, e.g., function composition, morphism composition in a category, and functor composition, and let Coq automatically infer which one we mean by scopes.  We can&#39;t do this if this notation isn&#39;t scoped.  Unfortunately, Coq doesn&#39;t have a built-in [function_scope] like [type_scope]; [type_scope] is automatically opened wherever Coq is expecting a [Sort], and it would be nice if [function_scope] were automatically opened whenever Coq expects a thing of type [forall _, _] or [_ -&gt; _].  To work around this, we open [function_scope] globally. *)</span>
+
+<span class="sd">(** We allow writing [(f o g)%function] to force [function_scope] over, e.g., [morphism_scope]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;g &#39;o&#39; f&quot;</span> := (compose g%function f%function) : function_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This definition helps guide typeclass inference. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Compose</span> {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : <span class="kt">Type</span>} (<span class="nv">g</span> : B -&gt; C) (<span class="nv">f</span> : A -&gt; B) : A -&gt; C := compose g f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Dependent composition of functions. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">composeD</span> {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span>} (<span class="nv">g</span> : <span class="kr">forall</span> <span class="nv">b</span>, C b) (<span class="nv">f</span> : A -&gt; B) := <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; g (f x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> composeD {A B C}%_type_scope (g f)%_function_scope x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Hint Unfold</span> composeD : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;g &#39;oD&#39; f&quot;</span> := (composeD g f) : function_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** The groupoid structure of identity types. *)</span>
+
+<span class="sd">(** The results in this file are used everywhere else, so we need to be extra careful about how we define and prove things.  We prefer hand-written terms, or at least tactics that allow us to retain clear control over the proof-term produced. *)</span>
+
+<span class="sd">(** We define our own identity type, rather than using the one in the Coq standard library, so as to have more control over transitivity, symmetry and inverse.  It seems impossible to change these for the standard eq/identity type (or its Type-valued version) because it breaks various other standard things.  Merely changing notations also doesn&#39;t seem to quite work. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">paths</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">a</span> : A) : A -&gt; <span class="kt">Type</span> :=
+  idpath : paths a a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> idpath {A a} , [A] a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Hint Resolve</span> idpath : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">paths_ind</span> := <span class="kn">Induction for</span> paths <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> paths_ind [A] a P f y p : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">paths_rec</span> := <span class="kn">Minimality for</span> paths <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> paths_rec [A] a P f y p : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* See comment above about the tactic [induction]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">paths_rect</span> := paths_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> paths <span class="kr">as</span> core.identity.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> idpath <span class="kr">as</span> core.identity.refl.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> paths_rect <span class="kr">as</span> core.identity.ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x = y :&gt; A&quot;</span> := (@paths A x y) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x = y&quot;</span> := (x = y :&gt;_) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">reflexive_paths</span> {<span class="nv">A</span>} : Reflexive (@paths A) | <span class="mi">0</span> := @idpath A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> reflexive_paths / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Our identity type is the Paulin-Mohring style.  We derive the Martin-Löf eliminator. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk1"><span class="kn">Definition</span> <span class="nf">paths_ind&#39;</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">P</span> : <span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : A), (a = b) -&gt; <span class="kt">Type</span>)
+  : (<span class="kr">forall</span> (<span class="nv">a</span> : A), P a a idpath) -&gt; <span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : A) (<span class="nv">p</span> : a = b), P a b p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : A, a = b -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> <span class="nv">a</span> : A, P a a idpath) -&gt;
+<span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : A) (<span class="nv">p</span> : a = b), P a b p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : A, a = b -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> <span class="nv">a</span> : A, P a a idpath) -&gt;
+<span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : A) (<span class="nv">p</span> : a = b), P a b p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk3"><span class="nb">intros</span> H ? ? [].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> : A, a = b -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, P a a idpath</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P a a idpath</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> H.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** And here&#39;s the &quot;right-sided&quot; Paulin-Mohring eliminator. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk4"><span class="kn">Definition</span> <span class="nf">paths_ind_r</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">a</span> : A)
+           (<span class="nv">P</span> : <span class="kr">forall</span> <span class="nv">b</span> : A, b = a -&gt; <span class="kt">Type</span>) (<span class="nv">u</span> : P a idpath)
+  : <span class="kr">forall</span> (<span class="nv">y</span> : A) (<span class="nv">p</span> : y = a), P y p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : A, b = a -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P a idpath</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">y</span> : A) (<span class="nv">p</span> : y = a), P y p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : A, b = a -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P a idpath</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">y</span> : A) (<span class="nv">p</span> : y = a), P y p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk6"><span class="nb">intros</span> y p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : A, b = a -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P a idpath</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>y = a</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P y p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk7"><span class="nb">destruct</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">b</span> : A, b = y -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P y idpath</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P y idpath</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> u.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)</span>
+
+<span class="sd">(** We bind [path_scope] to [paths] so that when we are constructing arguments to things like [concat], we automatically are in [path_scope]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> path_scope <span class="kr">with</span> paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The inverse of a path. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inverse</span> {<span class="nv">A</span> : <span class="kt">Type</span>} {<span class="nv">x</span> <span class="nv">y</span> : A} (<span class="nv">p</span> : x = y) : y = x
+  := <span class="kr">match</span> p <span class="kr">with</span> idpath =&gt; idpath <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> inverse <span class="kr">as</span> core.identity.sym.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> inverse {A x y} p : <span class="nb">simpl</span> nomatch.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">symmetric_paths</span> {<span class="nv">A</span>} : Symmetric (@paths A) | <span class="mi">0</span> := @inverse A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> symmetric_paths / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** If we wanted to not have the constant [symmetric_paths] floating around, and wanted to resolve [inverse] directly, instead, we could play this trick, discovered by Georges Gonthier to fool Coq&#39;s restriction on [Identity Coercion]s:</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">Module Export inverse.</span>
+<span class="sd">  Definition inverse {A : Type} {x y : A} (p : x = y) : y = x</span>
+<span class="sd">    := match p with idpath =&gt; idpath end.</span>
+<span class="sd">End inverse.</span>
+
+<span class="sd">Module Type inverseT.</span>
+<span class="sd">  Parameter inverse : forall {A}, Symmetric (@paths A).</span>
+<span class="sd">End inverseT.</span>
+
+<span class="sd">Module inverseSymmetric (inverse : inverseT).</span>
+<span class="sd">  Global Existing Instance inverse.inverse.</span>
+<span class="sd">End inverseSymmetric.</span>
+
+<span class="sd">Module Export symmetric_paths := inverseSymmetric inverse.</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">*)</span>
+
+
+<span class="sd">(** We define equality concatenation by destructing on both its arguments, so that it only computes when both arguments are [idpath].  This makes proofs more robust and symmetrical.  Compare with the definition of [identity_trans].  *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">concat</span> {<span class="nv">A</span> : <span class="kt">Type</span>} {<span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> : A} (<span class="nv">p</span> : x = y) (<span class="nv">q</span> : y = z) : x = z :=
+  <span class="kr">match</span> p, q <span class="kr">with</span> idpath, idpath =&gt; idpath <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** See above for the meaning of [simpl nomatch]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> concat {A x y z} p q : <span class="nb">simpl</span> nomatch.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">transitive_paths</span> {<span class="nv">A</span>} : Transitive (@paths A) | <span class="mi">0</span> := @concat A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> transitive_paths / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> concat <span class="kr">as</span> core.identity.trans.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Note that you can use the Coq tactics [reflexivity], [transitivity], [etransitivity], and [symmetry] when working with paths; we&#39;ve redefined them above to use typeclasses and to unfold the instances so you get proof terms with [concat] and [inverse]. *)</span>
+
+<span class="sd">(** The identity path. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;1&quot;</span> := idpath : path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The composition of two paths. *)</span>
+<span class="sd">(** We put [p] and [q] in [path_scope] explicitly.  This is a partial work-around for https://coq.inria.fr/bugs/show_bug.cgi?id=3990, which is that implicitly bound scopes don&#39;t nest well. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;p @ q&quot;</span> := (concat p%path q%path) : path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The inverse of a path. *)</span>
+<span class="sd">(** See above about explicitly placing [p] in [path_scope]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;p ^&quot;</span> := (inverse p%path) : path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** An alternative notation which puts each path on its own line, via the [format] specification in Notations.v.  Useful as a temporary device during proofs of equalities between very long composites; to turn it on inside a section, say [Open Scope long_path_scope]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;p @&#39; q&quot;</span> := (concat p q) : long_path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** An important instance of [paths_ind] is that given any dependent type, one can _transport_ elements of instances of the type along equalities in the base:  [transport P p u] transports [u : P x] to [P y] along [p : x = y]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">transport</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">P</span> : A -&gt; <span class="kt">Type</span>) {<span class="nv">x</span> <span class="nv">y</span> : A} (<span class="nv">p</span> : x = y) (<span class="nv">u</span> : P x) : P y
+  := <span class="kr">match</span> p <span class="kr">with</span> idpath =&gt; u <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** See above for the meaning of [simpl nomatch]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> transport {A}%_type_scope P%_function_scope {x y} p%_path_scope u : <span class="nb">simpl</span> nomatch.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;p # u&quot;</span> := (transport _ p u) (<span class="kn">only parsing</span>) : path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  See ../Tactics.v for how these compare to [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic.  The lemmas below are not used in the library. *)</span>
+<span class="sd">(** TODO: If Coq PR#18299 is merged (possibly in Coq 8.20), then we can instead register wrappers for [transport] to be used for rewriting.  See the comment by Dan Christensen in that PR for how to do this.  Then the tactics [internal_paths_rew_to_transport] and [rewrite_to_transport] can be removed from ../Tactics.v. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk8"><span class="kn">Local Lemma</span> <span class="nf">define_internal_paths_rew</span> <span class="nv">A</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">P</span> (<span class="nv">u</span> : P x) (<span class="nv">H</span> : x = y :&gt; A) : P y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk9"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P y</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chka"><span class="nb">rewrite</span> &lt;- H.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> u.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chkb"><span class="kn">Local Lemma</span> <span class="nf">define_internal_paths_rew_r</span> <span class="nv">A</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">P</span> (<span class="nv">u</span> : P y) (<span class="nv">H</span> : x = y :&gt; A) : P x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P y</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chkc"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P y</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chkd"><span class="nb">rewrite</span> -&gt; H.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P y</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P y</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> u.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> internal_paths_rew {A%_type_scope} {a} P%_function_scope f {a0} p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Having defined transport, we can use it to talk about what a homotopy theorist might see as &quot;paths in a fibration over paths in the base&quot;; and what a type theorist might see as &quot;heterogeneous equality in a dependent type&quot;.  We will first see this appearing in the type of [apD]. *)</span>
+
+<span class="sd">(** Functions act on paths: if [f : A -&gt; B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  We typically pronounce [ap] as a single syllable, short for &quot;application&quot;; but it may also be considered as an acronym, &quot;action on paths&quot;. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">ap</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B) {<span class="nv">x</span> <span class="nv">y</span> : A} (<span class="nv">p</span> : x = y) : f x = f y
+  := <span class="kr">match</span> p <span class="kr">with</span> idpath =&gt; idpath <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope : <span class="nb">simpl</span> nomatch.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> ap <span class="kr">as</span> core.identity.<span class="nb">congr</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element. Thus, [ap] is a shorthand for [ap01]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">ap01</span> := ap (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Similarly, dependent functions act on paths; but the type is a bit more subtle. If [f : forall a:A, B a] and [p : x = y] is a path in [A], then [apD f p] should somehow be a path between [f x : B x] and [f y : B y]. Since these live in different types, we use transport along [p] to make them comparable: [apD f p : p # f x = f y].</span>
+
+<span class="sd">  The type [p # f x = f y] can profitably be considered as a heterogeneous or dependent equality type, of &quot;paths from [f x] to [f y] over [p]&quot;. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">apD</span> {<span class="nv">A</span>:<span class="kt">Type</span>} {<span class="nv">B</span>:A-&gt;<span class="kt">Type</span>} (<span class="nv">f</span>:<span class="kr">forall</span> <span class="nv">a</span>:A, B a) {<span class="nv">x</span> <span class="nv">y</span>:A} (<span class="nv">p</span>:x=y):
+  p # (f x) = f y
+  :=
+  <span class="kr">match</span> p <span class="kr">with</span> idpath =&gt; idpath <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** See above for the meaning of [simpl nomatch]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> apD {A%_type_scope B} f%_function_scope {x y} p%_path_scope : <span class="nb">simpl</span> nomatch.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Homotopies between functions *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pointwise_paths</span> <span class="nv">A</span> (<span class="nv">P</span> : A -&gt; <span class="kt">Type</span>) (<span class="nv">f</span> <span class="nv">g</span> : <span class="kr">forall</span> <span class="nv">x</span>, P x)
+  := <span class="kr">forall</span> <span class="nv">x</span>, f x = g x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pointwise_paths_concat</span> {<span class="nv">A</span>} {<span class="nv">P</span> : A -&gt; <span class="kt">Type</span>} {<span class="nv">f</span> <span class="nv">g</span> <span class="nv">h</span> : <span class="kr">forall</span> <span class="nv">x</span>, P x}
+  : pointwise_paths A P f g -&gt; pointwise_paths A P g h
+    -&gt; pointwise_paths A P f h := <span class="kr">fun</span> <span class="nv">p</span> <span class="nv">q</span> <span class="nv">x</span> =&gt; p x @ q x.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chke"><span class="kn">Instance</span> <span class="nf">reflexive_pointwise_paths</span> <span class="nv">A</span> <span class="nv">P</span>
+  : Reflexive (pointwise_paths A P).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Reflexive (pointwise_paths A P)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chkf"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Reflexive (pointwise_paths A P)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> ? ?; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk10"><span class="kn">Instance</span> <span class="nf">transitive_pointwise_paths</span> <span class="nv">A</span> <span class="nv">P</span>
+  : Transitive (pointwise_paths A P).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Transitive (pointwise_paths A P)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk11"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Transitive (pointwise_paths A P)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk12"><span class="nb">intros</span> f g h.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g, h</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : A, P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">pointwise_paths A P f g -&gt;
+pointwise_paths A P g h -&gt; pointwise_paths A P f h</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> pointwise_paths_concat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk13"><span class="kn">Instance</span> <span class="nf">symmetric_pointwise_paths</span> <span class="nv">A</span> <span class="nv">P</span>
+  : Symmetric (pointwise_paths A P).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Symmetric (pointwise_paths A P)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk14"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Symmetric (pointwise_paths A P)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> ? ? p ?; <span class="nb">symmetry</span>; <span class="nb">apply</span> p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> pointwise_paths {A}%_type_scope {P} (f g)%_function_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> reflexive_pointwise_paths /.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> transitive_pointwise_paths /.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> symmetric_pointwise_paths /.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Unfold</span> pointwise_paths : typeclass_instances.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;f == g&quot;</span> := (pointwise_paths f g) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">apD10</span> {<span class="nv">A</span>} {<span class="nv">B</span> : A -&gt; <span class="kt">Type</span>} {<span class="nv">f</span> <span class="nv">g</span> : <span class="kr">forall</span> <span class="nv">x</span>, B x} (<span class="nv">h</span> : f = g)
+  : f == g
+  := <span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">match</span> h <span class="kr">with</span> idpath =&gt; <span class="mi">1</span> <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> apD10 {A%_type_scope B} {f g}%_function_scope h%_path_scope _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">ap10</span> {<span class="nv">A</span> <span class="nv">B</span>} {<span class="nv">f</span> <span class="nv">g</span> : A -&gt; B} (<span class="nv">h</span> : f = g) : f == g
+  := apD10 h.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> ap10 {A B}%_type_scope {f g}%_function_scope h%_path_scope _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** For the benefit of readers of the HoTT Book: *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">happly</span> := ap10 (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk15"><span class="kn">Definition</span> <span class="nf">ap11</span> {<span class="nv">A</span> <span class="nv">B</span>} {<span class="nv">f</span> <span class="nv">g</span> : A -&gt; B} (<span class="nv">h</span> : f = g) {<span class="nv">x</span> <span class="nv">y</span> : A} (<span class="nv">p</span> : x = y) : f x = g y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>f = g</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f x = g y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk16"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>f = g</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f x = g y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">case</span> h, p; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> ap11 {A B}%_type_scope {f g}%_function_scope h%_path_scope {x y} p%_path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Equivalences *)</span>
+
+<span class="sd">(** Homotopy equivalences are a central concept in homotopy type theory. Before we define equivalences, let us consider when two types [A] and [B] should be considered &quot;the same&quot;.</span>
+
+<span class="sd">   The first option is to require existence of [f : A -&gt; B] and [g : B -&gt; A] which are inverses of each other, up to homotopy.  Homotopically speaking, we should also require a certain condition on these homotopies, which is one of the triangle identities for adjunctions in category theory.  Thus, we call this notion an *adjoint equivalence*.</span>
+
+<span class="sd">  The other triangle identity is provable from the first one, along with all the higher coherences, so it is reasonable to only assume one of them.  Moreover, as we will see, if we have maps which are inverses up to homotopy, it is always possible to make the triangle identity hold by modifying one of the homotopies.</span>
+
+<span class="sd">   The second option is to use Vladimir Voevodsky&#39;s definition of an equivalence as a map whose homotopy fibers are contractible.  We call this notion a *homotopy bijection*.</span>
+
+<span class="sd">   An interesting third option was suggested by André Joyal: a map [f] which has separate left and right homotopy inverses.  We call this notion a *homotopy isomorphism*.</span>
+
+<span class="sd">   While the second option was the one used originally, and it is the most concise one, it makes more sense to use the first one in a formalized development, since it exposes most directly equivalence as a structure.  In particular, it is easier to extract directly from it the data of a homotopy inverse to [f], which is what we care about having most in practice.  Thus, adjoint equivalences are what we will refer to merely as *equivalences*. *)</span>
+
+<span class="sd">(** Naming convention: we use [equiv] and [Equiv] systematically to denote types of equivalences, and [isequiv] and [IsEquiv] systematically to denote the assertion that a given map is an equivalence. *)</span>
+
+<span class="sd">(** A typeclass that includes the data making [f] into an adjoint equivalence. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsEquiv</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B) := {
+  equiv_inv : B -&gt; A ;
+  eisretr : f o equiv_inv == idmap ;
+  eissect : equiv_inv o f == idmap ;
+  eisadj : <span class="kr">forall</span> <span class="nv">x</span> : A, eisretr (f x) = ap f (eissect x) ;
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> eisretr {A B}%_type_scope f%_function_scope {_} _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> eissect {A B}%_type_scope f%_function_scope {_} _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> eisadj {A B}%_type_scope f%_function_scope {_} _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> IsEquiv {A B}%_type_scope f%_function_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We mark [eisadj] as Opaque to deter Coq from unfolding it when simplifying. Since proofs of [eisadj] typically have larger proofs than the rest of the equivalence data, we gain some speed up as a result. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Opaque</span> eisadj.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A record that includes all the data of an adjoint equivalence. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Equiv</span> <span class="nv">A</span> <span class="nv">B</span> := {
+  equiv_fun : A -&gt; B ;
+  equiv_isequiv :: IsEquiv equiv_fun
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">equiv_fun</span> : Equiv &gt;-&gt; <span class="kt">Funclass</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> equiv_fun {A B} _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> equiv_isequiv {A B} _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> equiv_scope <span class="kr">with</span> Equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;A &lt;~&gt; B&quot;</span> := (Equiv A B) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A notation for the inverse of an equivalence.  We can apply this to a function as long as there is a typeclass instance asserting it to be an equivalence.  We can also apply it to an element of [A &lt;~&gt; B], since there is an implicit coercion to [A -&gt; B] and also an existing instance of [IsEquiv]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;f ^-1&quot;</span> := (@equiv_inv _ _ f _) : function_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A shorthand for applying paths between equivalences like functions. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">ap10_equiv</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} {<span class="nv">f</span> <span class="nv">g</span> : A &lt;~&gt; B} (<span class="nv">h</span> : f = g) : f == g
+  := ap10 (ap equiv_fun h).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Function extensionality *)</span>
+
+<span class="sd">(** Function extensionality is stated as the axiom [isequiv_apD10].  In order to track where it is used, we create an empty type [Funext] and require a term of that type in order to apply [isequiv_apD10].  Since there are no terms of that type, any definition that uses function extensionality (directly or indirectly) must have [Funext] as a hypothesis.  This is done by adding [`{Funext}] to the argument list.  You can also assume it for an entire Section with [Context `{Funext}].  Since [Funext] is a [Class], the provided argument will be found by typeclass search.</span>
+
+<span class="sd">    This approach also has the advantage that it lets us use [isequiv_apD10] at multiple universe levels, with a single assumption.</span>
+
+<span class="sd">    To get rid of unneeded universe variables, we put [Funext] in [Type0] and make it [Monomorphic]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Monomorphic</span> <span class="kn">Axiom</span> <span class="nv">Funext</span> : Type0.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Existing Class</span> <span class="nf">Funext</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Axiom</span> <span class="nv">isequiv_apD10</span> : <span class="kr">forall</span> `{Funext} (A : <span class="kt">Type</span>) (P : A -&gt; <span class="kt">Type</span>) f g, IsEquiv (@apD10 A P f g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Existing Instance</span> <span class="nf">isequiv_apD10</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_forall</span> `{Funext} {A : <span class="kt">Type</span>} {P : A -&gt; <span class="kt">Type</span>} (f g : <span class="kr">forall</span> <span class="nv">x</span> : A, P x)
+  : f == g -&gt; f = g
+  := (@apD10 A P f g)^-<span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> path_forall {_ A%_type_scope P} (f g)%_function_scope _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Contractibility and truncation levels *)</span>
+
+<span class="sd">(** Truncation measures how complicated a type is in terms of higher path types. The (-2)-truncated types are the contractible ones, whose homotopy is completely trivial.  More precisely, a type [A] is contractible if there is a point [x : A] and a (pointwise) homotopy connecting the identity on [A] to the constant map at [x].</span>
+
+<span class="sd">   The (n+1)-truncated types are those whose path types are n-truncated.</span>
+
+<span class="sd">   Thus, (-1)-truncated means &quot;the type of paths between any two points is contractible&quot;. Such a type is necessarily a sub-singleton: any two points are connected by a path which is unique up to homotopy. In other words, (-1)-truncated types are truth values.  We call such types &quot;propositions&quot; or &quot;h-propositions&quot;.</span>
+
+<span class="sd">   Next, 0-truncated means &quot;the type of paths between any two points is a sub-singleton&quot;. Thus, two points might not have any paths between them, or they have a unique path. Such a type may have many points but it is discrete in the sense that all paths are trivial. We call such types &quot;sets&quot; or &quot;h-sets&quot;.</span>
+
+<span class="sd">    In this library, a witness that a type is n-truncated is formalized by the [IsTrunc n] typeclass.  In many cases, the typeclass machinery of Coq can automatically infer a witness for a type being n-truncated.  Because [IsTrunc n A] itself has no computational content (that is, all witnesses of n-truncation of a type are provably equal), it does not matter much which witness Coq infers.  Therefore, the primary concerns in making use of the typeclass machinery are coverage (how many goals can be automatically solved) and speed (how long does it take to solve a goal, and how long does it take to error on a goal we cannot automatically solve).  Careful use of typeclass instances and priorities, which determine the order of typeclass resolution, can be used to effectively increase both the coverage and the speed in cases where the goal is solvable.  Unfortunately, typeclass resolution tends to spin for a while before failing unless you&#39;re very, very, very careful.  We currently aim to achieve moderate coverage and fast speed in solvable cases.  How long it takes to fail typeclass resolution is not currently considered, though it would be nice someday to be even more careful about things.</span>
+
+<span class="sd">In order to achieve moderate coverage and speedy resolution, we currently follow the following principles.  They set up a kind of directed flow of information, intended to prevent cycles and potentially infinite chains, which are often the ways that typeclass resolution gets stuck.</span>
+
+<span class="sd">- We prefer to reason about [IsTrunc (S n) A] rather than [IsTrunc n (@paths A a b)].  Whenever we see a statement (or goal) about truncation of paths, we try to turn it into a statement (or goal) about truncation of a (non-[paths]) type.  We do not allow typeclass resolution to go in the reverse direction from [IsTrunc (S n) A] to [forall a b : A, IsTrunc n (a = b)].</span>
+
+<span class="sd">- We prefer to reason about syntactically smaller types.  That is, typeclass instances should turn goals of type [IsTrunc n (forall a : A, P a)] into goals of type [forall a : A, IsTrunc n (P a)]; and goals of type [IsTrunc n (A * B)] into the pair of goals of type [IsTrunc n A] and [IsTrunc n B]; rather than the other way around.  Ideally, we would add similar rules to transform hypotheses in the cases where we can do so.  This rule is not always the one we want, but it seems to heuristically capture the shape of most cases that we want the typeclass machinery to automatically infer.  That is, we often want to infer [IsTrunc n (A * B)] from [IsTrunc n A] and [IsTrunc n B], but we (probably) don&#39;t often need to do other simple things with [IsTrunc n (A * B)] which are broken by that reduction.</span>
+
+<span class="sd">   We begin by defining the type that indexes the truncation levels.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">trunc_index</span> : Type0 :=
+| minus_two : trunc_index
+| trunc_S : trunc_index -&gt; trunc_index.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">trunc_index_ind</span> := <span class="kn">Induction for</span> trunc_index <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">trunc_index_rec</span> := <span class="kn">Minimality for</span> trunc_index <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* See comment above about the tactic [induction]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">trunc_index_rect</span> := trunc_index_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We will use [Notation] for [trunc_index]es, so define a scope for them here. Numeral notation for [trunc_index]es is set up in Basics/Trunc.v. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> trunc_scope <span class="kr">with</span> trunc_index.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> trunc_S _%_trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+1&quot;</span> := (trunc_S n) : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+2&quot;</span> := (n.+<span class="mi">1</span>.+<span class="mi">1</span>)%trunc : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+3&quot;</span> := (n.+<span class="mi">1</span>.+<span class="mi">2</span>)%trunc : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+4&quot;</span> := (n.+<span class="mi">1</span>.+<span class="mi">3</span>)%trunc : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;n .+5&quot;</span> := (n.+<span class="mi">1</span>.+<span class="mi">4</span>)%trunc : trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We define truncatedness using an inductive type [IsTrunc_internal A n].  We use a notation [IsTrunc n A] simply to swap the orders of arguments, and notations [Contr], [IsHProp] and [IsHSet] which specialize to [n] being [-2], [-1] and [0], respectively.  An alternative is to use a [Fixpoint], and that was done in the past.  The advantages of the inductive approach are:  [IsTrunc_internal] is cumulative; typeclass inference works smoothly; the library builds faster.  Some disadvantages are that we need to manually apply the constructors when proving that something is truncated, and that the induction principle is awkward to work with. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">IsTrunc_internal</span> (<span class="nv">A</span> : <span class="kt">Type</span>@{u}) : trunc_index -&gt; <span class="kt">Type</span>@{u} :=
+| Build_Contr : <span class="kr">forall</span> (<span class="nv">center</span> : A) (<span class="nv">contr</span> : <span class="kr">forall</span> <span class="nv">y</span>, center = y), IsTrunc_internal A minus_two
+| istrunc_S : <span class="kr">forall</span> {<span class="nv">n</span>:trunc_index}, (<span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>:A, IsTrunc_internal (x = y) n) -&gt; IsTrunc_internal A (trunc_S n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Existing Class</span> <span class="nf">IsTrunc_internal</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">IsTrunc</span> n A := (IsTrunc_internal A n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">IsTrunc_internal_ind</span> := <span class="kn">Induction for</span> IsTrunc_internal <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">IsTrunc_internal_rec</span> := <span class="kn">Minimality for</span> IsTrunc_internal <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTrunc_internal_rect</span> := IsTrunc_internal_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsTrunc_unfolded</span> (<span class="nv">n</span> : trunc_index) (<span class="nv">A</span> : <span class="kt">Type</span>)
+  := <span class="kr">match</span> n <span class="kr">with</span>
+    | minus_two =&gt; { center : A &amp; <span class="kr">forall</span> <span class="nv">y</span>, center = y }
+    | n.+<span class="mi">1</span> =&gt; <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : A, IsTrunc n (x = y)
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk17"><span class="kn">Definition</span> <span class="nf">istrunc_unfold</span> (<span class="nv">n</span> : trunc_index) (<span class="nv">A</span> : <span class="kt">Type</span>)
+  : IsTrunc n A -&gt; IsTrunc_unfolded n A.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n A -&gt; IsTrunc_unfolded n A</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk18"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n A -&gt; IsTrunc_unfolded n A</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk19"><span class="nb">intros</span> [center contr|k istrunc].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>center</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>contr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">y</span> : A, center = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc_unfolded minus_two A</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="overture-v-chk1a" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : A, IsTrunc k (x = y)</span></span></span><br></div><label class="goal-separator" for="overture-v-chk1a"><hr></label><div class="goal-conclusion">IsTrunc_unfolded k.+<span class="mi">1</span> A</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk1b">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>center</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>contr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">y</span> : A, center = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc_unfolded minus_two A</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (center; contr).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk1c">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : A, IsTrunc k (x = y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc_unfolded k.+<span class="mi">1</span> A</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> istrunc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk1d"><span class="kn">Definition</span> <span class="nf">isequiv_istrunc_unfold</span> (<span class="nv">n</span> : trunc_index) (<span class="nv">A</span> : <span class="kt">Type</span>)
+  : IsEquiv (istrunc_unfold n A).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (istrunc_unfold n A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk1e"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (istrunc_unfold n A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk1f"><span class="nb">simple refine</span> (Build_IsEquiv _ _ (istrunc_unfold n A) _ _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc_unfolded n A -&gt; IsTrunc n A</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="overture-v-chk20" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="overture-v-chk20"><hr></label><div class="goal-conclusion">istrunc_unfold n A o <span class="nl">?equiv_inv</span> == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="overture-v-chk21" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="overture-v-chk21"><hr></label><div class="goal-conclusion"><span class="nl">?equiv_inv</span> o istrunc_unfold n A == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="overture-v-chk22" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="overture-v-chk22"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : IsTrunc n A,
+<span class="nl">?eisretr</span> (istrunc_unfold n A x) =
+ap (istrunc_unfold n A) (<span class="nl">?eissect</span> x)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk23">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc_unfolded n A -&gt; IsTrunc n A</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk24"><span class="nb">destruct</span> n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc_unfolded minus_two A -&gt; IsTrunc minus_two A</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="overture-v-chk25" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="overture-v-chk25"><hr></label><div class="goal-conclusion">IsTrunc_unfolded n.+<span class="mi">1</span> A -&gt; IsTrunc n.+<span class="mi">1</span> A</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk26">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc_unfolded minus_two A -&gt; IsTrunc minus_two A</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [center contr]; <span class="bp">exact</span> (Build_Contr _ center contr).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk27">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc_unfolded n.+<span class="mi">1</span> A -&gt; IsTrunc n.+<span class="mi">1</span> A</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk28"><span class="nb">intros</span> H.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsTrunc_unfolded n.+<span class="mi">1</span> A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n.+<span class="mi">1</span> A</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (istrunc_S _ H).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk29">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">istrunc_unfold n A
+o <span class="kr">match</span>
+    n <span class="kr">as</span> t
+    <span class="kr">return</span> (IsTrunc_unfolded t A -&gt; IsTrunc t A)
+  <span class="kr">with</span>
+  | minus_two =&gt;
+      <span class="kr">fun</span> <span class="nv">X</span> : IsTrunc_unfolded minus_two A =&gt;
+      (<span class="kr">fun</span> (<span class="nv">center</span> : A)
+         (<span class="nv">contr</span> : <span class="kr">forall</span> <span class="nv">y</span> : A, center = y) =&gt;
+       Build_Contr A center contr) X.<span class="mi">1</span> X.<span class="mi">2</span>
+  | t.+<span class="mi">1</span> =&gt;
+      (<span class="kr">fun</span> (<span class="nv">n</span> : trunc_index)
+         (<span class="nv">H</span> : IsTrunc_unfolded n.+<span class="mi">1</span> A) =&gt;
+       istrunc_S A H) t
+  <span class="kr">end</span> == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">destruct</span> n; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk2a">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">match</span>
+  n <span class="kr">as</span> t <span class="kr">return</span> (IsTrunc_unfolded t A -&gt; IsTrunc t A)
+<span class="kr">with</span>
+| minus_two =&gt;
+    <span class="kr">fun</span> <span class="nv">X</span> : IsTrunc_unfolded minus_two A =&gt;
+    (<span class="kr">fun</span> (<span class="nv">center</span> : A)
+       (<span class="nv">contr</span> : <span class="kr">forall</span> <span class="nv">y</span> : A, center = y) =&gt;
+     Build_Contr A center contr) X.<span class="mi">1</span> X.<span class="mi">2</span>
+| t.+<span class="mi">1</span> =&gt;
+    (<span class="kr">fun</span> (<span class="nv">n</span> : trunc_index)
+       (<span class="nv">H</span> : IsTrunc_unfolded n.+<span class="mi">1</span> A) =&gt; istrunc_S A H)
+      t
+<span class="kr">end</span> o istrunc_unfold n A == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [center contr|k istrunc]; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk2b">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : IsTrunc n A,
+<span class="kr">match</span>
+  n <span class="kr">as</span> t
+  <span class="kr">return</span>
+    ((<span class="kr">fun</span> <span class="nv">x0</span> : IsTrunc_unfolded t A =&gt;
+      istrunc_unfold t A
+        (<span class="kr">match</span>
+           t <span class="kr">as</span> t0
+           <span class="kr">return</span>
+             (IsTrunc_unfolded t0 A -&gt; IsTrunc t0 A)
+         <span class="kr">with</span>
+         | minus_two =&gt;
+             <span class="kr">fun</span> <span class="nv">X</span> : IsTrunc_unfolded minus_two A =&gt;
+             Build_Contr A X.<span class="mi">1</span> X.<span class="mi">2</span>
+         | t0.+<span class="mi">1</span> =&gt;
+             <span class="kr">fun</span> <span class="nv">H</span> : IsTrunc_unfolded t0.+<span class="mi">1</span> A =&gt;
+             istrunc_S A H
+         <span class="kr">end</span> x0)) == idmap)
+<span class="kr">with</span>
+| minus_two =&gt;
+    <span class="kr">fun</span> <span class="nv">x0</span> : {center : A &amp; <span class="kr">forall</span> <span class="nv">y</span> : A, center = y}
+    =&gt; <span class="mi">1</span>
+| t.+<span class="mi">1</span> =&gt;
+    (<span class="kr">fun</span> (<span class="nv">n</span> : trunc_index)
+       (<span class="nv">x0</span> : <span class="kr">forall</span> <span class="nv">x0</span> <span class="nv">y</span> : A, IsTrunc n (x0 = y)) =&gt; <span class="mi">1</span>)
+      t
+<span class="kr">end</span> (istrunc_unfold n A x) =
+ap (istrunc_unfold n A)
+  (((<span class="kr">fun</span> <span class="nv">x0</span> : IsTrunc n A =&gt;
+     <span class="kr">match</span>
+       x0 <span class="kr">as</span> i <span class="kr">in</span> (IsTrunc t _)
+       <span class="kr">return</span>
+         (<span class="kr">match</span>
+            t <span class="kr">as</span> t0
+            <span class="kr">return</span>
+              (IsTrunc_unfolded t0 A -&gt; IsTrunc t0 A)
+          <span class="kr">with</span>
+          | minus_two =&gt;
+              <span class="kr">fun</span> <span class="nv">X</span> : IsTrunc_unfolded minus_two A =&gt;
+              Build_Contr A X.<span class="mi">1</span> X.<span class="mi">2</span>
+          | t0.+<span class="mi">1</span> =&gt;
+              <span class="kr">fun</span> <span class="nv">H</span> : IsTrunc_unfolded t0.+<span class="mi">1</span> A =&gt;
+              istrunc_S A H
+          <span class="kr">end</span> (istrunc_unfold t A i) = i)
+     <span class="kr">with</span>
+     | @Build_Contr _ center contr =&gt;
+         (<span class="kr">fun</span> (<span class="nv">center0</span> : A)
+            (<span class="nv">contr0</span> : <span class="kr">forall</span> <span class="nv">y</span> : A, center0 = y) =&gt; <span class="mi">1</span>)
+           center contr
+     | @istrunc_S _ n i =&gt;
+         (<span class="kr">fun</span> (<span class="nv">k</span> : trunc_index)
+            (<span class="nv">istrunc</span> : <span class="kr">forall</span> <span class="nv">x1</span> <span class="nv">y</span> : A,
+                       IsTrunc k (x1 = y)) =&gt; <span class="mi">1</span>) n i
+     <span class="kr">end</span>)
+    :
+    <span class="kr">match</span>
+      n <span class="kr">as</span> t
+      <span class="kr">return</span> (IsTrunc_unfolded t A -&gt; IsTrunc t A)
+    <span class="kr">with</span>
+    | minus_two =&gt;
+        <span class="kr">fun</span> <span class="nv">X</span> : IsTrunc_unfolded minus_two A =&gt;
+        (<span class="kr">fun</span> (<span class="nv">center</span> : A)
+           (<span class="nv">contr</span> : <span class="kr">forall</span> <span class="nv">y</span> : A, center = y) =&gt;
+         Build_Contr A center contr) X.<span class="mi">1</span> X.<span class="mi">2</span>
+    | t.+<span class="mi">1</span> =&gt;
+        (<span class="kr">fun</span> (<span class="nv">n</span> : trunc_index)
+           (<span class="nv">H</span> : IsTrunc_unfolded n.+<span class="mi">1</span> A) =&gt;
+         istrunc_S A H) t
+    <span class="kr">end</span> o istrunc_unfold n A == idmap) x)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [center contr|k istrunc]; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_istrunc_unfold</span> (<span class="nv">n</span> : trunc_index) (<span class="nv">A</span> : <span class="kt">Type</span>)
+  := Build_Equiv _ _ _  (isequiv_istrunc_unfold n A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A version of [istrunc_unfold] for successors. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">istrunc_paths</span> (<span class="nv">A</span> : <span class="kt">Type</span>) <span class="nv">n</span> `{H : IsTrunc n.+<span class="mi">1</span> A} (x y : A)
+  : IsTrunc n (x = y)
+  := istrunc_unfold n.+<span class="mi">1</span> A H x y.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">Contr</span> A := (IsTrunc minus_two A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">IsHProp</span> A := (IsTrunc minus_two.+<span class="mi">1</span> A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">IsHSet</span> A := (IsTrunc minus_two.+<span class="mi">2</span> A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">center</span> (<span class="nv">A</span> : <span class="kt">Type</span>) {<span class="nv">H</span> : Contr A} : A := pr1 (istrunc_unfold _ _ H).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">contr</span> {<span class="nv">A</span> : <span class="kt">Type</span>} {<span class="nv">H</span> : Contr A} (<span class="nv">y</span> : A) : center A = y := pr2 (istrunc_unfold _ _ H) y.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We define a slight variation of [istrunc_unfold], which differs only it what it does for [n = -2].  It will produce a section of the following type family. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk2c" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk2c"><span class="kn">Definition</span> <span class="nf">istrunc_codomain_fam</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">istrunc</span> : IsTrunc n A) : A -&gt; <span class="kt">Type</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A -&gt; <span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk2d"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A -&gt; <span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk2e" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk2e"><span class="nb">intro</span> y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n A</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk2f"><span class="nb">destruct</span> n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>Contr A</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kt">Type</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="overture-v-chk30" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n.+<span class="mi">1</span> A</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><label class="goal-separator" for="overture-v-chk30"><hr></label><div class="goal-conclusion"><span class="kt">Type</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk31">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>Contr A</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (center A = y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk32" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk32">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n.+<span class="mi">1</span> A</span></span></span><br><span><var>y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">forall</span> <span class="nv">x</span> : A, IsTrunc n (y = x)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The variant of [istrunc_unfold] lets us treat any proof of truncation as a function.  For [n = -2], it produces the contracting homotopy. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk33" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk33"><span class="kn">Definition</span> <span class="nf">istrunc_fun</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">istrunc</span> : IsTrunc n A)
+  : <span class="kr">forall</span> <span class="nv">y</span> : A, istrunc_codomain_fam istrunc y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : A, istrunc_codomain_fam istrunc y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk34" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk34"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : A, istrunc_codomain_fam istrunc y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk35" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk35"><span class="nb">destruct</span> n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>Contr A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : A, istrunc_codomain_fam istrunc y</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="overture-v-chk36" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n.+<span class="mi">1</span> A</span></span></span><br></div><label class="goal-separator" for="overture-v-chk36"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : A, istrunc_codomain_fam istrunc y</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk37" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk37">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>Contr A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : A, istrunc_codomain_fam istrunc y</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (@contr A istrunc).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="overture-v-chk38" style="display: none" type="checkbox"><label class="alectryon-input" for="overture-v-chk38">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n.+<span class="mi">1</span> A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : A, istrunc_codomain_fam istrunc y</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (istrunc_unfold _ _ istrunc).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We add this as a coercion. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[warning=<span class="s2">&quot;-uniform-inheritance&quot;</span>] 
+<span class="kn">Coercion</span> <span class="nf">istrunc_fun</span> : IsTrunc &gt;-&gt; <span class="kt">Funclass</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Truncated relations  *)</span>
+
+<span class="sd">(** Hprop-valued relations.  Making this a [Notation] rather than a [Definition] enables typeclass resolution to pick it up easily.  We include the base type [A] in the notation since otherwise e.g. [forall (x y : A) (z : B x y), IsHProp (C x y z)] will get displayed as [forall (x : A), is_mere_relation (C x)].  *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">is_mere_relation</span> A R := (<span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">y</span> : A), IsHProp (R x y)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Natural numbers *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">nat</span> : Type0 :=
+| O : nat
+| S : nat -&gt; nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">nat_ind</span> := <span class="kn">Induction for</span> nat <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">nat_rect</span> := <span class="kn">Induction for</span> nat <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">nat_rec</span> := <span class="kn">Induction for</span> nat <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> nat_scope <span class="kr">with</span> nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> nat_scope <span class="kr">with</span> nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> S _%_nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Misc *)</span>
+
+<span class="sd">(** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">Empty</span> : Type0 := .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> Empty <span class="kr">as</span> core.<span class="kt">False</span>.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">Empty_ind</span> := <span class="kn">Induction for</span> Empty <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">Empty_rec</span> := <span class="kn">Minimality for</span> Empty <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Empty_rect</span> := Empty_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">not</span> (<span class="nv">A</span> : <span class="kt">Type</span>) := A -&gt; Empty.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;~ x&quot;</span> := (not x) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;~~ x&quot;</span> := (~ ~x) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Unfold</span> not: core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x &lt;&gt; y  :&gt;  T&quot;</span> := (not (x = y :&gt; T)) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x &lt;&gt; y&quot;</span> := (x &lt;&gt; y :&gt; _) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">symmetric_neq</span> {<span class="nv">A</span>} {<span class="nv">x</span> <span class="nv">y</span> : A} : x &lt;&gt; y -&gt; y &lt;&gt; x
+  := <span class="kr">fun</span> <span class="nv">np</span> <span class="nv">p</span> =&gt; np (p^).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">complement</span> {<span class="nv">A</span>} (<span class="nv">R</span> : Relation A) : Relation A :=
+  <span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> =&gt; ~ (R x y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[<span class="kn">global</span>] <span class="kn">Typeclasses Opaque</span> complement.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">Irreflexive</span> {<span class="nv">A</span>} (<span class="nv">R</span> : Relation A) :=
+  irreflexivity : Reflexive (complement R).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">Asymmetric</span> {<span class="nv">A</span>} (<span class="nv">R</span> : Relation A) :=
+  asymmetry : <span class="kr">forall</span> {<span class="nv">x</span> <span class="nv">y</span>}, R x y -&gt; (complement R y x : <span class="kt">Type</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Likewise, we put [Unit] here, instead of in [Unit.v], because [Trunc] uses it. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">Unit</span> : Type0 := tt : Unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">Unit_ind</span> := <span class="kn">Induction for</span> Unit <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">Unit_rec</span> := <span class="kn">Minimality for</span> Unit <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Unit_rect</span> := Unit_ind.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A [Unit] goal should be resolved by [auto] and [trivial]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Resolve</span> tt : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> Unit <span class="kr">as</span> core.IDProp.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> Unit <span class="kr">as</span> core.<span class="kt">True</span>.type.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> tt <span class="kr">as</span> core.IDProp.idProp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> tt <span class="kr">as</span> core.<span class="kt">True</span>.I.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Pointed types *)</span>
+
+<span class="sd">(** A space is pointed if that space has a point. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsPointed</span> (<span class="nv">A</span> : <span class="kt">Type</span>) := point : A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[<span class="kn">global</span>] <span class="kn">Typeclasses Transparent</span> IsPointed.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> point A {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">pType</span> :=
+  { pointed_type : <span class="kt">Type</span> ;
+    ispointed_type :: IsPointed pointed_type }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">pointed_type</span> : pType &gt;-&gt; <span class="kt">Sortclass</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Homotopy fibers *)</span>
+
+<span class="sd">(** Homotopy fibers are homotopical inverse images of points.  *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">hfiber</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B) (<span class="nv">y</span> : B) := { x : A &amp; f x = y }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> hfiber {A B}%_type_scope f%_function_scope y.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Smallness *)</span>
+
+<span class="sd">(** We say that [X : Type@{j}] is small (relative to Type@{i}) if it is equivalent to a type in [Type@{i}].  We use a record to avoid an extra universe variable.  This version has no constraints on [i] and [j].  It lands in [max(i+1,j)], as expected.  We mark the [i] variable as being invariant, so that Coq is better at guessing universe variables when this is used. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsSmall</span>@{=i j | } (X : <span class="kt">Type</span>@{j}) := {
+  smalltype : <span class="kt">Type</span>@{i} ;
+  equiv_smalltype : smalltype &lt;~&gt; X ;
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> smalltype X {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> equiv_smalltype X {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Propositional resizing *)</span>
+
+<span class="sd">(** See the note by [Funext] above regarding classes for axioms. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Monomorphic</span> <span class="kn">Axiom</span> <span class="nv">PropResizing</span> : Type0.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Existing Class</span> <span class="nf">PropResizing</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Propositional resizing says that every (-1)-truncated type is small. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Axiom</span> <span class="nv">issmall_hprop</span>@{i j | } : <span class="kr">forall</span> `{PropResizing} (X : <span class="kt">Type</span>@{j})
+  (T : IsHProp X), IsSmall@{i j} X.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Existing Instance</span> <span class="nf">issmall_hprop</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

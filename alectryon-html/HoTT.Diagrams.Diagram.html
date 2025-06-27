@@ -1,0 +1,1046 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Diagram.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk0"><span class="kn">Require Import</span> Basics.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Types.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Diagrams.CommutativeSquares.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Diagrams.Graph.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This file contains the definition of diagrams, diagram maps and equivalences of diagrams. *)</span>
+
+<span class="sd">(** * Diagrams *)</span>
+
+<span class="sd">(** A [Diagram] over a graph [G] associates a type to each point of the graph and a function to each arrow. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Diagram</span> (<span class="nv">G</span> : Graph) := {
+  obj : G -&gt; <span class="kt">Type</span>;
+  arr {i j : G} : G i j -&gt; obj i -&gt; obj j
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> obj [G] D i : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> arr [G] D [i j] g x : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">obj</span> : Diagram &gt;-&gt; <span class="kt">Funclass</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;D &#39;_f&#39; g&quot;</span> := (arr D g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Diagram</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext} {G: Graph}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** [path_diagram] says when two diagrams are equals (up to funext). *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_diagram_naive</span> (<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G)
+    (<span class="nv">P</span> := <span class="kr">fun</span> <span class="nv">D&#39;</span> =&gt; <span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span>, G i j -&gt; (D&#39; i -&gt; D&#39; j))
+    (<span class="nv">path_obj</span> : obj D1 = obj D2)
+    (<span class="nv">path_arr</span> : transport P path_obj (arr D1) = arr D2)
+    : D1 = D2 :=
+    <span class="kr">match</span> path_arr <span class="kr">in</span> (_ = v1)
+      <span class="kr">return</span> D1 = {|obj := obj D2; arr := v1 |}
+    <span class="kr">with</span>
+      | idpath =&gt; <span class="kr">match</span> path_obj <span class="kr">in</span> (_ = v0)
+        <span class="kr">return</span> D1 = {|obj := v0; arr := path_obj # (arr D1) |}
+      <span class="kr">with</span>
+        | idpath =&gt; <span class="mi">1</span>
+      <span class="kr">end</span>
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk1"><span class="kn">Definition</span> <span class="nf">path_diagram</span> (<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G)
+    (<span class="nv">path_obj</span> : <span class="kr">forall</span> <span class="nv">i</span>, D1 i = D2 i)
+    (<span class="nv">path_arr</span> : <span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span> (<span class="nv">g</span> : G i j) <span class="nv">x</span>,
+      transport idmap (path_obj j) (D1 _f g x)
+      = D2 _f g (transport idmap (path_obj i) x))
+    : D1 = D2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">D1 = D2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">D1 = D2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk3">srapply path_diagram_naive; funext i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">D1 i = D2 i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="diagram-v-chk4" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br></div><label class="goal-separator" for="diagram-v-chk4"><hr></label><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">D&#39;</span> : G -&gt; <span class="kt">Type</span> =&gt;
+   <span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span> : G, G i j -&gt; D&#39; i -&gt; D&#39; j)
+  (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; <span class="nl">?Goal</span>)) 
+  (arr D1) i = arr D2 (i:=i)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk5"><span class="mi">1</span>: <span class="nb">apply</span> path_obj.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">D&#39;</span> : G -&gt; <span class="kt">Type</span> =&gt;
+   <span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span> : G, G i j -&gt; D&#39; i -&gt; D&#39; j)
+  (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; path_obj i))
+  (arr D1) i = arr D2 (i:=i)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk6">funext j g x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">D&#39;</span> : G -&gt; <span class="kt">Type</span> =&gt;
+   <span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span> : G, G i j -&gt; D&#39; i -&gt; D&#39; j)
+  (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; path_obj i))
+  (arr D1) i j g x = (D2 _f g) x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk7"><span class="nb">rewrite</span> <span class="mi">3</span> transport_forall_constant, transport_arrow.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : G -&gt; <span class="kt">Type</span> =&gt; x j)
+  (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; path_obj i))
+  ((D1 _f g)
+     (transport (<span class="kr">fun</span> <span class="nv">x</span> : G -&gt; <span class="kt">Type</span> =&gt; x i)
+        (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; path_obj i))^
+        x)) = (D2 _f g) x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk8">transport_path_forall_hammer.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport idmap (path_obj j)
+  ((D1 _f g)
+     (transport (<span class="kr">fun</span> <span class="nv">x</span> : G -&gt; <span class="kt">Type</span> =&gt; x i)
+        (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; path_obj i))^
+        x)) = (D2 _f g) x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk9"><span class="nb">refine</span> (_ @ path_arr i j g (transport idmap (path_obj i)^ x) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport idmap (path_obj j)
+  ((D1 _f g)
+     (transport (<span class="kr">fun</span> <span class="nv">x</span> : G -&gt; <span class="kt">Type</span> =&gt; x i)
+        (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; path_obj i))^
+        x)) =
+transport idmap (path_obj j)
+  ((D1 _f g) (transport idmap (path_obj i)^ x))</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="diagram-v-chka" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><label class="goal-separator" for="diagram-v-chka"><hr></label><div class="goal-conclusion">(D2 _f g)
+  (transport idmap (path_obj i)
+     (transport idmap (path_obj i)^ x)) = 
+(D2 _f g) x</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chkb">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport idmap (path_obj j)
+  ((D1 _f g)
+     (transport (<span class="kr">fun</span> <span class="nv">x</span> : G -&gt; <span class="kt">Type</span> =&gt; x i)
+        (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; path_obj i))^
+        x)) =
+transport idmap (path_obj j)
+  ((D1 _f g) (transport idmap (path_obj i)^ x))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chkc"><span class="kp">do</span> <span class="mi">3</span> f_ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : G -&gt; <span class="kt">Type</span> =&gt; x i)
+  (path_forall D1 D2 (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; path_obj i))^ =
+transport idmap (path_obj i)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chkd"><span class="nb">rewrite</span> &lt;- path_forall_V.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : G -&gt; <span class="kt">Type</span> =&gt; x i)
+  (path_forall D2 D1 (<span class="kr">fun</span> <span class="nv">x</span> : G =&gt; (path_obj x)^)) =
+transport idmap (path_obj i)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chke">funext y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">x</span> : G -&gt; <span class="kt">Type</span> =&gt; x i)
+  (path_forall D2 D1 (<span class="kr">fun</span> <span class="nv">x</span> : G =&gt; (path_obj x)^)) y =
+transport idmap (path_obj i)^ y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> transport_path_forall_hammer.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chkf">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(D2 _f g)
+  (transport idmap (path_obj i)
+     (transport idmap (path_obj i)^ x)) = (D2 _f g) x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk10">f_ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>path_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i = D2 i</span></span></span><br><span><var>path_arr</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+transport idmap (path_obj j) ((D1 _f g) x) =
+(D2 _f g) (transport idmap (path_obj i) x)</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport idmap (path_obj i)
+  (transport idmap (path_obj i)^ x) = x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (transport_pV idmap _ x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** * Diagram map *)</span>
+
+  <span class="sd">(** A map between two diagrams is a family of maps between the types of the diagrams making commuting the squares formed with the arrows. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">DiagramMap</span> (<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G) := {
+    DiagramMap_obj  :&gt; <span class="kr">forall</span> <span class="nv">i</span>, D1 i -&gt; D2 i;
+    DiagramMap_comm :  <span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span> (<span class="nv">g</span>: G i j) <span class="nv">x</span>,
+          D2 _f g (DiagramMap_obj i x) = DiagramMap_obj j (D1 _f g x)
+  }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> DiagramMap_obj [D1 D2] m i x : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> DiagramMap_comm  [D1 D2] m [i j] f x : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> Build_DiagramMap [D1 D2] _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">DiagramMap_homotopy</span> {<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G}
+    (<span class="nv">m1</span> <span class="nv">m2</span> : DiagramMap D1 D2) : <span class="kt">Type</span>
+    := {h_obj : (<span class="kr">forall</span> <span class="nv">i</span>, m1 i == m2 i) &amp; (<span class="kr">forall</span> <span class="nv">i</span> <span class="nv">j</span> (<span class="nv">g</span> : G i j) <span class="nv">x</span>,
+      DiagramMap_comm m1 g x @ h_obj j (D1 _f g x)
+      = ap (D2 _f g) (h_obj i x) @ DiagramMap_comm m2 g x)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk11">#[export] <span class="kn">Instance</span> <span class="nf">reflexive_DiagramMap_homotopy</span> {<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G} : Reflexive (@DiagramMap_homotopy D1 D2).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Reflexive DiagramMap_homotopy</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk12"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Reflexive DiagramMap_homotopy</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk13"><span class="nb">intros</span> m.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap_homotopy m m</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk14">snapply exist.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G, m i == m i</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="diagram-v-chk15" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br></div><label class="goal-separator" for="diagram-v-chk15"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">h_obj</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, m i == m i =&gt;
+ <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+ DiagramMap_comm m g x @ h_obj j ((D1 _f g) x) =
+ ap (D2 _f g) (h_obj i x) @ DiagramMap_comm m g x)
+  <span class="nl">?proj1</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk16">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G, m i == m i</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intro</span> i; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk17">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">h_obj</span> : <span class="kr">forall</span> <span class="nv">i</span> : G, m i == m i =&gt;
+ <span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+ DiagramMap_comm m g x @ h_obj j ((D1 _f g) x) =
+ ap (D2 _f g) (h_obj i x) @ DiagramMap_comm m g x)
+  (<span class="kr">fun</span> (<span class="nv">i</span> : G) (<span class="nv">x0</span> : D1 i) =&gt; <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk18"><span class="nb">intros</span> i j g x; <span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D1 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap_comm m g x @ <span class="mi">1</span> = <span class="mi">1</span> @ DiagramMap_comm m g x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> concat_p1_1p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** [path_DiagramMap] says when two maps are equals (up to funext). *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk19"><span class="kn">Definition</span> <span class="nf">path_DiagramMap</span> {<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G}
+    {<span class="nv">m1</span> <span class="nv">m2</span> : DiagramMap D1 D2} (<span class="nv">h</span> : DiagramMap_homotopy m1 m2)
+    : m1 = m2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1, m2</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>DiagramMap_homotopy m1 m2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m1 = m2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk1a"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1, m2</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>DiagramMap_homotopy m1 m2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m1 = m2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk1b"><span class="nb">destruct</span> m1 <span class="kr">as</span> [m1_obj m1_comm].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>DiagramMap_homotopy
+  {|
+    DiagramMap_obj := m1_obj;
+    DiagramMap_comm := m1_comm
+  |} m2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} = m2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk1c"><span class="nb">destruct</span> m2 <span class="kr">as</span> [m2_obj m2_comm].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m2_obj i x) =
+m2_obj j ((D1 _f g) x)</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>DiagramMap_homotopy
+  {|
+    DiagramMap_obj := m1_obj;
+    DiagramMap_comm := m1_comm
+  |}
+  {|
+    DiagramMap_obj := m2_obj;
+    DiagramMap_comm := m2_comm
+  |}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m2_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk1d"><span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m2_obj i x) =
+m2_obj j ((D1 _f g) x)</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>DiagramMap_homotopy
+  {|
+    DiagramMap_obj := m1_obj;
+    DiagramMap_comm := m1_comm
+  |}
+  {|
+    DiagramMap_obj := m2_obj;
+    DiagramMap_comm := m2_comm
+  |}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m2_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk1e"><span class="nb">destruct</span> h <span class="kr">as</span> [h_obj h_comm].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m2_obj i x) =
+m2_obj j ((D1 _f g) x)</span></span></span><br><span><var>h_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+{|
+  DiagramMap_obj := m1_obj;
+  DiagramMap_comm := m1_comm
+|} i ==
+{|
+  DiagramMap_obj := m2_obj;
+  DiagramMap_comm := m2_comm
+|} i</span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+DiagramMap_comm
+  {|
+    DiagramMap_obj := m1_obj;
+    DiagramMap_comm := m1_comm
+  |} g x @ h_obj j ((D1 _f g) x) =
+ap (D2 _f g) (h_obj i x) @
+DiagramMap_comm
+  {|
+    DiagramMap_obj := m2_obj;
+    DiagramMap_comm := m2_comm
+  |} g x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m2_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk1f"><span class="nb">revert</span> h_obj h_comm.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m2_obj i x) =
+m2_obj j ((D1 _f g) x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">h_obj</span> : <span class="kr">forall</span> <span class="nv">i</span> : G,
+        {|
+          DiagramMap_obj := m1_obj;
+          DiagramMap_comm := m1_comm
+        |} i ==
+        {|
+          DiagramMap_obj := m2_obj;
+          DiagramMap_comm := m2_comm
+        |} i,
+(<span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m1_obj;
+     DiagramMap_comm := m1_comm
+   |} g x @ h_obj j ((D1 _f g) x) =
+ ap (D2 _f g) (h_obj i x) @
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m2_obj;
+     DiagramMap_comm := m2_comm
+   |} g x) -&gt;
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m2_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk20"><span class="nb">set</span> (E := (@equiv_functor_forall _
+       G (<span class="kr">fun</span> <span class="nv">i</span> =&gt; m1_obj i = m2_obj i)
+       G (<span class="kr">fun</span> <span class="nv">i</span> =&gt; m1_obj i == m2_obj i)
+       idmap _
+       (<span class="kr">fun</span> <span class="nv">i</span> =&gt; @apD10 _ _ (m1_obj i) (m2_obj i)))
+       (<span class="kr">fun</span> <span class="nv">i</span> =&gt; isequiv_apD10 _ _ _ _)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m2_obj i x) =
+m2_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G,
+ (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; m1_obj i = m2_obj i) a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G,
+ (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; m1_obj i == m2_obj i) b)</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">h_obj</span> : <span class="kr">forall</span> <span class="nv">i</span> : G,
+        {|
+          DiagramMap_obj := m1_obj;
+          DiagramMap_comm := m1_comm
+        |} i ==
+        {|
+          DiagramMap_obj := m2_obj;
+          DiagramMap_comm := m2_comm
+        |} i,
+(<span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m1_obj;
+     DiagramMap_comm := m1_comm
+   |} g x @ h_obj j ((D1 _f g) x) =
+ ap (D2 _f g) (h_obj i x) @
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m2_obj;
+     DiagramMap_comm := m2_comm
+   |} g x) -&gt;
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m2_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk21">equiv_intro E h_obj.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m2_obj i x) =
+m2_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G,
+ (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; m1_obj i = m2_obj i) a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G,
+ (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; m1_obj i == m2_obj i) b)</span></span></span></span><br><span><var>h_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m2_obj a</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m1_obj;
+     DiagramMap_comm := m1_comm
+   |} g x @ E h_obj j ((D1 _f g) x) =
+ ap (D2 _f g) (E h_obj i x) @
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m2_obj;
+     DiagramMap_comm := m2_comm
+   |} g x) -&gt;
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m2_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk22"><span class="nb">revert</span> h_obj.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m2_obj i x) =
+m2_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G,
+ (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; m1_obj i = m2_obj i) a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G,
+ (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; m1_obj i == m2_obj i) b)</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">h_obj</span> : <span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m2_obj a,
+(<span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m1_obj;
+     DiagramMap_comm := m1_comm
+   |} g x @ E h_obj j ((D1 _f g) x) =
+ ap (D2 _f g) (E h_obj i x) @
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m2_obj;
+     DiagramMap_comm := m2_comm
+   |} g x) -&gt;
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m2_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk23">equiv_intro (@apD10 _ _ m1_obj m2_obj) h_obj.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>m2_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m2_obj i x) =
+m2_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G,
+ (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; m1_obj i = m2_obj i) a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G,
+ (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; m1_obj i == m2_obj i) b)</span></span></span></span><br><span><var>h_obj</var><span class="hyp-type"><b>: </b><span>m1_obj = m2_obj</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m1_obj;
+     DiagramMap_comm := m1_comm
+   |} g x @ E (apD10 h_obj) j ((D1 _f g) x) =
+ ap (D2 _f g) (E (apD10 h_obj) i x) @
+ DiagramMap_comm
+   {|
+     DiagramMap_obj := m2_obj;
+     DiagramMap_comm := m2_comm
+   |} g x) -&gt;
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m2_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk24"><span class="nb">destruct</span> h_obj; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+ m1_comm i j g x @
+ functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10) (apD10 <span class="mi">1</span>)
+   j ((D1 _f g) x) = <span class="mi">1</span> @ m2_comm i j g x) -&gt;
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk25"><span class="nb">intros</span> h_comm.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m2_comm i j g x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk26"><span class="nb">assert</span> (HH : m1_comm = m2_comm).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m2_comm i j g x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m1_comm = m2_comm</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="diagram-v-chk27" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m2_comm i j g x</span></span></span><br><span><var>HH</var><span class="hyp-type"><b>: </b><span>m1_comm = m2_comm</span></span></span><br></div><label class="goal-separator" for="diagram-v-chk27"><hr></label><div class="goal-conclusion">{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk28">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m2_comm i j g x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m1_comm = m2_comm</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk29">funext i j f x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m2_comm i j g x</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D1 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m1_comm i j f x = m2_comm i j f x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk2a">rhs_V napply concat_1p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m2_comm i j g x</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D1 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m1_comm i j f x = <span class="mi">1</span> @ m2_comm i j f x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk2b">rhs_V napply h_comm.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m2_comm i j g x</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D1 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m1_comm i j f x =
+m1_comm i j f x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10) (apD10 <span class="mi">1</span>) j
+  ((D1 _f f) x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> inverse, concat_p1.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk2c" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk2c">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm, m2_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m2_comm i j g x</span></span></span><br><span><var>HH</var><span class="hyp-type"><b>: </b><span>m1_comm = m2_comm</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m2_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk2d"><span class="nb">destruct</span> HH.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>m1_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (m1_obj i x) =
+m1_obj j ((D1 _f g) x)</span></span></span><br><span><var>E</var><span><span class="hyp-body"><b>:= </b><span>equiv_functor_forall idmap (<span class="kr">fun</span> <span class="nv">i</span> : G =&gt; apD10)</span></span><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : G, m1_obj a = m1_obj a) &lt;~&gt;
+(<span class="kr">forall</span> <span class="nv">b</span> : G, m1_obj b == m1_obj b)</span></span></span></span><br><span><var>h_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+m1_comm i j g x @
+functor_forall idmap (<span class="kr">fun</span> <span class="nv">i0</span> : G =&gt; apD10)
+  (apD10 <span class="mi">1</span>) j ((D1 _f g) x) =
+<span class="mi">1</span> @ m1_comm i j g x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|} =
+{|
+  DiagramMap_obj := m1_obj; DiagramMap_comm := m1_comm
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Identity and composition for diagram maps. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">diagram_idmap</span> (<span class="nv">D</span> : Diagram G) : DiagramMap D D
+    := Build_DiagramMap (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idmap) (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; <span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk2e" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk2e"><span class="kn">Definition</span> <span class="nf">diagram_comp</span> {<span class="nv">D1</span> <span class="nv">D2</span> <span class="nv">D3</span> : Diagram G} (<span class="nv">m2</span> : DiagramMap D2 D3)
+             (<span class="nv">m1</span> : DiagramMap D1 D2) : DiagramMap D1 D3.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2, D3</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>DiagramMap D2 D3</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap D1 D3</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk2f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2, D3</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>DiagramMap D2 D3</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap D1 D3</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk30" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk30"><span class="nb">apply</span> (Build_DiagramMap (<span class="kr">fun</span> <span class="nv">i</span> =&gt; m2 i o m1 i)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2, D3</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>DiagramMap D2 D3</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+(D3 _f g) (m2 i (m1 i x)) = m2 j (m1 j ((D1 _f g) x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk31"><span class="nb">intros</span> i j f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2, D3</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>DiagramMap D2 D3</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>DiagramMap D1 D2</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : D1 i,
+(D3 _f f) (m2 i (m1 i x)) = m2 j (m1 j ((D1 _f f) x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (comm_square_comp (DiagramMap_comm m1 f) (DiagramMap_comm m2 f)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** * Diagram equivalences *)</span>
+
+  <span class="sd">(** An equivalence of diagram is a diagram map whose functions are equivalences. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">diagram_equiv</span> (<span class="nv">D1</span> <span class="nv">D2</span>: Diagram G) :=
+    { diag_equiv_map :&gt; DiagramMap D1 D2;
+      diag_equiv_isequiv : <span class="kr">forall</span> <span class="nv">i</span>, IsEquiv (diag_equiv_map i) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> diag_equiv_map [D1 D2] e : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> diag_equiv_isequiv [D1 D2] e i : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> Build_diagram_equiv [D1 D2] m H : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Inverse, section and retraction of equivalences of diagrams. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk32" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk32"><span class="kn">Lemma</span> <span class="nf">diagram_equiv_inv</span> {<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G} (<span class="nv">w</span> : diagram_equiv D1 D2)
+    : DiagramMap D2 D1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap D2 D1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk33" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk33"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap D2 D1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk34" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk34"><span class="nb">apply</span> (Build_DiagramMap
+             (<span class="kr">fun</span> <span class="nv">i</span> =&gt; (Build_Equiv _ _ _ (diag_equiv_isequiv w i))^-<span class="mi">1</span>)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D2 i),
+(D1 _f g)
+  ({|
+     equiv_fun := w i;
+     equiv_isequiv := diag_equiv_isequiv w i
+   |}^-<span class="mi">1</span> x) =
+{|
+  equiv_fun := w j;
+  equiv_isequiv := diag_equiv_isequiv w j
+|}^-<span class="mi">1</span> ((D2 _f g) x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk35" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk35"><span class="nb">intros</span> i j f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : D2 i,
+(D1 _f f)
+  ({|
+     equiv_fun := w i;
+     equiv_isequiv := diag_equiv_isequiv w i
+   |}^-<span class="mi">1</span> x) =
+{|
+  equiv_fun := w j;
+  equiv_isequiv := diag_equiv_isequiv w j
+|}^-<span class="mi">1</span> ((D2 _f f) x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk36" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk36"><span class="nb">apply</span> (@comm_square_inverse _ _ _ _ _ _
+                                (Build_Equiv _ _ _ (diag_equiv_isequiv w i))
+                                (Build_Equiv _ _ _ (diag_equiv_isequiv w j))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : D1 i =&gt;
+ (D2 _f f)
+   ({|
+      equiv_fun := w i;
+      equiv_isequiv := diag_equiv_isequiv w i
+    |} x)) ==
+(<span class="kr">fun</span> <span class="nv">x</span> : D1 i =&gt;
+ {|
+   equiv_fun := w j;
+   equiv_isequiv := diag_equiv_isequiv w j
+ |} ((D1 _f f) x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> x; <span class="nb">apply</span> DiagramMap_comm.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk37" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk37"><span class="kn">Lemma</span> <span class="nf">diagram_inv_is_section</span> {<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G}
+        (<span class="nv">w</span> : diagram_equiv D1 D2)
+    : diagram_comp w (diagram_equiv_inv w) = diagram_idmap D2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp w (diagram_equiv_inv w) =
+diagram_idmap D2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk38" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk38"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp w (diagram_equiv_inv w) =
+diagram_idmap D2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk39" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk39"><span class="nb">destruct</span> w <span class="kr">as</span> [[w_obj w_comm] is_eq_w].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+IsEquiv
+  ({|
+     DiagramMap_obj := w_obj;
+     DiagramMap_comm := w_comm
+   |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp
+  {|
+    diag_equiv_map :=
+      {|
+        DiagramMap_obj := w_obj;
+        DiagramMap_comm := w_comm
+      |};
+    diag_equiv_isequiv := is_eq_w
+  |}
+  (diagram_equiv_inv
+     {|
+       diag_equiv_map :=
+         {|
+           DiagramMap_obj := w_obj;
+           DiagramMap_comm := w_comm
+         |};
+       diag_equiv_isequiv := is_eq_w
+     |}) = diagram_idmap D2</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk3a" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk3a"><span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp
+  {|
+    DiagramMap_obj := w_obj; DiagramMap_comm := w_comm
+  |}
+  (diagram_equiv_inv
+     {|
+       diag_equiv_map :=
+         {|
+           DiagramMap_obj := w_obj;
+           DiagramMap_comm := w_comm
+         |};
+       diag_equiv_isequiv := is_eq_w
+     |}) = diagram_idmap D2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk3b" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk3b"><span class="nb">set</span> (we i := Build_Equiv _ _ _ (is_eq_w i)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp
+  {|
+    DiagramMap_obj := w_obj; DiagramMap_comm := w_comm
+  |}
+  (diagram_equiv_inv
+     {|
+       diag_equiv_map :=
+         {|
+           DiagramMap_obj := w_obj;
+           DiagramMap_comm := w_comm
+         |};
+       diag_equiv_isequiv := is_eq_w
+     |}) = diagram_idmap D2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk3c" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk3c"><span class="nb">apply</span> path_DiagramMap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap_homotopy
+  (diagram_comp
+     {|
+       DiagramMap_obj := w_obj;
+       DiagramMap_comm := w_comm
+     |}
+     (diagram_equiv_inv
+        {|
+          diag_equiv_map :=
+            {|
+              DiagramMap_obj := w_obj;
+              DiagramMap_comm := w_comm
+            |};
+          diag_equiv_isequiv := is_eq_w
+        |})) (diagram_idmap D2)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk3d" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk3d"><span class="kr">exists</span> (<span class="nv">fun</span> <span class="nv">i</span> =&gt; eisretr (we i)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D2 i),
+DiagramMap_comm
+  (diagram_comp
+     {|
+       DiagramMap_obj := w_obj;
+       DiagramMap_comm := w_comm
+     |}
+     (diagram_equiv_inv
+        {|
+          diag_equiv_map :=
+            {|
+              DiagramMap_obj := w_obj;
+              DiagramMap_comm := w_comm
+            |};
+          diag_equiv_isequiv := is_eq_w
+        |})) g x @
+eisretr
+  {|
+    equiv_fun :=
+      {|
+        diag_equiv_map :=
+          {|
+            DiagramMap_obj := w_obj;
+            DiagramMap_comm := w_comm
+          |};
+        diag_equiv_isequiv := is_eq_w
+      |} j;
+    equiv_isequiv :=
+      diag_equiv_isequiv
+        {|
+          diag_equiv_map :=
+            {|
+              DiagramMap_obj := w_obj;
+              DiagramMap_comm := w_comm
+            |};
+          diag_equiv_isequiv := is_eq_w
+        |} j
+  |} ((D2 _f g) x) =
+ap (D2 _f g)
+  (eisretr
+     {|
+       equiv_fun :=
+         {|
+           diag_equiv_map :=
+             {|
+               DiagramMap_obj := w_obj;
+               DiagramMap_comm := w_comm
+             |};
+           diag_equiv_isequiv := is_eq_w
+         |} i;
+       equiv_isequiv :=
+         diag_equiv_isequiv
+           {|
+             diag_equiv_map :=
+               {|
+                 DiagramMap_obj := w_obj;
+                 DiagramMap_comm := w_comm
+               |};
+             diag_equiv_isequiv := is_eq_w
+           |} i
+     |} x) @ DiagramMap_comm (diagram_idmap D2) g x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk3e" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk3e"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D2 i),
+comm_square_comp
+  (comm_square_inverse
+     (<span class="kr">fun</span> <span class="nv">x0</span> : D1 i =&gt; w_comm i j g x0))
+  (w_comm i j g) x @ eisretr (w_obj j) ((D2 _f g) x) =
+ap (D2 _f g) (eisretr (w_obj i) x) @ <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk3f" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk3f"><span class="nb">intros</span> i j f x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">comm_square_comp
+  (comm_square_inverse
+     (<span class="kr">fun</span> <span class="nv">x</span> : D1 i =&gt; w_comm i j f x)) (w_comm i j f)
+  x @ eisretr (w_obj j) ((D2 _f f) x) =
+ap (D2 _f f) (eisretr (w_obj i) x) @ <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk40" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk40">rhs napply concat_p1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D2 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">comm_square_comp
+  (comm_square_inverse
+     (<span class="kr">fun</span> <span class="nv">x</span> : D1 i =&gt; w_comm i j f x)) (w_comm i j f)
+  x @ eisretr (w_obj j) ((D2 _f f) x) =
+ap (D2 _f f) (eisretr (w_obj i) x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (comm_square_inverse_is_retr (we i) (we j) _ x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk41" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk41"><span class="kn">Lemma</span> <span class="nf">diagram_inv_is_retraction</span> {<span class="nv">D1</span> <span class="nv">D2</span> : Diagram G}
+        (<span class="nv">w</span> : diagram_equiv D1 D2)
+    : diagram_comp (diagram_equiv_inv w) w = diagram_idmap D1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp (diagram_equiv_inv w) w =
+diagram_idmap D1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk42" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk42"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp (diagram_equiv_inv w) w =
+diagram_idmap D1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk43" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk43"><span class="nb">destruct</span> w <span class="kr">as</span> [[w_obj w_comm] is_eq_w].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G,
+IsEquiv
+  ({|
+     DiagramMap_obj := w_obj;
+     DiagramMap_comm := w_comm
+   |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp
+  (diagram_equiv_inv
+     {|
+       diag_equiv_map :=
+         {|
+           DiagramMap_obj := w_obj;
+           DiagramMap_comm := w_comm
+         |};
+       diag_equiv_isequiv := is_eq_w
+     |})
+  {|
+    diag_equiv_map :=
+      {|
+        DiagramMap_obj := w_obj;
+        DiagramMap_comm := w_comm
+      |};
+    diag_equiv_isequiv := is_eq_w
+  |} = diagram_idmap D1</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk44" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk44"><span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp
+  (diagram_equiv_inv
+     {|
+       diag_equiv_map :=
+         {|
+           DiagramMap_obj := w_obj;
+           DiagramMap_comm := w_comm
+         |};
+       diag_equiv_isequiv := is_eq_w
+     |})
+  {|
+    DiagramMap_obj := w_obj; DiagramMap_comm := w_comm
+  |} = diagram_idmap D1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk45" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk45"><span class="nb">set</span> (we i := Build_Equiv _ _ _ (is_eq_w i)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_comp
+  (diagram_equiv_inv
+     {|
+       diag_equiv_map :=
+         {|
+           DiagramMap_obj := w_obj;
+           DiagramMap_comm := w_comm
+         |};
+       diag_equiv_isequiv := is_eq_w
+     |})
+  {|
+    DiagramMap_obj := w_obj; DiagramMap_comm := w_comm
+  |} = diagram_idmap D1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk46" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk46"><span class="nb">apply</span> path_DiagramMap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">DiagramMap_homotopy
+  (diagram_comp
+     (diagram_equiv_inv
+        {|
+          diag_equiv_map :=
+            {|
+              DiagramMap_obj := w_obj;
+              DiagramMap_comm := w_comm
+            |};
+          diag_equiv_isequiv := is_eq_w
+        |})
+     {|
+       DiagramMap_obj := w_obj;
+       DiagramMap_comm := w_comm
+     |}) (diagram_idmap D1)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk47" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk47"><span class="kr">exists</span> (<span class="nv">fun</span> <span class="nv">i</span> =&gt; eissect (we i)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+DiagramMap_comm
+  (diagram_comp
+     (diagram_equiv_inv
+        {|
+          diag_equiv_map :=
+            {|
+              DiagramMap_obj := w_obj;
+              DiagramMap_comm := w_comm
+            |};
+          diag_equiv_isequiv := is_eq_w
+        |})
+     {|
+       DiagramMap_obj := w_obj;
+       DiagramMap_comm := w_comm
+     |}) g x @
+eissect
+  {|
+    equiv_fun :=
+      {|
+        diag_equiv_map :=
+          {|
+            DiagramMap_obj := w_obj;
+            DiagramMap_comm := w_comm
+          |};
+        diag_equiv_isequiv := is_eq_w
+      |} j;
+    equiv_isequiv :=
+      diag_equiv_isequiv
+        {|
+          diag_equiv_map :=
+            {|
+              DiagramMap_obj := w_obj;
+              DiagramMap_comm := w_comm
+            |};
+          diag_equiv_isequiv := is_eq_w
+        |} j
+  |} ((D1 _f g) x) =
+ap (D1 _f g)
+  (eissect
+     {|
+       equiv_fun :=
+         {|
+           diag_equiv_map :=
+             {|
+               DiagramMap_obj := w_obj;
+               DiagramMap_comm := w_comm
+             |};
+           diag_equiv_isequiv := is_eq_w
+         |} i;
+       equiv_isequiv :=
+         diag_equiv_isequiv
+           {|
+             diag_equiv_map :=
+               {|
+                 DiagramMap_obj := w_obj;
+                 DiagramMap_comm := w_comm
+               |};
+             diag_equiv_isequiv := is_eq_w
+           |} i
+     |} x) @ DiagramMap_comm (diagram_idmap D1) g x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk48" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk48"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) (<span class="nv">x</span> : D1 i),
+comm_square_comp (w_comm i j g)
+  (comm_square_inverse
+     (<span class="kr">fun</span> <span class="nv">x0</span> : D1 i =&gt; w_comm i j g x0)) x @
+eissect (w_obj j) ((D1 _f g) x) =
+ap (D1 _f g) (eissect (w_obj i) x) @ <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk49" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk49"><span class="nb">intros</span> i j f x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D1 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">comm_square_comp (w_comm i j f)
+  (comm_square_inverse
+     (<span class="kr">fun</span> <span class="nv">x</span> : D1 i =&gt; w_comm i j f x)) x @
+eissect (w_obj j) ((D1 _f f) x) =
+ap (D1 _f f) (eissect (w_obj i) x) @ <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk4a" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk4a">rhs napply concat_p1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>w_obj</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i -&gt; D2 i</span></span></span><br><span><var>w_comm</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">i</span> <span class="nv">j</span> : G) (<span class="nv">g</span> : G i j) 
+(<span class="nv">x</span> : D1 i),
+(D2 _f g) (w_obj i x) = w_obj j ((D1 _f g) x)</span></span></span><br><span><var>is_eq_w</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (w_obj i)</span></span></span><br><span><var>we</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">i</span> : G =&gt;
+{|
+  equiv_fun := w_obj i; equiv_isequiv := is_eq_w i
+|}</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : G, D1 i &lt;~&gt; D2 i</span></span></span></span><br><span><var>i, j</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>G i j</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>D1 i</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">comm_square_comp (w_comm i j f)
+  (comm_square_inverse
+     (<span class="kr">fun</span> <span class="nv">x</span> : D1 i =&gt; w_comm i j f x)) x @
+eissect (w_obj j) ((D1 _f f) x) =
+ap (D1 _f f) (eissect (w_obj i) x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (comm_square_inverse_is_sect (we i) (we j) _ x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** The equivalence of diagram is an equivalence relation. *)</span>
+  <span class="sd">(** Those instances allows to use the tactics reflexivity, symmetry and transitivity. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">reflexive_diagram_equiv</span> : Reflexive diagram_equiv | <span class="mi">1</span>
+    := <span class="kr">fun</span> <span class="nv">D</span> =&gt; Build_diagram_equiv (diagram_idmap D) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">symmetric_diagram_equiv</span> : Symmetric diagram_equiv | <span class="mi">1</span>
+    := <span class="kr">fun</span> <span class="nv">D1</span> <span class="nv">D2</span> <span class="nv">m</span> =&gt; Build_diagram_equiv (diagram_equiv_inv m) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk4b" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk4b">#[export] <span class="kn">Instance</span> <span class="nf">transitive_diagram_equiv</span> : Transitive diagram_equiv | <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Transitive diagram_equiv</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk4c" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk4c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Transitive diagram_equiv</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk4d" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk4d"><span class="nb">intros</span> D1 D2 D3 m1 m2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2, D3</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>diagram_equiv D2 D3</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">diagram_equiv D1 D3</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk4e" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk4e">napply (Build_diagram_equiv (diagram_comp m2 m1)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2, D3</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>diagram_equiv D2 D3</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">i</span> : G, IsEquiv (diagram_comp m2 m1 i)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk4f" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk4f"><span class="nb">intros</span> i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2, D3</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>diagram_equiv D2 D3</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (diagram_comp m2 m1 i)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="diagram-v-chk50" style="display: none" type="checkbox"><label class="alectryon-input" for="diagram-v-chk50"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Graph</span></span></span><br><span><var>D1, D2, D3</var><span class="hyp-type"><b>: </b><span>Diagram G</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>diagram_equiv D1 D2</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>diagram_equiv D2 D3</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (<span class="kr">fun</span> <span class="nv">x</span> : D1 i =&gt; m2 i (m1 i x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> isequiv_compose; [<span class="nb">apply</span> m1 | <span class="nb">apply</span> m2].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Diagram</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;D1 ~d~ D2&quot;</span> := (diagram_equiv D1 D2).</span></span></pre>
+</div>
+</div></body>
+</html>

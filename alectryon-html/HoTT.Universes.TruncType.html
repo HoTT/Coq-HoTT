@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>TruncType.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk0"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HProp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable Variables</span> <span class="nf">A</span> B n f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Universes of truncated types</span>
+
+<span class="sd">Now that we have the univalence axiom (from [Types/Universe]), we study further the universes [TruncType] of truncated types (including [hProp] and [hSet]) that were defined in [Basics/Trunc].  *)</span>
+
+<span class="sd">(** ** Paths in [TruncType] *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">TruncType</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Univalence}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk1"><span class="kn">Definition</span> <span class="nf">issig_trunctype</span> {<span class="nv">n</span> : trunc_index}
+    : { X : <span class="kt">Type</span> &amp; IsTrunc n X } &lt;~&gt; TruncType n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{X : <span class="kt">Type</span> &amp; IsTrunc n X} &lt;~&gt; n -<span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{X : <span class="kt">Type</span> &amp; IsTrunc n X} &lt;~&gt; n -<span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk3"><span class="kn">Definition</span> <span class="nf">equiv_path_trunctype&#39;</span> {<span class="nv">n</span> : trunc_index} (<span class="nv">A</span> <span class="nv">B</span> : TruncType n)
+    : (A = B :&gt; <span class="kt">Type</span>) &lt;~&gt; (A = B :&gt; TruncType n).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A = B &lt;~&gt; A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A = B &lt;~&gt; A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk5"><span class="nb">refine</span> ((equiv_ap&#39; issig_trunctype^-<span class="mi">1</span> _ _)^-<span class="mi">1</span> oE _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A = B &lt;~&gt;
+issig_trunctype^-<span class="mi">1</span>%equiv A =
+issig_trunctype^-<span class="mi">1</span>%equiv B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (equiv_path_sigma_hprop (_;_) (_;_)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk6">#[export] <span class="kn">Instance</span> <span class="nf">isequiv_ap_trunctype</span> {<span class="nv">n</span> : trunc_index} (<span class="nv">A</span> <span class="nv">B</span> : n-<span class="kt">Type</span>)
+    : IsEquiv (@ap _ _ (@trunctype_type n) A B).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (ap trunctype_type)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk7"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (ap trunctype_type)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk8">srefine (isequiv_homotopic _^-<span class="mi">1</span>%equiv _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A = B &lt;~&gt; A = B</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="trunctype-v-chk9" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="trunctype-v-chk9"><hr></label><div class="goal-conclusion"><span class="nl">?Goal</span>^-<span class="mi">1</span>%equiv == ap trunctype_type</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chka"><span class="mi">1</span>: <span class="nb">apply</span> equiv_path_trunctype&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(equiv_path_trunctype&#39; A B)^-<span class="mi">1</span>%equiv ==
+ap trunctype_type</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> []; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_path_trunctype</span> {<span class="nv">n</span> : trunc_index} (<span class="nv">A</span> <span class="nv">B</span> : TruncType n)
+    : (A &lt;~&gt; B) &lt;~&gt; (A = B :&gt; TruncType n)
+    := equiv_path_trunctype&#39; _ _ oE equiv_path_universe _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_trunctype</span>@{a b} {n : trunc_index} {A B : TruncType n}
+    : A &lt;~&gt; B -&gt; (A = B :&gt; TruncType n)
+  := equiv_path_trunctype@{a b} A B.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">isequiv_path_trunctype</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">A</span> <span class="nv">B</span> : TruncType n}
+    : IsEquiv (@path_trunctype n A B) := _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** [path_trunctype] is functorial *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chkb"><span class="kn">Definition</span> <span class="nf">path_trunctype_1</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">A</span> : TruncType n}
+  : path_trunctype (equiv_idmap A) = idpath.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_trunctype <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chkc"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_trunctype <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chkd"><span class="nb">unfold</span> path_trunctype; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (A; trunctype_istrunc A)
+      (A; trunctype_istrunc A)
+      (path_universe_uncurried <span class="mi">1</span>))) @ <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chke"><span class="nb">rewrite</span> (eta_path_universe_uncurried <span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (A; trunctype_istrunc A)
+      (A; trunctype_istrunc A) <span class="mi">1</span>)) @ <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chkf"><span class="nb">rewrite</span> path_sigma_hprop_1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |}) <span class="mi">1</span>) @ <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk10"><span class="kn">Definition</span> <span class="nf">path_trunctype_V</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">A</span> <span class="nv">B</span> : TruncType n}
+             (<span class="nv">f</span> : A &lt;~&gt; B)
+    : path_trunctype f^-<span class="mi">1</span> = (path_trunctype f)^.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_trunctype f^-<span class="mi">1</span> = (path_trunctype f)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk11"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_trunctype f^-<span class="mi">1</span> = (path_trunctype f)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk12"><span class="nb">unfold</span> path_trunctype; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (B; trunctype_istrunc B)
+      (A; trunctype_istrunc A)
+      (path_universe_uncurried f^-<span class="mi">1</span>))) @ <span class="mi">1</span> =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk13"><span class="nb">rewrite</span> path_universe_V_uncurried.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (B; trunctype_istrunc B)
+      (A; trunctype_istrunc A)
+      (path_universe_uncurried f)^)) @ <span class="mi">1</span> =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk14"><span class="nb">rewrite</span> (path_sigma_hprop_V (path_universe_uncurried f)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (A; trunctype_istrunc A)
+      (B; trunctype_istrunc B)
+      (path_universe_uncurried f))^) @ <span class="mi">1</span> =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk15"><span class="nb">refine</span> (concat_p1 _ @ concat_1p _ @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+   {|
+     trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+   |})
+  (path_sigma_hprop (A; trunctype_istrunc A)
+     (B; trunctype_istrunc B)
+     (path_universe_uncurried f))^ =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>)^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk16"><span class="nb">refine</span> (_ @ (ap inverse (concat_1p _))^ @ (ap inverse (concat_p1 _))^).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+   {|
+     trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+   |})
+  (path_sigma_hprop (A; trunctype_istrunc A)
+     (B; trunctype_istrunc B)
+     (path_universe_uncurried f))^ =
+(ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (A; trunctype_istrunc A)
+      (B; trunctype_istrunc B)
+      (path_universe_uncurried f)))^</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (ap_V _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk17"><span class="kn">Definition</span> <span class="nf">path_trunctype_pp</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : TruncType n}
+             (<span class="nv">f</span> : A &lt;~&gt; B) (<span class="nv">g</span> : B &lt;~&gt; C)
+    : path_trunctype (g oE f) = path_trunctype f @ path_trunctype g.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>B &lt;~&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_trunctype (g oE f) =
+path_trunctype f @ path_trunctype g</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk18"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>B &lt;~&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_trunctype (g oE f) =
+path_trunctype f @ path_trunctype g</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk19"><span class="nb">unfold</span> path_trunctype; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>B &lt;~&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (A; trunctype_istrunc A)
+      (C; trunctype_istrunc C)
+      (path_universe_uncurried (g oE f)))) @ <span class="mi">1</span> =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>) @
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (B; trunctype_istrunc B)
+       (C; trunctype_istrunc C)
+       (path_universe_uncurried g))) @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk1a"><span class="nb">rewrite</span> path_universe_compose_uncurried.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>B &lt;~&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (A; trunctype_istrunc A)
+      (C; trunctype_istrunc C)
+      (path_universe_uncurried f @
+       path_universe_uncurried g))) @ <span class="mi">1</span> =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>) @
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (B; trunctype_istrunc B)
+       (C; trunctype_istrunc C)
+       (path_universe_uncurried g))) @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk1b"><span class="nb">rewrite</span> (path_sigma_hprop_pp (path_universe_uncurried f) _ _ (trunctype_istrunc B)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>B &lt;~&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> @
+ ap
+   (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+    {|
+      trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+    |})
+   (path_sigma_hprop (A; trunctype_istrunc A)
+      (B; trunctype_istrunc B)
+      (path_universe_uncurried f) @
+    path_sigma_hprop (B; trunctype_istrunc B)
+      (C; trunctype_istrunc C)
+      (path_universe_uncurried g))) @ <span class="mi">1</span> =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>) @
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (B; trunctype_istrunc B)
+       (C; trunctype_istrunc C)
+       (path_universe_uncurried g))) @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk1c"><span class="nb">refine</span> (concat_p1 _ @ concat_1p _ @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>B &lt;~&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+   {|
+     trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+   |})
+  (path_sigma_hprop (A; trunctype_istrunc A)
+     (B; trunctype_istrunc B)
+     (path_universe_uncurried f) @
+   path_sigma_hprop (B; trunctype_istrunc B)
+     (C; trunctype_istrunc C)
+     (path_universe_uncurried g)) =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>) @
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (B; trunctype_istrunc B)
+       (C; trunctype_istrunc C)
+       (path_universe_uncurried g))) @ <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk1d"><span class="nb">refine</span> (_ @ (ap _ (concat_1p _))^ @ (ap _ (concat_p1 _))^).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>B &lt;~&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+   {|
+     trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+   |})
+  (path_sigma_hprop (A; trunctype_istrunc A)
+     (B; trunctype_istrunc B)
+     (path_universe_uncurried f) @
+   path_sigma_hprop (B; trunctype_istrunc B)
+     (C; trunctype_istrunc C)
+     (path_universe_uncurried g)) =
+((<span class="mi">1</span> @
+  ap
+    (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+     {|
+       trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+     |})
+    (path_sigma_hprop (A; trunctype_istrunc A)
+       (B; trunctype_istrunc B)
+       (path_universe_uncurried f))) @ <span class="mi">1</span>) @
+ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+   {|
+     trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+   |})
+  (path_sigma_hprop (B; trunctype_istrunc B)
+     (C; trunctype_istrunc C)
+     (path_universe_uncurried g))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk1e"><span class="nb">refine</span> (_ @ (ap (<span class="kr">fun</span> <span class="nv">z</span> =&gt; z @ _) (concat_1p _))^ @ (ap (<span class="kr">fun</span> <span class="nv">z</span> =&gt; z @ _) (concat_p1 _))^).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>B &lt;~&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+   {|
+     trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+   |})
+  (path_sigma_hprop (A; trunctype_istrunc A)
+     (B; trunctype_istrunc B)
+     (path_universe_uncurried f) @
+   path_sigma_hprop (B; trunctype_istrunc B)
+     (C; trunctype_istrunc C)
+     (path_universe_uncurried g)) =
+ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+   {|
+     trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+   |})
+  (path_sigma_hprop (A; trunctype_istrunc A)
+     (B; trunctype_istrunc B)
+     (path_universe_uncurried f)) @
+ap
+  (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+   {|
+     trunctype_type := u.<span class="mi">1</span>; trunctype_istrunc := u.<span class="mi">2</span>
+   |})
+  (path_sigma_hprop (B; trunctype_istrunc B)
+     (C; trunctype_istrunc C)
+     (path_universe_uncurried g))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (ap_pp _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk1f"><span class="kn">Definition</span> <span class="nf">ap_trunctype</span> {<span class="nv">n</span> : trunc_index} {<span class="nv">A</span> <span class="nv">B</span> : TruncType n} {<span class="nv">f</span> : A &lt;~&gt; B}
+    : ap trunctype_type (path_trunctype f) = path_universe_uncurried f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap trunctype_type (path_trunctype f) =
+path_universe_uncurried f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk20"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap trunctype_type (path_trunctype f) =
+path_universe_uncurried f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk21"><span class="nb">destruct</span> A, B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>trunctype_type</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>trunctype_istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n trunctype_type</span></span></span><br><span><var>trunctype_type0</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>trunctype_istrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n trunctype_type0</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>{|
+  trunctype_type := trunctype_type;
+  trunctype_istrunc := trunctype_istrunc
+|} &lt;~&gt;
+{|
+  trunctype_type := trunctype_type0;
+  trunctype_istrunc := trunctype_istrunc0
+|}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Trunc.trunctype_type (path_trunctype f) =
+path_universe_uncurried f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk22"><span class="nb">cbn</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>trunctype_type</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>trunctype_istrunc</var><span class="hyp-type"><b>: </b><span>IsTrunc n trunctype_type</span></span></span><br><span><var>trunctype_type0</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>trunctype_istrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n trunctype_type0</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>trunctype_type &lt;~&gt; trunctype_type0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Trunc.trunctype_type
+  ((<span class="mi">1</span> @
+    ap
+      (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+       {|
+         trunctype_type := u.<span class="mi">1</span>;
+         trunctype_istrunc := u.<span class="mi">2</span>
+       |})
+      (path_sigma_hprop
+         (trunctype_type; trunctype_istrunc)
+         (trunctype_type0; trunctype_istrunc0)
+         (path_universe_uncurried f))) @ <span class="mi">1</span>) =
+path_universe_uncurried f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk23"><span class="nb">cbn</span>; <span class="nb">destruct</span> (path_universe_uncurried f).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>trunctype_type</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>trunctype_istrunc, trunctype_istrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n trunctype_type</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>trunctype_type &lt;~&gt; trunctype_type</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Trunc.trunctype_type
+  ((<span class="mi">1</span> @
+    ap
+      (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+       {|
+         trunctype_type := u.<span class="mi">1</span>;
+         trunctype_istrunc := u.<span class="mi">2</span>
+       |})
+      (path_sigma_hprop
+         (trunctype_type; trunctype_istrunc)
+         (trunctype_type; trunctype_istrunc0) <span class="mi">1</span>)) @ <span class="mi">1</span>) =
+<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk24"><span class="nb">rewrite</span> concat_1p, concat_p1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>trunctype_type</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>trunctype_istrunc, trunctype_istrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n trunctype_type</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>trunctype_type &lt;~&gt; trunctype_type</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Trunc.trunctype_type
+  (ap
+     (<span class="kr">fun</span> <span class="nv">u</span> : {X : <span class="kt">Type</span> &amp; IsTrunc n X} =&gt;
+      {|
+        trunctype_type := u.<span class="mi">1</span>;
+        trunctype_istrunc := u.<span class="mi">2</span>
+      |})
+     (path_sigma_hprop
+        (trunctype_type; trunctype_istrunc)
+        (trunctype_type; trunctype_istrunc0) <span class="mi">1</span>)) = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk25"><span class="nb">rewrite</span> &lt;- <span class="mi">2</span> ap_compose.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>trunctype_type</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>trunctype_istrunc, trunctype_istrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n trunctype_type</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>trunctype_type &lt;~&gt; trunctype_type</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap
+  (<span class="kr">fun</span>
+     <span class="nv">x</span> : IsTrunc n
+           (trunctype_type; trunctype_istrunc0).<span class="mi">1</span> =&gt;
+   {|
+     trunctype_type :=
+       ((trunctype_type; trunctype_istrunc0).<span class="mi">1</span>; x).<span class="mi">1</span>;
+     trunctype_istrunc :=
+       ((trunctype_type; trunctype_istrunc0).<span class="mi">1</span>; x).<span class="mi">2</span>
+   |}) (pr1^-<span class="mi">1</span> <span class="mi">1</span>).<span class="mi">2</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> ap_const.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_hset</span> {<span class="nv">A</span> <span class="nv">B</span>} := @path_trunctype <span class="mi">0</span> A B.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_hprop</span> {<span class="nv">A</span> <span class="nv">B</span>} := @path_trunctype (-<span class="mi">1</span>) A B.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk26">#[export] <span class="kn">Instance</span> <span class="nf">istrunc_trunctype</span> {<span class="nv">n</span> : trunc_index}
+    : IsTrunc n.+<span class="mi">1</span> (TruncType n) | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n.+<span class="mi">1</span> n -<span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk27"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n.+<span class="mi">1</span> n -<span class="kt">Type</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk28"><span class="nb">apply</span> istrunc_S.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : n -<span class="kt">Type</span>, IsTrunc n (x = y)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk29"><span class="nb">intros</span> A B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n (A = B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk2a"><span class="nb">refine</span> (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i j} A B)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>n -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n (A &lt;~&gt; B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk2b"><span class="nb">case</span> n <span class="kr">as</span> [ | n&#39;].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>(-<span class="mi">2</span>) -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (A &lt;~&gt; B)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="trunctype-v-chk2c" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>(n&#39;.+<span class="mi">1</span>) -<span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="trunctype-v-chk2c"><hr></label><div class="goal-conclusion">IsTrunc n&#39;.+<span class="mi">1</span> (A &lt;~&gt; B)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk2d">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>(-<span class="mi">2</span>) -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (A &lt;~&gt; B)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> contr_equiv_contr_contr. <span class="c">(* The reason is different in this case. *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk2e" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk2e">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n'</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>(n&#39;.+<span class="mi">1</span>) -<span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n&#39;.+<span class="mi">1</span> (A &lt;~&gt; B)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> istrunc_equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">isset_HProp</span> : IsHSet HProp := _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk2f">#[export] <span class="kn">Instance</span> <span class="nf">istrunc_sig_istrunc</span> : <span class="kr">forall</span> <span class="nv">n</span>, IsTrunc n.+<span class="mi">1</span> { A : <span class="kt">Type</span> &amp; IsTrunc n A } | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">n</span> : trunc_index,
+IsTrunc n.+<span class="mi">1</span> {A : <span class="kt">Type</span> &amp; IsTrunc n A}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk30" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk30"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">n</span> : trunc_index,
+IsTrunc n.+<span class="mi">1</span> {A : <span class="kt">Type</span> &amp; IsTrunc n A}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk31"><span class="nb">intro</span> n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n.+<span class="mi">1</span> {A : <span class="kt">Type</span> &amp; IsTrunc n A}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (istrunc_equiv_istrunc _ issig_trunctype^-<span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Some standard inhabitants *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Unit_hp</span> : HProp := (Build_HProp Unit).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">False_hp</span> : HProp := (Build_HProp Empty).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Negation_hp</span> `{Funext} (hprop : HProp) : HProp := Build_HProp (~hprop).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** We could continue with products etc *)</span>
+
+  <span class="sd">(** ** The canonical map from [Bool] to [HProp] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">is_true</span> (<span class="nv">b</span> : Bool) : HProp
+    := <span class="kr">if</span> b <span class="kr">then</span> Unit_hp <span class="kr">else</span> False_hp.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Facts about [HProp]s using univalence *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk32" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk32">#[export] <span class="kn">Instance</span> <span class="nf">trunc_path_IsHProp</span> <span class="nv">X</span> <span class="nv">Y</span> `{IsHProp Y}
+  : IsHProp (X = Y).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHProp0</var><span class="hyp-type"><b>: </b><span>IsHProp Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (X = Y)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk33" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk33"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHProp0</var><span class="hyp-type"><b>: </b><span>IsHProp Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (X = Y)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk34" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk34"><span class="nb">apply</span> hprop_allpath.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHProp0</var><span class="hyp-type"><b>: </b><span>IsHProp Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : X = Y, x = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk35" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk35"><span class="nb">intros</span> pf1 pf2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHProp0</var><span class="hyp-type"><b>: </b><span>IsHProp Y</span></span></span><br><span><var>pf1, pf2</var><span class="hyp-type"><b>: </b><span>X = Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">pf1 = pf2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk36" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk36"><span class="nb">apply</span> (equiv_inj (equiv_path X Y)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHProp0</var><span class="hyp-type"><b>: </b><span>IsHProp Y</span></span></span><br><span><var>pf1, pf2</var><span class="hyp-type"><b>: </b><span>X = Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">equiv_path X Y pf1 = equiv_path X Y pf2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk37" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk37"><span class="nb">apply</span> path_equiv, path_arrow.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHProp0</var><span class="hyp-type"><b>: </b><span>IsHProp Y</span></span></span><br><span><var>pf1, pf2</var><span class="hyp-type"><b>: </b><span>X = Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">equiv_path X Y pf1 == equiv_path X Y pf2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> x; <span class="bp">by</span> <span class="nb">apply</span> path_ishprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_iff_ishprop_uncurried</span> `{IsHProp A, IsHProp B}
+  : (A &lt;-&gt; B) -&gt; A = B :&gt; <span class="kt">Type</span>
+    := @path_universe_uncurried _ A B o equiv_iff_hprop_uncurried.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_iff_hprop_uncurried</span> {<span class="nv">A</span> <span class="nv">B</span> : HProp}
+  : (A &lt;-&gt; B) -&gt; A = B :&gt; HProp
+    := (@path_hprop A B) o (@equiv_iff_hprop_uncurried A _ B _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">isequiv_path_iff_ishprop_uncurried</span> `{IsHProp A, IsHProp B}
+  : IsEquiv (@path_iff_ishprop_uncurried A _ B _) := _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">isequiv_path_iff_hprop_uncurried</span> {<span class="nv">A</span> <span class="nv">B</span> : HProp}
+  : IsEquiv (@path_iff_hprop_uncurried A B) := _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_iff_ishprop</span> `{IsHProp A, IsHProp B}
+  : (A -&gt; B) -&gt; (B -&gt; A) -&gt; A = B :&gt; <span class="kt">Type</span>
+    := <span class="kr">fun</span> <span class="nv">f</span> <span class="nv">g</span> =&gt; path_iff_ishprop_uncurried (f,g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_iff_hprop</span> {<span class="nv">A</span> <span class="nv">B</span> : HProp}
+  : (A -&gt; B) -&gt; (B -&gt; A) -&gt; A = B :&gt; HProp
+    := <span class="kr">fun</span> <span class="nv">f</span> <span class="nv">g</span> =&gt; path_iff_hprop_uncurried (f,g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk38" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk38"><span class="kn">Lemma</span> <span class="nf">equiv_path_iff_ishprop</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} `{IsHProp A, IsHProp B}
+    : (A &lt;-&gt; B) &lt;~&gt; (A = B).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHProp0</var><span class="hyp-type"><b>: </b><span>IsHProp A</span></span></span><br><span><var>IsHProp1</var><span class="hyp-type"><b>: </b><span>IsHProp B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(A &lt;-&gt; B) &lt;~&gt; A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk39" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk39"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHProp0</var><span class="hyp-type"><b>: </b><span>IsHProp A</span></span></span><br><span><var>IsHProp1</var><span class="hyp-type"><b>: </b><span>IsHProp B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(A &lt;-&gt; B) &lt;~&gt; A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (Build_Equiv _ _ path_iff_ishprop_uncurried _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk3a" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk3a"><span class="kn">Lemma</span> <span class="nf">equiv_path_iff_hprop</span> {<span class="nv">A</span> <span class="nv">B</span> : HProp}
+    : (A &lt;-&gt; B) &lt;~&gt; (A = B).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>HProp</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(A &lt;-&gt; B) &lt;~&gt; A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="trunctype-v-chk3b" style="display: none" type="checkbox"><label class="alectryon-input" for="trunctype-v-chk3b"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>HProp</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(A &lt;-&gt; B) &lt;~&gt; A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (equiv_path_trunctype&#39; _ _ oE equiv_path_iff_ishprop).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">TruncType</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

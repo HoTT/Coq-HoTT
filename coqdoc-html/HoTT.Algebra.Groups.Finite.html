@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Groups.Finite</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Groups.Finite</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#"><span class="id" title="library">Algebra.Groups.Group</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#"><span class="id" title="library">Algebra.Groups.Subgroup</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#"><span class="id" title="library">Algebra.Groups.QuotientGroup</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#"><span class="id" title="library">Spaces.Finite.Finite</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#"><span class="id" title="library">Spaces.Nat.Division</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_mult_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab93"></a><h1 class="section">Finite Groups</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab94"></a><h2 class="section">Basic Properties</h2>
+
+<div class="paragraph"> </div>
+
+ The order of a group is strictly positive. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="lt_zero_fcard_grp" class="idref" href="#lt_zero_fcard_grp"><span class="id" title="instance">lt_zero_fcard_grp</span></a> (<a id="G:1" class="idref" href="#G:1"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="fin_G:2" class="idref" href="#fin_G:2"><span class="id" title="binder">fin_G</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:1"><span class="id" title="variable">G</span></a>) : 0 <a class="idref" href="HoTT.Spaces.Nat.Core.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:1"><span class="id" title="variable">G</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">proof</span> (<a class="idref" href="HoTT.Spaces.Finite.Finite.html#merely_equiv_fin"><span class="id" title="method">merely_equiv_fin</span></a> <span class="id" title="var">G</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <span class="id" title="var">G</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">contradiction</span> (<span class="id" title="var">f</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#mon_unit"><span class="id" title="definition">mon_unit</span></a>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab95"></a><h2 class="section">Lagrange's theorem</h2>
+
+<div class="paragraph"> </div>
+
+ Lagrange's Theorem - Given a finite group <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> and a finite subgroup <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span>, the order of <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> divides the order of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span>.
+
+<div class="paragraph"> </div>
+
+Note that constructively, a subgroup of a finite group cannot be shown to be finite without excluded middle. We therefore have to assume it is. This in turn implies that the subgroup is decidable. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="divides_fcard_subgroup" class="idref" href="#divides_fcard_subgroup"><span class="id" title="definition">divides_fcard_subgroup</span></a> {<a id="U:3" class="idref" href="#U:3"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>}<br/>
+&nbsp;&nbsp;(<a id="G:4" class="idref" href="#G:4"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="H:5" class="idref" href="#H:5"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#Subgroup"><span class="id" title="record">Subgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:4"><span class="id" title="variable">G</span></a>) {<a id="fin_G:6" class="idref" href="#fin_G:6"><span class="id" title="binder">fin_G</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:4"><span class="id" title="variable">G</span></a>} {<a id="fin_H:7" class="idref" href="#fin_H:7"><span class="id" title="binder">fin_H</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#H:5"><span class="id" title="variable">H</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#H:5"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:4"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Spaces.Nat.Division.html#b4a741cc5b211885cd3acffc1c4c231f"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#subgroup_index"><span class="id" title="definition">subgroup_index</span></a> <span class="id" title="var">G</span> <span class="id" title="var">H</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard_quotient"><span class="id" title="definition">fcard_quotient</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#in_cosetL"><span class="id" title="definition">in_cosetL</span></a> <span class="id" title="var">H</span>) <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#finadd_const"><span class="id" title="definition">finadd_const</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#path_forall"><span class="id" title="definition">path_forall</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> <a class="idref" href="HoTT.Colimits.Quotient.html#Quotient_ind_hprop"><span class="id" title="definition">Quotient_ind_hprop</span></a>; <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard_equiv'"><span class="id" title="definition">fcard_equiv'</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#equiv_sigma_in_cosetL_subgroup"><span class="id" title="definition">equiv_sigma_in_cosetL_subgroup</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+As a corollary, the index of a subgroup is the order of the group divided by the order of the subgroup. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="subgroup_index_fcard_div" class="idref" href="#subgroup_index_fcard_div"><span class="id" title="definition">subgroup_index_fcard_div</span></a> {<a id="U:8" class="idref" href="#U:8"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>}<br/>
+&nbsp;&nbsp;(<a id="G:9" class="idref" href="#G:9"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="H:10" class="idref" href="#H:10"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#Subgroup"><span class="id" title="record">Subgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:9"><span class="id" title="variable">G</span></a>) (<a id="fin_G:11" class="idref" href="#fin_G:11"><span class="id" title="binder">fin_G</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:9"><span class="id" title="variable">G</span></a>) (<a id="fin_H:12" class="idref" href="#fin_H:12"><span class="id" title="binder">fin_H</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#H:10"><span class="id" title="variable">H</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#subgroup_index"><span class="id" title="definition">subgroup_index</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:9"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#H:10"><span class="id" title="variable">H</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:9"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#2e0d8202c5a48097752d760d3a1db6a7"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#H:10"><span class="id" title="variable">H</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Spaces.Nat.Division.html#nat_div_moveL_nV"><span class="id" title="definition">nat_div_moveL_nV</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#divides_fcard_subgroup"><span class="id" title="definition">divides_fcard_subgroup</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Therefore we can show that the order of the quotient group <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> <span class="inlinecode">/</span> <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span> is the order of <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> divided by the order of <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Modality.html#ModalFact.TwoFactorizations.H"><span class="id" title="variable">H</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="fcard_grp_quotient" class="idref" href="#fcard_grp_quotient"><span class="id" title="definition">fcard_grp_quotient</span></a> {<a id="U:13" class="idref" href="#U:13"><span class="id" title="binder">U</span></a> : <a class="idref" href="HoTT.Types.Universe.html#Univalence"><span class="id" title="class">Univalence</span></a>}<br/>
+&nbsp;&nbsp;(<a id="G:14" class="idref" href="#G:14"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:14"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;(<a id="fin_G:16" class="idref" href="#fin_G:16"><span class="id" title="binder">fin_G</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:14"><span class="id" title="variable">G</span></a>) (<a id="fin_H:17" class="idref" href="#fin_H:17"><span class="id" title="binder">fin_H</span></a> : <a class="idref" href="HoTT.Spaces.Finite.Finite.html#Finite"><span class="id" title="class">Finite</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#H:15"><span class="id" title="variable">H</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#QuotientGroup"><span class="id" title="definition">QuotientGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:14"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#H:15"><span class="id" title="variable">H</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#G:14"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Spaces.Nat.Core.html#2e0d8202c5a48097752d760d3a1db6a7"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Spaces.Finite.Finite.html#fcard"><span class="id" title="method">fcard</span></a> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#H:15"><span class="id" title="variable">H</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Groups.Finite.html#subgroup_index_fcard_div"><span class="id" title="definition">subgroup_index_fcard_div</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
