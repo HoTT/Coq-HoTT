@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Pseudofunctors *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc96" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc96"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms FunctorCategory.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Core Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">pseudofunctor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Quoting from nLab (http://ncatlab.org/nlab/show/pseudofunctor):</span>
+
+<span class="sd">      Given bicategories [C] and [D], a pseudofunctor (or weak 2-functor,</span>
+<span class="sd">      or just functor) [P : C → D] consists of:</span>
+
+<span class="sd">      - for each object [x] of [C], an object [P_x] of [D];</span>
+
+<span class="sd">      - for each hom-category [C(x,y)] in [C], a functor [P_{x,y} :</span>
+<span class="sd">        C(x,y) → D(P_x, P_y)];</span>
+
+<span class="sd">      - for each object [x] of [C], an invertible 2-morphism (2-cell)</span>
+<span class="sd">        [P_{id_x} : id_{P_x} ⇒ P_{x,x}(id_x)];</span>
+
+<span class="sd">      - for each triple [x],[y],[z] of [C]-objects, a isomorphism</span>
+<span class="sd">        (natural in [f : x → y] and [g : y → z]) [P_{x,y,z}(f,g) :</span>
+<span class="sd">        P_{x,y}(f);P_{y,z}(g) ⇒ P_{x,z}(f;g)];</span>
+
+<span class="sd">      - for each hom-category [C(x,y)],</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">                                    id_{Pₓ} ; P_{x, y}(f)</span>
+<span class="sd">                                      //              \\</span>
+<span class="sd">                                    //                  \\</span>
+<span class="sd">        P_{idₓ} ; id_{P_{x,y}(f)} //                      \\  λ_{P_{x,y}(f)}</span>
+<span class="sd">                                //                          \\</span>
+<span class="sd">                               ⇙                              ⇘</span>
+<span class="sd">              Pₓ,ₓ(idₓ) ; P_{x,y}(f)                       P_{x,y}(f)</span>
+<span class="sd">                               \\                             ⇗</span>
+<span class="sd">                                 \\                         //</span>
+<span class="sd">                P_{x,x,y}(idₓ, f)  \\                     // P_{x,y}(λ_f)</span>
+<span class="sd">                                     \\                 //</span>
+<span class="sd">                                       ⇘              //</span>
+<span class="sd">                                        P_{x,y}(idₓ ; f)</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">        and</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">                                    P_{x, y}(f) ; id_{P_y}</span>
+<span class="sd">                                      //              \\</span>
+<span class="sd">                                    //                  \\</span>
+<span class="sd">       id_{P_{x,y}(f)} ; P_{id_y} //                      \\  ρ_{P_{x,y}(f)}</span>
+<span class="sd">                                //                          \\</span>
+<span class="sd">                               ⇙                              ⇘</span>
+<span class="sd">              P_{x,y}(f) ; P_{y,y}(id_y)                   P_{x,y}(f)</span>
+<span class="sd">                               \\                             ⇗</span>
+<span class="sd">                                 \\                         //</span>
+<span class="sd">                P_{x,y,y}(f, id_y) \\                     // P_{x,y}(ρ_f)</span>
+<span class="sd">                                     \\                 //</span>
+<span class="sd">                                       ⇘              //</span>
+<span class="sd">                                       P_{x,y}(f ; id_y)</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">        commute; and</span>
+
+<span class="sd">      - for each quadruple [w],[x],[y],[z] of [C]-objects,</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">                                                  α_{P_{w,x}(f),P_{x,y}(g),P_{y,z}(h)}</span>
+<span class="sd">        (P_{w,x}(f) ; P_{x,y}(g)) ; P_{y,z}(h) ========================================⇒ P_{w,x}(f) ; (P_{x,y}(g) ; P_{y,z}(h))</span>
+<span class="sd">                                         ∥                                                   ∥</span>
+<span class="sd">                                         ∥                                                   ∥</span>
+<span class="sd">        P_{w,x,y}(f,g) ; id_{P_{y,z}(h)} ∥                                                   ∥ id_{P_{w,x}(f)} ; P_{x,y,z}(g, h)</span>
+<span class="sd">                                         ∥                                                   ∥</span>
+<span class="sd">                                         ⇓                                                   ⇓</span>
+<span class="sd">                   P_{w,y}(f ; g) ; P_{y,z}(h)                                           P_{w,x}(f) ; P_{x,z}(g ; h)</span>
+<span class="sd">                                         ∥                                                   ∥</span>
+<span class="sd">                                         ∥                                                   ∥</span>
+<span class="sd">                     P_{w,y,z}(f ; g, h) ∥                                                   ∥ P_{w,x,z}(f, g ; h)</span>
+<span class="sd">                                         ∥                                                   ∥</span>
+<span class="sd">                                         ⇓                                                   ⇓</span>
+<span class="sd">                          P_{w,z}((f ; g) ; h) ========================================⇒ P_{w,z}(f ; (g ; h))</span>
+<span class="sd">                                                          P_{w,z}(α_{f,g,h})</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">        commutes.</span>
+<span class="sd">*)</span>
+
+  <span class="c">(* To obtain the [p_composition_of_coherent] type, I ran</span>
+<span class="c">&lt;&lt;</span>
+<span class="c">  Unset Implicit Arguments.</span>
+<span class="c">  Variable F : Pseudofunctor.</span>
+<span class="c">  Goal forall (w x y z : C) (f : morphism C w x) (g : morphism C x y) (h : morphism C y z), Type.</span>
+<span class="c">  Proof.</span>
+<span class="c">    intros.</span>
+<span class="c">    pose ((idtoiso (_ -&gt; _) (ap (p_morphism_of F w z) (associativity C _ _ _ _ f g h))) : morphism _ _ _).</span>
+<span class="c">    pose ((p_composition_of F w y z h (g ∘ f)) : NaturalTransformation _ _).</span>
+<span class="c">    pose (p_morphism_of F y z h ∘ p_composition_of F w x y g f).</span>
+
+<span class="c">    pose (associator_1 (p_morphism_of F y z h) (p_morphism_of F x y g) (p_morphism_of F w x f)).</span>
+<span class="c">    pose (p_composition_of F x y z h g ∘ p_morphism_of F w x f).</span>
+<span class="c">    pose ((p_composition_of F w x z (h ∘ g) f) : NaturalTransformation _ _).</span>
+<span class="c">    simpl in *.</span>
+<span class="c">    repeat match goal with</span>
+<span class="c">             | [ H : _, H&#39; : _ |- _ ] =&gt; unique_pose_with_body (NTComposeT H H&#39;); subst H H&#39;</span>
+<span class="c">           end.</span>
+<span class="c">    match goal with</span>
+<span class="c">      | [ H := _, H&#39; := _ |- _ ] =&gt; assert (H = H&#39;); subst H H&#39;</span>
+<span class="c">    end.</span>
+<span class="c">&gt;&gt;</span>
+
+<span class="c">&lt;&lt;</span>
+<span class="c">  Unset Implicit Arguments.</span>
+<span class="c">  Variable F : Pseudofunctor.</span>
+<span class="c">  Goal forall (x y : C) (f : morphism C x y), Type.</span>
+<span class="c">  Proof.</span>
+<span class="c">    intros.</span>
+<span class="c">    pose (p_identity_of F y ∘ p_morphism_of F x y f).</span>
+<span class="c">    pose (p_composition_of F x y y (Identity y) f : NaturalTransformation _ _).</span>
+<span class="c">    pose (idtoiso (_ -&gt; _) (ap (p_morphism_of F x y) (left_identity _ _ _ f)) : morphism _ _ _).</span>
+<span class="c">    pose (left_identity_natural_transformation_2 (p_morphism_of F x y f)).</span>
+<span class="c">    simpl in *.</span>
+<span class="c">    repeat match goal with</span>
+<span class="c">             | [ H : _, H&#39; : _ |- _ ] =&gt; unique_pose_with_body (NTComposeT H H&#39;); subst H H&#39;</span>
+<span class="c">           end.</span>
+<span class="c">    match goal with</span>
+<span class="c">      | [ H := _, H&#39; := _ |- _ ] =&gt; assert (H = H&#39;); subst H H&#39;</span>
+<span class="c">    end.</span>
+<span class="c">&gt;&gt;</span>
+
+<span class="c">&lt;&lt;</span>
+<span class="c">  Unset Implicit Arguments.</span>
+<span class="c">  Variable F : Pseudofunctor.</span>
+<span class="c">  Goal forall (x y : C) (f : morphism C x y), Type.</span>
+<span class="c">  Proof.</span>
+<span class="c">    intros.</span>
+<span class="c">    pose (p_morphism_of F x y f ∘ p_identity_of F x).</span>
+<span class="c">    pose (p_composition_of F x x y f (Identity x) : NaturalTransformation _ _).</span>
+<span class="c">    pose (idtoiso (_ -&gt; _) (ap (p_morphism_of F x y) (right_identity _ _ _ f)) : morphism _ _ _).</span>
+<span class="c">    pose (right_identity_natural_transformation_2 (p_morphism_of F x y f)).</span>
+<span class="c">    simpl in *.</span>
+<span class="c">    repeat match goal with</span>
+<span class="c">             | [ H : _, H&#39; : _ |- _ ] =&gt; unique_pose_with_body (NTComposeT H H&#39;); subst H H&#39;</span>
+<span class="c">           end.</span>
+<span class="c">    match goal with</span>
+<span class="c">      | [ H := _, H&#39; := _ |- _ ] =&gt; assert (H = H&#39;); subst H H&#39;</span>
+<span class="c">    end.</span>
+<span class="c">&gt;&gt;</span>
+<span class="c"> *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Pseudofunctor</span> :=
+    {
+      p_object_of :&gt; C -&gt; PreCategory;
+      p_morphism_of : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, morphism C s d
+                                  -&gt; Functor (p_object_of s) (p_object_of d);
+      p_composition_of : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span>
+                                (<span class="nv">m1</span> : morphism C d d&#39;) (<span class="nv">m2</span> : morphism C s d),
+                           (p_morphism_of _ _ (m1 o m2))
+                             &lt;~=~&gt; (p_morphism_of _ _ m1 o p_morphism_of _ _ m2)%functor;
+      p_identity_of : <span class="kr">forall</span> <span class="nv">x</span>, p_morphism_of x x <span class="mi">1</span> &lt;~=~&gt; <span class="mi">1</span>%functor;
+      p_composition_of_coherent
+      : <span class="kr">forall</span> <span class="nv">w</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span>
+               (<span class="nv">f</span> : morphism C w x) (<span class="nv">g</span> : morphism C x y) (<span class="nv">h</span> : morphism C y z),
+          ((associator_1 (p_morphism_of y z h) (p_morphism_of x y g) (p_morphism_of w x f))
+             o ((p_composition_of x y z h g oR p_morphism_of w x f)
+                  o (p_composition_of w x z (h o g) f)))
+          = ((p_morphism_of y z h oL p_composition_of w x y g f)
+               o ((p_composition_of w y z h (g o f))
+                    o (Category.Morphisms.idtoiso (_ -&gt; _) (ap (p_morphism_of w z) (Category.Core.associativity C w x y z f g h)) : morphism _ _ _)));
+      p_left_identity_of_coherent
+      : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> (<span class="nv">f</span> : morphism C x y),
+          ((p_identity_of y oR p_morphism_of x y f)
+             o p_composition_of x y y <span class="mi">1</span> f)
+          = ((left_identity_natural_transformation_2 (p_morphism_of x y f))
+               o (Category.Morphisms.idtoiso (_ -&gt; _) (ap (p_morphism_of x y) (Category.Core.left_identity C x y f)) : morphism _ _ _));
+      p_right_identity_of_coherent
+      : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> (<span class="nv">f</span> : morphism C x y),
+          ((p_morphism_of x y f oL p_identity_of x)
+             o p_composition_of x x y f <span class="mi">1</span>)
+          = ((right_identity_natural_transformation_2 (p_morphism_of x y f))
+               o (Category.Morphisms.idtoiso (_ -&gt; _) (ap (p_morphism_of x y) (Category.Core.right_identity C x y f)) : morphism _ _ _))
+    }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">pseudofunctor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> pseudofunctor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> pseudofunctor_scope <span class="kr">with</span> pseudofunctor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> pseudofunctor_scope <span class="kr">with</span> Pseudofunctor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Create HintDb</span> pseudofunctor <span class="kn">discriminated</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> p_object_of {_} {C%_category} F%_pseudofunctor / c%_object : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> p_morphism_of {_} {C%_category} F%_pseudofunctor / {s d}%_object m%_morphism : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(*Notation &quot;F ₀ x&quot; := (p_object_of F x) : object_scope.</span>
+<span class="c">Notation &quot;F ₁ m&quot; := (p_morphism_of F m) : morphism_scope.*)</span></span></pre>
+</div>
+</div></body>
+</html>

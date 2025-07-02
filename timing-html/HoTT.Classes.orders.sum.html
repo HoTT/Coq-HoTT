@@ -1,0 +1,276 @@
+<html>
+<head>
+<title>sum.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for sum.v</h1>
+
+<div class="code" title="File: sum.v
+Line: 1
+Time: 0.072s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A B.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance Empty_lt : Lt@{Set Set} Empty.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance Unit_lt : Lt@{Set Set} Unit := fun _ _ =&gt; Empty.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance empty_tricho : Trichotomy@{Set Set Set} (_:Lt Empty).</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros [].</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance unit_tricho : Trichotomy@{Set Set Set} (_:Lt Unit).</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros [] [];auto.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section contents.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Context `{Alt : Lt@{Set Set} A} `{Blt : Lt@{Set Set} B}.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 23
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+
+#[export] Instance sum_lt : Lt@{Set Set} (A |_| B) | 2
+  := fun s1 s2 =&gt;
+  match s1, s2 with
+  | inl a1, inl a2 =&gt; a1 &lt; a2
+  | inr b1, inr b2 =&gt; b1 &lt; b2
+  | inl _, inr _ =&gt; Unit
+  | inr _, inl _ =&gt; Empty
+  end.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance sum_tricho `{!Trichotomy@{Set Set Set} Alt} `{!Trichotomy@{Set Set Set} Blt}
+  : Trichotomy@{Set Set Set} sum_lt.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+hnf.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a1|b1] [a2|b2];simpl.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 38
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> destruct (trichotomy _ a1 a2) as [?|[?|?]];auto.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> auto.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> auto.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> destruct (trichotomy _ b1 b2) as [?|[?|?]];auto.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+
+End contents.</pre>
+</div>
+<div class="code" title="File: sum.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

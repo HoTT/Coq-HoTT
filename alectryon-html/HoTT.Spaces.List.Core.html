@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chk621" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chk621"><span class="kn">Require Import</span> Basics.Overture.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Unset Elimination Schemes</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Universe Minimization ToSet</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Polymorphic Inductive Cumulativity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Lists *)</span>
+
+<span class="sd">(** ** Definition *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> list_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> list_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A list is a sequence of elements from a type [A]. This is a very useful datatype and has many applications ranging from programming to algebra. It can be thought of a free monoid. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Inductive</span> <span class="nf">list</span>@{i|} (A : <span class="kt">Type</span>@{i}) : <span class="kt">Type</span>@{i} :=
+| nil : list A
+| cons : A -&gt; list A -&gt; list A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> nil {A}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> cons {A} _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> list_scope <span class="kr">with</span> list.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> list_scope <span class="kr">with</span> list.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This messes with Coq&#39;s parsing of [] in Ltac. Therefore we keep it commented out. It&#39;s not difficult to write [nil] instead. *)</span>
+<span class="c">(* Notation &quot;[]&quot; := nil : list_scope. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;::&quot;</span> := cons : list_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">list_rect</span> := <span class="kn">Induction for</span> list <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">list_ind</span> := <span class="kn">Induction for</span> list <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Scheme</span> <span class="nf">list_rec</span> := <span class="kn">Minimality for</span> list <span class="kn">Sort</span> <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A tactic for doing induction over a list that avoids spurious universes. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">simple_list_induction</span> l h t IH :=
+  <span class="kp">try</span> <span class="nb">generalize dependent</span> l;
+  <span class="kr">fix</span> IH <span class="mi">1</span>;
+  <span class="nb">intros</span> [| h t];
+  [ <span class="nb">clear</span> IH | <span class="nb">specialize</span> (IH t) ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Syntactic sugar for creating lists. [ [a1, b2, ..., an] = a1 :: b2 :: ... :: an :: nil ]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;[ x ]&quot;</span> := (x :: nil) : list_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;[ x , y , .. , z ]&quot;</span> := (x :: (y :: .. (z :: nil) ..)) : list_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Length *)</span>
+
+<span class="sd">(** Notice that the definition of a list looks very similar to the definition of [nat]. It is as if each [S] constructor from [nat] has an element of [A] attached to it. We can discard this extra element and get a list invariant that we call [length]. *)</span>
+
+<span class="sd">(** The length (number of elements) of a list. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">length</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">l</span> : list A) :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+  | nil =&gt; O
+  | _ :: l =&gt; S (length l)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Concatenation *)</span>
+
+<span class="sd">(** Given two lists [ [a1; a2; ...; an] ] and [ [b1; b2; ...; bm] ], we can concatenate them to get [ [a1; a2; ...; an; b1; b2; ...; bm] ]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">app</span> {<span class="nv">A</span> : <span class="kt">Type</span>} : list A -&gt; list A -&gt; list A :=
+  <span class="kr">fix</span> app l m :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+   | nil =&gt; m
+   | a :: l1 =&gt; a :: app l1 m
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;++&quot;</span> := app : list_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Folding *)</span>
+
+<span class="sd">(** Folding is a very important operation on lists. It is a way to reduce a list to a single value. The [fold_left] function starts from the left and the [fold_right] function starts from the right. *)</span>
+
+<span class="sd">(** [fold_left f l a0] computes [f (... (f (f a0 x1) x2) ...) xn] where [l = [x1; x2; ...; xn]]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">fold_left</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : A -&gt; B -&gt; A) (<span class="nv">l</span> : list B) (<span class="nv">default</span> : A) : A :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+    | nil =&gt; default
+    | cons b l =&gt; fold_left f l (f default b)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [fold_right f a0 l] computes [f x1 (f x2 ... (f xn a0) ...)] where [l = [x1; x2; ...; xn]]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">fold_right</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : B -&gt; A -&gt; A) (<span class="nv">default</span> : A) (<span class="nv">l</span> : list B) : A :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+    | nil =&gt; default
+    | cons b l =&gt; f b (fold_right f default l)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Maps - Functoriality of Lists *)</span>
+
+<span class="sd">(** The [list_map] function applies a function to each element of a list. In other words [ list_map f [a1; a2; ...; an] = [f a1; f a2; ...; f an] ]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">list_map</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B) (<span class="nv">l</span> : list A) :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+  | nil =&gt; nil
+  | x :: l =&gt; (f x) :: (list_map f l)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The [list_map2] function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">list_map2</span> {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B -&gt; C)
+  (<span class="nv">def_l</span> : list A -&gt; list C) (<span class="nv">def_r</span> : list B -&gt; list C) <span class="nv">l1</span> <span class="nv">l2</span> :=
+  <span class="kr">match</span> l1, l2 <span class="kr">with</span>
+  | nil, nil =&gt; nil
+  | nil, _ =&gt; def_r l2
+  | _, nil =&gt; def_l l1
+  | x :: l1, y :: l2 =&gt; (f x y) :: (list_map2 f def_l def_r l1 l2)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Reversal *)</span>
+
+<span class="sd">(** Tail-recursive list reversal. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">reverse_acc</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">acc</span> : list A) (<span class="nv">l</span> : list A) : list A :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+  | nil =&gt; acc
+  | x :: l =&gt; reverse_acc (x :: acc) l
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Reversing the order of a list. The list [ [a1; a2; ...; an] ] becomes [ [an; ...; a2; a1] ]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">reverse</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">l</span> : list A) : list A := reverse_acc nil l.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Getting Elements *)</span>
+
+<span class="sd">(** The head of a list is its first element. Returns [None] If the list is empty. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">head</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">l</span> : list A) : option A :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+  | nil =&gt; None
+  | a :: _ =&gt; Some a
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The tail of a list is the list without its first element. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">tail</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">l</span> : list A) : list A :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+    | nil =&gt; nil
+    | a :: m =&gt; m
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The last element of a list. If the list is empty, it returns [None]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">last</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">l</span> : list A) : option A :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+  | nil =&gt; None
+  | a :: nil =&gt; Some a
+  | _ :: l =&gt; <span class="nb">last</span> l
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The [n]-th element of a list. If the list is too short, it returns [None]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">nth</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">l</span> : list A) (<span class="nv">n</span> : nat) : option A :=
+  <span class="kr">match</span> n, l <span class="kr">with</span>
+  | O, x :: _ =&gt; Some x
+  | S n, _ :: l =&gt; nth l n
+  | _, _ =&gt; None
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Removing Elements *)</span>
+
+<span class="sd">(** Remove the last element of a list and do nothing if it is empty. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">remove_last</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">l</span> : list A) : list A :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+  | nil =&gt; nil
+  | _ :: nil =&gt; nil
+  | x :: l =&gt; x :: remove_last l
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Sequences *)</span>
+
+<span class="sd">(** Descending sequence of natural numbers starting from [n.-1] to [0]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">seq_rev</span> (<span class="nv">n</span> : nat) : list nat :=
+    <span class="kr">match</span> n <span class="kr">with</span>
+    | O =&gt; nil
+    | S n =&gt; n :: seq_rev n
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Ascending sequence of natural numbers [&lt; n]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">seq</span> (<span class="nv">n</span> : nat) : list nat := reverse (seq_rev n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Repeat *)</span>
+
+<span class="sd">(** Repeat an element [n] times. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">repeat</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">x</span> : A) (<span class="nv">n</span> : nat) : list A :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+  | O =&gt; nil
+  | S n =&gt; x :: <span class="kp">repeat</span> x n
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Membership Predicate *)</span>
+
+<span class="sd">(** The &quot;In list&quot; predicate *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">InList</span>@{i|} {A : <span class="kt">Type</span>@{i}} (a : A) (l : list A) : <span class="kt">Type</span>@{i} :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+    | nil =&gt; Empty
+    | b :: m =&gt; (b = a) + InList a m
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Forall *)</span>
+
+<span class="sd">(** Apply a predicate to all elements of a list and take their conjunction. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">for_all</span>@{i j|} {A : <span class="kt">Type</span>@{i}} (P : A -&gt; <span class="kt">Type</span>@{j}) l : <span class="kt">Type</span>@{j} :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+  | nil =&gt; Unit
+  | x :: l =&gt; P x /\ for_all P l
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Exists *)</span>
+
+<span class="sd">(** Apply a predicate to all elements of a list and take their disjunction. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">list_exists</span>@{i j|} {A : <span class="kt">Type</span>@{i}} (P : A -&gt; <span class="kt">Type</span>@{j}) l : <span class="kt">Type</span>@{j} :=
+  <span class="kr">match</span> l <span class="kr">with</span>
+  | nil =&gt; Empty
+  | x :: l =&gt; P x + list_exists P l
+  <span class="kr">end</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

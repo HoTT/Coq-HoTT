@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Pseudofunctors.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Pseudofunctors from initial and terminal categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctors-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctors-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Pseudofunctor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> InitialTerminalCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NatCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> PathGroupoids.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">pseudofunctors</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** Constant functor from any terminal category *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctors-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctors-v-chk1"><span class="kn">Definition</span> <span class="nf">from_terminal</span> `{Funext} `{@IsTerminalCategory one Hone Hone&#39;}
+             (c : PreCategory)
+  : Pseudofunctor one.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Hone</var><span class="hyp-type"><b>: </b><span>Contr one</span></span></span><br><span><var>Hone'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : one, Contr (morphism one s d)</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory one</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Pseudofunctor one</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pseudofunctors-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="pseudofunctors-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Hone</var><span class="hyp-type"><b>: </b><span>Contr one</span></span></span><br><span><var>Hone'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : one, Contr (morphism one s d)</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory one</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Pseudofunctor one</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Pseudofunctor
+              one
+              (<span class="kr">fun</span> <span class="nv">_</span> =&gt; c)
+              (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; <span class="mi">1</span>%functor)
+              (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; <span class="bp">reflexivity</span> _)
+              (<span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="bp">reflexivity</span> _)
+              _
+              _
+              _);
+      <span class="nb">simpl</span>;
+      <span class="kp">abstract</span> (
+          <span class="nb">intros</span>;
+          path_natural_transformation;
+          <span class="nb">rewrite</span> ap_const; <span class="nb">simpl</span>;
+          <span class="bp">reflexivity</span>
+        ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** *** Functor from any initial category *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">from_initial</span> `{Funext} `{@IsInitialCategory zero}
+  : Pseudofunctor zero
+    := Build_Pseudofunctor
+         zero
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; initial_category_ind _ x)
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; initial_category_ind _ x)
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; initial_category_ind _ x)
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; initial_category_ind _ x)
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; initial_category_ind _ x)
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; initial_category_ind _ x)
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; initial_category_ind _ x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">pseudofunctors</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Arguments</span> from_terminal / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Arguments</span> from_initial / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">from_1</span> `{Funext} c : Pseudofunctor <span class="mi">1</span>
+  := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="kr">in</span> from_terminal c.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">from_0</span> `{Funext} : Pseudofunctor <span class="mi">0</span>
+  := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="kr">in</span> from_initial.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;! x&quot;</span> := (@from_terminal _ terminal_category _ _ _ x) : pseudofunctor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> InitialTerminalCategoryPseudofunctorsNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;! x&quot;</span> := (@from_terminal _ terminal_category _ _ _ x) : pseudofunctor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">InitialTerminalCategoryPseudofunctorsNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

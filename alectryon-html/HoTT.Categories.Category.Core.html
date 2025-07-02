@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Definition of a [PreCategory] *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc18" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc18"><span class="kn">Require Export</span> Overture Basics.Notations.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> object_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> morphism_scope <span class="kr">with</span> morphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> category_scope <span class="kr">with</span> category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> object_scope <span class="kr">with</span> object.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Quoting the HoTT Book: *)</span>
+<span class="sd">(** Definition 9.1.1. A precategory [A] consists of the following.</span>
+
+<span class="sd">    (i) A type [A₀] of objects. We write [a : A] for [a : A₀].</span>
+
+<span class="sd">    (ii) For each [a, b : A], a set [hom_A(a, b)] of arrows or morphisms.</span>
+
+<span class="sd">    (iii) For each [a : A], a morphism [1ₐ : hom_A(a, a)].</span>
+
+<span class="sd">    (iv) For each [a, b, c : A], a function</span>
+
+<span class="sd">         [hom_A(b, c) → hom_A(a, b) → hom_A(a, c)]</span>
+
+<span class="sd">         denoted infix by [g ↦ f ↦ g ∘ f] , or sometimes simply by [g f].</span>
+
+<span class="sd">    (v) For each [a, b : A] and [f : hom_A(a, b)], we have [f = 1_b ∘</span>
+<span class="sd">        f] and [f = f ∘ 1ₐ].</span>
+
+<span class="sd">    (vi) For each [a, b, c, d : A] and [f : hom_A(a, b)], [g :</span>
+<span class="sd">         hom_A(b, c)], [h : hom_A(c,d)], we have [h ∘ (g ∘ f) = (h ∘</span>
+<span class="sd">         g) ∘ f]. *)</span>
+<span class="sd">(** In addition to these laws, we ask for a few redundant laws to give</span>
+<span class="sd">    us more judgmental equalities.  For example, since [(p^)^ ≢ p] for</span>
+<span class="sd">    paths [p], we ask for the symmetrized version of the associativity</span>
+<span class="sd">    law, so we can swap them when we take the dual. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">PreCategory</span> :=
+  Build_PreCategory&#39; {
+      object :&gt; <span class="kt">Type</span>;
+      morphism : object -&gt; object -&gt; <span class="kt">Type</span>;
+
+      identity : <span class="kr">forall</span> <span class="nv">x</span>, morphism x x;
+      compose : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span>,
+                  morphism d d&#39;
+                  -&gt; morphism s d
+                  -&gt; morphism s d&#39;
+                              <span class="kn">where</span> <span class="s2">&quot;f &#39;o&#39; g&quot;</span> := (compose f g);
+
+      associativity : <span class="kr">forall</span> <span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span>
+                             (<span class="nv">m1</span> : morphism x1 x2)
+                             (<span class="nv">m2</span> : morphism x2 x3)
+                             (<span class="nv">m3</span> : morphism x3 x4),
+                        (m3 o m2) o m1 = m3 o (m2 o m1);
+      <span class="sd">(** Ask for the symmetrized version of [associativity], so that [(Cᵒᵖ)ᵒᵖ] and [C] are equal without [Funext] *)</span>
+      associativity_sym : <span class="kr">forall</span> <span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span>
+                                 (<span class="nv">m1</span> : morphism x1 x2)
+                                 (<span class="nv">m2</span> : morphism x2 x3)
+                                 (<span class="nv">m3</span> : morphism x3 x4),
+                            m3 o (m2 o m1) = (m3 o m2) o m1;
+
+      left_identity : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> (<span class="nv">f</span> : morphism a b), identity b o f = f;
+      right_identity : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> (<span class="nv">f</span> : morphism a b), f o identity a = f;
+      <span class="sd">(** Ask for the double-identity version so that [InitialTerminalCategory.Functors.from_terminal Cᵒᵖ X] and [(InitialTerminalCategory.Functors.from_terminal C X)ᵒᵖ] are convertible. *)</span>
+      identity_identity : <span class="kr">forall</span> <span class="nv">x</span>, identity x o identity x = identity x;
+
+      trunc_morphism :: <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, IsHSet (morphism s d)
+    }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> category_scope <span class="kr">with</span> PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> object_scope <span class="kr">with</span> object.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> morphism_scope <span class="kr">with</span> morphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We want eta-expanded primitive projections to [simpl] away. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> object !C%_category / : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> morphism !C%_category / s d : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> identity {!C%_category} / x%_object : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> compose {!C%_category} / {s d d&#39;}%_object (m1 m2)%_morphism : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Infix</span> <span class="s2">&quot;o&quot;</span> := compose : morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** Perhaps we should consider making this notation more global. *)</span>
+<span class="sd">(** Perhaps we should pre-reserve all of the notations. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;x --&gt; y&quot;</span> := (morphism _ x y) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;1&quot;</span> := (identity _) : morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Define a convenience wrapper for building a precategory without</span>
+<span class="sd">    specifying the redundant proofs. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_PreCategory</span>
+           <span class="nv">object</span> <span class="nv">morphism</span> <span class="nv">identity</span> <span class="nv">compose</span>
+           <span class="nv">associativity</span> <span class="nv">left_identity</span> <span class="nv">right_identity</span>
+  := @Build_PreCategory&#39;
+       object
+       morphism
+       identity
+       compose
+       associativity
+       (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; <span class="nb">symmetry</span> _ _ (associativity _ _ _ _ _ _ _))
+       left_identity
+       right_identity
+       (<span class="kr">fun</span> <span class="nv">_</span> =&gt; left_identity _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** create a hint db for all category theory things *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Create HintDb</span> category <span class="kn">discriminated</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** create a hint db for morphisms in categories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Create HintDb</span> morphism <span class="kn">discriminated</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Resolve</span> left_identity right_identity associativity : category morphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Rewrite</span> left_identity right_identity : category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Rewrite</span> left_identity right_identity : morphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Simple laws about the identity morphism *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">identity_unique</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** The identity morphism is unique. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc19" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc19"><span class="kn">Lemma</span> <span class="nf">identity_unique</span> (<span class="nv">id0</span> <span class="nv">id1</span> : <span class="kr">forall</span> <span class="nv">x</span>, morphism C x x)
+        (<span class="nv">id1_left</span> : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d), id1 _ o m = m)
+        (<span class="nv">id0_right</span> : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d), m o id0 _ = m)
+  : id0 == id1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>id0, id1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, x --&gt; x</span></span></span><br><span><var>id1_left</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : s --&gt; d),
+id1 d o m = m</span></span></span><br><span><var>id0_right</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : s --&gt; d),
+m o id0 s = m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">id0 == id1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc1a" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc1a"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>id0, id1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, x --&gt; x</span></span></span><br><span><var>id1_left</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : s --&gt; d),
+id1 d o m = m</span></span></span><br><span><var>id0_right</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : s --&gt; d),
+m o id0 s = m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">id0 == id1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc1b" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc1b"><span class="nb">intro</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>id0, id1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, x --&gt; x</span></span></span><br><span><var>id1_left</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : s --&gt; d),
+id1 d o m = m</span></span></span><br><span><var>id0_right</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : s --&gt; d),
+m o id0 s = m</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">id0 x = id1 x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">etransitivity</span>;
+      [ <span class="nb">symmetry</span>; <span class="nb">apply</span> id1_left
+      | <span class="nb">apply</span> id0_right ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Anything equal to the identity acts like it.  This is obvious,</span>
+<span class="sd">      but useful as a helper lemma for automation. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">concat_left_identity</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d) <span class="nv">i</span>
+  : i = <span class="mi">1</span> -&gt; i o m = m
+    := <span class="kr">fun</span> <span class="nv">H</span> =&gt; (ap10 (ap _ H) _ @ left_identity _ _ _ m)%path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">concat_right_identity</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d) <span class="nv">i</span>
+  : i = <span class="mi">1</span> -&gt; m o i = m
+    := <span class="kr">fun</span> <span class="nv">H</span> =&gt; (ap _ H @ right_identity _ _ _ m)%path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">identity_unique</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Make a separate module for Notations, which can be exported/imported separately. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> CategoryCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;o&quot;</span> := compose : morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** Perhaps we should consider making this notation more global. *)</span>
+  <span class="sd">(** Perhaps we should pre-reserve all of the notations. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;x --&gt; y&quot;</span> := (@morphism _ x y) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;x --&gt; y&quot;</span> := (morphism _ x y) : type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;1&quot;</span> := (identity _) : morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">CategoryCoreNotations</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We have a tactic for trying to run a tactic after associating morphisms either all the way to the left, or all the way to the right *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;try_associativity_quick&quot;</span> tactic(tac) :=
+  <span class="kp">first</span> [ <span class="nb">rewrite</span> &lt;- <span class="nl">?associativity</span>; tac
+        | <span class="nb">rewrite</span> -&gt; <span class="nl">?associativity</span>; tac ].</span></span></pre>
+</div>
+</div></body>
+</html>

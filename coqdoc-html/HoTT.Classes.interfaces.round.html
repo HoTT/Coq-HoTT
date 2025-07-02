@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Classes.interfaces.round</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Classes.interfaces.round</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">HoTT.Classes.interfaces.abstract_algebra</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.orders.html#"><span class="id" title="library">HoTT.Classes.interfaces.orders</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.naturals.html#"><span class="id" title="library">HoTT.Classes.interfaces.naturals</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.implementations.peano_naturals.html#"><span class="id" title="library">HoTT.Classes.implementations.peano_naturals</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="round_up" class="idref" href="#round_up"><span class="id" title="section">round_up</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Class</span> <a id="RoundUpStrict" class="idref" href="#RoundUpStrict"><span class="id" title="inductive, record"><span id="RoundUpStrict" class="id">RoundUpStrict</span></span></a> <a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> `{<a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">IsSemiCRing</span></a> <a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">A</span></a>} `{<a id="H4:12" class="idref" href="#H4:12"><span class="id" title="binder">StrictSemiRingOrder</span></a> <a id="H4:12" class="idref" href="#H4:12"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a id="round_up_strict" class="idref" href="#round_up_strict"><span class="id" title="constructor, projection"><span id="round_up_strict" class="id">round_up_strict</span></span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="a:14" class="idref" href="#a:14"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Classes.interfaces.round.html#A:1"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">{</span></a><a id="n:15" class="idref" href="#n:15"><span class="id" title="binder">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">:</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="HoTT.Classes.interfaces.round.html#a:14"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#::mc_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Classes.interfaces.naturals.html#naturals_to_semiring"><span class="id" title="definition">naturals_to_semiring</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Classes.interfaces.round.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Classes.interfaces.round.html#n:15"><span class="id" title="variable">n</span></a><a class="idref" href="HoTT.Basics.Overture.html#cc5e56ba3765e2d6b17e66d19b966f1d"><span class="id" title="notation">}</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Classes.interfaces.round.html#round_up_strict"><span class="id" title="definition">round_up_strict</span></a> <span class="id" title="var">A</span> {<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Classes.interfaces.round.html#round_up"><span class="id" title="section">round_up</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

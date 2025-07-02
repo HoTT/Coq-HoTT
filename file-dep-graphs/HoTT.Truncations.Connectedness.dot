@@ -1,0 +1,60 @@
+digraph HoTT_Truncations_Connectedness {
+  graph [ratio=0.5]
+  node [style=filled]
+Connectedness_wedge_incl_elim_uncurried [label="wedge_incl_elim_uncurried", URL=<Connectedness.html#wedge_incl_elim_uncurried>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_wedge_incl_comp3 [label="wedge_incl_comp3", URL=<Connectedness.html#wedge_incl_comp3>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_wedge_incl_comp2 [label="wedge_incl_comp2", URL=<Connectedness.html#wedge_incl_comp2>, fillcolor="#F070D1"] ;
+Connectedness_wedge_incl_comp1 [label="wedge_incl_comp1", URL=<Connectedness.html#wedge_incl_comp1>, fillcolor="#F070D1"] ;
+Connectedness_wedge_incl_elim [label="wedge_incl_elim", URL=<Connectedness.html#wedge_incl_elim>, fillcolor="#F070D1"] ;
+Connectedness_isconn_wedge_incl [label="isconn_wedge_incl", URL=<Connectedness.html#isconn_wedge_incl>, fillcolor="#F070D1"] ;
+Connectedness_isconnected_trunc [label="isconnected_trunc", URL=<Connectedness.html#isconnected_trunc>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_indecomposable_0connected [label="indecomposable_0connected", URL=<Connectedness.html#indecomposable_0connected>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_equiv_component_image_unit [label="equiv_component_image_unit", URL=<Connectedness.html#equiv_component_image_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_merely_path_component [label="merely_path_component", URL=<Connectedness.html#merely_path_component>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_is0connected_component [label="is0connected_component", URL=<Connectedness.html#is0connected_component>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_is0connected_merely_allpath [label="is0connected_merely_allpath", URL=<Connectedness.html#is0connected_merely_allpath>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_merely_path_is0connected [label="merely_path_is0connected", URL=<Connectedness.html#merely_path_is0connected>, fillcolor="#F070D1"] ;
+Connectedness_isconnmap_minus_two [label="isconnmap_minus_two", URL=<Connectedness.html#isconnmap_minus_two>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_isconnected_minus_two [label="isconnected_minus_two", URL=<Connectedness.html#isconnected_minus_two>, fillcolor="#F070D1"] ;
+Connectedness_isconnmap_pred_add [label="isconnmap_pred_add", URL=<Connectedness.html#isconnmap_pred_add>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_isconnmap_pred_ [label="isconnmap_pred'", URL=<Connectedness.html#isconnmap_pred'>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_is0connected_isconnected [label="is0connected_isconnected", URL=<Connectedness.html#is0connected_isconnected>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_merely_isconnected [label="merely_isconnected", URL=<Connectedness.html#merely_isconnected>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_isconnected_pred_add_ [label="isconnected_pred_add'", URL=<Connectedness.html#isconnected_pred_add'>, fillcolor="#F070D1"] ;
+Connectedness_isconnected_pred_add [label="isconnected_pred_add", URL=<Connectedness.html#isconnected_pred_add>, fillcolor="#F070D1"] ;
+Connectedness_isconnected_pred_ [label="isconnected_pred'", URL=<Connectedness.html#isconnected_pred'>, fillcolor="#F070D1"] ;
+Connectedness_isconnected_pred [label="isconnected_pred", URL=<Connectedness.html#isconnected_pred>, fillcolor="#F070D1"] ;
+Connectedness_conn_point_elim [label="conn_point_elim", URL=<Connectedness.html#conn_point_elim>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_conn_point_incl [label="conn_point_incl", URL=<Connectedness.html#conn_point_incl>, fillcolor="#F070D1"] ;
+Connectedness_conn_pointed_type [label="conn_pointed_type", URL=<Connectedness.html#conn_pointed_type>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_isconnmap_isconnmap_ap_surj [label="isconnmap_isconnmap_ap_surj", URL=<Connectedness.html#isconnmap_isconnmap_ap_surj>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_isconnected_isconnected_allpath [label="isconnected_isconnected_allpath", URL=<Connectedness.html#isconnected_isconnected_allpath>, fillcolor="#F070D1"] ;
+Connectedness_isconnmap_ap_isconnmap [label="isconnmap_ap_isconnmap", URL=<Connectedness.html#isconnmap_ap_isconnmap>, peripheries=3, fillcolor="#F070D1"] ;
+Connectedness_isconnected_paths [label="isconnected_paths", URL=<Connectedness.html#isconnected_paths>, fillcolor="#F070D1"] ;
+Connectedness_istrunc_extension_along_conn [label="istrunc_extension_along_conn", URL=<Connectedness.html#istrunc_extension_along_conn>, fillcolor="#F070D1"] ;
+  Connectedness_wedge_incl_elim_uncurried -> Connectedness_wedge_incl_elim [] ;
+  Connectedness_wedge_incl_comp3 -> Connectedness_wedge_incl_comp2 [] ;
+  Connectedness_wedge_incl_comp3 -> Connectedness_wedge_incl_comp1 [] ;
+  Connectedness_wedge_incl_comp2 -> Connectedness_wedge_incl_elim [] ;
+  Connectedness_wedge_incl_comp1 -> Connectedness_wedge_incl_elim [] ;
+  Connectedness_wedge_incl_elim -> Connectedness_isconn_wedge_incl [] ;
+  Connectedness_isconn_wedge_incl -> Connectedness_conn_point_incl [] ;
+  Connectedness_isconn_wedge_incl -> Connectedness_istrunc_extension_along_conn [] ;
+  Connectedness_indecomposable_0connected -> Connectedness_merely_path_is0connected [] ;
+  Connectedness_indecomposable_0connected -> Connectedness_isconnected_pred [] ;
+  Connectedness_is0connected_merely_allpath -> Connectedness_isconnected_isconnected_allpath [] ;
+  Connectedness_merely_path_is0connected -> Connectedness_isconnected_paths [] ;
+  Connectedness_isconnmap_minus_two -> Connectedness_isconnected_minus_two [] ;
+  Connectedness_isconnmap_pred_add -> Connectedness_isconnected_pred_add [] ;
+  Connectedness_isconnmap_pred_ -> Connectedness_isconnected_pred_ [] ;
+  Connectedness_is0connected_isconnected -> Connectedness_isconnected_pred_add_ [] ;
+  Connectedness_merely_isconnected -> Connectedness_isconnected_pred_add_ [] ;
+  Connectedness_isconnected_pred_add_ -> Connectedness_isconnected_pred_add [] ;
+  Connectedness_isconnected_pred_add -> Connectedness_isconnected_pred [] ;
+  Connectedness_isconnected_pred_ -> Connectedness_isconnected_pred [] ;
+  Connectedness_conn_point_elim -> Connectedness_isconnected_paths [] ;
+  Connectedness_isconnmap_isconnmap_ap_surj -> Connectedness_isconnected_isconnected_allpath [] ;
+  Connectedness_isconnmap_ap_isconnmap -> Connectedness_isconnected_paths [] ;
+subgraph cluster_Connectedness { label="Connectedness"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Connectedness_istrunc_extension_along_conn; Connectedness_isconnected_paths; Connectedness_isconnmap_ap_isconnmap; Connectedness_isconnected_isconnected_allpath; Connectedness_isconnmap_isconnmap_ap_surj; Connectedness_conn_pointed_type; Connectedness_conn_point_incl; Connectedness_conn_point_elim; Connectedness_isconnected_pred; Connectedness_isconnected_pred_; Connectedness_isconnected_pred_add; Connectedness_isconnected_pred_add_; Connectedness_merely_isconnected; Connectedness_is0connected_isconnected; Connectedness_isconnmap_pred_; Connectedness_isconnmap_pred_add; Connectedness_isconnected_minus_two; Connectedness_isconnmap_minus_two; Connectedness_merely_path_is0connected; Connectedness_is0connected_merely_allpath; Connectedness_is0connected_component; Connectedness_merely_path_component; Connectedness_equiv_component_image_unit; Connectedness_indecomposable_0connected; Connectedness_isconnected_trunc; Connectedness_isconn_wedge_incl; Connectedness_wedge_incl_elim; Connectedness_wedge_incl_comp1; Connectedness_wedge_incl_comp2; Connectedness_wedge_incl_comp3; Connectedness_wedge_incl_elim_uncurried; };
+} /* END */
