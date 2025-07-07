@@ -433,3 +433,22 @@ Proof.
   - napply wedge_incl_comp1.
   - napply wedge_incl_comp3.
 Defined.
+
+(** A more elementary fact is that a wedge of [n]-connected types is [n]-connected. *)
+Definition isconnected_wedge `{Univalence} (n : trunc_index) (X Y : pType)
+  `{IsConnected n X} `{IsConnected n Y}
+  : IsConnected n (Wedge X Y).
+Proof.
+  destruct n.
+  1: exact _.
+  apply isconnected_from_elim.
+  intros C H' f.  exists (f pt).
+  intro x; symmetry; revert x.
+  snapply wedge_ind; cbn.
+  - by rapply conn_point_elim.
+  - rapply conn_point_elim.
+    apply ap, wglue.
+  - transport_paths Fr.
+    rewrite 2 conn_point_elim_comp.
+    apply concat_1p.
+Defined.
