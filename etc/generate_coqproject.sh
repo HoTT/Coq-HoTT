@@ -31,6 +31,10 @@ COQPROJECT_HEADER=\
 -arg -noinit
 -arg -indices-matter
 -arg -native-compiler -arg no
+# This is a hack to avoid conflicts between HoTT.Basics and Program.Basics.
+# It would be better if we could more precisely exclude Coq.Program, and
+# even better if we could exclude all or most of the Coq namespace.
+-arg -exclude-dir -arg Program
 "
 
 ## Add additional lines when building with dune
