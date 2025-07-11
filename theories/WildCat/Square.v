@@ -1,4 +1,4 @@
-Require Import Basics.Overture.
+Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 Require Import WildCat.Equiv.
 
@@ -60,6 +60,28 @@ Section Squares.
     := (cat_idl _)^$ $@ ((cate_issect f12)^$ $@R _) $@ cat_assoc _ _ _
       $@ (_ $@L ((cat_assoc _ _ _)^$ $@ (s^$ $@R _) $@ cat_assoc _ _ _
       $@ (_ $@L cate_isretr f10) $@ cat_idr _)).
+
+  (** Alternatively if we are in a groupoid, we can flip the square horizontally. *)
+  Definition hinverse' `{!Is0Gpd A, !Is1Gpd A} (s : Square f01 f21 f10 f12)
+    : Square f21 f01 f10^$ f12^$.
+  Proof.
+    hnf.
+    apply gpd_moveR_hV.
+    refine ( _ $@ (cat_assoc _ _ _)^$).
+    apply gpd_moveL_Vh.
+    apply transpose.
+    exact s.
+  Defined.
+
+  Definition vinverse' `{!Is0Gpd A, !Is1Gpd A} (s : Square f01 f21 f10 f12)
+    : Square f01^$ f21^$ f12 f10.
+  Proof.
+    apply gpd_moveR_Vh.
+    nrefine ( _ $@ cat_assoc _ _ _).
+    apply gpd_moveL_hV.
+    apply transpose.
+    exact s.
+  Defined.
 
   (** The following four declarations modify one side of a Square using a 2-cell. The L or R indicate the side of the 2-cell. This can be thought of as rewriting the sides of a square using a homotopy. *)
 
