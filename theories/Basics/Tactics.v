@@ -365,11 +365,16 @@ Tactic Notation "stapply'" uconstr(term)
   := do_with_holes' ltac:(fun x => srefine x) term.
 
 (** Apply a tactic to one side of an equation.  For example, [lhs rapply lemma].  [tac] should produce a path. *)
-
 Tactic Notation "lhs" tactic3(tac) := nrefine (ltac:(tac) @ _).
 Tactic Notation "lhs_V" tactic3(tac) := nrefine (ltac:(tac)^ @ _).
 Tactic Notation "rhs" tactic3(tac) := nrefine (_ @ ltac:(tac)^).
 Tactic Notation "rhs_V" tactic3(tac) := nrefine (_ @ ltac:(tac)).
+
+(** Here are versions that work for a general relation.  The relation needs to be transitive and, in two cases, symmetric.  These versions also work for paths in most cases, but due to slightly different behaviours, don't work quite as well as the previous versions. *)
+Tactic Notation "lhs'" tactic3(tac) := etransitivity; [tac|].
+Tactic Notation "lhs_V'" tactic3(tac) := etransitivity; [symmetry; tac|].
+Tactic Notation "rhs'" tactic3(tac) := etransitivity; [|symmetry; tac].
+Tactic Notation "rhs_V'" tactic3(tac) := etransitivity; [|tac].
 
 (** SSReflect tactics, adapted by Robbert Krebbers *)
 Ltac done :=

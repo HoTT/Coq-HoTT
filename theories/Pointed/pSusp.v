@@ -244,22 +244,22 @@ Proof.
               (fun f => fmap loops f o* loop_susp_unit A)
               (fun g => loop_susp_counit B o* fmap psusp g) _ _).
     + intros g. apply path_pforall.
-      refine (pmap_prewhisker _ (fmap_comp loops _ _) @* _).
-      refine (pmap_compose_assoc _ _ _ @* _).
-      refine (pmap_postwhisker _ (loop_susp_unit_natural g)^* @* _).
-      refine ((pmap_compose_assoc _ _ _)^* @* _).
-      refine (pmap_prewhisker g (loop_susp_triangle1 B) @* _).
+      lhs' exact (pmap_prewhisker _ (fmap_comp loops _ _)).
+      lhs' apply pmap_compose_assoc.
+      lhs' exact (pmap_postwhisker _ (loop_susp_unit_natural g)^* ).
+      lhs_V' apply pmap_compose_assoc.
+      lhs' exact (pmap_prewhisker g (loop_susp_triangle1 B)).
       apply pmap_postcompose_idmap.
     + intros f. apply path_pforall.
-      refine (pmap_postwhisker _ (fmap_comp psusp _ _) @* _).
-      refine ((pmap_compose_assoc _ _ _)^* @* _).
-      refine (pmap_prewhisker _ (loop_susp_counit_natural f)^* @* _).
-      refine (pmap_compose_assoc _ _ _ @* _).
-      refine (pmap_postwhisker f (loop_susp_triangle2 A) @* _).
+      lhs' exact (pmap_postwhisker _ (fmap_comp psusp _ _)).
+      lhs_V' apply pmap_compose_assoc.
+      lhs' exact (pmap_prewhisker _ (loop_susp_counit_natural f)^* ).
+      lhs' apply pmap_compose_assoc.
+      lhs' exact (pmap_postwhisker f (loop_susp_triangle2 A)).
       apply pmap_precompose_idmap.
   - apply path_pforall.
     unfold equiv_adjointify, equiv_fun.
-    napply (pmap_prewhisker _ fmap_loops_pconst @* _).
+    lhs' exact (pmap_prewhisker _ fmap_loops_pconst).
     tapply cat_zero_l.
 Defined.
 
@@ -270,7 +270,7 @@ Definition loop_susp_adjoint_nat_r `{Funext} (A B B' : pType)
   ==* fmap loops g o* loop_susp_adjoint A B f.
 Proof.
   cbn.
-  refine (_ @* pmap_compose_assoc _ _ _).
+  rhs_V' apply pmap_compose_assoc.
   apply pmap_prewhisker.
   exact (fmap_comp loops f g).
 Defined.
@@ -280,7 +280,7 @@ Definition loop_susp_adjoint_nat_l `{Funext} (A A' B : pType)
   ==* (loop_susp_adjoint A B)^-1 f o* fmap psusp g.
 Proof.
   cbn.
-  refine (_ @* (pmap_compose_assoc _ _ _)^*).
+  rhs' apply pmap_compose_assoc.
   apply pmap_postwhisker.
   exact (fmap_comp psusp g f).
 Defined.
@@ -291,7 +291,7 @@ Instance is1natural_loop_susp_adjoint_r `{Funext} (A : pType)
 Proof.
   snapply Build_Is1Natural.
   intros B B' g f.
-  refine ( _ @ cat_assoc_strong _ _ _).
+  rhs_V rapply cat_assoc_strong.
   refine (ap (fun x => x o* loop_susp_unit A) _).
   apply path_pforall.
   tapply (fmap_comp loops).

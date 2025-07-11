@@ -113,7 +113,7 @@ entries = {}
 r = re.compile(r"\\newlabel{([a-zA-Z0-9:=_-]+)}{{([0-9.]+)}{([0-9]+)}{.*?}{([a-z]+)\.[^}]*}{[^}]*}}")
 
 print """Reading content of *.aux files from standard input...
-(If you see this press Ctrl-C, read help with --help option, and try agian.)""",
+(If you see this press Ctrl-C, read help with --help option, and try again.)""",
 
 for line in sys.stdin:
     lineno = lineno + 1
@@ -166,7 +166,7 @@ while snippets:
     label = snippets.pop(0)
     content = snippets.pop(0)
     if re.search("========", content):
-        die ("entry {0} contanins something that looks like a marker, please fix this first.".format(label))
+        die ("entry {0} contains something that looks like a marker, please fix this first.".format(label))
     k = k + 1
     if label not in entries:
         die ('unknown entry {0} found in Coq file, please fix this first.'.format(label))
@@ -207,7 +207,7 @@ for label in sorted(entries.keys(),
             better = re.sub('({0})'.format(suspect_names), 'Book', suspect.group(0))
             warn ('You wrote "{0}", should it not be "{1}"?'.format(suspect.group(0), better))
     else:
-        # Genereate new content
+        # Generate new content
         content = ''
         newentry.append(label)
     # Put in the correct first line

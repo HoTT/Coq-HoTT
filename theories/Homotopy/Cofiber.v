@@ -98,21 +98,20 @@ Local Open Scope trunc_scope.
 (** ** Connectivity of cofibers *)
 
 (** The cofiber of an [n]-connected map is [n.+1]-connected. *)
-Definition isconnnected_cofiber (n : trunc_index) {X Y : Type} (f : X -> Y)
+Definition isconnected_cofiber (n : trunc_index) {X Y : Type} (f : X -> Y)
   {fc : IsConnMap n f}
   : IsConnected n.+1 (Cofiber f).
 Proof.
   apply isconnected_from_elim.
   intros C H' g.
   exists (g (cf_apex _)).
-  snapply cofiber_ind.
+  snapply cofiber_ind; cbn beta.
   - rapply (conn_map_elim n f).
     intros x.
     exact (ap g (cfglue f x)).
   - exists idpath.
     intros x.
-    lhs snapply transport_paths_Fl.
-    apply moveR_Vp.
+    transport_paths Fl.
     rhs napply concat_p1.
     napply conn_map_comp.
 Defined.
@@ -127,11 +126,11 @@ Proof.
   apply cfglue.
 Defined.
 
-(** Blakers-Massey implies that the comparison map is highly connected. *)
+(** Blakers-Massey implies that the comparison map is highly connected.  Here we assume that [X] is merely inhabited.  There is a variant that instead assumes that [f] is surjective, with the same proof except that [blakers_massey_po] is used. *)
 Definition isconnected_fiber_to_cofiber `{Univalence}
   (n m : trunc_index) {X Y : Type} {ac : IsConnected m.+1 X}
-  (f : X -> Y) {fc : IsConnMap n.+1 f} (y : Y)
-  : IsConnMap (m +2+ n) (fiber_to_path_cofiber f y).
+  (f : X -> Y) {fc : IsConnMap n f} (y : Y)
+  : IsConnMap (m +2+ n).-1 (fiber_to_path_cofiber f y).
 Proof.
   (* It's enough to check the connectivity of [functor_sigma idmap (fiber_to_path_cofiber f)]. *)
   revert y; snapply conn_map_fiber.
@@ -141,10 +140,23 @@ Proof.
   snapply (cancelL_equiv_conn_map _ _ (equiv_pullback_unit_hfiber _ _)^-1%equiv).
   (* The composite is homotopic to the map from [blakers_massey_po], with the only difference being an extra [1 @ _]. *)
   snapply conn_map_homotopic.
-  3: rapply blakers_massey_po.
+  3: rapply blakers_massey_po'.
   (* Use [compute.] to see the details of the goal. *)
   intros x.
   apply (ap (fun z => (f x; tt; z))).
   unfold fiber_to_path_cofiber; simpl.
   symmetry; apply concat_1p.
+Defined.
+
+(** This lets us prove a converse to [isconnected_cofiber] when [X] is 1-connected. *)
+Definition isconnmap_isconnected_cofiber `{Univalence}
+  (n : trunc_index) {X Y : Type} `{IsConnected 1 X}
+  (f : X -> Y) `{IsConnected n.+1 (Cofiber f)}
+  : IsConnMap n f.
+Proof.
+  simple_induction n n IHn.
+  - exact _.
+  - intros conn_cof y.
+    rapply (isconnected_conn_map_isconnected (n.+1) (fiber_to_path_cofiber f y)).
+    rapply (isconnected_fiber_to_cofiber n 0).
 Defined.

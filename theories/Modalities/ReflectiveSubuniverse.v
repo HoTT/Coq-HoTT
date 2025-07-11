@@ -515,7 +515,7 @@ Section Reflective_Subuniverse.
     : IsEquiv (to O T) -> In O T
     := fun _ => inO_equiv_inO (O T) (to O T)^-1.
 
-    (** We don't make this an ordinary instance, but we allow it to solve [In O] constraints if we already have [IsEquiv] as a hypothesis.  *)
+    (** We don't make this an ordinary instance, but we allow it to solve [In O] constraints if we already have [IsEquiv] as a hypothesis. [Hint Immediate] doesn't support #[export] in Sections, so we repeat this at the end of the file. *)
     #[local]
     Hint Immediate inO_isequiv_to_O : typeclass_instances.
 
@@ -1652,6 +1652,15 @@ Section ConnectedMaps.
     exact istrunc_forall.
   Defined.
 
+  (** A map which is both connected and modal is an equivalence. *)
+  Definition isequiv_conn_ino_map {A B : Type} (f : A -> B)
+             `{IsConnMap O _ _ f} `{MapIn O _ _ f}
+  : IsEquiv f.
+  Proof.
+    apply isequiv_contr_map. intros b.
+    exact (contr_trunc_conn O).
+  Defined.
+
   (** Connected maps are orthogonal to modal maps (i.e. families of modal types). *)
   Definition conn_map_elim
              {A B : Type} (f : A -> B) `{IsConnMap O _ _ f}
@@ -1677,15 +1686,6 @@ Section ConnectedMaps.
     destruct (isconnected_elim O (P (f a)) fibermap) as [x e].
     change (d a) with (fibermap (a;1)).
     apply inverse, e.
-  Defined.
-
-  (** A map which is both connected and modal is an equivalence. *)
-  Definition isequiv_conn_ino_map {A B : Type} (f : A -> B)
-             `{IsConnMap O _ _ f} `{MapIn O _ _ f}
-  : IsEquiv f.
-  Proof.
-    apply isequiv_contr_map. intros b.
-    exact (contr_trunc_conn O).
   Defined.
 
   (** We can re-express this in terms of extensions. *)
@@ -1837,6 +1837,15 @@ Section ConnectedMaps.
     exact (isconnected_equiv O A
               (equiv_sigma_contr _)^-1 _).
   Defined.
+
+ (** Combining the above, we see that if [f] is a connected map with connected codomain, then the domain is connected. *)
+ Instance isconnected_conn_map_isconnected {A B : Type} (f : A -> B)
+         `{IsConnMap O _ _ f} `{IsConnected O B}
+   : IsConnected O A.
+ Proof.
+   rapply isconnected_conn_map_to_unit.
+   rapply conn_map_compose.
+ Defined.
 
   (* Lemma 7.5.10: A map to a type in [O] exhibits its codomain as the [O]-reflection of its domain if it is [O]-connected.  (The converse is true if and only if [O] is a modality.) *)
   Definition isequiv_O_rec_conn_map {A B : Type} `{In O B}
@@ -2187,6 +2196,6 @@ Proof.
     intros; rapply ooextendable_conn_map_inO.
 Defined.
 
-#[export] Hint Immediate inO_isequiv_to_O : typeclass_instances.
-#[export] Hint Immediate inO_unsigma : typeclass_instances.
-#[export] Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.
+Hint Immediate inO_isequiv_to_O : typeclass_instances.
+Hint Immediate inO_unsigma : typeclass_instances.
+Hint Immediate isconnected_conn_map_to_unit : typeclass_instances.

@@ -1,6 +1,7 @@
 (** * Connectedness *)
 Require Import Basics.
 Require Import Types.
+Require Import HFiber.
 
 Require Import Extensions.
 Require Import Factorization.
@@ -60,15 +61,46 @@ Proof.
   exact (contr_equiv' _ (equiv_path_Tr x y)^-1).
 Defined.
 
+(** As a consequence, we have that [ap f] is n-connected when [f] is (n+1)-connected.  See HFiber.v and Loops.v for similar results about truncated maps. *)
+Instance isconnmap_ap_isconnmap `{Univalence} (n : trunc_index) {A B : Type}
+  (f : A -> B) `{!IsConnMap n.+1 f} (x y : A)
+  : IsConnMap n (@ap _ _ f x y)
+  := fun p => isconnected_equiv (Tr n) _ (hfiber_ap p)^-1 _.
+
+(** The converse to [isconnected_paths] holds when [A] is merely inhabited. *)
+Definition isconnected_isconnected_allpath `{Univalence} (n : trunc_index)
+  (A : Type) `{mA : merely A}
+  (isc : forall x y : A, IsConnected n (x = y))
+  : IsConnected n.+1 A.
+Proof.
+  strip_truncations; hnf.
+  apply (Build_Contr _ (tr mA)); intro a.
+  strip_truncations.
+  apply equiv_path_Tr, center, isc.
+Defined.
+
+(** As a consequence, we get a converse to [isconnmap_ap_isconnmap] for (-1)-connected maps. *)
+Definition isconnmap_isconnmap_ap_surj `{Univalence} (n : trunc_index) {A B : Type}
+  (f : A -> B) {surj : IsConnMap (-1) f}
+  (isc : forall x y : A, IsConnMap n (@ap _ _ f x y))
+  : IsConnMap n.+1 f.
+Proof.
+  intro b.
+  apply isconnected_isconnected_allpath.
+  1: apply center, surj.
+  intros [x p] [y q]; destruct q.
+  exact (isconnected_equiv _ _ (hfiber_ap p) _).
+Defined.
+
 (** ** Connectivity of pointed types *)
 
 (** The connectivity of a pointed type and (the inclusion of) its point are intimately connected. *)
 
-(** We can't make both of these [Instance]s, as that would result in infinite loops. *)
+(** We can't make both of these [Instance]s, as that would result in infinite loops. And the first one is not likely to be useful as an instance, as it requires guessing the point [a0]. *)
 
-Instance conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
-  `{IsConnMap n _ _ (unit_name a0)}
-  : IsConnected n.+1 A | 1000.
+Definition conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
+  `{IsConnMap@{u} n _ _ (unit_name a0)}
+  : IsConnected n.+1 A.
 Proof.
   apply isconnected_conn_map_to_unit.
   exact (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
@@ -82,6 +114,7 @@ Proof.
   apply O_lex_leq_Tr.
 Defined.
 
+(** [conn_point_incl] can be made an instance, but at the time of writing, this doesn't cause any additional goals to be solved compared to making it an immediate hint, so we do the latter. *)
 #[export] Hint Immediate conn_point_incl : typeclass_instances.
 
 (** Note that [OO_cancelR_conn_map] and [OO_cancelL_conn_map] (Proposition 2.31 of CORS) generalize the above statements to 2/3 of a 2-out-of-3 property for connected maps, for any reflective subuniverse and its subuniverse of separated types.  If useful, we could specialize that more general form explicitly to truncations. *)
@@ -101,12 +134,24 @@ Defined.
 
 (** ** Decreasing connectedness *)
 
-(** An [n.+1]-connected type is also [n]-connected.  This obviously can't be an [Instance]! *)
+(** An [n.+1]-connected type is also [n]-connected. *)
 Definition isconnected_pred n A `{IsConnected n.+1 A}
   : IsConnected n A.
 Proof.
   apply isconnected_from_elim; intros C ? f.
   exact (isconnected_elim n.+1 C f).
+Defined.
+
+(* As an instance, this would cause loops, but it can be added as an immediate hint. *)
+Hint Immediate isconnected_pred : typeclass_instances.
+
+(** A version explicitly using the predecessor function. *)
+Definition isconnected_pred' (n : trunc_index) (A : Type) `{IsConnected n A}
+  : IsConnected n.-1 A.
+Proof.
+  destruct n.
+  1: unfold IsConnected; simpl; apply istrunc_truncation.
+  by apply isconnected_pred.
 Defined.
 
 (** A [k]-connected type is [n]-connected, when [k >= n].  We constrain [k] by making it of the form [n +2+ m], which makes the induction go through smoothly. *)
@@ -115,9 +160,7 @@ Definition isconnected_pred_add n m A `{H : IsConnected (n +2+ m) A}
 Proof.
   induction n.
   1: assumption.
-  apply IHn.
-  apply isconnected_pred.
-  assumption.
+  rapply IHn.
 Defined.
 
 (** A version with the order of summands swapped, which is sometimes handy, e.g. in the next two results. *)
@@ -138,12 +181,31 @@ Definition is0connected_isconnected (n : trunc_index) A `{IsConnected n.+2 A}
   : IsConnected 0 A
   := isconnected_pred_add' n 0 A.
 
+Definition isconnmap_pred' (n : trunc_index) {A B : Type} (f : A -> B)
+  `{IsConnMap n _ _ f}
+  : IsConnMap n.-1 f
+  := fun b => isconnected_pred' n _.
+
 Definition isconnmap_pred_add n m A B (f : A -> B) `{IsConnMap (n +2+ m) _ _ f}
   : IsConnMap m f.
 Proof.
   intro b.
   exact (isconnected_pred_add n m _).
 Defined.
+
+(** ** (-2)-connectedness *)
+
+(** Every type is (-2)-connected. *)
+Definition isconnected_minus_two A : IsConnected (-2) A
+  := istrunc_truncation (-2) A.
+
+(** Every map is (-2)-connected. *)
+Definition isconnmap_minus_two {A B : Type} (f : A -> B)
+  : IsConnMap (-2) f
+  := fun b => isconnected_minus_two _.
+
+Hint Immediate isconnected_minus_two : typeclass_instances.
+Hint Immediate isconnmap_minus_two : typeclass_instances.
 
 (** ** 0-connectedness *)
 
@@ -156,17 +218,15 @@ Proof.
   rapply center.
 Defined.
 
+(** The converse holds when [A] is merely inhabited. *)
 Definition is0connected_merely_allpath `{Univalence}
-           (A : Type) `{merely A}
+           (A : Type) `{mA : merely A}
            (p : forall (x y:A), merely (x = y))
   : IsConnected 0 A.
 Proof.
-  strip_truncations.
-  apply contr_inhabited_hprop.
-  - apply hprop_allpath; intros z w.
-    strip_truncations.
-    exact (equiv_path_Tr z w (p z w)).
-  - apply tr; assumption.
+  apply (isconnected_isconnected_allpath _ _ (mA:=mA)).
+  intros x y; hnf.
+  exact (contr_inhabited_hprop _ (p x y)).
 Defined.
 
 (** The path component of a point [x : X] is connected. *)
