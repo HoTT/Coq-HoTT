@@ -536,21 +536,16 @@ Definition ideal_principal {R : Ring} (x : R) : Ideal R
 Definition subgroup_leftideal_quotient {R : Ring} (I : Subgroup R) (J : R -> Type)
   : Subgroup R.
 Proof.
-  snapply Build_Subgroup'.
+  snapply Build_Subgroup.
+  (* We insert [merely] here to avoid needing [Funext]. *)
   - exact (fun r => merely (J ⊆ subgroup_preimage (grp_homo_rng_left_mult r) I)).
-  - exact _.
-  - apply tr; simpl.
-    intros r p.
-    rewrite rng_mult_zero_l.
-    apply ideal_in_zero.
-  - intros x y p q.
-    strip_truncations; apply tr.
-    hnf; intros s j; simpl.
-    rewrite rng_dist_r.
-    rewrite rng_mult_negate_l.
-    apply ideal_in_plus_negate.
-    + by apply p.
-    + by apply q.
+  (* This predicate is a subgroup, since it is equivalent to an intersection of a family of subgroups indexed by [sig J]. *)
+  - rapply (issubgroup_equiv
+              (H:=subgroup_intersection_family (sig J)
+                    (fun x => subgroup_preimage (grp_homo_rng_right_mult x.1) I))).
+    intro r; cbn.
+    apply Trunc_functor_equiv.
+    symmetry; napply equiv_sig_ind.
 Defined.
 
 (** The left ideal quotient of a left ideal is a left ideal. *)

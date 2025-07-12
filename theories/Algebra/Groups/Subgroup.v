@@ -731,6 +731,21 @@ Proof.
   split; by apply subgroup_in_op_inv.
 Defined.
 
+(** Intersection of a family of subgroups *)
+Definition subgroup_intersection_family {G : Group} (I : Type) (H : I -> Subgroup G)
+  : Subgroup G.
+Proof.
+  (* We insert [merely] to avoid needing [Funext]. *)
+  snapply (Build_Subgroup' (fun g => merely (forall i, H i g))).
+  - exact _.
+  - apply tr.
+    intro i; apply subgroup_in_unit.
+  - cbn.
+    intros x y Hx Hy.
+    strip_truncations; apply tr.
+    intro i; by apply subgroup_in_op_inv.
+Defined.
+
 (** ** Preimage subgroup *)
 
 (** The preimage of a subgroup under a group homomorphism is a subgroup. *)
