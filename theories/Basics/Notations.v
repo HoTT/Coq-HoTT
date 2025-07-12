@@ -17,6 +17,7 @@ Local Set Warnings "-skip-spaces-curly".
 (** Notations for propositional connectives *)
 
 Reserved Notation "x -> y" (at level 99, right associativity, y at level 200).
+Reserved Notation "(->)" (at level 0).
 Reserved Notation "x <-> y" (at level 95, no associativity).
 Reserved Notation "x /\ y" (at level 80, right associativity).
 Reserved Notation "x \/ y" (at level 85, right associativity).
