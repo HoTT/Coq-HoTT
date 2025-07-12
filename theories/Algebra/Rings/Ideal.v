@@ -223,7 +223,7 @@ Instance isideal_maximal_subgroup (R : Ring)
 Definition ideal_unit (R : Ring) : Ideal R
   := Build_Ideal R _ (isideal_maximal_subgroup R).
 
-(** *** Intersection of ideals *)
+(** *** Intersection of two ideals *)
 
 (** Intersections of underlying subgroups of left ideals are again left ideals. *)
 Instance isleftideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
@@ -259,6 +259,45 @@ Definition rightideal_intersection {R : Ring}
 Definition ideal_intersection {R : Ring}
   : Ideal R -> Ideal R -> Ideal R
   := fun I J => Build_Ideal R (subgroup_intersection I J) _.
+
+(** *** Intersection of a family of ideals *)
+
+(** Intersections of underlying subgroups of left ideals are again left ideals. *)
+Instance isleftideal_subgroup_intersection_family (R : Ring) (I : Type) (J : I -> Subgroup R)
+  {h : forall i, IsLeftIdeal (J i)}
+  : IsLeftIdeal (subgroup_intersection_family I J).
+Proof.
+  intros r x; cbn.
+  apply Trunc_functor.
+  intros Jix i;  by apply isleftideal.
+Defined.
+
+(** Intersections of underlying subgroups of right ideals are again right ideals. *)
+Instance isrightideal_subgroup_intersection_family (R : Ring) (I : Type) (J : I -> Subgroup R)
+  {h : forall i, IsRightIdeal (J i)}
+  : IsRightIdeal (subgroup_intersection_family I J)
+  := isleftideal_subgroup_intersection_family _ _ _.
+
+(** Intersections of underlying subgroups of ideals are again ideals. *)
+Instance isideal_subgroup_intersection_family (R : Ring) (I : Type) (J : I -> Subgroup R)
+  {h : forall i, IsIdeal (J i)}
+  : IsIdeal (subgroup_intersection_family I J)
+  := {}.
+
+(** Intersection of left ideals. *)
+Definition leftideal_intersection_family {R : Ring} (I : Type) (J : I -> LeftIdeal R)
+  : LeftIdeal R
+  := Build_LeftIdeal R (subgroup_intersection_family I J) _.
+
+(** Intersection of right ideals. *)
+Definition rightideal_intersection_family {R : Ring} (I : Type) (J : I -> RightIdeal R)
+  : RightIdeal R
+  := leftideal_intersection_family I J.
+
+(** Intersection of ideals. *)
+Definition ideal_intersection_family {R : Ring} (I : Type) (J : I -> Ideal R)
+  : Ideal R
+  := Build_Ideal R (subgroup_intersection_family I J) _.
 
 (** *** Sum of ideals *)
 
