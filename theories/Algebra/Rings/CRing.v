@@ -6,6 +6,7 @@ Require Export Algebra.Rings.Ring Algebra.Rings.Ideal Algebra.Rings.QuotientRing
 
 (** * Commutative Rings *)
 
+Local Open Scope predicate_scope.
 Local Open Scope ring_scope.
 Local Open Scope wc_iso_scope.
 
@@ -48,15 +49,16 @@ Definition rng_mult_comm {R : CRing} (x y : R) : x * y = y * x := commutativity 
 Lemma rng_power_mult {R : CRing} (x y : R) (n : nat)
   : rng_power (R:=R) (x * y) n = rng_power (R:=R) x n * rng_power (R:=R) y n.
 Proof.
-  induction n.
+  simple_induction' n.
   1: symmetry; rapply rng_mult_one_l.
   simpl.
-  rewrite (rng_mult_assoc (A:=R)).
-  rewrite <- (rng_mult_assoc (A:=R) x _ y).
-  rewrite (rng_mult_comm (rng_power (R:=R) x n) y).
-  rewrite rng_mult_assoc.
-  rewrite <- (rng_mult_assoc _ (rng_power (R:=R) x n)).
-  f_ap.
+  lhs_V napply rng_mult_assoc.
+  rhs_V napply rng_mult_assoc.
+  napply (ap (x *.)).
+  lhs napply (ap (y *.) IH).
+  lhs napply rng_mult_assoc.
+  rhs napply rng_mult_assoc.
+  exact (ap (.* _) (rng_mult_comm _ _)).
 Defined.
 
 Definition rng_mult_permute_2_3 {R : CRing} (x y z : R)
@@ -121,7 +123,7 @@ Section IdealCRing.
   (** Ideal products are commutative in commutative rings. Note that we are using ideal notations here and [↔] corresponds to equality of ideals. Essentially a subset in each direction. *)
   Lemma ideal_product_comm (I J : Ideal R) : I ⋅ J ↔ J ⋅ I.
   Proof.
-    apply ideal_subset_antisymm;
+    apply pred_subset_antisymm;
     apply ideal_product_subset_product_commutative.
   Defined.
   
@@ -143,7 +145,7 @@ Section IdealCRing.
   Proof.
     intros p.
     etransitivity.
-    { apply ideal_eq_subset.
+    { apply pred_subset_pred_eq.
       symmetry.
       apply ideal_product_unit_r. }
     etransitivity.
@@ -156,7 +158,7 @@ Section IdealCRing.
     : Coprime I J -> I ∩ J ↔ I ⋅ J.
   Proof.
     intros p.
-    apply ideal_subset_antisymm.
+    apply pred_subset_antisymm.
     - apply ideal_intersection_subset_product.
       unfold Coprime in p.
       apply symmetry in p.
@@ -167,11 +169,12 @@ Section IdealCRing.
   Lemma ideal_quotient_product (I J K : Ideal R)
     : (I :: J) :: K ↔ (I :: (J ⋅ K)).
   Proof.
-    apply ideal_subset_antisymm.
+    apply pred_subset_antisymm.
     - intros x [p q]; strip_truncations; split; apply tr;
       intros r; rapply Trunc_rec; intros jk.
       + induction jk as [y [z z' j k] | | ? ? ? ? ? ? ].
         * rewrite (rng_mult_comm z z').
+          simpl.
           rewrite rng_mult_assoc.
           destruct (p z' k) as [p' ?].
           revert p'; apply Trunc_rec; intros p'.
@@ -199,7 +202,8 @@ Section IdealCRing.
           by apply ideal_in_plus_negate.
     - intros x [p q]; strip_truncations; split; apply tr;
       intros r k; split; apply tr; intros z j.
-      + rewrite <- rng_mult_assoc.
+      + simpl.
+        rewrite <- rng_mult_assoc.
         rewrite (rng_mult_comm r z).
         by apply p, tr, sgt_in, ipn_in.
       + cbn in z.

@@ -118,7 +118,7 @@ Section ChineseRemainderTheorem.
     1: exact rng_homo_crt.
     1: exact _.
     (** Finally we must show the ideal of this map is the intersection. *)
-    apply ideal_subset_antisymm.
+    apply pred_subset_antisymm.
     - intros r [i j].
       apply path_prod; apply qglue.
       1: change (I (- r + 0)).
