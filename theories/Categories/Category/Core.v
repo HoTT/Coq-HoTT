@@ -158,8 +158,8 @@ End CategoryCoreNotations.
 (** ** Transport lemmas for morphisms *)
 
 (** Transport distributes over composition. *)
-Definition transport_compose_morphism {C : PreCategory} {X Y Z W : object C} (p : X = W)
-  (f : morphism C X Y) (g : morphism C Y Z)
+Definition transport_compose_morphism {C : PreCategory} {X Y Z W : object C}
+  (p : X = W) (f : morphism C X Y) (g : morphism C Y Z)
   : transport (fun U => morphism C U Z) p (g o f)%morphism =
     (g o transport (fun U => morphism C U Y) p f)%morphism
   := match p with idpath => idpath end.
