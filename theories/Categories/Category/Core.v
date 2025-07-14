@@ -165,8 +165,8 @@ Definition transport_compose_morphism {C : PreCategory} {X Y Z W : object C}
   := match p with idpath => idpath end.
 
 (** Composing transported morphisms along inverse paths. *)
-Definition transport_compose_both_inverse {C : PreCategory} {W X Y Z : object C} (p : W = X)
-  (f : morphism C W Z) (g : morphism C Y W)
+Definition transport_compose_both_inverse {C : PreCategory} {W X Y Z : object C}
+  (p : W = X) (f : morphism C W Z) (g : morphism C Y W)
   : (transport (fun U : object C => morphism C U Z) p f o 
      transport (fun U : object C => morphism C Y U) p g)%morphism =
     (f o g)%morphism
