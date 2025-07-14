@@ -155,6 +155,23 @@ Module Export CategoryCoreNotations.
   Notation "1" := (identity _) : morphism_scope.
 End CategoryCoreNotations.
 
+(** ** Transport lemmas for morphisms *)
+
+(** Transport distributes over composition. *)
+Definition transport_compose_morphism {C : PreCategory} {X Y Z W : object C}
+  (p : X = W) (f : morphism C X Y) (g : morphism C Y Z)
+  : transport (fun U => morphism C U Z) p (g o f)%morphism =
+    (g o transport (fun U => morphism C U Y) p f)%morphism
+  := match p with idpath => idpath end.
+
+(** Transporting the middle object in a composition. *)
+Definition transport_compose_middle {C : PreCategory} {W X Y Z : object C}
+  (p : W = X) (f : morphism C W Z) (g : morphism C Y W)
+  : (transport (fun U : object C => morphism C U Z) p f o 
+     transport (fun U : object C => morphism C Y U) p g)%morphism =
+    (f o g)%morphism
+  := match p with idpath => idpath end.
+
 (** We have a tactic for trying to run a tactic after associating morphisms either all the way to the left, or all the way to the right *)
 Tactic Notation "try_associativity_quick" tactic(tac) :=
   first [ rewrite <- ?associativity; tac
