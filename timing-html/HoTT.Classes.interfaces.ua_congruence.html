@@ -1,0 +1,278 @@
+<html>
+<head>
+<title>ua_congruence.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ua_congruence.v</h1>
+
+<div class="code" title="File: ua_congruence.v
+Line: 1
+Time: 0.072s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Universes.HProp
+  HoTT.Classes.interfaces.canonical_names
+  HoTT.Classes.interfaces.ua_algebra.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Import algebra_notations ne_list.notations.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section congruence.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {σ : Signature} (A : Algebra σ) (Φ : ∀ s, Relation (A s)).</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An operation [f : A s1 → A s2 → ... → A sn → A t] satisfies
+    [OpCompatible f] iff
+
+&lt;&lt;
+      Φ s1 x1 y1 ∧ Φ s2 x2 y2 ∧ ... ∧ Φ sn xn yn
+&gt;&gt;
+
+    implies
+
+&lt;&lt;
+      Φ t (f x1 x2 ... xn) (f y1 y2 ... yn).
+&gt;&gt;
+*)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>Definition OpCompatible {w : SymbolType σ} (f : Operation A w)
+    : Type
+    := ∀ (a b : FamilyProd A (dom_symboltype w)),
+       for_all_2_family_prod A A Φ a b -&gt;
+       Φ (cod_symboltype w) (ap_operation f a) (ap_operation f b).</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Class OpsCompatible : Type
+    := ops_compatible : ∀ (u : Symbol σ), OpCompatible u.#A.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance trunc_ops_compatible `{Funext} {n : trunc_index}
+    `{!∀ s x y, IsTrunc n (Φ s x y)}
+    : IsTrunc n OpsCompatible.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 37
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    apply istrunc_forall.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A family of relations [Φ] is a congruence iff it is a family of
+      mere equivalence relations and [OpsCompatible A Φ] holds. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 44
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>Class IsCongruence : Type := BuildIsCongruence
+   { is_mere_relation_cong :: ∀ (s : Sort σ), is_mere_relation (A s) (Φ s)
+   ; equiv_rel_cong :: ∀ (s : Sort σ), EquivRel (Φ s)
+   ; ops_compatible_cong :: OpsCompatible }.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments BuildIsCongruence {is_mere_relation_cong}
+                                     {equiv_rel_cong}
+                                     {ops_compatible_cong}.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance hprop_is_congruence `{Funext} : IsHProp IsCongruence.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+    apply (equiv_hprop_allpath _)^-1.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [C1 C2 C3] [D1 D2 D3].</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 56
+Time: 0.009s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+    by destruct (path_ishprop C1 D1),
+                (path_ishprop C2 D2),
+                (path_ishprop C3 D3).</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+
+End congruence.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [Φ] is a congruence and [f : A s1 → A s2 → ... → A sn] an
+    operation such that [OpCompatible A Φ f] holds.
+    Then [OpCompatible (f x)] holds for all [x : A s1]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>Lemma op_compatible_cons {σ : Signature} {A : Algebra σ}
+  (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}
+  (s : Sort σ) (w : SymbolType σ) (f : Operation A (s ::: w))
+  (x : A s) (P : OpCompatible A Φ f)
+  : OpCompatible A Φ (f x).</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b R.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  exact (P (x,a) (x,b) (EquivRel_Reflexive x, R)).</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_congruence.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

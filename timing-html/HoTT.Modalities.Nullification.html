@@ -1,0 +1,491 @@
+<html>
+<head>
+<title>Nullification.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Nullification.v</h1>
+
+<div class="code" title="File: Nullification.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Nullification *)
+
+</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 2
+Time: 0.037s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 2
+Time: 0.025s">
+<div class="time" style="width: 67.567567567568%"></div>
+<pre>
+Require Import Extensions.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 3
+Time: 0.007s">
+<div class="time" style="width: 18.918918918919%"></div>
+<pre>
+Require Import Modality Accessible.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Export Modalities.Localization.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>    (** Nullification is a special case of localization *)
+
+</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Nullification is the special case of localization where the codomains of the generating maps are all [Unit].  In this case, we get a modality and not just a reflective subuniverse. *)
+
+(** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)
+
+</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Definition extendable_over_unit (n : nat)
+  (A : Type@{a}) (C : Unit -&gt; Type@{i}) (D : forall u, C u -&gt; Type@{j})
+  (ext : ExtendableAlong@{a a i k} n (const_tt A) C)
+  (ext' : forall (c : forall u, C u),
+            ExtendableAlong@{a a j k} n (const_tt A) (fun u =&gt; (D u (c u))))
+  : ExtendableAlong_Over@{a a i j k} n (const_tt A) C D ext.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 17
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  generalize dependent C; simple_induction n n IH;
+    intros C D ext ext'; [exact tt | split].</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g g'.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    exists ((fst (ext' (fst ext g).1)
+                 (fun a =&gt; ((fst ext g).2 a)^ # (g' a))).1);
+      intros a; simpl.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_transport_p.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    exact ((fst (ext' (fst ext g).1)
+                (fun a =&gt; ((fst ext g).2 a)^ # (g' a))).2 a).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h k h' k'.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply IH; intros g.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (snd (ext' k) (fun u =&gt; g u # h' u) k').</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 29
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 30
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+Definition ooextendable_over_unit@{i j k l m}
+  (A : Type@{i}) (C : Unit -&gt; Type@{j}) (D : forall u, C u -&gt; Type@{k})
+  (ext : ooExtendableAlong@{l l j m} (const_tt A) C)
+  (ext' : forall (c : forall u, C u),
+            ooExtendableAlong (const_tt A) (fun u =&gt; (D u (c u))))
+  : ooExtendableAlong_Over (const_tt A) C D ext
+  := fun n =&gt; extendable_over_unit n A C D (ext n) (fun c =&gt; ext' c n).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[local] Hint Extern 4 =&gt; progress (cbv beta iota) : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Nul@{a i} (S : NullGenerators@{a}) : Modality@{i}.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We use the localization reflective subuniverses for most of the necessary data. *)
+ </pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>simple refine (Build_Modality' (Loc (null_to_local_generators S)) _ _).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** We take care with universes. *)
+   </pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snrefine (reflectsD_from_OO_ind@{i} _ _ _).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros B B_inO g.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (Localize_ind@{a i i i} (null_to_local_generators S) A B g _); intros i.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ooextendable_over_unit; intros c.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 52
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+      refine (ooextendable_postcompose@{a a i i i i i i i i}
+                (fun (_:Unit) =&gt; B (c tt)) _ _
+                (fun u =&gt; transport B (ap@{Set _} c (path_unit tt u))) _).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ooextendable_islocal _ i).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inO_paths@{i i}.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And here is the "real" definition of the notation [IsNull]. *)</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation IsNull f := (In (Nul f)).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Nullification and Accessibility *)
+
+(** Nullification modalities are accessible, essentially by definition. *)</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance accmodality_nul (S : NullGenerators) : IsAccModality (Nul S).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve econstructor.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact S.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; reflexivity.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And accessible modalities can be lifted to other universes. *)
+
+</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lift_accmodality@{a i j} (O : Subuniverse@{i}) `{IsAccModality@{a i} O}
+  : Modality@{j}
+  := Nul@{a j} (acc_ngen O).</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance O_eq_lift_accmodality (O : Subuniverse@{i}) `{IsAccModality@{a i} O}
+  : O &lt;=&gt; lift_accmodality O.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  split; intros A; apply inO_iff_isnull.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Nullification.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

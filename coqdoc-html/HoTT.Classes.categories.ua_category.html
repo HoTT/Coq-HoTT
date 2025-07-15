@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Classes.categories.ua_category</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Classes.categories.ua_category</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">HoTT.Categories.Category.Core</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Categories.Category.Univalent.html#"><span class="id" title="library">HoTT.Categories.Category.Univalent</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.theory.ua_isomorphic.html#"><span class="id" title="library">HoTT.Classes.theory.ua_isomorphic</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#CategoryMorphismsNotations"><span class="id" title="module">Morphisms.CategoryMorphismsNotations</span></a> <a class="idref" href="HoTT.Classes.theory.ua_isomorphic.html#isomorphic_notations"><span class="id" title="module">isomorphic_notations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">category</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Given any signature <span class="inlinecode">σ</span>, there is a precategory of set algebras
+    and homomorphisms for that signature. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="precategory_algebra" class="idref" href="#precategory_algebra"><span class="id" title="lemma">precategory_algebra</span></a> `{<a id="H:1" class="idref" href="#H:1"><span class="id" title="binder">Funext</span></a>} (<a id="5cb7069516295828a6769890e3fe4f53" class="idref" href="#5cb7069516295828a6769890e3fe4f53"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Signature"><span class="id" title="record">Signature</span></a>) : <a class="idref" href="HoTT.Categories.Category.Core.html#PreCategory"><span class="id" title="record">PreCategory</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (@<a class="idref" href="HoTT.Categories.Category.Core.html#Build_PreCategory"><span class="id" title="definition">Build_PreCategory</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#SetAlgebra"><span class="id" title="record">SetAlgebra</span></a> σ) <a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#Homomorphism"><span class="id" title="record">Homomorphism</span></a> <a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#hom_id"><span class="id" title="definition">hom_id</span></a> (@<a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#hom_compose"><span class="id" title="definition">hom_compose</span></a> σ));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[<span class="id" title="tactic">intros</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#path_hset_homomorphism"><span class="id" title="lemma">path_hset_homomorphism</span></a> .. | <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Category isomorphic implies algebra isomorphic. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="catiso_to_uaiso" class="idref" href="#catiso_to_uaiso"><span class="id" title="lemma">catiso_to_uaiso</span></a> `{<a id="H:3" class="idref" href="#H:3"><span class="id" title="binder">Funext</span></a>} {<a id="cd01c1f8eba18116122f50d6eb622af2" class="idref" href="#cd01c1f8eba18116122f50d6eb622af2"><span class="id" title="binder">σ</span></a>} {<a id="A:5" class="idref" href="#A:5"><span class="id" title="binder">A</span></a> <a id="B:6" class="idref" href="#B:6"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Classes.categories.ua_category.html#precategory_algebra"><span class="id" title="lemma">precategory_algebra</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#cd01c1f8eba18116122f50d6eb622af2"><span class="id" title="variable">σ</span></a>)}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.categories.ua_category.html#A:5"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#6afdcecda8be90e87489115d7021bd5e"><span class="id" title="notation">&lt;~=~&gt;</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#B:6"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Utf8Minimal.html#c41c566ddac4c1298b9e7dd2bae1c794"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#A:5"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Classes.theory.ua_isomorphic.html#1ea868b91187e76780e9fa7b002c59d6"><span class="id" title="notation">≅</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#B:6"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">f</span> [<span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>]].<br/>
+&nbsp;&nbsp;<span class="id" title="var">unshelve</span> <span class="id" title="tactic">eapply</span> (@<a class="idref" href="HoTT.Classes.theory.ua_isomorphic.html#BuildIsomorphic"><span class="id" title="constructor">BuildIsomorphic</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> (<span class="id" title="var">f</span> <span class="id" title="var">s</span>) (<span class="id" title="var">a</span> <span class="id" title="var">s</span>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#apD10_homomorphism"><span class="id" title="lemma">apD10_homomorphism</span></a> <span class="id" title="var">c</span> <span class="id" title="var">s</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#apD10_homomorphism"><span class="id" title="lemma">apD10_homomorphism</span></a> <span class="id" title="var">b</span> <span class="id" title="var">s</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Algebra isomorphic implies category isomorphic. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="uaiso_to_catiso" class="idref" href="#uaiso_to_catiso"><span class="id" title="lemma">uaiso_to_catiso</span></a> `{<a id="H:7" class="idref" href="#H:7"><span class="id" title="binder">Funext</span></a>} {<a id="adf3bc8341a90edf65bb756c93872ed9" class="idref" href="#adf3bc8341a90edf65bb756c93872ed9"><span class="id" title="binder">σ</span></a>} {<a id="A:9" class="idref" href="#A:9"><span class="id" title="binder">A</span></a> <a id="B:10" class="idref" href="#B:10"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Classes.categories.ua_category.html#precategory_algebra"><span class="id" title="lemma">precategory_algebra</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#adf3bc8341a90edf65bb756c93872ed9"><span class="id" title="variable">σ</span></a>)}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.categories.ua_category.html#A:9"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Classes.theory.ua_isomorphic.html#1ea868b91187e76780e9fa7b002c59d6"><span class="id" title="notation">≅</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#B:10"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Utf8Minimal.html#c41c566ddac4c1298b9e7dd2bae1c794"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#A:9"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#6afdcecda8be90e87489115d7021bd5e"><span class="id" title="notation">&lt;~=~&gt;</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#B:10"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">f</span> <span class="id" title="var">F</span> <span class="id" title="var">G</span>]. <span class="id" title="tactic">set</span> (<span class="id" title="var">h</span> := <a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#BuildHomomorphism"><span class="id" title="constructor">BuildHomomorphism</span></a> <span class="id" title="var">f</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (@<a class="idref" href="HoTT.Categories.Category.Morphisms.html#Build_Isomorphic"><span class="id" title="constructor">Morphisms.Build_Isomorphic</span></a> <span class="id" title="var">_</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">h</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (@<a class="idref" href="HoTT.Categories.Category.Morphisms.html#Build_IsIsomorphism"><span class="id" title="constructor">Morphisms.Build_IsIsomorphism</span></a> <span class="id" title="var">_</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">h</span> (<a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#hom_inv"><span class="id" title="definition">hom_inv</span></a> <span class="id" title="var">h</span>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#path_hset_homomorphism"><span class="id" title="lemma">path_hset_homomorphism</span></a>. <span class="id" title="var">funext</span> <span class="id" title="var">s</span> <span class="id" title="var">x</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#eissect"><span class="id" title="method">eissect</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.theory.ua_homomorphism.html#path_hset_homomorphism"><span class="id" title="lemma">path_hset_homomorphism</span></a>. <span class="id" title="var">funext</span> <span class="id" title="var">s</span> <span class="id" title="var">x</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#eisretr"><span class="id" title="method">eisretr</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Category isomorphic and algebra isomorphic is equivalent. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_catiso_to_uaiso" class="idref" href="#isequiv_catiso_to_uaiso"><span class="id" title="instance">isequiv_catiso_to_uaiso</span></a> `{<a id="H:11" class="idref" href="#H:11"><span class="id" title="binder">Funext</span></a>} {<a id="feb34c1ba9419896b17e3d09a5a7adde" class="idref" href="#feb34c1ba9419896b17e3d09a5a7adde"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Signature"><span class="id" title="record">Signature</span></a>}<br/>
+&nbsp;&nbsp;(<a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a> <a id="B:14" class="idref" href="#B:14"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Classes.categories.ua_category.html#precategory_algebra"><span class="id" title="lemma">precategory_algebra</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#feb34c1ba9419896b17e3d09a5a7adde"><span class="id" title="variable">σ</span></a>))<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (@<a class="idref" href="HoTT.Classes.categories.ua_category.html#catiso_to_uaiso"><span class="id" title="lemma">catiso_to_uaiso</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Classes.categories.ua_category.html#feb34c1ba9419896b17e3d09a5a7adde"><span class="id" title="variable">σ</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#B:14"><span class="id" title="variable">B</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#catiso_to_uaiso"><span class="id" title="lemma">catiso_to_uaiso</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#uaiso_to_catiso"><span class="id" title="lemma">uaiso_to_catiso</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">f</span> <span class="id" title="var">F</span> <span class="id" title="var">G</span>]. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Classes.theory.ua_isomorphic.html#path_hset_isomorphic"><span class="id" title="lemma">path_hset_isomorphic</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">f</span> <span class="id" title="var">F</span>]. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#path_isomorphic"><span class="id" title="definition">Morphisms.path_isomorphic</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">Morphisms.idtoiso</span></span> factorizes as the composition of equivalences. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="path_idtoiso_isomorphic_id" class="idref" href="#path_idtoiso_isomorphic_id"><span class="id" title="lemma">path_idtoiso_isomorphic_id</span></a> `{<a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">Funext</span></a>} {<a id="dd0f8ee13b043696963f589a3a566f8e" class="idref" href="#dd0f8ee13b043696963f589a3a566f8e"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Signature"><span class="id" title="record">Signature</span></a>}<br/>
+&nbsp;&nbsp;(<a id="A:17" class="idref" href="#A:17"><span class="id" title="binder">A</span></a> <a id="B:18" class="idref" href="#B:18"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> (<a class="idref" href="HoTT.Classes.categories.ua_category.html#precategory_algebra"><span class="id" title="lemma">precategory_algebra</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#dd0f8ee13b043696963f589a3a566f8e"><span class="id" title="variable">σ</span></a>))<br/>
+&nbsp;&nbsp;: @<a class="idref" href="HoTT.Categories.Category.Morphisms.html#idtoiso"><span class="id" title="definition">Morphisms.idtoiso</span></a> (<a class="idref" href="HoTT.Classes.categories.ua_category.html#precategory_algebra"><span class="id" title="lemma">precategory_algebra</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#dd0f8ee13b043696963f589a3a566f8e"><span class="id" title="variable">σ</span></a>) <a class="idref" href="HoTT.Classes.categories.ua_category.html#A:17"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#B:18"><span class="id" title="variable">B</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#catiso_to_uaiso"><span class="id" title="lemma">catiso_to_uaiso</span></a><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Classes.theory.ua_isomorphic.html#isomorphic_id"><span class="id" title="lemma">isomorphic_id</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#A:17"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#B:18"><span class="id" title="variable">B</span></a><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">)^-1</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">funext</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.Category.Morphisms.html#path_isomorphic"><span class="id" title="definition">Morphisms.path_isomorphic</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The precategory of set algebras and homomorphisms for a signature
+    is a (univalent) category. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="iscategory_algebra" class="idref" href="#iscategory_algebra"><span class="id" title="lemma">iscategory_algebra</span></a> `{<a id="H:19" class="idref" href="#H:19"><span class="id" title="binder">Univalence</span></a>} (<a id="73037d305ae1b6028b521cda53a3cc2f" class="idref" href="#73037d305ae1b6028b521cda53a3cc2f"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Signature"><span class="id" title="record">Signature</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Univalent.html#IsCategory"><span class="id" title="abbreviation">IsCategory</span></a> (<a class="idref" href="HoTT.Classes.categories.ua_category.html#precategory_algebra"><span class="id" title="lemma">precategory_algebra</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#73037d305ae1b6028b521cda53a3cc2f"><span class="id" title="variable">σ</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Classes.categories.ua_category.html#path_idtoiso_isomorphic_id"><span class="id" title="lemma">path_idtoiso_isomorphic_id</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> @<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_compose"><span class="id" title="instance">isequiv_compose</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_compose"><span class="id" title="instance">isequiv_compose</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_inverse"><span class="id" title="instance">isequiv_inverse</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="category_algebra" class="idref" href="#category_algebra"><span class="id" title="definition">category_algebra</span></a> `{<a id="H:21" class="idref" href="#H:21"><span class="id" title="binder">Univalence</span></a>} (<a id="7e47f8c913dc13cab771d71295e29a6d" class="idref" href="#7e47f8c913dc13cab771d71295e29a6d"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Signature"><span class="id" title="record">Signature</span></a>) : <a class="idref" href="HoTT.Categories.Category.Univalent.html#Category"><span class="id" title="record">Category</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Categories.Category.Univalent.html#Build_Category"><span class="id" title="constructor">Build_Category</span></a> (<a class="idref" href="HoTT.Classes.categories.ua_category.html#iscategory_algebra"><span class="id" title="lemma">iscategory_algebra</span></a> <a class="idref" href="HoTT.Classes.categories.ua_category.html#7e47f8c913dc13cab771d71295e29a6d"><span class="id" title="variable">σ</span></a>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

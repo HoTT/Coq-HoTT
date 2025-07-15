@@ -1,0 +1,560 @@
+<html>
+<head>
+<title>ImpredicativeTruncation.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ImpredicativeTruncation.v</h1>
+
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Impredicative truncations *)
+
+(** In this file, under the assumptions of propositional resizing [PropResizing] and function extensionality [Funext], we define the propositional truncation in any universe. In the main library, these are constructed using HITs. The definitions here are meant to be for illustration. *)
+
+</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 4
+Time: 0.028s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 4
+Time: 0.013s">
+<div class="time" style="width: 46.428571428571%"></div>
+<pre>
+Require Import Universes.Smallness.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Using only function extensionality, we can define a "propositional truncation" [Trm A] of a type [A] in universe [i] which eliminates into propositions in universe [j].  It lands in [max(i,j+1)].  So if we want it to land in universe [i], then we can only eliminate into propositions in a strictly smaller universe [j].  Or, if we want it to eliminate into propositions in universe [i], then it must land in a strictly larger universe. *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Trm@{i j | } (A : Type@{i})
+  := forall P:Type@{j}, IsHProp P -&gt; (A -&gt; P) -&gt; P.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition trm@{i j | } {A : Type@{i}} : A -&gt; Trm@{i j} A
+  := fun a P HP f =&gt; f a.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here [k] plays the role of [max(i,j+1)]. *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishprop_Trm@{i j k | i &lt;= k, j &lt; k} `{Funext} (A : Type@{i})
+  : IsHProp (Trm@{i j} A).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply istrunc_forall@{k k k}; intro B.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply istrunc_forall@{j k k}; intro ishp.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_forall@{k j k}.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As mentioned above, it eliminates into propositions in universe [j]. *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Trm_rec@{i j | } {A : Type@{i}}
+  {P : Type@{j}} {p : IsHProp@{j} P} (f : A -&gt; P)
+  : Trm@{i j} A -&gt; P
+  := fun ma =&gt; ma P p f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This computes definitionally. *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Trm_rec_beta@{i j | } {A : Type@{i}}
+  {P : Type@{j}} `{IsHProp P} (f : A -&gt; P)
+  : Trm_rec@{i j} f o trm == f
+  := fun _ =&gt; idpath.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Because of the universe constraints, we can't make this into a functor on [Type@{i}].  We have a universe constraint [i' &lt;= j] and [Trm@{i j} A] lands in [max(i,j+1)], which is strictly larger. *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition functor_Trm@{i j i' j' | i' &lt;= j, j' &lt; j} `{Funext}
+  {A : Type@{i}} {A' : Type@{i'}} (f : A -&gt; A')
+  : Trm@{i j} A -&gt; Trm@{i' j'} A'
+  := Trm_rec (trm o f).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We also record the dependent induction principle.  But it only computes propositionally. *)</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Trm_ind@{i j k | i &lt;= k, j &lt; k} {A : Type@{i}} `{Funext}
+  {P : Trm@{i j} A -&gt; Type@{j}} {p : forall x, IsHProp@{j} (P x)} (f : forall a, P (trm a))
+  : forall x, P x.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold Trm.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply x.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport P _ (f a)).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply path_ishprop@{k}.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The universe constraints go away if we assume propositional resizing. *)
+
+</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AssumePropResizing.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PropResizing}.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If we assume propositions resizing, then we may as well quantify over propositions in the lowest universe [Set] when defining the truncation.  This reduces the number of universe variables.  We also assume that [Set &lt; i], so that the construction lands in universe [i]. *)
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition imp_Trm@{i | Set &lt; i} (A : Type@{i}) : Type@{i}
+    := Trm@{i Set} A.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Here we use propositional resizing to resize a arbitrary proposition [P] from an arbitrary universe [j] to universe [Set], so there is no constraint on the universe [j].  In particular, we can take [j = i], which shows that [imp_Trm] is a reflective subuniverse of [Type@{i}], since any two maps into a proposition agree. *)
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>Definition imp_Trm_rec@{i j | Set &lt; i} {A : Type@{i}}
+    {P : Type@{j}} `{IsHProp P} (f : A -&gt; P)
+    : imp_Trm@{i} A -&gt; P
+    := fun ma =&gt; (equiv_smalltype@{Set j} P)
+                 (ma (smalltype@{Set j} P) _ ((equiv_smalltype@{Set j} P)^-1 o f)).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Similarly, there are no constraints between [i] and [i'] in the next definition, so they could be taken to be equal. *)
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition functor_imp_Trm@{i i' | Set &lt; i, Set &lt; i'} `{Funext}
+    {A : Type@{i}} {A' : Type@{i'}} (f : A -&gt; A')
+    : imp_Trm@{i} A -&gt; imp_Trm@{i'} A'
+    := imp_Trm_rec (trm o f).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Note that [imp_Trm_rec] only computes propositionally. *)
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition imp_Trm_rec_beta@{i j | Set &lt; i} {A : Type@{i}}
+    {P : Type@{j}} `{IsHProp P} (f : A -&gt; P)
+    : imp_Trm_rec@{i j} f o trm == f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold imp_Trm_rec, trm; cbn beta.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply eisretr@{Set j}.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End AssumePropResizing.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Above, we needed the constraint [Set &lt; i].  But one can use propositional resizing again to make [imp_Trm] land in the lowest universe, if that is needed.  (We'll in fact let it land in any universe [u].)  To do this, we need to assume [Funext] in the definition of the truncation itself. *)
+
+</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section TruncationWithFunext.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PropResizing} `{Funext}.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [Funext] implies that [Trm A] is a proposition, so [PropResizing] can be used to put it in any universe. The construction passes through universe [k], which represents [max(i,Set+1)]. *)
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition resized_Trm@{i k u | i &lt;= k, Set &lt; k} (A : Type@{i})
+    : Type@{u}
+    := smalltype@{u k} (Trm@{i Set} A).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 89
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+
+  Definition resized_trm@{i k u | i &lt;= k, Set &lt; k} {A : Type@{i}}
+    : A -&gt; resized_Trm@{i k u} A
+    := (equiv_smalltype _)^-1 o trm.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition resized_Trm_rec@{i j k u | i &lt;= k, Set &lt; k} {A : Type@{i}}
+    {P : Type@{j}} `{IsHProp P} (f : A -&gt; P)
+    : resized_Trm@{i k u} A -&gt; P.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ o (equiv_smalltype@{u k} _)).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    exact (fun ma =&gt; (equiv_smalltype@{Set j} P)
+                 (ma (smalltype@{Set j} P) _ ((equiv_smalltype@{Set j} P)^-1 o f))).</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The beta rule is again propositional. *)
+ </pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition resized_Trm_rec_beta@{i j k u | i &lt;= k, Set &lt; k} {A : Type@{i}}
+    {P : Type@{j}} `{IsHProp P} (f : A -&gt; P)
+    : resized_Trm_rec@{i j k u} f o resized_trm == f.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold resized_Trm_rec, resized_trm, Trm, trm; cbn beta.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite eisretr@{u k}.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply eisretr@{Set j}.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End TruncationWithFunext.</pre>
+</div>
+<div class="code" title="File: ImpredicativeTruncation.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+
