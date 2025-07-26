@@ -30,6 +30,8 @@ Record BiproductData {C : PreCategory} (X Y : object C)
   outr : morphism C biproduct_obj Y
 }.
 
+Coercion biproduct_obj : BiproductData >-> object.
+
 Arguments biproduct_obj {C X Y} b : rename.
 Arguments inl {C X Y} b : rename.
 Arguments inr {C X Y} b : rename.
@@ -73,16 +75,14 @@ Record HasBiproductUniversal {C : PreCategory} {X Y : object C}
   (* Universal property as a coproduct *)
   coprod_universal : forall (W : object C) 
     (f : morphism C X W) (g : morphism C Y W),
-    Contr {h : morphism C (biproduct_obj B) W & 
-           ((h o inl B = f)%morphism) * 
-           ((h o inr B = g)%morphism)};
+    Contr {h : morphism C B W & 
+           ((h o inl B = f)%morphism * (h o inr B = g)%morphism)};
   
   (* Universal property as a product *)
   prod_universal : forall (W : object C) 
     (f : morphism C W X) (g : morphism C W Y),
-    Contr {h : morphism C W (biproduct_obj B) & 
-           ((outl B o h = f)%morphism) * 
-           ((outr B o h = g)%morphism)}
+    Contr {h : morphism C W B & 
+           ((outl B o h = f)%morphism * (outr B o h = g)%morphism)}
 }.
 
 Arguments coprod_universal {C X Y B} u W f g : rename.
@@ -94,7 +94,7 @@ Arguments prod_universal {C X Y B} u W f g : rename.
     the biproduct axioms and universal property.
 *)
 
-Record Biproduct {C : PreCategory} `{Z : ZeroObject C} (X Y : object C)
+Class Biproduct {C : PreCategory} `{Z : ZeroObject C} (X Y : object C)
   : Type
   := {
   biproduct_data : BiproductData X Y;
@@ -117,7 +117,7 @@ Section BiproductOperations.
   (** Extract the unique morphism from the coproduct universal property. *)
   Definition biproduct_coprod_mor (W : object C) 
     (f : morphism C X W) (g : morphism C Y W)
-    : morphism C (biproduct_obj (biproduct_data B)) W
+    : morphism C (biproduct_data B) W
     := pr1 (@center _ (coprod_universal (biproduct_universal B) W f g)).
 
   Lemma biproduct_coprod_beta_l (W : object C) 
@@ -143,7 +143,7 @@ Section BiproductOperations.
   (** Extract the unique morphism from the product universal property. *)
   Definition biproduct_prod_mor (W : object C) 
     (f : morphism C W X) (g : morphism C W Y)
-    : morphism C W (biproduct_obj (biproduct_data B))
+    : morphism C W (biproduct_data B)
     := pr1 (@center _ (prod_universal (biproduct_universal B) W f g)).
 
   Lemma biproduct_prod_beta_l (W : object C) 
@@ -168,9 +168,9 @@ Section BiproductOperations.
   
   (** ** Uniqueness properties *)
 
-Lemma biproduct_coprod_unique (W : object C) 
+  Lemma biproduct_coprod_unique (W : object C) 
     (f : morphism C X W) (g : morphism C Y W)
-    (h : morphism C (biproduct_obj (biproduct_data B)) W)
+    (h : morphism C (biproduct_data B) W)
     : (h o inl (biproduct_data B) = f)%morphism -> 
       (h o inr (biproduct_data B) = g)%morphism ->
       h = biproduct_coprod_mor W f g.
@@ -179,7 +179,7 @@ Lemma biproduct_coprod_unique (W : object C)
     unfold biproduct_coprod_mor.
     set (c := @center _ (coprod_universal (biproduct_universal B) W f g)).
     assert (p : (h; (Hl, Hr)) = c).
-    { apply (@path_contr _ (coprod_universal (biproduct_universal B) W f g)). }
+    1: apply (@path_contr _ (coprod_universal (biproduct_universal B) W f g)).
     exact (ap pr1 p).
   Qed.
 
@@ -195,3 +195,4 @@ Hint Resolve
 Hint Rewrite 
   @zero_morphism_left @zero_morphism_right
   : biproduct_simplify.
+        
