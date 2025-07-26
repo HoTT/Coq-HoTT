@@ -68,8 +68,8 @@ Arguments mixed_r {C Z X Y B} i : rename.
     are uniquely determined by their components.
 *)
 
-Record HasBiproductUniversal {C : PreCategory} {X Y : object C} 
-                             (B : BiproductData X Y)
+Record HasBiproductUniversal {C : PreCategory} {X Y : object C}
+  (B : BiproductData X Y)
   : Type
   := {
   (* Universal property as a coproduct *)
@@ -101,6 +101,8 @@ Class Biproduct {C : PreCategory} `{Z : ZeroObject C} (X Y : object C)
   biproduct_is : IsBiproduct biproduct_data;
   biproduct_universal : HasBiproductUniversal biproduct_data
 }.
+
+Coercion biproduct_data : Biproduct >-> BiproductData.
 
 Arguments biproduct_data {C Z X Y} b : rename.
 Arguments biproduct_is {C Z X Y} b : rename.
@@ -195,4 +197,3 @@ Hint Resolve
 Hint Rewrite 
   @zero_morphism_left @zero_morphism_right
   : biproduct_simplify.
-        
