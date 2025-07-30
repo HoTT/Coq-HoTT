@@ -16,9 +16,7 @@ From HoTT.Categories.Additive Require Import ZeroObjects.
     and projection morphisms.
 *)
 
-Record BiproductData {C : PreCategory} (X Y : object C)
-  : Type
-  := {
+Record BiproductData {C : PreCategory} (X Y : object C) := {
   biproduct_obj : object C;
   
   (* Coproduct structure: injections *)
@@ -45,9 +43,7 @@ Arguments outr {C X Y} b : rename.
 *)
 
 Record IsBiproduct {C : PreCategory} `{Z : ZeroObject C} {X Y : object C} 
-                   (B : BiproductData X Y)
-  : Type
-  := {
+                   (B : BiproductData X Y) := {
   (* Projection-injection identities *)
   beta_l : (outl B o inl B = 1)%morphism;
   beta_r : (outr B o inr B = 1)%morphism;
@@ -69,9 +65,7 @@ Arguments mixed_r {C Z X Y B} i : rename.
 *)
 
 Record HasBiproductUniversal {C : PreCategory} {X Y : object C}
-  (B : BiproductData X Y)
-  : Type
-  := {
+  (B : BiproductData X Y) := {
   (* Universal property as a coproduct *)
   coprod_universal : forall (W : object C) 
     (f : morphism C X W) (g : morphism C Y W),
@@ -94,9 +88,7 @@ Arguments prod_universal {C X Y B} u W f g : rename.
     the biproduct axioms and universal property.
 *)
 
-Class Biproduct {C : PreCategory} `{Z : ZeroObject C} (X Y : object C)
-  : Type
-  := {
+Class Biproduct {C : PreCategory} `{Z : ZeroObject C} (X Y : object C) := {
   biproduct_data : BiproductData X Y;
   biproduct_is : IsBiproduct biproduct_data;
   biproduct_universal : HasBiproductUniversal biproduct_data
@@ -172,16 +164,29 @@ Section BiproductOperations.
 
   Lemma biproduct_coprod_unique (W : object C) 
     (f : morphism C X W) (g : morphism C Y W)
-    (h : morphism C (biproduct_data B) W)
-    : (h o inl (biproduct_data B) = f)%morphism -> 
-      (h o inr (biproduct_data B) = g)%morphism ->
-      h = biproduct_coprod_mor W f g.
+    (h : morphism C B W)
+    (Hl : (h o inl B = f)%morphism)
+    (Hr : (h o inr B = g)%morphism)
+    : h = biproduct_coprod_mor W f g.
   Proof.
-    intros Hl Hr.
     unfold biproduct_coprod_mor.
     set (c := @center _ (coprod_universal (biproduct_universal B) W f g)).
     assert (p : (h; (Hl, Hr)) = c).
     1: apply (@path_contr _ (coprod_universal (biproduct_universal B) W f g)).
+    exact (ap pr1 p).
+  Qed.
+  
+  Lemma biproduct_prod_unique (W : object C) 
+    (f : morphism C W X) (g : morphism C W Y)
+    (h : morphism C W B)
+    (Hl : (outl B o h = f)%morphism)
+    (Hr : (outr B o h = g)%morphism)
+    : h = biproduct_prod_mor W f g.
+  Proof.
+    unfold biproduct_prod_mor.
+    set (c := @center _ (prod_universal (biproduct_universal B) W f g)).
+    assert (p : (h; (Hl, Hr)) = c).
+    1: apply (@path_contr _ (prod_universal (biproduct_universal B) W f g)).
     exact (ap pr1 p).
   Qed.
 
@@ -197,3 +202,4 @@ Hint Resolve
 Hint Rewrite 
   @zero_morphism_left @zero_morphism_right
   : biproduct_simplify.
+        
