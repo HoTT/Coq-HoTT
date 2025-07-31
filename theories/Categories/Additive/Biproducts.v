@@ -108,17 +108,23 @@ Section BiproductOperations.
 
   (** ** Uniqueness from universal property *)
 
+  (** The coproduct universal morphism and its properties. *)
+  Definition biproduct_coprod_universal (W : object C) 
+    (f : morphism C X W) (g : morphism C Y W)
+    : {h : morphism C B W & ((h o inl B = f)%morphism * (h o inr B = g)%morphism)}
+    := @center _ (coprod_universal (biproduct_universal B) W f g).
+
   (** Extract the unique morphism from the coproduct universal property. *)
   Definition biproduct_coprod_mor (W : object C) 
     (f : morphism C X W) (g : morphism C Y W)
-    : morphism C (biproduct_data B) W
-    := pr1 (@center _ (coprod_universal (biproduct_universal B) W f g)).
+    : morphism C B W
+    := (biproduct_coprod_universal W f g).1.
 
   Lemma biproduct_coprod_beta_l (W : object C) 
     (f : morphism C X W) (g : morphism C Y W)
-    : (biproduct_coprod_mor W f g o inl (biproduct_data B) = f)%morphism.
+    : (biproduct_coprod_mor W f g o inl B = f)%morphism.
   Proof.
-    unfold biproduct_coprod_mor.
+    unfold biproduct_coprod_mor, biproduct_coprod_universal.
     set (c := @center _ (coprod_universal (biproduct_universal B) W f g)).
     destruct c as [h [Hl Hr]].
     exact Hl.
@@ -126,25 +132,31 @@ Section BiproductOperations.
 
   Lemma biproduct_coprod_beta_r (W : object C) 
     (f : morphism C X W) (g : morphism C Y W)
-    : (biproduct_coprod_mor W f g o inr (biproduct_data B) = g)%morphism.
+    : (biproduct_coprod_mor W f g o inr B = g)%morphism.
   Proof.
-    unfold biproduct_coprod_mor.
+    unfold biproduct_coprod_mor, biproduct_coprod_universal.
     set (c := @center _ (coprod_universal (biproduct_universal B) W f g)).
     destruct c as [h [Hl Hr]].
     exact Hr.
   Qed.
-  
+
+  (** The product universal morphism and its properties. *)
+  Definition biproduct_prod_universal (W : object C) 
+    (f : morphism C W X) (g : morphism C W Y)
+    : {h : morphism C W B & ((outl B o h = f)%morphism * (outr B o h = g)%morphism)}
+    := @center _ (prod_universal (biproduct_universal B) W f g).
+
   (** Extract the unique morphism from the product universal property. *)
   Definition biproduct_prod_mor (W : object C) 
     (f : morphism C W X) (g : morphism C W Y)
-    : morphism C W (biproduct_data B)
-    := pr1 (@center _ (prod_universal (biproduct_universal B) W f g)).
+    : morphism C W B
+    := (biproduct_prod_universal W f g).1.
 
   Lemma biproduct_prod_beta_l (W : object C) 
     (f : morphism C W X) (g : morphism C W Y)
-    : (outl (biproduct_data B) o biproduct_prod_mor W f g = f)%morphism.
+    : (outl B o biproduct_prod_mor W f g = f)%morphism.
   Proof.
-    unfold biproduct_prod_mor.
+    unfold biproduct_prod_mor, biproduct_prod_universal.
     set (c := @center _ (prod_universal (biproduct_universal B) W f g)).
     destruct c as [h [Hl Hr]].
     exact Hl.
@@ -152,9 +164,9 @@ Section BiproductOperations.
 
   Lemma biproduct_prod_beta_r (W : object C) 
     (f : morphism C W X) (g : morphism C W Y)
-    : (outr (biproduct_data B) o biproduct_prod_mor W f g = g)%morphism.
+    : (outr B o biproduct_prod_mor W f g = g)%morphism.
   Proof.
-    unfold biproduct_prod_mor.
+    unfold biproduct_prod_mor, biproduct_prod_universal.
     set (c := @center _ (prod_universal (biproduct_universal B) W f g)).
     destruct c as [h [Hl Hr]].
     exact Hr.
@@ -202,4 +214,3 @@ Hint Resolve
 Hint Rewrite 
   @zero_morphism_left @zero_morphism_right
   : biproduct_simplify.
-        
