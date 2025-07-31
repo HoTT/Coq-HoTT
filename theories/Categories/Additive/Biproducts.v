@@ -8,6 +8,9 @@ From HoTT Require Import Basics Types.
 From HoTT.Categories Require Import Category Functor.
 From HoTT.Categories.Additive Require Import ZeroObjects.
 
+Local Notation fst_type := Basics.Overture.fst.
+Local Notation snd_type := Basics.Overture.snd.
+
 (** * Biproduct structures *)
 
 (** ** Biproduct data
@@ -120,25 +123,15 @@ Section BiproductOperations.
     : morphism C B W
     := (biproduct_coprod_universal W f g).1.
 
-  Lemma biproduct_coprod_beta_l (W : object C) 
+  Definition biproduct_coprod_beta_l (W : object C)
     (f : morphism C X W) (g : morphism C Y W)
-    : (biproduct_coprod_mor W f g o inl B = f)%morphism.
-  Proof.
-    unfold biproduct_coprod_mor, biproduct_coprod_universal.
-    set (c := @center _ (coprod_universal (biproduct_universal B) W f g)).
-    destruct c as [h [Hl Hr]].
-    exact Hl.
-  Qed.
+    : (biproduct_coprod_mor W f g o inl B = f)%morphism
+    := fst_type (biproduct_coprod_universal W f g).2.
 
-  Lemma biproduct_coprod_beta_r (W : object C) 
+  Definition biproduct_coprod_beta_r (W : object C)
     (f : morphism C X W) (g : morphism C Y W)
-    : (biproduct_coprod_mor W f g o inr B = g)%morphism.
-  Proof.
-    unfold biproduct_coprod_mor, biproduct_coprod_universal.
-    set (c := @center _ (coprod_universal (biproduct_universal B) W f g)).
-    destruct c as [h [Hl Hr]].
-    exact Hr.
-  Qed.
+    : (biproduct_coprod_mor W f g o inr B = g)%morphism
+    := snd_type (biproduct_coprod_universal W f g).2.
 
   (** The product universal morphism and its properties. *)
   Definition biproduct_prod_universal (W : object C) 
@@ -152,55 +145,33 @@ Section BiproductOperations.
     : morphism C W B
     := (biproduct_prod_universal W f g).1.
 
-  Lemma biproduct_prod_beta_l (W : object C) 
+  Definition biproduct_prod_beta_l (W : object C)
     (f : morphism C W X) (g : morphism C W Y)
-    : (outl B o biproduct_prod_mor W f g = f)%morphism.
-  Proof.
-    unfold biproduct_prod_mor, biproduct_prod_universal.
-    set (c := @center _ (prod_universal (biproduct_universal B) W f g)).
-    destruct c as [h [Hl Hr]].
-    exact Hl.
-  Qed.
+    : (outl B o biproduct_prod_mor W f g = f)%morphism
+    := fst_type (biproduct_prod_universal W f g).2.
 
-  Lemma biproduct_prod_beta_r (W : object C) 
+  Definition biproduct_prod_beta_r (W : object C)
     (f : morphism C W X) (g : morphism C W Y)
-    : (outr B o biproduct_prod_mor W f g = g)%morphism.
-  Proof.
-    unfold biproduct_prod_mor, biproduct_prod_universal.
-    set (c := @center _ (prod_universal (biproduct_universal B) W f g)).
-    destruct c as [h [Hl Hr]].
-    exact Hr.
-  Qed.
+    : (outr B o biproduct_prod_mor W f g = g)%morphism
+    := snd_type (biproduct_prod_universal W f g).2.
   
   (** ** Uniqueness properties *)
 
-  Lemma biproduct_coprod_unique (W : object C) 
+  Definition biproduct_coprod_unique (W : object C)
     (f : morphism C X W) (g : morphism C Y W)
     (h : morphism C B W)
     (Hl : (h o inl B = f)%morphism)
     (Hr : (h o inr B = g)%morphism)
-    : h = biproduct_coprod_mor W f g.
-  Proof.
-    unfold biproduct_coprod_mor.
-    set (c := @center _ (coprod_universal (biproduct_universal B) W f g)).
-    assert (p : (h; (Hl, Hr)) = c).
-    1: apply (@path_contr _ (coprod_universal (biproduct_universal B) W f g)).
-    exact (ap pr1 p).
-  Qed.
-  
-  Lemma biproduct_prod_unique (W : object C) 
+    : h = biproduct_coprod_mor W f g
+    := ap pr1 (contr (h; (Hl, Hr)))^.
+
+  Definition biproduct_prod_unique (W : object C)
     (f : morphism C W X) (g : morphism C W Y)
     (h : morphism C W B)
     (Hl : (outl B o h = f)%morphism)
     (Hr : (outr B o h = g)%morphism)
-    : h = biproduct_prod_mor W f g.
-  Proof.
-    unfold biproduct_prod_mor.
-    set (c := @center _ (prod_universal (biproduct_universal B) W f g)).
-    assert (p : (h; (Hl, Hr)) = c).
-    1: apply (@path_contr _ (prod_universal (biproduct_universal B) W f g)).
-    exact (ap pr1 p).
-  Qed.
+    : h = biproduct_prod_mor W f g
+    := ap pr1 (contr (h; (Hl, Hr)))^.
 
 End BiproductOperations.
 
