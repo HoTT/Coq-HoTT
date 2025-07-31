@@ -1,0 +1,65 @@
+digraph HoTT_WildCat_ZeroGroupoid {
+  graph [ratio=0.5]
+  node [style=filled]
+ZeroGroupoid_cate_prod_0gpd [label="cate_prod_0gpd", URL=<ZeroGroupoid.html#cate_prod_0gpd>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_equiv_prod_0gpd_corec [label="equiv_prod_0gpd_corec", URL=<ZeroGroupoid.html#equiv_prod_0gpd_corec>, fillcolor="#F070D1"] ;
+ZeroGroupoid_prod_0gpd_pr [label="prod_0gpd_pr", URL=<ZeroGroupoid.html#prod_0gpd_pr>, fillcolor="#F070D1"] ;
+ZeroGroupoid_prod_0gpd [label="prod_0gpd", URL=<ZeroGroupoid.html#prod_0gpd>, fillcolor="#F070D1"] ;
+ZeroGroupoid_isequiv_0gpd_issurjinj [label="isequiv_0gpd_issurjinj", URL=<ZeroGroupoid.html#isequiv_0gpd_issurjinj>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_issurjinj_equiv_0gpd [label="issurjinj_equiv_0gpd", URL=<ZeroGroupoid.html#issurjinj_equiv_0gpd>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_moveL_equiv_V_0gpd [label="moveL_equiv_V_0gpd", URL=<ZeroGroupoid.html#moveL_equiv_V_0gpd>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_moveR_equiv_V_0gpd [label="moveR_equiv_V_0gpd", URL=<ZeroGroupoid.html#moveR_equiv_V_0gpd>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_isinj_equiv_0gpd [label="isinj_equiv_0gpd", URL=<ZeroGroupoid.html#isinj_equiv_0gpd>, fillcolor="#F070D1"] ;
+ZeroGroupoid_equiv_fun_0gpd [label="equiv_fun_0gpd", URL=<ZeroGroupoid.html#equiv_fun_0gpd>, fillcolor="#F070D1"] ;
+ZeroGroupoid_hasequivs_0gpd [label="hasequivs_0gpd", URL=<ZeroGroupoid.html#hasequivs_0gpd>, fillcolor="#F070D1"] ;
+ZeroGroupoid_is1cat_0gpd [label="is1cat_0gpd", URL=<ZeroGroupoid.html#is1cat_0gpd>, fillcolor="#F070D1"] ;
+ZeroGroupoid_is2graph_0gpd [label="is2graph_0gpd", URL=<ZeroGroupoid.html#is2graph_0gpd>, fillcolor="#F070D1"] ;
+ZeroGroupoid_is01cat_0gpd [label="is01cat_0gpd", URL=<ZeroGroupoid.html#is01cat_0gpd>, fillcolor="#F070D1"] ;
+ZeroGroupoid_isgraph_0gpd [label="isgraph_0gpd", URL=<ZeroGroupoid.html#isgraph_0gpd>, fillcolor="#F070D1"] ;
+ZeroGroupoid_zerogpd_graph [label="zerogpd_graph", URL=<ZeroGroupoid.html#zerogpd_graph>, fillcolor="#F070D1"] ;
+ZeroGroupoid_is0gpd_carrier [label="is0gpd_carrier", URL=<ZeroGroupoid.html#is0gpd_carrier>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_is01cat_carrier [label="is01cat_carrier", URL=<ZeroGroupoid.html#is01cat_carrier>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_isgraph_carrier [label="isgraph_carrier", URL=<ZeroGroupoid.html#isgraph_carrier>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_carrier [label="carrier", URL=<ZeroGroupoid.html#carrier>, fillcolor="#F070D1"] ;
+ZeroGroupoid_ZeroGpd_sind [label="ZeroGpd_sind", URL=<ZeroGroupoid.html#ZeroGpd_sind>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_ZeroGpd_rec [label="ZeroGpd_rec", URL=<ZeroGroupoid.html#ZeroGpd_rec>, peripheries=3, fillcolor="#F070D1"] ;
+ZeroGroupoid_ZeroGpd_ind [label="ZeroGpd_ind", URL=<ZeroGroupoid.html#ZeroGpd_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+ZeroGroupoid_ZeroGpd_rect [label="ZeroGpd_rect", URL=<ZeroGroupoid.html#ZeroGpd_rect>, fillcolor="#F070D1"] ;
+ZeroGroupoid_Build_ZeroGpd [label="Build_ZeroGpd", URL=<ZeroGroupoid.html#Build_ZeroGpd>, fillcolor="#7FAAFF"] ;
+ZeroGroupoid_ZeroGpd [label="ZeroGpd", URL=<ZeroGroupoid.html#ZeroGpd>, fillcolor="#E2CDFA"] ;
+  ZeroGroupoid_cate_prod_0gpd -> ZeroGroupoid_equiv_prod_0gpd_corec [] ;
+  ZeroGroupoid_cate_prod_0gpd -> ZeroGroupoid_hasequivs_0gpd [] ;
+  ZeroGroupoid_cate_prod_0gpd -> ZeroGroupoid_carrier [] ;
+  ZeroGroupoid_equiv_prod_0gpd_corec -> ZeroGroupoid_prod_0gpd_pr [] ;
+  ZeroGroupoid_equiv_prod_0gpd_corec -> ZeroGroupoid_is01cat_0gpd [] ;
+  ZeroGroupoid_prod_0gpd_pr -> ZeroGroupoid_prod_0gpd [] ;
+  ZeroGroupoid_prod_0gpd_pr -> ZeroGroupoid_isgraph_0gpd [] ;
+  ZeroGroupoid_prod_0gpd -> ZeroGroupoid_Build_ZeroGpd [] ;
+  ZeroGroupoid_prod_0gpd -> ZeroGroupoid_ZeroGpd [] ;
+  ZeroGroupoid_isequiv_0gpd_issurjinj -> ZeroGroupoid_hasequivs_0gpd [] ;
+  ZeroGroupoid_issurjinj_equiv_0gpd -> ZeroGroupoid_isinj_equiv_0gpd [] ;
+  ZeroGroupoid_moveL_equiv_V_0gpd -> ZeroGroupoid_equiv_fun_0gpd [] ;
+  ZeroGroupoid_moveR_equiv_V_0gpd -> ZeroGroupoid_equiv_fun_0gpd [] ;
+  ZeroGroupoid_isinj_equiv_0gpd -> ZeroGroupoid_equiv_fun_0gpd [] ;
+  ZeroGroupoid_equiv_fun_0gpd -> ZeroGroupoid_hasequivs_0gpd [] ;
+  ZeroGroupoid_hasequivs_0gpd -> ZeroGroupoid_is1cat_0gpd [] ;
+  ZeroGroupoid_is1cat_0gpd -> ZeroGroupoid_is2graph_0gpd [] ;
+  ZeroGroupoid_is1cat_0gpd -> ZeroGroupoid_is01cat_0gpd [] ;
+  ZeroGroupoid_is2graph_0gpd -> ZeroGroupoid_isgraph_0gpd [] ;
+  ZeroGroupoid_is01cat_0gpd -> ZeroGroupoid_isgraph_0gpd [] ;
+  ZeroGroupoid_isgraph_0gpd -> ZeroGroupoid_zerogpd_graph [] ;
+  ZeroGroupoid_zerogpd_graph -> ZeroGroupoid_ZeroGpd [] ;
+  ZeroGroupoid_is0gpd_carrier -> ZeroGroupoid_ZeroGpd [] ;
+  ZeroGroupoid_is01cat_carrier -> ZeroGroupoid_ZeroGpd [] ;
+  ZeroGroupoid_isgraph_carrier -> ZeroGroupoid_ZeroGpd [] ;
+  ZeroGroupoid_carrier -> ZeroGroupoid_ZeroGpd [] ;
+  ZeroGroupoid_ZeroGpd_sind -> ZeroGroupoid_Build_ZeroGpd [] ;
+  ZeroGroupoid_ZeroGpd_sind -> ZeroGroupoid_ZeroGpd [] ;
+  ZeroGroupoid_ZeroGpd_rec -> ZeroGroupoid_ZeroGpd_rect [] ;
+  ZeroGroupoid_ZeroGpd_ind -> ZeroGroupoid_Build_ZeroGpd [] ;
+  ZeroGroupoid_ZeroGpd_ind -> ZeroGroupoid_ZeroGpd [] ;
+  ZeroGroupoid_ZeroGpd_rect -> ZeroGroupoid_Build_ZeroGpd [] ;
+  ZeroGroupoid_ZeroGpd_rect -> ZeroGroupoid_ZeroGpd [] ;
+subgraph cluster_ZeroGroupoid { label="ZeroGroupoid"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ZeroGroupoid_ZeroGpd; ZeroGroupoid_Build_ZeroGpd; ZeroGroupoid_ZeroGpd_rect; ZeroGroupoid_ZeroGpd_ind; ZeroGroupoid_ZeroGpd_rec; ZeroGroupoid_ZeroGpd_sind; ZeroGroupoid_carrier; ZeroGroupoid_isgraph_carrier; ZeroGroupoid_is01cat_carrier; ZeroGroupoid_is0gpd_carrier; ZeroGroupoid_zerogpd_graph; ZeroGroupoid_isgraph_0gpd; ZeroGroupoid_is01cat_0gpd; ZeroGroupoid_is2graph_0gpd; ZeroGroupoid_is1cat_0gpd; ZeroGroupoid_hasequivs_0gpd; ZeroGroupoid_equiv_fun_0gpd; ZeroGroupoid_isinj_equiv_0gpd; ZeroGroupoid_moveR_equiv_V_0gpd; ZeroGroupoid_moveL_equiv_V_0gpd; ZeroGroupoid_issurjinj_equiv_0gpd; ZeroGroupoid_isequiv_0gpd_issurjinj; ZeroGroupoid_prod_0gpd; ZeroGroupoid_prod_0gpd_pr; ZeroGroupoid_equiv_prod_0gpd_corec; ZeroGroupoid_cate_prod_0gpd; };
+} /* END */

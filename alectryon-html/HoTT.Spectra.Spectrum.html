@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Spectrum.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Spectra *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk0"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Pointed.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> equiv_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> pointed_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Basic Definitions of Spectra *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Prespectrum</span> :=
+  { deloop :&gt; nat -&gt; pType
+    ; glue : <span class="kr">forall</span> <span class="nv">n</span>, deloop n -&gt;* loops (deloop (n .+<span class="mi">1</span>)) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsSpectrum</span> (<span class="nv">E</span> : Prespectrum) :=
+  is_equiv_glue :: <span class="kr">forall</span> <span class="nv">n</span>, IsEquiv (glue E n).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_glue</span> (<span class="nv">E</span> : Prespectrum) `{IsSpectrum E}
+: <span class="kr">forall</span> <span class="nv">n</span>, E n &lt;~&gt;* loops (E n.+<span class="mi">1</span>)
+  := <span class="kr">fun</span> <span class="nv">n</span> =&gt; Build_pEquiv (glue E n) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Spectrum</span> :=
+  { to_prespectrum :&gt; Prespectrum
+    ; to_is_spectrum :: IsSpectrum to_prespectrum }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Truncations of spectra *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk1"><span class="kn">Definition</span> <span class="nf">strunc</span> `{Univalence} (k : trunc_index) (E : Spectrum) : Spectrum.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Spectrum</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Spectrum</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk3"><span class="nb">simple refine</span> (Build_Spectrum (Build_Prespectrum (<span class="kr">fun</span> <span class="nv">n</span> =&gt; pTr (trunc_index_inc k n) (E n)) _) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">n</span> : nat,
+(<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; pTr (trunc_index_inc k n0) (E n0)) n -&gt;*
+loops
+  ((<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; pTr (trunc_index_inc k n0) (E n0))
+     n.+<span class="mi">1</span>)</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="spectrum-v-chk4" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br></div><label class="goal-separator" for="spectrum-v-chk4"><hr></label><div class="goal-conclusion">IsSpectrum
+  {|
+    deloop :=
+      <span class="kr">fun</span> <span class="nv">n</span> : nat =&gt; pTr (trunc_index_inc k n) (E n);
+    glue := <span class="nl">?glue</span>
+  |}</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk5">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">n</span> : nat,
+(<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; pTr (trunc_index_inc k n0) (E n0)) n -&gt;*
+loops
+  ((<span class="kr">fun</span> <span class="nv">n0</span> : nat =&gt; pTr (trunc_index_inc k n0) (E n0))
+     n.+<span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk6"><span class="nb">intros</span> n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">n</span> : nat =&gt; pTr (trunc_index_inc k n) (E n)) n -&gt;*
+loops
+  ((<span class="kr">fun</span> <span class="nv">n</span> : nat =&gt; pTr (trunc_index_inc k n) (E n))
+     n.+<span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> ((ptr_loops _ (E n.+<span class="mi">1</span>)) o*E (pequiv_ptr_functor _ (equiv_glue E n))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk7">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsSpectrum
+  {|
+    deloop :=
+      <span class="kr">fun</span> <span class="nv">n</span> : nat =&gt; pTr (trunc_index_inc k n) (E n);
+    glue :=
+      <span class="kr">fun</span> <span class="nv">n</span> : nat =&gt;
+      ptr_loops (trunc_index_inc k n) (E n.+<span class="mi">1</span>)
+      o*E pequiv_ptr_functor (trunc_index_inc k n)
+            (equiv_glue E n)
+  |}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk8"><span class="nb">intros</span> n.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv
+  (glue
+     {|
+       deloop :=
+         <span class="kr">fun</span> <span class="nv">n</span> : nat =&gt;
+         pTr (trunc_index_inc k n) (E n);
+       glue :=
+         <span class="kr">fun</span> <span class="nv">n</span> : nat =&gt;
+         ptr_loops (trunc_index_inc k n) (E n.+<span class="mi">1</span>)
+         o*E pequiv_ptr_functor (trunc_index_inc k n)
+               (equiv_glue E n)
+     |} n)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="spectrum-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="spectrum-v-chk9"><span class="nb">unfold</span> glue.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>k</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>E</var><span class="hyp-type"><b>: </b><span>Spectrum</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv
+  (ptr_loops (trunc_index_inc k n) (E n.+<span class="mi">1</span>)
+   o*E pequiv_ptr_functor (trunc_index_inc k n)
+         (equiv_glue E n))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">rapply isequiv_compose.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

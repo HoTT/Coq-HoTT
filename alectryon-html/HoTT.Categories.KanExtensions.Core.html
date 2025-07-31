@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Kan Extensions *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc87" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc87"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Functorial.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> UniversalProperties.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Quoting nLab on Kan extensions:</span>
+
+<span class="sd">    ** Idea</span>
+
+<span class="sd">    The Kan extension of a functor [F : C → D] with respect to a</span>
+<span class="sd">    functor</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">    C</span>
+<span class="sd">    |</span>
+<span class="sd">    | p</span>
+<span class="sd">    ↓</span>
+<span class="sd">    C&#39;</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    is, if it exists, a kind of best approximation to the problem of</span>
+<span class="sd">    finding a functor [C&#39; → D] such that</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">        F</span>
+<span class="sd">    C -----&gt; D</span>
+<span class="sd">    |       ↗</span>
+<span class="sd">    | p   /</span>
+<span class="sd">    |   /</span>
+<span class="sd">    ↓ /</span>
+<span class="sd">    C&#39;</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    hence to extending the domain of [F] through [p] from [C] to [C&#39;].</span>
+
+<span class="sd">    More generally, this makes sense not only in Cat but in any</span>
+<span class="sd">    2-category.</span>
+
+<span class="sd">    Similarly, a Kan lift is the best approximation to lifting a</span>
+<span class="sd">    morphism [F : C → D] through a morphism</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">    D&#39;</span>
+<span class="sd">    |</span>
+<span class="sd">    ↓</span>
+<span class="sd">    D</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    to a morphism [F̂]</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">                D&#39;</span>
+<span class="sd">              ↗ |</span>
+<span class="sd">            /   |</span>
+<span class="sd">        F̂ /     |</span>
+<span class="sd">        /       |</span>
+<span class="sd">      /   F     ↓</span>
+<span class="sd">    C --------&gt; D</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    Kan extensions are ubiquitous. See the discussion at Examples</span>
+<span class="sd">    below.</span>
+
+<span class="sd">    ** Definitions</span>
+
+<span class="sd">    There are various slight variants of the definition of Kan</span>
+<span class="sd">    extension. In good cases they all exist and all coincide, but in</span>
+<span class="sd">    some cases only some of these will actually exist.</span>
+
+<span class="sd">    We (have to) distinguish the following cases:</span>
+
+<span class="sd">    - “ordinary” or “weak” Kan extensions</span>
+
+<span class="sd">      These define the extension of an entire functor, by an</span>
+<span class="sd">      adjointness relation.</span>
+
+<span class="sd">      Here we (have to) distinguish further between</span>
+
+<span class="sd">      - global Kan extensions,</span>
+
+<span class="sd">        which define extensions of all possible functors of given</span>
+<span class="sd">        domain and codomain (if all of them indeed exist);</span>
+
+<span class="sd">      - local Kan extensions,</span>
+
+<span class="sd">        which define extensions of single functors only, which may</span>
+<span class="sd">        exist even if not every functor has an extension.</span>
+
+<span class="sd">    - “pointwise” or “strong” Kan extensions</span>
+
+<span class="sd">      These define the value of an extended functor on each object</span>
+<span class="sd">      (each “point”) by a weighted (co)limit.</span>
+
+<span class="sd">      Furthermore, a pointwise Kan extension can be “absolute”.</span>
+
+<span class="sd">    If the pointwise version exists, then it coincides with the</span>
+<span class="sd">    “ordinary” or “weak” version, but the former may exist without the</span>
+<span class="sd">    pointwise version existing. See below for more.</span>
+
+<span class="sd">    Some authors (such as Kelly) assert that only pointwise Kan</span>
+<span class="sd">    extensions deserve the name “Kan extension,” and use the term as</span>
+<span class="sd">    “weak Kan extension” for a functor equipped with a universal</span>
+<span class="sd">    natural transformation. It is certainly true that most Kan</span>
+<span class="sd">    extensions which arise in practice are pointwise. This distinction</span>
+<span class="sd">    is even more important in enriched category theory. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">kan_extensions</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** Ordinary or weak Kan extensions</span>
+
+<span class="sd">      *** Global Kan extensions</span>
+
+<span class="sd">      Let [p : C → C&#39;] be a functor. For [D] any other category, write</span>
+<span class="sd">      [p* : (C&#39; → D) → (C → D)] for the induced functor on the functor</span>
+<span class="sd">      categories: this sends a functor [h : C&#39; → D] to the composite functor</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">                p      h</span>
+<span class="sd">      p* h : C --&gt; C&#39; --&gt; D</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">   *)</span>
+
+
+  <span class="sd">(** *** Pullback-along functor *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">C&#39;</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">pullback_along</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pullback_along_functor</span>
+    : object ((C -&gt; C&#39;) -&gt; (C&#39; -&gt; D) -&gt; (C -&gt; D))
+      := Functor.Composition.Functorial.Core.compose_functor _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pullback_along</span> (<span class="nv">p</span> : Functor C C&#39;)
+    : object ((C&#39; -&gt; D) -&gt; (C -&gt; D))
+      := <span class="kn">Eval</span> <span class="nb">hnf</span> <span class="kr">in</span> pullback_along_functor p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">pullback_along</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Definition. If [p*] has a left adjoint, typically denoted [p_! :</span>
+<span class="sd">      (C → D) → (C&#39; → D)] or [Lan_p : (C → D) → (C&#39; → D)] then this</span>
+<span class="sd">      left adjoint is called the (ordinary or weak) left Kan extension</span>
+<span class="sd">      operation along [p]. For [h ∈ (C -&gt; D)] we call [p_! h] the left</span>
+<span class="sd">      Kan extension of [h] along [p].</span>
+
+<span class="sd">      Similarly, if [p*] has a right adjoint, this right adjoint is</span>
+<span class="sd">      called the right Kan extension operation along [p]. It is</span>
+<span class="sd">      typically denoted [p_* : (C → D) → (C&#39; → D)] or [Ran = Ran_p :</span>
+<span class="sd">      (C → D) → (C&#39; → D)].</span>
+
+<span class="sd">      The analogous definition clearly makes sense as stated in other</span>
+<span class="sd">      contexts, such as in enriched category theory.</span>
+
+<span class="sd">      Observation. If [C&#39; = 1] is the terminal category, then</span>
+
+<span class="sd">      - the left Kan extension operation forms the colimit of a functor;</span>
+
+<span class="sd">      - the right Kan extension operation forms the limit of a functor. *)</span>
+
+  <span class="sd">(** *** Left Kan extensions *)</span>
+  <span class="sd">(** Colimits are initial morphisms. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsLeftKanExtensionAlong</span> (<span class="nv">p</span> : Functor C C&#39;) (<span class="nv">h</span> : Functor C D)
+    := @IsInitialMorphism (_ -&gt; _) _ h (pullback_along p).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** *** Right Kan extensions *)</span>
+  <span class="sd">(** Limits are terminal morphisms *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsRightKanExtensionAlong</span> (<span class="nv">p</span> : Functor C C&#39;) (<span class="nv">h</span> : Functor C D)
+    := @IsTerminalMorphism _ (_ -&gt; _) (pullback_along p) h.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">kan_extensions</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

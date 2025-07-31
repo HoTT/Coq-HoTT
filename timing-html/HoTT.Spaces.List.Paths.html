@@ -1,0 +1,647 @@
+<html>
+<head>
+<title>Paths.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Paths.v</h1>
+
+<div class="code" title="File: Paths.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 71.428571428571%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+Require Import Basics.Equivalences Types.Empty Types.Unit Types.Prod.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 2
+Time: 0.035s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.List.Core.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Path spaces of lists *)
+
+(** This proof was adapted from a proof given in Agda/cubical by Evan Cavallo. *)
+
+</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PathList.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A : Type}.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  (** We'll show that this type is equivalent to the path space [l = l'] in [list A]. *)
+ </pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint ListEq (l l' : list A) : Type :=
+    match l, l' with
+      | nil, nil =&gt; Unit
+      | cons x xs, cons x' xs' =&gt; (x = x') * ListEq xs xs'
+      | _, _ =&gt; Empty
+    end.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance reflexive_listeq : Reflexive ListEq.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros l.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction l as [| a l IHl].</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tt.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (idpath, IHl).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition encode {l1 l2} (p : l1 = l2) : ListEq l1 l2.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition decode {l1 l2} (q : ListEq l1 l2) : l1 = l2.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction l1 as [| a l1 IHl1 ] in l2, q |- *.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by destruct l2.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct l2.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: contradiction.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct q as [p q].</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap011 (cons (A:=_)) p (IHl1 _ q)).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition decode_refl {l} : decode (reflexivity l) = idpath.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction l.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap02 (cons a) IHl).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition decode_encode {l1 l2} (p : l1 = l2)
+    : decode (encode p) = p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact decode_refl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** By case analysis on both lists, it's easy to show that [ListEq] is [n.+1]-truncated if [A] is [n.+2]-truncated. *)
+ </pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance istrunc_listeq n {l1 l2} {H : IsTrunc n.+2 A}
+    : IsTrunc n.+1 (ListEq l1 l2).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction l1 in l2 |- *.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1,2: exact _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact _.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact istrunc_prod.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The path space of lists is a retract of [ListEq], therefore it is [n.+1]-truncated if [ListEq] is [n.+1]-truncated. By the previous result, this holds when [A] is [n.+2]-truncated. *) 
+ </pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance istrunc_list n {H : IsTrunc n.+2 A} : IsTrunc n.+2 (list A).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (inO_retract_inO n.+1 _ _ encode decode decode_encode).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** With a little more work, we can show that [ListEq] is also a retract of the path space. *)
+ </pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition encode_decode {l1 l2} (p : ListEq l1 l2)
+    : encode (decode p) = p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction l1 in l2, p |- *.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: destruct l2; by destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct l2.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by destruct p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn in p.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p as [r p].</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (decode p).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by destruct r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rhs_V napply IHl1.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      simpl.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (decode p).</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by destruct r.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Giving us a way of characterizing paths in lists. *)
+ </pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_list {l1 l2}
+    : ListEq l1 l2 &lt;~&gt; l1 = l2
+    := equiv_adjointify decode encode decode_encode encode_decode.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+
+End PathList.</pre>
+</div>
+<div class="code" title="File: Paths.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

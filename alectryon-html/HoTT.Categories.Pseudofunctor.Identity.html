@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Identity.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Identity pseudofunctor *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk22"><span class="kn">Require Import</span> FunctorCategory.Morphisms.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Core Functor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Isomorphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Cat.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Pseudofunctor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Bring things into scope. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> NaturalTransformation.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Category.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> FunctorCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> PathGroupoids.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">identity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">P</span> : PreCategory -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">cat</span> := (@sub_pre_cat _ P HF).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">t</span> :=
+    path_natural_transformation;
+    <span class="kp">abstract</span> (
+        <span class="nb">autorewrite with</span> functor morphism;
+        <span class="nb">unfold</span> morphism_isomorphic;
+        <span class="nb">rewrite</span> ap_idmap, idtoiso_components_of;
+        <span class="nb">rewrite</span> <span class="nl">?Functor</span>.Composition.Laws.associativity_fst,
+        <span class="nl">?Functor</span>.Composition.Laws.left_identity_fst,
+        <span class="nl">?Functor</span>.Composition.Laws.right_identity_fst;
+        <span class="bp">reflexivity</span>
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk23"><span class="kn">Lemma</span> <span class="nf">identity_associativity</span>
+        (<span class="nv">w</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> : PreCategory) (<span class="nv">f</span> : Functor w x)
+        (<span class="nv">g</span> : Functor x y) (<span class="nv">h</span> : Functor y z)
+  : associator_1 h g f o (<span class="mi">1</span> oR f o <span class="mi">1</span>) =
+    h oL <span class="mi">1</span> o (<span class="mi">1</span> o @morphism_isomorphic _ _ _ (idtoiso (w -&gt; z) (ap idmap (Functor.Composition.Laws.associativity f g h)))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>w, x, y, z</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Functor w x</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>Functor x y</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>Functor y z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">associator_1 h g f o (<span class="mi">1</span> oR f o <span class="mi">1</span>) =
+h oL <span class="mi">1</span>
+o (<span class="mi">1</span>
+   o idtoiso (w -&gt; z)
+       (ap idmap (Laws.associativity f g h)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk24"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>w, x, y, z</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Functor w x</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>Functor x y</span></span></span><br><span><var>h</var><span class="hyp-type"><b>: </b><span>Functor y z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">associator_1 h g f o (<span class="mi">1</span> oR f o <span class="mi">1</span>) =
+h oL <span class="mi">1</span>
+o (<span class="mi">1</span>
+   o idtoiso (w -&gt; z)
+       (ap idmap (Laws.associativity f g h)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk25"><span class="kn">Lemma</span> <span class="nf">identity_left_identity</span>
+        (<span class="nv">x</span> <span class="nv">y</span> : PreCategory) (<span class="nv">f</span> : Functor x y)
+  : <span class="mi">1</span> oR f o <span class="mi">1</span> =
+    (left_identity_natural_transformation_2 f)
+      o @morphism_isomorphic _ _ _ (idtoiso (x -&gt; y) (ap idmap (Functor.Composition.Laws.left_identity f))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Functor x y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> oR f o <span class="mi">1</span> =
+left_identity_natural_transformation_2 f
+o idtoiso (x -&gt; y) (ap idmap (Laws.left_identity f))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk26"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Functor x y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> oR f o <span class="mi">1</span> =
+left_identity_natural_transformation_2 f
+o idtoiso (x -&gt; y) (ap idmap (Laws.left_identity f))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk27"><span class="kn">Lemma</span> <span class="nf">identity_right_identity</span>
+        (<span class="nv">x</span> <span class="nv">y</span> : PreCategory) (<span class="nv">f</span> : Functor x y)
+  : f oL <span class="mi">1</span> o <span class="mi">1</span> =
+    (right_identity_natural_transformation_2 f)
+      o @morphism_isomorphic _ _ _ (idtoiso (x -&gt; y) (ap idmap (Functor.Composition.Laws.right_identity f))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Functor x y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f oL <span class="mi">1</span> o <span class="mi">1</span> =
+right_identity_natural_transformation_2 f
+o idtoiso (x -&gt; y) (ap idmap (Laws.right_identity f))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk28"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Functor x y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f oL <span class="mi">1</span> o <span class="mi">1</span> =
+right_identity_natural_transformation_2 f
+o idtoiso (x -&gt; y) (ap idmap (Laws.right_identity f))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** There is an identity pseudofunctor.  It does the obvious thing. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">identity</span> : Pseudofunctor cat
+    := Build_Pseudofunctor
+         cat
+         (<span class="kr">fun</span> <span class="nv">C</span> =&gt; C.<span class="mi">1</span>)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">F</span> =&gt; F)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; <span class="bp">reflexivity</span> _)
+         (<span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="bp">reflexivity</span> _)
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> <span class="nv">w</span> =&gt; @identity_associativity x.<span class="mi">1</span> y.<span class="mi">1</span> z.<span class="mi">1</span> w.<span class="mi">1</span>)
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> =&gt; @identity_left_identity x.<span class="mi">1</span> y.<span class="mi">1</span>)
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> =&gt; @identity_right_identity x.<span class="mi">1</span> y.<span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">identity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> PseudofunctorIdentityNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;1&quot;</span> := (identity _) : pseudofunctor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">PseudofunctorIdentityNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

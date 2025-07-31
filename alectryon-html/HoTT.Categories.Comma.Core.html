@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Comma categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc2f" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc2f"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> InitialTerminalCategory.Core InitialTerminalCategory.Functors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Strict.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Functor.Identity.FunctorIdentityNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Quoting Wikipedia:</span>
+
+<span class="sd">    Suppose that [A], [B], and [C] are categories, and [S] and [T] are</span>
+<span class="sd">    functors</span>
+
+<span class="sd">    [S : A → C ← B : T]</span>
+
+<span class="sd">    We can form the comma category [(S ↓ T)] as follows:</span>
+
+<span class="sd">    - The objects are all triples [(α, β, f)] with [α] an object in</span>
+<span class="sd">      [A], [β] an object in [B], and [f : S α -&gt; T β] a morphism in</span>
+<span class="sd">      [C].</span>
+
+<span class="sd">    - The morphisms from [(α, β, f)] to [(α&#39;, β&#39;, f&#39;)] are all pairs</span>
+<span class="sd">      [(g, h)] where [g : α → α&#39;] and [h : β → β&#39;] are morphisms in</span>
+<span class="sd">      [A] and [B] respectively, such that the following diagram</span>
+<span class="sd">      commutes:</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">             S g</span>
+<span class="sd">        S α -----&gt; S α&#39;</span>
+<span class="sd">         |          |</span>
+<span class="sd">       f |          | f&#39;</span>
+<span class="sd">         |          |</span>
+<span class="sd">         ↓          ↓</span>
+<span class="sd">        T β -----&gt; T β&#39;</span>
+<span class="sd">             T h</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    Morphisms are composed by taking [(g, h) ∘ (g&#39;, h&#39;)] to be [(g ∘</span>
+<span class="sd">    g&#39;, h ∘ h&#39;)], whenever the latter expression is defined.  The</span>
+<span class="sd">    identity morphism on an object [(α, β, f)] is [(1_α, 1_β)].  *)</span>
+
+<span class="sd">(** ** Comma category [(S / T)] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Import</span> CommaCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">comma_category_parts</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">S</span> : Functor A C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">T</span> : Functor B C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">object</span> :=
+      {
+        a : A;
+        b : B;
+        f : morphism C (S a) (T b)
+      }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> a _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> b _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> f _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">object_sig_T</span> :=
+      ({ a : A
+       | { b : B
+         | morphism C (S a) (T b) }}).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc30" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc30"><span class="kn">Lemma</span> <span class="nf">issig_object</span>
+    : object_sig_T &lt;~&gt; object.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{a : A &amp;
+{b : B &amp; morphism C (S _0 a)%object (T _0 b)%object}} &lt;~&gt;
+object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc31" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc31"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{a : A &amp;
+{b : B &amp; morphism C (S _0 a)%object (T _0 b)%object}} &lt;~&gt;
+object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc32" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc32">#[export] <span class="kn">Instance</span> <span class="nf">trunc_object</span> `{IsTrunc n A, IsTrunc n B}
+           `{<span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, IsTrunc n (morphism C s d)}
+    : IsTrunc n object.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n A</span></span></span><br><span><var>IsTrunc1</var><span class="hyp-type"><b>: </b><span>IsTrunc n B</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C, IsTrunc n (morphism C s d)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc33" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc33"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n A</span></span></span><br><span><var>IsTrunc1</var><span class="hyp-type"><b>: </b><span>IsTrunc n B</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C, IsTrunc n (morphism C s d)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc34" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc34"><span class="nb">eapply</span> istrunc_equiv_istrunc;
+      [ <span class="bp">exact</span> issig_object | ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n A</span></span></span><br><span><var>IsTrunc1</var><span class="hyp-type"><b>: </b><span>IsTrunc n B</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C, IsTrunc n (morphism C s d)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n
+  {a : A &amp;
+  {b : B &amp; morphism C (S _0 a)%object (T _0 b)%object}}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc35" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc35"><span class="kn">Lemma</span> <span class="nf">path_object&#39;</span> (<span class="nv">x</span> <span class="nv">y</span> : object)
+    : <span class="kr">forall</span> (<span class="nv">Ha</span> : x.(a) = y.(a))
+             (<span class="nv">Hb</span> : x.(b) = y.(b)),
+        transport (<span class="kr">fun</span> <span class="nv">X</span> =&gt; morphism C (S X) _)
+                  Ha
+                  (transport (<span class="kr">fun</span> <span class="nv">Y</span> =&gt; morphism C _ (T Y))
+                             Hb
+                             x.(f))
+        = y.(f)
+        -&gt; x = y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">Ha</span> : a x = a y) (<span class="nv">Hb</span> : b x = b y),
+transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 (b y))%object) Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 (a x))%object (T _0 Y)%object)
+     Hb (f x)) = f y -&gt; x = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc36" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc36"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">Ha</span> : a x = a y) (<span class="nv">Hb</span> : b x = b y),
+transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 (b y))%object) Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 (a x))%object (T _0 Y)%object)
+     Hb (f x)) = f y -&gt; x = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc37" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc37"><span class="nb">destruct</span> x, y; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>a0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>b0</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>f0</var><span class="hyp-type"><b>: </b><span>morphism C (S _0 a0)%object (T _0 b0)%object</span></span></span><br><span><var>a1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>b1</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>f1</var><span class="hyp-type"><b>: </b><span>morphism C (S _0 a1)%object (T _0 b1)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">Ha</span> : a0 = a1) (<span class="nv">Hb</span> : b0 = b1),
+transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 b1)%object) Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 a0)%object (T _0 Y)%object) Hb
+     f0) = f1 -&gt;
+{| a := a0; b := b0; f := f0 |} =
+{| a := a1; b := b1; f := f1 |}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span>; path_induction; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc38" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc38"><span class="kn">Lemma</span> <span class="nf">ap_a_path_object&#39;</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">Ha</span> <span class="nv">Hb</span> <span class="nv">Hf</span>
+    : ap (@a) (@path_object&#39; x y Ha Hb Hf) = Ha.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>Ha</var><span class="hyp-type"><b>: </b><span>a x = a y</span></span></span><br><span><var>Hb</var><span class="hyp-type"><b>: </b><span>b x = b y</span></span></span><br><span><var>Hf</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 (b y))%object)
+  Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 (a x))%object
+        (T _0 Y)%object) Hb (f x)) = f y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap a (path_object&#39; x y Ha Hb Hf) = Ha</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc39" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc39"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>Ha</var><span class="hyp-type"><b>: </b><span>a x = a y</span></span></span><br><span><var>Hb</var><span class="hyp-type"><b>: </b><span>b x = b y</span></span></span><br><span><var>Hf</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 (b y))%object)
+  Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 (a x))%object
+        (T _0 Y)%object) Hb (f x)) = f y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap a (path_object&#39; x y Ha Hb Hf) = Ha</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc3a" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc3a"><span class="nb">destruct</span> x, y; <span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>a0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>b0</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>f0</var><span class="hyp-type"><b>: </b><span>morphism C (S _0 a0)%object (T _0 b0)%object</span></span></span><br><span><var>a1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>b1</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>f1</var><span class="hyp-type"><b>: </b><span>morphism C (S _0 a1)%object (T _0 b1)%object</span></span></span><br><span><var>Ha</var><span class="hyp-type"><b>: </b><span>a0 = a1</span></span></span><br><span><var>Hb</var><span class="hyp-type"><b>: </b><span>b0 = b1</span></span></span><br><span><var>Hf</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 b1)%object)
+  Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 a0)%object (T _0 Y)%object)
+     Hb f0) = f1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap a
+  (path_object&#39; {| a := a0; b := b0; f := f0 |}
+     {| a := a1; b := b1; f := f1 |} Ha Hb Hf) = Ha</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc3b" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc3b"><span class="nb">destruct</span> Ha, Hb, Hf; <span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>a0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>b0</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>f0</var><span class="hyp-type"><b>: </b><span>morphism C (S _0 a0)%object (T _0 b0)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span>%path = <span class="mi">1</span>%path</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc3c" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc3c"><span class="kn">Lemma</span> <span class="nf">ap_b_path_object&#39;</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">Ha</span> <span class="nv">Hb</span> <span class="nv">Hf</span>
+    : ap (@b) (@path_object&#39; x y Ha Hb Hf) = Hb.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>Ha</var><span class="hyp-type"><b>: </b><span>a x = a y</span></span></span><br><span><var>Hb</var><span class="hyp-type"><b>: </b><span>b x = b y</span></span></span><br><span><var>Hf</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 (b y))%object)
+  Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 (a x))%object
+        (T _0 Y)%object) Hb (f x)) = f y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap b (path_object&#39; x y Ha Hb Hf) = Hb</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc3d" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc3d"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>Ha</var><span class="hyp-type"><b>: </b><span>a x = a y</span></span></span><br><span><var>Hb</var><span class="hyp-type"><b>: </b><span>b x = b y</span></span></span><br><span><var>Hf</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 (b y))%object)
+  Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 (a x))%object
+        (T _0 Y)%object) Hb (f x)) = f y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap b (path_object&#39; x y Ha Hb Hf) = Hb</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc3e" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc3e"><span class="nb">destruct</span> x, y; <span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>a0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>b0</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>f0</var><span class="hyp-type"><b>: </b><span>morphism C (S _0 a0)%object (T _0 b0)%object</span></span></span><br><span><var>a1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>b1</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>f1</var><span class="hyp-type"><b>: </b><span>morphism C (S _0 a1)%object (T _0 b1)%object</span></span></span><br><span><var>Ha</var><span class="hyp-type"><b>: </b><span>a0 = a1</span></span></span><br><span><var>Hb</var><span class="hyp-type"><b>: </b><span>b0 = b1</span></span></span><br><span><var>Hf</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C (S _0 X)%object (T _0 b1)%object)
+  Ha
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C (S _0 a0)%object (T _0 Y)%object)
+     Hb f0) = f1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap b
+  (path_object&#39; {| a := a0; b := b0; f := f0 |}
+     {| a := a1; b := b1; f := f1 |} Ha Hb Hf) = Hb</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc3f" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc3f"><span class="nb">destruct</span> Ha, Hb, Hf; <span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>a0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>b0</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br><span><var>f0</var><span class="hyp-type"><b>: </b><span>morphism C (S _0 a0)%object (T _0 b0)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span>%path = <span class="mi">1</span>%path</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> path_object&#39; : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">morphism</span> (<span class="nv">abf</span> <span class="nv">a&#39;b&#39;f&#39;</span> : object) :=
+      Build_morphism&#39; {
+          g : Category.Core.morphism A (abf.(a)) (a&#39;b&#39;f&#39;.(a));
+          h : Category.Core.morphism B (abf.(b)) (a&#39;b&#39;f&#39;.(b));
+          p : T _1 h o abf.(f) = a&#39;b&#39;f&#39;.(f) o S _1 g;
+          p_sym : a&#39;b&#39;f&#39;.(f) o S _1 g = T _1 h o abf.(f)
+        }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_morphism</span> <span class="nv">abf</span> <span class="nv">a&#39;b&#39;f&#39;</span> <span class="nv">g</span> <span class="nv">h</span> <span class="nv">p</span> : morphism abf a&#39;b&#39;f&#39;
+      := @Build_morphism&#39; abf a&#39;b&#39;f&#39; g h p p^.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> Build_morphism / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> g _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> h _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> p _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> p_sym _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">morphism_sig_T</span> abf a&#39;b&#39;f&#39; :=
+      ({ g : Category.Core.morphism A (abf.(a)) (a&#39;b&#39;f&#39;.(a))
+       | { h : Category.Core.morphism B (abf.(b)) (a&#39;b&#39;f&#39;.(b))
+         | T _1 h o abf.(f) = a&#39;b&#39;f&#39;.(f) o S _1 g }}).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">morphism_sig_T&#39;</span> abf a&#39;b&#39;f&#39; :=
+      ({ g : Category.Core.morphism A (abf.(a)) (a&#39;b&#39;f&#39;.(a))
+       | { h : Category.Core.morphism B (abf.(b)) (a&#39;b&#39;f&#39;.(b))
+         | { _ : T _1 h o abf.(f) = a&#39;b&#39;f&#39;.(f) o S _1 g
+           | a&#39;b&#39;f&#39;.(f) o S _1 g = T _1 h o abf.(f) }}}).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc40" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc40"><span class="kn">Lemma</span> <span class="nf">issig_morphism&#39;</span> <span class="nv">abf</span> <span class="nv">a&#39;b&#39;f&#39;</span>
+    : (morphism_sig_T&#39; abf a&#39;b&#39;f&#39;)
+        &lt;~&gt; morphism abf a&#39;b&#39;f&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism_sig_T&#39; abf a&#39;b&#39;f&#39; &lt;~&gt; morphism abf a&#39;b&#39;f&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc41" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc41"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism_sig_T&#39; abf a&#39;b&#39;f&#39; &lt;~&gt; morphism abf a&#39;b&#39;f&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc42" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc42"><span class="kn">Lemma</span> <span class="nf">issig_morphism_helper</span> {<span class="nv">T0</span>} `{IsHSet T0} (a b : T0) (pf : a = b)
+    : Contr (b = a).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>T0</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHSet0</var><span class="hyp-type"><b>: </b><span>IsHSet T0</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>T0</span></span></span><br><span><var>pf</var><span class="hyp-type"><b>: </b><span>a = b</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (b = a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc43" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc43"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>T0</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHSet0</var><span class="hyp-type"><b>: </b><span>IsHSet T0</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>T0</span></span></span><br><span><var>pf</var><span class="hyp-type"><b>: </b><span>a = b</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (b = a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc44" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc44"><span class="nb">destruct</span> pf.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>T0</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHSet0</var><span class="hyp-type"><b>: </b><span>IsHSet T0</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>T0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (a = a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc45" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc45"><span class="nb">apply</span> contr_inhabited_hprop; <span class="kp">try</span> <span class="bp">reflexivity</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>T0</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsHSet0</var><span class="hyp-type"><b>: </b><span>IsHSet T0</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>T0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (a = a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc46" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc46"><span class="kn">Lemma</span> <span class="nf">issig_morphism</span> <span class="nv">abf</span> <span class="nv">a&#39;b&#39;f&#39;</span>
+    : (morphism_sig_T abf a&#39;b&#39;f&#39;)
+        &lt;~&gt; morphism abf a&#39;b&#39;f&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism_sig_T abf a&#39;b&#39;f&#39; &lt;~&gt; morphism abf a&#39;b&#39;f&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc47" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc47"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism_sig_T abf a&#39;b&#39;f&#39; &lt;~&gt; morphism abf a&#39;b&#39;f&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc48" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc48"><span class="nb">etransitivity</span>; [ | <span class="bp">exact</span> (issig_morphism&#39; abf a&#39;b&#39;f&#39;) ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism_sig_T abf a&#39;b&#39;f&#39; &lt;~&gt;
+morphism_sig_T&#39; abf a&#39;b&#39;f&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc49" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc49"><span class="kp">repeat</span> (<span class="nb">apply</span> equiv_functor_sigma_id; <span class="nb">intro</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>a0</var><span class="hyp-type"><b>: </b><span>Core.morphism A (a abf) (a a&#39;b&#39;f&#39;)</span></span></span><br><span><var>a1</var><span class="hyp-type"><b>: </b><span>Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">T _1 a1 o f abf = f a&#39;b&#39;f&#39; o S _1 a0 &lt;~&gt;
+{_ : T _1 a1 o f abf = f a&#39;b&#39;f&#39; o S _1 a0 &amp;
+f a&#39;b&#39;f&#39; o S _1 a0 = T _1 a1 o f abf}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc4a" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc4a"><span class="nb">symmetry</span>; <span class="nb">apply</span> equiv_sigma_contr; <span class="nb">intro</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>a0</var><span class="hyp-type"><b>: </b><span>Core.morphism A (a abf) (a a&#39;b&#39;f&#39;)</span></span></span><br><span><var>a1</var><span class="hyp-type"><b>: </b><span>Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)</span></span></span><br><span><var>a2</var><span class="hyp-type"><b>: </b><span>T _1 a1 o f abf = f a&#39;b&#39;f&#39; o S _1 a0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (f a&#39;b&#39;f&#39; o S _1 a0 = T _1 a1 o f abf)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> issig_morphism_helper; <span class="bp">assumption</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc4b" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc4b">#[export] <span class="kn">Instance</span> <span class="nf">trunc_morphism</span> <span class="nv">abf</span> <span class="nv">a&#39;b&#39;f&#39;</span>
+           `{IsTrunc n (Category.Core.morphism A (abf.(a)) (a&#39;b&#39;f&#39;.(a)))}
+           `{IsTrunc n (Category.Core.morphism B (abf.(b)) (a&#39;b&#39;f&#39;.(b)))}
+           `{<span class="kr">forall</span> <span class="nv">m1</span> <span class="nv">m2</span>,
+               IsTrunc n (T _1 m2 o abf.(f) = a&#39;b&#39;f&#39;.(f) o S _1 m1)}
+    : IsTrunc n (morphism abf a&#39;b&#39;f&#39;).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n
+  (Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))</span></span></span><br><span><var>IsTrunc1</var><span class="hyp-type"><b>: </b><span>IsTrunc n
+  (Core.morphism B (b abf) (b a&#39;b&#39;f&#39;))</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">m1</span> : Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))
+(<span class="nv">m2</span> : Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)),
+IsTrunc n (T _1 m2 o f abf = f a&#39;b&#39;f&#39; o S _1 m1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n (morphism abf a&#39;b&#39;f&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc4c" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc4c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n
+  (Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))</span></span></span><br><span><var>IsTrunc1</var><span class="hyp-type"><b>: </b><span>IsTrunc n
+  (Core.morphism B (b abf) (b a&#39;b&#39;f&#39;))</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">m1</span> : Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))
+(<span class="nv">m2</span> : Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)),
+IsTrunc n (T _1 m2 o f abf = f a&#39;b&#39;f&#39; o S _1 m1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n (morphism abf a&#39;b&#39;f&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc4d" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc4d"><span class="nb">assert</span> (<span class="kr">forall</span> <span class="nv">m1</span> <span class="nv">m2</span>,
+                IsTrunc n (a&#39;b&#39;f&#39;.(f) o S _1 m1 = T _1 m2 o abf.(f)))
+        <span class="bp">by</span> (<span class="nb">intros</span>; <span class="bp">exact</span> (istrunc_isequiv_istrunc _ inverse)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n
+  (Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))</span></span></span><br><span><var>IsTrunc1</var><span class="hyp-type"><b>: </b><span>IsTrunc n
+  (Core.morphism B (b abf) (b a&#39;b&#39;f&#39;))</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">m1</span> : Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))
+(<span class="nv">m2</span> : Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)),
+IsTrunc n (T _1 m2 o f abf = f a&#39;b&#39;f&#39; o S _1 m1)</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">m1</span> : Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))
+(<span class="nv">m2</span> : Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)),
+IsTrunc n (f a&#39;b&#39;f&#39; o S _1 m1 = T _1 m2 o f abf)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n (morphism abf a&#39;b&#39;f&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc4e" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc4e"><span class="nb">eapply</span> istrunc_equiv_istrunc;
+      [ <span class="bp">exact</span> (issig_morphism _ _) | ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n
+  (Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))</span></span></span><br><span><var>IsTrunc1</var><span class="hyp-type"><b>: </b><span>IsTrunc n
+  (Core.morphism B (b abf) (b a&#39;b&#39;f&#39;))</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">m1</span> : Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))
+(<span class="nv">m2</span> : Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)),
+IsTrunc n (T _1 m2 o f abf = f a&#39;b&#39;f&#39; o S _1 m1)</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">m1</span> : Core.morphism A (a abf) (a a&#39;b&#39;f&#39;))
+(<span class="nv">m2</span> : Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)),
+IsTrunc n (f a&#39;b&#39;f&#39; o S _1 m1 = T _1 m2 o f abf)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n (morphism_sig_T abf a&#39;b&#39;f&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc4f" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc4f"><span class="kn">Lemma</span> <span class="nf">path_morphism</span> <span class="nv">abf</span> <span class="nv">a&#39;b&#39;f&#39;</span>
+          (<span class="nv">gh</span> <span class="nv">g&#39;h&#39;</span> : morphism abf a&#39;b&#39;f&#39;)
+    : gh.(g) = g&#39;h&#39;.(g)
+      -&gt; gh.(h) = g&#39;h&#39;.(h)
+      -&gt; gh = g&#39;h&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>gh, g'h'</var><span class="hyp-type"><b>: </b><span>morphism abf a&#39;b&#39;f&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">g gh = g g&#39;h&#39; -&gt; h gh = h g&#39;h&#39; -&gt; gh = g&#39;h&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc50" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc50"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>gh, g'h'</var><span class="hyp-type"><b>: </b><span>morphism abf a&#39;b&#39;f&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">g gh = g g&#39;h&#39; -&gt; h gh = h g&#39;h&#39; -&gt; gh = g&#39;h&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc51" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc51"><span class="nb">destruct</span> gh, g&#39;h&#39;; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>g0</var><span class="hyp-type"><b>: </b><span>Core.morphism A (a abf) (a a&#39;b&#39;f&#39;)</span></span></span><br><span><var>h0</var><span class="hyp-type"><b>: </b><span>Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)</span></span></span><br><span><var>p0</var><span class="hyp-type"><b>: </b><span>T _1 h0 o f abf = f a&#39;b&#39;f&#39; o S _1 g0</span></span></span><br><span><var>p_sym0</var><span class="hyp-type"><b>: </b><span>f a&#39;b&#39;f&#39; o S _1 g0 = T _1 h0 o f abf</span></span></span><br><span><var>g1</var><span class="hyp-type"><b>: </b><span>Core.morphism A (a abf) (a a&#39;b&#39;f&#39;)</span></span></span><br><span><var>h1</var><span class="hyp-type"><b>: </b><span>Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)</span></span></span><br><span><var>p1</var><span class="hyp-type"><b>: </b><span>T _1 h1 o f abf = f a&#39;b&#39;f&#39; o S _1 g1</span></span></span><br><span><var>p_sym1</var><span class="hyp-type"><b>: </b><span>f a&#39;b&#39;f&#39; o S _1 g1 = T _1 h1 o f abf</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">g0 = g1 -&gt;
+h0 = h1 -&gt;
+{| g := g0; h := h0; p := p0; p_sym := p_sym0 |} =
+{| g := g1; h := h1; p := p1; p_sym := p_sym1 |}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc52" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc52"><span class="nb">intros</span>; path_induction.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>g0</var><span class="hyp-type"><b>: </b><span>Core.morphism A (a abf) (a a&#39;b&#39;f&#39;)</span></span></span><br><span><var>h0</var><span class="hyp-type"><b>: </b><span>Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)</span></span></span><br><span><var>p0</var><span class="hyp-type"><b>: </b><span>T _1 h0 o f abf = f a&#39;b&#39;f&#39; o S _1 g0</span></span></span><br><span><var>p_sym0</var><span class="hyp-type"><b>: </b><span>f a&#39;b&#39;f&#39; o S _1 g0 = T _1 h0 o f abf</span></span></span><br><span><var>p1</var><span class="hyp-type"><b>: </b><span>T _1 h0 o f abf = f a&#39;b&#39;f&#39; o S _1 g0</span></span></span><br><span><var>p_sym1</var><span class="hyp-type"><b>: </b><span>f a&#39;b&#39;f&#39; o S _1 g0 = T _1 h0 o f abf</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{| g := g0; h := h0; p := p0; p_sym := p_sym0 |} =
+{| g := g0; h := h0; p := p1; p_sym := p_sym1 |}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc53" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc53">f_ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>g0</var><span class="hyp-type"><b>: </b><span>Core.morphism A (a abf) (a a&#39;b&#39;f&#39;)</span></span></span><br><span><var>h0</var><span class="hyp-type"><b>: </b><span>Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)</span></span></span><br><span><var>p0</var><span class="hyp-type"><b>: </b><span>T _1 h0 o f abf = f a&#39;b&#39;f&#39; o S _1 g0</span></span></span><br><span><var>p_sym0</var><span class="hyp-type"><b>: </b><span>f a&#39;b&#39;f&#39; o S _1 g0 = T _1 h0 o f abf</span></span></span><br><span><var>p1</var><span class="hyp-type"><b>: </b><span>T _1 h0 o f abf = f a&#39;b&#39;f&#39; o S _1 g0</span></span></span><br><span><var>p_sym1</var><span class="hyp-type"><b>: </b><span>f a&#39;b&#39;f&#39; o S _1 g0 = T _1 h0 o f abf</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">p0 = p1</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="core-v-chkc54" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>abf, a'b'f'</var><span class="hyp-type"><b>: </b><span>object</span></span></span><br><span><var>g0</var><span class="hyp-type"><b>: </b><span>Core.morphism A (a abf) (a a&#39;b&#39;f&#39;)</span></span></span><br><span><var>h0</var><span class="hyp-type"><b>: </b><span>Core.morphism B (b abf) (b a&#39;b&#39;f&#39;)</span></span></span><br><span><var>p0</var><span class="hyp-type"><b>: </b><span>T _1 h0 o f abf = f a&#39;b&#39;f&#39; o S _1 g0</span></span></span><br><span><var>p_sym0</var><span class="hyp-type"><b>: </b><span>f a&#39;b&#39;f&#39; o S _1 g0 = T _1 h0 o f abf</span></span></span><br><span><var>p1</var><span class="hyp-type"><b>: </b><span>T _1 h0 o f abf = f a&#39;b&#39;f&#39; o S _1 g0</span></span></span><br><span><var>p_sym1</var><span class="hyp-type"><b>: </b><span>f a&#39;b&#39;f&#39; o S _1 g0 = T _1 h0 o f abf</span></span></span><br></div><label class="goal-separator" for="core-v-chkc54"><hr></label><div class="goal-conclusion">p_sym0 = p_sym1</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">all</span>:<span class="bp">exact</span> (center _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">compose</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span>
+               (<span class="nv">gh</span> : morphism d d&#39;) (<span class="nv">g&#39;h&#39;</span> : morphism s d)
+    : morphism s d&#39;
+      := Build_morphism&#39;
+           s d&#39;
+           (gh.(g) o g&#39;h&#39;.(g))
+           (gh.(h) o g&#39;h&#39;.(h))
+           ((ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; m o s.(f)) (composition_of T _ _ _ _ _))
+              @ (associativity _ _ _ _ _ _ _ _)
+              @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; _ o m) g&#39;h&#39;.(p))
+              @ (associativity_sym _ _ _ _ _ _ _ _)
+              @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; m o _) gh.(p))
+              @ (associativity _ _ _ _ _ _ _ _)
+              @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; d&#39;.(f) o m) (composition_of S _ _ _ _ _)^))%path
+           ((ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; d&#39;.(f) o m) (composition_of S _ _ _ _ _))
+              @ (associativity_sym _ _ _ _ _ _ _ _)
+              @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; m o _) gh.(p_sym))
+              @ (associativity _ _ _ _ _ _ _ _)
+              @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; _ o m) g&#39;h&#39;.(p_sym))
+              @ (associativity_sym _ _ _ _ _ _ _ _)
+              @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; m o s.(f)) (composition_of T _ _ _ _ _)^))%path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> compose _ _ _ _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">identity</span> <span class="nv">x</span> : morphism x x
+      := Build_morphism&#39;
+           x x
+           (identity (x.(a)))
+           (identity (x.(b)))
+           ((ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; m o x.(f)) (identity_of T _))
+              @ (left_identity _ _ _ _)
+              @ ((right_identity _ _ _ _)^)
+              @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; x.(f) o m) (identity_of S _)^))
+           ((ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; x.(f) o m) (identity_of S _))
+              @ (right_identity _ _ _ _)
+              @ ((left_identity _ _ _ _)^)
+              @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; m o x.(f)) (identity_of T _)^)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> identity _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">comma_category_parts</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">CommaCategory</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> CommaCategory.path_object&#39; : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">path_comma_t</span> :=
+  <span class="nb">intros</span>;
+  <span class="nb">apply</span> path_morphism;
+  <span class="nb">simpl</span>;
+  <span class="nb">auto with</span> morphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc55" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc55"><span class="kn">Definition</span> <span class="nf">comma_category</span> <span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> (<span class="nv">S</span> : Functor A C) (<span class="nv">T</span> : Functor B C)
+: PreCategory.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc56" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc56"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (@Build_PreCategory
+            (@object _ _ _ S T)
+            (@morphism _ _ _ S T)
+            (@identity _ _ _ S T)
+            (@compose _ _ _ S T)
+            _
+            _
+            _
+            _
+         );
+  <span class="kp">abstract</span> path_comma_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc57" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc57"><span class="kn">Instance</span> <span class="nf">isstrict_comma_category</span> <span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="nv">S</span> <span class="nv">T</span>
+       `{IsStrictCategory A, IsStrictCategory B}
+: IsStrictCategory (@comma_category A B C S T).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>IsStrictCategory0</var><span class="hyp-type"><b>: </b><span>IsStrictCategory A</span></span></span><br><span><var>IsStrictCategory1</var><span class="hyp-type"><b>: </b><span>IsStrictCategory B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory (comma_category S T)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc58" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc58"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Functor A C</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>IsStrictCategory0</var><span class="hyp-type"><b>: </b><span>IsStrictCategory A</span></span></span><br><span><var>IsStrictCategory1</var><span class="hyp-type"><b>: </b><span>IsStrictCategory B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory (comma_category S T)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(*  Section category.</span>
+<span class="c">    Context `{IsCategory A, IsCategory B}.</span>
+<span class="c">    (*Context `{Funext}. *)</span>
+
+<span class="c">    Definition comma_category_isotoid (x y : comma_category)</span>
+<span class="c">    : x ≅ y -&gt; x = y.</span>
+<span class="c">    Proof.</span>
+<span class="c">      intro i.</span>
+<span class="c">      destruct i as [i [i&#39; ? ?]].</span>
+<span class="c">      hnf in *.</span>
+<span class="c">      destruct i, i&#39;.</span>
+<span class="c">      simpl in *.</span>
+
+
+<span class="c">    #[export] Instance comma_category_IsCategory `{IsCategory A, IsCategory B}</span>
+<span class="c">    : IsCategory comma_category.</span>
+<span class="c">    Proof.</span>
+<span class="c">      hnf.</span>
+<span class="c">      unfold IsStrictCategory in *.</span>
+<span class="c">      typeclasses eauto.</span>
+<span class="c">    Qed.</span>
+<span class="c">  End category.</span>
+<span class="c">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Unfold</span> compose identity : category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Constructors</span> morphism object : category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** (co)slice category [(a / F)], [(F / a)] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">slice_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">A</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">a</span> : C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">S</span> : Functor A C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">slice_category</span> := comma_category S (!a).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">coslice_category</span> := comma_category (!a) S.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** [x ↓ F] is a coslice category; [F ↓ x] is a slice category; [x ↓ F] deals with morphisms [x -&gt; F y]; [F ↓ x] has morphisms [F y -&gt; x] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">slice_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** (co)slice category over [(a / C)], [(C / a)] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">slice_category_over</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">a</span> : C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">slice_category_over</span> := slice_category a (Functor.Identity.identity C).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">coslice_category_over</span> := coslice_category a (Functor.Identity.identity C).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">slice_category_over</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** category of arrows *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">arrow_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">arrow_category</span> := comma_category (Functor.Identity.identity C) (Functor.Identity.identity C).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">arrow_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">CC_Functor&#39;</span> (<span class="nv">C</span> : PreCategory) (<span class="nv">D</span> : PreCategory) := Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">cc_functor_from_terminal&#39;</span> (C : PreCategory) (x : C) : CC_Functor&#39; _ C
+  := (!x)%functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">cc_identity_functor&#39;</span> (C : PreCategory) : CC_Functor&#39; C C
+  := <span class="mi">1</span>%functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> CC_Functor&#39; / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> cc_functor_from_terminal&#39; / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> cc_identity_functor&#39; / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;-notation-overridden&quot;</span>. <span class="c">(* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> CommaCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** We really want to use infix [↓] for comma categories, but that&#39;s Unicode.  Infix [,] might also be reasonable, but I can&#39;t seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [/] of [↓]. *)</span>
+  <span class="sd">(** Set some notations for printing *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;C / a&quot;</span> := (@slice_category_over C a) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;a \ C&quot;</span> := (@coslice_category_over C a) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;a / C&quot;</span> := (@coslice_category_over C a) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x / F&quot;</span> := (coslice_category x F) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;F / x&quot;</span> := (slice_category x F) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;S / T&quot;</span> := (comma_category S T) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** Set the notation for parsing; coercions will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;S / T&quot;</span> := (comma_category (S : CC_Functor&#39; _ _)
+                                      (T : CC_Functor&#39; _ _)) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">CommaCoreNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Adjunctions as universal morphisms *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc02" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc02"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity Functor.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Dual Category.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Adjoint.Core Adjoint.UnitCounit Adjoint.UnitCounitCoercions Adjoint.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Comma.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;-notation-overridden&quot;</span>. <span class="c">(* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Comma.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;notation-overridden&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> UniversalProperties Comma.Dual InitialTerminalCategory.Core InitialTerminalCategory.Functors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">adjunction_universal</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** [F ⊣ G] gives an initial object of [(Y / G)] for all [Y : C] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">initial</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : F -| G.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Y</span> : C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">initial_morphism__of__adjunction</span>
+    : object (Y / G)
+      := @CommaCategory.Build_object
+           _ D C
+           (! Y) G
+           (center _)
+           (F Y)
+           ((unit A) Y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">is_initial_morphism__of__adjunction</span>
+    : IsInitialMorphism initial_morphism__of__adjunction
+      := Build_IsInitialMorphism
+           _
+           _
+           _
+           _
+           ((A : AdjunctionUnit _ _).<span class="mi">2</span> _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">initial</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> initial_morphism__of__adjunction [C D F G] A Y.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> is_initial_morphism__of__adjunction [C D F G] A Y _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** [F ⊣ G] gives a terminal object of [(F / X)] for all [X : D] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">terminal</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : F -| G.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">X</span> : D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">terminal_morphism__of__adjunction</span>
+    : object (F / X)
+      := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="kr">in</span>
+          dual_functor
+            (! X)^op F^op
+            (initial_morphism__of__adjunction A^op X).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">is_terminal_morphism__of__adjunction</span>
+    : IsTerminalMorphism terminal_morphism__of__adjunction
+      := is_initial_morphism__of__adjunction A^op X.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">terminal</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> terminal_morphism__of__adjunction [C D F G] A X.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> is_terminal_morphism__of__adjunction [C D F G] A X _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">adjunction_universal</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">adjunction_from_universal</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** an initial object of [(Y / G)] for all [Y : C] gives a left adjoint to [G] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">initial</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `(HM : <span class="kr">forall</span> <span class="nv">Y</span>, @IsInitialMorphism _ _ Y G (M Y)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">obj_of</span> Y :=
+      (IsInitialMorphism_object (@HM Y))
+        (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">mor_of</span> Y0 Y1 f :=
+      (<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (@HM Y1) <span class="kr">in</span>
+       IsInitialMorphism_property_morphism (@HM Y0) _ (etaY1 o f))
+        (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc03" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc03"><span class="kn">Lemma</span> <span class="nf">identity_of</span> <span class="nv">Y</span> : mor_of Y Y <span class="mi">1</span> = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (HM (Y:=Y))
+   <span class="kr">in</span>
+ IsInitialMorphism_property_morphism (HM (Y:=Y))
+   (IsInitialMorphism_object (HM (Y:=Y))) (etaY1 o <span class="mi">1</span>)) =
+<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc04" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc04"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (HM (Y:=Y))
+   <span class="kr">in</span>
+ IsInitialMorphism_property_morphism (HM (Y:=Y))
+   (IsInitialMorphism_object (HM (Y:=Y))) (etaY1 o <span class="mi">1</span>)) =
+<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc05" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc05"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsInitialMorphism_property_morphism (HM (Y:=Y))
+  (IsInitialMorphism_object (HM (Y:=Y)))
+  (IsInitialMorphism_morphism (HM (Y:=Y)) o <span class="mi">1</span>) = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc06" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc06"><span class="nb">erewrite</span> IsInitialMorphism_property_morphism_unique; [ <span class="bp">reflexivity</span> | ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">G _1 <span class="mi">1</span> o IsInitialMorphism_morphism (HM (Y:=Y)) =
+IsInitialMorphism_morphism (HM (Y:=Y)) o <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc07" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc07"><span class="nb">rewrite</span> <span class="nl">?identity_of</span>, <span class="nl">?left_identity</span>, <span class="nl">?right_identity</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsInitialMorphism_morphism (HM (Y:=Y)) =
+IsInitialMorphism_morphism (HM (Y:=Y))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc08" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc08"><span class="kn">Lemma</span> <span class="nf">composition_of</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> <span class="nv">g</span> <span class="nv">f</span>
+    : mor_of _ _ (f o g) = mor_of y z f o mor_of x y g.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>x, y, z</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C x y</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C y z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (HM (Y:=z))
+   <span class="kr">in</span>
+ IsInitialMorphism_property_morphism (HM (Y:=x))
+   (IsInitialMorphism_object (HM (Y:=z)))
+   (etaY1 o (f o g))) =
+(<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (HM (Y:=z))
+   <span class="kr">in</span>
+ IsInitialMorphism_property_morphism (HM (Y:=y))
+   (IsInitialMorphism_object (HM (Y:=z))) (etaY1 o f))
+o (<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (HM (Y:=y))
+     <span class="kr">in</span>
+   IsInitialMorphism_property_morphism (HM (Y:=x))
+     (IsInitialMorphism_object (HM (Y:=y)))
+     (etaY1 o g))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc09" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc09"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>x, y, z</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C x y</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C y z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (HM (Y:=z))
+   <span class="kr">in</span>
+ IsInitialMorphism_property_morphism (HM (Y:=x))
+   (IsInitialMorphism_object (HM (Y:=z)))
+   (etaY1 o (f o g))) =
+(<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (HM (Y:=z))
+   <span class="kr">in</span>
+ IsInitialMorphism_property_morphism (HM (Y:=y))
+   (IsInitialMorphism_object (HM (Y:=z))) (etaY1 o f))
+o (<span class="kr">let</span> <span class="nv">etaY1</span> := IsInitialMorphism_morphism (HM (Y:=y))
+     <span class="kr">in</span>
+   IsInitialMorphism_property_morphism (HM (Y:=x))
+     (IsInitialMorphism_object (HM (Y:=y)))
+     (etaY1 o g))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc0a" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc0a"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>x, y, z</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C x y</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C y z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsInitialMorphism_property_morphism (HM (Y:=x))
+  (IsInitialMorphism_object (HM (Y:=z)))
+  (IsInitialMorphism_morphism (HM (Y:=z)) o (f o g)) =
+IsInitialMorphism_property_morphism (HM (Y:=y))
+  (IsInitialMorphism_object (HM (Y:=z)))
+  (IsInitialMorphism_morphism (HM (Y:=z)) o f)
+o IsInitialMorphism_property_morphism (HM (Y:=x))
+    (IsInitialMorphism_object (HM (Y:=y)))
+    (IsInitialMorphism_morphism (HM (Y:=y)) o g)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc0b" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc0b"><span class="nb">erewrite</span> IsInitialMorphism_property_morphism_unique; [ <span class="bp">reflexivity</span> | ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>x, y, z</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C x y</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C y z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">G
+_1 (IsInitialMorphism_property_morphism (HM (Y:=y))
+      (IsInitialMorphism_object (HM (Y:=z)))
+      (IsInitialMorphism_morphism (HM (Y:=z)) o f)
+    o IsInitialMorphism_property_morphism (HM (Y:=x))
+        (IsInitialMorphism_object (HM (Y:=y)))
+        (IsInitialMorphism_morphism (HM (Y:=y)) o g))
+o IsInitialMorphism_morphism (HM (Y:=x)) =
+IsInitialMorphism_morphism (HM (Y:=z)) o (f o g)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc0c" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc0c"><span class="nb">rewrite</span> <span class="nl">?composition_of</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>x, y, z</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C x y</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C y z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">G
+_1 (IsInitialMorphism_property_morphism (HM (Y:=y))
+      (IsInitialMorphism_object (HM (Y:=z)))
+      (IsInitialMorphism_morphism (HM (Y:=z)) o f))
+o G
+  _1 (IsInitialMorphism_property_morphism (HM (Y:=x))
+        (IsInitialMorphism_object (HM (Y:=y)))
+        (IsInitialMorphism_morphism (HM (Y:=y)) o g))
+o IsInitialMorphism_morphism (HM (Y:=x)) =
+IsInitialMorphism_morphism (HM (Y:=z)) o (f o g)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc0d" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc0d"><span class="kp">repeat</span>
+        try_associativity_quick
+        <span class="nb">rewrite</span> IsInitialMorphism_property_morphism_property.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br><span><var>x, y, z</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C x y</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C y z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsInitialMorphism_morphism (HM (Y:=z)) o f o g =
+IsInitialMorphism_morphism (HM (Y:=z)) o f o g</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">functor__of__initial_morphism</span> : Functor C D
+      := Build_Functor
+           C D
+           (<span class="kr">fun</span> <span class="nv">x</span> =&gt; obj_of x)
+           (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span> =&gt; mor_of s d m)
+           composition_of
+           identity_of.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc0e" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc0e"><span class="kn">Definition</span> <span class="nf">adjunction__of__initial_morphism</span>
+    : functor__of__initial_morphism -| G.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">functor__of__initial_morphism -| G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc0f" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc0f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">functor__of__initial_morphism -| G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc10" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc10"><span class="nb">refine</span> (adjunction_unit_counit__of__adjunction_unit _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">AdjunctionUnit functor__of__initial_morphism G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc11" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc11"><span class="nb">eexists</span> (Build_NaturalTransformation
+                <span class="mi">1</span>
+                (G o functor__of__initial_morphism)
+                (<span class="kr">fun</span> <span class="nv">x</span> =&gt; IsInitialMorphism_morphism (@HM x))
+                (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span> =&gt;
+                   <span class="nb">symmetry</span>
+                     _ _
+                     (IsInitialMorphism_property_morphism_property (@HM s) _ _))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">c</span> : C) (<span class="nv">d</span> : D)
+(<span class="nv">f</span> : morphism C c (G _0 d)%object),
+Contr
+  {g
+  : morphism D
+      (functor__of__initial_morphism _0 c)%object d &amp;
+  G _1 g
+  o Build_NaturalTransformation <span class="mi">1</span>
+      (G o functor__of__initial_morphism)
+      (<span class="kr">fun</span> <span class="nv">x</span> : C =&gt;
+       IsInitialMorphism_morphism (HM (Y:=x)))
+      (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d0</span> : C) (<span class="nv">m</span> : morphism C s d0) =&gt;
+       <span class="nb">symmetry</span>
+         (G
+          _1 (IsInitialMorphism_property_morphism
+                (HM (Y:=s))
+                (functor__of__initial_morphism _0 d0)
+                (IsInitialMorphism_morphism
+                   (HM (Y:=d0)) o <span class="mi">1</span> _1 m))
+          o IsInitialMorphism_morphism (HM (Y:=s)))
+         (IsInitialMorphism_morphism (HM (Y:=d0))
+          o <span class="mi">1</span> _1 m)
+         (IsInitialMorphism_property_morphism_property
+            (HM (Y:=s))
+            (functor__of__initial_morphism _0 d0)
+            (IsInitialMorphism_morphism (HM (Y:=d0))
+             o <span class="mi">1</span> _1 m))) c = f}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc12" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc12"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>M</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, (x / G)%category</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">Y</span> : C, IsInitialMorphism (M Y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">c</span> : C) (<span class="nv">d</span> : D)
+(<span class="nv">f</span> : morphism C c (G _0 d)%object),
+Contr
+  {g
+  : morphism D (IsInitialMorphism_object (HM (Y:=c)))
+      d &amp;
+  G _1 g o IsInitialMorphism_morphism (HM (Y:=c)) = f}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (<span class="kr">fun</span> <span class="nv">c</span> =&gt; @IsInitialMorphism_property _ _ c G (M c) (@HM c)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">initial</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** a terminal object of [(F / X)] for all [X : D] gives a right adjoint to [F] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">terminal</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `(HM : <span class="kr">forall</span> <span class="nv">X</span>, @IsTerminalMorphism _ _ F X (M X)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">functor__of__terminal_morphism</span> : Functor D C
+      := (@functor__of__initial_morphism
+            (D^op) (C^op)
+            (F^op)
+            (<span class="kr">fun</span> <span class="nv">x</span> : D =&gt; dual_functor F !x (M x)) HM)^op.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">adjunction__of__terminal_morphism</span>
+    : F -| functor__of__terminal_morphism
+      := ((@adjunction__of__initial_morphism
+             (D^op) (C^op)
+             (F^op)
+             (<span class="kr">fun</span> <span class="nv">x</span> : D =&gt; dual_functor F !x (M x)) HM)^op)%adjunction.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">terminal</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">adjunction_from_universal</span>.</span></span></pre>
+</div>
+</div></body>
+</html>
