@@ -133,6 +133,14 @@ Section BiproductOperations.
     : (biproduct_coprod_mor W f g o inr B = g)%morphism
     := snd_type (biproduct_coprod_universal W f g).2.
 
+  Definition biproduct_coprod_unique (W : object C)
+    (f : morphism C X W) (g : morphism C Y W)
+    (h : morphism C B W)
+    (Hl : (h o inl B = f)%morphism)
+    (Hr : (h o inr B = g)%morphism)
+    : h = biproduct_coprod_mor W f g
+    := ap pr1 (contr (h; (Hl, Hr)))^.
+
   (** The product universal morphism and its properties. *)
   Definition biproduct_prod_universal (W : object C) 
     (f : morphism C W X) (g : morphism C W Y)
@@ -155,16 +163,6 @@ Section BiproductOperations.
     : (outr B o biproduct_prod_mor W f g = g)%morphism
     := snd_type (biproduct_prod_universal W f g).2.
   
-  (** ** Uniqueness properties *)
-
-  Definition biproduct_coprod_unique (W : object C)
-    (f : morphism C X W) (g : morphism C Y W)
-    (h : morphism C B W)
-    (Hl : (h o inl B = f)%morphism)
-    (Hr : (h o inr B = g)%morphism)
-    : h = biproduct_coprod_mor W f g
-    := ap pr1 (contr (h; (Hl, Hr)))^.
-
   Definition biproduct_prod_unique (W : object C)
     (f : morphism C W X) (g : morphism C W Y)
     (h : morphism C W B)
