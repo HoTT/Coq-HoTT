@@ -76,11 +76,6 @@ Coercion cat : AdditiveCategory >-> PreCategory.
 Definition zero_obj (A : AdditiveCategory) : object A
   := @zero A add_zero.
 
-(** Zero morphism in an additive category. *)
-Definition add_zero_morphism (A : AdditiveCategory) (X Y : object A)
-  : morphism A X Y
-  := @zero_morphism A add_zero X Y.
-
 (** Helper functions to access biproduct components. *)
 Definition add_biproduct_data (A : AdditiveCategory) (X Y : object A)
   : BiproductData X Y
@@ -265,7 +260,7 @@ Section AdditiveFunctorProperties.
   
   (** F preserves the zero morphism components. *)
   Local Lemma F_preserves_zero_morphism_factorization (X Y : object A)
-    : morphism_of F (add_zero_morphism A X Y) =
+    : morphism_of F (zero_morphism X Y) =
       (morphism_of F 
         (@morphism_from_initial A 
           (initialobject_zeroobject (@add_zero A)) Y) o
@@ -273,7 +268,7 @@ Section AdditiveFunctorProperties.
         (@morphism_to_terminal A 
           (terminalobject_zeroobject (@add_zero A)) X))%morphism.
   Proof.
-    unfold add_zero_morphism, zero_morphism.
+    unfold zero_morphism.
     apply composition_of.
   Qed.
   
@@ -310,11 +305,11 @@ Section AdditiveFunctorProperties.
   (** ** Main theorem: additive functors preserve zero morphisms *)
   
   Theorem additive_functor_preserves_zero_morphisms (X Y : object A)
-    : morphism_of F (add_zero_morphism A X Y) = 
-      add_zero_morphism B (object_of F X) (object_of F Y).
+    : morphism_of F (zero_morphism X Y) = 
+      zero_morphism (object_of F X) (object_of F Y).
   Proof.
     rewrite F_preserves_zero_morphism_factorization.
-    unfold add_zero_morphism, zero_morphism.
+    unfold zero_morphism.
     exact (F_preserves_composition_through_zero X Y).
   Qed.
   
