@@ -16,6 +16,7 @@ Local Unset Elimination Schemes.
 
 (** Notation for non-dependent function types *)
 Notation "A -> B" := (forall (_ : A), B) : type_scope.
+Notation "(->)" := (fun A B : Type => A -> B) : type_scope.
 
 (** *** Option type *)
 
@@ -140,13 +141,6 @@ Tactic Notation "transitivity" constr(x) := etransitivity x.
 (** Define an alias for [Set], which is really [Type₀], the smallest universe. *)
 Notation Type0 := Set.
 
-(** We make the identity map a notation so we do not have to unfold it,
-    or complicate matters with its type. *)
-Notation idmap := (fun x => x).
-
-(** *** Constant functions *)
-Definition const {A B} (b : B) := fun x : A => b.
-
 (** ** Sigma types *)
 
 (** [(sig A P)], or more suggestively [{x:A & (P x)}] is a Sigma-type. *)
@@ -199,9 +193,16 @@ Notation pr2 := proj2.
 Notation "x .1" := (pr1 x) : fibration_scope.
 Notation "x .2" := (pr2 x) : fibration_scope.
 
-Definition uncurry {A B C} (f : A -> B -> C) (p : A * B) : C := f (fst p) (snd p).
+(** ** Functions *)
 
-Arguments uncurry {A B C} f%_function_scope p /. 
+(** We make the identity map a notation so we do not have to unfold it, or complicate matters with its type. *)
+Notation idmap := (fun x => x).
+
+Instance reflexive_fun : Reflexive (fun A B => A -> B)
+  := fun _ => idmap.
+
+(** Constant functions. *)
+Definition const {A B} (b : B) := fun x : A => b.
 
 (** Composition of functions. *)
 
@@ -224,6 +225,39 @@ Global Arguments composeD {A B C}%_type_scope (g f)%_function_scope x.
 #[export] Hint Unfold composeD : core.
 
 Notation "g 'oD' f" := (composeD g f) : function_scope.
+
+Instance transitive_fun : Transitive (fun A B => A -> B)
+  := fun _ _ _ f g => g o f.
+
+(** Arguments to a two-variable function can be paired. *)
+
+Definition uncurry {A B C} (f : A -> B -> C) (p : A * B) : C := f (fst p) (snd p).
+
+Arguments uncurry {A B C} f%_function_scope p /.
+
+(** Arguments to a two-variable function can be swapped.  In Types/Forall.v, this is shown to be an equivalence. *)
+
+Definition flip A B `{P : A -> B -> Type}
+  : (forall a b, P a b) -> (forall b a, P a b)
+  := fun f b a => f a b.
+
+Arguments flip {A B P} f b a /.
+
+Definition reflexive_flip {A : Type} (R : Relation A) `{Reflexive _ R}
+  : Reflexive (flip R)
+  := @reflexivity A R _.
+
+Definition transitive_flip {A : Type} (R : Relation A) `{Transitive _ R}
+  : Transitive (flip R)
+  := fun a b c rab rbc => @transitivity A R _ c b a rbc rab.
+
+Definition symmetric_flip {A : Type} (R : Relation A) `{Symmetric _ R}
+  : Symmetric (flip R)
+  := fun a b rab => @symmetry A R _ b a rab.
+
+Hint Immediate reflexive_flip : typeclass_instances.
+Hint Immediate transitive_flip : typeclass_instances.
+Hint Immediate symmetric_flip : typeclass_instances.
 
 (** ** The groupoid structure of identity types. *)
 
@@ -273,6 +307,13 @@ Proof.
   intros y p.
   destruct p.
   exact u.
+Defined.
+
+Definition related_reflexive_path {A : Type} (R : Relation A) `{Reflexive A R}
+  {a b : A} (p : a = b)
+  : R a b.
+Proof.
+  destruct p; reflexivity.
 Defined.
 
 (** We declare a scope in which we shall place path notations. This way they can be turned on and off by the user. *)
@@ -362,7 +403,8 @@ Proof. rewrite <- H. exact u. Defined.
 Local Lemma define_internal_paths_rew_r A x y P (u : P y) (H : x = y :> A) : P x.
 Proof. rewrite -> H. exact u. Defined.
 
-Arguments internal_paths_rew {A%_type_scope} {a} P%_function_scope f {a0} p.
+(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
+Arguments internal_paths_rew {A%_type_scope} {a} P%_function_scope f {a0} p : rename.
 Arguments internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.
 
 (** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous equality in a dependent type".  We will first see this appearing in the type of [apD]. *)

@@ -1,4 +1,5 @@
 (** * Universal objects *)
+Require Import Basics.Contractible.
 Require Import Category.Core Category.Morphisms.
 
 Set Universe Polymorphism.
@@ -22,13 +23,13 @@ Definition unique_up_to_unique_isomorphism (C : PreCategory) (P : C -> Type) :=
 Notation IsTerminalObject C x :=
   (forall x' : object C, Contr (morphism C x' x)).
 
-Record TerminalObject (C : PreCategory) :=
+Class TerminalObject (C : PreCategory) :=
   {
-    object_terminal :> C;
-    isterminal_object_terminal :> IsTerminalObject C object_terminal
+    object_terminal : C;
+    isterminal_object_terminal :: IsTerminalObject C object_terminal
   }.
 
-Existing Instance isterminal_object_terminal.
+Coercion object_terminal : TerminalObject >-> object.
 
 (** ** Initial objects *)
 (** An initial object is an object with a unique morphism from every
@@ -36,37 +37,64 @@ Existing Instance isterminal_object_terminal.
 Notation IsInitialObject C x :=
   (forall x' : object C, Contr (morphism C x x')).
 
-Record InitialObject (C : PreCategory) :=
+Class InitialObject (C : PreCategory) :=
   {
-    object_initial :> C;
-    isinitial_object_initial :> IsInitialObject C object_initial
+    object_initial : C;
+    isinitial_object_initial :: IsInitialObject C object_initial
   }.
 
-Existing Instance isinitial_object_initial.
+Coercion object_initial : InitialObject >-> object.
 
 Arguments unique_up_to_unique_isomorphism [C] P.
+
+(** ** Canonical morphisms *)
+  
+(** The unique morphism from an initial object. *)
+Definition morphism_from_initial {C : PreCategory} {I : InitialObject C}
+  (Y : object C)
+  : morphism C I Y
+  := center (morphism C I Y).
+
+(** The unique morphism to a terminal object. *)
+Definition morphism_to_terminal {C : PreCategory} {T : TerminalObject C}
+  (X : object C)
+  : morphism C X T
+  := center (morphism C X T).
 
 (** ** Initial and terminal objects are unique up to unique isomorphism *)
 Section CategoryObjectsTheorems.
   Variable C : PreCategory.
 
-  Local Ltac unique :=
+  Ltac unique :=
     repeat first [ intro
                  | exists _
                  | exists (center (morphism C _ _))
-                 | etransitivity; [ symmetry | ]; apply contr ].
+                 | apply path_contr ].
 
   (** The terminal object is unique up to unique isomorphism. *)
   Theorem terminal_object_unique
-  : unique_up_to_unique_isomorphism (fun x => IsTerminalObject C x).
+    : unique_up_to_unique_isomorphism (fun x => IsTerminalObject C x).
   Proof.
     unique.
   Qed.
 
   (** The initial object is unique up to unique isomorphism. *)
   Theorem initial_object_unique
-  : unique_up_to_unique_isomorphism (fun x => IsInitialObject C x).
+    : unique_up_to_unique_isomorphism (fun x => IsInitialObject C x).
   Proof.
     unique.
   Qed.
+
+  (** Any two morphisms from an initial object are equal. *)
+  Definition initial_morphism_unique {I X : object C}
+    `{IsInitialObject C I} (f g : morphism C I X)
+    : f = g
+    := path_contr f g.
+    
+  (** Any two morphisms to a terminal object are equal. *)
+  Definition terminal_morphism_unique {T X : object C}
+    `{IsTerminalObject C T} (f g : morphism C X T)
+    : f = g
+    := path_contr f g.
+
 End CategoryObjectsTheorems.

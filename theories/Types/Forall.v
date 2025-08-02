@@ -358,14 +358,7 @@ End AssumeFunext.
 
 (** ** Symmetry of curried arguments *)
 
-(** Using the standard Haskell name for this, as it’s a handy utility function.
-
-Note: not sure if [P] will usually be deducible, or whether it would be better explicit. *)
-Definition flip `{P : A -> B -> Type}
-  : (forall a b, P a b) -> (forall b a, P a b)
-  := fun f b a => f a b.
-
-Arguments flip {A B P} f b a /.
+(** [flip] is defined in Overture.v *)
 
 Instance isequiv_flip `{P : A -> B -> Type}
   : IsEquiv (@flip _ _ P) | 0.

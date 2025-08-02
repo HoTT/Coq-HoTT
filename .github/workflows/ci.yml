@@ -44,7 +44,7 @@ jobs:
       coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ${{ matrix.os }}
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
+    # Github actions doesn't let us set workflow level environment variables inside the strategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment variable env.coq-version, which uses the globally set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
@@ -76,7 +76,7 @@ jobs:
       coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ${{ matrix.os }}
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
+    # Github actions doesn't let us set workflow level environment variables inside the strategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment variable env.coq-version, which uses the globally set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
@@ -114,7 +114,7 @@ jobs:
       coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
+    # Github actions doesn't let us set workflow level environment variables inside the strategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment variable env.coq-version, which uses the globally set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
@@ -249,13 +249,18 @@ jobs:
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
           sudo apt-get update
-          sudo apt-get install -y ghc cabal-install
+          sudo apt-get install -y ghc
           sudo apt-get install -y --allow-unauthenticated \
           libssl-dev aspcud \
           graphviz xsltproc python3-lxml python-pexpect-doc \
           libxml2-dev libxslt1-dev time lua5.1 unzip npm
           # libnode-dev node-gyp
 
+          # Installing cabal using ghcup rather than installing cabal-install via apt fixes the error:
+          # <repo>/root.json does not have enough signatures signed with the appropriate keys
+          curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_MINIMAL=1 sh
+          source ~/.ghcup/env
+          ghcup install cabal
           cabal update
           cabal install --lib graphviz text fgl
           sudo -E npm config set strict-ssl false
@@ -416,7 +421,7 @@ jobs:
       coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
+    # Github actions doesn't let us set workflow level environment variables inside the strategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment variable env.coq-version, which uses the globally set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV
@@ -461,7 +466,7 @@ jobs:
       coq-version: ${{ matrix.coq-version-dummy }}
     runs-on: ubuntu-latest
     steps:
-    # Github actions doesn't let us set workflow level enviornment variables inside the stategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment varible env.coq-version, which uses the globablly set coq-version-supported when running the 'supported' case.
+    # Github actions doesn't let us set workflow level environment variables inside the strategy of a job. Therefore we use the dummy variable coq-version in the matrix to set an environment variable env.coq-version, which uses the globally set coq-version-supported when running the 'supported' case.
     - name: Set supported coq-version
       if: matrix.coq-version-dummy == 'supported'
       run: echo "coq-version=${{ env.coq-version-supported }}" >> $GITHUB_ENV

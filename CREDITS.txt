@@ -17,7 +17,7 @@ available at https://github.com/HoTT/HoTT.
 INSTITUTIONAL SUPPORT
 =====================
 
-We acknowledge the support of the following instutitions and funding agencies,
+We acknowledge the support of the following institutions and funding agencies,
 listed in alphabetical order:
 
 * Institute for Advanced Study, Princeton, USA (http://www.ias.edu/)

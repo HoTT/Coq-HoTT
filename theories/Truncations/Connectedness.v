@@ -132,6 +132,16 @@ Proof.
   exact (p # p0).
 Defined.
 
+(** A computation rule for [conn_point_elim_comp]. *)
+Definition conn_point_elim_comp `{Univalence} (n : trunc_index) {A : pType@{u}} `{IsConnected n.+1 A}
+  (P : A -> Type@{u}) `{forall a, IsTrunc n (P a)} (p0 : P (point A))
+  : conn_point_elim n P p0 (point A) = p0.
+Proof.
+  unfold conn_point_elim.
+  (* The center of truncation isn't definitionally [tr 1], but is equal to it: *)
+  exact (ap (Trunc_ind _ _) (contr (tr idpath))).
+Defined.
+
 (** ** Decreasing connectedness *)
 
 (** An [n.+1]-connected type is also [n]-connected. *)
