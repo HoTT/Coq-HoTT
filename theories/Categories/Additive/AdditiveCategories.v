@@ -55,7 +55,17 @@ Class AdditiveCategory := {
   composition_bilinear_r : forall {X Y Z : object cat}
     (f : morphism cat X Y) (g h : morphism cat Y Z),
     (add_morphism g h o f)%morphism = 
-    add_morphism (g o f) (h o f)
+    add_morphism (g o f) (h o f);
+    
+  (** Addition via biproducts axiom *)
+  addition_via_biproduct_axiom : forall {X Y : object cat} (f g : morphism cat X Y),
+    add_morphism f g = 
+    (biproduct_coprod_mor (add_biproduct Y Y) Y 1%morphism 1%morphism o
+     biproduct_prod_mor (add_biproduct Y Y) 
+       (biproduct_obj (biproduct_data (add_biproduct X X)))
+       (f o outl (biproduct_data (add_biproduct X X)))
+       (g o outr (biproduct_data (add_biproduct X X))) o
+     biproduct_prod_mor (add_biproduct X X) X 1%morphism 1%morphism)%morphism
 }.
 
 Coercion cat : AdditiveCategory >-> PreCategory.
@@ -145,6 +155,42 @@ Section AdditiveOperations.
   Qed.
 
 End AdditiveOperations.
+
+(** ** Relationship between addition and biproducts *)
+
+Section AdditionViaBiproducts.
+  Context (A : AdditiveCategory).
+  
+  (** The diagonal morphism. *)
+  Definition diagonal {X : object A} : morphism A X (X ⊕ X)
+    := biproduct_prod_mor (@add_biproduct A X X) X 
+         (1%morphism : morphism A X X) 
+         (1%morphism : morphism A X X).
+  
+  (** The codiagonal morphism. *)
+  Definition codiagonal {X : object A} : morphism A (X ⊕ X) X
+    := biproduct_coprod_mor (@add_biproduct A X X) X 
+         (1%morphism : morphism A X X) 
+         (1%morphism : morphism A X X).
+  
+  (** The biproduct morphism induced by two morphisms. *)
+  Definition biproduct_mor {W X Y Z : object A}
+    (f : morphism A W Y) (g : morphism A X Z)
+    : morphism A (W ⊕ X) (Y ⊕ Z)
+    := biproduct_prod_mor (@add_biproduct A Y Z) (W ⊕ X)
+         (f o add_outl) 
+         (g o add_outr).
+  
+  (** Addition can be expressed using biproducts. *)
+  Theorem addition_via_biproducts {X Y : object A} 
+    (f g : morphism A X Y)
+    : add_morphism f g = (@codiagonal Y o biproduct_mor f g o @diagonal X)%morphism.
+  Proof.
+    unfold codiagonal, diagonal, biproduct_mor.
+    apply addition_via_biproduct_axiom.
+  Qed.
+  
+End AdditionViaBiproducts.
 
 (** * Additive functors *)
 
@@ -312,4 +358,4 @@ Defined.
 Hint Rewrite 
   @additive_functor_preserves_zero_morphisms
   : additive_simplify.
-    
+      
