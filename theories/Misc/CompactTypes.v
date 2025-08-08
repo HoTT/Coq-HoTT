@@ -15,8 +15,8 @@ Local Open Scope pointed_scope.
 
 (** ** Basic definitions of compact types. *)
 
-(** A type is compact if for every decidable predicate we can decide whether it is always true or not. *)
-Definition IsCompact (A : Type) : Type
+(** A type [A] is compact if for every decidable predicate [P] on [A] we can either find an element of [A] making [P] false or we can show that [P a] always holds. *)
+Definition IsCompact (A : Type)
   := forall P : A -> Type, (forall a : A, Decidable (P a)) ->
                               {a : A & ~ P a} + (forall a : A, P a).
 
@@ -32,11 +32,7 @@ Proof.
   - exact (inl (l.1; fun p => l.2 (tr p))).
   - right.
     intro a.
-    specialize (r a).
-    rapply stable_decidable.
-    intro n.
-    strip_truncations.
-    exact (n r).
+    apply merely_inhabited_iff_inhabited_stable, r.
 Defined.
 
 (** Any compact type is decidable. *)
@@ -275,7 +271,7 @@ Proof.
 Defined.
 
 (** Assuming univalence, the type of propositions is searchable. *)
-Definition issearchable_HProp `{Univalence} : IsSearchable HProp.
+Definition issearchable_hprop `{Univalence} : IsSearchable HProp.
 Proof.
   apply issearchable_issearchable_prop.
   intros P dP.
