@@ -20,7 +20,15 @@ Definition IsCompact (A : Type)
   := forall P : A -> Type, (forall a : A, Decidable (P a)) ->
                               {a : A & ~ P a} + (forall a : A, P a).
 
-(** Equivalently, we can assume the same for [HProp]-valued decidable predicates. *)
+(** Any compact type is decidable. *)
+Definition decidable_iscompact {A : Type} (c : IsCompact A) : Decidable A.
+Proof.
+  destruct (c (fun (_ : A) => Empty) _) as [c1|c2].
+  - exact (inl c1.1).
+  - exact (inr c2).
+Defined.
+
+(** Compactness is equivalent to assuming the same for [HProp]-valued decidable predicates. *)
 Definition IsPropCompact (A : Type) : Type
   := forall P : A -> HProp, (forall a : A, Decidable (P a)) ->
                               {a : A & ~ P a} + (forall a : A, P a).
@@ -33,14 +41,6 @@ Proof.
   - right.
     intro a.
     apply merely_inhabited_iff_inhabited_stable, r.
-Defined.
-
-(** Any compact type is decidable. *)
-Definition decidable_iscompact {A : Type} (c : IsCompact A) : Decidable A.
-Proof.
-  destruct (c (fun (_ : A) => Empty) _) as [c1|c2].
-  - exact (inl c1.1).
-  - exact (inr c2).
 Defined.
 
 (** Since decidable types are stable, it's also equivalent to negate [P] in the definition. *)
