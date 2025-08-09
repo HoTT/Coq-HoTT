@@ -43,28 +43,36 @@ Proof.
   - exact (inr c2).
 Defined.
 
-(** Equivalent definition of compactness: If a family over the type is decidable, then the Σ-type is decidable. *)
+(** Since decidable types are stable, it's also equivalent to negate [P] in the definition. *)
+Definition IsCompact' (A : Type)
+  := forall P : A -> Type, (forall a : A, Decidable (P a)) ->
+                              {a : A & P a} + (forall a : A, ~ P a).
+
+Definition iff_iscompact_iscompact' (A : Type)
+  : IsCompact A <-> IsCompact' A.
+Proof.
+  split;
+    napply (functor_forall (fun P => (fun a => ~ P a))); intro P;
+    rapply functor_forall; intro dP;
+    apply functor_sum.
+  2,3: exact idmap.
+  1: apply (functor_sigma idmap).
+  2: apply (functor_forall idmap).
+  all: intro a; by apply stable_decidable.
+Defined.
+
+(** Another equivalent definition of compactness: If a family over the type is decidable, then the Σ-type is decidable. *)
 Definition IsSigCompact (A : Type) : Type
   := forall P : A -> Type, (forall a : A, Decidable (P a)) -> Decidable (sig P).
 
-Definition issigcompact_iscompact {A : Type} (c : IsCompact A)
-  : IsSigCompact A.
+Definition equiv_iscompact'_issigcompact {A : Type}
+  : IsCompact' A <-> IsSigCompact A.
 Proof.
-  intros P dP.
-  destruct (c (fun a => ~ P a) _) as [l|r].
-  - left; exists l.1.
-    exact (stable_decidable (P l.1) l.2).
-  - right; exact (fun x => (r x.1) x.2).
-Defined.
-
-Definition iscompact_issigcompact {A : Type} (c : IsSigCompact A)
-  : IsCompact A.
-Proof.
-  intros P dP.
-  destruct (c (fun a => ~ P a) _) as [l|r].
-  - exact (inl l).
-  - right; intro a.
-    apply (stable_decidable (P a) (fun h => r (a; h))).
+  apply iff_functor_forall; intro P.
+  apply iff_functor_forall; intro dP.
+  apply iff_equiv.
+  apply (equiv_functor_sum' equiv_idmap).
+  napply equiv_sig_ind.
 Defined.
 
 (** Again, it is enough to consider [HProp]-valued families. *)
