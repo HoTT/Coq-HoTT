@@ -156,18 +156,6 @@ End ZeroMorphismProperties.
 Section BiproductMorphismProperties.
   Context (C : SemiAdditiveCategory).
 
-  (** Projection of biproduct morphism extracts the component. *)
-  Lemma biproduct_prod_proj_r (X Y Z : object C) 
-    (f g : morphism C Z Y) (h : morphism C X Z) :
-    (outr (biproduct_data (semiadditive_biproduct Y Y)) o 
-     (biproduct_prod_mor (semiadditive_biproduct Y Y) Z f g o h))%morphism =
-    (g o h)%morphism.
-  Proof.
-    rewrite <- Category.Core.associativity.
-    rewrite biproduct_prod_beta_r.
-    reflexivity.
-  Qed.
-
   (** Composing through diagonal/codiagonal preserves morphisms. *)
   Lemma compose_through_diagonal_right (X Y : object C) (g : morphism C X Y) :
     ((g o outr (biproduct_data (semiadditive_biproduct X X))) o 
