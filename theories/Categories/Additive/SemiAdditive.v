@@ -73,34 +73,26 @@ Section BiproductBasics.
     (outl (biproduct_data (semiadditive_biproduct X X)) o 
      biproduct_prod_mor (semiadditive_biproduct X X) X 1%morphism 1%morphism)%morphism = 
     1%morphism.
-  Proof.
-    rapply biproduct_prod_beta_l.
-  Qed.
+  Proof. rapply biproduct_prod_beta_l. Qed.
 
   Lemma diagonal_outr (X : object C) :
     (outr (biproduct_data (semiadditive_biproduct X X)) o 
      biproduct_prod_mor (semiadditive_biproduct X X) X 1%morphism 1%morphism)%morphism = 
     1%morphism.
-  Proof.
-    rapply biproduct_prod_beta_r.
-  Qed.
+  Proof. rapply biproduct_prod_beta_r. Qed.
 
   (** Codiagonal after injection gives identity. *)
   Lemma inl_codiagonal (Y : object C) :
     (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
      Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y)))%morphism = 
     1%morphism.
-  Proof.
-    rapply biproduct_coprod_beta_l.
-  Qed.
+  Proof. rapply biproduct_coprod_beta_l. Qed.
 
   Lemma inr_codiagonal (Y : object C) :
     (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
      Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y)))%morphism = 
     1%morphism.
-  Proof.
-    rapply biproduct_coprod_beta_r.
-  Qed.
+  Proof. rapply biproduct_coprod_beta_r. Qed.
 
 End BiproductBasics.
 
@@ -142,10 +134,7 @@ Section ZeroMorphismProperties.
       (biproduct_obj (biproduct_data (semiadditive_biproduct X X)))
       (zero_morphism (biproduct_obj (biproduct_data (semiadditive_biproduct X X))) Y)
       (f o outr (biproduct_data (semiadditive_biproduct X X))).
-  Proof.
-    f_ap.
-    rapply zero_through_proj_left.
-  Qed.
+  Proof. f_ap. rapply zero_through_proj_left. Qed.
 
   Lemma biproduct_mor_zero_right (X Y : object C) (f : morphism C X Y) :
     biproduct_prod_mor (semiadditive_biproduct Y Y) 
@@ -156,10 +145,7 @@ Section ZeroMorphismProperties.
       (biproduct_obj (biproduct_data (semiadditive_biproduct X X)))
       (f o outl (biproduct_data (semiadditive_biproduct X X)))
       (zero_morphism (biproduct_obj (biproduct_data (semiadditive_biproduct X X))) Y).
-  Proof.
-    f_ap.
-    rapply zero_through_proj_right.
-  Qed.
+  Proof. f_ap. rapply zero_through_proj_right. Qed.
 
 End ZeroMorphismProperties.
 
@@ -352,43 +338,33 @@ Section BiproductHelpers.
     (outr (biproduct_data (semiadditive_biproduct A B)) o 
      Biproducts.inr (biproduct_data (semiadditive_biproduct A B)))%morphism = 
     1%morphism.
-  Proof.
-    rapply (beta_r (biproduct_is (semiadditive_biproduct A B))).
-  Qed.
+  Proof. rapply (beta_r (biproduct_is (semiadditive_biproduct A B))). Qed.
 
   (** Projecting left after injecting left gives identity. *)
   Lemma outl_after_inl (A B : object C) :
     (outl (biproduct_data (semiadditive_biproduct A B)) o 
      Biproducts.inl (biproduct_data (semiadditive_biproduct A B)))%morphism = 
     1%morphism.
-  Proof.
-    rapply (beta_l (biproduct_is (semiadditive_biproduct A B))).
-  Qed.
+  Proof. rapply (beta_l (biproduct_is (semiadditive_biproduct A B))). Qed.
 
   (** Projecting right after injecting left gives zero. *)
   Lemma outr_after_inl (A B : object C) :
     (outr (biproduct_data (semiadditive_biproduct A B)) o 
      Biproducts.inl (biproduct_data (semiadditive_biproduct A B)))%morphism = 
     zero_morphism A B.
-  Proof.
-    rapply (mixed_r (biproduct_is (semiadditive_biproduct A B))).
-  Qed.
+  Proof. rapply (mixed_r (biproduct_is (semiadditive_biproduct A B))). Qed.
 
   (** Helper: left projection after biproduct morphism. *)
   Lemma outl_biproduct_prod (A B D : object C) (f : morphism C D A) (g : morphism C D B) :
     (outl (biproduct_data (semiadditive_biproduct A B)) o 
      biproduct_prod_mor (semiadditive_biproduct A B) D f g)%morphism = f.
-  Proof.
-    rapply biproduct_prod_beta_l.
-  Qed.
+  Proof. rapply biproduct_prod_beta_l. Qed.
 
   (** Helper: right projection after biproduct morphism. *)
   Lemma outr_biproduct_prod (A B D : object C) (f : morphism C D A) (g : morphism C D B) :
     (outr (biproduct_data (semiadditive_biproduct A B)) o 
      biproduct_prod_mor (semiadditive_biproduct A B) D f g)%morphism = g.
-  Proof.
-    rapply biproduct_prod_beta_r.
-  Qed.
+  Proof. rapply biproduct_prod_beta_r. Qed.
 
   (** Composition of biproduct morphisms. *)
   Lemma biproduct_comp_general (W X Y Z : object C)
@@ -1047,16 +1023,12 @@ Defined.
 Theorem composition_left_distributive (C : SemiAdditiveCategory) {X Y Z : object C}
   (h : morphism C Y Z) (f g : morphism C X Y)
   : (h o (f + g))%morphism = ((h o f) + (h o g))%morphism.
-Proof.
-  exact (addition_postcompose C X Y Z f g h).
-Qed.
+Proof. exact (addition_postcompose C X Y Z f g h). Qed.
 
 Theorem composition_right_distributive (C : SemiAdditiveCategory) {X Y Z : object C}
   (f g : morphism C Y Z) (h : morphism C X Y)
   : ((f + g) o h)%morphism = ((f o h) + (g o h))%morphism.
-Proof.
-  exact (addition_precompose C Y Z X f g h).
-Qed.
+Proof. exact (addition_precompose C Y Z X f g h). Qed.
 
 (** ** Export hints and derived instances *)
 
