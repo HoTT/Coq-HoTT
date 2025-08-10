@@ -29,11 +29,11 @@ Proof.
 Defined.
 
 (** Compactness is equivalent to assuming the same for [HProp]-valued decidable predicates. *)
-Definition IsPropCompact (A : Type)
+Definition IsCompactProps (A : Type)
   := forall P : A -> HProp, (forall a : A, Decidable (P a)) ->
                               {a : A & ~ P a} + (forall a : A, P a).
 
-Definition iscompact_ispropcompact {A} (c : IsPropCompact A) : IsCompact A.
+Definition iscompact_iscompactprops {A} (c : IsCompactProps A) : IsCompact A.
 Proof.
   intros P dP.
   destruct (c (merely o P) _) as [l|r].
@@ -62,11 +62,11 @@ Proof.
 Defined.
 
 (** Another equivalent definition of compactness: If a family over the type is decidable, then the Σ-type is decidable. *)
-Definition IsSigCompact (A : Type)
+Definition IsSigmaCompact (A : Type)
   := forall P : A -> Type, (forall a : A, Decidable (P a)) -> Decidable (sig P).
 
-Definition equiv_iscompact'_issigcompact {A : Type}
-  : IsCompact' A <-> IsSigCompact A.
+Definition equiv_iscompact'_issigmacompact {A : Type}
+  : IsCompact' A <-> IsSigmaCompact A.
 Proof.
   apply iff_functor_forall; intro P.
   apply iff_functor_forall; intro dP.
@@ -76,13 +76,13 @@ Proof.
 Defined.
 
 (** Again, it is enough to consider [HProp]-valued families. *)
-Definition IsSigCompact_prop (A : Type)
+Definition IsSigmaCompactProps (A : Type)
   := forall P : A -> HProp,
       (forall a : A, Decidable (P a)) -> Decidable (sig P).
 
-Definition issigcompact_prop_issigcompact {A : Type}
-  (h : IsSigCompact A)
-  : IsSigCompact_prop A
+Definition issigmacompactprops_issigmacompact {A : Type}
+  (h : IsSigmaCompact A)
+  : IsSigmaCompactProps A
   := fun P hP => h P hP.
 
 Definition sigma_iff_prop_truncation_decidable {A : Type} {P : A -> Type}
@@ -93,9 +93,9 @@ Proof.
   exact (x; fst (@merely_inhabited_iff_inhabited_stable (P x) _) hx).
 Defined.
 
-Definition issigcompact_issigcompact_prop {A : Type}
-  (h : IsSigCompact_prop A)
-  : IsSigCompact A.
+Definition issigmacompact_issigmacompactprops {A : Type}
+  (h : IsSigmaCompactProps A)
+  : IsSigmaCompact A.
 Proof.
   intros P hP.
   destruct (h (merely o P) _) as [[l k]|r].
@@ -110,7 +110,7 @@ Definition IsPiCompact (A : Type)
   := forall (P : A -> Type) (dP : forall a : A, Decidable (P a)),
       Decidable (forall a : A, P a).
 
-Definition ispicompact_issigcompact {A : Type} (c : IsSigCompact A)
+Definition ispicompact_issigmacompact {A : Type} (c : IsSigmaCompact A)
   : IsPiCompact A.
 Proof.
   intros P dP.
@@ -139,11 +139,11 @@ Definition witness_universality {A : Type}
   : P (universal_witness s P dP) -> forall a : A, P a
   := (s P dP).2.
 
-Definition IsSearchable_prop (A : Type)
+Definition IsSearchableProps (A : Type)
   := forall (P : A -> HProp) (dP : forall a : A, Decidable (P a)),
       {x : A & P x -> forall a : A, P a}.
 
-Definition issearchable_issearchable_prop {A : Type} (s : IsSearchable_prop A)
+Definition issearchable_issearchableprops {A : Type} (s : IsSearchableProps A)
   : IsSearchable A.
 Proof.
   intros P dP.
@@ -269,7 +269,7 @@ Definition compact_set_trunc_compact `{Univalence} {A : Type} {n : nat}
 Proof.
   constructor.
   1: exact (iscompact_retract' s).
-  intro cpt; rapply iscompact_ispropcompact.
+  intro cpt; rapply iscompact_iscompactprops.
   intros P dP.
   destruct (cpt (Trunc_rec P)) as [l|r].
   - intro a; strip_truncations.
@@ -281,7 +281,7 @@ Defined.
 (** Assuming univalence, the type of propositions is searchable. *)
 Definition issearchable_hprop `{Univalence} : IsSearchable HProp.
 Proof.
-  apply issearchable_issearchable_prop.
+  apply issearchable_issearchableprops.
   intros P dP.
   destruct (dP Unit_hp) as [t|f].
   - exists False_hp; intros p a.
@@ -291,10 +291,10 @@ Defined.
 
 (** Assuming univalence, if the domain of a surjective map is searchable, then so is its codomain. *)
 
-Definition ispropsearchable_image `{Univalence} (A B : Type)
-  (s : IsSearchable_prop A)
+Definition issearchableprops_image `{Univalence} (A B : Type)
+  (s : IsSearchableProps A)
   (f : A -> B) (surj : IsSurjection f)
-  : IsSearchable_prop B.
+  : IsSearchableProps B.
 Proof.
   intros P dP.
   specialize (s (P o f) _).
@@ -305,7 +305,7 @@ Definition issearchable_image `{Univalence} (A B : Type)
   (s : IsSearchable A)
   (f : A -> B) (surj : IsSurjection f)
   : IsSearchable B
-  := issearchable_issearchable_prop (ispropsearchable_image A B s f surj).
+  := issearchable_issearchableprops (issearchableprops_image A B s f surj).
 
 (** Assuming univalence, every connected pointed type is searchable. *)
 Definition issearchable_isconnected_ptype `{Univalence} (A : pType)
