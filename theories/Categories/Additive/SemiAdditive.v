@@ -538,7 +538,7 @@ Section Associativity.
   Local Notation obj := (object C).
   Local Notation hom := (morphism C).
 
-  (** Shorthands for frequently used biproduct structures. *)
+  (* Shorthands for frequently used biproduct structures *)
   Local Definition YY (Y : obj) : Biproduct Y Y := semiadditive_biproduct Y Y.
   Local Definition YYYL (Y : obj) : Biproduct (biproduct_obj (biproduct_data (YY Y))) Y
     := semiadditive_biproduct (biproduct_obj (biproduct_data (YY Y))) Y.
@@ -743,16 +743,16 @@ Proof.
   set (BY  := semiadditive_biproduct Y Y).
   set (BY' := semiadditive_biproduct Y' Y').
 
-  (** Reassociate so [coprod ∘ prod] forms a single block. *)
+  (* Reassociate so [coprod ∘ prod] forms a single block *)
   rewrite <- Category.Core.associativity.
 
-  (** Turn [coprod ∘ prod] into addition. *)
+  (* Turn [coprod ∘ prod] into addition *)
   rewrite <- (@morphism_addition_simplify C
                (biproduct_obj (biproduct_data BY)) Y'
                (a o outl (biproduct_data BY))
                (b o outr (biproduct_data BY))).
 
-  (** Precompose the addition by [inl] (positional args). *)
+  (* Precompose the addition by [inl] (positional args) *)
   rewrite (@addition_precompose
              (biproduct_obj (biproduct_data BY))  (* X *)
              Y'                                   (* Y *)
@@ -761,7 +761,7 @@ Proof.
              ((b o outr (biproduct_data BY))%morphism)  (* g *)
              (Biproducts.inl (biproduct_data BY))).     (* a *)
 
-  (** Compare components, then use right-identity of +. *)
+  (* Compare components, then use right-identity of + *)
   transitivity (morphism_addition C Y Y' a (zero_morphism Y Y')).
   - rapply ap011.
     + rewrite Category.Core.associativity.
@@ -838,15 +838,15 @@ Proof.
   rewrite (morphism_addition_simplify C X Y' (a o f)%morphism (a o g)%morphism).
   set (BY  := semiadditive_biproduct Y Y).
   set (BY' := semiadditive_biproduct Y' Y').
-  (** Reassociate a ∘ (Δ;pair) to (a∘Δ);pair. *)
+  (* Reassociate a ∘ (Δ;pair) to (a∘Δ);pair *)
   rewrite <- Category.Core.associativity.
-  (** Push a through the codiagonal. *)
+  (* Push a through the codiagonal *)
   rewrite (codiagonal_postcompose_any Y Y' a).
-  (** Factor codiagonal a,a through the BY'–pair. *)
+  (* Factor codiagonal a,a through the BY'–pair *)
   rewrite <- (codiagonal_factor_through_pair Y Y' a a).
-  (** Re-associate to coprod ∘ (pair ∘ pair). *)
+  (* Re-associate to coprod ∘ (pair ∘ pair) *)
   rewrite Category.Core.associativity.
-  (** Naturality of the pair under postcomposition by a. *)
+  (* Naturality of the pair under postcomposition by a *)
   rewrite <- (biproduct_pair_naturality X Y Y' a f g).
   reflexivity.
 Qed.
@@ -960,10 +960,10 @@ Proof.
                (biproduct_prod_mor BY X f2 g2))
             (morphism_addition C X Y f1 f2)
             (morphism_addition C X Y g1 g2)).
-  - (** Left projection. *)
+  - (* Left projection *)
     rewrite outl_addition_of_pairs.
     reflexivity.
-  - (** Right projection. *)
+  - (* Right projection *)
     rewrite outr_addition_of_pairs.
     reflexivity.
 Qed.
@@ -974,11 +974,11 @@ Theorem morphism_addition_associative
 Proof.
   set (BY := semiadditive_biproduct Y Y).
 
-  (** Rewrite both sides to codiagonal ∘ pair. *)
+  (* Rewrite both sides to codiagonal ∘ pair *)
   rewrite (@morphism_addition_simplify C X Y ((f + g)%morphism) h).
   rewrite (@morphism_addition_simplify C X Y f ((g + h)%morphism)).
 
-  (** Insert 0 + h in the second component. *)
+  (* Insert 0 + h in the second component *)
   etransitivity
     ((biproduct_coprod_mor BY Y 1%morphism 1%morphism
       o biproduct_prod_mor BY X ((f + g)%morphism) ((zero_morphism X Y + h)%morphism))%morphism).
@@ -990,11 +990,11 @@ Proof.
         ((@zero_left_identity C X Y h)^)
     ). }
 
-  (** Turn "pair of sums" into "sum of pairs". *)
+  (* Turn "pair of sums" into "sum of pairs" *)
   rewrite <- (sum_of_pairs_is_pair_of_sums
                 X Y f g (zero_morphism X Y) h).
 
-  (** Distribute postcomposition by the codiagonal over the sum. *)
+  (* Distribute postcomposition by the codiagonal over the sum *)
   rewrite (addition_postcompose
              X
              (biproduct_obj (biproduct_data BY))
@@ -1003,11 +1003,11 @@ Proof.
              (biproduct_prod_mor BY X g h)
              (biproduct_coprod_mor BY Y 1%morphism 1%morphism)).
 
-  (** Evaluate the two summands. *)
+  (* Evaluate the two summands *)
   rewrite (@codiagonal_zero_left C Y X f).
   rewrite <- (@morphism_addition_simplify C X Y g h).
 
-  (** Match the right-hand side. *)
+  (* Match the right-hand side *)
   rewrite <- (@morphism_addition_simplify C X Y f ((g + h)%morphism)).
   reflexivity.
 Qed.
@@ -1018,25 +1018,25 @@ Instance is_commutative_monoid_morphisms (C : SemiAdditiveCategory) (X Y : objec
   : IsCommutativeMonoid (morphism C X Y).
 Proof.
   split.
-  - (** IsMonoid. *)
+  - (* IsMonoid *)
     split.
-    + (** IsSemiGroup. *)
+    + (* IsSemiGroup *)
       split.
-      * exact _.  (** IsHSet. *)
-      * (** Associative. *)
+      * exact _.  (* IsHSet *)
+      * (* Associative *)
         intros f g h.
         unfold sg_op, morphism_sgop.
         symmetry.
         rapply (morphism_addition_associative C X Y).
-    + (** LeftIdentity. *)
+    + (* LeftIdentity *)
       intro f.
       unfold mon_unit, morphism_monunit, sg_op, morphism_sgop.
       rapply (zero_left_identity C X Y).
-    + (** RightIdentity. *)
+    + (* RightIdentity *)
       intro f.
       unfold mon_unit, morphism_monunit, sg_op, morphism_sgop.
       rapply (zero_right_identity C X Y).
-  - (** Commutative. *)
+  - (* Commutative *)
     intros f g.
     unfold sg_op, morphism_sgop.
     rapply (morphism_addition_commutative C X Y).
@@ -1068,6 +1068,6 @@ Qed.
   : IsCommutativeSemiGroup (morphism C X Y).
 Proof.
   split.
-  - exact _.  (** IsSemiGroup - from IsMonoid. *)
-  - exact _.  (** Commutative - from IsCommutativeMonoid. *)
+  - exact _.  (* IsSemiGroup - from IsMonoid *)
+  - exact _.  (* Commutative - from IsCommutativeMonoid *)
 Defined.
