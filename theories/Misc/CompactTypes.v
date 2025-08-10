@@ -29,7 +29,7 @@ Proof.
 Defined.
 
 (** Compactness is equivalent to assuming the same for [HProp]-valued decidable predicates. *)
-Definition IsPropCompact (A : Type) : Type
+Definition IsPropCompact (A : Type)
   := forall P : A -> HProp, (forall a : A, Decidable (P a)) ->
                               {a : A & ~ P a} + (forall a : A, P a).
 
@@ -62,7 +62,7 @@ Proof.
 Defined.
 
 (** Another equivalent definition of compactness: If a family over the type is decidable, then the Σ-type is decidable. *)
-Definition IsSigCompact (A : Type) : Type
+Definition IsSigCompact (A : Type)
   := forall P : A -> Type, (forall a : A, Decidable (P a)) -> Decidable (sig P).
 
 Definition equiv_iscompact'_issigcompact {A : Type}
@@ -76,7 +76,7 @@ Proof.
 Defined.
 
 (** Again, it is enough to consider [HProp]-valued families. *)
-Definition IsSigCompact_prop (A : Type) : Type
+Definition IsSigCompact_prop (A : Type)
   := forall P : A -> HProp,
       (forall a : A, Decidable (P a)) -> Decidable (sig P).
 
@@ -125,7 +125,7 @@ Defined.
 (** ** Basic definitions of searchable types. *)
 
 (** Second notion of compactness, also called searchability: for every predicate we can find a witness for whether it is always true or not. *)
-Definition IsSearchable (A : Type) : Type
+Definition IsSearchable (A : Type)
   := forall (P : A -> Type) (dP : forall a : A, Decidable (P a)),
       {x : A & P x -> forall a : A, P a}.
 
@@ -139,7 +139,7 @@ Definition witness_universality {A : Type}
   : P (universal_witness s P dP) -> forall a : A, P a
   := (s P dP).2.
 
-Definition IsSearchable_prop (A : Type) : Type
+Definition IsSearchable_prop (A : Type)
   := forall (P : A -> HProp) (dP : forall a : A, Decidable (P a)),
       {x : A & P x -> forall a : A, P a}.
 
