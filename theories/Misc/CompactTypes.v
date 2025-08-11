@@ -173,6 +173,34 @@ Proof.
   apply merely_inhabited_iff_inhabited_stable, s.2, tr, h.
 Defined.
 
+(** A type is searchable if and only if it is compact and inhabited. *)
+
+Definition issearchable_iscompact_inhabited {A : Type}
+  : IsCompact A -> A -> IsSearchable A.
+Proof.
+  intros c a P dP.
+  induction (c P _) as [l|r].
+  - exists l.1.
+    intro h; contradiction (l.2 h).
+  - exact (a; fun _ => r).
+Defined.
+
+Definition iscompact_issearchable {A : Type} : IsSearchable A -> IsCompact A.
+Proof.
+  intros h P dP.
+  set (w := (h P dP).1).
+  destruct (dP w) as [x|y].
+  - exact (inr ((h P dP).2 x)).
+  - exact (inl (w; y)).
+Defined.
+
+Definition inhabited_issearchable {A : Type} : IsSearchable A -> A
+  := fun s => (s (fun a => Unit) _).1.
+
+Definition searchable_iff {A : Type} : IsSearchable A <-> A * (IsCompact A)
+  := (fun s => (inhabited_issearchable s, iscompact_issearchable s),
+        fun c => issearchable_iscompact_inhabited (snd c) (fst c)).
+
 (** ** Examples of searchable and compact types.  *)
 
 Definition issearchable_contr {A} (c : Contr A) : IsSearchable A.
@@ -215,34 +243,6 @@ Proof.
     + by apply inhabited_dtype_bool_encoding_true in r.
   - contradiction (ninhabited_dtype_bool_encoding_false _ r x).
 Defined.
-
-(** A type is searchable if and only if it is compact and inhabited. *)
-
-Definition issearchable_iscompact_inhabited {A : Type}
-  : IsCompact A -> A -> IsSearchable A.
-Proof.
-  intros c a P dP.
-  induction (c P _) as [l|r].
-  - exists l.1.
-    intro h; contradiction (l.2 h).
-  - exact (a; fun _ => r).
-Defined.
-
-Definition iscompact_issearchable {A : Type} : IsSearchable A -> IsCompact A.
-Proof.
-  intros h P dP.
-  set (w := (h P dP).1).
-  destruct (dP w) as [x|y].
-  - exact (inr ((h P dP).2 x)).
-  - exact (inl (w; y)).
-Defined.
-
-Definition inhabited_issearchable {A : Type} : IsSearchable A -> A
-  := fun s => (s (fun a => Unit) _).1.
-
-Definition searchable_iff {A : Type} : IsSearchable A <-> A * (IsCompact A)
-  := (fun s => (inhabited_issearchable s, iscompact_issearchable s),
-        fun c => issearchable_iscompact_inhabited (snd c) (fst c)).
 
 (** The empty type is trivially compact. *)
 Definition iscompact_empty : IsCompact Empty
