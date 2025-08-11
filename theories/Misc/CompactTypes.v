@@ -112,6 +112,36 @@ Proof.
     exact (fun u => r (a; u)).
 Defined.
 
+(** Compact types are closed under retracts. *)
+Definition iscompact_retract {A : Type} (R : RetractOf A) (c : IsCompact A)
+  : IsCompact (retract_type R).
+Proof.
+  intros P dP; destruct (c (P o (retract_retr R)) _) as [l|r].
+  - exact (inl ((retract_retr R) l.1; l.2)).
+  - exact (inr (fun a =>  ((retract_issect R) a) # r ((retract_sect R) a))).
+Defined.
+
+Definition iscompact_retract' {A R : Type} {f : A -> R} {g : R -> A}
+  (s : f o g == idmap) (c : IsCompact A)
+  : IsCompact R
+  := iscompact_retract (Build_RetractOf A R f g s) c.
+
+(** Assuming the set truncation map has a section, a type is compact if and only if its set truncation is compact. *)
+Definition compact_set_trunc_compact `{Univalence} {A : Type}
+  (f : (Tr 0 A) -> A) (s : tr o f == idmap)
+  : IsCompact A <-> IsCompact (Tr 0 A).
+Proof.
+  constructor.
+  1: exact (iscompact_retract' s).
+  intro cpt; rapply iscompact_iscompactprops.
+  intros P dP.
+  destruct (cpt (Trunc_rec P)) as [l|r].
+  - intro a; strip_truncations.
+    exact (dP a).
+  - exact (inl (f l.1; fun x => l.2 (ap (Trunc_rec P) (s l.1) # x))).
+  - exact (inr (fun a => r (tr a))).
+Defined.
+
 (** ** Basic definitions of searchable types. *)
 
 (** A type is searchable if for every decidable predicate we can find a "universal witness" for whether the predicate is always true or not. *)
@@ -232,36 +262,6 @@ Proof.
   - intros [l|r].
     + exact (iscompact_empty' l).
     + exact (iscompact_issearchable r).
-Defined.
-
-(** Compact types are closed under retracts. *)
-Definition iscompact_retract {A : Type} (R : RetractOf A) (c : IsCompact A)
-  : IsCompact (retract_type R).
-Proof.
-  intros P dP; destruct (c (P o (retract_retr R)) _) as [l|r].
-  - exact (inl ((retract_retr R) l.1; l.2)).
-  - exact (inr (fun a =>  ((retract_issect R) a) # r ((retract_sect R) a))).
-Defined.
-
-Definition iscompact_retract' {A R : Type} {f : A -> R} {g : R -> A}
-  (s : f o g == idmap) (c : IsCompact A)
-  : IsCompact R
-  := iscompact_retract (Build_RetractOf A R f g s) c.
-
-(** Assuming the set truncation map has a section, a type is compact if and only if its set truncation is compact. *)
-Definition compact_set_trunc_compact `{Univalence} {A : Type}
-  (f : (Tr 0 A) -> A) (s : tr o f == idmap)
-  : IsCompact A <-> IsCompact (Tr 0 A).
-Proof.
-  constructor.
-  1: exact (iscompact_retract' s).
-  intro cpt; rapply iscompact_iscompactprops.
-  intros P dP.
-  destruct (cpt (Trunc_rec P)) as [l|r].
-  - intro a; strip_truncations.
-    exact (dP a).
-  - exact (inl (f l.1; fun x => l.2 (ap (Trunc_rec P) (s l.1) # x))).
-  - exact (inr (fun a => r (tr a))).
 Defined.
 
 (** Assuming univalence, the type of propositions is searchable. *)
