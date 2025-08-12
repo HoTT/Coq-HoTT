@@ -18,15 +18,19 @@ Class SemiAdditiveCategory := {
 
 Coercion cat : SemiAdditiveCategory >-> PreCategory.
 
+(** Notation for biproduct objects *)
+Local Notation "X ⊕ Y" := 
+  (biproduct_obj (biproduct_data (semiadditive_biproduct X Y)))
+  (at level 40, left associativity).
+
 (** ** Morphism addition via biproducts 
 
-    Key idea: addition of f,g : X → Y is the codiagonal ∇ : Y⊕Y → Y
-    postcomposed with the pairing ⟨f,g⟩ : X → Y⊕Y. *)
+    Addition is the codiagonal composed with the pairing morphism. *)
 
 Section MorphismAddition.
   Context (C : SemiAdditiveCategory) (X Y : object C).
   
-  (** Direct, standard definition: ∇ ∘ ⟨f,g⟩. *)
+  (** Codiagonal composed with pairing. *)
   Definition morphism_addition : SgOp (morphism C X Y) :=
     fun f g =>
       (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 
@@ -62,7 +66,7 @@ Section BiproductCharacterization.
       its projections. *)
   Lemma biproduct_morphism_unique (Y Z : object C)
     (h : morphism C Z 
-      (biproduct_obj (biproduct_data (semiadditive_biproduct Y Y))))
+      (Y ⊕ Y))
     (f g : morphism C Z Y)
     : (outl (biproduct_data (semiadditive_biproduct Y Y)) o h 
        = f)%morphism
@@ -212,7 +216,7 @@ Section BiproductSwap.
        Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y)))%morphism
       = Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y)).
   Proof.
-    unfold biproduct_swap; simpl.
+    unfold biproduct_swap;
     rewrite biproduct_comp_general.
     rewrite (beta_l (biproduct_is (semiadditive_biproduct Y Y))).
     rewrite (mixed_r (biproduct_is (semiadditive_biproduct Y Y))).
@@ -227,7 +231,7 @@ Section BiproductSwap.
        Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y)))%morphism
       = Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y)).
   Proof.
-    unfold biproduct_swap; simpl.
+    unfold biproduct_swap;
     rewrite biproduct_comp_general.
     rewrite (mixed_l (biproduct_is (semiadditive_biproduct Y Y))).
     rewrite (beta_r (biproduct_is (semiadditive_biproduct Y Y))).
@@ -257,16 +261,16 @@ End BiproductSwap.
 
 (** ** Commutativity of morphism addition *)
 
-Theorem morphism_addition_commutative (C : SemiAdditiveCategory) 
-  (X Y : object C) : Commutative (@morphism_addition C X Y).
-Proof.
-  intros f g.
-  unfold morphism_addition.
-  rewrite (biproduct_prod_swap C X Y f g).
-  rewrite <- Category.Core.associativity.
-  rewrite codiagonal_swap_invariant.
-  reflexivity.
-Qed.
+  Theorem morphism_addition_commutative (C : SemiAdditiveCategory) 
+    (X Y : object C) : Commutative (@morphism_addition C X Y).
+  Proof.
+    intros f g.
+    unfold morphism_addition.
+    rewrite (biproduct_prod_swap C X Y f g).
+    rewrite <- Category.Core.associativity.
+    rewrite codiagonal_swap_invariant.
+    reflexivity.
+  Qed.
 
 (** ** Associativity of morphism addition *)
 
@@ -305,7 +309,7 @@ Section Associativity.
     (f g : morphism C X Y)
     : biproduct_prod_mor (semiadditive_biproduct Y' Y') X (a o f) (a o g)
       = (biproduct_prod_mor (semiadditive_biproduct Y' Y')
-           (biproduct_obj (biproduct_data (semiadditive_biproduct Y Y)))
+           (Y ⊕ Y)
            (a o outl (biproduct_data (semiadditive_biproduct Y Y)))
            (a o outr (biproduct_data (semiadditive_biproduct Y Y)))
          o biproduct_prod_mor (semiadditive_biproduct Y Y) X f g)%morphism.
@@ -329,7 +333,7 @@ Section Associativity.
     : (biproduct_coprod_mor (semiadditive_biproduct Y' Y') Y' 
          1%morphism 1%morphism
        o (biproduct_prod_mor (semiadditive_biproduct Y' Y')
-            (biproduct_obj (biproduct_data (semiadditive_biproduct Y Y)))
+            (Y ⊕ Y)
             (a o outl (biproduct_data (semiadditive_biproduct Y Y)))
             (b o outr (biproduct_data (semiadditive_biproduct Y Y)))
           o Biproducts.inl 
@@ -362,7 +366,7 @@ Section Associativity.
     : (biproduct_coprod_mor (semiadditive_biproduct Y' Y') Y' 
          1%morphism 1%morphism
        o (biproduct_prod_mor (semiadditive_biproduct Y' Y')
-            (biproduct_obj (biproduct_data (semiadditive_biproduct Y Y)))
+            (Y ⊕ Y)
             (a o outl (biproduct_data (semiadditive_biproduct Y Y)))
             (b o outr (biproduct_data (semiadditive_biproduct Y Y)))
           o Biproducts.inr 
@@ -395,7 +399,7 @@ Section Associativity.
     : (biproduct_coprod_mor (semiadditive_biproduct Y' Y') Y' 
          1%morphism 1%morphism
        o biproduct_prod_mor (semiadditive_biproduct Y' Y')
-           (biproduct_obj (biproduct_data (semiadditive_biproduct Y Y)))
+           (Y ⊕ Y)
            (a o outl (biproduct_data (semiadditive_biproduct Y Y)))
            (b o outr (biproduct_data (semiadditive_biproduct Y Y))))%morphism
       = biproduct_coprod_mor (semiadditive_biproduct Y Y) Y' a b.
@@ -430,7 +434,7 @@ Section Associativity.
     (f1 f2 g1 g2 : morphism C X Y)
     : (outl (biproduct_data (semiadditive_biproduct Y Y)) o
        morphism_addition C X
-         (biproduct_obj (biproduct_data (semiadditive_biproduct Y Y)))
+         (Y ⊕ Y)
          (biproduct_prod_mor (semiadditive_biproduct Y Y) X f1 g1)
          (biproduct_prod_mor (semiadditive_biproduct Y Y) X f2 g2))%morphism
       = morphism_addition C X Y f1 f2.
@@ -453,7 +457,7 @@ Section Associativity.
     (f1 f2 g1 g2 : morphism C X Y)
     : (outr (biproduct_data (semiadditive_biproduct Y Y)) o
        morphism_addition C X
-         (biproduct_obj (biproduct_data (semiadditive_biproduct Y Y)))
+         (Y ⊕ Y)
          (biproduct_prod_mor (semiadditive_biproduct Y Y) X f1 g1)
          (biproduct_prod_mor (semiadditive_biproduct Y Y) X f2 g2))%morphism
       = morphism_addition C X Y g1 g2.
@@ -475,7 +479,7 @@ Section Associativity.
     (X Y : object C)
     (f1 f2 g1 g2 : morphism C X Y)
     : morphism_addition C X
-        (biproduct_obj (biproduct_data (semiadditive_biproduct Y Y)))
+        (Y ⊕ Y)
         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f1 g1)
         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f2 g2)
       = biproduct_prod_mor (semiadditive_biproduct Y Y) X
@@ -554,3 +558,4 @@ Proof.
     unfold sg_op, morphism_sgop.
     rapply (morphism_addition_commutative C X Y).
 Defined.
+    
