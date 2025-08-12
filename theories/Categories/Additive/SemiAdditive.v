@@ -53,57 +53,9 @@ End MorphismAddition.
 
 Notation "f + g" := (morphism_addition _ _ _ f g) : morphism_scope.
 
-(** ** Biproduct morphism properties
+(** ** Biproduct characterization lemmas *)
 
-    These lemmas establish key facts about morphisms built using biproducts. *)
-
-Section BiproductMorphismProperties.
-  Context (C : SemiAdditiveCategory).
-
-  (** Mixed projection/injection combinations. *)
-  Lemma proj_inj_mixed_lr (Y Z : object C) (h : morphism C Z Y) :
-    ((outl (biproduct_data (semiadditive_biproduct Y Y)) o
-      Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y))) o h)%morphism =
-    zero_morphism Z Y.
-  Proof.
-    rewrite (mixed_l (biproduct_is (semiadditive_biproduct Y Y))).
-    rapply zero_morphism_left.
-  Qed.
-
-  Lemma proj_inj_mixed_rl (Y Z : object C) (h : morphism C Z Y) :
-    ((outr (biproduct_data (semiadditive_biproduct Y Y)) o
-      Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y))) o h)%morphism =
-    zero_morphism Z Y.
-  Proof.
-    rewrite (mixed_r (biproduct_is (semiadditive_biproduct Y Y))).
-    rapply zero_morphism_left.
-  Qed.
-
-  (** Matched projection/injection combinations. *)
-  Lemma proj_inj_matched_l (Y Z : object C) (h : morphism C Z Y) :
-    ((outl (biproduct_data (semiadditive_biproduct Y Y)) o
-      Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y))) o h)%morphism = h.
-  Proof.
-    rewrite (beta_l (biproduct_is (semiadditive_biproduct Y Y))).
-    rapply Category.Core.left_identity.
-  Qed.
-
-  Lemma proj_inj_matched_r (Y Z : object C) (h : morphism C Z Y) :
-    ((outr (biproduct_data (semiadditive_biproduct Y Y)) o
-      Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y))) o h)%morphism = h.
-  Proof.
-    rewrite (beta_r (biproduct_is (semiadditive_biproduct Y Y))).
-    rapply Category.Core.left_identity.
-  Qed.
-
-End BiproductMorphismProperties.
-
-(** ** Uniqueness of biproduct morphisms
-
-    These lemmas establish the universal property of biproducts
-    and uniqueness of morphisms. *)
-
-Section BiproductUniqueness.
+Section BiproductCharacterization.
   Context (C : SemiAdditiveCategory).
 
   (** Every morphism into a biproduct is uniquely determined by its projections. *)
@@ -129,8 +81,12 @@ Section BiproductUniqueness.
   Proof.
     symmetry.
     rapply biproduct_morphism_unique.
-    - rewrite <- Category.Core.associativity. rapply proj_inj_matched_l.
-    - rewrite <- Category.Core.associativity. rapply proj_inj_mixed_rl.
+    - rewrite <- Category.Core.associativity.
+      rewrite (beta_l (biproduct_is (semiadditive_biproduct Y Y))).
+      rapply Category.Core.left_identity.
+    - rewrite <- Category.Core.associativity.
+      rewrite (mixed_r (biproduct_is (semiadditive_biproduct Y Y))).
+      rapply zero_morphism_left.
   Qed.
 
   Lemma biproduct_zero_left_is_inr (Y Z : object C) (h : morphism C Z Y) :
@@ -139,64 +95,13 @@ Section BiproductUniqueness.
   Proof.
     symmetry.
     rapply biproduct_morphism_unique.
-    - rewrite <- Category.Core.associativity. rapply proj_inj_mixed_lr.
-    - rewrite <- Category.Core.associativity. rapply proj_inj_matched_r.
+    - rewrite <- Category.Core.associativity.
+      rewrite (mixed_l (biproduct_is (semiadditive_biproduct Y Y))).
+      rapply zero_morphism_left.
+    - rewrite <- Category.Core.associativity.
+      rewrite (beta_r (biproduct_is (semiadditive_biproduct Y Y))).
+      rapply Category.Core.left_identity.
   Qed.
-
-End BiproductUniqueness.
-
-(** ** Identity laws for morphism addition
-
-    The main results showing that zero is a left and right identity. *)
-
-Section IdentityLaws.
-  Context (C : SemiAdditiveCategory).
-
-  (** Helper: codiagonal of zero/morphism simplifies. *)
-  Lemma codiagonal_zero_right (Y Z : object C) (h : morphism C Z Y) :
-    (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
-     biproduct_prod_mor (semiadditive_biproduct Y Y) Z (zero_morphism Z Y) h)%morphism = h.
-  Proof.
-    rewrite biproduct_zero_left_is_inr.
-    rewrite <- Category.Core.associativity.
-    rewrite biproduct_coprod_beta_r.
-    rapply Category.Core.left_identity.
-  Qed.
-
-  Lemma codiagonal_zero_left (Y Z : object C) (h : morphism C Z Y) :
-    (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
-     biproduct_prod_mor (semiadditive_biproduct Y Y) Z h (zero_morphism Z Y))%morphism = h.
-  Proof.
-    rewrite biproduct_zero_right_is_inl.
-    rewrite <- Category.Core.associativity.
-    rewrite biproduct_coprod_beta_l.
-    rapply Category.Core.left_identity.
-  Qed.
-
-  (** Zero is a left identity for morphism addition. *)
-  Theorem zero_left_identity (X Y : object C) (f : morphism C X Y) :
-    morphism_addition C X Y (zero_morphism X Y) f = f.
-  Proof.
-    (* addition = ∇ ∘ ⟨0,f⟩ *)
-    unfold morphism_addition.
-    rapply codiagonal_zero_right.
-  Qed.
-
-  (** Zero is a right identity for morphism addition. *)
-  Theorem zero_right_identity (X Y : object C) (f : morphism C X Y) :
-    morphism_addition C X Y f (zero_morphism X Y) = f.
-  Proof.
-    (* addition = ∇ ∘ ⟨f,0⟩ *)
-    unfold morphism_addition.
-    rapply codiagonal_zero_left.
-  Qed.
-
-End IdentityLaws.
-
-(** ** Helper lemmas for basic biproduct operations *)
-
-Section BiproductHelpers.
-  Context (C : SemiAdditiveCategory).
 
   (** Composition of biproduct morphisms. *)
   Lemma biproduct_comp_general (W X Y Z : object C)
@@ -220,7 +125,36 @@ Section BiproductHelpers.
     exact (ap pr1 (@path_contr _ bp_univ (lhs; (Hl, Hr)) (@center _ bp_univ))).
   Qed.
 
-End BiproductHelpers.
+End BiproductCharacterization.
+
+(** ** Identity laws for morphism addition *)
+
+Section IdentityLaws.
+  Context (C : SemiAdditiveCategory).
+
+  (** Zero is a left identity for morphism addition. *)
+  Theorem zero_left_identity (X Y : object C) (f : morphism C X Y) :
+    morphism_addition C X Y (zero_morphism X Y) f = f.
+  Proof.
+    unfold morphism_addition.
+    rewrite biproduct_zero_left_is_inr.
+    rewrite <- Category.Core.associativity.
+    rewrite biproduct_coprod_beta_r.
+    rapply Category.Core.left_identity.
+  Qed.
+
+  (** Zero is a right identity for morphism addition. *)
+  Theorem zero_right_identity (X Y : object C) (f : morphism C X Y) :
+    morphism_addition C X Y f (zero_morphism X Y) = f.
+  Proof.
+    unfold morphism_addition.
+    rewrite biproduct_zero_right_is_inl.
+    rewrite <- Category.Core.associativity.
+    rewrite biproduct_coprod_beta_l.
+    rapply Category.Core.left_identity.
+  Qed.
+
+End IdentityLaws.
 
 (** ** Swap morphism for biproducts *)
 
@@ -298,9 +232,8 @@ Section BiproductSwap.
 
 End BiproductSwap.
 
-(** ** Commutative Theorem *)
+(** ** Commutativity of morphism addition *)
 
-(** Commutativity of morphism addition. *)
 Theorem morphism_addition_commutative (C : SemiAdditiveCategory) (X Y : object C)
   : Commutative (@morphism_addition C X Y).
 Proof.
@@ -563,12 +496,17 @@ Section Associativity.
                (biproduct_prod_mor BY X f (zero_morphism X Y))
                (biproduct_prod_mor BY X g h)
                (biproduct_coprod_mor BY Y 1%morphism 1%morphism)).
-    rewrite (@codiagonal_zero_left C Y X f).
+    rewrite biproduct_zero_right_is_inl.
+    rewrite <- Category.Core.associativity.
+    rewrite biproduct_coprod_beta_l.
+    rewrite Category.Core.left_identity.
     fold (morphism_addition C X Y g h).
     reflexivity.
   Qed.
 
 End Associativity.
+
+(** ** Main theorem: morphism sets form commutative monoids *)
 
 Instance is_commutative_monoid_morphisms (C : SemiAdditiveCategory) (X Y : object C)
   : IsCommutativeMonoid (morphism C X Y).
