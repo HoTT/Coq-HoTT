@@ -21,7 +21,7 @@ Coercion cat : SemiAdditiveCategory >-> PreCategory.
 
 (** ** Morphism addition via biproducts 
 
-    Morphism addition can be defined using the
+    The key insight is that morphism addition can be defined using the
     diagonal morphism X → X⊕X, the biproduct morphism, and the 
     codiagonal morphism Y⊕Y → Y. *)
 
@@ -86,7 +86,7 @@ Section BiproductBasics.
     (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
      Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y)))%morphism = 
     1%morphism.
-  Proof. rapply biproduct_coprod_bet a_l. Qed.
+  Proof. rapply biproduct_coprod_beta_l. Qed.
 
   Lemma inr_codiagonal (Y : object C) :
     (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
@@ -107,12 +107,12 @@ Section ZeroMorphismProperties.
   Lemma zero_through_proj_left (X Y : object C) :
     ((zero_morphism X Y) o outl (biproduct_data (semiadditive_biproduct X X)))%morphism = 
     zero_morphism (biproduct_obj (biproduct_data (semiadditive_biproduct X X))) Y.
-  Proof. apply zero_morphism_left. Qed.
+  Proof. rapply zero_morphism_left. Qed.
 
   Lemma zero_through_proj_right (X Y : object C) :
     ((zero_morphism X Y) o outr (biproduct_data (semiadditive_biproduct X X)))%morphism = 
     zero_morphism (biproduct_obj (biproduct_data (semiadditive_biproduct X X))) Y.
-  Proof. apply zero_morphism_left. Qed.
+  Proof. rapply zero_morphism_left. Qed.
 
   (** Biproduct morphisms preserve zero in components. *)
   Lemma biproduct_mor_zero_left (X Y : object C) (f : morphism C X Y) :
@@ -124,7 +124,7 @@ Section ZeroMorphismProperties.
       (biproduct_obj (biproduct_data (semiadditive_biproduct X X)))
       (zero_morphism (biproduct_obj (biproduct_data (semiadditive_biproduct X X))) Y)
       (f o outr (biproduct_data (semiadditive_biproduct X X))).
-  Proof. f_ap; apply zero_through_proj_left. Qed.
+  Proof. f_ap; rapply zero_through_proj_left. Qed.
 
   Lemma biproduct_mor_zero_right (X Y : object C) (f : morphism C X Y) :
     biproduct_prod_mor (semiadditive_biproduct Y Y) 
@@ -135,7 +135,7 @@ Section ZeroMorphismProperties.
       (biproduct_obj (biproduct_data (semiadditive_biproduct X X)))
       (f o outl (biproduct_data (semiadditive_biproduct X X)))
       (zero_morphism (biproduct_obj (biproduct_data (semiadditive_biproduct X X))) Y).
-  Proof. f_ap; apply zero_through_proj_right. Qed.
+  Proof. f_ap; rapply zero_through_proj_right. Qed.
 
 End ZeroMorphismProperties.
 
