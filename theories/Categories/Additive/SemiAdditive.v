@@ -65,8 +65,7 @@ Section BiproductCharacterization.
   (** Every morphism into a biproduct is uniquely determined by 
       its projections. *)
   Lemma biproduct_morphism_unique (Y Z : object C)
-    (h : morphism C Z 
-      (Y ⊕ Y))
+    (h : morphism C Z (Y ⊕ Y))
     (f g : morphism C Z Y)
     : (outl (biproduct_data (semiadditive_biproduct Y Y)) o h 
        = f)%morphism
@@ -184,13 +183,11 @@ Section BiproductSwap.
 
   (** The swap morphism for biproducts. *)
   Definition biproduct_swap (A : object C) 
-    : morphism C 
-        (biproduct_obj (biproduct_data (semiadditive_biproduct A A)))
-        (biproduct_obj (biproduct_data (semiadditive_biproduct A A)))
-    := biproduct_prod_mor (semiadditive_biproduct A A) 
-         (biproduct_obj (biproduct_data (semiadditive_biproduct A A)))
-         (outr (biproduct_data (semiadditive_biproduct A A)))
-         (outl (biproduct_data (semiadditive_biproduct A A))).
+  : morphism C (A ⊕ A) (A ⊕ A)
+  := biproduct_prod_mor (semiadditive_biproduct A A) 
+       (A ⊕ A)
+       (outr (biproduct_data (semiadditive_biproduct A A)))
+       (outl (biproduct_data (semiadditive_biproduct A A))).
 
   (** Swapping components of a biproduct morphism. *)
   Lemma biproduct_prod_swap (A B : object C) 
@@ -344,7 +341,7 @@ Section Associativity.
     set (BY' := semiadditive_biproduct Y' Y').
     rewrite <- Category.Core.associativity.
     rewrite (@addition_precompose
-               (biproduct_obj (biproduct_data BY))
+               (Y ⊕ Y)
                Y'
                Y
                ((a o outl (biproduct_data BY))%morphism)
@@ -377,7 +374,7 @@ Section Associativity.
     set (BY' := semiadditive_biproduct Y' Y').
     rewrite <- Category.Core.associativity.
     rewrite (@addition_precompose
-               (biproduct_obj (biproduct_data BY))
+               (Y ⊕ Y)
                Y'
                Y
                ((a o outl (biproduct_data BY))%morphism)
@@ -432,8 +429,7 @@ Section Associativity.
   Lemma addition_of_pairs
     (X Y : object C)
     (f1 f2 g1 g2 : morphism C X Y)
-    : morphism_addition C X
-        (Y ⊕ Y)
+    : morphism_addition C X (Y ⊕ Y)
         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f1 g1)
         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f2 g2)
       = biproduct_prod_mor (semiadditive_biproduct Y Y) X
@@ -472,7 +468,7 @@ Section Associativity.
     rewrite <- (addition_of_pairs X Y f g (zero_morphism X Y) h).
     rewrite (addition_postcompose
                X
-               (biproduct_obj (biproduct_data BY))
+               (Y ⊕ Y)
                Y
                (biproduct_prod_mor BY X f (zero_morphism X Y))
                (biproduct_prod_mor BY X g h)
