@@ -1722,7 +1722,7 @@ Defined.
 (** Exercise 5.2 *)
 
 Section Book_5_2.
-  (** Here is one example of functions which are propositionally equal but not judgmentally equal.  They satisfy the same reucrrence propositionally. *)
+  (** Here is one example of functions which are propositionally equal but not judgmentally equal.  They satisfy the same recurrence propositionally. *)
   Let ez : Bool := true.
   Let es : nat -> Bool -> Bool := fun _ => idmap.
   Definition Book_5_2_i : nat -> Bool := nat_ind (fun _ => Bool) ez es.
@@ -1736,7 +1736,7 @@ End Book_5_2.
 
 Section Book_5_2'.
   Local Open Scope nat_scope.
-  (** Here's another example where two functions are not (currently) definitionally equal, but satisfy the same reucrrence judgmentally.  This example is a bit less robust; it fails in CoqMT. *)
+  (** Here's another example where two functions are not (currently) definitionally equal, but satisfy the same recurrence judgmentally.  This example is a bit less robust; it fails in CoqMT. *)
   Let ez : nat := 1.
   Let es : nat -> nat -> nat := fun _ => S.
   Definition Book_5_2'_i : nat -> nat := fun n => n + 1.

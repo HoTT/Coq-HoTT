@@ -29,7 +29,7 @@ Proof.
   apply f.
 Defined.
 
-(** A useful lemma to show than two sequences are equivalent. *)
+(** A useful lemma to show that two sequences are equivalent. *)
 
 Definition equiv_sequence (D1 D2 : Sequence)
   (H0 : (D1 0) <~> (D2 0))

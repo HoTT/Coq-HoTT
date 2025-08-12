@@ -10,7 +10,7 @@ Require Import Types.Forall Types.Sigma Types.Prod Types.WType.
 Inductive IW
   (I : Type) (** The indexing type *)
   (A : Type) (** The type of labels / constructors / data *)
-  (B : A -> Type) (** The the type of arities / arguments / children *)
+  (B : A -> Type) (** The type of arities / arguments / children *)
   (i : A -> I) (** The index map (for labels) *)
   (j : forall x, B x -> I) (** The index map for arguments *)
   : I -> Type :=

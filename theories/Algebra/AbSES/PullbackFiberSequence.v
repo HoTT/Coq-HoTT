@@ -14,7 +14,7 @@ Local Open Scope mc_add_scope.
 
 We will prove the analog of exactness in terms of path data, and deduce the usual notion. *)
 
-(** If a short exact sequence [A -> F -> E] becomes trivial after pulling back along an inclusion [i : B -> E], then there is a "transpose" short exact sequence [B -> F -> F/B]. We begin by constructing the the map [B -> F]. *)
+(** If a short exact sequence [A -> F -> E] becomes trivial after pulling back along an inclusion [i : B -> E], then there is a "transpose" short exact sequence [B -> F -> F/B]. We begin by constructing the map [B -> F]. *)
 Definition abses_pullback_inclusion_transpose_map {A B E : AbGroup}
       (i : B $-> E) `{IsEmbedding i}
       (F : AbSES E A) (p : abses_pullback i F $== pt)
