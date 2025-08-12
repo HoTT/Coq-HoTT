@@ -53,42 +53,6 @@ End MorphismAddition.
 
 Notation "f + g" := (morphism_addition _ _ _ f g) : morphism_scope.
 
-(** ** Basic biproduct properties
-
-    These lemmas capture the fundamental relationships between
-    diagonal/codiagonal morphisms and projections/injections. *)
-
-Section BiproductBasics.
-  Context (C : SemiAdditiveCategory).
-
-  (** Projecting after diagonal gives identity. *)
-  Lemma diagonal_outl (X : object C) :
-    (outl (biproduct_data (semiadditive_biproduct X X)) o 
-     biproduct_prod_mor (semiadditive_biproduct X X) X 1%morphism 1%morphism)%morphism = 
-    1%morphism.
-  Proof. rapply biproduct_prod_beta_l. Qed.
-
-  Lemma diagonal_outr (X : object C) :
-    (outr (biproduct_data (semiadditive_biproduct X X)) o 
-     biproduct_prod_mor (semiadditive_biproduct X X) X 1%morphism 1%morphism)%morphism = 
-    1%morphism.
-  Proof. rapply biproduct_prod_beta_r. Qed.
-
-  (** Codiagonal after injection gives identity. *)
-  Lemma inl_codiagonal (Y : object C) :
-    (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
-     Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y)))%morphism = 
-    1%morphism.
-  Proof. rapply biproduct_coprod_beta_l. Qed.
-
-  Lemma inr_codiagonal (Y : object C) :
-    (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
-     Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y)))%morphism = 
-    1%morphism.
-  Proof. rapply biproduct_coprod_beta_r. Qed.
-
-End BiproductBasics.
-
 (** ** Zero morphism properties 
 
     These lemmas show how zero morphisms interact with biproduct structures. *)
@@ -145,7 +109,7 @@ Section BiproductMorphismProperties.
      biproduct_prod_mor (semiadditive_biproduct X X) X 1%morphism 1%morphism)%morphism = g.
   Proof.
     rewrite Category.Core.associativity.
-    rewrite diagonal_outr.
+    rewrite biproduct_prod_beta_r.
     rapply Category.Core.right_identity.
   Qed.
 
@@ -154,7 +118,7 @@ Section BiproductMorphismProperties.
      biproduct_prod_mor (semiadditive_biproduct X X) X 1%morphism 1%morphism)%morphism = f.
   Proof.
     rewrite Category.Core.associativity.
-    rewrite diagonal_outl.
+    rewrite biproduct_prod_beta_l.
     rapply Category.Core.right_identity.
   Qed.
 
@@ -257,7 +221,7 @@ Section IdentityLaws.
   Proof.
     rewrite biproduct_zero_left_is_inr.
     rewrite <- Category.Core.associativity.
-    rewrite inr_codiagonal.
+    rewrite biproduct_coprod_beta_r.
     rapply Category.Core.left_identity.
   Qed.
 
@@ -267,7 +231,7 @@ Section IdentityLaws.
   Proof.
     rewrite biproduct_zero_right_is_inl.
     rewrite <- Category.Core.associativity.
-    rewrite inl_codiagonal.
+    rewrite biproduct_coprod_beta_l.
     rapply Category.Core.left_identity.
   Qed.
 
@@ -476,10 +440,10 @@ Proof.
   set (B := semiadditive_biproduct Y Y).
   rapply (biproduct_coprod_unique B Y' a a).
   - rewrite Category.Core.associativity.
-    rewrite inl_codiagonal.
+    rewrite biproduct_coprod_beta_l.
     rapply Category.Core.right_identity.
   - rewrite Category.Core.associativity.
-    rewrite inr_codiagonal.
+    rewrite biproduct_coprod_beta_r.
     rapply Category.Core.right_identity.
 Qed.
 
@@ -779,3 +743,4 @@ Proof.
   - exact _.
   - exact _.
 Defined.
+    
