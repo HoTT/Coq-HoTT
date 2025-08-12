@@ -554,18 +554,3 @@ Proof.
     unfold sg_op, morphism_sgop.
     rapply (morphism_addition_commutative C X Y).
 Defined.
-
-(** ** Export hints and derived instances *)
-
-#[export] Instance is_semigroup_morphisms (C : SemiAdditiveCategory) 
-  (X Y : object C) : IsSemiGroup (morphism C X Y)
-  := _.
-  
-#[export] Instance is_commutative_semigroup_morphisms 
-  (C : SemiAdditiveCategory) (X Y : object C)
-  : IsCommutativeSemiGroup (morphism C X Y).
-Proof.
-  split.
-  - exact _.
-  - exact _.
-Defined.
