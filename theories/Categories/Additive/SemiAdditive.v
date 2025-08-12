@@ -428,53 +428,7 @@ Section Associativity.
     rewrite <- (biproduct_pair_naturality X Y Y' a f g).
     reflexivity.
   Qed.
-
-  Lemma outl_addition_of_pairs
-    (X Y : object C)
-    (f1 f2 g1 g2 : morphism C X Y)
-    : (outl (biproduct_data (semiadditive_biproduct Y Y)) o
-       morphism_addition C X
-         (Y ⊕ Y)
-         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f1 g1)
-         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f2 g2))%morphism
-      = morphism_addition C X Y f1 f2.
-  Proof.
-    set (BY := semiadditive_biproduct Y Y).
-    rewrite (@addition_postcompose
-             X
-             (biproduct_obj (biproduct_data BY))
-             Y
-             (biproduct_prod_mor BY X f1 g1)
-             (biproduct_prod_mor BY X f2 g2)
-             (outl (biproduct_data BY))).
-    rewrite biproduct_prod_beta_l.
-    rewrite biproduct_prod_beta_l.
-    reflexivity.
-  Qed.
-
-  Lemma outr_addition_of_pairs
-    (X Y : object C)
-    (f1 f2 g1 g2 : morphism C X Y)
-    : (outr (biproduct_data (semiadditive_biproduct Y Y)) o
-       morphism_addition C X
-         (Y ⊕ Y)
-         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f1 g1)
-         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f2 g2))%morphism
-      = morphism_addition C X Y g1 g2.
-  Proof.
-    set (BY := semiadditive_biproduct Y Y).
-    rewrite (@addition_postcompose
-             X
-             (biproduct_obj (biproduct_data BY))
-             Y
-             (biproduct_prod_mor BY X f1 g1)
-             (biproduct_prod_mor BY X f2 g2)
-             (outr (biproduct_data BY))).
-    rewrite biproduct_prod_beta_r.
-    rewrite biproduct_prod_beta_r.
-    reflexivity.
-  Qed.
-
+  
   Lemma addition_of_pairs
     (X Y : object C)
     (f1 f2 g1 g2 : morphism C X Y)
@@ -487,16 +441,15 @@ Section Associativity.
           (morphism_addition C X Y g1 g2).
   Proof.
     set (BY := semiadditive_biproduct Y Y).
-    refine (biproduct_morphism_unique C Y X
-              (morphism_addition C X 
-                (biproduct_obj (biproduct_data BY))
-                (biproduct_prod_mor BY X f1 g1)
-                (biproduct_prod_mor BY X f2 g2))
-              (morphism_addition C X Y f1 f2)
-              (morphism_addition C X Y g1 g2)
-              _ _).
-    - rapply outl_addition_of_pairs.
-    - rapply outr_addition_of_pairs.
+    rapply (biproduct_morphism_unique C Y X).
+    - rewrite (@addition_postcompose X _ Y _ _ (outl (biproduct_data BY))).
+      rewrite biproduct_prod_beta_l.
+      rewrite biproduct_prod_beta_l.
+      reflexivity.
+    - rewrite (@addition_postcompose X _ Y _ _ (outr (biproduct_data BY))).
+      rewrite biproduct_prod_beta_r.
+      rewrite biproduct_prod_beta_r.
+      reflexivity.
   Qed.
 
   Theorem morphism_addition_associative
