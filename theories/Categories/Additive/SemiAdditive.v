@@ -555,24 +555,6 @@ Proof.
     rapply (morphism_addition_commutative C X Y).
 Defined.
 
-(** ** Bilinearity of composition *)
-
-Theorem composition_left_distributive (C : SemiAdditiveCategory) 
-  {X Y Z : object C}
-  (h : morphism C Y Z) (f g : morphism C X Y)
-  : (h o (f + g))%morphism = ((h o f) + (h o g))%morphism.
-Proof.
-  exact (addition_postcompose C X Y Z f g h).
-Qed.
-
-Theorem composition_right_distributive (C : SemiAdditiveCategory) 
-  {X Y Z : object C}
-  (f g : morphism C Y Z) (h : morphism C X Y)
-  : ((f + g) o h)%morphism = ((f o h) + (g o h))%morphism.
-Proof.
-  exact (addition_precompose C Y Z X f g h).
-Qed.
-
 (** ** Export hints and derived instances *)
 
 #[export] Instance is_semigroup_morphisms (C : SemiAdditiveCategory) 
@@ -587,4 +569,3 @@ Proof.
   - exact _.
   - exact _.
 Defined.
-    
