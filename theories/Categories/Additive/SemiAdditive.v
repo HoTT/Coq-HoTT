@@ -21,25 +21,18 @@ Coercion cat : SemiAdditiveCategory >-> PreCategory.
 
 (** ** Morphism addition via biproducts 
 
-    The key insight is that morphism addition can be defined using the
-    diagonal morphism X → X⊕X, the biproduct morphism, and the 
-    codiagonal morphism Y⊕Y → Y. *)
+    Key idea: addition of f,g : X → Y is the codiagonal ∇ : Y⊕Y → Y
+    postcomposed with the pairing ⟨f,g⟩ : X → Y⊕Y.
+*)
 
 Section MorphismAddition.
   Context (C : SemiAdditiveCategory) (X Y : object C).
   
-  (** Addition of morphisms f,g : X → Y is defined as:
-      X → X⊕X → Y⊕Y → Y
-      where the middle map applies f to the left component and g to the right. *)
-  Definition morphism_addition : SgOp (morphism C X Y).
-  Proof.
-    intros f g.
-    refine (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o _)%morphism.
-    refine (biproduct_prod_mor (semiadditive_biproduct Y Y) _ _ _ o _)%morphism.
-    - exact (f o outl (biproduct_data (semiadditive_biproduct X X)))%morphism.
-    - exact (g o outr (biproduct_data (semiadditive_biproduct X X)))%morphism.
-    - exact (biproduct_prod_mor (semiadditive_biproduct X X) X 1%morphism 1%morphism).
-  Defined.
+  (** Direct, standard definition: ∇ ∘ ⟨f,g⟩. *)
+  Definition morphism_addition : SgOp (morphism C X Y) :=
+    fun f g =>
+      (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism
+       o biproduct_prod_mor (semiadditive_biproduct Y Y) X f g)%morphism.
   
   (** The zero morphism is the unit for addition. *)
   Definition morphism_zero : MonUnit (morphism C X Y)
@@ -282,26 +275,18 @@ Section IdentityLaws.
   Theorem zero_left_identity (X Y : object C) (f : morphism C X Y) :
     morphism_addition C X Y (zero_morphism X Y) f = f.
   Proof.
+    (* addition = ∇ ∘ ⟨0,f⟩ *)
     unfold morphism_addition.
-    rewrite biproduct_mor_zero_left.
-    set (X2 := semiadditive_biproduct X X).
-    set (Y2 := semiadditive_biproduct Y Y).
-    rewrite <- Category.Core.associativity.
-    rewrite codiagonal_zero_right.
-    rapply compose_through_diagonal_right.
+    rapply codiagonal_zero_right.
   Qed.
 
   (** Zero is a right identity for morphism addition. *)
   Theorem zero_right_identity (X Y : object C) (f : morphism C X Y) :
     morphism_addition C X Y f (zero_morphism X Y) = f.
   Proof.
+    (* addition = ∇ ∘ ⟨f,0⟩ *)
     unfold morphism_addition.
-    rewrite biproduct_mor_zero_right.
-    set (X2 := semiadditive_biproduct X X).
-    set (Y2 := semiadditive_biproduct Y Y).
-    rewrite <- Category.Core.associativity.
-    rewrite codiagonal_zero_left.
-    rapply compose_through_diagonal_left.
+    rapply codiagonal_zero_left.
   Qed.
 
 End IdentityLaws.
@@ -366,20 +351,13 @@ Section BiproductHelpers.
     exact (ap pr1 (@path_contr _ bp_univ (lhs; (Hl, Hr)) (@center _ bp_univ))).
   Qed.
 
-  (** Full simplification of morphism addition. *)
+  (** With the new direct definition, this is judgmental. *)
   Lemma morphism_addition_simplify (X Y : object C) 
     (f g : morphism C X Y) :
     morphism_addition C X Y f g = 
     (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o
      biproduct_prod_mor (semiadditive_biproduct Y Y) X f g)%morphism.
-  Proof.
-    unfold morphism_addition.
-    f_ap.
-    rewrite biproduct_comp_general.
-    f_ap.
-    - rewrite compose_through_diagonal_left. reflexivity.
-    - rewrite compose_through_diagonal_right. reflexivity.
-  Qed.
+  Proof. reflexivity. Qed.
 
 End BiproductHelpers.
 
@@ -661,16 +639,16 @@ Lemma outl_addition_of_pairs
   morphism_addition C X Y f1 f2.
 Proof.
   set (BY := semiadditive_biproduct Y Y).
-rewrite (@addition_postcompose
+  rewrite (@addition_postcompose
            X
            (biproduct_obj (biproduct_data BY))
            Y
            (biproduct_prod_mor BY X f1 g1)
            (biproduct_prod_mor BY X f2 g2)
            (outl (biproduct_data BY))).
-rewrite outl_biproduct_prod.
-rewrite outl_biproduct_prod.
-reflexivity.
+  rewrite outl_biproduct_prod.
+  rewrite outl_biproduct_prod.
+  reflexivity.
 Qed.
 
 Lemma outr_addition_of_pairs
