@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Functors.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Functors about currying, between [C₁ × C₂ → D] and [C₁ → (C₂ → D)] *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chkb"><span class="kn">Require Import</span> Category.Core Category.Prod FunctorCategory.Core Functor.Core NaturalTransformation.Core NaturalTransformation.Paths.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">law4</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C1</span> <span class="nv">C2</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">do_exponential4_helper</span> rew_comp :=
+    <span class="nb">intros</span>; <span class="nb">simpl</span>;
+    <span class="kp">repeat</span> (<span class="nb">simpl</span>;
+            <span class="kr">match goal with</span>
+              | _ =&gt; <span class="bp">reflexivity</span>
+              | _ =&gt; <span class="kp">progress</span> rew_comp
+              | _ =&gt; <span class="nb">rewrite</span> !identity_of
+              | _ =&gt; <span class="nb">rewrite</span> !left_identity
+              | _ =&gt; <span class="nb">rewrite</span> !right_identity
+              | _ =&gt; <span class="nb">rewrite</span> <span class="nl">?associativity</span>; <span class="kp">progress</span> f_ap
+              | _ =&gt; <span class="nb">rewrite</span> &lt;- <span class="nl">?associativity</span>; <span class="kp">progress</span> f_ap
+              | _ =&gt; <span class="nb">rewrite</span> !commutes
+              | _ =&gt; <span class="nb">rewrite</span> <span class="nl">?associativity</span>, !commutes
+              | _ =&gt; <span class="nb">rewrite</span> &lt;- <span class="nl">?associativity</span>, !commutes
+            <span class="kr">end</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** [(yⁿ)ᵐ → yⁿᵐ] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">do_exponential4</span>
+      := do_exponential4_helper <span class="kp">ltac</span>:(<span class="nb">rewrite</span> !composition_of).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chkc"><span class="kn">Definition</span> <span class="nf">functor_object_of</span>
+    : (C1 -&gt; (C2 -&gt; D))%category -&gt; (C1 * C2 -&gt; D)%category.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(C1 -&gt; C2 -&gt; D)%category -&gt; (C1 * C2 -&gt; D)%category</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chkd"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(C1 -&gt; C2 -&gt; D)%category -&gt; (C1 * C2 -&gt; D)%category</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chke"><span class="nb">intro</span> F; <span class="nb">hnf</span> <span class="kr">in</span> F |- *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C1 (C2 -&gt; D)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C1 * C2) D</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+                (C1 * C2) D
+                (<span class="kr">fun</span> <span class="nv">c1c2</span> =&gt; F (fst c1c2) (snd c1c2))
+                (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span> =&gt; F (fst d) _1 (snd m) o (F _1 (fst m)) (snd s))
+                _
+                _);
+        <span class="kp">abstract</span> do_exponential4.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chkf"><span class="kn">Definition</span> <span class="nf">functor_morphism_of</span>
+               <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism (C1 -&gt; (C2 -&gt; D)) s d)
+    : morphism (C1 * C2 -&gt; D)
+               (functor_object_of s)
+               (functor_object_of d).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 -&gt; C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 -&gt; C2 -&gt; D) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (C1 * C2 -&gt; D) (functor_object_of s)
+  (functor_object_of d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk10"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 -&gt; C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 -&gt; C2 -&gt; D) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (C1 * C2 -&gt; D) (functor_object_of s)
+  (functor_object_of d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk11"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 -&gt; C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 -&gt; C2 -&gt; D) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (functor_object_of s)
+  (functor_object_of d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_NaturalTransformation
+                (functor_object_of s)
+                (functor_object_of d)
+                (<span class="kr">fun</span> <span class="nv">c</span> =&gt; m (fst c) (snd c))
+                _);
+        <span class="kp">abstract</span> (
+            <span class="kp">repeat</span> <span class="kr">match goal with</span>
+                     | [ |- <span class="kp">context</span>[components_of <span class="nl">?T</span> <span class="nl">?x</span> o components_of <span class="nl">?U</span> <span class="nl">?x</span>] ] =&gt;
+                       <span class="nb">change</span> (T x o U x) <span class="kr">with</span> ((compose (C := (_ -&gt; _)) T U) x)
+                     | _ =&gt; f_ap
+                     | _ =&gt; <span class="nb">rewrite</span> !commutes
+                     | _ =&gt; do_exponential4
+                   <span class="kr">end</span>
+          ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk12"><span class="kn">Definition</span> <span class="nf">functor</span>
+    : Functor (C1 -&gt; (C2 -&gt; D)) (C1 * C2 -&gt; D).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C1 -&gt; C2 -&gt; D) (C1 * C2 -&gt; D)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk13"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C1 -&gt; C2 -&gt; D) (C1 * C2 -&gt; D)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+                (C1 -&gt; (C2 -&gt; D)) (C1 * C2 -&gt; D)
+                functor_object_of
+                functor_morphism_of
+                _
+                _);
+      <span class="kp">abstract</span> <span class="bp">by</span> path_natural_transformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** [yⁿᵐ → (yⁿ)ᵐ] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">inverse</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">do_exponential4_inverse</span>
+      := do_exponential4_helper <span class="kp">ltac</span>:(<span class="nb">rewrite</span> &lt;- !composition_of).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">object_of</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor (C1 * C2) D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk14"><span class="kn">Definition</span> <span class="nf">inverse_object_of_object_of</span>
+      : C1 -&gt; (C2 -&gt; D)%category.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C1 * C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">C1 -&gt; (C2 -&gt; D)%category</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk15"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C1 * C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">C1 -&gt; (C2 -&gt; D)%category</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk16"><span class="nb">intro</span> c1.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C1 * C2) D</span></span></span><br><span><var>c1</var><span class="hyp-type"><b>: </b><span>C1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(C2 -&gt; D)%category</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+                  C2 D
+                  (<span class="kr">fun</span> <span class="nv">c2</span> =&gt; F (c1, c2))
+                  (<span class="kr">fun</span> <span class="nv">s2</span> <span class="nv">d2</span> <span class="nv">m2</span> =&gt; F _1 ((identity c1, m2) : morphism (_ * _) (c1, s2) (c1, d2)))
+                  _
+                  _);
+          <span class="kp">abstract</span> do_exponential4_inverse.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk17"><span class="kn">Definition</span> <span class="nf">inverse_object_of_morphism_of</span>
+                 <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C1 s d)
+      : morphism (C2 -&gt; D)
+                 (inverse_object_of_object_of s)
+                 (inverse_object_of_object_of d).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C1 * C2) D</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C1</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C1 s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (C2 -&gt; D) (inverse_object_of_object_of s)
+  (inverse_object_of_object_of d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk18"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C1 * C2) D</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C1</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C1 s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (C2 -&gt; D) (inverse_object_of_object_of s)
+  (inverse_object_of_object_of d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_NaturalTransformation
+                  (inverse_object_of_object_of s)
+                  (inverse_object_of_object_of d)
+                  (<span class="kr">fun</span> <span class="nv">c</span> =&gt; F _1 ((m, identity c) : morphism (_ * _) (s, c) (d, c)))
+                  _);
+        <span class="kp">abstract</span> do_exponential4_inverse.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk19"><span class="kn">Definition</span> <span class="nf">inverse_object_of</span>
+      : (C1 -&gt; (C2 -&gt; D))%category.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C1 * C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(C1 -&gt; C2 -&gt; D)%category</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk1a"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C1 * C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(C1 -&gt; C2 -&gt; D)%category</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+                  C1 (C2 -&gt; D)
+                  inverse_object_of_object_of
+                  inverse_object_of_morphism_of
+                  _
+                  _);
+        <span class="kp">abstract</span> (path_natural_transformation; do_exponential4_inverse).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">object_of</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">morphism_of</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk1b"><span class="kn">Definition</span> <span class="nf">inverse_morphism_of_components_of</span>
+                 <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism (C1 * C2 -&gt; D) s d)
+      : <span class="kr">forall</span> <span class="nv">c</span>, morphism (C2 -&gt; D)
+                           ((inverse_object_of s) c)
+                           ((inverse_object_of d) c).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 * C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 * C2 -&gt; D) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">c</span> : C1,
+morphism (C2 -&gt; D) ((inverse_object_of s) _0 c)%object
+  ((inverse_object_of d) _0 c)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk1c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 * C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 * C2 -&gt; D) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">c</span> : C1,
+morphism (C2 -&gt; D) ((inverse_object_of s) _0 c)%object
+  ((inverse_object_of d) _0 c)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk1d"><span class="nb">intro</span> c.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 * C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 * C2 -&gt; D) s d</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>C1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (C2 -&gt; D) ((inverse_object_of s) _0 c)%object
+  ((inverse_object_of d) _0 c)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk1e"><span class="nb">refine</span> (Build_NaturalTransformation
+                  ((inverse_object_of s) c)
+                  ((inverse_object_of d) c)
+                  (<span class="kr">fun</span> <span class="nv">c&#39;</span> =&gt; m (c, c&#39;))
+                  _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 * C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 * C2 -&gt; D) s d</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>C1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">s0</span> <span class="nv">d0</span> : C2) (<span class="nv">m0</span> : morphism C2 s0 d0),
+m (c, d0) o ((inverse_object_of s) _0 c)%object _1 m0 =
+((inverse_object_of d) _0 c)%object _1 m0 o m (c, s0)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> do_exponential4_inverse.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk1f"><span class="kn">Definition</span> <span class="nf">inverse_morphism_of</span>
+                 <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism (C1 * C2 -&gt; D) s d)
+      : morphism (C1 -&gt; (C2 -&gt; D))
+                 (inverse_object_of s)
+                 (inverse_object_of d).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 * C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 * C2 -&gt; D) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (C1 -&gt; C2 -&gt; D) (inverse_object_of s)
+  (inverse_object_of d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk20"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 * C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 * C2 -&gt; D) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (C1 -&gt; C2 -&gt; D) (inverse_object_of s)
+  (inverse_object_of d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk21"><span class="nb">refine</span> (Build_NaturalTransformation
+                  (inverse_object_of s)
+                  (inverse_object_of d)
+                  (inverse_morphism_of_components_of m)
+                  _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(C1 * C2 -&gt; D)%category</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism (C1 * C2 -&gt; D) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">s0</span> <span class="nv">d0</span> : C1) (<span class="nv">m0</span> : morphism C1 s0 d0),
+inverse_morphism_of_components_of m d0
+o (inverse_object_of s) _1 m0 =
+(inverse_object_of d) _1 m0
+o inverse_morphism_of_components_of m s0</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (path_natural_transformation; do_exponential4_inverse).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">morphism_of</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> inverse_morphism_of_components_of / _ _ _ _ .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk22"><span class="kn">Definition</span> <span class="nf">inverse</span>
+    : Functor (C1 * C2 -&gt; D) (C1 -&gt; (C2 -&gt; D)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C1 * C2 -&gt; D) (C1 -&gt; C2 -&gt; D)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="functors-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="functors-v-chk23"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C1 * C2 -&gt; D) (C1 -&gt; C2 -&gt; D)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor
+                (C1 * C2 -&gt; D) (C1 -&gt; (C2 -&gt; D))
+                inverse_object_of
+                inverse_morphism_of
+                _
+                _);
+      <span class="kp">abstract</span> <span class="bp">by</span> path_natural_transformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">inverse</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">law4</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

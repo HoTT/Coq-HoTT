@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.bugs.github1791</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.bugs.github1791</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.html#"><span class="id" title="library">WildCat</span></a> <a class="idref" href="HoTT.Homotopy.Join.html#"><span class="id" title="library">Join</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+PR 1791 reduced the number of universe variables for several definitions.  These tests ensure that they remain reduced. 
+<div class="paragraph"> </div>
+
+ WildCat/Square.v: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="HoTT.WildCat.Core.html#is0functor_idmap"><span class="id" title="instance">is0functor_idmap@</span></a><a class="idref" href="HoTT.WildCat.Core.html#is0functor_idmap"><span class="id" title="instance">{</span></a><a class="idref" href="HoTT.WildCat.Core.html#is0functor_idmap"><span class="id" title="instance">u1</span></a> <a class="idref" href="HoTT.WildCat.Core.html#is0functor_idmap"><span class="id" title="instance">u2</span></a><a class="idref" href="HoTT.WildCat.Core.html#is0functor_idmap"><span class="id" title="instance">}</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="HoTT.WildCat.Square.html#vinverse"><span class="id" title="definition">vinverse@</span></a><a class="idref" href="HoTT.WildCat.Square.html#vinverse"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.WildCat.Square.html#vinverse"><span class="id" title="definition">u1</span></a> <a class="idref" href="HoTT.WildCat.Square.html#vinverse"><span class="id" title="definition">u2</span></a> <a class="idref" href="HoTT.WildCat.Square.html#vinverse"><span class="id" title="definition">u3</span></a> <a class="idref" href="HoTT.WildCat.Square.html#vinverse"><span class="id" title="definition">u4</span></a> <a class="idref" href="HoTT.WildCat.Square.html#vinverse"><span class="id" title="definition">u5</span></a><a class="idref" href="HoTT.WildCat.Square.html#vinverse"><span class="id" title="definition">}</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="HoTT.WildCat.Square.html#transpose"><span class="id" title="definition">transpose@</span></a><a class="idref" href="HoTT.WildCat.Square.html#transpose"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.WildCat.Square.html#transpose"><span class="id" title="definition">u1</span></a> <a class="idref" href="HoTT.WildCat.Square.html#transpose"><span class="id" title="definition">u2</span></a> <a class="idref" href="HoTT.WildCat.Square.html#transpose"><span class="id" title="definition">u3</span></a><a class="idref" href="HoTT.WildCat.Square.html#transpose"><span class="id" title="definition">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+WildCat/Yoneda.v: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">opyon_equiv_0gpd@</span></a><a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u1</span></a> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u2</span></a> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u3</span></a> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u4</span></a> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u5</span></a> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u6</span></a> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u7</span></a> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u8</span></a> <a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">u9</span></a><a class="idref" href="HoTT.WildCat.Yoneda.html#opyon_equiv_0gpd"><span class="id" title="definition">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Join/Core.v: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="HoTT.Homotopy.Join.Core.html#equiv_join_sym"><span class="id" title="definition">equiv_join_sym@</span></a><a class="idref" href="HoTT.Homotopy.Join.Core.html#equiv_join_sym"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Homotopy.Join.Core.html#equiv_join_sym"><span class="id" title="definition">u1</span></a> <a class="idref" href="HoTT.Homotopy.Join.Core.html#equiv_join_sym"><span class="id" title="definition">u2</span></a> <a class="idref" href="HoTT.Homotopy.Join.Core.html#equiv_join_sym"><span class="id" title="definition">u3</span></a> <a class="idref" href="HoTT.Homotopy.Join.Core.html#equiv_join_sym"><span class="id" title="definition">u4</span></a><a class="idref" href="HoTT.Homotopy.Join.Core.html#equiv_join_sym"><span class="id" title="definition">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Join/JoinAssoc.v: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">join_assoc@</span></a><a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">{</span></a><a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">u1</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">u2</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">u3</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">u4</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">u5</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">u6</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">u7</span></a> <a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">u8</span></a><a class="idref" href="HoTT.Homotopy.Join.JoinAssoc.html#join_assoc"><span class="id" title="definition">}</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

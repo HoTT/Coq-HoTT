@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Limits and Colimits *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc8b" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc8b"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> ExponentialLaws.Law1.Functors FunctorCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> KanExtensions.Core InitialTerminalCategory.Core NatCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;-notation-overridden&quot;</span>. <span class="c">(* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Comma.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;notation-overridden&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** The diagonal or &quot;constant diagram&quot; functor Δ *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">diagonal_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(**</span>
+<span class="sd">     Quoting Dwyer and Spalinski:</span>
+
+<span class="sd">     There is a diagonal or ``constant diagram&#39;&#39; functor</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">     Δ : C → Cᴰ,</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">     which carries an object [X : C] to the constant functor [Δ X : D</span>
+<span class="sd">     -&gt; C] (by definition, this ``constant functor&#39;&#39; sends each object</span>
+<span class="sd">     of [D] to [X] and each morphism of [D] to [Identity X]). The</span>
+<span class="sd">     functor Δ assigns to each morphism [f : X -&gt; X&#39;] of [C] the</span>
+<span class="sd">     constant natural transformation [t(f) : Δ X -&gt; Δ X&#39;] determined</span>
+<span class="sd">     by the formula [t(f) d = f] for each object [d] of [D].  **)</span>
+
+  <span class="sd">(** We use [C¹] rather than [C] for judgemental compatibility with</span>
+<span class="sd">      Kan extensions. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">diagonal_functor</span> : Functor (<span class="mi">1</span> -&gt; C) (D -&gt; C)
+    := @pullback_along _ D <span class="mi">1</span> C (Functors.to_terminal _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">diagonal_functor&#39;</span> : Functor C (D -&gt; C)
+    := diagonal_functor o ExponentialLaws.Law1.Functors.inverse _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">convert</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc8c" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc8c"><span class="kn">Lemma</span> <span class="nf">diagonal_functor_diagonal_functor&#39;</span> <span class="nv">X</span>
+    : diagonal_functor X = diagonal_functor&#39; (X (center _)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> -&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(diagonal_functor _0 X)%object =
+(diagonal_functor&#39; _0 (X _0 (center <span class="mi">1</span>)))%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc8d" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc8d"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> -&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(diagonal_functor _0 X)%object =
+(diagonal_functor&#39; _0 (X _0 (center <span class="mi">1</span>)))%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc8e" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc8e">path_functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> -&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : D -&gt; C =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : D,
+   morphism D s d -&gt; morphism C (GO s) (GO d)) <span class="mi">1</span>
+  (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : D) (<span class="nv">_</span> : morphism D s d) =&gt;
+   (X _1 (center Unit))%morphism) =
+(<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : D) (<span class="nv">_</span> : morphism D s d) =&gt; <span class="mi">1</span>%morphism)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc8f" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc8f"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> -&gt; C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : D) (<span class="nv">_</span> : morphism D s d) =&gt;
+ (X _1 (center Unit))%morphism) =
+(<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : D) (<span class="nv">_</span> : morphism D s d) =&gt; <span class="mi">1</span>%morphism)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc90" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc90"><span class="kp">repeat</span> (<span class="nb">apply</span> path_forall || <span class="nb">intro</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> -&gt; C</span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>morphism D x x0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(X _1 (center Unit))%morphism = <span class="mi">1</span>%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> identity_of.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">convert</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">diagonal_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> diagonal_functor : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">diagonal_functor_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">D&#39;</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc91" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc91"><span class="kn">Lemma</span> <span class="nf">compose_diagonal_functor</span> <span class="nv">x</span> (<span class="nv">F</span> : Functor D&#39; D)
+  : diagonal_functor C D x o F = diagonal_functor _ _ x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> -&gt; C</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor D&#39; D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((diagonal_functor C D) _0 x)%object o F =
+((diagonal_functor C D&#39;) _0 x)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc92" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc92"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span><span class="mi">1</span> -&gt; C</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor D&#39; D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((diagonal_functor C D) _0 x)%object o F =
+((diagonal_functor C D&#39;) _0 x)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">path_functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">compose_diagonal_functor_natural_transformation</span>
+             <span class="nv">x</span> (<span class="nv">F</span> : Functor D&#39; D)
+  : NaturalTransformation (diagonal_functor C D x o F) (diagonal_functor _ _ x)
+    := Build_NaturalTransformation
+         (diagonal_functor C D x o F)
+         (diagonal_functor _ _ x)
+         (<span class="kr">fun</span> <span class="nv">z</span> =&gt; identity _)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; <span class="nb">transitivity</span>
+                         (left_identity _ _ _ _)
+                         (<span class="nb">symmetry</span>
+                            _ _
+                            (right_identity _ _ _ _))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">diagonal_functor_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Rewrite</span> @compose_diagonal_functor : category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Limit</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Definition of Limit *)</span>
+  <span class="sd">(**</span>
+<span class="sd">     Quoting Dwyer and Spalinski:</span>
+
+<span class="sd">     Let [D] be a small category and [F : D -&gt; C] a functor. A limit</span>
+<span class="sd">     for [F] is an object [L] of [C] together with a natural</span>
+<span class="sd">     transformation [t : Δ L -&gt; F] such that for every object [X] of</span>
+<span class="sd">     [C] and every natural transformation [s : Δ X -&gt; F], there exists</span>
+<span class="sd">     a unique map [s&#39; : X -&gt; L] in [C] such that [t (Δ s&#39;) = s].  **)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsLimit</span>
+    := @IsRightKanExtensionAlong _ D <span class="mi">1</span> C (Functors.to_terminal _) F.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(*Definition IsLimit&#39; := @IsTerminalMorphism (_ -&gt; _) (_ -&gt; _) (diagonal_functor C D) F.*)</span>
+  <span class="c">(*  Definition Limit (L : C) :=</span>
+<span class="c">    { t : SmallNaturalTransformation ((diagonal_functor C D) L) F &amp;</span>
+<span class="c">      forall X : C, forall s : SmallNaturalTransformation ((diagonal_functor C D) X) F,</span>
+<span class="c">        { s&#39; : C.(Morphism) X L |</span>
+<span class="c">          unique</span>
+<span class="c">          (fun s&#39; =&gt; SNTComposeT t ((diagonal_functor C D).(MorphismOf) s&#39;) = s)</span>
+<span class="c">          s&#39;</span>
+<span class="c">        }</span>
+<span class="c">    }.*)</span>
+
+  <span class="sd">(**</span>
+<span class="sd">     Quoting Dwyer and Spalinski:</span>
+
+<span class="sd">     Let [D] be a small category and [F : D -&gt; C] a functor. A colimit</span>
+<span class="sd">     for [F] is an object [c] of [C] together with a natural</span>
+<span class="sd">     transformation [t : F -&gt; Δ c] such that for every object [X] of</span>
+<span class="sd">     [C] and every natural transformation [s : F -&gt; Δ X], there exists</span>
+<span class="sd">     a unique map [s&#39; : c -&gt; X] in [C] such that [(Δ s&#39;) t = s].  **)</span>
+
+  <span class="sd">(** ** Definition of Colimit *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">IsColimit</span>
+    := @IsLeftKanExtensionAlong _ D <span class="mi">1</span> C (Functors.to_terminal _) F.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(*Definition IsColimit&#39; := @IsInitialMorphism (_ -&gt; _) (_ -&gt; _) F (diagonal_functor C D).*)</span>
+  <span class="c">(*  Definition Colimit (c : C) :=</span>
+<span class="c">    { t : SmallNaturalTransformation F ((diagonal_functor C D) c) &amp;</span>
+<span class="c">      forall X : C, forall s : SmallNaturalTransformation F ((diagonal_functor C D) X),</span>
+<span class="c">        { s&#39; : C.(Morphism) c X | is_unique s&#39; /\</span>
+<span class="c">          SNTComposeT ((diagonal_functor C D).(MorphismOf) s&#39;) t = s</span>
+<span class="c">        }</span>
+<span class="c">    }.*)</span>
+  <span class="sd">(** TODO(JasonGross): Figure out how to get good introduction and elimination rules working, which don&#39;t mention spurious identities. *)</span>
+  <span class="c">(*Section AbstractionBarrier.</span>
+<span class="c">    Section Limit.</span>
+<span class="c">      Set Printing  Implicit.</span>
+<span class="c">      Section IntroductionAbstractionBarrier.</span>
+<span class="c">        Local Open Scope morphism_scope.</span>
+
+<span class="c">        Definition Build_IsLimit</span>
+<span class="c">                 (lim_obj : C)</span>
+<span class="c">                 (lim_mor : morphism (D -&gt; C)</span>
+<span class="c">                                     (diagonal_functor&#39; C D lim_obj)</span>
+<span class="c">                                     F)</span>
+<span class="c">                 (lim := CommaCategory.Build_object</span>
+<span class="c">                           (diagonal_functor C D)</span>
+<span class="c">                           !(F : object (_ -&gt; _))</span>
+<span class="c">                           !lim_obj</span>
+<span class="c">                           (center _)</span>
+<span class="c">                           lim_mor)</span>
+<span class="c">                 (UniversalProperty</span>
+<span class="c">                  : forall (lim_obj&#39; : C)</span>
+<span class="c">                           (lim_mor&#39; : morphism (D -&gt; C)</span>
+<span class="c">                                                (diagonal_functor&#39; C D lim_obj&#39;)</span>
+<span class="c">                                                F),</span>
+<span class="c">                      Contr { m : morphism C lim_obj&#39; lim_obj</span>
+<span class="c">                            | lim_mor o morphism_of (diagonal_functor&#39; C D) m = lim_mor&#39; })</span>
+<span class="c">        : IsTerminalMorphism lim.</span>
+<span class="c">        Proof.</span>
+<span class="c">          apply Build_IsTerminalMorphism.</span>
+<span class="c">          intros A&#39; p&#39;.</span>
+<span class="c">          specialize (UniversalProperty (A&#39; (center _))).*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Limit</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** TODO(JasonGross): Port MorphismsBetweenLimits from catdb *)</span></span></pre>
+</div>
+</div></body>
+</html>

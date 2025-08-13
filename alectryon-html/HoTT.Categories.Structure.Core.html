@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Notions of Structure *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc99" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc99"><span class="kn">Require Import</span> Category.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types HSet.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Structures *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> structure_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> long_structure_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> structure_scope <span class="kr">with</span> structure.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> long_structure_scope <span class="kr">with</span> long_structure.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> structure_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Quoting the Homotopy Type Theory Book (with slight changes for</span>
+<span class="sd">    notational consistency): *)</span>
+
+<span class="sd">(** ** 9.8 The structure identity principle</span>
+
+<span class="sd">    The _structure identity principle_ is an informal principle that</span>
+<span class="sd">    expresses that isomorphic structures are identical. We aim to</span>
+<span class="sd">    prove a general abstract result which can be applied to a wide</span>
+<span class="sd">    family of notions of structure, where structures may be</span>
+<span class="sd">    many-sorted or even dependently-sorted, in-finitary, or even</span>
+<span class="sd">    higher order.</span>
+
+<span class="sd">    The simplest kind of single-sorted structure consists of a type</span>
+<span class="sd">    with no additional structure. The univalence axiom expresses the</span>
+<span class="sd">    structure identity principle for that notion of structure in a</span>
+<span class="sd">    strong form: for types [A], [B], the canonical function [(A = B) →</span>
+<span class="sd">    (A ≃ B)] is an equivalence.  We start with a precategory [X]. In</span>
+<span class="sd">    our application to single-sorted first order structures, [X] will</span>
+<span class="sd">    be the category of [U]-small sets, where [U] is a univalent type</span>
+<span class="sd">    universe. *)</span>
+
+<span class="sd">(** *** Notion of Structure *)</span>
+<span class="sd">(** Definition: A _notion of structure_ [(P,H)] over [X] consists of</span>
+<span class="sd">    the following.  We use [X₀] to denote the objects of [X], and</span>
+<span class="sd">    [homₓ(x, y)] to denote the morphisms [morphism X x y] of [X].</span>
+
+<span class="sd">    (i) A type family [P : X₀ → Type].  For each [x : X₀] the elements</span>
+<span class="sd">        of [P x] are called _[(P, H)]-structures_ on [x].</span>
+
+<span class="sd">    (ii) For [x y : X₀] and [α : P x], [β : P y], to each [f : homₓ(x,</span>
+<span class="sd">         y)] a mere proposition [H_{αβ}(f)].</span>
+
+<span class="sd">         If [H_{αβ}(f)] is true, we say that [f] is a _[(P,</span>
+<span class="sd">         H)]-homomorphism_ from [α] to [β].</span>
+
+<span class="sd">    (iii) For [x : X₀] and [α : P x], we have [H_{αα}(1ₓ)].</span>
+
+<span class="sd">    (iv) For [x y z : X₀] and [α : P x], [β : P y], [γ : P z], if [f :</span>
+<span class="sd">         homₓ(x, y)], we have</span>
+
+<span class="sd">         [H_{αβ}(f)→ H_{βγ}(g) → H_{αγ}(g ∘ f)].</span>
+<span class="sd"> *)</span>
+
+<span class="sd">(** Note: We rearrange some parameters to [H] to ease Coq&#39;s</span>
+<span class="sd">    unification engine and typeclass machinery. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">NotionOfStructure</span> (<span class="nv">X</span> : PreCategory) :=
+  {
+    structure :&gt; X -&gt; <span class="kt">Type</span>;
+    is_structure_homomorphism : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>
+                                       (<span class="nv">f</span> : morphism X x y)
+                                       (<span class="nv">a</span> : structure x) (<span class="nv">b</span> : structure y),
+                               <span class="kt">Type</span>;
+    istrunc_is_structure_homomorphism : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">f</span>,
+                                          IsHProp (@is_structure_homomorphism x y a b f);
+    is_structure_homomorphism_identity : <span class="kr">forall</span> <span class="nv">x</span> (<span class="nv">a</span> : structure x),
+                                           is_structure_homomorphism (identity x) a a;
+    is_structure_homomorphism_composition : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span>
+                                                   (<span class="nv">a</span> : structure x)
+                                                   (<span class="nv">b</span> : structure y)
+                                                   (<span class="nv">c</span> : structure z)
+                                                   (<span class="nv">f</span> : morphism X x y)
+                                                   (<span class="nv">g</span> : morphism X y z),
+                                              is_structure_homomorphism f a b
+                                              -&gt; is_structure_homomorphism g b c
+                                              -&gt; is_structure_homomorphism (g o f) a c
+  }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** It would be nice to make this a class, but we can&#39;t:</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">    Existing Class is_structure_homomorphism.</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    gives</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">    Toplevel input, characters 0-41:</span>
+<span class="sd">    Anomaly: Mismatched instance and context when building universe substitution.</span>
+<span class="sd">    Please report.</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    When we move to polyproj, it won&#39;t anymore. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Existing Instance</span> <span class="nf">istrunc_is_structure_homomorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Create HintDb</span> structure_homomorphisms <span class="kn">discriminated</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Resolve</span> is_structure_homomorphism_identity is_structure_homomorphism_composition : structure_homomorphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** When [(P, H)] is a notion of structure, for [α β : P x] we define</span>
+
+<span class="sd">    [(α ≤ₓ β) := H_{αβ}(1ₓ)].</span>
+
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;a &lt;=_{ x } b&quot;</span> := (is_structure_homomorphism _ x x (identity x) a b) : long_structure_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Notation</span> <span class="s2">&quot;a &lt;= b&quot;</span> := (a &lt;=_{ _ } b)%long_structure : structure_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** By (iii) and (iv), this is a preorder with [P x] its type of objects. *)</span>
+
+
+<span class="sd">(** *** Being a structure homomorphism is a preorder *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc9a" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc9a">#[export] <span class="kn">Instance</span> <span class="nf">preorder_is_structure_homomorphism</span>
+       <span class="nv">X</span> (<span class="nv">P</span> : NotionOfStructure X) <span class="nv">x</span>
+: PreOrder (is_structure_homomorphism P x x (identity x)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreOrder (is_structure_homomorphism P x x <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc9b" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc9b"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreOrder (is_structure_homomorphism P x x <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc9c" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc9c"><span class="nb">split</span>; <span class="kp">repeat</span> <span class="nb">intro</span>; <span class="nb">eauto with</span> structure_homomorphisms.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br><span><var>x0, y, z</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br><span><var>X0</var><span class="hyp-type"><b>: </b><span>x0 &lt;= y</span></span></span><br><span><var>X1</var><span class="hyp-type"><b>: </b><span>y &lt;= z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">x0 &lt;= z</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc9d" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc9d"><span class="nb">rewrite</span> &lt;- identity_identity.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br><span><var>x0, y, z</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br><span><var>X0</var><span class="hyp-type"><b>: </b><span>x0 &lt;= y</span></span></span><br><span><var>X1</var><span class="hyp-type"><b>: </b><span>y &lt;= z</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">is_structure_homomorphism P x x (<span class="mi">1</span> o <span class="mi">1</span>) x0 z</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">eauto with</span> structure_homomorphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Standard notion of structure *)</span>
+<span class="sd">(** We say that [(P, H)] is a _standard notion of structure_ if this</span>
+<span class="sd">    preorder is in fact a partial order, for all [x : X]. *)</span>
+
+<span class="sd">(** A partial order is an antisymmetric preorder, i.e., we must have</span>
+<span class="sd">    [a &lt;= b &lt;= a -&gt; a = b]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsStandardNotionOfStructure</span> <span class="nv">X</span> (<span class="nv">P</span> : NotionOfStructure X) :=
+  antisymmetry_structure : <span class="kr">forall</span> <span class="nv">x</span> (<span class="nv">a</span> <span class="nv">b</span> : P x),
+                             a &lt;= b -&gt; b &lt;= a -&gt; a = b.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Note that for a standard notion of structure, each type [P x] must</span>
+<span class="sd">    actually be a set. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc9e" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc9e">#[export] <span class="kn">Instance</span> <span class="nf">istrunc_homomorphism_standard_notion_of_structure</span>
+       <span class="nv">X</span> <span class="nv">P</span> `{@IsStandardNotionOfStructure X P} x
+: IsHSet (P x).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsStandardNotionOfStructure P</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet (P x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc9f" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc9f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsStandardNotionOfStructure P</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet (P x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca0" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca0"><span class="nb">eapply</span> (@ishset_hrel_subpaths
+            _ (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; (a &lt;= b) * (b &lt;= a)));
+  <span class="kp">try</span> <span class="nb">typeclasses eauto</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsStandardNotionOfStructure P</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Reflexive (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> : P x =&gt; (a &lt;= b) * (b &lt;= a))</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="core-v-chkca1" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsStandardNotionOfStructure P</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><label class="goal-separator" for="core-v-chkca1"><hr></label><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x0</span> <span class="nv">y</span> : P x, (x0 &lt;= y) * (y &lt;= x0) -&gt; x0 = y</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca2" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca2">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsStandardNotionOfStructure P</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Reflexive (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> : P x =&gt; (a &lt;= b) * (b &lt;= a))</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">repeat</span> <span class="nb">intro</span>; <span class="nb">split</span>; <span class="nb">apply</span> <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca3" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca3">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsStandardNotionOfStructure P</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x0</span> <span class="nv">y</span> : P x, (x0 &lt;= y) * (y &lt;= x0) -&gt; x0 = y</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> ? ? [? ?]; <span class="nb">apply</span> antisymmetry_structure; <span class="bp">assumption</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Precategory of structures *)</span>
+<span class="sd">(** We now define, for any notion of structure [(P, H)], a</span>
+<span class="sd">    _precategory of [(P, H)]-structures_,</span>
+
+<span class="sd">    [A = Str_{(P, H)}(X)].</span>
+
+<span class="sd">    - The type of objects of [A] is the type [A₀ := ∑ₓ P x].  If [a ≡</span>
+<span class="sd">      (x; α)], we may write [|a| := x].</span>
+
+<span class="sd">    - For [(x; α) : A₀] and [(y; β) : A₀], we define</span>
+
+<span class="sd">      [hom_A((x; α), (y; β)) := { f : x → y | H_{αβ}(f) }].</span>
+
+<span class="sd">    The composition and identities are inherited from [X]; conditions</span>
+<span class="sd">    (iii) and (iv) ensure that these lift to [A]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">PreCategoryOfStructures</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">precategory</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** We use [Records] because they are faster than sigma types. *)</span>
+
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">X</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">P</span> : NotionOfStructure X.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">object</span> := { x : X | P x }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="c">(*Lemma issig_object</span>
+<span class="c">    : { x : X | P x } &lt;~&gt; object.</span>
+<span class="c">    Proof.</span>
+<span class="c">      issig Build_object x a.</span>
+<span class="c">    Defined.</span>
+
+<span class="c">    Lemma path_object</span>
+<span class="c">    : forall xa yb (H : x xa = x yb),</span>
+<span class="c">        transport P H (a xa) = a yb</span>
+<span class="c">        -&gt; xa = yb.</span>
+<span class="c">    Proof.</span>
+<span class="c">      intros [? ?] [? ?] H H&#39;; simpl in *; path_induction; reflexivity.</span>
+<span class="c">    Defined.*)</span>
+
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">morphism</span> (<span class="nv">xa</span> <span class="nv">yb</span> : object) :=
+      { f : Category.Core.morphism X xa.<span class="mi">1</span> yb.<span class="mi">1</span>;
+        h : is_structure_homomorphism _ _ _ f xa.<span class="mi">2</span> yb.<span class="mi">2</span> }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca4" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca4"><span class="kn">Lemma</span> <span class="nf">issig_morphism</span> (<span class="nv">xa</span> <span class="nv">yb</span> : object)
+    : { f : Category.Core.morphism X xa.<span class="mi">1</span> yb.<span class="mi">1</span>
+      | is_structure_homomorphism _ _ _ f xa.<span class="mi">2</span> yb.<span class="mi">2</span> }
+        &lt;~&gt; morphism xa yb.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>xa, yb</var><span class="hyp-type"><b>: </b><span>{x : X &amp; P x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : Core.morphism X xa.<span class="mi">1</span> yb.<span class="mi">1</span> &amp;
+is_structure_homomorphism P xa.<span class="mi">1</span> yb.<span class="mi">1</span> f xa.<span class="mi">2</span> yb.<span class="mi">2</span>} &lt;~&gt;
+morphism xa yb</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca5" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>xa, yb</var><span class="hyp-type"><b>: </b><span>{x : X &amp; P x}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : Core.morphism X xa.<span class="mi">1</span> yb.<span class="mi">1</span> &amp;
+is_structure_homomorphism P xa.<span class="mi">1</span> yb.<span class="mi">1</span> f xa.<span class="mi">2</span> yb.<span class="mi">2</span>} &lt;~&gt;
+morphism xa yb</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca6" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca6"><span class="kn">Lemma</span> <span class="nf">path_morphism</span>
+    : <span class="kr">forall</span> <span class="nv">xa</span> <span class="nv">yb</span> (<span class="nv">fh</span> <span class="nv">gi</span> : morphism xa yb),
+        f fh = f gi -&gt; fh = gi.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">xa</span> <span class="nv">yb</span> : {x : X &amp; P x})
+(<span class="nv">fh</span> <span class="nv">gi</span> : morphism xa yb), f fh = f gi -&gt; fh = gi</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca7" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca7"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">xa</span> <span class="nv">yb</span> : {x : X &amp; P x})
+(<span class="nv">fh</span> <span class="nv">gi</span> : morphism xa yb), f fh = f gi -&gt; fh = gi</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca8" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca8"><span class="nb">intros</span> ? ? [? ?] [? ?] H; <span class="nb">simpl</span> <span class="kr">in</span> *; path_induction; <span class="nb">apply</span> ap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br><span><var>xa, yb</var><span class="hyp-type"><b>: </b><span>{x : X &amp; P x}</span></span></span><br><span><var>f0</var><span class="hyp-type"><b>: </b><span>Core.morphism X xa.<span class="mi">1</span> yb.<span class="mi">1</span></span></span></span><br><span><var>h0, h1</var><span class="hyp-type"><b>: </b><span>is_structure_homomorphism P xa.<span class="mi">1</span> yb.<span class="mi">1</span> f0 xa.<span class="mi">2</span>
+  yb.<span class="mi">2</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">h0 = h1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_ishprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">precategory</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="c">(*Global Arguments path_object {X P xa yb} H _.*)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> path_morphism {X P xa yb fh gi} H.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">PreCategoryOfStructures</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">precategory</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> PreCategoryOfStructures.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkca9" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkca9"><span class="kn">Definition</span> <span class="nf">precategory_of_structures</span> <span class="nv">X</span> (<span class="nv">P</span> : NotionOfStructure X) : PreCategory.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkcaa" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkcaa"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>NotionOfStructure X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (@Build_PreCategory
+              _
+              (@morphism _ P)
+              (<span class="kr">fun</span> <span class="nv">xa</span> =&gt; {| f := identity xa.<span class="mi">1</span>;
+                            h := is_structure_homomorphism_identity _ _ xa.<span class="mi">2</span> |})
+              (<span class="kr">fun</span> <span class="nv">xa</span> <span class="nv">yb</span> <span class="nv">zc</span> <span class="nv">gi</span> <span class="nv">fh</span> =&gt; {| f := (f gi) o (f fh);
+                                        h := is_structure_homomorphism_composition _ _ _ _ _ _ _ _ _ (h fh) (h gi) |})
+              _
+              _
+              _
+              (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> =&gt; istrunc_equiv_istrunc _ (issig_morphism P s d)));
+    <span class="nb">simpl</span>;
+    <span class="kp">abstract</span> (
+        <span class="kp">repeat</span> <span class="kr">match goal with</span>
+                 | |- @morphism _ P _ _ -&gt; _ =&gt; <span class="nb">intros</span> [? ?]; <span class="nb">simpl</span> <span class="kr">in</span> *
+                 | |- _ -&gt; _ =&gt; <span class="nb">intro</span>
+               <span class="kr">end</span>;
+        <span class="kp">first</span> [ <span class="nb">apply</span> path_morphism; <span class="bp">exact</span> (associativity _ _ _ _ _ _ _ _)
+              | <span class="nb">apply</span> path_morphism; <span class="bp">exact</span> (left_identity _ _ _ _)
+              | <span class="nb">apply</span> path_morphism; <span class="bp">exact</span> (right_identity _ _ _ _) ]
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">precategory</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> StructureCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;a &lt;=_{ x } b&quot;</span> := (is_structure_homomorphism _ x x (identity x) a b) : long_structure_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;a &lt;= b&quot;</span> := (a &lt;=_{ _ } b)%long_structure : structure_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">StructureCoreNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>
