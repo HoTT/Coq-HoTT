@@ -1,4 +1,4 @@
-(** This file implements algebra homomorphism. We show that algebras form a wild category with homomorphisms. The [WildCat] module provides some nice notations that we we use: [A $-> B] for homomorphism, [Id] for the identity homomorphism and [g $o f] for composition. *)
+(** This file implements algebra homomorphism. We show that algebras form a wild category with homomorphisms. The [WildCat] module provides some nice notations that we use: [A $-> B] for homomorphism, [Id] for the identity homomorphism and [g $o f] for composition. *)
 
 Local Unset Elimination Schemes.
 

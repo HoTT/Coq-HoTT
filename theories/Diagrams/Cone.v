@@ -76,7 +76,7 @@ Section Cone.
 
   (** ** Universality of a cone. *)
 
-  (** A limit will be the extremity of an universal cone. *)
+  (** A limit will be the extremity of a universal cone. *)
 
   (** A cone [C] over [D] from [X] is said universal when for all [Y] the map [cone_precompose] is an equivalence. In particular, given another cone [C'] over [D] from [X'] the inverse of the map allows us to recover a map [h] : [X] -> [X'] such that [C'] is [C] precomposed with [h]. The fact that [cone_precompose] is an equivalence is an elegant way of stating the usual "unique existence" of category theory. *)
 

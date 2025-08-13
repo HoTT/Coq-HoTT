@@ -243,7 +243,7 @@ Proof.
   snapply rng_mult_assoc.
 Defined.
 
-(** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analagous statement for the right action. We haven't yet stated a definition of right module yet though. *)
+(** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analogous statement for the right action. We haven't yet stated a definition of right module yet though. *)
 
 (** In a commutative ring, matrix multiplication over the ring and the opposite ring agree. *)
 Definition matrix_mult_rng_op {R : CRing} {m n p}
