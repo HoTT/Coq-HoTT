@@ -211,37 +211,11 @@ Proof.
   by induction (contr a).
 Defined.
 
-Definition dtype_bool_encoding (A : Type) {d : Decidable A} : Bool
-  := if d then true else false.
-
-Definition inhabited_dtype_bool_encoding_true (A : Type) {d : Decidable A}
-  (t : dtype_bool_encoding A = true)
-  : A.
-Proof.
-  induction d as [a|na].
-  - exact a.
-  - cbn in t. contradiction (false_ne_true t).
-Defined.
-
-Definition ninhabited_dtype_bool_encoding_false (A : Type) {d : Decidable A}
-  (t : dtype_bool_encoding A = false)
-  : ~ A.
-Proof.
-  induction d as [a|na].
-  - cbn in t. contradiction (false_ne_true t^).
-  - exact na.
-Defined.
-
 Definition issearchable_Bool : IsSearchable Bool.
 Proof.
   intros P dP.
-  exists (dtype_bool_encoding (P false)).
-  intro x.
-  remember (dtype_bool_encoding (P false)) as b eqn:r; induction b.
-  - intros [].
-    + assumption.
-    + by apply inhabited_dtype_bool_encoding_true in r.
-  - contradiction (ninhabited_dtype_bool_encoding_false _ r x).
+  induction (dP false) as [p | np]; [exists true | exists false].
+  all: by intros p' [].
 Defined.
 
 (** The empty type is trivially compact. *)
