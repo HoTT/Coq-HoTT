@@ -300,26 +300,27 @@ Section Uniform_Search.
   Context {A : Type} (issearchable_A : IsSearchable A).
 
   (** The witness function for uniformly continuous predicates on [nat -> A]. The first argument [n : nat] will be the modulus of uniform continuity, but we do not use the property in this definition. *)
-  Definition witness_nat (n : nat) (P : (nat -> A) -> Type)
+  Definition uniformsearch_witness (n : nat) (P : (nat -> A) -> Type)
     (dP : forall (f : nat -> A), Decidable (P f))
     : nat -> A.
   Proof.
     induction n in P, dP.
     - exact (fun _ => inhabited_issearchable issearchable_A).
     - pose (g Q dQ := Q (IHn Q dQ)).
-      pose (y0 := (issearchable_A (fun x => g (P o (seq_cons x)) _) _).1).
-      exact (seq_cons y0 (IHn (P o seq_cons y0) _)).
+      pose (wA := (issearchable_A (fun x => g (P o (seq_cons x)) _) _).1).
+      exact (seq_cons wA (IHn (P o (seq_cons wA)) _)).
   Defined.
 
-  Definition uniformsearch_witness (n : nat) := fun P dP =>
-                                                  P (witness_nat n P dP).
+  (** We often need to apply [P] to [uniformsearch_witness n P dP], and this saves repeating [P]. *)
+  Local Definition pred_uniformsearch_witness (n : nat) := fun P dP =>
+                                                  P (uniformsearch_witness n P dP).
 
   (** The desired property of the witness function. *)
   Definition uniformsearch_witness_spec {n : nat}
     (P : (nat -> A) -> Type)
     (dP : forall f : (nat -> A), Decidable (P f))
     (is_mod : is_modulus_of_uniform_continuity n P)
-    (h : uniformsearch_witness n P dP)
+    (h : pred_uniformsearch_witness n P dP)
     : forall u : nat -> A, P u.
   Proof.
     induction n in P, dP, is_mod, h |- *.
@@ -327,31 +328,31 @@ Section Uniform_Search.
       by induction (is_mod u (fun _ => inhabited_issearchable issearchable_A)
                      (sequence_type_us_zero _ _))^.
     - intro u.
-      pose (x1 := (issearchable_A
-                    (fun y => uniformsearch_witness
+      pose (wA := (issearchable_A
+                    (fun y => pred_uniformsearch_witness
                                 n (P o (seq_cons y)) _) _).1).
       assert (consprop : forall x : A,
-                          uniformsearch_witness n (P o (seq_cons x)) _
+                          pred_uniformsearch_witness n (P o (seq_cons x)) _
                             -> forall v : nat -> A, P (seq_cons x v)).
       + exact (fun _ k => IHn (P o (seq_cons _)) _
                               (cons_decreases_modulus P n _ is_mod) k).
-      + assert (x1prop : uniformsearch_witness n (P o (seq_cons x1)) _
+      + assert (wAprop : pred_uniformsearch_witness n (P o (seq_cons wA)) _
                           -> forall x : A,
-                              uniformsearch_witness n (P o (seq_cons x)) _).
+                              pred_uniformsearch_witness n (P o (seq_cons x)) _).
         * exact (fun l x =>
                   (issearchable_A
-                    (fun y => uniformsearch_witness n (P o (seq_cons y)) _) _).2
+                    (fun y => pred_uniformsearch_witness n (P o (seq_cons y)) _) _).2
                   l x).
         * induction (@uniformly_continuous_extensionality _ _ _ P 0
                     (uniformly_continuous_has_modulus is_mod)
                       _ _ (seq_cons_head_tail u)).
-          exact (consprop (u 0) (x1prop h (u 0)) (seq_tail u)).
+          exact (consprop (u 0) (wAprop h (u 0)) (seq_tail u)).
   Defined.
 
   Definition has_uniformly_searchable_seq_issearchable
     : uniformly_searchable (nat -> A)
     := fun P dP contP
-        => (witness_nat (contP 1).1 P dP;
+        => (uniformsearch_witness (contP 1).1 P dP;
             fun r => uniformsearch_witness_spec P dP (contP 1).2 r).
 
 End Uniform_Search.
