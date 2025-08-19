@@ -345,8 +345,8 @@ Section Uniform_Search.
     : uniformly_searchable (nat -> A).
   Proof.
     intros P dP contP.
-    exists (uniformsearch_witness (contP 1).1 P dP).
-    apply uniformsearch_witness_spec; exact (contP 1).2.
+    exists (uniformsearch_witness (contP 0).1 P dP).
+    apply uniformsearch_witness_spec; exact (contP 0).2.
   Defined.
 
 End Uniform_Search.
