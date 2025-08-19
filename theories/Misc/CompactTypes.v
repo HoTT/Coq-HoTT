@@ -323,30 +323,22 @@ Section Uniform_Search.
     (h : pred_uniformsearch_witness n P dP)
     : forall u : nat -> A, P u.
   Proof.
-    induction n in P, dP, is_mod, h |- *.
+    induction n in P, dP, is_mod, h.
     - intro u.
-      by induction (is_mod u (fun _ => inhabited_issearchable issearchable_A)
-                     (sequence_type_us_zero _ _))^.
+      refine (transport idmap _ h).
+      (* For [n = 0], [is_mod u1 u2] says that [P u1 = P u2]. *)
+      apply is_mod, sequence_type_us_zero.
     - intro u.
-      pose (wA := (issearchable_A
-                    (fun y => pred_uniformsearch_witness
-                                n (P o (seq_cons y)) _) _).1).
-      assert (consprop : forall x : A,
-                          pred_uniformsearch_witness n (P o (seq_cons x)) _
-                            -> forall v : nat -> A, P (seq_cons x v)).
-      + exact (fun _ k => IHn (P o (seq_cons _)) _
-                              (cons_decreases_modulus P n _ is_mod) k).
-      + assert (wAprop : pred_uniformsearch_witness n (P o (seq_cons wA)) _
-                          -> forall x : A,
-                              pred_uniformsearch_witness n (P o (seq_cons x)) _).
-        * exact (fun l x =>
-                  (issearchable_A
-                    (fun y => pred_uniformsearch_witness n (P o (seq_cons y)) _) _).2
-                  l x).
-        * induction (@uniformly_continuous_extensionality _ _ _ P 0
-                    (uniformly_continuous_has_modulus is_mod)
-                      _ _ (seq_cons_head_tail u)).
-          exact (consprop (u 0) (wAprop h (u 0)) (seq_tail u)).
+      refine (transport idmap _ _).
+      1: exact (uniformly_continuous_extensionality P (m:=0)
+                  (uniformly_continuous_has_modulus is_mod)
+                  (seq_cons_head_tail u)).
+      rapply (IHn (P o (seq_cons (u 0)))).
+      1: apply cons_decreases_modulus, is_mod.
+      (* The universality of [uniformsearch_witness] says that it is enough to check this statement with [u 0] replaced with [wA] above, and that is exactly what [h] proves, by the inductive step. *)
+      refine ((issearchable_A
+                 (fun y => pred_uniformsearch_witness n (P o (seq_cons y)) _) _).2
+                h (u 0)).
   Defined.
 
   Definition has_uniformly_searchable_seq_issearchable
