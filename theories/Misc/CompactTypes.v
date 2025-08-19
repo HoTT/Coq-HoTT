@@ -292,7 +292,7 @@ Section Uniform_Search.
 
   (** ** Following https://www.cs.bham.ac.uk/~mhe/TypeTopology/TypeTopology.UniformSearch.html, we prove that if [A] is searchable then [nat -> A] is uniformly searchable. *)
 
-  (** A type with a uniform structure is uniformly searchable if it is searchable over uniformly continuous predicates. *)
+  (** A type with a uniform structure is uniformly searchable if it is searchable over uniformly continuous predicates. Here the uniform structure on [Type] is the trivial one [trivial_us] involving the identity types at each level. *)
   Definition uniformly_searchable (A : Type) {usA : UStructure A}
     := forall (P : A -> Type) (dP : forall a : A, Decidable (P a)),
         uniformly_continuous P -> exists w0 : A, (P w0 -> forall u : A, P u).
@@ -312,12 +312,12 @@ Section Uniform_Search.
   Defined.
 
   (** We often need to apply [P] to [uniformsearch_witness n P dP], and this saves repeating [P]. *)
-  Local Definition pred_uniformsearch_witness (n : nat) := fun P dP =>
-                                                  P (uniformsearch_witness n P dP).
+  Local Definition pred_uniformsearch_witness (n : nat) (P : (nat -> A) -> Type)
+    (dP : forall (f : nat -> A), Decidable (P f))
+    := P (uniformsearch_witness n P dP).
 
   (** The desired property of the witness function. *)
-  Definition uniformsearch_witness_spec {n : nat}
-    (P : (nat -> A) -> Type)
+  Definition uniformsearch_witness_spec {n : nat} (P : (nat -> A) -> Type)
     (dP : forall f : (nat -> A), Decidable (P f))
     (is_mod : is_modulus_of_uniform_continuity n P)
     (h : pred_uniformsearch_witness n P dP)
@@ -350,9 +350,11 @@ Section Uniform_Search.
   Defined.
 
   Definition has_uniformly_searchable_seq_issearchable
-    : uniformly_searchable (nat -> A)
-    := fun P dP contP
-        => (uniformsearch_witness (contP 1).1 P dP;
-            fun r => uniformsearch_witness_spec P dP (contP 1).2 r).
+    : uniformly_searchable (nat -> A).
+  Proof.
+    intros P dP contP.
+    exists (uniformsearch_witness (contP 1).1 P dP).
+    apply uniformsearch_witness_spec; exact (contP 1).2.
+  Defined.
 
 End Uniform_Search.
