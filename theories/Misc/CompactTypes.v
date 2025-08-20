@@ -1,4 +1,4 @@
-(** * Properties of compact and searchable types. *)
+(** * Properties of compact and searchable types *)
 
 Require Import Basics Types.
 Require Import Truncations.Core Truncations.Connectedness.
@@ -13,7 +13,7 @@ Require Import Idempotents.
 Local Open Scope nat_scope.
 Local Open Scope pointed_scope.
 
-(** ** Basic definitions of compact types. *)
+(** ** Basic definitions of compact types *)
 
 (** A type [A] is compact if for every decidable predicate [P] on [A] we can either find an element of [A] making [P] false or we can show that [P a] always holds. *)
 Definition IsCompact (A : Type)
@@ -142,7 +142,7 @@ Proof.
   - exact (inr (fun a => r (tr a))).
 Defined.
 
-(** ** Basic definitions of searchable types. *)
+(** ** Basic definitions of searchable types *)
 
 (** A type is searchable if for every decidable predicate we can find a "universal witness" for whether the predicate is always true or not. *)
 Definition IsSearchable (A : Type)
@@ -191,7 +191,7 @@ Definition searchable_iff {A : Type} : IsSearchable A <-> A * (IsCompact A)
   := (fun s => (inhabited_issearchable s, iscompact_issearchable s),
         fun c => issearchable_iscompact_inhabited (snd c) (fst c)).
 
-(** ** Examples of searchable and compact types.  *)
+(** ** Examples of searchable and compact types  *)
 
 Definition issearchable_contr {A} (c : Contr A) : IsSearchable A.
 Proof.
@@ -290,7 +290,9 @@ Defined.
 
 Section Uniform_Search.
 
-  (** ** Following https://www.cs.bham.ac.uk/~mhe/TypeTopology/TypeTopology.UniformSearch.html, we prove that if [A] is searchable then [nat -> A] is uniformly searchable. *)
+  (** ** Searchability of [nat -> A] *)
+
+  (** Following https://www.cs.bham.ac.uk/~mhe/TypeTopology/TypeTopology.UniformSearch.html, we prove that if [A] is searchable then [nat -> A] is uniformly searchable. *)
 
   (** A type with a uniform structure is uniformly searchable if it is searchable over uniformly continuous predicates. Here the uniform structure on [Type] is the trivial one [trivial_us] involving the identity types at each level. *)
   Definition uniformly_searchable (A : Type) {usA : UStructure A}
