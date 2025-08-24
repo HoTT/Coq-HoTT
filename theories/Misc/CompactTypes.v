@@ -92,7 +92,7 @@ Proof.
   intros P hP.
   refine (decidable_iff _ (h (merely o P) _)).
   apply iff_functor_sigma; intro a.
-  apply merely_inhabited_iff_inhabited_stable.
+  exact merely_inhabited_iff_inhabited_stable.
 Defined.
 
 (** A weaker definition: for any decidable family, the dependent function type is decidable. *)
@@ -338,7 +338,7 @@ Section Uniform_Search.
       rapply (IHn (P o (seq_cons (u 0)))).
       1: apply cons_decreases_modulus, is_mod.
       (* The universality of [uniformsearch_witness] says that it is enough to check this statement with [u 0] replaced with [wA] above, and that is exactly what [h] proves, by the inductive step. *)
-      refine ((issearchable_A
+      exact ((issearchable_A
                  (fun y => pred_uniformsearch_witness n (P o (seq_cons y)) _) _).2
                 h (u 0)).
   Defined.
