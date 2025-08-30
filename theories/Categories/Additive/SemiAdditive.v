@@ -80,10 +80,8 @@ Section BiproductCharacterization.
     : (biproduct_prod_mor (semiadditive_biproduct X Y) W f g o h)%morphism
       = biproduct_prod_mor (semiadditive_biproduct X Y) Z (f o h) (g o h).
   Proof.
-    rapply biproduct_prod_unique;
-    rewrite <- Category.Core.associativity;
-    [rewrite biproduct_prod_beta_l | rewrite biproduct_prod_beta_r];
-    reflexivity.
+    rapply biproduct_prod_unique; rewrite <- Category.Core.associativity;
+    [rewrite biproduct_prod_beta_l | rewrite biproduct_prod_beta_r]; reflexivity.
   Qed.
 
 End BiproductCharacterization.
@@ -129,10 +127,8 @@ Section BiproductSwap.
     : biproduct_prod_mor (semiadditive_biproduct B B) A g f 
       = (biproduct_swap B o biproduct_prod_mor (semiadditive_biproduct B B) A f g)%morphism.
   Proof.
-    symmetry; rapply biproduct_prod_unique;
-    rewrite <- Category.Core.associativity; unfold biproduct_swap;
-    [rewrite biproduct_prod_beta_l; rapply biproduct_prod_beta_r
-    |rewrite biproduct_prod_beta_r; rapply biproduct_prod_beta_l].
+    symmetry; rapply biproduct_prod_unique; rewrite <- Category.Core.associativity; unfold biproduct_swap;
+    [rewrite biproduct_prod_beta_l; rapply biproduct_prod_beta_r | rewrite biproduct_prod_beta_r; rapply biproduct_prod_beta_l].
   Qed.
 
   (** Swap composed with left injection gives right injection. *)
@@ -164,23 +160,21 @@ Section BiproductSwap.
     : (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o biproduct_swap Y)%morphism 
       = biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism.
   Proof.
-    rapply (biproduct_coprod_unique (semiadditive_biproduct Y Y));
-    rewrite Category.Core.associativity;
-    [rewrite swap_inl; rapply biproduct_coprod_beta_r
-    |rewrite swap_inr; rapply biproduct_coprod_beta_l].
+    rapply (biproduct_coprod_unique (semiadditive_biproduct Y Y)); rewrite Category.Core.associativity;
+    [rewrite swap_inl; rapply biproduct_coprod_beta_r | rewrite swap_inr; rapply biproduct_coprod_beta_l].
   Qed.
 
 End BiproductSwap.
 
 (** ** Commutativity of morphism addition *)
 
-Theorem morphism_addition_commutative (C : SemiAdditiveCategory) 
-  (X Y : object C) : Commutative (@sgop_morphism C X Y).
-Proof.
-  intros f g; unfold sgop_morphism;
-  rewrite (biproduct_prod_swap C X Y f g), <- Category.Core.associativity, codiagonal_swap_invariant;
-  reflexivity.
-Qed.
+  Theorem morphism_addition_commutative (C : SemiAdditiveCategory) 
+    (X Y : object C) : Commutative (@sgop_morphism C X Y).
+  Proof.
+    intros f g; unfold sgop_morphism;
+    rewrite (biproduct_prod_swap C X Y f g), <- Category.Core.associativity, codiagonal_swap_invariant;
+    reflexivity.
+  Qed.
 
 (** ** Associativity of morphism addition *)
 
@@ -194,8 +188,7 @@ Section Associativity.
   Proof.
     rapply (biproduct_coprod_unique (semiadditive_biproduct Y Y) Y' a a);
     rewrite Category.Core.associativity;
-    [rewrite biproduct_coprod_beta_l | rewrite biproduct_coprod_beta_r];
-    rapply Category.Core.right_identity.
+    [rewrite biproduct_coprod_beta_l | rewrite biproduct_coprod_beta_r]; rapply Category.Core.right_identity.
   Qed.
 
   Lemma addition_precompose
@@ -217,12 +210,11 @@ Section Associativity.
          o biproduct_prod_mor (semiadditive_biproduct Y Y) X f g)%morphism.
   Proof.
     symmetry; rapply biproduct_prod_unique;
-    rewrite <- Category.Core.associativity;
-    [rewrite biproduct_prod_beta_l | rewrite biproduct_prod_beta_r];
-    rewrite Category.Core.associativity, ?biproduct_prod_beta_l, ?biproduct_prod_beta_r;
+    (rewrite <- Category.Core.associativity, biproduct_prod_beta_l, Category.Core.associativity, biproduct_prod_beta_l
+     || rewrite <- Category.Core.associativity, biproduct_prod_beta_r, Category.Core.associativity, biproduct_prod_beta_r);
     reflexivity.
   Qed.
-
+  
   Lemma codiagonal_pair_inl (Y Y' : object C) (a b : morphism C Y Y')
     : (biproduct_coprod_mor (semiadditive_biproduct Y' Y') Y' 1%morphism 1%morphism
        o (biproduct_prod_mor (semiadditive_biproduct Y' Y') (Y ⊕ Y)
@@ -367,4 +359,3 @@ Proof.
     unfold sg_op, sgop_morphism.
     rapply (morphism_addition_commutative C X Y).
 Defined.
-    
