@@ -31,7 +31,7 @@ Section MorphismAddition.
   Context (C : SemiAdditiveCategory) (X Y : object C).
   
   (** Codiagonal composed with pairing. *)
-  Definition morphism_addition : SgOp (morphism C X Y) :=
+  #[export] Instance sgop_morphism : SgOp (morphism C X Y) :=
     fun f g =>
       (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 
          1%morphism 1%morphism
@@ -39,23 +39,14 @@ Section MorphismAddition.
          f g)%morphism.
   
   (** The zero morphism is the unit for addition. *)
-  Definition morphism_zero : MonUnit (morphism C X Y)
+  #[export] Instance monunit_morphism : MonUnit (morphism C X Y)
     := @zero_morphism C semiadditive_zero X Y.
     
 End MorphismAddition.
 
-(** Make the operations instances for typeclass search. *)
-#[export] Instance morphism_sgop (C : SemiAdditiveCategory) 
-  (X Y : object C) : SgOp (morphism C X Y) 
-  := morphism_addition C X Y.
-
-#[export] Instance morphism_monunit (C : SemiAdditiveCategory) 
-  (X Y : object C) : MonUnit (morphism C X Y) 
-  := morphism_zero C X Y.
-
 (** ** Notation for morphism addition *)
 
-Notation "f + g" := (morphism_addition _ _ _ f g) : morphism_scope.
+Notation "f + g" := (sgop_morphism _ _ _ f g) : morphism_scope.
 
 (** ** Biproduct characterization lemmas *)
 
@@ -154,9 +145,9 @@ Section IdentityLaws.
 
   (** Zero is a left identity for morphism addition. *)
   Theorem zero_left_identity (X Y : object C) (f : morphism C X Y)
-    : morphism_addition C X Y (zero_morphism X Y) f = f.
+    : sgop_morphism C X Y (zero_morphism X Y) f = f.
   Proof.
-    unfold morphism_addition.
+    unfold sgop_morphism.
     rewrite biproduct_zero_left_is_inr.
     rewrite <- Category.Core.associativity.
     rewrite biproduct_coprod_beta_r.
@@ -165,9 +156,9 @@ Section IdentityLaws.
 
   (** Zero is a right identity for morphism addition. *)
   Theorem zero_right_identity (X Y : object C) (f : morphism C X Y)
-    : morphism_addition C X Y f (zero_morphism X Y) = f.
+    : sgop_morphism C X Y f (zero_morphism X Y) = f.
   Proof.
-    unfold morphism_addition.
+    unfold sgop_morphism.
     rewrite biproduct_zero_right_is_inl.
     rewrite <- Category.Core.associativity.
     rewrite biproduct_coprod_beta_l.
@@ -259,10 +250,10 @@ End BiproductSwap.
 (** ** Commutativity of morphism addition *)
 
   Theorem morphism_addition_commutative (C : SemiAdditiveCategory) 
-    (X Y : object C) : Commutative (@morphism_addition C X Y).
+    (X Y : object C) : Commutative (@sgop_morphism C X Y).
   Proof.
     intros f g.
-    unfold morphism_addition.
+    unfold sgop_morphism.
     rewrite (biproduct_prod_swap C X Y f g).
     rewrite <- Category.Core.associativity.
     rewrite codiagonal_swap_invariant.
@@ -292,10 +283,10 @@ Section Associativity.
 
   Lemma addition_precompose
     (X Y W : object C) (f g : morphism C X Y) (a : morphism C W X)
-    : (morphism_addition C X Y f g o a)%morphism
-      = morphism_addition C W Y (f o a)%morphism (g o a)%morphism.
+    : (sgop_morphism C X Y f g o a)%morphism
+      = sgop_morphism C W Y (f o a)%morphism (g o a)%morphism.
   Proof.
-    unfold morphism_addition.
+    unfold sgop_morphism.
     rewrite Category.Core.associativity.
     rewrite (@biproduct_comp_general C X Y Y W f g a).
     reflexivity.
@@ -347,7 +338,7 @@ Section Associativity.
                ((a o outl (biproduct_data BY))%morphism)
                ((b o outr (biproduct_data BY))%morphism)
                (Biproducts.inl (biproduct_data BY))).
-    transitivity (morphism_addition C Y Y' a (zero_morphism Y Y')).
+    transitivity (sgop_morphism C Y Y' a (zero_morphism Y Y')).
     - rapply ap011.
       + rewrite Category.Core.associativity.
         rewrite (beta_l (biproduct_is (semiadditive_biproduct Y Y))).
@@ -380,7 +371,7 @@ Section Associativity.
                ((a o outl (biproduct_data BY))%morphism)
                ((b o outr (biproduct_data BY))%morphism)
                (Biproducts.inr (biproduct_data BY))).
-    transitivity (morphism_addition C Y Y' (zero_morphism Y Y') b).
+    transitivity (sgop_morphism C Y Y' (zero_morphism Y Y') b).
     - rapply ap011.
       + rewrite Category.Core.associativity.
         rewrite (mixed_l (biproduct_is BY)).
@@ -412,10 +403,10 @@ Section Associativity.
 
   Lemma addition_postcompose
     (X Y Y' : object C) (f g : morphism C X Y) (a : morphism C Y Y')
-    : (a o morphism_addition C X Y f g)%morphism
-      = morphism_addition C X Y' (a o f)%morphism (a o g)%morphism.
+    : (a o sgop_morphism C X Y f g)%morphism
+      = sgop_morphism C X Y' (a o f)%morphism (a o g)%morphism.
   Proof.
-    unfold morphism_addition.
+    unfold sgop_morphism.
     set (BY  := semiadditive_biproduct Y Y).
     set (BY' := semiadditive_biproduct Y' Y').
     rewrite <- Category.Core.associativity.
@@ -429,12 +420,12 @@ Section Associativity.
   Lemma addition_of_pairs
     (X Y : object C)
     (f1 f2 g1 g2 : morphism C X Y)
-    : morphism_addition C X (Y ⊕ Y)
+    : sgop_morphism C X (Y ⊕ Y)
         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f1 g1)
         (biproduct_prod_mor (semiadditive_biproduct Y Y) X f2 g2)
       = biproduct_prod_mor (semiadditive_biproduct Y Y) X
-          (morphism_addition C X Y f1 f2)
-          (morphism_addition C X Y g1 g2).
+          (sgop_morphism C X Y f1 f2)
+          (sgop_morphism C X Y g1 g2).
   Proof.
     set (BY := semiadditive_biproduct Y Y).
     rapply (biproduct_morphism_unique C Y X).
@@ -453,7 +444,7 @@ Section Associativity.
     : ((f + g) + h = f + (g + h))%morphism.
   Proof.
     set (BY := semiadditive_biproduct Y Y).
-    unfold morphism_addition at 1.
+    unfold sgop_morphism at 1.
     etransitivity
       ((biproduct_coprod_mor BY Y 1%morphism 1%morphism
         o biproduct_prod_mor BY X ((f + g)%morphism) 
@@ -477,7 +468,7 @@ Section Associativity.
     rewrite <- Category.Core.associativity.
     rewrite biproduct_coprod_beta_l.
     rewrite Category.Core.left_identity.
-    fold (morphism_addition C X Y g h).
+    fold (sgop_morphism C X Y g h).
     reflexivity.
   Qed.
 
@@ -494,17 +485,17 @@ Proof.
     + split.
       * exact _.
       * intros f g h.
-        unfold sg_op, morphism_sgop.
+        unfold sg_op, sgop_morphism.
         symmetry.
         rapply (morphism_addition_associative C X Y).
     + intro f.
-      unfold mon_unit, morphism_monunit, sg_op, morphism_sgop.
+      unfold mon_unit, monunit_morphism, sg_op, sgop_morphism.
       rapply (zero_left_identity C X Y).
     + intro f.
-      unfold mon_unit, morphism_monunit, sg_op, morphism_sgop.
+      unfold mon_unit, monunit_morphism, sg_op, sgop_morphism.
       rapply (zero_right_identity C X Y).
   - intros f g.
-    unfold sg_op, morphism_sgop.
+    unfold sg_op, sgop_morphism.
     rapply (morphism_addition_commutative C X Y).
 Defined.
     
