@@ -95,24 +95,18 @@ Section IdentityLaws.
 
   (** Zero is a left identity for morphism addition. *)
   Theorem zero_left_identity (X Y : object C) (f : morphism C X Y)
-    : sgop_morphism C X Y (zero_morphism X Y) f = f.
-  Proof.
-    unfold sgop_morphism.
-    rewrite biproduct_zero_left_is_inr.
-    rewrite <- Category.Core.associativity.
-    rewrite biproduct_coprod_beta_r.
-    rapply Category.Core.left_identity.
-  Qed.
+      : sgop_morphism C X Y (zero_morphism X Y) f = f.
+    Proof.
+      unfold sgop_morphism; rewrite biproduct_zero_left_is_inr, <- Category.Core.associativity,
+                                     biproduct_coprod_beta_r; rapply Category.Core.left_identity.
+    Qed.
 
   (** Zero is a right identity for morphism addition. *)
   Theorem zero_right_identity (X Y : object C) (f : morphism C X Y)
     : sgop_morphism C X Y f (zero_morphism X Y) = f.
   Proof.
-    unfold sgop_morphism.
-    rewrite biproduct_zero_right_is_inl.
-    rewrite <- Category.Core.associativity.
-    rewrite biproduct_coprod_beta_l.
-    rapply Category.Core.left_identity.
+    unfold sgop_morphism; rewrite biproduct_zero_right_is_inl, <- Category.Core.associativity,
+                                   biproduct_coprod_beta_l; rapply Category.Core.left_identity.
   Qed.
 
 End IdentityLaws.
@@ -183,11 +177,8 @@ End BiproductSwap.
 Theorem morphism_addition_commutative (C : SemiAdditiveCategory) 
   (X Y : object C) : Commutative (@sgop_morphism C X Y).
 Proof.
-  intros f g.
-  unfold sgop_morphism.
-  rewrite (biproduct_prod_swap C X Y f g).
-  rewrite <- Category.Core.associativity.
-  rewrite codiagonal_swap_invariant.
+  intros f g; unfold sgop_morphism;
+  rewrite (biproduct_prod_swap C X Y f g), <- Category.Core.associativity, codiagonal_swap_invariant;
   reflexivity.
 Qed.
 
@@ -376,3 +367,4 @@ Proof.
     unfold sg_op, sgop_morphism.
     rapply (morphism_addition_commutative C X Y).
 Defined.
+    
