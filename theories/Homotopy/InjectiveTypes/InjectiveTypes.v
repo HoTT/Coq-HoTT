@@ -16,7 +16,7 @@ Require Import InjectiveTypes.TypeFamKanExt.
 
 In universe declarations, we use [u], [v], [w], etc. as our typical universe variables. Our convention for the max of two universes [u] and [v] is [uv], and the successor of a universe [u] is [su]. Occasionally we write [T] for a top universe which is strictly larger than all other provided universes.
 
-We hope that later versions of Coq will allow us access to the max and successor operations and much of the cumbersome universe handing here can be greatly reduced. *)
+We hope that later versions of Coq will allow us access to the max and successor operations and much of the cumbersome universe handling here can be greatly reduced. *)
 
 Section UniverseStructure.
   Universes u v w uv uw vw.

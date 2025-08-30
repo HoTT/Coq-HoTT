@@ -436,6 +436,15 @@ Definition equiv_functor_sigma_pb {A B : Type} {Q : B -> Type}
   : sig (Q o f) <~> sig Q
   := equiv_functor_sigma f (fun a => 1%equiv).
 
+(** ** Functoriality on logical equivalences *)
+
+(** At least over a fixed base *)
+Definition iff_functor_sigma {A : Type} {P Q : A -> Type}
+           (f : forall a, P a <-> Q a)
+  : sig P <-> sig Q
+  := (functor_sigma idmap (fun a => fst (f a)),
+    functor_sigma idmap (fun a => snd (f a))).
+
 (** Lemma 3.11.9(i): Summing up a contractible family of types does nothing. *)
 Instance isequiv_pr1_contr {A} {P : A -> Type}
   `{forall a, Contr (P a)}

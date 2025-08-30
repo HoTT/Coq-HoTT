@@ -705,7 +705,7 @@ Definition extension_functor_coeq {B A f g B' A' f' g'}
            (s : forall x, C (functor_coeq h k p q x))
   : ExtensionAlong (functor_coeq h k p q) C s.
 Proof.
-  (** We start by change the problem to involve [CylCoeq] with cofibrations. *)
+  (** We start by changing the problem to involve [CylCoeq] with cofibrations. *)
   set (C' := C o pr_cylcoeq p q).
   set (s' x := pr_cyl_cylcoeq p q x # s x).
   assert (e : ExtensionAlong (cyl_cylcoeq p q) C' s').

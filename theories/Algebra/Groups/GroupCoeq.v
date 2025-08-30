@@ -48,7 +48,7 @@ Proof.
       $@ (_ $@L freeproduct_rec_beta_inr _ _)^$).
 Defined.
 
-(** TODO: unify this with [groupcoeq_rec]. It will require doing the analagous thing for [AmalgamatedFreeProduct]. *)
+(** TODO: unify this with [groupcoeq_rec]. It will require doing the analogous thing for [AmalgamatedFreeProduct]. *)
 Definition equiv_groupcoeq_rec `{Funext} {A B C : Group} (f g : A $-> B)
   : {h : B $-> C & h $o f $== h $o g} <~> (GroupCoeq f g $-> C).
 Proof.

@@ -3,7 +3,7 @@ From HoTT Require Import Spaces.Nat.Core.
 
 Local Open Scope nat_scope.
 
-(** Testing the different [apply] tacitcs in the library. *)
+(** Testing the different [apply] tactics in the library. *)
 
 Definition test1_type := {n : nat & n < 3}.
 Fail Definition test1 : test1_type := ltac:(apply exist).
