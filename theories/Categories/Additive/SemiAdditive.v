@@ -3,10 +3,10 @@
     Categories with zero objects and biproducts, which automatically 
     have commutative monoid structure on hom-sets. *)
 
-From HoTT Require Import Basics Types.
-From HoTT.Categories Require Import Category Functor.
+From HoTT Require Import Basics.Overture.
+From HoTT.Categories Require Import Category.Core.
 From HoTT.Categories.Additive Require Import ZeroObjects Biproducts.
-From HoTT.Classes.interfaces Require Import abstract_algebra canonical_names.
+From HoTT.Classes.interfaces Require Import abstract_algebra.
 
 (** ** Definition of semi-additive category *)
 
