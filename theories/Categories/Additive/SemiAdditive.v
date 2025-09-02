@@ -57,20 +57,24 @@ Section BiproductCharacterization.
     : biproduct_prod_mor (semiadditive_biproduct Y Y) Z h (zero_morphism Z Y)
       = (Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y)) o h)%morphism.
   Proof.
-    symmetry; rapply biproduct_prod_unique;
-    rewrite <- Category.Core.associativity;
-    [rewrite (beta_l (biproduct_is (semiadditive_biproduct Y Y))); rapply Category.Core.left_identity
-    |rewrite (mixed_r (biproduct_is (semiadditive_biproduct Y Y))); rapply zero_morphism_left].
+    symmetry; rapply biproduct_prod_unique.
+    all: rewrite <- Category.Core.associativity.
+    - rewrite (beta_l (biproduct_is (semiadditive_biproduct Y Y))).
+      rapply Category.Core.left_identity.
+    - rewrite (mixed_r (biproduct_is (semiadditive_biproduct Y Y))).
+      rapply zero_morphism_left.
   Qed.
 
   Lemma biproduct_zero_left_is_inr (Y Z : object C) (h : morphism C Z Y)
     : biproduct_prod_mor (semiadditive_biproduct Y Y) Z (zero_morphism Z Y) h
       = (Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y)) o h)%morphism.
   Proof.
-    symmetry; rapply biproduct_prod_unique;
-    rewrite <- Category.Core.associativity;
-    [rewrite (mixed_l (biproduct_is (semiadditive_biproduct Y Y))); rapply zero_morphism_left
-    |rewrite (beta_r (biproduct_is (semiadditive_biproduct Y Y))); rapply Category.Core.left_identity].
+    symmetry; rapply biproduct_prod_unique.
+    all: rewrite <- Category.Core.associativity.
+    - rewrite (mixed_l (biproduct_is (semiadditive_biproduct Y Y))).
+      rapply zero_morphism_left.
+    - rewrite (beta_r (biproduct_is (semiadditive_biproduct Y Y))).
+      rapply Category.Core.left_identity.
   Qed.
 
   (** Composition of biproduct morphisms. *)
@@ -79,8 +83,10 @@ Section BiproductCharacterization.
     : (biproduct_prod_mor (semiadditive_biproduct X Y) W f g o h)%morphism
       = biproduct_prod_mor (semiadditive_biproduct X Y) Z (f o h) (g o h).
   Proof.
-    rapply biproduct_prod_unique; rewrite <- Category.Core.associativity;
-    [rewrite biproduct_prod_beta_l | rewrite biproduct_prod_beta_r]; reflexivity.
+    rapply biproduct_prod_unique.
+    all: rewrite <- Category.Core.associativity.
+    - by rewrite biproduct_prod_beta_l.
+    - by rewrite biproduct_prod_beta_r.
   Qed.
 
 End BiproductCharacterization.
@@ -92,18 +98,24 @@ Section IdentityLaws.
 
   (** Zero is a left identity for morphism addition. *)
   Theorem zero_left_identity (X Y : object C) (f : morphism C X Y)
-      : sgop_morphism C X Y (zero_morphism X Y) f = f.
-    Proof.
-      unfold sgop_morphism; rewrite biproduct_zero_left_is_inr, <- Category.Core.associativity,
-                                     biproduct_coprod_beta_r; rapply Category.Core.left_identity.
-    Qed.
+    : sgop_morphism C X Y (zero_morphism X Y) f = f.
+  Proof.
+    unfold sgop_morphism.
+    rewrite biproduct_zero_left_is_inr.
+    rewrite <- Category.Core.associativity.
+    rewrite biproduct_coprod_beta_r.
+    rapply Category.Core.left_identity.
+  Qed.
 
   (** Zero is a right identity for morphism addition. *)
   Theorem zero_right_identity (X Y : object C) (f : morphism C X Y)
     : sgop_morphism C X Y f (zero_morphism X Y) = f.
   Proof.
-    unfold sgop_morphism; rewrite biproduct_zero_right_is_inl, <- Category.Core.associativity,
-                                   biproduct_coprod_beta_l; rapply Category.Core.left_identity.
+    unfold sgop_morphism.
+    rewrite biproduct_zero_right_is_inl.
+    rewrite <- Category.Core.associativity.
+    rewrite biproduct_coprod_beta_l.
+    rapply Category.Core.left_identity.
   Qed.
 
 End IdentityLaws.
