@@ -1,12 +1,15 @@
 (** * Semi-additive categories
 
-    Categories with zero objects and biproducts, which automatically 
-    have commutative monoid structure on hom-sets. *)
+    Categories with zero objects and biproducts, which automatically
+    have commutative monoid structures on hom-sets. *)
 
 From HoTT Require Import Basics.Overture.
 From HoTT.Categories Require Import Category.Core.
 From HoTT.Categories.Additive Require Import ZeroObjects Biproducts.
 From HoTT.Classes.interfaces Require Import abstract_algebra.
+
+(** This lets us use "+" notation for the [sgop] instance defined below. *)
+Local Open Scope mc_add_scope.
 
 (** ** Definition of semi-additive category *)
 
@@ -43,10 +46,6 @@ Section MorphismAddition.
     := @zero_morphism C semiadditive_zero X Y.
     
 End MorphismAddition.
-
-(** ** Notation for morphism addition *)
-
-Notation "f + g" := (sgop_morphism _ _ _ f g) : morphism_scope.
 
 (** ** Biproduct characterization lemmas *)
 
