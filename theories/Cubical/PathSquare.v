@@ -46,9 +46,10 @@ Arguments PathSquare {A _ _ _ _}.
 Notation "1" := sq_id : square_scope.
 
 (* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
-Scheme PathSquare_ind := Induction for PathSquare Sort Type.
+(* register=no: otherwise the scheme confuses the make_equiv tactic. When the minimum supported version is >= 9.2.0, the warning can be re-enabled. *)
+#[warnings="-unsupported-attributes",register=no] Scheme PathSquare_ind := Induction for PathSquare Sort Type.
 Arguments PathSquare_ind {A} P f {_ _ _ _ _ _ _ _} _ : rename.
-Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
+#[warnings="-unsupported-attributes",register=no] Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
 Arguments PathSquare_rec {A} P f {_ _ _ _ _ _ _ _} _ : rename.
 
 (** [PathSquare_ind] is an equivalence, similar to how [paths_ind] is *)
