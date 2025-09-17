@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
 Require Import Modalities.Modality Modalities.Identity.
 Require Import Limits.Pullback.

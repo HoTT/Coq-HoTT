@@ -1,4 +1,4 @@
-Require Import Basics Types Truncations.Core.
+From HoTT Require Import Basics Types Truncations.Core.
 Require Import WildCat.Core HSet.
 Require Import Algebra.Groups.Group.
 Require Export Algebra.Groups.QuotientGroup.

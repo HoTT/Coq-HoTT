@@ -4,7 +4,7 @@
 
 Many proofs guided by original Agda formalization in the Type Topology Library which can be found at: https://martinescardo.github.io/TypeTopology/InjectiveTypes.Sigma and InjectiveTypes.MathematicalStructuresMoreGeneral. *)
 
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.Forall Types.Sigma Types.Universe.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import Truncations.Core.

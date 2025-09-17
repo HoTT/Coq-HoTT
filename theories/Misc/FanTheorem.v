@@ -1,6 +1,6 @@
 (** * The fan theorem *)
 
-Require Import Basics Types. 
+From HoTT Require Import Basics Types. 
 Require Import Truncations.Core.
 Require Import Spaces.Nat.Core.
 Require Import Misc.UStructures BarInduction. 

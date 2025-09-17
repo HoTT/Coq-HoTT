@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.
 Require Import Diagrams.ParallelPair.
 Require Import Diagrams.Cocone.

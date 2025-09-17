@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Cubical.DPath.
 Require Import Cubical.PathSquare.
 Require Import Cubical.DPathSquare.

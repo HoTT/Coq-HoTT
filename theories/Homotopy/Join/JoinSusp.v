@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Join.Core Join.JoinAssoc Suspension Spaces.Spheres.
 Require Import WildCat.
 Require Import Spaces.Nat.Core.
