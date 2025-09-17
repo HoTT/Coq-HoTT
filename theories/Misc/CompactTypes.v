@@ -1,6 +1,6 @@
 (** * Properties of compact and searchable types *)
 
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Spaces.Nat.Core.
 Require Import Misc.UStructures.
