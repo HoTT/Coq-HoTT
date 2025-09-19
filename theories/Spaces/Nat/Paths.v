@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Export Basics.Nat.
 Require Export HoTT.Universes.DProp.
 

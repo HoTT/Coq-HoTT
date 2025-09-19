@@ -1,4 +1,4 @@
-Require Import Basics Types.Prod Types.Equiv.
+From HoTT Require Import Basics Types.Prod Types.Equiv.
 
 Local Open Scope path_scope.
 Generalizable Variables A B f.

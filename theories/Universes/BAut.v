@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Truncations.
 Require Import ObjectClassifier Homotopy.ExactSequence Pointed.
 

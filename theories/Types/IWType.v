@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.Forall Types.Sigma Types.Prod Types.WType.
 
 (** In this file we define indexed W-types. We show that indexed W-types can be reduced to W-types whilst still having definitional computation rules. We also characterize the path space of indexed W-types. This allows us to derive sufficient conditions for an indexed W-type to be truncated. *)

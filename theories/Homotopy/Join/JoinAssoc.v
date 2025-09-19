@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
+From HoTT Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
 
 (** * The associativity of [Join]
 

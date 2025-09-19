@@ -1,5 +1,5 @@
 (** * The simplex category Δ, and the precategory of simplicial sets, [Δᵒᵖ → set] *)
-Require Import Basics Types Spaces.Nat.Core.
+From HoTT Require Import Basics Types Spaces.Nat.Core.
 Require Import Category.Core Functor.Core Functor.Paths.
 Require Import SetCategory.Core.
 Require Import ChainCategory FunctorCategory.Core.

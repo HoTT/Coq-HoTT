@@ -1,4 +1,4 @@
-Require Import Basics Pointed.
+From HoTT Require Import Basics Pointed.
 Require Import Truncations.Core.
 
 (** ** Encode-decode method of characterizing identity types *)
