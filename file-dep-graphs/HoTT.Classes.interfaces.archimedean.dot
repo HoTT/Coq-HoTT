@@ -1,0 +1,11 @@
+digraph HoTT_Classes_interfaces_archimedean {
+  graph [ratio=0.5]
+  node [style=filled]
+archimedean_archimedean_property [label="archimedean_property", URL=<archimedean.html#archimedean_property>, peripheries=3, fillcolor="#F070D1"] ;
+archimedean_ArchimedeanProperty [label="ArchimedeanProperty", URL=<archimedean.html#ArchimedeanProperty>, fillcolor="#F070D1"] ;
+archimedean_qinc [label="qinc", URL=<archimedean.html#qinc>, fillcolor="#F070D1"] ;
+  archimedean_archimedean_property -> archimedean_ArchimedeanProperty [] ;
+  archimedean_ArchimedeanProperty -> archimedean_qinc [] ;
+subgraph cluster_archimedean { label="archimedean"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+archimedean_qinc; archimedean_ArchimedeanProperty; archimedean_archimedean_property; };
+} /* END */

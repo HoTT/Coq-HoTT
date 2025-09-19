@@ -1,0 +1,698 @@
+<html>
+<head>
+<title>FunextVarieties.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for FunextVarieties.v</h1>
+
+<div class="code" title="File: FunextVarieties.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Varieties of function extensionality *)
+
+</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 2
+Time: 0.038s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Metatheory.Core.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In the Overture, we defined function extensionality to be the assertion that the map [apD10] is an equivalence.   We now prove that this follows from a couple of weaker-looking forms of function extensionality.  We do require eta conversion, which Coq 8.4+ has judgmentally.
+
+   This proof is originally due to Voevodsky; it has since been simplified by Peter Lumsdaine and Michael Shulman. *)
+
+(** Naive funext is the simple assertion that pointwise equal functions are equal.  The domain and codomain could live in different universes; the third universe argument is essentially the max of [i] and [j] (and similarly for all subsequent axioms). *)
+
+</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition NaiveFunext :=
+  forall (A : Type@{i}) (P : A -&gt; Type@{j}) (f g : forall x, P x),
+    (forall x, f x = g x) -&gt; (f = g).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Naive non-dependent funext is the same, but only for non-dependent functions.  *)
+
+</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition NaiveNondepFunext :=
+  forall (A B : Type) (f g : A -&gt; B),
+    (forall x, f x = g x) -&gt; (f = g).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Weak funext says that a product of contractible types is contractible. *)
+
+</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition WeakFunext :=
+  forall (A : Type) (P : A -&gt; Type),
+    (forall x, Contr (P x)) -&gt; Contr (forall x, P x).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The obvious implications are
+   [Funext -&gt; NaiveFunext -&gt; WeakFunext] and [NaiveFunext -&gt; NaiveNondepFunext].
+   None of these do anything fiddly with the universes either. *)
+
+</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Funext_implies_NaiveFunext@{i j max}
+  : Funext_type@{i j max} -&gt; NaiveFunext@{i j max}.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros fe A P f g h.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold Funext_type in *.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((@apD10 A P f g)^-1 h).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition NaiveFunext_implies_WeakFunext@{i j max}
+  : NaiveFunext@{i j max} -&gt; WeakFunext@{i j max}.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros nf A P Pc.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (fun x =&gt; center (P x))).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f; apply nf; intros x.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply contr.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition NaiveFunext_implies_NaiveNondepFunext@{i j max}
+  : NaiveFunext@{i j max} -&gt; NaiveNondepFunext@{i j max}
+  := fun nf A B f g =&gt; nf A (fun _ =&gt; B) f g.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The non-obvious directions are that [WeakFunext] implies Funext and that [NaiveNondepFunext] implies [WeakFunext] (and hence all four are logically equivalent). *)
+
+(** ** [WeakFunext] implies [Funext] *)
+
+(** To show that [WeakFunext] implies Funext, the point is that under weak funext, the space of "pointwise homotopies" has the same universal property as the space of paths. *)
+
+</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Homotopies.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (wf : WeakFunext).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A:Type} {B : A -&gt; Type}.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (f : forall x, B x).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Recall that [f == g] is the type of pointwise paths (or "homotopies") from [f] to [g]. *)
+ </pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Let idhtpy : f == f := fun x =&gt; idpath (f x).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Weak funext implies that the "based homotopy space" of the Pi-type is contractible, just like the based path space. *)
+  (** Use priority 1, so we don't override [Contr Unit]. *)
+ </pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance contr_basedhtpy : Contr {g : forall x, B x &amp; f == g } | 1.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold WeakFunext in wf.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>    (* Allow typeclass inference to find it *)
+   </pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (Build_Contr _ (f;idhtpy)).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [g h].</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The trick is to show that the type [{g : forall x, B x &amp; f == g }] is a retract of [forall x, {y : B x &amp; f x = y}], which is contractible due to J and weak funext.  Here are the retraction and its section. *)
+   </pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose (r := fun k =&gt; exist (fun g =&gt; f == g)
+      (fun x =&gt; (k x).1) (fun x =&gt; (k x).2)).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (s := fun (g : forall x, B x) (h : f == g) x =&gt; (g x ; h x)).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Because of judgemental eta-conversion, the retraction is actually definitional, so we can just replace the goal. *)
+   </pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>change (r (fun x =&gt; (f x ; idpath (f x))) = r (s g h)).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    apply ap; srapply path_contr.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This enables us to prove that pointwise homotopies have the same elimination rule as the identity type. *)
+
+ </pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context (Q : forall g (h : f == g), Type).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (d : Q f idhtpy).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+
+  Definition htpy_ind g h : Q g h
+    := @transport _ (fun gh =&gt; Q gh.1 gh.2) (f;idhtpy) (g;h)
+         (@path_contr _ _ _ _) d.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The computation rule, of course, is only propositional. *)
+ </pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 89
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Definition htpy_ind_beta : htpy_ind f idhtpy = d
+    := transport (fun p : (f;idhtpy) = (f;idhtpy) =&gt;
+                    transport (fun gh =&gt; Q gh.1 gh.2) p d = d)
+         (@path2_contr _ _ _ _
+           (path_contr (f;idhtpy) (f;idhtpy)) (idpath _))^
+         (idpath _).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Homotopies.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now the proof is fairly easy; we can just use the same induction principle on both sides.  This proof also preserves all the universes. *)</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem WeakFunext_implies_Funext@{i j max}
+  : WeakFunext@{i j max} -&gt; Funext_type@{i j max}.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros wf; hnf; intros A B f g.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_adjointify (@apD10 A B f g)
+    (htpy_ind wf f (fun g' _ =&gt; f = g') idpath g) _ _).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert g; refine (htpy_ind wf _ _ _).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap _ (htpy_ind_beta wf _ _ _)).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h; destruct h.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (htpy_ind_beta wf _ _ _).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition NaiveFunext_implies_Funext : NaiveFunext -&gt; Funext_type
+  := WeakFunext_implies_Funext o NaiveFunext_implies_WeakFunext.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Naive non-dependent funext implies weak funext  *)
+
+(** First we show that naive non-dependent funext suffices to show that postcomposition with an equivalence is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 115
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>Definition equiv_postcompose_from_NaiveNondepFunext
+           (nf : NaiveNondepFunext) {A B C : Type} (f : B &lt;~&gt; C)
+  : (A -&gt; B) &lt;~&gt; (A -&gt; C)
+  := Build_Equiv
+       _ _ (fun (g:A-&gt;B) =&gt; f o g)
+       (isequiv_adjointify
+          (fun (g:A-&gt;B) =&gt; f o g)
+          (fun h =&gt; f^-1 o h)
+          (fun h =&gt; nf _ _ _ _ (fun x =&gt; eisretr f (h x)))
+          (fun g =&gt; nf _ _ _ _ (fun y =&gt; eissect f (g y)))).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now, if each [P x] is contractible, the projection [pr1 : {x:X &amp; P x} -&gt; X] is an equivalence (this requires no funext).  Thus, postcomposition with it is also an equivalence, and hence the fiber of postcomposition over [idmap X] is contractible.  But this fiber is "the type of sections of [pr1]" and hence equivalent to [forall x:X, P x].  The latter equivalence requires full funext to prove, but without any funext we can show that [forall x:X, P x] is a *retract* of the type of sections, hence also contractible. *)</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem NaiveNondepFunext_implies_WeakFunext
+  : NaiveNondepFunext -&gt; WeakFunext.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros nf X P H.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (T := (hfiber (equiv_postcompose_from_NaiveNondepFunext nf (equiv_pr1 P)) idmap)).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 130
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  exact (@contr_retract T _ _
+           (fun fp x =&gt; transport P (ap10 fp.2 x) (fp.1 x).2)
+           (fun f =&gt; ((fun x =&gt; (x ; f x)) ; 1)) (fun f =&gt; 1)).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Therefore, naive non-dependent funext also implies full funext.  Interestingly, this requires the universe of the assumption codomain to be not just that of the conclusion codomain, but the max of that universe with the domain universe (which is unchanged). *)</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition NaiveNondepFunext_implies_Funext@{i j max}
+  : NaiveNondepFunext@{i max max} -&gt; Funext_type@{i j max}
+  := WeakFunext_implies_Funext o NaiveNondepFunext_implies_WeakFunext.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functional extensionality is downward closed *)
+
+(** If universe [U_i] is functionally extensional, then so are universes [U_i'] for [i' ≤ i]. *)</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma Funext_downward_closed@{i j max i' j' max' | i &lt;= max, j &lt;= max, i' &lt;= max', j' &lt;= max', i' &lt;= i, j' &lt;= j}
+  `{H : Funext_type@{i j max}} : Funext_type@{i' j' max'}.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  hnf in *.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Here we make use of cumulativity. *)
+ </pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>exact (fun A P =&gt; H A P).</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunextVarieties.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

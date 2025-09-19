@@ -1,0 +1,153 @@
+<html>
+<head>
+<title>Numeral.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Numeral.v</h1>
+
+<div class="code" title="File: Numeral.v
+Line: 1
+Time: 0.02s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Numerals.Decimal Basics.Numerals.Hexadecimal.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Decimal or Hexadecimal numbers *)
+
+</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Variant uint : Type0 := UIntDec (u:Decimal.uint) | UIntHex (u:Hexadecimal.uint).</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Variant int : Type0 := IntDec (i:Decimal.int) | IntHex (i:Hexadecimal.int).</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Variant numeral : Type0 := Dec (d:Decimal.decimal) | Hex (h:Hexadecimal.hexadecimal).</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Register uint as num.num_uint.type.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Register int as num.num_int.type.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Register numeral as num.numeral.type.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Register numeral as num.number.type.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pseudo-conversion functions used when declaring
+    Numeral Notations on [uint] and [int]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition uint_of_uint (i:uint) := i.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition int_of_int (i:int) := i.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Parsing / printing of decimal numbers *)</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Number Notation uint uint_of_uint uint_of_uint : dec_uint_scope.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Number Notation int int_of_int int_of_int : dec_int_scope.</pre>
+</div>
+<div class="code" title="File: Numeral.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

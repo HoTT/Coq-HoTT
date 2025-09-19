@@ -1,0 +1,1415 @@
+<html>
+<head>
+<title>ring_quote.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ring_quote.v</h1>
+
+<div class="code" title="File: ring_quote.v
+Line: 1
+Time: 0.068s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import 
+  HoTT.Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Class AlmostNegate A := almost_negate : A -&gt; A.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 4
+Time: 0.002s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+Class AlmostRing A {Aplus : Plus A} {Amult : Mult A}
+  {Azero : Zero A} {Aone : One A} {Anegate : AlmostNegate A} :=
+  { almost_ring_semiring : IsSemiCRing A
+  ; almost_ring_neg_pr : forall x : A, almost_negate x = (almost_negate 1) * x }.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section almostring_mor.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context {A B : Type} {Aplus : Plus A} {Bplus : Plus B}
+  {Amult : Mult A} {Bmult : Mult B} {Azero : Zero A} {Bzero : Zero B}
+  {Aone : One A} {Bone : One B} {Aneg : AlmostNegate A} {Bneg : AlmostNegate B}.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+Class AlmostRingPreserving (f : A -&gt; B) :=
+  { almostring_mor_sr_mor : IsSemiRingPreserving f
+  ; almostring_mor_neg : forall x, f (almost_negate x) = almost_negate (f x) }.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End almostring_mor.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Module Quoting.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 21
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+Inductive Expr (V:Type0) : Type0 :=
+  | Var (v : V)
+  | Zero
+  | One
+  | Plus (a b : Expr V)
+  | Mult (a b : Expr V)
+  | Neg (a : Expr V)
+.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Var {V} v.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Zero {V}.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments One {V}.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Plus {V} a b.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Mult {V} a b.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Neg {V} a.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section contents.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Universe U.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context (R:Type@{U}) `{AlmostRing R}.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation Vars V := (V -&gt; R).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 43
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+Fixpoint eval {V:Type0} (vs : Vars V) (e : Expr V) : R :=
+  match e with
+  | Var v =&gt; vs v
+  | Zero =&gt; 0
+  | One =&gt; 1
+  | Plus a b =&gt; eval vs a + eval vs b
+  | Mult a b =&gt; eval vs a * eval vs b
+  | Neg a =&gt; almost_negate (eval vs a)
+  end.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma eval_ext {V:Type0} (vs vs' : Vars V) :
+  pointwise_paths@{Set U} vs vs' -&gt;
+  pointwise_paths@{Set U} (eval vs) (eval vs').</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 58
+Time: 0.002s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+intros E e;induction e;simpl;auto;apply ap011;auto.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition noVars : Vars Empty.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition singleton x : Vars Unit := fun _ =&gt; x.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition merge {A B:Type0 } (va:Vars A) (vb:Vars B) : Vars (sum@{Set Set} A B)
+  := fun i =&gt; match i with inl i =&gt; va i | inr i =&gt; vb i end.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Lookup.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Class Lookup {A:Type0 } (x: R) (f: Vars A)
+    := { lookup: A; lookup_correct: f lookup = x }.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments lookup {A} x f {_}.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (x:R) {A B:Type0 } (va : Vars A) (vb : Vars B).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance lookup_l `{!Lookup x va} : Lookup x (merge va vb).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (inl (lookup x va)).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact lookup_correct.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance lookup_r `{!Lookup x vb} : Lookup x (merge va vb).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (inr (lookup x vb)).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact lookup_correct.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance lookup_single : Lookup x (singleton x).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists tt.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Lookup.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+Fixpoint expr_map {V W:Type0 } (f : V -&gt; W) (e : Expr V) : Expr W :=
+  match e with
+  | Var v =&gt; Var (f v)
+  | Zero =&gt; Zero
+  | One =&gt; One
+  | Plus a b =&gt; Plus (expr_map f a) (expr_map f b)
+  | Mult a b =&gt; Mult (expr_map f a) (expr_map f b)
+  | Neg a =&gt; Neg (expr_map f a)
+  end.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma eval_map {V W:Type0 } (f : V -&gt; W) v e
+  : eval v (expr_map f e) = eval (Compose@{Set Set U} v f) e.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 108
+Time: 0.002s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+induction e;simpl;try reflexivity;apply ap011;auto.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Quote.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+  Class Quote {V:Type0 } (l: Vars V) (n: R) {V':Type0 } (r: Vars V') :=
+    { quote : Expr (V |_| V')
+    ; eval_quote : @eval (V |_| V') (merge l r) quote = n }.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments quote {V l} n {V' r _}.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Arguments eval_quote {V l} n {V' r _}.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sum_assoc {A B C}: (A |_| B) |_| C -&gt; A |_| (B |_| C).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [[?|?]|?];auto.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sum_aux {A B C}: (A |_| B) -&gt; A |_| (B |_| C).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [?|?];auto.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance quote_zero (V:Type0) (v: Vars V): Quote v 0 noVars.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists Zero.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance quote_one (V:Type0) (v: Vars V): Quote v 1 noVars.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists One.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 141
+Time: 0.002s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+  Lemma quote_plus_ok (V:Type0) (v: Vars V) n
+    (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
+    `{!Quote v n v'} `{!Quote (merge v v') m v''}
+    : eval (merge v (merge v' v''))
+      (Plus (expr_map sum_aux (quote n)) (expr_map sum_assoc (quote m))) = 
+      n + m.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 150
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+  rewrite &lt;-(eval_quote n), &lt;-(eval_quote m),
+    2!eval_map.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap011;apply eval_ext.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [?|?];reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[?|?]|?];reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 155
+Time: 0.002s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+  Local Instance quote_plus (V:Type0) (v: Vars V) n
+  (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
+  `{!Quote v n v'} `{!Quote (merge v v') m v''}: Quote v (n + m) (merge v' v'').</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  econstructor.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply quote_plus_ok.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 163
+Time: 0.002s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+  Lemma quote_mult_ok (V:Type0) (v: Vars V) n
+    (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
+    `{!Quote v n v'} `{!Quote (merge v v') m v''}
+    : eval (merge v (merge v' v''))
+      (Mult (expr_map sum_aux (quote n)) (expr_map sum_assoc (quote m))) = 
+      n * m.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+  rewrite &lt;-(eval_quote n), &lt;-(eval_quote m),
+    2!eval_map.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap011;apply eval_ext.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [?|?];reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[?|?]|?];reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 177
+Time: 0.002s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+  Local Instance quote_mult (V:Type0) (v: Vars V) n
+    (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
+    `{!Quote v n v'} `{!Quote (merge v v') m v''}
+    : Quote v (n * m) (merge v' v'').</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  econstructor.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply quote_mult_ok.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma quote_neg_ok@{} (V:Type0) (v : Vars V) n (V':Type0) (v' : Vars V')
+    `{!Quote v n v'}
+    : eval (merge v v') (Neg (quote n)) = almost_negate n.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap,eval_quote.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance quote_neg (V:Type0) (v : Vars V) n (V':Type0) (v' : Vars V')
+    `{!Quote v n v'}
+    : Quote v (almost_negate n) v'.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (Neg (quote n)).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply quote_neg_ok.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance quote_old_var (V:Type0) (v: Vars V) x {i: Lookup x v}
+    : Quote v x noVars | 8.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (Var (inl (lookup x v))).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact lookup_correct.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance quote_new_var (V:Type0) (v: Vars V) x
+    : Quote v x (singleton x) | 9.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (Var (inr tt)).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Quote.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition quote': forall x {V':Type0 } {v: Vars V'} {d: Quote noVars x v}, Expr _
+  := @quote _ _.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition eval_quote': forall x {V':Type0} {v: Vars V'} {d: Quote noVars x v},
+  eval (merge noVars v) (quote x) = x
+  := @eval_quote _ _.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+Class EqQuote {V:Type0 } (l: Vars V) (n m: R) {V':Type0 } (r: Vars V') :=
+    { eqquote_l : Expr V
+    ; eqquote_r : Expr (V |_| V')
+    ; eval_eqquote : eval (merge l r) (expr_map inl eqquote_l)
+                   = eval (merge l r) eqquote_r -&gt; n = m }.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 230
+Time: 0.002s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+Lemma eq_quote_ok (V:Type0) (v: Vars V) n
+  (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
+  `{!Quote v n v'} `{!Quote (merge v v') m v''}
+  : eval (merge v (merge v' v'')) (expr_map sum_aux (quote n))
+  = eval (merge v (merge v' v'')) (expr_map sum_assoc (quote m))
+  -&gt; n = m.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros E.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+rewrite &lt;-(eval_quote n), &lt;-(eval_quote m).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 240
+Time: 0.003s">
+<div class="time" style="width: 4.4117647058824%"></div>
+<pre>
+path_via (eval (merge v (merge v' v'')) (expr_map sum_aux (quote n)));
+[|path_via (eval (merge v (merge v' v'')) (expr_map sum_assoc (quote m)))].</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite eval_map.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eval_ext.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [?|?];reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite eval_map.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eval_ext.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [[?|?]|?];reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 246
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Instance eq_quote (V:Type0) (v: Vars V) n
+  (V':Type0) (v': Vars V') m (V'':Type0) (v'': Vars V'')
+  `{!Quote v n v'} `{!Quote (merge v v') m v''}
+  : EqQuote (merge v v') n m v''.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+econstructor.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros E.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply (@eq_quote_ok _ _ _ _ _ _ _ _ Quote0 Quote1).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 256
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+etransitivity;[etransitivity;[|exact E]|].</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite 2!eval_map.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eval_ext.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [?|?];reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (eval_map sum_assoc).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply eval_ext.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[?|?]|?];reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 260
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sum_forget {A B} : Empty |_| A -&gt; A |_| B.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros [[]|?];auto.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 266
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+
+Lemma quote_equality {V:Type0} {v: Vars V}
+  {V':Type0} {v': Vars V'} (l r: R)
+  `{!Quote noVars l v} `{!Quote v r v'}
+  : let heap := (merge v v') in
+  eval heap (expr_map sum_forget (quote l)) = eval heap (quote r) -&gt; l = r.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros ? E.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+rewrite &lt;-(eval_quote l),&lt;-(eval_quote r).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 275
+Time: 0.001s">
+<div class="time" style="width: 1.4705882352941%"></div>
+<pre>
+path_via (eval heap (expr_map sum_forget (quote l))).</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+rewrite eval_map.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eval_ext.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros [[]|?].</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 279
+Time: 0.004s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+
+End contents.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Module Export Instances.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Existing Instances lookup_l lookup_r lookup_single quote_zero quote_one quote_plus quote_mult quote_neg eq_quote.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Existing Instance quote_old_var | 8.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Existing Instance quote_new_var | 9.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End Instances.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Quoting.</pre>
+</div>
+<div class="code" title="File: ring_quote.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,18 @@
+N: 11 "Build_pEquiv'" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 1 "equiv_pequiv_inverse" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 7 "moveL_pequiv_Mf" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 6 "moveL_pequiv_Vf" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 8 "moveR_pequiv_Mf" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 5 "moveR_pequiv_Vf" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 4 "moveR_pequiv_fV" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 10 "pequiv_adjointify" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 9 "pequiv_adjointify'" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 13 "pequiv_compose" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 2 "pequiv_pequiv_postcompose" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 3 "pequiv_pequiv_precompose" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 15 "pequiv_reflexive" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 14 "pequiv_symmetric" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+N: 12 "pequiv_transitive" [body=yes, kind=cnst, prop=no, path="pEquiv", ];
+E: 2 11 [weight=1, ];
+E: 3 11 [weight=1, ];
+E: 12 13 [weight=1, ];

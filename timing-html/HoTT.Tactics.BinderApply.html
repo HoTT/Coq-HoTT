@@ -1,0 +1,465 @@
+<html>
+<head>
+<title>BinderApply.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for BinderApply.v</h1>
+
+<div class="code" title="File: BinderApply.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Apply a lemma under binders *)</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 1
+Time: 0.022s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Tactics.EvalIn.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** There are some cases where [apply lem] will fail, but [intros; apply lem] will succeed.  The tactic [binder apply] is like [intros; apply lem], but it cleans up after itself by [revert]ing the things it introduced.  The tactic [binder apply lem in H] is to [binder apply lem], as [apply lem in H] is to [apply lem].  Note, however, that the implementation of [binder apply lem in H] is completely different and significantly more complicated. *)
+
+</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac can_binder_apply apply_tac fail1_tac :=
+  first [ assert_succeeds apply_tac
+        | assert_succeeds (intro; can_binder_apply apply_tac fail1_tac)
+        | fail1_tac ].</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Ltac binder_apply apply_tac fail1_tac :=
+  can_binder_apply apply_tac fail1_tac;
+  first [ apply_tac
+        | let H := fresh in
+          intro H;
+            binder_apply apply_tac fail1_tac;
+            revert H
+        | fail 1 "Cannot re-revert some introduced hypothesis" ].</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The tactic [eval_under_binders tac H] is equivalent to [tac H] if [H] is not a product (lambda-abstraction), and roughly equivalent to the constr [fun x =&gt; eval_under_binders tac (H x)] if [H] is a product. *)</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac eval_under_binders tac H :=
+  (** Bind a convenient name for the recursive call *)
+  let rec_tac := eval_under_binders tac in
+  (** If the hypothesis is a product ([forall]), we want to recurse under binders; if not, we're in the base case, and we simply compute the new term.  We use [match] rather than [lazymatch] so that if the tactic fails to apply under all of the binders, we try again under fewer binders.  We want to try first under as many binders as possible, in case the tactic, e.g., instantiates extra binders with evars. *)
+  match type of H with
+      (** Standard pattern for recursing under binders.  We zeta-expand to work around https://coq.inria.fr/bugs/show_bug.cgi?id=3248 and https://coq.inria.fr/bugs/show_bug.cgi?id=3458; we'd otherwise need globally unique name for [x].  We zeta-reduce afterwards so the user doesn't see our zeta-expansion.  We use [x] in both the pattern and the returned constructor so that we preserve the given name for the binder.  *)
+    | forall x : ?T, @?P x
+      =&gt; let ret := constr:(fun x : T =&gt;
+                              let Hx := H x in
+                              ltac:(
+                                let ret' := rec_tac Hx in
+                                exact ret')) in
+         let ret' := (eval cbv zeta in ret) in
+         constr:(ret')
+    (** Base case - simply return [tac H]  *)
+    | _ =&gt; tac H
+  end.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The tactic [make_tac_under_binders_using_in tac using_tac H] uses [tac] to transform a term [H], solving side-conditions (e.g., if [tac] uses [apply]) with [using_tac].  It returns the updated version of [H] as a constr; if [H] is a hypothesis in the context, it does not modify it.  Conceptually, [make_tac_under_binders_using_in tac idtac H] is the composition of two tactics: a [transform_under_binders : (constr -&gt; constr) -&gt; (constr -&gt; constr)] that runs a tactic under the binders of the constr it's given, and what would be an [eval tac in H], except for the fact that, e.g., [eval rewrite in H] doesn't actually work because it predates tactics in terms (we use [eval_in_using tac using_tac H] instead).
+
+    The arguments are:
+
+    - [tac] - should take the name of a hypothesis, and modify that hypothesis in place.  It could, for example, be [fun H =&gt; rewrite lem in H] to do the [rewrite H] under binders.
+
+    - [using_tac] - used to solve any side-conditions that [tac] generates.  Not strictly necessary, since [tac] can always solve its own side-conditions, but it's sometimes convenient to instantiate [tac] with [fun H =&gt; eapply lem in H] or something, and solve the side-conditions with [eassumption].
+
+    - [H] - the name of the hypothesis to start from.
+
+    N.B. We do not require [Funext] to use this tactic; [Funext] would only required to relate the term returned by this tactic and the original term.  Note also that we only rewrite under top-level binders (e.g., under the [x] in a hypothesis of type [forall x, P x], but not under the [x] in a hypothesis of type [(fun x y =&gt; x + y) = (fun x y =&gt; y + x)]). *)</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac make_tac_under_binders_using_in tac using_tac H :=
+  eval_under_binders ltac:(fun H' =&gt; eval_in_using tac using_tac H') H.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac do_tac_under_binders_using_in tac using_tac H :=
+  let H' := make_tac_under_binders_using_in tac using_tac H in
+  let H'' := fresh in
+  pose proof H' as H'';
+    clear H;
+    rename H'' into H.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "constrbinder" "apply" constr(lem) "in" constr(H) "using" tactic3(tac)
+  := make_tac_under_binders_using_in ltac:(fun H' =&gt; apply lem in H') tac H.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "constrbinder" "eapply" open_constr(lem) "in" constr(H) "using" tactic3(tac)
+  := constrbinder apply lem in H using tac.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "binder" "apply" constr(lem) "in" constr(H) "using" tactic3(tac)
+  := do_tac_under_binders_using_in ltac:(fun H' =&gt; apply lem in H') tac H.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "binder" "eapply" open_constr(lem) "in" constr(H) "using" tactic3(tac)
+  := binder apply lem in H using tac.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "constrbinder" "apply" constr(lem) "in" constr(H) := constrbinder apply lem in H using idtac.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "constrbinder" "eapply" open_constr(lem) "in" constr(H) := constrbinder eapply lem in H using idtac.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "binder" "apply" constr(lem) := binder_apply ltac:(apply lem) ltac:(fail 1 "Cannot apply" lem).</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "binder" "eapply" open_constr(lem) := binder_apply ltac:(eapply lem) ltac:(fail 1 "Cannot eapply" lem).</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "binder" "apply" constr(lem) "in" constr(H) := binder apply lem in H using idtac.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "binder" "eapply" open_constr(lem) "in" constr(H) := binder eapply lem in H using idtac.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Example basic_goal {A B C} (HA : forall x : A, B x) (HB : forall x : A, B x -&gt; C x) : forall x : A, C x.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** If we try to [apply HB], wanting to replace [C] with [B], we get an error about being unable to unify [B ?] with [A]. *)
+ </pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fail apply HB.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The tactic [binder apply] fixes this shortcoming. *)
+ </pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>binder apply HB.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact HA.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We [Abort], so that we don't get an extra constant floating around. *)</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Abort.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Example basic {A B C} (HA : forall x : A, B x) (HB : forall x : A, B x -&gt; C x) : forall x : A, C x.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** If we try to [apply HB in HA], wanting to replace [B] with [C], we get an error about being unable to instantiate the argument of type [A]: "Error: Unable to find an instance for the variable x." *)
+ </pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fail apply HB in HA.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The tactic [binder apply] fixes this shortcoming. *)
+ </pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>binder apply HB in HA.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact HA.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We [Abort], so that we don't get an extra constant floating around. *)</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Abort.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Example ex_funext `{Funext} {A} f g
+        (H' : forall x y z w : A, f x y z w = g x y z w :&gt; A)
+: f = g.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We need to apply [path_forall] under binders five times in [H'].  We use a different variant each time to demonstrate the various ways of using this tactic.  In a normal proof, you'd probably just do [do 4 binder apply (@path_forall _) in H'] or just [repeat binder apply (@path_forall _) in H']. *)
+  (** If we do [binder apply path_forall in H'], we are told that Coq can't infer the argument [A] to [path_forall].  Instead, we can [binder eapply] it, to tell Coq to defer inference and use an evar for now. *)
+ </pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fail binder apply path_forall in H'.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  binder eapply path_forall in H'.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Alternatively, we can make [A] explicit.  But then we get an error about not being able to resolve the instance of [Funext].  We can either tell Coq to solve the side condition using the [assumption] tactic (or [typeclasses eauto], for that matter), or we can have typeclass inference run when we construct the lemma to apply. *)
+  (** Some versions of Proof General are bad about noticing [Fail] within a tactic; see http://proofgeneral.inf.ed.ac.uk/trac/ticket/494.  So we comment this one out. *)
+  (**
+&lt;&lt;
+  Fail binder apply @path_forall in H'.
+&gt;&gt;
+  Error: Tactic failure: Cannot use &lt;tactic&gt; to solve side-condition goal
+Funext . Extended goal with context:
+(Funext -&gt;
+ forall (A : Type) (f g : A -&gt; A -&gt; A -&gt; A -&gt; A)
+   (H' : forall x' x'0 x'1 : A, f x' x'0 x'1 = g x' x'0 x'1),
+ let H0 := H' in Funext). *)
+ </pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>binder apply @path_forall in H' using assumption.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  binder apply @path_forall in H' using typeclasses eauto.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  binder apply (@path_forall _) in H'.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Now we have removed all arguments to [f] and [g] in [H']. *)
+ </pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>exact H'.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We [Abort], so that we don't get an extra constant floating around. *)</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Abort.</pre>
+</div>
+<div class="code" title="File: BinderApply.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** N.B. [constrbinder apply] is like [binder apply], except that it constructs a new term and returns it, rather than applying a lemma in-place to a hypothesis.  It's primarily useful as plumbing for higher-level tactics. *)
+
+</pre>
+</div>
+</body>
+</html>
+

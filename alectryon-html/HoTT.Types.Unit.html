@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Unit.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Theorems about the unit type *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk0"><span class="kn">Require Import</span> Basics.Overture Basics.Equivalences.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Universe Minimization ToSet</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable Variables</span> <span class="nf">A</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Eta conversion *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">eta_unit</span> (<span class="nv">z</span> : Unit) : tt = z
+  := <span class="kr">match</span> z <span class="kr">with</span> tt =&gt; <span class="mi">1</span> <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Paths *)</span>
+
+<span class="c">(* This is all kind of ridiculous, but it fits the pattern. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_unit_uncurried</span> (<span class="nv">z</span> <span class="nv">z&#39;</span> : Unit) : Unit -&gt; z = z&#39;
+  := <span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="kr">match</span> z, z&#39; <span class="kr">with</span> tt, tt =&gt; <span class="mi">1</span> <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_unit</span> (<span class="nv">z</span> <span class="nv">z&#39;</span> : Unit) : z = z&#39;
+  := path_unit_uncurried z z&#39; tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk1"><span class="kn">Definition</span> <span class="nf">eta_path_unit</span> {<span class="nv">z</span> <span class="nv">z&#39;</span> : Unit} (<span class="nv">p</span> : z = z&#39;) :
+  path_unit z z&#39; = p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>z, z'</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>z = z&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_unit z z&#39; = p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>z, z'</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>z = z&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_unit z z&#39; = p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk3"><span class="nb">destruct</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>z</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_unit z z = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk4"><span class="nb">destruct</span> z.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">path_unit tt tt = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk5"><span class="kn">Instance</span> <span class="nf">isequiv_path_unit</span> (<span class="nv">z</span> <span class="nv">z&#39;</span> : Unit) : IsEquiv (path_unit_uncurried z z&#39;) | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>z, z'</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (path_unit_uncurried z z&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>z, z'</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (path_unit_uncurried z z&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk7"><span class="nb">refine</span> (Build_IsEquiv _ _ (path_unit_uncurried z z&#39;) (<span class="kr">fun</span> <span class="nv">_</span> =&gt; tt)
+    (<span class="kr">fun</span> <span class="nv">p</span>:z=z&#39; =&gt;
+      <span class="kr">match</span> p <span class="kr">in</span> (_ = z&#39;) <span class="kr">return</span> (path_unit_uncurried z z&#39; tt = p) <span class="kr">with</span>
+        | idpath =&gt; <span class="kr">match</span> z <span class="kr">as</span> z <span class="kr">return</span> (path_unit_uncurried z z tt = <span class="mi">1</span>) <span class="kr">with</span>
+                    | tt =&gt; <span class="mi">1</span>
+                  <span class="kr">end</span>
+      <span class="kr">end</span>)
+    (<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">match</span> x <span class="kr">with</span> tt =&gt; <span class="mi">1</span> <span class="kr">end</span>) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>z, z'</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : Unit,
+<span class="kr">match</span>
+  path_unit_uncurried z z&#39; x <span class="kr">as</span> p <span class="kr">in</span> (_ = z&#39;)
+  <span class="kr">return</span> (path_unit_uncurried z z&#39; tt = p)
+<span class="kr">with</span>
+| <span class="mi">1</span> =&gt;
+    <span class="kr">match</span>
+      z <span class="kr">return</span> (path_unit_uncurried z z tt = <span class="mi">1</span>)
+    <span class="kr">with</span>
+    | tt =&gt; <span class="mi">1</span>
+    <span class="kr">end</span>
+<span class="kr">end</span> =
+ap (path_unit_uncurried z z&#39;)
+  <span class="kr">match</span> x <span class="kr">as</span> x0 <span class="kr">return</span> (tt = x0) <span class="kr">with</span>
+  | tt =&gt; <span class="mi">1</span>
+  <span class="kr">end</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> []; <span class="nb">destruct</span> z, z&#39;; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_path_unit</span> (<span class="nv">z</span> <span class="nv">z&#39;</span> : Unit) : Unit &lt;~&gt; (z = z&#39;)
+  := Build_Equiv _ _ (path_unit_uncurried z z&#39;) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Transport *)</span>
+
+<span class="sd">(** Is a special case of transporting in a constant fibration. *)</span>
+
+<span class="sd">(** ** Universal mapping properties *)</span>
+
+<span class="c">(* The positive universal property *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> Unit_ind [A] a u : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isequiv_unit_ind</span> `{Funext} (A : Unit -&gt; <span class="kt">Type</span>)
+: IsEquiv (@Unit_ind A) | <span class="mi">0</span>
+  := isequiv_adjointify _
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">u</span>:Unit, A u =&gt; f tt)
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">u</span>:Unit, A u =&gt; path_forall (@Unit_ind A (f tt)) f
+                                             (<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">match</span> x <span class="kr">with</span> tt =&gt; <span class="mi">1</span> <span class="kr">end</span>))
+  (<span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isequiv_unit_rec</span> `{Funext} (A : <span class="kt">Type</span>)
+: IsEquiv (@Unit_ind (<span class="kr">fun</span> <span class="nv">_</span> =&gt; A)) | <span class="mi">0</span>
+  := isequiv_unit_ind (<span class="kr">fun</span> <span class="nv">_</span> =&gt; A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[local]
+<span class="kn">Hint Extern</span> <span class="mi">4</span> =&gt; <span class="kp">progress</span> (<span class="nb">cbv</span> beta iota) : typeclass_instances.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_unit_rec</span> `{Funext} (A : <span class="kt">Type</span>)
+  : A &lt;~&gt; (Unit -&gt; A)
+  := (Build_Equiv _ _ (@Unit_ind (<span class="kr">fun</span> <span class="nv">_</span> =&gt; A)) _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">unit_name</span> x := (<span class="kr">fun</span> (<span class="nv">_</span> : Unit) =&gt; x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk8"><span class="kn">Instance</span> <span class="nf">isequiv_unit_name</span>@{i j} `{Funext} (A : <span class="kt">Type</span>@{i})
+: @IsEquiv@{i j} _ (Unit -&gt; _) (<span class="kr">fun</span> (<span class="nv">a</span>:A) =&gt; unit_name a).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (<span class="kr">fun</span> <span class="nv">a</span> : A =&gt; unit_name a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk9"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (<span class="kr">fun</span> <span class="nv">a</span> : A =&gt; unit_name a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chka"><span class="nb">refine</span> (isequiv_adjointify _ (<span class="kr">fun</span> <span class="nv">f</span> : Unit -&gt; _ =&gt; f tt) _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Unit -&gt; A =&gt; unit_name (x tt)) == idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="unit-v-chkb" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="unit-v-chkb"><hr></label><div class="goal-conclusion">idmap == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chkc">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : Unit -&gt; A =&gt; unit_name (x tt)) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chkd"><span class="nb">intros</span> f; <span class="nb">apply</span> path_forall@{i i j}; <span class="nb">intros</span> x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>Unit -&gt; A</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f tt = f x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> ap@{i i}, path_unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chke">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">idmap == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> a; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* The negative universal property *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">unit_coind</span> {<span class="nv">A</span> : <span class="kt">Type</span>} : Unit -&gt; (A -&gt; Unit)
+  := <span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chkf"><span class="kn">Instance</span> <span class="nf">isequiv_unit_coind</span> `{Funext} (A : <span class="kt">Type</span>) : IsEquiv (@unit_coind A) | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv unit_coind</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk10"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv unit_coind</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk11"><span class="nb">refine</span> (isequiv_adjointify _ (<span class="kr">fun</span> <span class="nv">f</span> =&gt; tt) _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">_</span> : A -&gt; Unit =&gt; unit_coind tt) == idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="unit-v-chk12" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><label class="goal-separator" for="unit-v-chk12"><hr></label><div class="goal-conclusion">unit_name tt == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk13">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">_</span> : A -&gt; Unit =&gt; unit_coind tt) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk14"><span class="nb">intro</span> f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; Unit</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">unit_coind tt = f</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_forall; <span class="nb">intros</span> x; <span class="nb">apply</span> path_unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="unit-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="unit-v-chk15">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">unit_name tt == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intro</span> x; <span class="nb">destruct</span> x; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_unit_coind</span> `{Funext} (A : <span class="kt">Type</span>)
+  : Unit &lt;~&gt; (A -&gt; Unit)
+  := Build_Equiv _ _ (@unit_coind A) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Truncation *)</span>
+
+<span class="c">(* The Unit type is contractible *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">contr_unit</span> : Contr Unit | <span class="mi">0</span> := Build_Contr _ tt (<span class="kr">fun</span> <span class="nv">t</span> : Unit =&gt; <span class="kr">match</span> t <span class="kr">with</span> tt =&gt; <span class="mi">1</span> <span class="kr">end</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Equivalences *)</span>
+
+<span class="sd">(** A contractible type is equivalent to [Unit]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_contr_unit</span> `{Contr A} : A &lt;~&gt; Unit
+  := equiv_contr_contr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Conversely, a type equivalent to [Unit] is contractible. We don&#39;t make this an instance because Coq would have to guess the equivalence.  And when it has a map in mind, it would try to use [isequiv_contr_contr], which would cause a cycle. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">contr_equiv_unit</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">f</span> : A &lt;~&gt; Unit) : Contr A
+  := contr_equiv&#39; Unit f^-<span class="mi">1</span>%equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The constant map to [Unit].  We define this so we can get rid of an unneeded universe variable that Coq generates when [const tt] is used in a context that doesn&#39;t have [Universe Minimization ToSet] as this file does. If we ever set that globally, then we could get rid of this and remove some imports of this file. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">const_tt</span> (<span class="nv">A</span> : <span class="kt">Type</span>) := @const A Unit tt.</span></span></pre>
+</div>
+</div></body>
+</html>

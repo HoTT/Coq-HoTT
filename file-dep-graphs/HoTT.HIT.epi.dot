@@ -1,0 +1,31 @@
+digraph HoTT_HIT_epi {
+  graph [ratio=0.5]
+  node [style=filled]
+epi_isepi_isequiv [label="isepi_isequiv", URL=<epi.html#isepi_isequiv>, peripheries=3, fillcolor="#F070D1"] ;
+epi_isepi_issurj [label="isepi_issurj", URL=<epi.html#isepi_issurj>, peripheries=3, fillcolor="#F070D1"] ;
+epi_fam [label="fam", URL=<epi.html#fam>, fillcolor="#F070D1"] ;
+epi_epif [label="epif", URL=<epi.html#epif>, fillcolor="#F070D1"] ;
+epi_issurj_isepi_funext [label="issurj_isepi_funext", URL=<epi.html#issurj_isepi_funext>, peripheries=3, fillcolor="#F070D1"] ;
+epi_issurj_isepi [label="issurj_isepi", URL=<epi.html#issurj_isepi>, fillcolor="#F070D1"] ;
+epi_isepi__contr_cone [label="isepi'_contr_cone", URL=<epi.html#isepi'_contr_cone>, fillcolor="#F070D1"] ;
+epi_equiv_isepi_isepi_funext [label="equiv_isepi_isepi_funext", URL=<epi.html#equiv_isepi_isepi_funext>, fillcolor="#F070D1"] ;
+epi_equiv_isepi_isepi_ [label="equiv_isepi_isepi'", URL=<epi.html#equiv_isepi_isepi'>, fillcolor="#F070D1"] ;
+epi_isepi_ [label="isepi'", URL=<epi.html#isepi'>, fillcolor="#F070D1"] ;
+epi_isepi_funext [label="isepi_funext", URL=<epi.html#isepi_funext>, fillcolor="#F070D1"] ;
+epi_isepi [label="isepi", URL=<epi.html#isepi>, fillcolor="#F070D1"] ;
+  epi_isepi_isequiv -> epi_isepi [] ;
+  epi_isepi_issurj -> epi_fam [] ;
+  epi_isepi_issurj -> epi_epif [] ;
+  epi_isepi_issurj -> epi_isepi__contr_cone [] ;
+  epi_epif -> epi_equiv_isepi_isepi_ [] ;
+  epi_issurj_isepi_funext -> epi_issurj_isepi [] ;
+  epi_issurj_isepi_funext -> epi_equiv_isepi_isepi_funext [] ;
+  epi_issurj_isepi -> epi_isepi [] ;
+  epi_isepi__contr_cone -> epi_isepi_ [] ;
+  epi_equiv_isepi_isepi_funext -> epi_isepi_funext [] ;
+  epi_equiv_isepi_isepi_funext -> epi_isepi [] ;
+  epi_equiv_isepi_isepi_ -> epi_isepi_ [] ;
+  epi_equiv_isepi_isepi_ -> epi_isepi [] ;
+subgraph cluster_epi { label="epi"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+epi_isepi; epi_isepi_funext; epi_isepi_; epi_equiv_isepi_isepi_; epi_equiv_isepi_isepi_funext; epi_isepi__contr_cone; epi_issurj_isepi; epi_issurj_isepi_funext; epi_epif; epi_fam; epi_isepi_issurj; epi_isepi_isequiv; };
+} /* END */

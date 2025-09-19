@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Relational.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk0"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable Variables</span> <span class="nf">A</span> B f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Relational equivalences *)</span>
+
+<span class="sd">(** This definition is due to Peter LeFanu Lumsdaine on the HoTT mailing list.  This definition gives more judgmental properties, though has the downside of jumping universe levels. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">RelEquiv</span> <span class="nv">A</span> <span class="nv">B</span> :=
+  { equiv_rel : A -&gt; B -&gt; <span class="kt">Type</span>;
+    relequiv_contr_f :: <span class="kr">forall</span> <span class="nv">a</span>, Contr { b : B &amp; equiv_rel a b };
+    relequiv_contr_g :: <span class="kr">forall</span> <span class="nv">b</span>, Contr { a : A &amp; equiv_rel a b } }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> equiv_rel {A B} _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk1"><span class="kn">Definition</span> <span class="nf">issig_relequiv</span> {<span class="nv">A</span> <span class="nv">B</span>}
+  : { equiv_rel : A -&gt; B -&gt; <span class="kt">Type</span>
+    | { f : <span class="kr">forall</span> <span class="nv">a</span>, Contr { b : B &amp; equiv_rel a b }
+      | <span class="kr">forall</span> <span class="nv">b</span>, Contr { a : A &amp; equiv_rel a b } } }
+      &lt;~&gt; RelEquiv A B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{equiv_rel : A -&gt; B -&gt; <span class="kt">Type</span> &amp;
+{_ : <span class="kr">forall</span> <span class="nv">a</span> : A, Contr {b : B &amp; equiv_rel a b} &amp;
+<span class="kr">forall</span> <span class="nv">b</span> : B, Contr {a : A &amp; equiv_rel a b}}} &lt;~&gt;
+RelEquiv A B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{equiv_rel : A -&gt; B -&gt; <span class="kt">Type</span> &amp;
+{_ : <span class="kr">forall</span> <span class="nv">a</span> : A, Contr {b : B &amp; equiv_rel a b} &amp;
+<span class="kr">forall</span> <span class="nv">b</span> : B, Contr {a : A &amp; equiv_rel a b}}} &lt;~&gt;
+RelEquiv A B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk3"><span class="kn">Definition</span> <span class="nf">relequiv_of_equiv</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">e</span> : A &lt;~&gt; B) : RelEquiv A B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">RelEquiv A B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>A &lt;~&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">RelEquiv A B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> {| equiv_rel a b := e a = b |}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** The rest is found by typeclass inference! *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk5"><span class="kn">Definition</span> <span class="nf">equiv_of_relequiv</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">e</span> : RelEquiv A B) : A &lt;~&gt; B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A &lt;~&gt; B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A &lt;~&gt; B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk7"><span class="nb">refine</span> (equiv_adjointify
+            (<span class="kr">fun</span> <span class="nv">a</span> =&gt; (center { b : B &amp; equiv_rel e a b}).<span class="mi">1</span>)
+            (<span class="kr">fun</span> <span class="nv">b</span> =&gt; (center { a : A &amp; equiv_rel e a b}).<span class="mi">1</span>)
+            _ _);
+    <span class="nb">intro</span> x; <span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(center
+   {b : B &amp;
+   equiv_rel e (center {a : A &amp; equiv_rel e a x}).<span class="mi">1</span> b}).<span class="mi">1</span> =
+x</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="relational-v-chk8" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><label class="goal-separator" for="relational-v-chk8"><hr></label><div class="goal-conclusion">(center
+   {a : A &amp;
+   equiv_rel e a (center {b : B &amp; equiv_rel e x b}).<span class="mi">1</span>}).<span class="mi">1</span> =
+x</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chk9">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(center
+   {b : B &amp;
+   equiv_rel e (center {a : A &amp; equiv_rel e a x}).<span class="mi">1</span> b}).<span class="mi">1</span> =
+x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chka"><span class="nb">refine</span> (ap pr1 (contr _) : _.<span class="mi">1</span> = (x; _).<span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">equiv_rel e (center {a : A &amp; equiv_rel e a x}).<span class="mi">1</span> x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (center {a : A &amp; equiv_rel e a x}).<span class="mi">2</span>.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chkb">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(center
+   {a : A &amp;
+   equiv_rel e a (center {b : B &amp; equiv_rel e x b}).<span class="mi">1</span>}).<span class="mi">1</span> =
+x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chkc">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(center
+   {a : A &amp;
+   equiv_rel e a (center {b : B &amp; equiv_rel e x b}).<span class="mi">1</span>}).<span class="mi">1</span> =
+x</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="relational-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="relational-v-chkd"><span class="nb">refine</span> (ap pr1 (contr _) : _.<span class="mi">1</span> = (x; _).<span class="mi">1</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>RelEquiv A B</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">equiv_rel e x (center {b : B &amp; equiv_rel e x b}).<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (center {b : B &amp; equiv_rel e x b}).<span class="mi">2</span>.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">}</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">RelIsEquiv</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">f</span> : A -&gt; B)
+  := { r : RelEquiv A B | <span class="kr">forall</span> <span class="nv">x</span>, (center { b : B &amp; equiv_rel r x b }).<span class="mi">1</span> = f x }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** TODO: Prove [ishprop_relisequiv `{Funext} {A B} f : IsHProp (@RelIsEquiv A B f)] *)</span>
+
+<span class="sd">(** * Judgmental property *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">inverse_relequiv</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">e</span> : RelEquiv A B) : RelEquiv B A
+  := {| equiv_rel a b := equiv_rel e b a |}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">reinv_V</span> {<span class="nv">A</span> <span class="nv">B</span>} (<span class="nv">e</span> : RelEquiv A B)
+  : inverse_relequiv (inverse_relequiv e) = e
+  := <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** TODO: Is there a definition of this that makes [inverse_relequiv (relequiv_idmap A)] be [relequiv_idmap A], judgmentally? *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">relequiv_idmap</span> <span class="nv">A</span> : RelEquiv A A
+  := {| equiv_rel a b := a = b |}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** TODO: Define composition; we probably need truncation to do this? *)</span></span></pre>
+</div>
+</div></body>
+</html>

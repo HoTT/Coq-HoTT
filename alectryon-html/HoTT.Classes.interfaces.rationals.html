@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>rationals.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="rationals-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="rationals-v-chk0"><span class="kn">Require Import</span>
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Universes:</span>
+<span class="c">  - i universe of origin type</span>
+<span class="c">  - j universe of target types</span>
+<span class="c">  - k universe of applied apart of target types</span>
+<span class="c">  - l universe of Field property of target types </span>
+<span class="c">*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">RationalsToField</span>@{i j k l} (A : <span class="kt">Type</span>@{i}) :=
+  rationals_to_field : <span class="kr">forall</span> (<span class="nv">B</span> : <span class="kt">Type</span>@{j}) `{IsField@{j l k} B}
+    `{!FieldCharacteristic B <span class="mi">0</span>}, A -&gt; B.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> rationals_to_field A {_} B {_ _ _ _ _ _ _ _ _} _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+<span class="c">(* The Rationals are the initial field of characteristic 0. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">Rationals</span> <span class="nv">A</span> {<span class="nv">Aap</span> : Apart A} {<span class="nv">Aplus</span> <span class="nv">Amult</span> <span class="nv">Azero</span> <span class="nv">Aone</span> <span class="nv">Aneg</span> <span class="nv">Arecip</span> <span class="nv">Ale</span> <span class="nv">Alt</span>}
+  `{U : !RationalsToField A} :=
+  { rationals_field :: @IsDecField A Aplus Amult Azero Aone Aneg Arecip
+  ; rationals_order :: FullPseudoSemiRingOrder Ale Alt
+  ; rationals_to_field_mor :: <span class="kr">forall</span> {<span class="nv">B</span>} `{IsField B} `{!FieldCharacteristic B <span class="mi">0</span>},
+    IsSemiRingPreserving (rationals_to_field A B)
+  ; rationals_initial : <span class="kr">forall</span> {<span class="nv">B</span>} `{IsField B} `{!FieldCharacteristic B <span class="mi">0</span>}
+    {h : A -&gt; B} `{!IsSemiRingPreserving h} x,
+    rationals_to_field A B x = h x }.</span></span></pre>
+</div>
+</div></body>
+</html>
