@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Settings.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * General Settings *)</span>
+
+<span class="sd">(** This file contains all the tweaks and settings we make to Coq. *)</span>
+
+<span class="sd">(** ** Warnings *)</span>
+
+<span class="sd">(** ** Plugins *)</span>
+
+<span class="sd">(** Load the Ltac plugin. This is the tactic language we use for proofs. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare ML Module</span> <span class="s2">&quot;ltac_plugin:coq-core.plugins.ltac&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** Load the number string notation plugin. Allowing us to write numbers like [1234]. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="settings-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="settings-v-chk0"><span class="kn">Declare ML Module</span> <span class="s2">&quot;number_string_notation_plugin:coq-core.plugins.number_string_notation&quot;</span>.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Proofs *)</span>
+
+<span class="sd">(** Activate the Ltac tactics language for proofs. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kt">Set</span> Default <span class="kn">Proof</span> Mode <span class="s2">&quot;Classic&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Force use of bullets in proofs. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Set Default Goal Selector</span> <span class="s2">&quot;!&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Universes *)</span>
+
+<span class="sd">(** Activate universe polymorphism everywhere. This means that whenever you see a [Type], it&#39;s actually a [Type@{i}] for some universe level [i]. This allows us to reuse definitions for each universe level without having to redefine them. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This command makes it so that you don&#39;t have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Unset Strict Universe Declaration</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Unset Universe Minimization ToSet</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Primitive Projections *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Set Primitive Projections</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Set Nonrecursive Elimination Schemes</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Currently Coq doesn&#39;t print equivalences correctly (8.6). This fixes that. See https://github.com/HoTT/HoTT/issues/1000 *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Set Printing Primitive Projection Parameters</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Pattern Matching *)</span>
+
+<span class="sd">(** This flag removes parameters from constructors in patterns that appear in a match statement. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Unification *)</span>
+
+<span class="sd">(** This command changes Coq&#39;s subterm selection to always use full conversion after finding a subterm whose head/key matches the key of the term we&#39;re looking for.  This applies to [rewrite] and higher-order unification in [apply]/[elim]/[destruct].  Again, if you don&#39;t know what that means, ignore it. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Set Keyed Unification</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Typeclasses and Hint settings *)</span>
+
+<span class="sd">(** This tells Coq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kt">Set</span> Loose <span class="kn">Hint</span> Behavior <span class="s2">&quot;Strict&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Create HintDb</span> <span class="nb">rewrite</span> <span class="kn">discriminated</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Hint Variables Opaque</span> : <span class="nb">rewrite</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Create HintDb</span> typeclass_instances <span class="kn">discriminated</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Reversible Coercions *)</span>
+
+<span class="sd">(** Coercions in Coq since 8.16 have the ability to be reversible. These are coercions that are not regular functions but rely on some meta-procedure like typeclass resolution to fill in missing pieces. Examples include marking fields of a record with [:&gt;] which allows Coq to elaborate the projected term to the original term.</span>
+
+<span class="sd">This behaviour can have some surprising effects in some places, where you might not expect a term to be elaborated. When inspecting proofs with [Set Printing All] you will not be able to see the reversible coercion. In order to help with inspecting such situations, Coq exposes a register for a dummy term called [reverse_coercion] which gets inserted during an application of a reversible coercion. This way you can see the application clearly in a proof term.</span>
+
+<span class="sd">We register this here. This is standard from the Coq Stdlib prelude.*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[universes(polymorphic=yes)] <span class="kn">Definition</span> <span class="nf">ReverseCoercionSource</span> (<span class="nv">T</span> : <span class="kt">Type</span>) := T.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[universes(polymorphic=yes)] <span class="kn">Definition</span> <span class="nf">ReverseCoercionTarget</span> (<span class="nv">T</span> : <span class="kt">Type</span>) := T.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[warning=<span class="s2">&quot;-uniform-inheritance&quot;</span>, reversible=no, universes(polymorphic=yes)]
+<span class="kn">Coercion</span> <span class="nf">reverse_coercion</span> {T&#39; T} (x&#39; : T&#39;) (x : ReverseCoercionSource T)
+  : ReverseCoercionTarget T&#39; := x&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Register</span> reverse_coercion <span class="kr">as</span> core.coercion.reverse_coercion.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Search Settings *)</span>
+
+<span class="sd">(** Keywords for blacklisting from search function *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Add Search Blacklist</span> <span class="s2">&quot;_admitted&quot;</span> <span class="s2">&quot;_subproof&quot;</span> <span class="s2">&quot;Private_&quot;</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

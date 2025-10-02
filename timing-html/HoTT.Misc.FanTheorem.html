@@ -1,0 +1,560 @@
+<html>
+<head>
+<title>FanTheorem.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for FanTheorem.v</h1>
+
+<div class="code" title="File: FanTheorem.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * The fan theorem *)
+
+</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 2
+Time: 0.038s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 2
+Time: 0.031s">
+<div class="time" style="width: 81.578947368421%"></div>
+<pre> 
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 3
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 4
+Time: 0.004s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+Require Import Misc.UStructures BarInduction.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+Require Import Spaces.NatSeq.Core Spaces.NatSeq.UStructure.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.List.Core Spaces.List.Theory.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope list_scope.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition DecidableFanTheorem (A : Type) :=
+  forall (B : list A -&gt; Type)
+  (dec : forall l : list A, Decidable (B l))
+  (bar : IsBar B),
+  IsUniformBar B.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition MonotoneFanTheorem (A : Type) :=
+  forall (B : list A -&gt; Type)
+  (mon : IsMonotone B)
+  (bar : IsBar B),
+  IsUniformBar B.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition FanTheorem (A : Type) :=
+  forall (B : list A -&gt; Type)
+  (bar : IsBar B),
+  IsUniformBar B.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fantheorem_empty : FanTheorem Empty.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros B bB.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists 0.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  contradiction (s 0).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fantheorem_contr (A : Type) `{Contr A} : FanTheorem A.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros B bB.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (c := fun (_ : nat) =&gt; center A).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (bB c).1.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (p : forall n : nat, list_restrict s n = list_restrict c n).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro n.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_list_nth'.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by rewrite !length_list_restrict.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros m h.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply path_contr.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (bB c).1; split.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite p.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (bB c).2.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The family we use when applying the fan theorem in our proof that continuity implies uniform continuity. *)</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition uc_theorem_family {A : Type} (p : (nat -&gt; A) -&gt; Bool)
+  : list A -&gt; Type
+  := fun l =&gt;
+      forall (u v : nat -&gt; A) (h : list_restrict u (length l) = l)
+        (h' : list_restrict v (length l) = l), p u = p v.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition is_bar_uc_theorem_family {A : Type}
+  (p : (nat -&gt; A) -&gt; Bool) (cont : IsContinuous p)
+  : IsBar (uc_theorem_family p).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  specialize (cont s 0) as [n H].</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists n.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros u v h t.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry in h,t.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite length_list_restrict in h, t.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply list_restrict_eq_iff_seq_agree_lt in h, t.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((H _ h)^ @ (H _ t)).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The fan theorem implies that every continuous function is uniformly continuous. The current proof uses the full fan theorem. Less powerful versions might be enough. *)
+
+</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition uniform_continuity_fantheorem {A : Type} (fan : FanTheorem A)
+  (p : (nat -&gt; A) -&gt; Bool) (c : IsContinuous p)
+  : uniformly_continuous p.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (fan' := fan (uc_theorem_family p) (is_bar_uc_theorem_family p c)).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct fan' as [n ub].</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro m.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists n.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros u v h.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  specialize (ub v) as [k [bound uctf]].</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply uctf.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite length_list_restrict.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (snd list_restrict_eq_iff_seq_agree_lt).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (us_rel_leq bound h).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap _ (length_list_restrict _ _)).</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FanTheorem.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,234 @@
+<html>
+<head>
+<title>Interval.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Interval.v</h1>
+
+<div class="code" title="File: Interval.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Theorems about the homotopical interval. *)
+
+</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 2
+Time: 0.021s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.PathGroupoids.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 2
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+Require Import Types.Paths.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Module Export Interval.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Private Inductive interval : Type0 :=
+  | zero : interval
+  | one : interval.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Axiom seg : zero = one.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+
+Definition interval_ind (P : interval -&gt; Type)
+  (a : P zero) (b : P one) (p : seg # a = b)
+  : forall x:interval, P x
+  := fun x =&gt; (match x return _ -&gt; P x with
+                | zero =&gt; fun _ =&gt; a
+                | one  =&gt; fun _ =&gt; b
+              end) p.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Axiom interval_ind_beta_seg : forall (P : interval -&gt; Type)
+  (a : P zero) (b : P one) (p : seg # a = b),
+  apD (interval_ind P a b p) seg = p.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Interval.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition interval_rec (P : Type) (a b : P) (p : a = b)
+  : interval -&gt; P
+  := interval_ind (fun _ =&gt; P) a b (transport_const _ _ @ p).</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition interval_rec_beta_seg (P : Type) (a b : P) (p : a = b)
+  : ap (interval_rec P a b p) seg = p.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cancelL (transport_const seg a) _ _ _).</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((apD_const (interval_ind (fun _ =&gt; P) a b _) seg)^ @ _).</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (interval_ind_beta_seg (fun _ =&gt; P) _ _ _).</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The interval is contractible. *)
+
+</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance contr_interval : Contr interval | 0.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ zero).</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (interval_ind _ 1 seg _).</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (transport_paths_r _ _ @ concat_1p _).</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Interval.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

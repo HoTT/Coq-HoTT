@@ -1,0 +1,826 @@
+<html>
+<head>
+<title>ua_algebra.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ua_algebra.v</h1>
+
+<div class="code" title="File: ua_algebra.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** This file defines [Algebra]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 2
+Time: 0.039s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Export
+  HoTT.Utf8Minimal
+  HoTT.Basics
+  HoTT.Classes.implementations.ne_list
+  HoTT.Classes.implementations.family_prod.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 6
+Time: 0.004s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+
+Require Import
+  HoTT.Types
+  HoTT.Universes.HSet
+  HoTT.Spaces.List.Core.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Import ne_list.notations.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope Algebra_scope.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Delimit Scope Algebra_scope with Algebra.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Open Scope Algebra_scope.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition SymbolType_internal : Type → Type := ne_list.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [Signature] is used to characterise [Algebra]s. In particular
+    a signature specifies which operations (functions) an algebra for
+    the signature is expected to provide. A signature consists of
+    - A type of [Sort]s. An algebra for the signature must provide
+      a type for each [s : Sort].
+    - A type of function symbols [Symbol]. For each function symbol
+      [u : Symbol], an algebra for the signature must provide a
+      corresponding operation.
+    - The field [symbol_types σ u] indicates which type the operation
+      corresponding to [u] should have. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Record Signature : Type := BuildSignature
+  { Sort : Type
+  ; Symbol : Type
+  ; symbol_types : Symbol → SymbolType_internal Sort }.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We have this implicit coercion allowing us to use a signature
+    [σ:Signature] as a map [Symbol σ → SymbolType σ]
+    (see [SymbolType] below). *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Coercion symbol_types : Signature &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A single sorted [Signature] is a signature with [Sort = Unit]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition BuildSingleSortedSignature (sym : Type) (arities : sym → nat)
+  : Signature
+  := BuildSignature Unit sym (ne_list.replicate_Sn tt o arities).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Let [σ:Signature]. For each symbol [u : Symbol σ], [σ u]
+    associates [u] to a [SymbolType σ]. This represents the required
+    type of the algebra operation corresponding to [u]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition SymbolType (σ : Signature) : Type := ne_list (Sort σ).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [s : SymbolType σ], [cod_symboltype σ] is the codomain of the
+    symbol type [s]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cod_symboltype {σ} : SymbolType σ → Sort σ
+  := ne_list.last.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [s : SymbolType σ], [cod_symboltype σ] is the domain of the
+    symbol type [s]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition dom_symboltype {σ} : SymbolType σ → list (Sort σ)
+  := ne_list.front.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [s : SymbolType σ], [cod_symboltype σ] is the arity of the
+    symbol type [s]. That is the number [n:nat] of arguments of the
+    [SymbolType σ]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition arity_symboltype {σ} : SymbolType σ → nat
+  := length o dom_symboltype.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An [Algebra] must provide a family of [Carriers σ] indexed by
+    [Sort σ]. These carriers are the "objects" (types) of the algebra. *)
+
+(* [Carriers] is a notation because it will be used for an implicit
+   coercion [Algebra &gt;-&gt; Funclass] below. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation Carriers σ := (Sort σ → Type).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The function [Operation] maps a family of carriers [A : Carriers σ]
+    and [w : SymbolType σ] to the corresponding function type.
+
+&lt;&lt;
+      Operation A [:s1; s2; ...; sn; t:] = A s1 → A s2 → ... → A sn → A t
+&gt;&gt;
+
+    where [[:s1; s2; ...; sn; t:] : SymbolType σ] is a symbol type
+    with domain [[s1; s2; ...; sn]] and codomain [t]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Fixpoint Operation {σ} (A : Carriers σ) (w : SymbolType σ) : Type
+  := match w with
+     | [:s:] =&gt; A s
+     | s ::: w' =&gt; A s → Operation A w'
+     end.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance trunc_operation `{Funext} {σ : Signature}
+  (A : Carriers σ) {n} `{!∀ s, IsTrunc n (A s)} (w : SymbolType σ)
+  : IsTrunc n (Operation A w).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  induction w; exact _.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Uncurry of an [f : Operation A w], such that
+
+&lt;&lt;
+      ap_operation f (x1,x2,...,xn) = f x1 x2 ... xn
+&gt;&gt;
+*)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 104
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>Fixpoint ap_operation {σ} {A : Carriers σ} {w : SymbolType σ}
+    : Operation A w →
+      FamilyProd A (dom_symboltype w) →
+      A (cod_symboltype w)
+    := match w with
+       | [:s:] =&gt; λ f _, f
+       | s ::: w' =&gt; λ f '(x, l), ap_operation (f x) l
+       end.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Funext for uncurried [Operation A w]. If
+
+&lt;&lt;
+      ap_operation f (x1,x2,...,xn) = ap_operation g (x1,x2,...,xn)
+&gt;&gt;
+
+    for all [(x1,x2,...,xn) : A s1 * A s2 * ... * A sn], then [f = g]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 120
+Time: 0.004s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>Fixpoint path_forall_ap_operation `{Funext} {σ : Signature}
+  {A : Carriers σ} {w : SymbolType σ}
+  : ∀ (f g : Operation A w),
+    (∀ a : FamilyProd A (dom_symboltype w),
+       ap_operation f a = ap_operation g a)
+    -&gt; f = g
+  := match w with
+     | [:s:] =&gt; λ (f g : A s) p, p tt
+     | s ::: w' =&gt;
+         λ (f g : A s → Operation A w') p,
+          path_forall f g
+            (λ x, path_forall_ap_operation (f x) (g x) (λ a, p (x,a)))
+     end.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An [Algebra σ] for a signature [σ] consists of a family [carriers :
+    Carriers σ] indexed by the sorts [s : Sort σ], and for each symbol
+    [u : Symbol σ], an operation of type [Operation carriers (σ u)],
+    where [σ u : SymbolType σ] is the symbol type of [u]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Record Algebra {σ : Signature} : Type := BuildAlgebra
+  { carriers : Carriers σ
+  ; operations : ∀ (u : Symbol σ), Operation carriers (σ u) }.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Algebra : clear implicits.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments BuildAlgebra {σ} carriers operations.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We have a convenient implicit coercion from an algebra to the
+    family of carriers. *)</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Coercion carriers : Algebra &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Bind Scope Algebra_scope with Algebra.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition SigAlgebra (σ : Signature) : Type
+  := {c : Carriers σ | ∀ (u : Symbol σ), Operation c (σ u) }.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma issig_algebra (σ : Signature) : SigAlgebra σ &lt;~&gt; Algebra σ.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 155
+Time: 0.003s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  issig.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Class IsTruncAlgebra (n : trunc_index) {σ : Signature} (A : Algebra σ)
+  := trunc_carriers_algebra :: ∀ (s : Sort σ), IsTrunc n (A s).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation IsHSetAlgebra := (IsTruncAlgebra 0).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hprop_is_trunc_algebra `{Funext} (n : trunc_index)
+  {σ : Signature} (A : Algebra σ)
+  : IsHProp (IsTruncAlgebra n A).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  apply istrunc_forall.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance trunc_algebra_succ {σ : Signature} (A : Algebra σ)
+  {n} `{!IsTruncAlgebra n A}
+  : IsTruncAlgebra n.+1 A | 1000.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 174
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  intro; exact _.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** To find a path between two algebras [A B : Algebra σ] it suffices
+    to find paths between the carriers and the operations. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Lemma path_algebra {σ : Signature} (A B : Algebra σ)
+  (p : carriers A = carriers B)
+  (q : transport (λ X, ∀ u, Operation X (σ u)) p (operations A)
+       = operations B)
+  : A = B.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct A,B.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in *.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by path_induction.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Lemma path_ap_carriers_path_algebra {σ} (A B : Algebra σ)
+  (p : carriers A = carriers B)
+  (q : transport (λ X, ∀ u, Operation X (σ u)) p (operations A)
+       = operations B)
+  : ap carriers (path_algebra A B p q) = p.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct A as [A a], B as [B b].</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in *.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by destruct p,q.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 195
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Suppose [p],[q] are paths in [Algebra σ]. To show that [p = q] it
+    suffices to find a path [r] between the paths corresponding to
+    [p] and [q] in [SigAlgebra σ]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 201
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>Lemma path_path_algebra {σ : Signature} {A B : Algebra σ} (p q : A = B)
+  (r : ap (issig_algebra σ)^-1 p = ap (issig_algebra σ)^-1 q)
+  : p = q.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (e := (equiv_ap (issig_algebra σ)^-1 A B)).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 205
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  by apply (@equiv_inv _ _ (ap e) (Equivalences.isequiv_ap _ _)).</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [p q : A = B] and [IsHSetAlgebra B].
+    Then [ap carriers p = ap carriers q] implies [p = q]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 211
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Lemma path_path_hset_algebra `{Funext} {σ : Signature}
+  {A B : Algebra σ} `{IsHSetAlgebra B}
+  (p q : A = B) (r : ap carriers p = ap carriers q)
+  : p = q.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_path_algebra.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve eapply path_path_sigma.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 218
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> transitivity (ap carriers p); [by destruct p |].</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 218
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    transitivity (ap carriers q); [exact r | by destruct q].</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 220
+Time: 0.006s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 220
+Time: 0.005s">
+<div class="time" style="width: 12.820512820513%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Module algebra_notations.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given [A : Algebra σ] and function symbol [u : Symbol σ], we use
+    the notation [u .# A] to refer to the corresponding algebra
+    operation of type [Operation A (σ u)]. *)
+ </pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Notation "u .# A" := (operations A u) : Algebra_scope.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End algebra_notations.</pre>
+</div>
+<div class="code" title="File: ua_algebra.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

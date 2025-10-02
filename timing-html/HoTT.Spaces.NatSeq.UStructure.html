@@ -1,0 +1,474 @@
+<html>
+<head>
+<title>UStructure.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for UStructure.v</h1>
+
+<div class="code" title="File: UStructure.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Uniform structure on types of sequences *)
+
+</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 2
+Time: 0.039s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 2
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 3
+Time: 0.033s">
+<div class="time" style="width: 84.615384615385%"></div>
+<pre>
+Require Import Misc.UStructures.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 4
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Require Import List.Core List.Theory.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.NatSeq.Core.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [UStructure] defined by [seq_agree_lt] *)
+
+(** Every type of the form [nat -&gt; X] carries a uniform structure defined by the [seq_agree_lt n] relation for every [n : nat]. *)</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance sequence_type_us {X : Type} : UStructure (nat -&gt; X) | 10.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_UStructure.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact seq_agree_lt.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun _ _ _ _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun _ _ _ h _ _ =&gt; (h _ _)^).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun _ _ _ _ h1 h2 _ _ =&gt; ((h1 _ _) @ (h2 _ _))).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 20
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre> exact (fun _ _ _ h _ _ =&gt; h _ _).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sequence_type_us_zero {X : Type} (s t : nat -&gt; X) : s =[0] t
+  := fun n hn =&gt; Empty_rec (not_lt_zero_r n hn).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition seq_cons_of_eq {X : Type} {n : nat} {s t : nat -&gt; X} {x : X}
+  (h : s =[n] t)
+  : (seq_cons x s) =[n.+1] (seq_cons x t).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros m hm; destruct m.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h m _).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can also rephrase the definition of [seq_agree_lt] using the [list_restrict] function. *)</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_restrict_eq_iff_seq_agree_lt
+  {A : Type} {n : nat} {s t : nat -&gt; A}
+  : (list_restrict s n = list_restrict t n) &lt;-&gt; s =[n] t.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h m hm.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V exact (nth'_list_restrict s ((length_list_restrict _ _)^ # hm)).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V exact (nth'_list_restrict t ((length_list_restrict _ _)^ # hm)).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (nth'_path_list h _ _).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro h.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (path_list_nth' _ _
+            (length_list_restrict s n @ (length_list_restrict t n)^)).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i Hi.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs snapply nth'_list_restrict.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs snapply nth'_list_restrict.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (h i ((length_list_restrict s n) # Hi)).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Definition list_restrict_eq_iff_seq_agree_inductive
+  {A : Type} {n : nat} {s t : nat -&gt; A}
+  : list_restrict s n = list_restrict t n &lt;-&gt; seq_agree_inductive n s t
+  := iff_compose
+      list_restrict_eq_iff_seq_agree_lt
+      seq_agree_lt_iff_seq_agree_inductive.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Continuity *)
+
+(** Following https://martinescardo.github.io/TypeTopology/TypeTopology.CantorSearch.html#920.  *)
+
+(** A uniformly continuous function takes homotopic sequences to outputs that are equivalent with respect to the structure on [Y]. *)</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Definition uniformly_continuous_extensionality
+  {X Y : Type} {usY : UStructure Y} (p : (nat -&gt; X) -&gt; Y) {m : nat}
+  (c : uniformly_continuous p)
+  {u v : nat -&gt; X} (h : u == v)
+  : p u =[m] p v
+  := (c m).2 u v (fun m _ =&gt; h m).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Composing a uniformly continuous function with the [cons] operation decreases the modulus by 1. Maybe this can be done with greater generality for the structure on [Y]. *)</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Definition cons_decreases_modulus {X Y : Type}
+  (p : (nat -&gt; X) -&gt; Y) (n : nat) (b : X)
+  (hSn : is_modulus_of_uniform_continuity n.+1 p)
+  : is_modulus_of_uniform_continuity n (p o seq_cons b).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros u v huv.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hSn.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (seq_cons_of_eq huv).</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: UStructure.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+
