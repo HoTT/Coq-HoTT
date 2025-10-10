@@ -524,9 +524,7 @@ Section AmalgamatedFreeProduct.
 
   Definition AmalgamatedFreeProduct : Group.
   Proof.
-    snapply (Build_Group amal_type).
-    4: split. 4: repeat split.
-    all: exact _.
+    snapply (Build_Group amal_type sgop_amal_type); repeat split; exact _.
   Defined.
 
 End AmalgamatedFreeProduct.

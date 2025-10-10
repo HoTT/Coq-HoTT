@@ -241,9 +241,7 @@ Section Reduction.
   (** Finally we have defined the free group on [A] *)
   Definition FreeGroup : Group.
   Proof.
-    snapply (Build_Group freegroup_type).
-    4: split. 4: repeat split.
-    all: exact _.
+    srapply (Build_Group freegroup_type sgop_freegroup); repeat split; exact _.
   Defined.
   
   Definition word_rec (G : Group) (s : A -> G) : A + A -> G.
