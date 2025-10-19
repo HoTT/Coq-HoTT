@@ -420,6 +420,10 @@ Arguments trunctype_istrunc [_] _.
 
 Coercion trunctype_type : TruncType >-> Sortclass.
 
+(* This hint is required to be able to use cumulativity of inductive types together with first-order approximation for polymorphic hints. *)
+Hint Extern 100 (IsTrunc_internal (trunctype_type ?A) _)
+  => (exact (trunctype_istrunc A)) : typeclass_instances.
+
 Notation "n -Type" := (TruncType n) : type_scope.
 Notation HProp := (-1)-Type.
 Notation HSet := 0-Type.

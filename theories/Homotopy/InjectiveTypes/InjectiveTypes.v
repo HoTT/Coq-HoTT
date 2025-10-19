@@ -368,8 +368,8 @@ Proof.
   assert (embId : IsEmbedding (fun a : A => a)) by rapply istruncmap_mapinO_tr.
   pose proof (mD := Di (X * A) (Y * A) (functor_prod j equiv_idmap)
     (istruncmap_functor_prod@{u v t t ut vt uvt uvt uv t} _ _ _) (uncurry f)).
-  revert mD.
-  rapply Trunc_rec@{utvw utvw}.
+  pose proof (HP := _ : IsHProp (merely@{utvw} {f' : Y -> A -> D & (fun x : X => f' (j x)) == f})).
+  rapply (Trunc_rec@{utvw utvw} (IsTrunc0 := HP) _ mD).
   intros [g e].
   apply tr.
   refine (fun y a => g (y, a); _).
