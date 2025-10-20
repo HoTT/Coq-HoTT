@@ -1109,7 +1109,7 @@ Defined.
 Definition Book_3_10_LEM@{j} := forall A : HProp@{j}, A + ~ A.
 
 Definition Book_3_10_Lift@{i j | i < j} (A : HProp@{i}) : HProp@{j}
-  := Build_HProp A.
+  := @Build_HProp A (trunctype_istrunc A).
 
 Definition Book_3_10_impred@{i j k | i < j, j < k} `{Univalence}
   (LEM : Book_3_10_LEM@{j})
