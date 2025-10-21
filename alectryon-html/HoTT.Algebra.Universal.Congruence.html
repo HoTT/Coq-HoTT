@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Congruence.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** This file implements algebra congruence relation. It serves as a</span>
+<span class="sd">    universal algebra generalization of normal subgroup, ring ideal, etc.</span>
+
+<span class="sd">    Congruence is used to construct quotients, in similarity with how</span>
+<span class="sd">    normal subgroup and ring ideal are used to construct quotients. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="congruence-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="congruence-v-chk1"><span class="kn">Require Export</span> HoTT.Algebra.Universal.Algebra.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span>
+  HoTT.Universes.HProp
+  HoTT.Classes.interfaces.canonical_names
+  HoTT.Algebra.Universal.Homomorphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Unset Elimination Schemes</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> Algebra_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">congruence</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">σ</span> : Signature} (<span class="nv">A</span> : Algebra σ) (<span class="nv">Φ</span> : <span class="kr">forall</span> <span class="nv">s</span>, Relation (A s)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A finitary operation [f : A s1 * A s2 * ... * A sn -&gt; A t]</span>
+<span class="sd">    satisfies [OpCompatible f] iff</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">      Φ s1 x1 y1 * Φ s2 x2 y2 * ... * Φ sn xn yn</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    implies</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">      Φ t (f (x1, x2, ..., xn)) (f (y1, y2, ..., yn)).</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">    The below definition generalizes this to infinitary operations.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">OpCompatible</span> {<span class="nv">w</span> : SymbolType σ} (<span class="nv">f</span> : Operation A w) : <span class="kt">Type</span>
+    := <span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : DomOperation A w),
+       (<span class="kr">forall</span> <span class="nv">i</span> : Arity w, Φ (sorts_dom w i) (a i) (b i)) -&gt;
+       Φ (sort_cod w) (f a) (f b).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">OpsCompatible</span> : <span class="kt">Type</span>
+    := ops_compatible : <span class="kr">forall</span> (<span class="nv">u</span> : Symbol σ), OpCompatible u.#A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="congruence-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="congruence-v-chk2">#[export] <span class="kn">Instance</span> <span class="nf">trunc_ops_compatible</span> `{Funext} {n : trunc_index}
+    `{!<span class="kr">forall</span> <span class="nv">s</span> <span class="nv">x</span> <span class="nv">y</span>, IsTrunc n (Φ s x y)}
+    : IsTrunc n OpsCompatible.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>Φ</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, Relation (A s)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> : Sort σ) (<span class="nv">x</span> <span class="nv">y</span> : A s),
+IsTrunc n (Φ s x y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n OpsCompatible</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="congruence-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="congruence-v-chk3"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>Φ</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, Relation (A s)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> : Sort σ) (<span class="nv">x</span> <span class="nv">y</span> : A s),
+IsTrunc n (Φ s x y)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n OpsCompatible</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> istrunc_forall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** A family of relations [Φ] is a congruence iff it is a family of</span>
+<span class="sd">      mere equivalence relations and [OpsCompatible A Φ] holds. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsCongruence</span> : <span class="kt">Type</span> := Build_IsCongruence
+   { is_mere_relation_cong :: <span class="kr">forall</span> (<span class="nv">s</span> : Sort σ), is_mere_relation (A s) (Φ s)
+   ; equiv_rel_cong :: <span class="kr">forall</span> (<span class="nv">s</span> : Sort σ), EquivRel (Φ s)
+   ; ops_compatible_cong :: OpsCompatible }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> Build_IsCongruence {is_mere_relation_cong}
+                                      {equiv_rel_cong}
+                                      {ops_compatible_cong}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="congruence-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="congruence-v-chk4">#[export] <span class="kn">Instance</span> <span class="nf">hprop_is_congruence</span> `{Funext} : IsHProp IsCongruence.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>Φ</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, Relation (A s)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp IsCongruence</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="congruence-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="congruence-v-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>Φ</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, Relation (A s)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp IsCongruence</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="congruence-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="congruence-v-chk6"><span class="nb">apply</span> (equiv_hprop_allpath _)^-<span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>Φ</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, Relation (A s)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : IsCongruence, x = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="congruence-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="congruence-v-chk7"><span class="nb">intros</span> [C1 C2 C3] [D1 D2 D3].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>Φ</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, Relation (A s)</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> : Sort σ) (<span class="nv">x</span> <span class="nv">y</span> : A s),
+IsHProp (Φ s x y)</span></span></span><br><span><var>C2</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, EquivRel (Φ s)</span></span></span><br><span><var>C3</var><span class="hyp-type"><b>: </b><span>OpsCompatible</span></span></span><br><span><var>D1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> : Sort σ) (<span class="nv">x</span> <span class="nv">y</span> : A s),
+IsHProp (Φ s x y)</span></span></span><br><span><var>D2</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, EquivRel (Φ s)</span></span></span><br><span><var>D3</var><span class="hyp-type"><b>: </b><span>OpsCompatible</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  is_mere_relation_cong := C1;
+  equiv_rel_cong := C2;
+  ops_compatible_cong := C3
+|} =
+{|
+  is_mere_relation_cong := D1;
+  equiv_rel_cong := D2;
+  ops_compatible_cong := D3
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">destruct</span> (path_ishprop C1 D1),
+                (path_ishprop C2 D2),
+                (path_ishprop C3 D3).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">congruence</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A homomorphism [f : forall s, A s -&gt; B s] is compatible</span>
+<span class="sd">    with a congruence [Φ] iff [Φ s x y] implies [f s x = f s y]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">HomCompatible</span> {<span class="nv">σ</span> : Signature} {<span class="nv">A</span> <span class="nv">B</span> : Algebra σ}
+  (<span class="nv">Φ</span> : <span class="kr">forall</span> <span class="nv">s</span>, Relation (A s)) `{!IsCongruence A Φ}
+  (f : <span class="kr">forall</span> <span class="nv">s</span>, A s -&gt; B s) `{!IsHomomorphism f}
+  : <span class="kt">Type</span>
+  := <span class="kr">forall</span> <span class="nv">s</span> (<span class="nv">x</span> <span class="nv">y</span> : A s), Φ s x y -&gt; f s x = f s y.</span></span></pre>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,13 @@
+digraph HoTT_Colimits_Colimit_Pushout_Flattening {
+  graph [ratio=0.5]
+  node [style=filled]
+Colimit_Pushout_Flattening_PO_flattening [label="PO_flattening", URL=<Colimit_Pushout_Flattening.html#PO_flattening>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Pushout_Flattening_POCase_HE [label="POCase_HE", URL=<Colimit_Pushout_Flattening.html#POCase_HE>, fillcolor="#F070D1"] ;
+Colimit_Pushout_Flattening_POCase_E [label="POCase_E", URL=<Colimit_Pushout_Flattening.html#POCase_E>, fillcolor="#F070D1"] ;
+Colimit_Pushout_Flattening_POCase_P [label="POCase_P", URL=<Colimit_Pushout_Flattening.html#POCase_P>, fillcolor="#F070D1"] ;
+  Colimit_Pushout_Flattening_PO_flattening -> Colimit_Pushout_Flattening_POCase_HE [] ;
+  Colimit_Pushout_Flattening_PO_flattening -> Colimit_Pushout_Flattening_POCase_P [] ;
+  Colimit_Pushout_Flattening_POCase_HE -> Colimit_Pushout_Flattening_POCase_E [] ;
+subgraph cluster_Colimit_Pushout_Flattening { label="Colimit_Pushout_Flattening"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Colimit_Pushout_Flattening_POCase_P; Colimit_Pushout_Flattening_POCase_E; Colimit_Pushout_Flattening_POCase_HE; Colimit_Pushout_Flattening_PO_flattening; };
+} /* END */

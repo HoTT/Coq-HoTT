@@ -1,0 +1,874 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.028s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.008s">
+<div class="time" style="width: 28.571428571429%"></div>
+<pre>
+Require Import Spaces.Pos.Core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Binary Integers *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Close Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Close Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope positive_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Definition of the Integers *)
+
+(** We define an integer as being a positive number labelled negative, zero or a positive number labelled positive. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Inductive BinInt : Type0 :=
+  | neg : Pos -&gt; BinInt
+  | zero : BinInt
+  | pos : Pos -&gt; BinInt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments pos p%_pos.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope binint_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope binint_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope binint_scope with binint.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The integers are a pointed type *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ispointed_BinInt : IsPointed BinInt := zero.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Properties of constructors *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition neg_inj {z w : Pos} (p : neg z = neg w) : z = w
+  := transport (fun s =&gt; z =
+    (match s with neg a =&gt; a | zero =&gt; w | pos a =&gt; w end)) p (idpath z).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pos_inj {z w : Pos} (p : pos z = pos w) : z = w
+  := transport (fun s =&gt; z =
+    (match s with neg a =&gt; w | zero =&gt; w | pos a =&gt; a end)) p (idpath z).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition neg_neq_zero {z : Pos} : ~ (neg z = zero)
+  := fun p =&gt; transport (fun s =&gt;
+    match s with neg a =&gt; z = a| zero =&gt; Empty | pos _ =&gt; Empty end) p (idpath z).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pos_neq_zero {z : Pos} : ~ (pos z = zero)
+  := fun p =&gt; transport (fun s =&gt;
+    match s with pos a =&gt; z = a | zero =&gt; Empty | neg _ =&gt; Empty end) p (idpath z).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition neg_neq_pos {z w : Pos} : ~ (neg z = pos w)
+  := fun p =&gt; transport (fun s =&gt;
+    match s with neg a =&gt; z = a | zero =&gt; Empty | pos _ =&gt; Empty end) p (idpath z).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition zero_neq_neg {z : Pos} := @neg_neq_zero z o symmetry _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition zero_neq_pos {z : Pos} := @pos_neq_zero z o symmetry _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pos_neq_neg {z w : Pos} := @neg_neq_pos z w o symmetry _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Conversion with a decimal representation for printing/parsing *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_to_decimal_binint (n : BinInt) : Decimal.int :=
+  match n with
+    | neg m =&gt; Decimal.Neg (pos_to_uint m)
+    | zero  =&gt; Decimal.Pos Decimal.Nil
+    | pos m =&gt; Decimal.Pos (pos_to_uint m)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition binint_to_number_binint (n : BinInt) : Numeral.int :=
+  Numeral.IntDec (binint_to_decimal_binint n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+
+Fixpoint binint_of_decimal_uint (d : Decimal.uint) : BinInt :=
+  match d with
+    | Decimal.Nil =&gt; zero
+    | Decimal.D0 l =&gt; binint_of_decimal_uint l
+    | Decimal.D1 l =&gt; pos (pos_of_uint_acc l 1)
+    | Decimal.D2 l =&gt; pos (pos_of_uint_acc l 1~0)
+    | Decimal.D3 l =&gt; pos (pos_of_uint_acc l 1~1)
+    | Decimal.D4 l =&gt; pos (pos_of_uint_acc l 1~0~0)
+    | Decimal.D5 l =&gt; pos (pos_of_uint_acc l 1~0~1)
+    | Decimal.D6 l =&gt; pos (pos_of_uint_acc l 1~1~0)
+    | Decimal.D7 l =&gt; pos (pos_of_uint_acc l 1~1~1)
+    | Decimal.D8 l =&gt; pos (pos_of_uint_acc l 1~0~0~0)
+    | Decimal.D9 l =&gt; pos (pos_of_uint_acc l 1~0~0~1)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition binint_of_decimal_binint (d : Decimal.int) : BinInt :=
+  match d with
+    | Decimal.Pos u =&gt; binint_of_decimal_uint u
+    | Decimal.Neg u =&gt; let t := binint_of_decimal_uint u in
+        match t with
+          | pos v =&gt; neg v
+          | _ =&gt; zero
+        end
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition binint_of_number_binint (d:Numeral.int) :=
+  match d with
+  | Numeral.IntDec d =&gt; Some (binint_of_decimal_binint d)
+  | Numeral.IntHex _ =&gt; None
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Number Notation BinInt binint_of_number_binint binint_to_number_binint : binint_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* For some reason 0 can be parsed as an integer, but is printed as [zero]. This notation fixes that. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "0" := zero : binint_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Doubling and variants *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_double x :=
+  match x with
+    | 0 =&gt; 0
+    | pos p =&gt; pos p~0
+    | neg p =&gt; neg p~0
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition binint_succ_double x :=
+  match x with
+    | 0 =&gt; 1
+    | pos p =&gt; pos p~1
+    | neg p =&gt; neg (pos_pred_double p)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition binint_pred_double x :=
+  match x with
+    | 0 =&gt; neg 1%pos
+    | neg p =&gt; neg p~1
+    | pos p =&gt; pos (pos_pred_double p)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subtraction of positive into [BinInt] *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>Fixpoint binint_pos_sub (x y : Pos) {struct y} : BinInt :=
+  match x, y with
+    | p~1, q~1 =&gt; binint_double (binint_pos_sub p q)
+    | p~1, q~0 =&gt; binint_succ_double (binint_pos_sub p q)
+    | p~1, 1 =&gt; pos p~0
+    | p~0, q~1 =&gt; binint_pred_double (binint_pos_sub p q)
+    | p~0, q~0 =&gt; binint_double (binint_pos_sub p q)
+    | p~0, 1 =&gt; pos (pos_pred_double p)
+    | 1, q~1 =&gt; neg q~0
+    | 1, q~0 =&gt; neg (pos_pred_double q)
+    | 1, 1 =&gt; zero
+  end%pos.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Negation *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_negation x :=
+  match x with
+    | zero =&gt; zero
+    | pos x =&gt; neg x
+    | neg x =&gt; pos x
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "- x" := (binint_negation x) : binint_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma ibnint_negation_negation n : --n = n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Addition *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_add x y :=
+  match x, y with
+    | 0, y =&gt; y
+    | x, 0 =&gt; x
+    | pos x', pos y' =&gt; pos (x' + y')
+    | pos x', neg y' =&gt; binint_pos_sub x' y'
+    | neg x', pos y' =&gt; binint_pos_sub y' x'
+    | neg x', neg y' =&gt; neg (x' + y')
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "+" := binint_add : binint_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Successor *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_succ x := x + 1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Predecessor *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_pred x := x + neg 1%pos.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subtraction *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_sub m n := m + -n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "-" := binint_sub : binint_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Multiplication *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_mul x y :=
+  match x, y with
+    | 0, _ =&gt; 0
+    | _, 0 =&gt; 0
+    | pos x', pos y' =&gt; pos (x' * y')
+    | pos x', neg y' =&gt; neg (x' * y')
+    | neg x', pos y' =&gt; neg (x' * y')
+    | neg x', neg y' =&gt; pos (x' * y')
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "*" := binint_mul : binint_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Power function *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_pow x y :=
+  match y with
+    | pos p =&gt; pos_iter (binint_mul x) p 1
+    | 0 =&gt; 1
+    | neg _ =&gt; 0
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Square *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_square x :=
+  match x with
+    | 0 =&gt; 0
+    | pos p =&gt; pos (pos_square p)
+    | neg p =&gt; pos (pos_square p)
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Sign function *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_sgn z :=
+  match z with
+    | 0 =&gt; 0
+    | pos p =&gt; 1
+    | neg p =&gt; neg 1%pos
+  end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ** Decidable paths and truncation. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decpaths_binint : DecidablePaths BinInt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [n | | n] [m | | m].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 216
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre> destruct (dec (n = m)) as [p | q].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inl, ap, p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply inr; intro; apply q, neg_inj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr neg_neq_zero).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr neg_neq_pos).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr zero_neq_neg).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl idpath).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr zero_neq_pos).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr pos_neq_neg).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr pos_neq_zero).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre> destruct (dec (n = m)) as [p | q].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inl, ap, p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply inr; intro; apply q, pos_inj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 228
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since integers have decidable paths they are a hset *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance hset_binint : IsHSet BinInt | 0 := _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

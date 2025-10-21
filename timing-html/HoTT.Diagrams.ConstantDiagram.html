@@ -1,0 +1,423 @@
+<html>
+<head>
+<title>ConstantDiagram.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ConstantDiagram.v</h1>
+
+<div class="code" title="File: ConstantDiagram.v
+Line: 1
+Time: 0.03s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types.Paths.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 1
+Time: 0.018s">
+<div class="time" style="width: 60%"></div>
+<pre>
+Require Import Cone.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Require Import Cocone.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagram.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Graph.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Constant diagram *)
+
+</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ConstantDiagram.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {G : Graph}.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition diagram_const (C : Type) : Diagram G.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Diagram.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fun _ =&gt; C).</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i j k.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact idmap.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition diagram_const_functor {A B : Type} (f : A -&gt; B)
+    : DiagramMap (diagram_const A) (diagram_const B).</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_DiagramMap.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intro i; exact f.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 26
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+  Definition diagram_const_functor_comp {A B C : Type}
+    (f : A -&gt; B) (g : B -&gt; C)
+    : diagram_const_functor (g o f)
+      = diagram_comp (diagram_const_functor g) (diagram_const_functor f)
+    := idpath.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition diagram_const_functor_idmap {A : Type}
+    : diagram_const_functor (idmap : A -&gt; A) = diagram_idmap (diagram_const A)
+    := idpath.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_diagram_const_cocone `{Funext} (D : Diagram G) (X : Type)
+    : DiagramMap D (diagram_const X) &lt;~&gt; Cocone D X.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The two functions are defined in parallel: *)
+   </pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>1,2: intros [? w]; econstructor.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* This reversal is a defect in the definition of [Cocone]. *)
+   </pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>1,2: intros x y z z'; symmetry; revert x y z z'.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: exact w.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The two homotopies are proved in parallel: *)
+   </pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>1,2: intros [].</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: srapply path_cocone; cbn.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    3: srapply path_DiagramMap; snrefine (_; _); cbn.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: intros; cbn.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply inv_V.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 54
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_diagram_const_cone `{Funext} (X : Type) (D : Diagram G)
+    : DiagramMap (diagram_const X) D &lt;~&gt; Cone X D.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: intros [? w]; econstructor.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: exact w.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: intros[].</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: srapply path_cone.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    3: srapply path_DiagramMap.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 66
+Time: 0.029s">
+<div class="time" style="width: 96.666666666667%"></div>
+<pre>
+    all: cbn; intros; hott_simpl.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 67
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 68
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+End ConstantDiagram.</pre>
+</div>
+<div class="code" title="File: ConstantDiagram.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,823 @@
+<html>
+<head>
+<title>ua_prod_algebra.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ua_prod_algebra.v</h1>
+
+<div class="code" title="File: ua_prod_algebra.v
+Line: 1
+Time: 0.04s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Types.Bool
+  HoTT.Classes.theory.ua_homomorphism.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Import algebra_notations ne_list.notations.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following section defines product algebra [ProdAlgebra].
+    Section [bin_prod_algebra] specialises the definition to
+    binary product algebra. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext} {σ : Signature} (I : Type) (A : I → Algebra σ).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition carriers_prod_algebra : Carriers σ
+    := λ (s : Sort σ), ∀ (i:I), A i s.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+
+  Fixpoint op_prod_algebra (w : SymbolType σ)
+      : (∀ i, Operation (A i) w) →
+        Operation carriers_prod_algebra w :=
+    match w return (∀ i, Operation (A i) w) →
+                    Operation carriers_prod_algebra w
+    with
+    | [:_:] =&gt; idmap
+    | _ ::: g =&gt; λ f p, op_prod_algebra g (λ i, f i (p i))
+    end.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ops_prod_algebra (u : Symbol σ)
+    : Operation carriers_prod_algebra (σ u)
+    := op_prod_algebra (σ u) (λ (i:I), u.#(A i)).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ProdAlgebra : Algebra σ
+    := BuildAlgebra carriers_prod_algebra ops_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance trunc_prod_algebra {n : trunc_index}
+    `{!∀ i, IsTruncAlgebra n (A i)}
+    : IsTruncAlgebra n ProdAlgebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro s.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next section defines the product projection homomorphisms. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section hom_proj_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext} {σ : Signature} (I : Type) (A : I → Algebra σ).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition def_proj_prod_algebra (i:I) (s : Sort σ) (c : ProdAlgebra I A s)
+    : A i s
+    := c i.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+
+  Lemma oppreserving_proj_prod_algebra {w : SymbolType σ}
+    (i : I) (v : ∀ i : I, Operation (A i) w) (α : Operation (A i) w)
+    (P : v i = α)
+    : OpPreserving (def_proj_prod_algebra i)
+        (op_prod_algebra I A w v) α.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction w.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact P.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (IHw (λ i, v i (p i)) (α (p i))).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> f_ap.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is_homomorphism_proj_prod_algebra (i:I)
+    : IsHomomorphism (def_proj_prod_algebra i).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro u.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply oppreserving_proj_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition hom_proj_prod_algebra (i : I)
+    : Homomorphism (ProdAlgebra I A) (A i)
+    := BuildHomomorphism (def_proj_prod_algebra i).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End hom_proj_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product algebra universal mapping property [ump_prod_algebra]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ump_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context
+    `{Funext}
+    {σ : Signature}
+    (I : Type)
+    (A : I → Algebra σ)
+    (C : Algebra σ).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition hom_prod_algebra_mapout
+    (f : Homomorphism C (ProdAlgebra I A)) (i:I)
+    : Homomorphism C (A i)
+    := hom_compose (hom_proj_prod_algebra I A i) f.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition def_prod_algebra_mapin (f : ∀ (i:I) s, C s → A i s)
+    : ∀ (s : Sort σ) , C s → ProdAlgebra I A s
+    := λ (s : Sort σ) (x : C s) (i : I), f i s x.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 89
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+
+  Lemma oppreserving_prod_algebra_mapin {w : SymbolType σ}
+    (f : ∀ (i:I) s, C s → A i s)
+    (α : ∀ (i:I), Operation (A i) w) (β : Operation C w)
+    (P : ∀ (i:I), OpPreserving (f i) β (α i))
+    : OpPreserving (def_prod_algebra_mapin f) β
+        (op_prod_algebra I A w (λ i, α i)).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction w.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext i.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHw.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro i.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is_homomorphism_prod_algebra_mapin
+    (f : ∀ (i:I), Homomorphism C (A i))
+    : IsHomomorphism (def_prod_algebra_mapin f).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro u.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply oppreserving_prod_algebra_mapin.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro i.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply f.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+
+  Definition hom_prod_algebra_mapin (f : ∀ i, Homomorphism C (A i))
+    : Homomorphism C (ProdAlgebra I A)
+    := BuildHomomorphism (def_prod_algebra_mapin f).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Given a family of homomorphisms [h : ∀ (i:I), Homomorphism C (A i)]
+      there is a unique homomorphism [f : Homomorphism C (ProdAlgebra I A)]
+      such that [h i = hom_compose (pr i) f], where
+
+&lt;&lt;
+        pr i = hom_proj_prod_algebra I A i
+&gt;&gt;
+
+      is the ith projection homomorphism. *)
+
+
+</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ump_prod_algebra `{!∀ i, IsHSetAlgebra (A i)}
+   : (∀ (i:I), Homomorphism C (A i)) &lt;~&gt; Homomorphism C (ProdAlgebra I A).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (equiv_adjointify hom_prod_algebra_mapin hom_prod_algebra_mapout).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply path_hset_homomorphism.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext i.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply path_hset_homomorphism.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+End ump_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Binary product algebra. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section bin_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext} {σ : Signature} (A B : Algebra σ).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition bin_prod_algebras (b:Bool) : Algebra σ
+    := if b then B else A.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance trunc_bin_prod_algebras {n : trunc_index}
+    `{!IsTruncAlgebra n A} `{!IsTruncAlgebra n B}
+    : ∀ (b:Bool), IsTruncAlgebra n (bin_prod_algebras b).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros []; exact _.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition BinProdAlgebra : Algebra σ :=
+    ProdAlgebra Bool bin_prod_algebras.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition fst_prod_algebra : Homomorphism BinProdAlgebra A
+    := hom_proj_prod_algebra Bool bin_prod_algebras false.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition snd_prod_algebra : Homomorphism BinProdAlgebra B
+    := hom_proj_prod_algebra Bool bin_prod_algebras true.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End bin_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Module prod_algebra_notations.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Notation "A × B" := (BinProdAlgebra A B) : Algebra_scope.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End prod_algebra_notations.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Import prod_algebra_notations.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Specialization of the product algebra universal mapping property
+    to binary product. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ump_bin_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context
+    `{Funext}
+    {σ : Signature}
+    (A B C : Algebra σ)
+    `{!IsHSetAlgebra A} `{!IsHSetAlgebra B}.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+ Lemma ump_bin_prod_algebra
+   : Homomorphism C A * Homomorphism C B &lt;~&gt; Homomorphism C (A × B).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (k := λ (b:Bool), Homomorphism C (bin_prod_algebras A B b)).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    exact (equiv_compose
+            (ump_prod_algebra Bool (bin_prod_algebras A B) C)
+            (equiv_bool_forall_prod k)^-1).</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End ump_bin_prod_algebra.</pre>
+</div>
+<div class="code" title="File: ua_prod_algebra.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Definition of pseudonatural transformation *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc97" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc97"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Pseudofunctor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms FunctorCategory.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> pseudonatural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> pseudonatural_transformation_scope <span class="kr">with</span> pseudonatural_transformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> pseudonatural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Quoting Michael Shulman from an email:</span>
+
+<span class="sd">    The 2-limit in question is sometimes called a &quot;descent object&quot;, or</span>
+<span class="sd">    the totalization of a truncated cosimplicial object.  It&#39;s a</span>
+<span class="sd">    generalization of an equalizer.  The set of natural</span>
+<span class="sd">    transformations between two ordinary functors [F],[G : C → D] is</span>
+<span class="sd">    the equalizer of</span>
+
+<span class="sd">    [Π_x D(Fx,Gx) ⇉ Π_{x→y} D(Fx,Gy)]</span>
+
+<span class="sd">    The category of pseudonatural transformations between two</span>
+<span class="sd">    2-functors is the descent object of</span>
+
+<span class="sd">    [Π_x D(Fx,Gx) ⇉ Π_{x→y} D(Fx,Gy) ⇛ Π_{x→y→z} D(Fx,Gz)]</span>
+
+<span class="sd">    where there are three maps from the second product to the third,</span>
+<span class="sd">    corresponding to picking out [x→y], [y→z], and [x→z].</span>
+
+<span class="sd">    In general, the descent object of</span>
+
+<span class="sd">    [A ⇉ B ⇛ C]</span>
+
+<span class="sd">    is the category of objects [a∈A] equipped with an isomorphism</span>
+<span class="sd">    between their two images in [B] which results in a commutative</span>
+<span class="sd">    triangle between their three images in [C]. *)</span>
+
+<span class="sd">(** Later, he said (https://github.com/HoTT/HoTT/pull/382##issuecomment-41240787):</span>
+
+<span class="sd">    The &quot;naturality&quot; axiom is only necessary if the domain is a</span>
+<span class="sd">    2-category rather than a 1-category. However, the respect for</span>
+<span class="sd">    units axiom really is necessary; I guess I forgot to mention that</span>
+<span class="sd">    in the email. The way it comes up in the descent object is that</span>
+<span class="sd">    there&#39;s a map from [B] to [A] given by projecting the components</span>
+<span class="sd">    of identities, and the coherence cell has to become an identity</span>
+<span class="sd">    when composed with that map. *)</span>
+
+<span class="sd">(** We construct the parts as above, but inline the resulting definitions for speed.</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">Module PseudonaturalTransformationParts.</span>
+<span class="sd">  Section PseudonaturalTransformation.</span>
+<span class="sd">    Context `{Funext}.</span>
+
+<span class="sd">    Variable X : PreCategory.</span>
+
+<span class="sd">    Variables F G : Pseudofunctor X.</span>
+
+
+<span class="sd">    Definition A : PreCategory</span>
+<span class="sd">      := (forall x : X, F x -&gt; G x)%category.</span>
+<span class="sd">    Definition B : PreCategory</span>
+<span class="sd">      := (forall x y (m : morphism X x y), F x -&gt; G y)%category.</span>
+<span class="sd">    Definition C : PreCategory</span>
+<span class="sd">      := (forall x y z (m1 : morphism X y z) (m2 : morphism X x y), F x -&gt; G z)%category.</span>
+
+<span class="sd">    Definition a_part := Eval simpl in object A.</span>
+
+<span class="sd">    Definition A_to_B_1 : Functor A B.</span>
+<span class="sd">    Proof.</span>
+<span class="sd">      exact (Build_Functor</span>
+<span class="sd">                A B</span>
+<span class="sd">                (fun x__Fx_to_Gx =&gt; fun x y m =&gt; x__Fx_to_Gx y o p_morphism_of F m)%functor</span>
+<span class="sd">                (fun x__s x__d x__m =&gt; fun x y m =&gt; x__m y oR p_morphism_of F m)</span>
+<span class="sd">                _</span>
+<span class="sd">                _);</span>
+<span class="sd">      simpl; repeat (intro || apply path_forall);</span>
+<span class="sd">      [ apply composition_of_whisker_r</span>
+<span class="sd">      | apply whisker_r_left_identity ].</span>
+<span class="sd">    Defined.</span>
+
+<span class="sd">    Definition A_to_B_2 : Functor A B.</span>
+<span class="sd">    Proof.</span>
+<span class="sd">      exact (Build_Functor</span>
+<span class="sd">                A B</span>
+<span class="sd">                (fun x__Fx_to_Gx =&gt; fun x y m =&gt; p_morphism_of G m o x__Fx_to_Gx x)%functor</span>
+<span class="sd">                (fun x__s x__d x__m =&gt; fun x y m =&gt; p_morphism_of G m oL x__m x)</span>
+<span class="sd">                _</span>
+<span class="sd">                _);</span>
+<span class="sd">      simpl; repeat (intro || apply path_forall);</span>
+<span class="sd">      [ apply composition_of_whisker_l</span>
+<span class="sd">      | apply whisker_l_right_identity ].</span>
+<span class="sd">    Defined.</span>
+
+<span class="sd">    Definition b_part (a : a_part)</span>
+<span class="sd">      := Eval simpl in forall x y m, (A_to_B_1 a x y m &lt;~=~&gt; A_to_B_2 a x y m).</span>
+
+<span class="sd">    Definition B_to_A : Functor B A</span>
+<span class="sd">      := Build_Functor</span>
+<span class="sd">           B A</span>
+<span class="sd">           (fun xym__Fx_to_Gy =&gt; fun x =&gt; xym__Fx_to_Gy x x 1)</span>
+<span class="sd">           (fun x__s x__d x__m =&gt; fun x =&gt; x__m x x 1)</span>
+<span class="sd">           (fun _ _ _ _ _ =&gt; idpath)</span>
+<span class="sd">           (fun _ =&gt; idpath).</span>
+
+<span class="sd">    Definition b_id_part (a : a_part) (b : b_part a)</span>
+<span class="sd">      := Eval simpl in</span>
+<span class="sd">          forall x,</span>
+<span class="sd">            (((left_identity_natural_transformation_1 _)</span>
+<span class="sd">                o (p_identity_of G _ oR _)</span>
+<span class="sd">                o (B_to_A _1 b x)</span>
+<span class="sd">                o (_ oL (p_identity_of F _)^-1)</span>
+<span class="sd">                o (left_identity_natural_transformation_2 _))</span>
+<span class="sd">             = 1)%natural_transformation.</span>
+
+<span class="sd">    Definition B_to_C_1 : Functor B C.</span>
+<span class="sd">    Proof.</span>
+<span class="sd">      exact (Build_Functor</span>
+<span class="sd">                B C</span>
+<span class="sd">                (fun xym__Fx_to_Gy =&gt; fun x y z m1 m2 =&gt; xym__Fx_to_Gy y z m1 o p_morphism_of F m2)%functor</span>
+<span class="sd">                (fun xym__s xym__d xym__m =&gt; fun x y z m1 m2 =&gt; xym__m y z m1 oR p_morphism_of F m2)</span>
+<span class="sd">                _</span>
+<span class="sd">                _);</span>
+<span class="sd">      simpl; repeat (intro || apply path_forall);</span>
+<span class="sd">      [ apply composition_of_whisker_r</span>
+<span class="sd">      | apply whisker_r_left_identity ].</span>
+<span class="sd">    Defined.</span>
+
+<span class="sd">    Definition B_to_C_2 : Functor B C.</span>
+<span class="sd">    Proof.</span>
+<span class="sd">      exact (Build_Functor</span>
+<span class="sd">                B C</span>
+<span class="sd">                (fun xym__Fx_to_Gy =&gt; fun x y z m1 m2 =&gt; p_morphism_of G m1 o xym__Fx_to_Gy x y m2)%functor</span>
+<span class="sd">                (fun xym__s xym__d xym__m =&gt; fun x y z m1 m2 =&gt; p_morphism_of G m1 oL xym__m x y m2)</span>
+<span class="sd">                _</span>
+<span class="sd">                _);</span>
+<span class="sd">      simpl; repeat (intro || apply path_forall);</span>
+<span class="sd">      [ apply composition_of_whisker_l</span>
+<span class="sd">      | apply whisker_l_right_identity ].</span>
+<span class="sd">    Defined.</span>
+
+<span class="sd">    Definition B_to_C_3 : Functor B C</span>
+<span class="sd">      := Build_Functor</span>
+<span class="sd">           B C</span>
+<span class="sd">           (fun xym__Fx_to_Gy =&gt; fun x y z m1 m2 =&gt; xym__Fx_to_Gy x z (m1 o m2))</span>
+<span class="sd">           (fun xym__s xym__d xym__m =&gt; fun x y z m1 m2 =&gt; xym__m x z (m1 o m2))</span>
+<span class="sd">           (fun _ _ _ _ _ =&gt; idpath)</span>
+<span class="sd">           (fun _ =&gt; idpath).</span>
+
+<span class="sd">    Definition c_part&#39; (a : a_part) (b : b_part a)</span>
+<span class="sd">    : forall (x y z : X) (m1 : morphism X y z) (m2 : morphism X x y), Type.</span>
+<span class="sd">    Proof.</span>
+<span class="sd">      hnf in a, b.</span>
+<span class="sd">      pose (fun x y m =&gt; (b x y m : morphism _ _ _)) as bB; simpl in *.</span>
+<span class="sd">      intros x y z m1 m2.</span>
+<span class="sd">      exact (((associator_2 _ _ _)</span>
+<span class="sd">                o (B_to_C_2 _1 bB x y z m1 m2)</span>
+<span class="sd">                o (associator_1 _ _ _)</span>
+<span class="sd">                o (B_to_C_1 _1 bB x y z m1 m2)</span>
+<span class="sd">                o (associator_2 _ _ _))</span>
+<span class="sd">             = ((p_composition_of G _ _ _ m1 m2 oR _)</span>
+<span class="sd">                  o (B_to_C_3 _1 bB x y z m1 m2)</span>
+<span class="sd">                  o (_ oL (p_composition_of F _ _ _ m1 m2)^-1)))%natural_transformation.</span>
+<span class="sd">    Defined.</span>
+
+<span class="sd">    Arguments c_part&#39; / .</span>
+
+<span class="sd">    Definition c_part (a : a_part) (b : b_part a)</span>
+<span class="sd">      := Eval simpl in forall x y z m1 m2, @c_part&#39; a b x y z m1 m2.</span>
+
+<span class="sd">    (** We would like to define [PseudonaturalTransformation] here, then our types are η-expanded. *)</span>
+<span class="sd">  (*Record PseudonaturalTransformation :=</span>
+<span class="sd">      { p_components_of :&gt; a_part;</span>
+<span class="sd">        p_commutes : b_part p_components_of;</span>
+<span class="sd">        p_commutes_coherent : c_part p_commutes }.*)</span>
+<span class="sd">  End PseudonaturalTransformation.</span>
+<span class="sd">End PseudonaturalTransformationParts.</span>
+
+<span class="sd">Print PseudonaturalTransformationParts.a_part.</span>
+<span class="sd">Print PseudonaturalTransformationParts.b_part.</span>
+<span class="sd">Print PseudonaturalTransformationParts.b_id_part.</span>
+<span class="sd">Print PseudonaturalTransformationParts.c_part.</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">PseudonaturalTransformation</span> `{Funext} (X : PreCategory)
+       (F G : Pseudofunctor X) :=
+  { p_components_of
+      :&gt; <span class="kr">forall</span> <span class="nv">a</span> : X, Functor (F a) (G a);
+    p_commutes
+    : <span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">y</span> : X) (<span class="nv">m</span> : morphism X x y),
+        ((p_components_of y o p_morphism_of F m)%functor &lt;~=~&gt; (p_morphism_of G m o p_components_of x)%functor)%natural_transformation;
+    p_commutes_respects_identity
+    : <span class="kr">forall</span> <span class="nv">x</span> : X,
+        ((left_identity_natural_transformation_1 (p_components_of x))
+           o (p_identity_of G x oR p_components_of x)
+           o (p_commutes x x <span class="mi">1</span>%morphism)
+           o (p_components_of x oL (p_identity_of F x) ^-<span class="mi">1</span>)
+           o (right_identity_natural_transformation_2 (p_components_of x))
+         = <span class="mi">1</span>)%natural_transformation;
+    p_commutes_respects_composition
+    : <span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> : X) (<span class="nv">m1</span> : morphism X y z) (<span class="nv">m2</span> : morphism X x y),
+        (((associator_2 (p_morphism_of G m1) (p_morphism_of G m2) (p_components_of x))
+            o (p_morphism_of G m1 oL p_commutes x y m2)
+            o (associator_1 (p_morphism_of G m1) (p_components_of y) (p_morphism_of F m2))
+            o (p_commutes y z m1 oR p_morphism_of F m2)
+            o (associator_2 (p_components_of z) (p_morphism_of F m1) (p_morphism_of F m2)))
+         = ((p_composition_of G x y z m1 m2 oR p_components_of x o p_commutes x z (m1 o m2)%morphism)
+              o (p_components_of z oL (p_composition_of F x y z m1 m2) ^-<span class="mi">1</span>)))%natural_transformation }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> pseudonatural_transformation_scope <span class="kr">with</span> PseudonaturalTransformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Create HintDb</span> pseuodnatural_transformation <span class="kn">discriminated</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> p_components_of {_} {X}%_category {F G}%_pseudofunctor T%_pseudonatural_transformation
+          a%_object : <span class="nb">rename</span>, <span class="nb">simpl</span> nomatch.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Resolve</span> p_commutes_respects_identity p_commutes_respects_composition : category pseudonatural_transformation.</span></span></pre>
+</div>
+</div></body>
+</html>

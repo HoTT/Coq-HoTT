@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>FromFunctor.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Functors to cat are pseudofunctors *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Core NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Pseudofunctor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Cat.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Morphisms NaturalTransformation.Isomorphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms NaturalTransformation.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.PathGroupoids Basics.Trunc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Every functor to Cat is a pseudofunctor *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">of_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{HP : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">cat</span> := (@sub_pre_cat _ P HP).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C cat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_functor_helper</span> <span class="nv">A</span> <span class="nv">B</span> (<span class="nv">F1</span> <span class="nv">F2</span> : Functor A B) (<span class="nv">pf1</span> <span class="nv">pf2</span> : F1 = F2)
+  : P A -&gt; P B -&gt; pf1 = pf2
+    := <span class="kr">fun</span> <span class="nv">PA</span> <span class="nv">PB</span> =&gt; @path_ishprop _ (@HP A B PA PB F1 F2) _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Hint Extern</span> <span class="mi">0</span> (P <span class="nl">?x</span>.<span class="mi">1</span>) =&gt; <span class="bp">exact</span> x.<span class="mi">2</span> : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Tactic Notation</span> <span class="s2">&quot;transitivity_idtoiso&quot;</span> open_constr(hyp) :=
+    <span class="kr">lazymatch goal with</span>
+      | [ |- <span class="nl">?f</span> (Category.Morphisms.idtoiso <span class="nl">?C</span> _) = _ ] =&gt; <span class="nb">etransitivity</span> (f (Category.Morphisms.idtoiso C hyp));
+                                       [ <span class="kp">do</span> <span class="mi">2</span> <span class="nb">refine</span> (ap _ _); <span class="c">(* https://coq.inria.fr/bugs/show_bug.cgi?id=3626 *)</span>
+                                         <span class="nb">apply</span> path_functor_helper;
+                                         <span class="nb">simpl</span>; <span class="nb">trivial</span>
+                                       | path_natural_transformation ]
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">pseudofunctor_t</span> :=
+    <span class="nb">intros</span>;
+    <span class="nb">unfold</span> natural_transformation_of_natural_isomorphism;
+    <span class="nb">rewrite</span> <span class="nl">?idtoiso_whisker_r</span>, <span class="nl">?idtoiso_whisker_l</span>;
+    <span class="kp">repeat</span> (
+        <span class="kr">let</span> <span class="nv">C</span> := <span class="kr">match goal with</span> |- @paths (@NaturalTransformation <span class="nl">?C</span> <span class="nl">?D</span> <span class="nl">?F</span> <span class="nl">?G</span>) _ _ =&gt; <span class="kp">constr</span>:((C -&gt; D)%category) <span class="kr">end</span> <span class="kr">in</span>
+        <span class="kp">first</span> [ <span class="nb">eapply</span> (@iso_moveL_pV C)
+              | <span class="nb">eapply</span> (@iso_moveL_Vp C)
+              | <span class="nb">eapply</span> (@iso_moveL_pM C)
+              | <span class="nb">eapply</span> (@iso_moveL_Mp C) ];
+        <span class="nb">simpl</span>
+      );
+    <span class="nb">rewrite</span> <span class="nl">?idtoiso_inv</span>;
+    <span class="nb">simpl</span>;
+    <span class="nb">change</span> @NaturalTransformation.Composition.Core.compose
+    <span class="kr">with</span> (<span class="kr">fun</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">F</span> <span class="nv">G</span> <span class="nv">H</span> =&gt; Category.Core.compose (C := C -&gt; D) (s := F) (d := G) (d&#39; := H));
+    <span class="nb">cbv</span> beta;
+    <span class="nb">rewrite</span> <span class="nl">?idtoiso_comp</span>;
+    <span class="kp">first</span> [ transitivity_idtoiso (Functor.Composition.Laws.left_identity _)
+          | transitivity_idtoiso ((Functor.Composition.Laws.left_identity _)^)
+          | transitivity_idtoiso (Functor.Composition.Laws.right_identity _)
+          | transitivity_idtoiso ((Functor.Composition.Laws.right_identity _)^)
+          | transitivity_idtoiso (Functor.Composition.Laws.associativity _ _ _)
+          | transitivity_idtoiso ((Functor.Composition.Laws.associativity _ _ _)^) ];
+    <span class="nb">rewrite</span> eta_idtoiso;
+    <span class="nb">simpl</span>;
+    <span class="nb">rewrite</span> <span class="nl">?ap_V</span>, <span class="nl">?Functor</span>.Composition.Laws.left_identity_fst, <span class="nl">?Functor</span>.Composition.Laws.right_identity_fst, <span class="nl">?Functor</span>.Composition.Laws.associativity_fst;
+    <span class="kp">try</span> <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="c">(* The following helpers were generated with</span>
+<span class="c">&lt;&lt;</span>
+<span class="c">intros.</span>
+<span class="c">    repeat match goal with</span>
+<span class="c">             | [ |- context[idtoiso ?C (?f ?x)] ] =&gt; generalize (f x); intro</span>
+<span class="c">             | [ |- context[MorphismOf ?F ?f] ] =&gt; generalize dependent (MorphismOf F f); repeat (let x := fresh &quot;x&quot; in intro x)</span>
+<span class="c">             | [ |- context[ObjectOf ?F ?f] ] =&gt; generalize dependent (ObjectOf F f); repeat (let x := fresh &quot;x&quot; in intro x)</span>
+<span class="c">           end.</span>
+<span class="c">    simpl in *.</span>
+<span class="c">    unfold SubPreCatCat.</span>
+<span class="c">    simpl in *.</span>
+<span class="c">    clear.</span>
+<span class="c">    destruct_head_hnf @sig.</span>
+<span class="c">    simpl in *.</span>
+<span class="c">    repeat match goal with</span>
+<span class="c">             | [ H : _ |- _ ] =&gt; revert H</span>
+<span class="c">           end.</span>
+<span class="c">    intros H P.</span>
+<span class="c">&gt;&gt; *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk1"><span class="kn">Lemma</span> <span class="nf">pseudofunctor_of_functor__composition_of</span>
+        {<span class="nv">x0</span> <span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x</span> : PreCategory}
+        {<span class="nv">x7</span> <span class="nv">x11</span> : Functor x0 x1}
+        {<span class="nv">x12</span> : x7 = x11}
+        {<span class="nv">x6</span> : Functor x0 x2} {<span class="nv">x9</span> : Functor x2 x1}
+        {<span class="nv">x14</span> : x11 = (x9 o x6)%functor}
+        {<span class="nv">x4</span> : Functor x0 x} {<span class="nv">x5</span> : Functor x x1}
+        {<span class="nv">x8</span> : x7 = (x5 o x4)%functor} {<span class="nv">x10</span> : Functor x x2}
+        {<span class="nv">x13</span> : x6 = (x10 o x4)%functor} {<span class="nv">x15</span> : x5 = (x9 o x10)%functor}
+        (<span class="nv">H0&#39;</span> : P x0) (<span class="nv">H1&#39;</span> : P x1) (<span class="nv">H2&#39;</span> : P x2) (<span class="nv">H&#39;</span> : P x)
+  : ((associator_1 x9 x10 x4)
+       o ((idtoiso (x -&gt; x1) x15 : morphism _ _ _)
+            oR x4
+            o (idtoiso (x0 -&gt; x1) x8 : morphism _ _ _)))%natural_transformation
+    = (x9
+         oL (idtoiso (x0 -&gt; x2) x13 : morphism _ _ _)
+         o ((idtoiso (x0 -&gt; x1) x14 : morphism _ _ _)
+              o (idtoiso (x0 -&gt; x1) x12 : morphism _ _ _)))%natural_transformation.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C cat</span></span></span><br><span><var>x0, x1, x2, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x7, x11</var><span class="hyp-type"><b>: </b><span>Functor x0 x1</span></span></span><br><span><var>x12</var><span class="hyp-type"><b>: </b><span>x7 = x11</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>Functor x0 x2</span></span></span><br><span><var>x9</var><span class="hyp-type"><b>: </b><span>Functor x2 x1</span></span></span><br><span><var>x14</var><span class="hyp-type"><b>: </b><span>x11 = (x9 o x6)%functor</span></span></span><br><span><var>x4</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x5</var><span class="hyp-type"><b>: </b><span>Functor x x1</span></span></span><br><span><var>x8</var><span class="hyp-type"><b>: </b><span>x7 = (x5 o x4)%functor</span></span></span><br><span><var>x10</var><span class="hyp-type"><b>: </b><span>Functor x x2</span></span></span><br><span><var>x13</var><span class="hyp-type"><b>: </b><span>x6 = (x10 o x4)%functor</span></span></span><br><span><var>x15</var><span class="hyp-type"><b>: </b><span>x5 = (x9 o x10)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H1'</var><span class="hyp-type"><b>: </b><span>P x1</span></span></span><br><span><var>H2'</var><span class="hyp-type"><b>: </b><span>P x2</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(associator_1 x9 x10 x4
+ o ((idtoiso (x -&gt; x1) x15
+     :
+     morphism (x -&gt; x1) x5 (x9 o x10)%functor) oR x4
+    o (idtoiso (x0 -&gt; x1) x8
+       :
+       morphism (x0 -&gt; x1) x7 (x5 o x4)%functor)))%natural_transformation =
+(x9
+ oL (idtoiso (x0 -&gt; x2) x13
+     :
+     morphism (x0 -&gt; x2) x6 (x10 o x4)%functor)
+ o ((idtoiso (x0 -&gt; x1) x14
+     :
+     morphism (x0 -&gt; x1) x11 (x9 o x6)%functor)
+    o (idtoiso (x0 -&gt; x1) x12
+       :
+       morphism (x0 -&gt; x1) x7 x11)))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C cat</span></span></span><br><span><var>x0, x1, x2, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x7, x11</var><span class="hyp-type"><b>: </b><span>Functor x0 x1</span></span></span><br><span><var>x12</var><span class="hyp-type"><b>: </b><span>x7 = x11</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>Functor x0 x2</span></span></span><br><span><var>x9</var><span class="hyp-type"><b>: </b><span>Functor x2 x1</span></span></span><br><span><var>x14</var><span class="hyp-type"><b>: </b><span>x11 = (x9 o x6)%functor</span></span></span><br><span><var>x4</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x5</var><span class="hyp-type"><b>: </b><span>Functor x x1</span></span></span><br><span><var>x8</var><span class="hyp-type"><b>: </b><span>x7 = (x5 o x4)%functor</span></span></span><br><span><var>x10</var><span class="hyp-type"><b>: </b><span>Functor x x2</span></span></span><br><span><var>x13</var><span class="hyp-type"><b>: </b><span>x6 = (x10 o x4)%functor</span></span></span><br><span><var>x15</var><span class="hyp-type"><b>: </b><span>x5 = (x9 o x10)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H1'</var><span class="hyp-type"><b>: </b><span>P x1</span></span></span><br><span><var>H2'</var><span class="hyp-type"><b>: </b><span>P x2</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(associator_1 x9 x10 x4
+ o ((idtoiso (x -&gt; x1) x15
+     :
+     morphism (x -&gt; x1) x5 (x9 o x10)%functor) oR x4
+    o (idtoiso (x0 -&gt; x1) x8
+       :
+       morphism (x0 -&gt; x1) x7 (x5 o x4)%functor)))%natural_transformation =
+(x9
+ oL (idtoiso (x0 -&gt; x2) x13
+     :
+     morphism (x0 -&gt; x2) x6 (x10 o x4)%functor)
+ o ((idtoiso (x0 -&gt; x1) x14
+     :
+     morphism (x0 -&gt; x1) x11 (x9 o x6)%functor)
+    o (idtoiso (x0 -&gt; x1) x12
+       :
+       morphism (x0 -&gt; x1) x7 x11)))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk3"><span class="nb">clear</span> F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>x0, x1, x2, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x7, x11</var><span class="hyp-type"><b>: </b><span>Functor x0 x1</span></span></span><br><span><var>x12</var><span class="hyp-type"><b>: </b><span>x7 = x11</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>Functor x0 x2</span></span></span><br><span><var>x9</var><span class="hyp-type"><b>: </b><span>Functor x2 x1</span></span></span><br><span><var>x14</var><span class="hyp-type"><b>: </b><span>x11 = (x9 o x6)%functor</span></span></span><br><span><var>x4</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x5</var><span class="hyp-type"><b>: </b><span>Functor x x1</span></span></span><br><span><var>x8</var><span class="hyp-type"><b>: </b><span>x7 = (x5 o x4)%functor</span></span></span><br><span><var>x10</var><span class="hyp-type"><b>: </b><span>Functor x x2</span></span></span><br><span><var>x13</var><span class="hyp-type"><b>: </b><span>x6 = (x10 o x4)%functor</span></span></span><br><span><var>x15</var><span class="hyp-type"><b>: </b><span>x5 = (x9 o x10)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H1'</var><span class="hyp-type"><b>: </b><span>P x1</span></span></span><br><span><var>H2'</var><span class="hyp-type"><b>: </b><span>P x2</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(associator_1 x9 x10 x4
+ o ((idtoiso (x -&gt; x1) x15
+     :
+     morphism (x -&gt; x1) x5 (x9 o x10)%functor) oR x4
+    o (idtoiso (x0 -&gt; x1) x8
+       :
+       morphism (x0 -&gt; x1) x7 (x5 o x4)%functor)))%natural_transformation =
+(x9
+ oL (idtoiso (x0 -&gt; x2) x13
+     :
+     morphism (x0 -&gt; x2) x6 (x10 o x4)%functor)
+ o ((idtoiso (x0 -&gt; x1) x14
+     :
+     morphism (x0 -&gt; x1) x11 (x9 o x6)%functor)
+    o (idtoiso (x0 -&gt; x1) x12
+       :
+       morphism (x0 -&gt; x1) x7 x11)))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">symmetry</span>; <span class="nb">simpl</span>; pseudofunctor_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk4"><span class="kn">Lemma</span> <span class="nf">pseudofunctor_of_functor__left_identity_of</span>
+        {<span class="nv">x0</span> <span class="nv">x</span> : PreCategory}
+        {<span class="nv">x2</span> : Functor x x} {<span class="nv">x3</span> : x2 = <span class="mi">1</span>%functor}
+        {<span class="nv">x4</span> <span class="nv">x5</span> : Functor x0 x} {<span class="nv">x6</span> : x4 = x5} {<span class="nv">x7</span> : x4 = (x2 o x5)%functor}
+        (<span class="nv">H0&#39;</span> : P x0) (<span class="nv">H&#39;</span> : P x)
+  : ((Category.Morphisms.idtoiso (x -&gt; x) x3 : morphism _ _ _)
+       oR x5
+       o (Category.Morphisms.idtoiso (x0 -&gt; x) x7 : morphism _ _ _))%natural_transformation
+    = ((NaturalTransformation.Composition.Laws.left_identity_natural_transformation_2 x5)
+         o (Category.Morphisms.idtoiso (x0 -&gt; x) x6 : morphism _ _ _))%natural_transformation.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C cat</span></span></span><br><span><var>x0, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x2</var><span class="hyp-type"><b>: </b><span>Functor x x</span></span></span><br><span><var>x3</var><span class="hyp-type"><b>: </b><span>x2 = <span class="mi">1</span>%functor</span></span></span><br><span><var>x4, x5</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>x4 = x5</span></span></span><br><span><var>x7</var><span class="hyp-type"><b>: </b><span>x4 = (x2 o x5)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((idtoiso (x -&gt; x) x3 : morphism (x -&gt; x) x2 <span class="mi">1</span>%functor)
+ oR x5
+ o (idtoiso (x0 -&gt; x) x7
+    :
+    morphism (x0 -&gt; x) x4 (x2 o x5)%functor))%natural_transformation =
+(left_identity_natural_transformation_2 x5
+ o (idtoiso (x0 -&gt; x) x6 : morphism (x0 -&gt; x) x4 x5))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C cat</span></span></span><br><span><var>x0, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x2</var><span class="hyp-type"><b>: </b><span>Functor x x</span></span></span><br><span><var>x3</var><span class="hyp-type"><b>: </b><span>x2 = <span class="mi">1</span>%functor</span></span></span><br><span><var>x4, x5</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>x4 = x5</span></span></span><br><span><var>x7</var><span class="hyp-type"><b>: </b><span>x4 = (x2 o x5)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((idtoiso (x -&gt; x) x3 : morphism (x -&gt; x) x2 <span class="mi">1</span>%functor)
+ oR x5
+ o (idtoiso (x0 -&gt; x) x7
+    :
+    morphism (x0 -&gt; x) x4 (x2 o x5)%functor))%natural_transformation =
+(left_identity_natural_transformation_2 x5
+ o (idtoiso (x0 -&gt; x) x6 : morphism (x0 -&gt; x) x4 x5))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk6"><span class="nb">clear</span> F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>x0, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x2</var><span class="hyp-type"><b>: </b><span>Functor x x</span></span></span><br><span><var>x3</var><span class="hyp-type"><b>: </b><span>x2 = <span class="mi">1</span>%functor</span></span></span><br><span><var>x4, x5</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>x4 = x5</span></span></span><br><span><var>x7</var><span class="hyp-type"><b>: </b><span>x4 = (x2 o x5)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((idtoiso (x -&gt; x) x3 : morphism (x -&gt; x) x2 <span class="mi">1</span>%functor)
+ oR x5
+ o (idtoiso (x0 -&gt; x) x7
+    :
+    morphism (x0 -&gt; x) x4 (x2 o x5)%functor))%natural_transformation =
+(left_identity_natural_transformation_2 x5
+ o (idtoiso (x0 -&gt; x) x6 : morphism (x0 -&gt; x) x4 x5))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">simpl</span>; pseudofunctor_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk7"><span class="kn">Lemma</span> <span class="nf">pseudofunctor_of_functor__right_identity_of</span>
+        {<span class="nv">x0</span> <span class="nv">x</span> : PreCategory}
+        {<span class="nv">x4</span> : Functor x0 x0} {<span class="nv">x5</span> : x4 = <span class="mi">1</span>%functor}
+        {<span class="nv">x2</span> <span class="nv">x3</span> : Functor x0 x} {<span class="nv">x6</span> : x2 = x3} {<span class="nv">x7</span> : x2 = (x3 o x4)%functor}
+        (<span class="nv">H0&#39;</span> : P x0) (<span class="nv">H&#39;</span> : P x)
+  : (x3
+       oL (Category.Morphisms.idtoiso (x0 -&gt; x0) x5 : morphism _ _ _)
+       o (Category.Morphisms.idtoiso (x0 -&gt; x) x7 : morphism _ _ _))%natural_transformation
+    = ((NaturalTransformation.Composition.Laws.right_identity_natural_transformation_2 x3)
+         o (Category.Morphisms.idtoiso (x0 -&gt; x) x6 : morphism _ _ _))%natural_transformation.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C cat</span></span></span><br><span><var>x0, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x4</var><span class="hyp-type"><b>: </b><span>Functor x0 x0</span></span></span><br><span><var>x5</var><span class="hyp-type"><b>: </b><span>x4 = <span class="mi">1</span>%functor</span></span></span><br><span><var>x2, x3</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>x2 = x3</span></span></span><br><span><var>x7</var><span class="hyp-type"><b>: </b><span>x2 = (x3 o x4)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(x3
+ oL (idtoiso (x0 -&gt; x0) x5
+     :
+     morphism (x0 -&gt; x0) x4 <span class="mi">1</span>%functor)
+ o (idtoiso (x0 -&gt; x) x7
+    :
+    morphism (x0 -&gt; x) x2 (x3 o x4)%functor))%natural_transformation =
+(right_identity_natural_transformation_2 x3
+ o (idtoiso (x0 -&gt; x) x6 : morphism (x0 -&gt; x) x2 x3))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk8"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C cat</span></span></span><br><span><var>x0, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x4</var><span class="hyp-type"><b>: </b><span>Functor x0 x0</span></span></span><br><span><var>x5</var><span class="hyp-type"><b>: </b><span>x4 = <span class="mi">1</span>%functor</span></span></span><br><span><var>x2, x3</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>x2 = x3</span></span></span><br><span><var>x7</var><span class="hyp-type"><b>: </b><span>x2 = (x3 o x4)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(x3
+ oL (idtoiso (x0 -&gt; x0) x5
+     :
+     morphism (x0 -&gt; x0) x4 <span class="mi">1</span>%functor)
+ o (idtoiso (x0 -&gt; x) x7
+    :
+    morphism (x0 -&gt; x) x2 (x3 o x4)%functor))%natural_transformation =
+(right_identity_natural_transformation_2 x3
+ o (idtoiso (x0 -&gt; x) x6 : morphism (x0 -&gt; x) x2 x3))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="fromfunctor-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="fromfunctor-v-chk9"><span class="nb">clear</span> F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HP</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>x0, x</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>x4</var><span class="hyp-type"><b>: </b><span>Functor x0 x0</span></span></span><br><span><var>x5</var><span class="hyp-type"><b>: </b><span>x4 = <span class="mi">1</span>%functor</span></span></span><br><span><var>x2, x3</var><span class="hyp-type"><b>: </b><span>Functor x0 x</span></span></span><br><span><var>x6</var><span class="hyp-type"><b>: </b><span>x2 = x3</span></span></span><br><span><var>x7</var><span class="hyp-type"><b>: </b><span>x2 = (x3 o x4)%functor</span></span></span><br><span><var>H0'</var><span class="hyp-type"><b>: </b><span>P x0</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>P x</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(x3
+ oL (idtoiso (x0 -&gt; x0) x5
+     :
+     morphism (x0 -&gt; x0) x4 <span class="mi">1</span>%functor)
+ o (idtoiso (x0 -&gt; x) x7
+    :
+    morphism (x0 -&gt; x) x2 (x3 o x4)%functor))%natural_transformation =
+(right_identity_natural_transformation_2 x3
+ o (idtoiso (x0 -&gt; x) x6 : morphism (x0 -&gt; x) x2 x3))%natural_transformation</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">simpl</span>; pseudofunctor_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pseudofunctor_of_functor</span> : Pseudofunctor C
+    := Build_Pseudofunctor
+         C
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; pr1 (F x))
+         (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span> =&gt; F _1 m)
+         (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> <span class="nv">m0</span> <span class="nv">m1</span> =&gt; Category.Morphisms.idtoiso (_ -&gt; _) (composition_of F _ _ _ m1 m0))
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; Category.Morphisms.idtoiso (_ -&gt; _) (identity_of F x))
+         (<span class="kr">fun</span> <span class="nv">w</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; pseudofunctor_of_functor__composition_of (F w).<span class="mi">2</span> (F z).<span class="mi">2</span> (F y).<span class="mi">2</span> (F x).<span class="mi">2</span>)
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">_</span> =&gt; pseudofunctor_of_functor__left_identity_of (F x).<span class="mi">2</span> (F y).<span class="mi">2</span>)
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">_</span> =&gt; pseudofunctor_of_functor__right_identity_of (F x).<span class="mi">2</span> (F y).<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">of_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">FunctorToCat</span> `{Funext} {C} `{HP : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}
+  := Functor C (@sub_pre_cat _ P HP).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Identity Coercion</span> <span class="nf">functor_to_cat_id</span> : FunctorToCat &gt;-&gt; Functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pseudofunctor_of_functor_to_cat</span> `(F : @FunctorToCat H C P HP)
+  := @pseudofunctor_of_functor _ C P HP F.</span></span></pre>
+</div>
+</div></body>
+</html>

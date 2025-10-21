@@ -1,0 +1,485 @@
+<html>
+<head>
+<title>Powers.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Powers.v</h1>
+
+<div class="code" title="File: Powers.v
+Line: 1
+Time: 0.041s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types TruncType.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 1
+Time: 0.009s">
+<div class="time" style="width: 21.951219512195%"></div>
+<pre>
+From HoTT Require Import Universes.Smallness.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 2
+Time: 0.026s">
+<div class="time" style="width: 63.414634146341%"></div>
+<pre>
+From HoTT Require Import Spaces.Card Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Definition of Power types *)
+
+(* The definition is only used in Hartogs.v to allow defining a coercion, and one place below.  Everywhere else we prefer to write out the definition for clarity. *)
+
+</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition power_type (A : Type) : Type
+  := A -&gt; HProp.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Iterated powers *)
+
+</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma Injection_power {PR : PropResizing} X
+  : IsHSet X -&gt; Injection X (X -&gt; HProp).</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros HX.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 15
+Time: 0.002s">
+<div class="time" style="width: 4.8780487804878%"></div>
+<pre>
+  set (f (x : X) := fun y =&gt; Build_HProp (smalltype (x = y))).</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists f.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x x' H.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  eapply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (f x x').</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite H.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition power_iterated X n := nat_iter n power_type X.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition power_iterated_shift X n
+  : power_iterated (X -&gt; HProp) n = (power_iterated X n -&gt; HProp)
+  := (nat_iter_succ_r _ _ _)^.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hset_power {UA : Univalence} (X : HSet)
+  : IsHSet (X -&gt; HProp).</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p q.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H H'.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+  destruct (equiv_path_arrow p q) as [f [g Hfg Hgf _]].</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (Hfg H), &lt;- (Hfg H').</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hset_power_iterated {UA : Univalence} (X : HSet) n
+  : IsHSet (power_iterated X n).</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (nat_iter_invariant n power_type (fun A =&gt; IsHSet A)).</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Y HS.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply hset_power.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n
+  : Injection X (power_iterated X n).</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply Injection_trans; try exact IHn.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Injection_power.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma infinite_inject X Y
+  : infinite X -&gt; Injection X Y -&gt; infinite Y.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Injection_trans.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma infinite_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n
+  : infinite X -&gt; infinite (power_iterated X n).</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply infinite_inject; try apply H.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Injection_power_iterated.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Powers.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

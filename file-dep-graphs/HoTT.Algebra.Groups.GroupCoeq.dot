@@ -1,0 +1,22 @@
+digraph HoTT_Algebra_Groups_GroupCoeq {
+  graph [ratio=0.5]
+  node [style=filled]
+GroupCoeq_functor_groupcoeq [label="functor_groupcoeq", URL=<GroupCoeq.html#functor_groupcoeq>, peripheries=3, fillcolor="#F070D1"] ;
+GroupCoeq_groupcoeq_ind_homotopy [label="groupcoeq_ind_homotopy", URL=<GroupCoeq.html#groupcoeq_ind_homotopy>, peripheries=3, fillcolor="#F070D1"] ;
+GroupCoeq_groupcoeq_ind_hprop [label="groupcoeq_ind_hprop", URL=<GroupCoeq.html#groupcoeq_ind_hprop>, fillcolor="#F070D1"] ;
+GroupCoeq_equiv_groupcoeq_rec [label="equiv_groupcoeq_rec", URL=<GroupCoeq.html#equiv_groupcoeq_rec>, peripheries=3, fillcolor="#F070D1"] ;
+GroupCoeq_groupcoeq_rec [label="groupcoeq_rec", URL=<GroupCoeq.html#groupcoeq_rec>, fillcolor="#F070D1"] ;
+GroupCoeq_groupcoeq_glue [label="groupcoeq_glue", URL=<GroupCoeq.html#groupcoeq_glue>, fillcolor="#F070D1"] ;
+GroupCoeq_groupcoeq_in [label="groupcoeq_in", URL=<GroupCoeq.html#groupcoeq_in>, fillcolor="#F070D1"] ;
+GroupCoeq_GroupCoeq [label="GroupCoeq", URL=<GroupCoeq.html#GroupCoeq>, fillcolor="#F070D1"] ;
+  GroupCoeq_functor_groupcoeq -> GroupCoeq_groupcoeq_rec [] ;
+  GroupCoeq_functor_groupcoeq -> GroupCoeq_groupcoeq_glue [] ;
+  GroupCoeq_groupcoeq_ind_homotopy -> GroupCoeq_groupcoeq_ind_hprop [] ;
+  GroupCoeq_groupcoeq_ind_hprop -> GroupCoeq_groupcoeq_in [] ;
+  GroupCoeq_equiv_groupcoeq_rec -> GroupCoeq_GroupCoeq [] ;
+  GroupCoeq_groupcoeq_rec -> GroupCoeq_GroupCoeq [] ;
+  GroupCoeq_groupcoeq_glue -> GroupCoeq_groupcoeq_in [] ;
+  GroupCoeq_groupcoeq_in -> GroupCoeq_GroupCoeq [] ;
+subgraph cluster_GroupCoeq { label="GroupCoeq"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+GroupCoeq_GroupCoeq; GroupCoeq_groupcoeq_in; GroupCoeq_groupcoeq_glue; GroupCoeq_groupcoeq_rec; GroupCoeq_equiv_groupcoeq_rec; GroupCoeq_groupcoeq_ind_hprop; GroupCoeq_groupcoeq_ind_homotopy; GroupCoeq_functor_groupcoeq; };
+} /* END */

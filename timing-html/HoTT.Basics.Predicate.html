@@ -1,0 +1,569 @@
+<html>
+<head>
+<title>Predicate.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Predicate.v</h1>
+
+<div class="code" title="File: Predicate.v
+Line: 1
+Time: 0.022s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.Iff Basics.Classes Basics.Utf8.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Predicates on types *)
+
+(** We use the words "predicate" and "(type) family" interchangably to mean something of type [A -&gt; Type]. *)
+
+(** ** Predicate equality *)
+
+(** Two predicates are considered "equal" if they are pointwise logically equivalent: [forall a, P a &lt;-&gt; Q a]. We express this with [relation_pointwise] to ease typeclass search. *)</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pred_eq {A : Type} := relation_pointwise (fun _ : A =&gt; iff).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows from [reflexive_pointwise], [transitive_pointwise] and [symmetric_pointwise] that [pred_eq] is reflexive, transitive and symmetric. *)
+
+(** ** Subsets of a predicate *)
+
+(** A predicate [P] is a "subset" of a predicate [Q] if [forall a, P a -&gt; Q a]. *)</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pred_subset {A : Type} := relation_pointwise (fun (_ : A) =&gt; (-&gt;)).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Predicate Notations *)
+
+</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Declare Scope predicate_scope.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope predicate_scope.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "⊆" := pred_subset : predicate_scope.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "↔" := pred_eq     : predicate_scope.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Properties of subsets *)
+
+(** It follows from [reflexive_pointwise] and [transitive_pointwise] that [pred_subset] is reflexive and transitive. *)
+
+</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion pred_subset_pred_eq {A : Type} (P Q : A -&gt; Type)
+  : P ↔ Q -&gt; P ⊆ Q
+  := fun p x =&gt; fst (p x).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pred_subset_pred_eq' {A : Type} (P Q : A -&gt; Type)
+  : P ↔ Q -&gt; Q ⊆ P
+  := fun p x =&gt; snd (p x).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The subset relation is antisymmetric. Note that this isn't [Antisymmetry] as defined in [Basics.Classes] since we get a [pred_eq] rather than a path. Under being a hprop and univalance, we would get a path. *)</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pred_subset_antisymm {A : Type} {P Q : A -&gt; Type}
+  : P ⊆ Q -&gt; Q ⊆ P -&gt; P ↔ Q.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p q x; specialize (p x); specialize (q x); by split.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition pred_subset_precomp {A B : Type} {P Q : B -&gt; Type} (f : A -&gt; B)
+  : P ⊆ Q -&gt; (P o f) ⊆ (Q o f)
+  := pointwise_precomp _ f P Q.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition pred_subset_postcomp {A : Type} {P Q : A -&gt; Type}
+  (F : Type -&gt; Type) (f : forall {X Y}, (X -&gt; Y) -&gt; F X -&gt; F Y) (p : P ⊆ Q)
+  : (F o P) ⊆ (F o Q)
+  := fun x =&gt; f (p x).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition pred_subset_moveL_equiv {A B : Type} {P : B -&gt; Type} {Q : A -&gt; Type}
+  (f : B &lt;~&gt; A)
+  : (P o f^-1) ⊆ Q -&gt; P ⊆ (Q o f)
+  := pointwise_moveL_equiv _ f P Q.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 55
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+
+Definition pred_subset_moveR_equiv {A B : Type} {P : B -&gt; Type} {Q : A -&gt; Type}
+  (f : A &lt;~&gt; B)
+  : P ⊆ (Q o f^-1) -&gt; (P o f) ⊆ Q
+  := pointwise_moveR_equiv _ f P Q.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section OperationsAndIdentities.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Operations on predicates *)
+
+ </pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A : Type}.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Notation Pred := (A -&gt; Type).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_and (P Q : Pred) : Pred
+    := fun a =&gt; P a /\ Q a.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_or (P Q : Pred) : Pred
+    := fun a =&gt; P a + Q a.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** True and false predicates *)
+
+ </pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pred_unit : Pred
+    := fun _ =&gt; Unit.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_empty : Pred
+    := fun _ =&gt; Empty.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Relationships between predicates *)
+
+ </pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pred_empty_subset (P : Pred) : pred_empty ⊆ P
+    := fun _ =&gt; Empty_rec _.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_unit_subset (P : Pred) : P ⊆ pred_unit
+    := fun _ _ =&gt; tt.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_and_subset_l (P Q : Pred) : pred_and P Q ⊆ P
+    := fun _ =&gt; fst.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_and_subset_r (P Q : Pred) : pred_and P Q ⊆ Q
+    := fun _ =&gt; snd.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_and_is_meet (P Q R : Pred) (p : R ⊆ P) (q : R ⊆ Q)
+    : R ⊆ pred_and P Q
+    := fun a r =&gt; ((p a r), (q a r)).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_and_comm' (P Q : Pred)
+    : pred_and P Q ⊆ pred_and Q P
+    := fun a pq =&gt; (snd pq, fst pq).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_and_comm (P Q : Pred)
+    : pred_and P Q ↔ pred_and Q P
+    := pred_subset_antisymm (pred_and_comm' P Q) (pred_and_comm' Q P).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 107
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+  Definition pred_or_is_join (P Q R : Pred) (p : P ⊆ R) (q : Q ⊆ R)
+    : pred_or P Q ⊆ R
+    := fun a pq =&gt; match pq with
+                 | inl l =&gt; p a l
+                 | inr r =&gt; q a r end.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_or_comm' (P Q : Pred)
+    : pred_or P Q ⊆ pred_or Q P
+    := fun a pq =&gt; match pq with
+                 | inl p =&gt; inr p
+                 | inr q =&gt; inl q end.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_or_comm (P Q : Pred)
+    : pred_or P Q ↔ pred_or Q P
+    := pred_subset_antisymm (pred_or_comm' P Q) (pred_or_comm' Q P).</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_and_unit_l (P : Pred) : pred_and pred_unit P ↔ P.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply pred_and_subset_r.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pred_and_is_meet.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pred_unit_subset.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pred_and_unit_r (P : Pred) : pred_and P pred_unit ↔ P.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply pred_and_subset_l.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pred_and_is_meet.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pred_unit_subset.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End OperationsAndIdentities.</pre>
+</div>
+<div class="code" title="File: Predicate.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

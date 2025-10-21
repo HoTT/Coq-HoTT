@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Prod.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Natural transformations involving product categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="prod-v-chk133" style="display: none" type="checkbox"><label class="alectryon-input" for="prod-v-chk133"><span class="kn">Require Import</span> Category.Core Functor.Core Category.Prod Functor.Prod.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Types.Prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Product of natural transformations *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">prod</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">A</span> : PreCategory}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">B</span> : PreCategory}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">C</span> : PreCategory}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">F</span> <span class="nv">F&#39;</span> : Functor A B.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">G</span> <span class="nv">G&#39;</span> : Functor A C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">T</span> : NaturalTransformation F F&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">U</span> : NaturalTransformation G G&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">prod</span>
+  : NaturalTransformation (F * G) (F&#39; * G&#39;)
+    := Build_NaturalTransformation
+         (F * G) (F&#39; * G&#39;)
+         (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; (T x, U x))
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; path_prod&#39; (commutes T _ _ _) (commutes U _ _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">prod</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Infix</span> <span class="s2">&quot;*&quot;</span> := prod : natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Natural transformations between partially applied functors *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">induced</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">E</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor (C * D) E.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">t</span> :=
+    <span class="nb">simpl</span>; <span class="nb">intros</span>;
+    <span class="nb">rewrite</span> &lt;- !composition_of;
+    <span class="nb">simpl</span>;
+    <span class="nb">rewrite</span> <span class="nl">?left_identity</span>, <span class="nl">?right_identity</span>;
+    <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="prod-v-chk134" style="display: none" type="checkbox"><label class="alectryon-input" for="prod-v-chk134"><span class="kn">Definition</span> <span class="nf">induced_fst</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+  : NaturalTransformation (Functor.Prod.Core.induced_snd F s)
+                          (Functor.Prod.Core.induced_snd F d).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C * D) E</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (induced_snd F s)
+  (induced_snd F d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="prod-v-chk135" style="display: none" type="checkbox"><label class="alectryon-input" for="prod-v-chk135"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C * D) E</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (induced_snd F s)
+  (induced_snd F d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="prod-v-chk136" style="display: none" type="checkbox"><label class="alectryon-input" for="prod-v-chk136"><span class="kr">let</span> <span class="nv">F0</span> := <span class="kr">match goal with</span> |- NaturalTransformation <span class="nl">?F0</span> <span class="nl">?G0</span> =&gt; <span class="kp">constr</span>:(F0) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="kr">let</span> <span class="nv">G0</span> := <span class="kr">match goal with</span> |- NaturalTransformation <span class="nl">?F0</span> <span class="nl">?G0</span> =&gt; <span class="kp">constr</span>:(G0) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="nb">refine</span> (Build_NaturalTransformation
+              F0 G0
+              (<span class="kr">fun</span> <span class="nv">d</span> =&gt; @morphism_of _ _ F (_, _) (_, _) (m, @identity D d))
+              _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C * D) E</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">s0</span> <span class="nv">d0</span> : D) (<span class="nv">m0</span> : morphism D s0 d0),
+(F _1 (m, <span class="mi">1</span>) o (induced_snd F s) _1 m0)%morphism =
+((induced_snd F d) _1 m0 o F _1 (m, <span class="mi">1</span>))%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="prod-v-chk137" style="display: none" type="checkbox"><label class="alectryon-input" for="prod-v-chk137"><span class="kn">Definition</span> <span class="nf">induced_snd</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism D s d)
+  : NaturalTransformation (Functor.Prod.Core.induced_fst F s)
+                          (Functor.Prod.Core.induced_fst F d).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C * D) E</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism D s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (Core.induced_fst F s)
+  (Core.induced_fst F d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="prod-v-chk138" style="display: none" type="checkbox"><label class="alectryon-input" for="prod-v-chk138"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C * D) E</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism D s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (Core.induced_fst F s)
+  (Core.induced_fst F d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="prod-v-chk139" style="display: none" type="checkbox"><label class="alectryon-input" for="prod-v-chk139"><span class="kr">let</span> <span class="nv">F0</span> := <span class="kr">match goal with</span> |- NaturalTransformation <span class="nl">?F0</span> <span class="nl">?G0</span> =&gt; <span class="kp">constr</span>:(F0) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="kr">let</span> <span class="nv">G0</span> := <span class="kr">match goal with</span> |- NaturalTransformation <span class="nl">?F0</span> <span class="nl">?G0</span> =&gt; <span class="kp">constr</span>:(G0) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="nb">refine</span> (Build_NaturalTransformation
+              F0 G0
+              (<span class="kr">fun</span> <span class="nv">c</span> =&gt; @morphism_of _ _ F (_, _) (_, _) (@identity C c, m))
+              _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor (C * D) E</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism D s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">s0</span> <span class="nv">d0</span> : C) (<span class="nv">m0</span> : morphism C s0 d0),
+(F _1 (<span class="mi">1</span>, m) o (Core.induced_fst F s) _1 m0)%morphism =
+((Core.induced_fst F d) _1 m0 o F _1 (<span class="mi">1</span>, m))%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">induced</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> NaturalTransformationProdNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;*&quot;</span> := prod : natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">NaturalTransformationProdNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>
