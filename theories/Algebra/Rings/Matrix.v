@@ -667,7 +667,7 @@ Class IsUpperTriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Ty
 Instance ishprop_isuppertriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   : IsHProp (IsUpperTriangular M).
 Proof.
-  apply istrunc_truncation@{i i}.
+  apply istrunc_truncation@{i}.
 Defined.
 
 (** A matrix is lower triangular if all the entries above the diagonal are zero. We define it as the transpose being upper triangular. *)
@@ -678,7 +678,7 @@ Instance ishprop_islowertriangular@{i} {R : Ring@{i}} {n : nat}
   (M : Matrix R n n)
   : IsHProp (IsLowerTriangular M).
 Proof.
-  apply istrunc_truncation@{i i}.
+  apply istrunc_truncation@{i}.
 Defined.
 
 (** The transpose of a matrix is lower triangular if and only if the matrix is upper triangular. *)

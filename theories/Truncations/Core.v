@@ -28,9 +28,9 @@ Module Export Trunc.
     tr : A -> Trunc n A.
   Arguments tr {n A} a.
 
-  (** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
-  #[export] Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
-    : IsTrunc@{j} n (Trunc@{i} n A).
+  (** Because [IsTrunc] is cumulative, we can use only one universe variable here. *)
+  #[export] Instance istrunc_truncation@{i} (n : trunc_index) (A : Type@{i})
+    : IsTrunc@{i} n (Trunc@{i} n A).
   Admitted.
 
   Definition Trunc_ind {n A}
