@@ -74,30 +74,30 @@ Proof.
   apply concat_p1.
 Defined.
 
-(** Our next goal is to see that when [A] is a left-invertible H-space, then the fibration [ev A] is trivial. *)
+(** Our next goal is to see that when [A] is a left-invertible H-space, then the fibration [ev A] is trivial. We begin with two results that allow the domain to be a general pointed type [B]. We'll later just need the case when [B] is [A]. *)
 
-(** This lemma says that the family [fun a => A ->* [A,a]] is trivial. *)
-Lemma equiv_pmap_hspace `{Funext} {A : pType}
+(** This lemma says that the family [fun a => B ->* [A,a]] is trivial. *)
+Lemma equiv_pmap_hspace `{Funext} {A B : pType}
   (a : A) `{IsHSpace A} `{!IsEquiv (hspace_op a)}
-  : (A ->* A) <~> (A ->* [A,a]).
+  : (B ->* A) <~> (B ->* [A,a]).
 Proof.
   napply pequiv_pequiv_postcompose.
   rapply pequiv_hspace_left_op.
 Defined.
 
-(** The lemma gives us an equivalence on the total spaces (domains) of [ev A] and [psnd] (the projection out of the displayed product). *)
-Proposition equiv_map_pmap_hspace `{Funext} {A : pType}
+(** The next result is a consequence of the previous lemma. *)
+Proposition equiv_map_pmap_hspace `{Funext} {A B : pType}
   `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}
-  : (A ->* A) * A <~> (A -> A).
+  : (B ->* A) * A <~> (B -> A).
 Proof.
-  transitivity {a : A  & {f : A -> A & f pt = a}}.
+  transitivity {a : A  & {f : B -> A & f pt = a}}.
   2: exact (equiv_sigma_contr _ oE (equiv_sigma_symm _)^-1%equiv).
   refine (_ oE (equiv_sigma_prod0 _ _)^-1%equiv oE equiv_prod_symm _ _).
   apply equiv_functor_sigma_id; intro a.
-  exact ((issig_pmap A [A,a])^-1%equiv oE equiv_pmap_hspace a).
+  exact ((issig_pmap B [A,a])^-1%equiv oE equiv_pmap_hspace a).
 Defined.
 
-(** The above is a pointed equivalence. *)
+(** The equivalence [equiv_map_pmap_hspace] is pointed when [B] is [A]. (Note that [selfmaps A] is pointed at [idmap].) This is a pointed equivalence between the domains of [psnd : (A ->* A) * A ->* A] and [ev A : selfmaps A -> A], respectively. *)
 Proposition pequiv_map_pmap_hspace `{Funext} {A : pType}
   `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}
   : [(A ->* A) * A, (pmap_idmap, pt)] <~>* selfmaps A.
