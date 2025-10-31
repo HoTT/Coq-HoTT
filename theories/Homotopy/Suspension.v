@@ -418,7 +418,7 @@ Section UnivPropNat.
   Local Instance is0functor_functor_Susp_ind_data
     : Is0Functor functor_Susp_ind_data.
   Proof.
-    exact (is0functor_sigma _ _
+    exact (is0functor_functor_sigma_id _ _
            (fun NS => functor_Susp_ind_data' NS o functor_Susp_ind_data'' NS)).
   Defined.
 

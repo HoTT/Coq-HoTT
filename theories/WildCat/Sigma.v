@@ -3,7 +3,7 @@ Require Import WildCat.Core.
 
 (** * Indexed sum of categories *)
 
-(** We define a wild category structure on [sig B] where [B : A -> Type] is a family of wild categories.  In this construction, we implicitly regard [A] as a wild category using its path groupoid structure. *)
+(** We define a wild category structure on [sig B] where [B : A -> Type] is a family of wild categories.  In this construction, we implicitly regard [A] as a wild category using its path groupoid structure.  We only handle the case where each [B a] is a 0-groupoid, for now. *)
 
 Section Sigma.
 
@@ -41,7 +41,7 @@ Defined.
 
 End Sigma.
 
-Instance is0functor_sigma {A : Type} (B C : A -> Type)
+Instance is0functor_functor_sigma_id {A : Type} (B C : A -> Type)
        `{forall a, IsGraph (B a)} `{forall a, IsGraph (C a)}
        `{forall a, Is01Cat (B a)} `{forall a, Is01Cat (C a)}
        (F : forall a, B a -> C a) {ff : forall a, Is0Functor (F a)}
