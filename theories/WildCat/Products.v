@@ -2,7 +2,7 @@ Require Import Basics.Equivalences Basics.Overture Basics.Tactics.
 Require Import Types.Bool Types.Prod Types.Forall.
 Require Import WildCat.Bifunctor WildCat.Core WildCat.Equiv WildCat.EquivGpd
                WildCat.Forall WildCat.NatTrans WildCat.Opposite
-               WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid
+               WildCat.Universe WildCat.Yoneda WildCat.Graph WildCat.ZeroGroupoid
                WildCat.Monoidal WildCat.MonoidalTwistConstruction
                WildCat.FunctorCat.
 
@@ -1007,7 +1007,20 @@ End Associativity.
 
 (** Since we use the Yoneda lemma in this file, we therefore depend on WildCat.Universe which means these instances have to live here. *)
 
-(** We prove this separately from the next result, since the next result relies on [Funext]. *)
+(** Assuming [Funext], [Type] has all products. *)
+Instance hasallproducts_type `{Funext} : HasAllProducts Type.
+Proof.
+  intros I x.
+  snapply Build_Product.
+  - exact (forall (i : I), x i).
+  - intros i f. exact (f i).
+  - intros A f a i. exact (f i a).
+  - reflexivity.
+  - intros A f g p a.
+    exact (path_forall _ _ (fun i => p i a)).
+Defined.
+
+(** It follows that [Type] has binary products, but we prove this separately to avoid [Funext]. *)
 Instance hasbinaryproducts_type : HasBinaryProducts Type.
 Proof.
   intros X Y.
@@ -1022,17 +1035,4 @@ Proof.
     napply path_prod.
     + exact (p x).
     + exact (q x).
-Defined.
-
-(** Assuming [Funext], [Type] has all products. *)
-Instance hasallproducts_type `{Funext} : HasAllProducts Type.
-Proof.
-  intros I x.
-  snapply Build_Product.
-  - exact (forall (i : I), x i).
-  - intros i f. exact (f i).
-  - intros A f a i. exact (f i a).
-  - reflexivity.
-  - intros A f g p a.
-    exact (path_forall _ _ (fun i => p i a)).
 Defined.
