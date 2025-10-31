@@ -33,7 +33,7 @@ Definition psusp (X : Type) : pType
 (** [psusp] has a functorial action. *)
 (** TODO: make this a displayed functor *)
 Instance is0functor_psusp : Is0Functor psusp
-  := Build_Is0Functor _ _ _ _ psusp (fun X Y f
+  := Build_Is0Functor psusp (fun X Y f
       => Build_pMap (functor_susp f) 1).
 
 (** [psusp] is a 1-functor. *)

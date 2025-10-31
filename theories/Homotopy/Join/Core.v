@@ -351,9 +351,7 @@ Instance is0functor_joinrecdata_0gpd (A B : Type) : Is0Functor (joinrecdata_0gpd
 Proof.
   apply Build_Is0Functor.
   intros P Q g.
-  snapply Build_Fun01.
-  - exact (joinrecdata_fun g).
-  - apply is0functor_joinrecdata_fun.
+  exact (Build_Fun01 (joinrecdata_fun g)).
 Defined.
 
 (** [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]. *)
@@ -685,14 +683,13 @@ Section JoinSym.
   Definition joinrecdata_sym (A B P : Type)
     : joinrecdata_0gpd A B P $-> joinrecdata_0gpd B A P.
   Proof.
-    snapply Build_Fun01.
+    snapply Build_Fun01'.
     (* The map of types [JoinRecData A B P -> JoinRecData B A P]: *)
     - intros [fl fr fg].
       snapply (Build_JoinRecData fr fl).
       intros b a; exact (fg a b)^.
     (* It respects the paths. *)
-    - apply Build_Is0Functor.
-      intros f g h; simpl.
+    - intros f g h; simpl.
       snapply Build_JoinRecPath; simpl.
       1, 2: intros; apply h.
       intros b a.

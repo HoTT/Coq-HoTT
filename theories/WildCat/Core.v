@@ -86,6 +86,7 @@ Definition GpdHom_path {A} `{Is0Gpd A} {a b : A} (p : a = b) : a $== b
 Class Is0Functor {A B : Type} `{IsGraph A} `{IsGraph B} (F : A -> B)
   := { fmap : forall (a b : A) (f : a $-> b), F a $-> F b }.
 
+Arguments Build_Is0Functor {A B isgraph_A isgraph_B} F fmap : rename.
 Arguments fmap {A B isgraph_A isgraph_B} F {is0functor_F a b} f : rename.
 
 Class Is2Graph (A : Type) `{IsGraph A}

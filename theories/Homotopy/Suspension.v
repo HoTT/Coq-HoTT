@@ -243,7 +243,7 @@ Proof.
 Defined.
 
 Instance is0functor_susp : Is0Functor Susp
-  := Build_Is0Functor _ _ _ _ Susp (@functor_susp).
+  := Build_Is0Functor Susp (@functor_susp).
 
 Instance is1functor_susp : Is1Functor Susp
   := Build_Is1Functor _ _ _ _ _ _ _ _ _ _ Susp _

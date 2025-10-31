@@ -103,9 +103,9 @@ Definition isequiv_0gpd_issurjinj {G H : ZeroGpd} (F : G $-> H)
 Proof.
   destruct e as [e0 e1]; unfold SplEssSurj in e0.
   stapply catie_adjointify.
-  - snapply Build_Fun01.
+  - snapply Build_Fun01'.
     1: exact (fun y => (e0 y).1).
-    snapply Build_Is0Functor; cbn beta.
+    cbn beta.
     intros y1 y2 m.
     apply e1.
     exact ((e0 y1).2 $@ m $@ ((e0 y2).2)^$).
@@ -126,9 +126,7 @@ Definition prod_0gpd_pr {I : Type} {G : I -> ZeroGpd}
   : forall i, prod_0gpd I G $-> G i.
 Proof.
   intros i.
-  snapply Build_Fun01.
-  1: exact (fun f => f i).
-  snapply Build_Is0Functor; cbn beta.
+  apply (Build_Fun01' (fun f => f i)); cbn beta.
   intros f g p.
   exact (p i).
 Defined.
@@ -139,10 +137,8 @@ Definition equiv_prod_0gpd_corec {I : Type} {G : ZeroGpd} {H : I -> ZeroGpd}
 Proof.
   snapply Build_Equiv.
   { intro f.
-    snapply Build_Fun01.
-    1: exact (fun x i => f i x).
-    snapply Build_Is0Functor; cbn beta.
-    intros x y p i; simpl.
+    apply (Build_Fun01' (fun x i => f i x)).
+    intros x y p i.
     exact (fmap (f i) p). }
   snapply Build_IsEquiv.
   - intro f.
@@ -162,15 +158,12 @@ Definition cate_prod_0gpd {I J : Type} (ie : I <~> J)
   : prod_0gpd I G $<~> prod_0gpd J H.
 Proof.
   snapply cate_adjointify.
-  - snapply Build_Fun01.
+  - snapply Build_Fun01'.
     + intros h j.
       exact (transport H (eisretr ie j) (cate_fun (f (ie^-1 j)) (h _))).
-    + napply Build_Is0Functor.
-      intros g h p j.
-      destruct (eisretr ie j).
-      refine (_ $o Hom_path (transport_1 _ _)).
-      apply Build_Fun01.
-      exact (p _).
+    + cbn. intros g h p j.
+      destruct (eisretr ie j); simpl.
+      exact (fmap _ (p _)).
   - exact (equiv_prod_0gpd_corec (fun i => (f i)^-1$ $o prod_0gpd_pr (ie i))).
   - intros h j.
     cbn.

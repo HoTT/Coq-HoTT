@@ -88,11 +88,10 @@ Section Lemmata.
   Proof.
     snapply Build_Is0Functor.
     intros a b f.
-    snapply Build_Fun01.
+    snapply Build_Fun01'.
     - intros g i.
       exact (f $o g i).
-    - snapply Build_Is0Functor.
-      intros g h p i.
+    - intros g h p i.
       exact (f $@L p i).
   Defined.
 
