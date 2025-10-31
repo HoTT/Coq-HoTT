@@ -128,7 +128,7 @@ Proof.
   - exact (fun _ => p).
 Defined.
 
-(** If an hprop is not inhabited, then it is equivalent to [Empty]. Note that we'd don't need the assumption that the type is an hprop here. *)
+(** If an hprop is not inhabited, then it is equivalent to [Empty]. Note that we don't need the assumption that the type is an hprop here. *)
 Definition if_not_hprop_then_equiv_Empty (hprop : Type) : ~hprop -> hprop <~> Empty
   := equiv_to_empty.
 

@@ -3,6 +3,8 @@ Require Import WildCat.Core WildCat.TwoOneCat WildCat.NatTrans.
 
 (** * Path groupoids as wild categories *)
 
+(** Every type is a wild (2,1)-category. *)
+
 (** Not global instances for now *)
 
 (** These are written so that they can be augmented with an existing wildcat structure. For instance, you may partially define a wildcat and ask for paths for the higher cells. *)

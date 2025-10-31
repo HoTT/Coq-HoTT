@@ -56,13 +56,13 @@ Definition nat_to_trunc_index@{} (n : nat) : trunc_index
 
 Coercion nat_to_trunc_index : nat >-> trunc_index.
 
-Definition trunc_index_inc'_0n (n : nat)
+Definition trunc_index_inc'_0n@{} (n : nat)
   : trunc_index_inc' 0%nat n = n.
 Proof.
-  induction n as [|n p].
+  simple_induction n n IHn.
   1: reflexivity.
   refine (trunc_index_inc'_succ _ _ @ _).
-  exact (ap _ p).
+  exact (ap _ IHn).
 Defined.
 
 Definition int_to_trunc_index@{} (v : Decimal.int) : option trunc_index
