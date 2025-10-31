@@ -67,12 +67,8 @@ Lemma fun01_profunctor {A B C D : Type} (F : A -> B) (G : C -> D)
 Proof.
   snapply Build_Fun01.
   1: exact (functor_prod F G).
-  rapply is0functor_prod_functor.
+  rapply is0functor_prod_functor.  (* Why not found by typeclass search? *)
 Defined.
-
-Definition fun01_hom {C : Type} `{Is01Cat C}
-  : Fun01 (C^op * C) Type
-  := @Build_Fun01 _ _ _ _ _ is0functor_hom.
 
 (** ** Natural equivalences coming from adjunctions. *)
 
