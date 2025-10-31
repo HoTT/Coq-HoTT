@@ -1036,3 +1036,34 @@ Proof.
     + exact (p x).
     + exact (q x).
 Defined.
+
+(** *** Products in ZeroGpd *)
+
+(** Since we use products in ZeroGpd to define general products, we must depend on ZeroGroupoid, which means that these instances have to live here. *)
+
+(** Note that this does not rely on [Funext], since the 1-cells in the product 0-groupoid are *defined* to be homotopies. *)
+Instance hasallproducts_0gpd : HasAllProducts ZeroGpd.
+Proof.
+  intros I x.
+  snapply Build_Product.
+  - exact (prod_0gpd I x).
+  - exact prod_0gpd_pr.
+  - intro G. apply equiv_prod_0gpd_corec.
+  - reflexivity.
+  - intros G f g p.  intro a.  intro i.
+    exact (p i a).
+Defined.
+
+(** This follows from the previous result, but we prove it separately because using these custom binary products can make certain things easier, and can sometimes avoid the need to use [Funext]. *)
+Instance hasbinaryproducts_0gpd : HasBinaryProducts ZeroGpd.
+Proof.
+  intros G H.
+  snapply Build_BinaryProduct.
+  - exact (binprod_0gpd G H).
+  - apply binprod_0gpd_pr1.
+  - apply binprod_0gpd_pr2.
+  - intro K. exact (fun f g => (equiv_binprod_0gpd_corec G H K (f, g))).
+  - reflexivity.
+  - reflexivity.
+  - intros K f g p q. intro k. exact (p k, q k).
+Defined.
