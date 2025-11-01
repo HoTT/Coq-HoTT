@@ -4,9 +4,8 @@
     concepts for additive and stable category theory.
 *)
 
-From HoTT Require Import Basics Types.
-From HoTT.Categories Require Import Category Functor NaturalTransformation.
-From HoTT.Categories Require Import InitialTerminalCategory.
+From HoTT Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics.
+From HoTT.Categories Require Import Category.Core Category.Objects.
 
 (** * Zero objects
     
