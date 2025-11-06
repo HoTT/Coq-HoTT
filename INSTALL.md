@@ -9,7 +9,7 @@ library to use in your own project or to play around with.
   - [Source Versions](#source-versions)
   - [Development Versions](#development-versions)
 - [3. Setup for developers (using git)](#3-setup-for-developers-using-git)
-  - [3.1. Prequisites (Installing Coq)](#31-prequisites-installing-coq)
+  - [3.1. Prerequisites (Installing Coq)](#31-prerequisites-installing-coq)
     - [3.1.1. Development in OSX and Windows](#311-development-in-osx-and-windows)
   - [3.2. Forking and obtaining the HoTT library](#32-forking-and-obtaining-the-hott-library)
   - [3.3. Building the HoTT library](#33-building-the-hott-library)
@@ -109,7 +109,7 @@ Then install the library with `opam install coq-hott`, as for the released versi
 
 # 3. Setup for developers (using git)
 
-## 3.1. Prequisites (Installing Coq)
+## 3.1. Prerequisites (Installing Coq)
 
 We recommend that you use the `opam` package manager to install `coq`. Details
 about [installing Opam can be found here][3].
