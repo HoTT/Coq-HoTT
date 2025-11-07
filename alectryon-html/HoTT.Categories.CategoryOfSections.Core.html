@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Category of sections *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc27" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc27"><span class="kn">Require Import</span> Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Strict.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity NaturalTransformation.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Paths NaturalTransformation.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">FunctorSectionCategory</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">R</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** There is a category [Sect(R)] of sections of [R]. *)</span>
+
+  <span class="sd">(** ** Section of a functor *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">SectionOfFunctor</span> :=
+    {
+      section_of_functor_morphism :&gt; Functor D C;
+      section_of_functor_issect : R o section_of_functor_morphism = <span class="mi">1</span>
+    }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">section_of_functor_sig</span> :=
+    { section_of_functor_morphism : Functor D C
+    | R o section_of_functor_morphism = <span class="mi">1</span> }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc28" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc28"><span class="kn">Lemma</span> <span class="nf">section_of_functor_sig&#39;</span>
+  : section_of_functor_sig &lt;~&gt; SectionOfFunctor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>R</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{section_of_functor_morphism : Functor D C &amp;
+R o section_of_functor_morphism = <span class="mi">1</span>} &lt;~&gt;
+SectionOfFunctor</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc29" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc29"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>R</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{section_of_functor_morphism : Functor D C &amp;
+R o section_of_functor_morphism = <span class="mi">1</span>} &lt;~&gt;
+SectionOfFunctor</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Definition of category of sections of a functor *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc2a" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc2a"><span class="kn">Definition</span> <span class="nf">category_of_sections</span> : PreCategory.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>R</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc2b" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc2b"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>R</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (@Build_PreCategory
+              SectionOfFunctor
+              (<span class="kr">fun</span> <span class="nv">F</span> <span class="nv">G</span> =&gt; NaturalTransformation F G)
+              (<span class="kr">fun</span> <span class="nv">F</span> =&gt; <span class="mi">1</span>)
+              (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">T</span> <span class="nv">U</span> =&gt; T o U)
+              _
+              _
+              _
+              _);
+    <span class="kp">abstract</span> (path_natural_transformation; <span class="nb">auto with</span> morphism).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">FunctorSectionCategory</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc2c" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc2c"><span class="kn">Instance</span> <span class="nf">isstrict_category_of_sections</span> `{Funext}
+      `{IsStrictCategory C, IsStrictCategory D}
+      (F : Functor C D)
+: IsStrictCategory (category_of_sections F) | <span class="mi">20</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>IsStrictCategory0</var><span class="hyp-type"><b>: </b><span>IsStrictCategory C</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>IsStrictCategory1</var><span class="hyp-type"><b>: </b><span>IsStrictCategory D</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory (category_of_sections F)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc2d" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc2d"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>IsStrictCategory0</var><span class="hyp-type"><b>: </b><span>IsStrictCategory C</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>IsStrictCategory1</var><span class="hyp-type"><b>: </b><span>IsStrictCategory D</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory (category_of_sections F)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc2e" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc2e"><span class="nb">eapply</span> istrunc_isequiv_istrunc; [ | <span class="nb">apply</span> section_of_functor_sig&#39; ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>IsStrictCategory0</var><span class="hyp-type"><b>: </b><span>IsStrictCategory C</span></span></span><br><span><var>D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>IsStrictCategory1</var><span class="hyp-type"><b>: </b><span>IsStrictCategory D</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet
+  {section_of_functor_morphism : 
+  Functor D C &amp;
+  (<span class="kr">fun</span> <span class="nv">x</span> : D =&gt;
+   (F _0 (section_of_functor_morphism _0 x))%object) =
+  <span class="mi">1</span>}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

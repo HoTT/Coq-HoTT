@@ -1,0 +1,1599 @@
+<html>
+<head>
+<title>Decidable.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Decidable.v</h1>
+
+<div class="code" title="File: Decidable.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  Basics.Overture
+  Basics.PathGroupoids
+  Basics.Trunc
+  Basics.Tactics
+  Basics.Iff.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Decidability *)
+
+(** ** Definitions *)
+
+(* NB: This has to come after our definition of [not] (which is in [Overture]), so that it refers to our [not] rather than the one in [Coq.Logic]. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class Decidable (A : Type) :=
+  dec : A + (~ A).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments dec A {_}.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [decide_type] and [decide] tactic allow to automatically prove
+decidable claims using previously written decision procedures that
+compute. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac decide_type A :=
+  let K := (eval hnf in (dec A)) in
+  match K with
+  | inl ?Z =&gt; exact Z
+  | inr ?Z =&gt; exact Z
+  end.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac decide :=
+  multimatch goal with
+  | [|- ?A] =&gt; decide_type A
+  | [|- ~ ?A] =&gt; decide_type A
+  end.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition decidable_true {A : Type}
+  (a : A)
+  (P : forall (p : Decidable A), Type)
+  (p : forall x, P (inl x))
+  : forall p, P p.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x|n].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply p.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction n.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Replace a term [p] of the form [Decidable A] with [inl x] if we have a term [a : A] showing that [A] is true. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac decidable_true p a :=
+  generalize p;
+  rapply (decidable_true a);
+  try intro.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition decidable_false {A : Type}
+  (n : not A)
+  (P : forall (p : Decidable A), Type)
+  (p : forall n', P (inr n'))
+  : forall p, P p.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x|n'].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction n.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply p.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Replace a term [p] of the form [Decidable A] with [inr na] if we have a term [n : not A] showing that [A] is false. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac decidable_false p n :=
+  generalize p;
+  rapply (decidable_false n);
+  try intro.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Class DecidablePaths (A : Type) :=
+  dec_paths :: forall (x y : A), Decidable (x = y).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Class Stable P := stable : ~~P -&gt; P.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We always have a map in the other direction. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition not_not_unit {P : Type} : P -&gt; ~~P
+  := fun x np =&gt; np x.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_stable_hprop `{Funext} P `{IsHProp P} : IsHProp (Stable P)
+  := istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance stable_decidable P `{Decidable P} : Stable P.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros dn.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* [dec P] either solves the goal or contradicts [dn]. *)
+ </pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>by destruct (dec P).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance stable_negation P : Stable (~ P).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros nnnp p.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (nnnp (not_not_unit p)).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iff_stable P `(Stable P) : ~~P &lt;-&gt; P.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact stable.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact not_not_unit.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition stable_iff {A B} (f : A &lt;-&gt; B)
+  : Stable A -&gt; Stable B.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros stableA nnb.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct f as [f finv].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (f (stableA (fun na =&gt; nnb (fun b =&gt; na (finv b))))).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition stable_equiv' {A B} (f : A &lt;~&gt; B)
+  : Stable A -&gt; Stable B
+  := stable_iff f.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition stable_equiv {A B} (f : A -&gt; B) `{!IsEquiv f}
+  : Stable A -&gt; Stable B
+  := stable_equiv' (Build_Equiv _ _ f _).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(**
+  Because [vm_compute] evaluates terms in [PROP] eagerly
+  and does not remove dead code we
+  need the decide_rel hack. Suppose we have [(x = y) =def  (f x = f y)], now:
+     [bool_decide (x = y) -&gt; bool_decide (f x = f y) -&gt; ...]
+  As we see, the dead code [f x] and [f y] is actually evaluated,
+  which is of course an utter waste.
+  Therefore we introduce [decide_rel] and [bool_decide_rel].
+     [bool_decide_rel (=) x y -&gt; bool_decide_rel (fun a b =&gt; f a = f b) x y -&gt; ...]
+  Now the definition of equality remains under a lambda and
+  our problem does not occur anymore!
+*)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition decide_rel {A B} (R : A -&gt; B -&gt; Type)
+  {dec : forall x y, Decidable (R x y)} (x : A) (y : B)
+  : Decidable (R x y)
+  := dec x y.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Decidable hprops *)
+
+(** Contractible types are decidable. *)
+
+</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidable_contr X `{Contr X} : Decidable X
+  := inl (center X).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Thus, hprops have decidable equality. *)
+
+</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidablepaths_hprop X `{IsHProp X} : DecidablePaths X
+  := fun x y =&gt; dec (x = y).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Empty types are trivial. *)
+
+</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidable_empty : Decidable Empty
+  := inr idmap.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Transfer along equivalences *)
+
+</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition decidable_iff {A B} (f : A &lt;-&gt; B)
+  : Decidable A -&gt; Decidable B.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a|na].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl (fst f a)).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr (fun b =&gt; na (snd f b))).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition decidable_equiv' (A : Type) {B : Type} (f : A &lt;~&gt; B)
+: Decidable A -&gt; Decidable B
+  := decidable_iff f.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition decidable_equiv (A : Type) {B : Type} (f : A -&gt; B) `{!IsEquiv f}
+: Decidable A -&gt; Decidable B
+  := decidable_equiv' _ (Build_Equiv _ _ f _).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition decidablepaths_equiv
+           (A : Type) {B : Type} (f : A -&gt; B) `{IsEquiv A B f}
+: DecidablePaths A -&gt; DecidablePaths B.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros d x y.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (d (f^-1 x) (f^-1 y)) as [e|ne].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inl.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ((eisretr f x)^ @ ap f e @ eisretr f y).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inr; intros p.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ne, ap, p.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition decidablepaths_equiv' (A : Type) {B : Type} (f : A &lt;~&gt; B)
+: DecidablePaths A -&gt; DecidablePaths B
+  := decidablepaths_equiv A f.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Hedberg's theorem: any type with decidable equality is a set. *)
+
+(** A weakly constant function is one all of whose values are equal (in a specified way). *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class WeaklyConstant {A B} (f : A -&gt; B) :=
+  wconst : forall x y, f x = f y.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any map that factors through an hprop is weakly constant. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition wconst_through_hprop {A B P} `{IsHProp P}
+           (f : A -&gt; P) (g : P -&gt; B)
+: WeaklyConstant (g o f).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; apply (ap g), path_ishprop.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A type is collapsible if it admits a weakly constant endomap. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class Collapsible (A : Type) :=
+  { collapse : A -&gt; A ;
+    wconst_collapse :: WeaklyConstant collapse
+  }.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Class PathCollapsible (A : Type) :=
+  path_coll :: forall (x y : A), Collapsible (x = y).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance collapsible_decidable (A : Type) `{Decidable A}
+: Collapsible A.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (dec A) as [a | na].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (const a).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y; reflexivity.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists idmap.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y; destruct (na x).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance pathcoll_decpaths (A : Type) `{DecidablePaths A}
+: PathCollapsible A.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; exact _.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We give this a relatively high-numbered priority so that in deducing [IsHProp -&gt; IsHSet] Coq doesn't detour via [DecidablePaths]. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance hset_pathcoll (A : Type) `{PathCollapsible A}
+: IsHSet A | 1000.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 214
+Time: 0.002s">
+<div class="time" style="width: 8%"></div>
+<pre>
+  assert (h : forall p:x=y, p = (collapse (idpath x))^ @ collapse p).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros []; symmetry; by apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath; intros p q.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (h p @ _ @ (h q)^).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply whiskerL.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply wconst.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition collapsible_hprop (A : Type) `{IsHProp A}
+: Collapsible A.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists idmap.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pathcoll_hset (A : Type) `{IsHSet A}
+: PathCollapsible A.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; apply collapsible_hprop; exact _.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Hedberg's Theorem *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Corollary hset_decpaths (A : Type) `{DecidablePaths A}
+: IsHSet A.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can use Hedberg's Theorem to simplify a goal of the form [forall (d : Decidable (x = x :&gt; A)), P d] when [A] has decidable paths. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition decidable_paths_refl (A : Type) `{DecidablePaths A}
+  (x : A)
+  (P : forall (d : Decidable (x = x)), Type)
+  (Px : P (inl idpath))
+  : forall d, P d.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply (decidable_true idpath).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We cannot eliminate [p : x = x] with path induction, but we can use Hedberg's theorem to replace this with [idpath]. *)
+ </pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 251
+Time: 0.001s">
+<div class="time" style="width: 4%"></div>
+<pre>assert (r : (idpath = p)) by apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct r.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Truncation *)
+
+(** Having decidable equality (which implies being an hset, by Hedberg's theorem above) is itself an hprop. *)
+
+</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishprop_decpaths `{Funext} (A : Type)
+: IsHProp (DecidablePaths A).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_inhabited_contr; intros d.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (IsHSet A) by exact _.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ d).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros d'.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  funext x y.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (d x y); clear d; intros d.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (d' x y); clear d'; intros d'.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct d as [d|nd]; destruct d' as [d'|nd'].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, path_ishprop.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (nd' d).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (nd d').</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, path_forall; intros p; elim (nd p).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 272
+Time: 0.001s">
+<div class="time" style="width: 4%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Logical Laws *)
+
+(** Various logical laws don't hold constructively as they do classically due to a required use of excluded middle. For us, this means that some laws require further assumptions on the decidability of propositions. *)
+
+(** Here we give the dual De Morgan's Law which complements the one given in Iff.v.  One direction requires that one of the two propositions be decidable, while the other direction needs no assumption.  We state the latter property first, to avoid duplication in the proof. *)</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition not_prod_sum_not A B : ~ A + ~ B -&gt; ~ (A * B).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [na|nb] [a b].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (na a).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (nb b).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iff_not_prod A B `{Decidable A}
+  : ~ (A * B) &lt;-&gt; ~ A + ~ B.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros np.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (dec A) as [a|na].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr (fun b =&gt; np (a, b))).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl na).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply not_prod_sum_not.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iff_not_prod' A B `{Decidable B}
+  : ~ (A * B) &lt;-&gt; ~ A + ~ B.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros np.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (dec B) as [b|nb].</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl (fun a =&gt; np (a, b))).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr nb).</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply not_prod_sum_not.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Decidable.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

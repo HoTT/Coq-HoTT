@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Tactics.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk0"><span class="kn">Require Import</span> Basics.Overture.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** TODO: Clean up *)</span>
+
+<span class="sd">(** * Basic tactics *)</span>
+
+<span class="sd">(** This module implements various tactics used in the library. *)</span>
+
+<span class="sd">(** If the goal is [x = z], [path_via y] will replace this with two goals, [x = y] and [y = z]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">path_via</span> mid :=
+  <span class="nb">apply</span> @concat <span class="kr">with</span> (y := mid); <span class="nb">auto with</span> path_hints.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n&#39; IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. It works if [n] is in the context or in the goal. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">simple_induction</span> n n&#39; IH :=
+  <span class="kp">try</span> <span class="nb">generalize dependent</span> n;
+  <span class="kr">fix</span> IH <span class="mi">1</span>;
+  <span class="nb">intros</span> [| n&#39;];
+  [ <span class="nb">clear</span> IH | <span class="nb">specialize</span> (IH n&#39;) ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">simple_induction&#39;</span> n :=
+  <span class="kr">let</span> <span class="nv">IH</span> := <span class="kp">fresh</span> <span class="s2">&quot;IH&quot;</span> <span class="kr">in</span>
+  simple_induction n n IH.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Debugging tactics to show the goal during evaluation. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">show_goal</span> := <span class="kr">match goal with</span> [ |- <span class="nl">?T</span> ] =&gt; <span class="kp">idtac</span> T <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">show_hyp</span> id :=
+  <span class="kr">match goal with</span>
+    | [ H := <span class="nl">?b</span> : <span class="nl">?T</span> |- _ ] =&gt;
+      <span class="kr">match</span> H <span class="kr">with</span>
+        | id =&gt; <span class="kp">idtac</span> id <span class="s2">&quot;:=&quot;</span> b <span class="s2">&quot;:&quot;</span> T
+      <span class="kr">end</span>
+    | [ H : <span class="nl">?T</span> |- _ ] =&gt;
+      <span class="kr">match</span> H <span class="kr">with</span>
+        | id =&gt; <span class="kp">idtac</span> id  <span class="s2">&quot;:&quot;</span>  T
+      <span class="kr">end</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">show_hyps</span> :=
+  <span class="kp">try</span> <span class="kr">match reverse goal with</span>
+        | [ H : <span class="nl">?T</span> |- _ ] =&gt; show_hyp H ; <span class="kp">fail</span>
+      <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Do something on the last hypothesis, or fail *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">on_last_hyp</span> tac :=
+  <span class="kr">match goal with</span> [ H : _ |- _ ] =&gt; <span class="kp">first</span> [ tac H | <span class="kp">fail</span> <span class="mi">1</span> ] <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Revert the last hypothesis. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">revert_last</span> :=
+  <span class="kr">match goal with</span>
+    [ H : _ |- _ ] =&gt; <span class="nb">revert</span> H
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Repeatedly reverse the last hypothesis, putting everything in the goal. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">reverse</span> := <span class="kp">repeat</span> revert_last.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Reverse everything up to hypothesis id (not included). *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">revert_until</span> id :=
+  on_last_hyp <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">id&#39;</span> =&gt;
+    <span class="kr">match</span> id&#39; <span class="kr">with</span>
+      | id =&gt; <span class="kp">idtac</span>
+      | _ =&gt; <span class="nb">revert</span> id&#39; ; revert_until id
+    <span class="kr">end</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Clear duplicated hypotheses *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">clear_dup</span> :=
+  <span class="kr">match goal with</span>
+    | [ H : <span class="nl">?X</span> |- _ ] =&gt;
+      <span class="kr">match goal with</span>
+        | [ H&#39; : <span class="nl">?Y</span> |- _ ] =&gt;
+          <span class="kr">match</span> H <span class="kr">with</span>
+            | H&#39; =&gt; <span class="kp">fail</span> <span class="mi">2</span>
+            | _ =&gt; <span class="nb">unify</span> X Y ; (<span class="nb">clear</span> H&#39; || <span class="nb">clear</span> H)
+          <span class="kr">end</span>
+      <span class="kr">end</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">clear_dups</span> := <span class="kp">repeat</span> clear_dup.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Try to clear everything except some hypothesis *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">clear_except</span> hyp :=
+  <span class="kp">repeat</span> <span class="kr">match goal with</span> [ H : _ |- _ ] =&gt;
+           <span class="kr">match</span> H <span class="kr">with</span>
+             | hyp =&gt; <span class="kp">fail</span> <span class="mi">1</span>
+             | _ =&gt; <span class="nb">clear</span> H
+           <span class="kr">end</span>
+         <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">on_application</span> f tac T :=
+  <span class="kr">match</span> T <span class="kr">with</span>
+    | <span class="kp">context</span> [f <span class="nl">?x</span> <span class="nl">?y</span> <span class="nl">?z</span> <span class="nl">?w</span> <span class="nl">?v</span> <span class="nl">?u</span> <span class="nl">?a</span> <span class="nl">?b</span> <span class="nl">?c</span>] =&gt; tac (f x y z w v u a b c)
+    | <span class="kp">context</span> [f <span class="nl">?x</span> <span class="nl">?y</span> <span class="nl">?z</span> <span class="nl">?w</span> <span class="nl">?v</span> <span class="nl">?u</span> <span class="nl">?a</span> <span class="nl">?b</span>] =&gt; tac (f x y z w v u a b)
+    | <span class="kp">context</span> [f <span class="nl">?x</span> <span class="nl">?y</span> <span class="nl">?z</span> <span class="nl">?w</span> <span class="nl">?v</span> <span class="nl">?u</span> <span class="nl">?a</span>] =&gt; tac (f x y z w v u a)
+    | <span class="kp">context</span> [f <span class="nl">?x</span> <span class="nl">?y</span> <span class="nl">?z</span> <span class="nl">?w</span> <span class="nl">?v</span> <span class="nl">?u</span>] =&gt; tac (f x y z w v u)
+    | <span class="kp">context</span> [f <span class="nl">?x</span> <span class="nl">?y</span> <span class="nl">?z</span> <span class="nl">?w</span> <span class="nl">?v</span>] =&gt; tac (f x y z w v)
+    | <span class="kp">context</span> [f <span class="nl">?x</span> <span class="nl">?y</span> <span class="nl">?z</span> <span class="nl">?w</span>] =&gt; tac (f x y z w)
+    | <span class="kp">context</span> [f <span class="nl">?x</span> <span class="nl">?y</span> <span class="nl">?z</span>] =&gt; tac (f x y z)
+    | <span class="kp">context</span> [f <span class="nl">?x</span> <span class="nl">?y</span>] =&gt; tac (f x y)
+    | <span class="kp">context</span> [f <span class="nl">?x</span>] =&gt; tac (f x)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Tactical [on_call f tac] applies [tac] on any application of [f] in the hypothesis or goal. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">on_call</span> f tac :=
+  <span class="kr">match goal with</span>
+    | |- <span class="nl">?T</span>  =&gt; on_application f tac T
+    | H : <span class="nl">?T</span> |- _  =&gt; on_application f tac T
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Destructs calls to f in hypothesis or conclusion, useful if f creates a subset object. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_call</span> f :=
+  <span class="kr">let</span> <span class="nv">tac</span> <span class="nv">t</span> := (<span class="nb">destruct</span> t) <span class="kr">in</span> on_call f tac.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_calls</span> f := <span class="kp">repeat</span> destruct_call f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_call_in</span> f H :=
+  <span class="kr">let</span> <span class="nv">tac</span> <span class="nv">t</span> := (<span class="nb">destruct</span> t) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">T</span> := <span class="kp">type of</span> H <span class="kr">in</span>
+    on_application f tac T.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_call_as</span> f l :=
+  <span class="kr">let</span> <span class="nv">tac</span> <span class="nv">t</span> := (<span class="nb">destruct</span> t <span class="kr">as</span> l) <span class="kr">in</span> on_call f tac.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_call_as_in</span> f l H :=
+  <span class="kr">let</span> <span class="nv">tac</span> <span class="nv">t</span> := (<span class="nb">destruct</span> t <span class="kr">as</span> l) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">T</span> := <span class="kp">type of</span> H <span class="kr">in</span>
+    on_application f tac T.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;destruct_call&quot;</span> <span class="kp">constr</span>(f) := destruct_call f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Permit to name the results of destructing the call to [f]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;destruct_call&quot;</span> <span class="kp">constr</span>(f) <span class="s2">&quot;as&quot;</span> simple_intropattern(l) :=
+  destruct_call_as f l.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Specify the hypothesis in which the call occurs as well. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;destruct_call&quot;</span> <span class="kp">constr</span>(f) <span class="s2">&quot;in&quot;</span> hyp(id) :=
+  destruct_call_in f id.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;destruct_call&quot;</span> <span class="kp">constr</span>(f) <span class="s2">&quot;as&quot;</span> simple_intropattern(l) <span class="s2">&quot;in&quot;</span> hyp(id) :=
+  destruct_call_as_in f l id.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A marker for prototypes to destruct. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">fix_proto</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">a</span> : A) := a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_rec_calls</span> :=
+  <span class="kr">match goal with</span>
+    | [ H : fix_proto _ |- _ ] =&gt; destruct_calls H ; <span class="nb">clear</span> H
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_all_rec_calls</span> :=
+  <span class="kp">repeat</span> destruct_rec_calls ; <span class="nb">unfold</span> fix_proto <span class="kr">in</span> *.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Try to inject any potential constructor equality hypothesis. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">inject</span> H := <span class="kp">progress</span> (<span class="nb">inversion</span> H ; clear_dups) ; <span class="nb">clear</span> H.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">autoinjections</span> := <span class="kp">repeat</span> (clear_dups ; <span class="kp">ltac</span>:(inject)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Destruct an hypothesis by first copying it to avoid dependencies. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_nondep</span> H := <span class="kr">let</span> <span class="nv">H0</span> := <span class="kp">fresh</span> <span class="s2">&quot;H&quot;</span> <span class="kr">in</span> <span class="nb">assert</span>(H0 := H); <span class="nb">destruct</span> H0.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A tactic to show contradiction by first asserting an automatically provable hypothesis. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;contradiction&quot;</span> <span class="s2">&quot;by&quot;</span> <span class="kp">constr</span>(t) :=
+  <span class="kr">let</span> <span class="nv">H</span> := <span class="kp">fresh</span> <span class="kr">in</span> <span class="nb">assert</span> t <span class="kr">as</span> H <span class="bp">by</span> <span class="nb">auto with</span> * ; <span class="bp">contradiction</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A tactic that adds [H:=p:typeof(p)] to the context if no hypothesis of the same type appears in the goal.</span>
+<span class="sd">   Useful to do saturation using tactics. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">add_hypothesis</span> H&#39; p :=
+  <span class="kr">match</span> <span class="kp">type of</span> p <span class="kr">with</span>
+    <span class="nl">?X</span> =&gt;
+    <span class="kr">match goal with</span>
+      | [ H : X |- _ ] =&gt; <span class="kp">fail</span> <span class="mi">1</span>
+      | _ =&gt; <span class="nb">set</span> (H&#39;:=p) ; <span class="kp">try</span> (<span class="nb">change</span> p <span class="kr">with</span> H&#39;) ; <span class="nb">clearbody</span> H&#39;
+    <span class="kr">end</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A tactic to replace an hypothesis by another term. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">replace_hyp</span> H c :=
+  <span class="kr">let</span> <span class="nv">H&#39;</span> := <span class="kp">fresh</span> <span class="s2">&quot;H&quot;</span> <span class="kr">in</span>
+    <span class="nb">assert</span>(H&#39; := c) ; <span class="nb">clear</span> H ; <span class="nb">rename</span> H&#39; <span class="nb">into</span> H.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A tactic to refine an hypothesis by supplying some of its arguments. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">refine_hyp</span> c :=
+  <span class="kr">let</span> <span class="nv">tac</span> <span class="nv">H</span> := replace_hyp H c <span class="kr">in</span>
+    <span class="kr">match</span> c <span class="kr">with</span>
+      | <span class="nl">?H</span> _ =&gt; tac H
+      | <span class="nl">?H</span> _ _ =&gt; tac H
+      | <span class="nl">?H</span> _ _ _ =&gt; tac H
+      | <span class="nl">?H</span> _ _ _ _ =&gt; tac H
+      | <span class="nl">?H</span> _ _ _ _ _ =&gt; tac H
+      | <span class="nl">?H</span> _ _ _ _ _ _ =&gt; tac H
+      | <span class="nl">?H</span> _ _ _ _ _ _ _ =&gt; tac H
+      | <span class="nl">?H</span> _ _ _ _ _ _ _ _ =&gt; tac H
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** TODO: From here comes from Overture.v *)</span>
+
+<span class="sd">(** Clear a hypothesis and also its dependencies.  Taken from Coq Stdlib, with the performance-enhancing change to [lazymatch] suggested at [https://github.com/coq/coq/issues/11689]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;clear&quot;</span> <span class="s2">&quot;dependent&quot;</span> hyp(h) :=
+  <span class="kr">let rec</span> <span class="nv">depclear</span> <span class="nv">h</span> :=
+  <span class="nb">clear</span> h ||
+  <span class="kr">lazymatch goal with</span>
+   | H : <span class="kp">context</span> [ h ] |- _ =&gt; depclear H; depclear h
+  <span class="kr">end</span> ||
+  <span class="kp">fail</span> <span class="s2">&quot;hypothesis to clear is used in the conclusion (maybe indirectly)&quot;</span>
+ <span class="kr">in</span> depclear h.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+<span class="sd">(** A version of [generalize dependent] that applies only to a hypothesis.  Taken from Coq Stdlib. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;revert&quot;</span> <span class="s2">&quot;dependent&quot;</span> hyp(h) :=
+  <span class="nb">generalize dependent</span> h.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Applying a tactic to a term with increasingly many arguments *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;do_with_holes&quot;</span> tactic3(x) <span class="kp">uconstr</span>(p) :=
+  x <span class="kp">uconstr</span>:(p) ||
+  x <span class="kp">uconstr</span>:(p _) ||
+  x <span class="kp">uconstr</span>:(p _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Same thing but starting with many holes first *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;do_with_holes&#39;&quot;</span> tactic3(x) <span class="kp">uconstr</span>(p) :=
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _ _) ||
+  x <span class="kp">uconstr</span>:(p _ _) ||
+  x <span class="kp">uconstr</span>:(p _) ||
+  x <span class="kp">uconstr</span>:(p).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We keep a list of global axioms that we will solve automatically, even when not using typeclass search. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Unset Primitive Projections</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsGlobalAxiom</span> (<span class="nv">A</span> : <span class="kt">Type</span>) : Type0 := {}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Primitive Projections</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Hint Mode</span> IsGlobalAxiom + : typeclass_instances.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We add [Funext] to the list here, and will later add [Univalence]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">is_global_axiom_funext</span> : IsGlobalAxiom Funext := {}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Add [PropResizing] to the list of global axioms. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">is_global_axiom_propresizing</span> : IsGlobalAxiom PropResizing := {}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">is_global_axiom</span> A := <span class="kr">let</span> <span class="nv">_</span> := <span class="kp">constr</span>:(_ : IsGlobalAxiom A) <span class="kr">in</span> <span class="kp">idtac</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">global_axiom</span> := <span class="kp">try</span> <span class="kr">match goal with</span>
+    | |- <span class="nl">?G</span>  =&gt; is_global_axiom G; <span class="bp">exact</span> _
+<span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A shorter name for [simple refine]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;srefine&quot;</span> <span class="kp">uconstr</span>(term) := <span class="nb">simple refine</span> term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** A shorter name for [notypeclasses refine]; also handles global axioms. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;nrefine&quot;</span> <span class="kp">uconstr</span>(term) := <span class="nb">notypeclasses refine</span> term; global_axiom.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** A shorter name for [simple notypeclasses refine]; also handles global axioms. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;snrefine&quot;</span> <span class="kp">uconstr</span>(term) := <span class="nb">simple notypeclasses refine</span> term; global_axiom.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The tactics [napply], [rapply] and [tapply] are similar but they differ in their reliance on typeclass search. [napply t] tries [nrefine t], [nrefine (t _)], [nrefine (t _ _)], so on until it succeeds in unifying with the goal. At each iteration, [nrefine] computes the type of the given term and tries to unify it with the goal; if it succeeds, all holes remaining in the term after unification are new goals. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;napply&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; nrefine x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;napply&#39;&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes&#39; <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; nrefine x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** TODO: remove when min Coq/Rocq version is 9.1 (~ end of 2026). *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[deprecated(note=<span class="s2">&quot;nrapply was renamed to napply and will be removed soon&quot;</span>,
+  since=<span class="s2">&quot;2025-03-11&quot;</span>)]
+<span class="kn">Tactic Notation</span> <span class="s2">&quot;nrapply&quot;</span> <span class="kp">uconstr</span>(term) := napply term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [rapply] is equivalent in strength to [napply], i.e., it should succeed iff [napply] succeeds, but it solves all possible typeclasses after successful unification with the goal. The implementation is: try [nrefine t, t _, t _ _], ... until success; upon success, revert the last (successful) application of [nrefine] and call [refine (t _ _ _)]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;rapply&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kp">assert_succeeds</span> (nrefine x); <span class="nb">refine</span> x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;rapply&#39;&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes&#39; <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kp">assert_succeeds</span> (nrefine x); <span class="nb">refine</span> x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The [tapply] tactic is strictly stronger than [rapply], because if the type of the argument term [t] (with holes) cannot be successfully computed or unified with the goal type, it calls typeclass search on all typeclass holes within [t] (independently of the goal) and then tries to unify with the goal again. Our implementation of [rapply] requires that the type (with holes) of the argument term unifies with the goal directly, without any help from typeclass search to fill in the holes in the type. The typeclass search after unification is more robust than the typeclass search before unification, because there is more information available to guide the typeclass search. If [rapply] succeeds, then [tapply] succeeds and their outcomes are equivalent. Note that the Coq standard library has a [rapply], of these six tactics it is closest to our [tapply&#39;] with many-holes first. We prefer fewer-holes first, for instance so that a theorem producing an equivalence will by preference be used to produce an equivalence rather than to apply the coercion of that equivalence to a function. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;tapply&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="nb">refine</span> x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;tapply&#39;&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes&#39; <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="nb">refine</span> x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Each of the tactics [napply], [rapply], [tapply] has a &quot;simple&quot; variant prefixed with s. The simple variants do not perform beta reduction when unifying with the goal, and they do not shelve any of the holes created by unification with the goal. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;snapply&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; snrefine x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;snapply&#39;&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes&#39; <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; snrefine x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** TODO: remove when min Coq/Rocq version is 9.1 (~ end of 2026). *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[deprecated(note=<span class="s2">&quot;snrapply was renamed to snapply and will be removed soon&quot;</span>,
+  since=<span class="s2">&quot;2025-03-11&quot;</span>)]
+<span class="kn">Tactic Notation</span> <span class="s2">&quot;snrapply&quot;</span> <span class="kp">uconstr</span>(term) := snapply term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** See comment for [rapply]. This cannot be simplified to [snrefine x] because we don&#39;t want the [global_axiom] tactic to run here. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;srapply&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kp">assert_succeeds</span> (<span class="nb">simple notypeclasses refine</span> x); srefine x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;srapply&#39;&quot;</span> <span class="kp">uconstr</span>(term)
+:= do_with_holes&#39; <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kp">assert_succeeds</span> (<span class="nb">simple notypeclasses refine</span> x); srefine x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;stapply&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; srefine x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;stapply&#39;&quot;</span> <span class="kp">uconstr</span>(term)
+  := do_with_holes&#39; <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; srefine x) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Apply a tactic to one side of an equation.  For example, [lhs rapply lemma].  [tac] should produce a path. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;lhs&quot;</span> tactic3(tac) := nrefine (<span class="kp">ltac</span>:(tac) @ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;lhs_V&quot;</span> tactic3(tac) := nrefine (<span class="kp">ltac</span>:(tac)^ @ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;rhs&quot;</span> tactic3(tac) := nrefine (_ @ <span class="kp">ltac</span>:(tac)^).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;rhs_V&quot;</span> tactic3(tac) := nrefine (_ @ <span class="kp">ltac</span>:(tac)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Here are versions that work for a general relation.  The relation needs to be transitive and, in two cases, symmetric.  These versions also work for paths in most cases, but due to slightly different behaviours, don&#39;t work quite as well as the previous versions. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;lhs&#39;&quot;</span> tactic3(tac) := <span class="nb">etransitivity</span>; [tac|].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;lhs_V&#39;&quot;</span> tactic3(tac) := <span class="nb">etransitivity</span>; [<span class="nb">symmetry</span>; tac|].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;rhs&#39;&quot;</span> tactic3(tac) := <span class="nb">etransitivity</span>; [|<span class="nb">symmetry</span>; tac].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;rhs_V&#39;&quot;</span> tactic3(tac) := <span class="nb">etransitivity</span>; [|tac].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** SSReflect tactics, adapted by Robbert Krebbers *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">done</span> :=
+  <span class="nb">trivial</span>; <span class="nb">intros</span>; <span class="kp">solve</span>
+    [ <span class="kp">repeat</span> <span class="kp">first</span>
+      [ <span class="kp">solve</span> [<span class="nb">trivial</span>]
+      | <span class="kp">solve</span> [<span class="nb">symmetry</span>; <span class="nb">trivial</span>]
+      | <span class="bp">reflexivity</span>
+      <span class="c">(* Discriminate should be here, but it doesn&#39;t work yet *)</span>
+      <span class="c">(* | discriminate *)</span>
+      | <span class="bp">contradiction</span>
+      | <span class="nb">split</span> ]
+    | <span class="kr">match goal with</span>
+      H : ~ _ |- _ =&gt; <span class="kp">solve</span> [<span class="nb">destruct</span> H; <span class="nb">trivial</span>]
+      <span class="kr">end</span> ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;by&quot;</span> tactic(tac) :=
+  tac; <span class="bp">done</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Apply using the same opacity information as typeclass proof search. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">class_apply</span> c := <span class="nb">autoapply</span> c <span class="kr">with</span> typeclass_instances.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A convenient tactic for using function extensionality. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">by_extensionality</span> x :=
+  <span class="nb">intros</span>;
+  <span class="kr">match goal with</span>
+  | [ |- <span class="nl">?f</span> = <span class="nl">?g</span> ] =&gt; <span class="nb">eapply</span> path_forall; <span class="nb">intro</span> x;
+      <span class="kr">match goal with</span>
+        | [ |- <span class="kr">forall</span> (<span class="nv">_</span> : prod _ _), _ ] =&gt; <span class="nb">intros</span> [? ?]
+        | [ |- <span class="kr">forall</span> (<span class="nv">_</span> : sig _ _), _ ] =&gt; <span class="nb">intros</span> [? ?]
+        | _ =&gt; <span class="nb">intros</span>
+    <span class="kr">end</span>;
+    <span class="nb">simpl</span>; <span class="nb">auto with</span> path_hints
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [funext] apply functional extensionality ([path_forall]) to the goal and the introduce the arguments in the context. *)</span>
+<span class="sd">(** For instance, if you have to prove [f = g] where [f] and [g] take two arguments, you can use [funext x y], and the goal become [f x y = g x y]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;funext&quot;</span> simple_intropattern(a)
+  := <span class="nb">apply</span> path_forall; <span class="nb">intros</span> a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;funext&quot;</span> simple_intropattern(a)  simple_intropattern(b)
+  := funext a; funext b.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;funext&quot;</span> simple_intropattern(a) simple_intropattern(b) simple_intropattern(c)
+  := funext a; funext b; funext c.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;funext&quot;</span> simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d)
+  := funext a; funext b; funext c; funext d.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;funext&quot;</span> simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e)
+  := funext a; funext b; funext c; funext d; funext e.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;funext&quot;</span> simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e) simple_intropattern(f)
+  := funext a; funext b; funext c; funext d; funext e; funext f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Test whether a tactic fails or succeeds, without actually doing anything.  Taken from Coq Stdlib. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">assert_fails</span> tac :=
+  <span class="kr">tryif</span> (<span class="kp">once</span> tac) <span class="kr">then</span> <span class="kp">gfail</span> <span class="mi">0</span> tac <span class="s2">&quot;succeeds&quot;</span> <span class="kr">else</span> <span class="kp">idtac</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;assert_succeeds&quot;</span> tactic3(tac) :=
+  <span class="kr">tryif</span> (<span class="kp">assert_fails</span> tac) <span class="kr">then</span> <span class="kp">gfail</span> <span class="mi">0</span> tac <span class="s2">&quot;fails&quot;</span> <span class="kr">else</span> <span class="kp">idtac</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;assert_succeeds&quot;</span> tactic3(tac) :=
+  <span class="kp">assert_succeeds</span> tac.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;assert_fails&quot;</span> tactic3(tac) :=
+  <span class="kp">assert_fails</span> tac.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This tactic doesn&#39;t end with [auto], but you can always write &quot;by (path_induction;auto with path_hints)&quot; if you want.*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">path_induction</span> :=
+  <span class="nb">intros</span>; <span class="kp">repeat</span> <span class="kp">progress</span> (
+    <span class="kr">match goal with</span>
+      | [ p : <span class="nl">?x</span> = <span class="nl">?y</span>  |- _ ] =&gt; <span class="kp">assert_fails</span> <span class="nb">constr_eq</span> x y; <span class="nb">induction</span> p
+    <span class="kr">end</span>
+  ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The tactic [f_ap] is a replacement for the previously existing standard library tactic [f_equal].  This tactic works by repeatedly applying the fact that [f = g -&gt; x = y -&gt; f x = g y] to turn, e.g., [f x y = f z w] first into [f x = f z] and [y = w], and then turns the first of these into [f = f] and [x = z].  The [done] tactic is used to detect the [f = f] case and finish, and the [trivial] is used to solve, e.g., [x = x] when using [f_ap] on [f y x = f z x].  This tactic only works for non-dependently-typed functions; we cannot express [y = w] in the first example if [y] and [w] have different types.  If and when Arnaud&#39;s new-tacticals branch lands, and we can have a goal which depends on the term used to discharge another goal, then this tactic should probably be generalized to deal with dependent functions. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">f_ap</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">lazymatch goal with</span>
+    | [ |- <span class="nl">?f</span> <span class="nl">?x</span> = <span class="nl">?g</span> <span class="nl">?x</span> ] =&gt; <span class="nb">apply</span> (@apD10 _ _ f g);
+                             <span class="kp">try</span> (<span class="bp">done</span> || f_ap)
+    | _ =&gt; <span class="nb">apply</span> ap11;
+          [ <span class="bp">done</span> || f_ap
+          | <span class="nb">trivial</span> ]
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [expand] replaces both terms of an equality (either [paths] or [pointwise_paths] in the goal with their head normal forms *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">expand</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | [ |- <span class="nl">?X</span> = <span class="nl">?Y</span> ] =&gt;
+      <span class="kr">let</span> <span class="nv">X&#39;</span> := <span class="kp">eval</span> <span class="nb">hnf</span> <span class="kr">in</span> X <span class="kr">in</span> <span class="kr">let</span> <span class="nv">Y&#39;</span> := <span class="kp">eval</span> <span class="nb">hnf</span> <span class="kr">in</span> Y <span class="kr">in</span> <span class="nb">change</span> (X&#39; = Y&#39;)
+    | [ |- <span class="nl">?X</span> == <span class="nl">?Y</span> ] =&gt;
+      <span class="kr">let</span> <span class="nv">X&#39;</span> := <span class="kp">eval</span> <span class="nb">hnf</span> <span class="kr">in</span> X <span class="kr">in</span> <span class="kr">let</span> <span class="nv">Y&#39;</span> := <span class="kp">eval</span> <span class="nb">hnf</span> <span class="kr">in</span> Y <span class="kr">in</span> <span class="nb">change</span> (X&#39; == Y&#39;)
+  <span class="kr">end</span>; <span class="nb">simpl</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure.  This is useful, for example, to easily destruct all variables that show up as the discriminees of [match] statements, without destructing more complicated terms whose structures might matter. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">atomic</span> x :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match</span> x <span class="kr">with</span>
+    | _ =&gt; <span class="nb">is_evar</span> x; <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (evar)&quot;</span>
+    | <span class="nl">?f</span> _ =&gt; <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (application)&quot;</span>
+    | (<span class="kr">fun</span> <span class="nv">_</span> =&gt; _) =&gt; <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (fun)&quot;</span>
+    | <span class="kr">forall</span> <span class="nv">_</span>, _ =&gt; <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (forall)&quot;</span>
+    | <span class="kr">let</span> <span class="nv">x</span> := _ <span class="kr">in</span> _ =&gt; <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (let in)&quot;</span>
+    | <span class="kr">match</span> _ <span class="kr">with</span> _ =&gt; _ <span class="kr">end</span> =&gt; <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (match)&quot;</span>
+    | _ =&gt; is_fix x; <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (fix)&quot;</span>
+    | _ =&gt; is_cofix x; <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (cofix)&quot;</span>
+    | <span class="kp">context</span>[<span class="nl">?E</span>] =&gt; <span class="c">(* catch-all *)</span> (<span class="kp">assert_fails</span> <span class="nb">constr_eq</span> E x); <span class="kp">fail</span> <span class="mi">1</span> x <span class="s2">&quot;is not atomic (has subterm&quot;</span> E <span class="s2">&quot;)&quot;</span>
+    | _ =&gt; <span class="kp">idtac</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Find the head of the given expression. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">head</span> expr :=
+  <span class="kr">match</span> expr <span class="kr">with</span>
+    | <span class="nl">?f</span> _ =&gt; head f
+    | _ =&gt; expr
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This tactic gets the constructor of any one-constructor inductive type. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">get_constructor_head</span> T :=
+  <span class="kr">let</span> <span class="nv">x</span> := <span class="kp">fresh</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">x&#39;</span> := <span class="kp">fresh</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">h</span> := open_constr:(_) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">__</span> := <span class="kp">constr</span>:(<span class="kr">fun</span> (<span class="nv">x</span> : T)
+                    =&gt; <span class="kr">let</span> <span class="nv">x&#39;</span> := x <span class="kr">in</span>
+                       <span class="kp">ltac</span>:(<span class="nb">destruct</span> x;
+                             <span class="kr">let</span> <span class="nv">x&#39;</span> := (<span class="kp">eval</span> <span class="nb">cbv</span> delta [x&#39;] <span class="kr">in</span> x&#39;) <span class="kr">in</span>
+                             <span class="kr">let</span> <span class="nv">x&#39;</span> := head x&#39; <span class="kr">in</span>
+                             <span class="nb">unify</span> h x&#39;;
+                             <span class="bp">exact</span> tt)) <span class="kr">in</span>
+  h.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* A version of econstructor that doesn&#39;t resolve typeclasses. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">ntc_constructor</span> :=
+  <span class="kr">lazymatch goal with</span>
+  | [ |- <span class="nl">?G</span> ] =&gt; <span class="kr">let</span> <span class="nv">build</span> := get_constructor_head G <span class="kr">in</span>
+                 napply build
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [case_path] is a HoTT replacement for [case_eq]; [case_path x] is like [destruct x], but it remembers the original value of [x] in an equation to be introduced. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">case_path</span> x :=
+  <span class="kr">let</span> <span class="nv">x&#39;</span> := <span class="kp">fresh</span> <span class="s2">&quot;x&quot;</span> <span class="kr">in</span>
+  <span class="nb">set</span> (x&#39; := x);
+    <span class="nb">generalize</span> (idpath : x&#39; = x);
+    <span class="nb">clearbody</span> x&#39;;
+    <span class="nb">destruct</span> x&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [revert_opaque x] is like [revert x], except that it fails if [x] is not an opaque variable (i.e. if it has a [:=] definition rather than just a type). *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">revert_opaque</span> x :=
+  <span class="nb">revert</span> x;
+  <span class="kr">match goal with</span>
+    | [ |- <span class="kr">forall</span> <span class="nv">_</span>, _ ] =&gt; <span class="kp">idtac</span>
+    | _ =&gt; <span class="kp">fail</span> <span class="mi">1</span> <span class="s2">&quot;Reverted constant is not an opaque variable&quot;</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [transparent assert (H : T)] is like [assert (H : T)], but leaves the body transparent. *)</span>
+<span class="sd">(** Since binders don&#39;t respect [fresh], we use a name unlikely to be reused. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;transparent&quot;</span> <span class="s2">&quot;assert&quot;</span> <span class="s2">&quot;(&quot;</span> <span class="kn">ident</span>(name) <span class="s2">&quot;:&quot;</span> <span class="kp">constr</span>(type) <span class="s2">&quot;)&quot;</span> :=
+  <span class="nb">simple refine</span> (<span class="kr">let</span> <span class="nv">__transparent_assert_hypothesis</span> := (_ : type) <span class="kr">in</span> _);
+  [
+  | (<span class="c">(* We cannot use the name [__transparent_assert_hypothesis], due to some infelicities in the naming of bound variables.  So instead we pull the bottommost hypothesis. *)</span>
+    <span class="kr">let</span> <span class="nv">H</span> := <span class="kr">match goal with</span> H := _ |- _ =&gt; <span class="kp">constr</span>:(H) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="nb">rename</span> H <span class="nb">into</span> name) ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [transparent eassert] is like [transparent assert], but allows holes in the type, which will be turned into evars. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;transparent&quot;</span> <span class="s2">&quot;assert&quot;</span> <span class="s2">&quot;(&quot;</span> <span class="kn">ident</span>(name) <span class="s2">&quot;:&quot;</span> <span class="kp">constr</span>(type) <span class="s2">&quot;)&quot;</span> <span class="s2">&quot;by&quot;</span> tactic3(tac) := <span class="kr">let</span> <span class="nv">name</span> := <span class="kp">fresh</span> <span class="s2">&quot;H&quot;</span> <span class="kr">in</span> transparent <span class="nb">assert</span> (name : type); [ <span class="kp">solve</span> [ tac ] | ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;transparent&quot;</span> <span class="s2">&quot;eassert&quot;</span> <span class="s2">&quot;(&quot;</span> <span class="kn">ident</span>(name) <span class="s2">&quot;:&quot;</span> open_constr(type) <span class="s2">&quot;)&quot;</span> := transparent <span class="nb">assert</span> (name : type).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;transparent&quot;</span> <span class="s2">&quot;eassert&quot;</span> <span class="s2">&quot;(&quot;</span> <span class="kn">ident</span>(name) <span class="s2">&quot;:&quot;</span> open_constr(type) <span class="s2">&quot;)&quot;</span> <span class="s2">&quot;by&quot;</span> tactic3(tac) := transparent <span class="nb">assert</span> (name : type) <span class="bp">by</span> tac.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A version of Coq&#39;s [remember] that uses our equality. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">remember_as</span> term name eqname :=
+  <span class="nb">set</span> (name := term) <span class="kr">in</span> *;
+  <span class="nb">pose</span> (eqname := idpath : term = name);
+  <span class="nb">clearbody</span> eqname name.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;remember&quot;</span> <span class="kp">constr</span>(term) <span class="s2">&quot;as&quot;</span> <span class="kn">ident</span>(name) <span class="s2">&quot;eqn:&quot;</span> <span class="kn">ident</span>(eqname) :=
+  remember_as term name eqname.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A variant that doesn&#39;t substitute in the goal and hypotheses. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">recall_as</span> term name eqname :=
+  <span class="nb">pose</span> (name := term);
+  <span class="nb">pose</span> (eqname := idpath : term = name);
+  <span class="nb">clearbody</span> eqname name.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;recall&quot;</span> <span class="kp">constr</span>(term) <span class="s2">&quot;as&quot;</span> <span class="kn">ident</span>(name) <span class="s2">&quot;eqn:&quot;</span> <span class="kn">ident</span>(eqname) :=
+  recall_as term name eqname.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [rel_hnf], when given a goal of the form [R x y] for any relation [R], puts [x] and [y] in head normal form. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">rel_hnf</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | [ |- <span class="nl">?R</span> <span class="nl">?x</span> <span class="nl">?y</span> ] =&gt; <span class="kr">let</span> <span class="nv">x&#39;</span> := (<span class="kp">eval</span> <span class="nb">hnf</span> <span class="kr">in</span> x) <span class="kr">in</span>
+                         <span class="kr">let</span> <span class="nv">y&#39;</span> := (<span class="kp">eval</span> <span class="nb">hnf</span> <span class="kr">in</span> y) <span class="kr">in</span>
+                         <span class="nb">change</span> (R x&#39; y&#39;)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This tactic is a version of [tryif require () then if_yes () else if_no ()] which is suitable for use in constructing constrs by virtue of being evaluated during the Ltac expression evaluation phase rather than during the tactic running phase.</span>
+<span class="sd">All three arguments are expected to be tactic thunks which will be passed a dummy unit argument.*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">tryif_cps</span> require if_yes if_no :=
+  <span class="kr">let</span> <span class="nv">res</span> := <span class="kr">match</span> <span class="kp">constr</span>:(<span class="kt">Set</span>) <span class="kr">with</span>
+             | _ =&gt; <span class="kr">let</span> <span class="nv">__</span> := <span class="kr">match</span> <span class="kp">constr</span>:(<span class="kt">Set</span>) <span class="kr">with</span> _ =&gt; require () <span class="kr">end</span> <span class="kr">in</span>
+                    <span class="kp">ltac</span>:(if_yes)
+             | _ =&gt; <span class="kp">ltac</span>:(if_no)
+             <span class="kr">end</span> <span class="kr">in</span> res ().</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The following tactic [issig] proves automatically that a record type is equivalent to a nested Sigma-type. Specifically, it proves a goal that looks like</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">   { x : A &amp; B x } &lt;~&gt; Some_Record</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">In fact you don&#39;t even have to write down the sigma type. Though it is good practice to write it out anyway, this tactic can work out the sigma type and tell you what it should look like.</span>
+
+<span class="sd">The following should generate the desired equivalence. You can check the definition to see what type it has and therefore what the sigma type should be.</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">  Definition issig_myrecord</span>
+<span class="sd">    : _ &lt;~&gt; MyRecord := ltac:(issig).</span>
+
+<span class="sd">  Check issig_myrecord.</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">In order to define this tactic we have many helper tactics.</span>
+
+<span class="sd">*)</span>
+
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">peel_evars</span> term :=
+  <span class="kr">lazymatch</span> term <span class="kr">with</span>
+  | <span class="nl">?f</span> <span class="nl">?x</span>
+    =&gt; tryif_cps
+         <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="nb">has_evar</span> x)
+         <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">_</span> =&gt; peel_evars f)
+         <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">_</span> =&gt; term)
+  | _ =&gt; term
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">pi_to_sig</span> ty :=
+  <span class="kr">lazymatch</span> (<span class="kp">eval</span> <span class="nb">cbv</span> beta <span class="kr">in</span> ty) <span class="kr">with</span>
+  | <span class="kr">forall</span> (<span class="nv">x</span> : <span class="nl">?T</span>) (<span class="nv">y</span> : @<span class="nl">?A</span> x), @<span class="nl">?P</span> x y
+    =&gt; <span class="kr">let</span> <span class="nv">x&#39;</span> := <span class="kp">fresh</span> <span class="kr">in</span>
+       <span class="kp">constr</span>:(@sig T (<span class="kr">fun</span> <span class="nv">x&#39;</span> : T =&gt;
+        <span class="kp">ltac</span>:(<span class="kr">let</span> <span class="nv">res</span> := pi_to_sig
+          (<span class="kr">forall</span> <span class="nv">y</span> : A x&#39;, P x&#39; y) <span class="kr">in</span> <span class="bp">exact</span> res)))
+  | <span class="nl">?T</span> -&gt; _ =&gt; T
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">ctor_to_sig</span> ctor :=
+  <span class="kr">let</span> <span class="nv">ctor</span> := peel_evars ctor <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">t</span> := <span class="kp">type of</span> ctor <span class="kr">in</span>
+  pi_to_sig t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">unify_first_evar_with</span> term u :=
+  <span class="kr">lazymatch</span> term <span class="kr">with</span>
+  | <span class="nl">?f</span> <span class="nl">?x</span>
+    =&gt; <span class="kr">tryif</span> <span class="nb">has_evar</span> f
+    <span class="kr">then</span> unify_first_evar_with f u
+    <span class="kr">else</span> <span class="nb">unify</span> x u
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">unify_with_projections</span> term u :=
+  (unify_first_evar_with term u.<span class="mi">1</span>; unify_with_projections term u.<span class="mi">2</span>) +
+  (unify_first_evar_with term u;
+   <span class="kr">tryif</span> <span class="nb">has_evar</span> term <span class="kr">then</span> <span class="kp">fail</span> <span class="mi">0</span> term <span class="s2">&quot;has evars remaining&quot;</span> <span class="kr">else</span> <span class="kp">idtac</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Completely destroys [v] into its pieces and tries to put pieces in a sigma type. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">refine_with_exist_as_much_as_needed_then_destruct</span> v :=
+  ((<span class="nb">destruct</span> v; <span class="nb">shelve</span>) +
+   (snrefine (_ ; _);
+    [ <span class="nb">destruct</span> v; <span class="nb">shelve</span>
+    | refine_with_exist_as_much_as_needed_then_destruct v ])).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+<span class="c">(* Finally we can define our issig tactic: *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">issig</span> :=
+  <span class="nb">hnf</span>; <span class="c">(* First we make sure things are normalised. *)</span>
+  <span class="c">(* We get the types either side of the equivalence. *)</span>
+  <span class="kr">let</span> <span class="nv">A</span> := <span class="kr">match goal with</span> |- <span class="nl">?sigma</span> &lt;~&gt; <span class="nl">?record</span> =&gt; <span class="kp">constr</span>:(sigma) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">B</span> := <span class="kr">match goal with</span> |- <span class="nl">?sigma</span> &lt;~&gt; <span class="nl">?record</span> =&gt; <span class="kp">constr</span>:(record) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">u</span> := <span class="kp">fresh</span> <span class="s2">&quot;u&quot;</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">v</span> := <span class="kp">fresh</span> <span class="s2">&quot;v&quot;</span> <span class="kr">in</span>
+  <span class="sd">(** We build an equivalence with 5 holes. *)</span>
+  snrefine  <span class="c">(* We don&#39;t want typeclass search running. *)</span>
+    (Build_Equiv A B _ (Build_IsEquiv A B (<span class="kr">fun</span> <span class="nv">u</span> =&gt; _) (<span class="kr">fun</span> <span class="nv">v</span> =&gt; _)
+      (<span class="kr">fun</span> <span class="nv">v</span> =&gt; _) (<span class="kr">fun</span> <span class="nv">u</span> =&gt; _) (<span class="kr">fun</span> <span class="nv">_</span> =&gt; _)));
+  <span class="sd">(** Going from a sigma type to a record *)</span>
+  [ <span class="c">(* let built be the constructor of T *)</span>
+    <span class="kr">let</span> <span class="nv">T</span> := <span class="kr">match goal with</span> |- <span class="nl">?T</span> =&gt; T <span class="kr">end</span> <span class="kr">in</span>
+    <span class="c">(* We want to get the constructor of the record. Note that we use [ntc_constructor] instead of [econstructor] since we don&#39;t want to resolve typeclasses. If we used [econstructor] then the constructor would be wrong for many records whose fields are classes. [ntc_constructor] is defined in Overture.v. *)</span>
+    <span class="kr">let</span> <span class="nv">built</span> := open_constr:(<span class="kp">ltac</span>:(ntc_constructor) : T) <span class="kr">in</span>
+    <span class="kr">let</span> <span class="nv">A&#39;</span> := ctor_to_sig built <span class="kr">in</span>
+    <span class="nb">unify</span> A A&#39;;
+    unify_with_projections built u;
+    <span class="nb">refine</span> built
+  <span class="sd">(** Going from a record to a sigma type *)</span>
+  | refine_with_exist_as_much_as_needed_then_destruct v
+  <span class="sd">(** Proving [eissect] *)</span>
+  | <span class="nb">destruct</span> v; <span class="nb">cbn</span> [pr1 pr2]; <span class="bp">reflexivity</span>
+  <span class="sd">(** Proving [eisretr] *)</span>
+  | <span class="bp">reflexivity</span>
+  <span class="sd">(** Proving [eisadj] *)</span>
+  | <span class="bp">reflexivity</span> ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We show how the tactic works in a couple of examples. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk1"><span class="kn">Definition</span> <span class="nf">issig_equiv</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>)
+  : {f : A -&gt; B &amp; IsEquiv f} &lt;~&gt; Equiv A B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : A -&gt; B &amp; IsEquiv f} &lt;~&gt; (A &lt;~&gt; B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{f : A -&gt; B &amp; IsEquiv f} &lt;~&gt; (A &lt;~&gt; B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk3"><span class="kn">Definition</span> <span class="nf">issig_isequiv</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B)
+  : {g : B -&gt; A &amp; {r : f o g == idmap &amp; { s : g o f == idmap
+    &amp; <span class="kr">forall</span> <span class="nv">x</span> : A, r (f x) = ap f (s x)}}}
+  &lt;~&gt; IsEquiv f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{g : B -&gt; A &amp;
+{r : f o g == idmap &amp;
+{s : g o f == idmap &amp;
+<span class="kr">forall</span> <span class="nv">x</span> : A, r (f x) = ap f (s x)}}} &lt;~&gt; IsEquiv f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>A -&gt; B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{g : B -&gt; A &amp;
+{r : f o g == idmap &amp;
+{s : g o f == idmap &amp;
+<span class="kr">forall</span> <span class="nv">x</span> : A, r (f x) = ap f (s x)}}} &lt;~&gt; IsEquiv f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The general reasoning behind the [issig] tactic is: if we know the type of the record, [econstructor] will give us the constructor applied to evars for each field. If we assume that there are no evars in the type, we can unify the first evar with [u.1], the next evar with [u.2.1], the next with [u.2.2.1], etc, and if we run out of evars or projections, we backtrack and instead fill the final evar with [u.2.2....2]. (Note that if we strip the trailing evars from the constructor before unifying them, we get a term with a Pi type, and if we drop the final codomain and turn the Pi type into a Sigma, this lets us autogenerate the Sigma type we should be using; this is how the versions that don&#39;t need a hand-crafted Sigma type work: they unify the generated type with the term in the goal that should be the Sigma type.)</span>
+
+<span class="sd">Generating the function the other way is a bit trickier, because there&#39;s no easy way to get our hands on all the projections of the record, and moreover we don&#39;t even know how many pairings we&#39;ll need. The thing we want to do is introduce the right number of pairings, destruct the variable of record type in the goal for each component, and then magically use the right projection. I&#39;ll get back to the magic in a moment; first we need to take care of the &quot;right number&quot; of pairings. We could pull a trick where we infer the number by looking at the term we get from [econstructor] in a goal whose type is the record. Instead, I chose the more concise route of coding a tactic that introduces the minimum number of pairings needed to make the magic work. How does it know the minimum number? It doesn&#39;t need to! The wonder of (recursive) multisuccess tactics is that you can say &quot;try no pairings, and if that makes any future tactic fail, backtrack and try one pairing, and if that doesn&#39;t work, backtrack and try two pairings, etc&quot;. (The downside is that the error messages you get when you set things up wrong are truly incomprehensible, because if you make a typo in any of the fields of the Sigma type the error message you end up getting is something like &quot;(_; _) is a Sigma type but it was expected to have the type of the final field&quot; (and it&#39;s always about the final field, regardless of which field you made a typo in). So plausibly it&#39;s worth it to still do the small [issig] tactics by hand, and only use this tactic for &gt;= 5 fields or something.)</span>
+
+<span class="sd">Okay, now onto the magic. How do we know which field is the right one? Well, there&#39;s only one answer that lets us prove the section and retraction by [destruct] + [reflexivity], so we can let unification solve this problem for us. It&#39;s important to have destructed the record variable in each of the pair-component evars, because unification is not (yet) smart enough to invert records for us; this is what the [destruct] before [shelve] in the inverse function generation tactic is. We [cbn] [pr1] and [pr2] to make the unification problem be completely syntactic (no need to unfold anything during unification). This is probably not strictly necessary, but seems like good form to me.</span>
+
+<span class="sd">Finally, we can prove the other one of the section/retraction pair (I can never recall which is which), and the adjoint, by [reflexivity]. (Perhaps it would be better to use [exact idpath], if we want to not have to unfold [reflexivity] when using equivalences generated by these tactics.) *)</span></span></pre>
+</div>
+</div></body>
+</html>

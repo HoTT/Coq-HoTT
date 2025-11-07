@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Graph.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="graph-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="graph-v-chk1"><span class="kn">Require Import</span> Basics.Overture Basics.Tactics.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> WildCat.Core WildCat.NatTrans WildCat.FunctorCat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Category of graphs *)</span>
+
+<span class="sd">(** ** Definition *)</span>
+
+<span class="sd">(** A graph is a [Type] together with a relation [$-&gt;]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Graph</span> := {
+  graph_carrier :&gt; <span class="kt">Type</span>;
+  isgraph_graph_carrier :: IsGraph graph_carrier
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Category of graphs *)</span>
+
+<span class="sd">(** Morphisms of graphs are 0-coherent 1-functors, i.e., maps between the underlying types of the graphs together with an [fmap] functorial map taking arrows to appropriate arrows. This is known as a graph homomorphism. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isgraph_graph</span> : IsGraph Graph
+  := { Hom A B := Fun01 A B }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** A 2-cell between graph homomorphisms [F G : A $-&gt; B] is a wild [Transformation], i.e., a family of 1-cells [forall x, F x $-&gt; G x] subject to no coherence conditions. When [A] and [B] have more structure (e.g., they are 1-categories or bicategories) a stronger notion of 2-cell is appropriate, such as a (possibly lax or oplax) natural transformation.*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">is2graph_graph</span> : Is2Graph Graph
+  := <span class="kr">fun</span> <span class="nv">A</span> <span class="nv">B</span> =&gt; {| Hom F G := Transformation (fun01_F F) (fun01_F G) |}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We have identity graph homomorphisms together with compositions of graph homomorphisms. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">is01cat_graph</span> : Is01Cat Graph := {
+  Id A := fun01_id;
+  cat_comp A B C G F := fun01_compose G F
+}.</span></span></pre>
+</div>
+</div></body>
+</html>

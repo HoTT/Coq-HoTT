@@ -1,0 +1,111 @@
+<html>
+<head>
+<title>Cyclic.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Cyclic.v</h1>
+
+<div class="code" title="File: Cyclic.v
+Line: 1
+Time: 0.115s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics WildCat.Core AbelianGroup
+  AbGroups.Z Spaces.Int Groups.QuotientGroup.</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Cyclic groups *)
+
+(** The [n]-th cyclic group is the cokernel of [ab_mul n]. *)</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cyclic (n : nat) : AbGroup
+  := ab_cokernel (ab_mul (A:=abgroup_Z) n).</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition cyclic_in (n : nat) : abgroup_Z $-&gt; cyclic n
+  := grp_quotient_map.</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+Definition ab_mul_cyclic_in (n : nat) (x y : abgroup_Z)
+  : ab_mul y (cyclic_in n x) = cyclic_in n (y * x)%int.</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 0.8695652173913%"></div>
+<pre>
+  lhs_V napply ab_mul_natural.</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap, abgroup_Z_ab_mul.</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 0.8695652173913%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Cyclic.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+
