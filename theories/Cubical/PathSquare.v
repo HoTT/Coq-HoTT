@@ -10,14 +10,22 @@ Local Unset Elimination Schemes.
 (* Homogeneous squares *)
 
 (* 
-        x00 ----pi0---- x01
+        a00 ----p0i---- a01
          |               |
+         |         >     |
+        pi0      =     pi1
+         |     =         |
          |               |
-        p0i     ==>     p1i
-         |               |
-         |               |
-        x01-----pi1-----x11
- *)
+        a10-----p1i-----a11
+ 
+Indexing of points in a square follows the convention for matrices,
+first a row index, then a column index. Unless stated otherwise,
+paths are oriented in the direction of increasing index i (or x, etc).
+In PathSquare below, the order of the paths is: left, right, top, bottom.
+The stylized 2-path on the antidiagonal goes from pi0 @ p1i to p0i @ pi1,
+complying with the definition of equiv_sq_path below.
+
+*)
 
 (** Contents:
 
@@ -72,6 +80,7 @@ Definition equiv_sq_path {A} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
   {p0x : a00 = a01} {p1x : a10 = a11}
   : px0 @ p1x = p0x @ px1 <~> PathSquare px0 px1 p0x p1x.
+
 Proof.
   snapply Build_Equiv.
   { destruct p0x, p1x.
@@ -602,4 +611,41 @@ Proof.
   apply sq_dp.
   exact (apD (fun y => ap (fun x => f x y) p) q).
 Defined.
+
+(* Interchange playground *)
+
+Definition interchange {A}
+{a00 a10 a20 a01 a11 a21 a02 a12 a22 :A} (** 9 points in big square of 2x2 squares *)
+(** sq00, top left, 4 paths *)
+(vi0 : a00 = a10) (* i = 0,1 *)
+(h0i : a00 = a01) 
+(vi1 : a01 = a11)
+(h1i : a10 = a11)
+(** sq10, bottom left, 3 paths, h1i shared with sq00 *)
+(vj0 : a10 = a20) (* j = 1,2 *)
+(vj1 : a11 = a21)
+(h2i : a20 = a21)
+(** sq01, top right, 3 paths, vi1 shared with sq00 *)
+(vi2 : a02 = a12)
+(h0j : a01 = a02)
+(h1j : a11 = a12)
+(** sq11, bottom right, 2 paths, vj1 shared with sq10 and h1j with sq01 *)
+(vj2 : a12 = a22) 
+(h2j : a21 = a22)
+(sq00 : PathSquare vi0 vi1 h0i h1i) 
+(sq10 : PathSquare vj0 vj1 h1i h2i)
+(sq01 : PathSquare vi1 vi2 h0j h1j)
+(sq11 : PathSquare vj1 vj2 h1j h2j)
+   : 
+sq_concat_h (sq_concat_v sq00 sq10) (sq_concat_v sq01 sq11)
+   =
+sq_concat_v (sq_concat_h sq00 sq01) (sq_concat_h sq10 sq11).
+
+Proof.
+  destruct sq00, sq11, vj0, h0j.
+Admitted.
+
+  
+
+
 
