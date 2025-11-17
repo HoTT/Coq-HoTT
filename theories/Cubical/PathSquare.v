@@ -614,6 +614,26 @@ Defined.
 
 (* Interchange playground *)
 
+Definition experimental {A}
+(a : A)
+(P : A -> Type)
+(f : forall (x : A), (a = x) -> P(x))
+(g : forall (x : A), P(x) -> (a = x))
+(fxgxid: forall (x : A) (p : P x), (p = f x (g x p)))
+:
+forall (x : A)(p : P x), p = transport P (g x p) (f a 1).
+
+Proof.
+  intros.
+  remember (g x p) as gxp eqn:H.
+  destruct gxp. (* Syntax error: destruct (g x p) as gxp eqn:H.  *)
+  simpl. (* Here you see that p = f a 1 if g a p = 1 *)
+  destruct H.
+  apply fxgxid.
+Defined.
+
+
+
 Definition interchange {A}
 {a00 a10 a20 a01 a11 a21 a02 a12 a22 :A} (** 9 points in big square of 2x2 squares *)
 (** sq00, top left, 4 paths *)
@@ -642,7 +662,12 @@ sq_concat_h (sq_concat_v sq00 sq10) (sq_concat_v sq01 sq11)
 sq_concat_v (sq_concat_h sq00 sq01) (sq_concat_h sq10 sq11).
 
 Proof.
-  destruct sq00, sq11, vj0, h0j.
+  destruct sq00, sq11.
+  destruct vi2, h2i.
+  simpl.
+  rewrite (sq_concat_h_1s (p0y:=1) (p1y:=1) sq01).
+  simpl.
+  (* We're missing the analogous [sq_concat_v_1s].  Even with it, it's not clear to me how to proceed. *)
 Admitted.
 
   
