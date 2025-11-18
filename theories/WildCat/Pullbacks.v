@@ -15,7 +15,7 @@ Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd
 >>
 In this diagram, the hom sets are regarded as 0-groupoids and the top-level arrows are morphisms of 0-groupoids (0-functors). *)
 
-Definition cat_pullback_corec_inv {A : Type} `{Is1Cat A}
+Definition cat_pb_corec_inv {A : Type} `{Is1Cat A}
   {a b c : A} (f : a $-> c) (g : b $-> c)
   (pb : A) (pra : pb $-> a) (prb : pb $-> b) (glue : f $o pra $== g $o prb)
   (z : A)
@@ -28,7 +28,7 @@ Proof.
   exact (fmap2 _ glue).
 Defined.
 
-(** A pullback is a object completing [f] and [g] to a commuting square such that the map above is an equivalence of 0-groupoids for each [z].  The name [Pullback] is used for the construction in Limits.Pullback, so we use CatPullback here. *)
+(** A pullback is an object completing [f] and [g] to a commuting square such that the map above is an equivalence of 0-groupoids for each [z].  The name [Pullback] is used for the construction in Limits.Pullback, so we use CatPullback here. *)
 Class CatPullback {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c)
   := Build_CatPullback' {
     cat_pb : A;
@@ -36,15 +36,49 @@ Class CatPullback {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c)
     cat_pb_pr2 : cat_pb $-> b;
     cat_pb_glue : f $o cat_pb_pr1 $== g $o cat_pb_pr2;
     cat_isequiv_cat_pullback_corec_inv
-      :: forall z : A, CatIsEquiv (cat_pullback_corec_inv f g
+      :: forall z : A, CatIsEquiv (cat_pb_corec_inv f g
                                 cat_pb cat_pb_pr1 cat_pb_pr2 cat_pb_glue z);
   }.
 
 Arguments Build_CatPullback' {A IsGraph Is2Graph Is01Cat H a b c}
-  f g cat_pb cat_pb_pr1 cat_pb_pr2  cat_pb_glue eq : rename.
-Arguments cat_pb {A IsGraph Is2Graph Is01Cat H a b c} f g {pullback} : rename.
+  f g cat_pb cat_pb_pr1 cat_pb_pr2 cat_pb_glue eq : rename.
+Arguments cat_pb {A IsGraph Is2Graph Is01Cat H a b c} f g {pb} : rename.
+
+Definition cate_pb_corec_inv {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  {pb : CatPullback f g}
+  (z : A)
+  : opyon_0gpd z (cat_pb _ _) $<~>
+      pullback_0gpd (fmap (opyon_0gpd z) f) (fmap (opyon_0gpd z) g)
+  := Build_CatEquiv _.
+
+Definition cat_pb_corec {A : Type} `{Is1Cat A}
+  {a b c : A} {f : a $-> c} {g : b $-> c}
+  {pb : CatPullback f g} {z : A}
+  (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
+  : opyon_0gpd z (cat_pb f g).
+Proof.
+  apply (cate_pb_corec_inv f g z)^-1$.
+  simpl.
+  exact (h; k; p).
+Defined.
+
+Definition cat_pb_corec_beta_pr1 {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  {pb : CatPullback f g} (z : A)
+  (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
+  : cat_pb_pr1 $o cat_pb_corec h k p $== h
+  := fst (cate_isretr (cate_pb_corec_inv f g z) (h; k; p)).
+
+Definition cat_pb_corec_beta_pr2 {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  {pb : CatPullback f g} (z : A)
+  (h : z $-> a) (k : z $-> b) (p : f $o h $== g $o k)
+  : cat_pb_pr2 $o cat_pb_corec h k p $== k
+  := snd (cate_isretr (cate_pb_corec_inv f g z) (h; k; p)).
 
 (** A convenience wrapper for building pullbacks. *)
+(** TODO: maybe unbundle khp?  Or bundle them above to match? *)
 Definition Build_CatPullback {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c)
   (cat_pb : A) (cat_pb_pr1 : cat_pb $-> a) (cat_pb_pr2 : cat_pb $-> b)
   (cat_pb_glue : f $o cat_pb_pr1 $== g $o cat_pb_pr2)
@@ -70,6 +104,40 @@ Defined.
 
 Class HasPullbacks (A : Type) `{Is1Cat A}
   := has_pullbacks :: forall {a b c} (f : a $-> c) (g : b $-> c), CatPullback f g.
+
+(** ** Uniqueness of pullbacks *)
+
+Definition compare_cat_pb {A : Type} `{Is1Cat A}
+  {a b c : A} {f : a $-> c} {g : b $-> c}
+  (pb1 pb2 : CatPullback f g)
+  : pb1.(cat_pb _ _) $-> pb2.(cat_pb _ _)
+  := cat_pb_corec pb1.(cat_pb_pr1) pb1.(cat_pb_pr2) pb1.(cat_pb_glue).
+
+Definition compose_compare_cat_pb {A : Type} `{Is1Cat A}
+  {a b c : A} {f : a $-> c} {g : b $-> c}
+  (pb1 pb2 : CatPullback f g)
+  : compare_cat_pb pb1 pb2 $o compare_cat_pb pb2 pb1 $== Id pb2.(cat_pb f g).
+Proof.
+  apply (isinj_equiv_0gpd (cate_pb_corec_inv f g _)).
+  simpl; unfold cat_postcomp.
+  split.
+  - refine (cat_assoc_opp _ _ _ $@ _ $@ (cat_idr _)^$).
+    refine ((cat_pb_corec_beta_pr1 _ _ _ _ _ _ $@R _) $@ _).
+    apply cat_pb_corec_beta_pr1.
+  - refine (cat_assoc_opp _ _ _ $@ _ $@ (cat_idr _)^$).
+    refine ((cat_pb_corec_beta_pr2 _ _ _ _ _ _ $@R _) $@ _).
+    apply cat_pb_corec_beta_pr2.
+Defined.
+
+Definition catie_compare_cat_pb {A : Type} `{Is1Cat A} `{!HasEquivs A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  (pb1 pb2 : CatPullback f g)
+  : CatIsEquiv (compare_cat_pb pb1 pb2).
+Proof.
+  srapply catie_adjointify.
+  1: exact (compare_cat_pb pb2 pb1).
+  all: apply compose_compare_cat_pb.
+Defined.
 
 (** ** Symmetry of pullbacks *)
 
