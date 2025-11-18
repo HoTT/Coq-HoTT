@@ -1,0 +1,279 @@
+<html>
+<head>
+<title>Congruence.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Congruence.v</h1>
+
+<div class="code" title="File: Congruence.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** This file implements algebra congruence relation. It serves as a
+    universal algebra generalization of normal subgroup, ring ideal, etc.
+
+    Congruence is used to construct quotients, in similarity with how
+    normal subgroup and ring ideal are used to construct quotients. *)
+
+</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 6
+Time: 0.035s">
+<div class="time" style="width: 76.086956521739%"></div>
+<pre>Require Export HoTT.Algebra.Universal.Algebra.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 6
+Time: 0.046s">
+<div class="time" style="width: 100%"></div>
+<pre>
+
+Require Import
+  HoTT.Universes.HProp
+  HoTT.Classes.interfaces.canonical_names
+  HoTT.Algebra.Universal.Homomorphism.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope Algebra_scope.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section congruence.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {σ : Signature} (A : Algebra σ) (Φ : forall s, Relation (A s)).</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A finitary operation [f : A s1 * A s2 * ... * A sn -&gt; A t]
+    satisfies [OpCompatible f] iff
+
+&lt;&lt;
+      Φ s1 x1 y1 * Φ s2 x2 y2 * ... * Φ sn xn yn
+&gt;&gt;
+
+    implies
+
+&lt;&lt;
+      Φ t (f (x1, x2, ..., xn)) (f (y1, y2, ..., yn)).
+&gt;&gt;
+
+    The below definition generalizes this to infinitary operations.
+*)
+
+ </pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 2.1739130434783%"></div>
+<pre>Definition OpCompatible {w : SymbolType σ} (f : Operation A w) : Type
+    := forall (a b : DomOperation A w),
+       (forall i : Arity w, Φ (sorts_dom w i) (a i) (b i)) -&gt;
+       Φ (sort_cod w) (f a) (f b).</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Class OpsCompatible : Type
+    := ops_compatible : forall (u : Symbol σ), OpCompatible u.#A.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance trunc_ops_compatible `{Funext} {n : trunc_index}
+    `{!forall s x y, IsTrunc n (Φ s x y)}
+    : IsTrunc n OpsCompatible.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 47
+Time: 0.002s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+    exact istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A family of relations [Φ] is a congruence iff it is a family of
+      mere equivalence relations and [OpsCompatible A Φ] holds. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 2.1739130434783%"></div>
+<pre>Class IsCongruence : Type := Build_IsCongruence
+   { is_mere_relation_cong :: forall (s : Sort σ), is_mere_relation (A s) (Φ s)
+   ; equiv_rel_cong :: forall (s : Sort σ), EquivRel (Φ s)
+   ; ops_compatible_cong :: OpsCompatible }.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments Build_IsCongruence {is_mere_relation_cong}
+                                      {equiv_rel_cong}
+                                      {ops_compatible_cong}.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance hprop_is_congruence `{Funext} : IsHProp IsCongruence.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 2.1739130434783%"></div>
+<pre>
+    apply (equiv_hprop_allpath _)^-1.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [C1 C2 C3] [D1 D2 D3].</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 66
+Time: 0.009s">
+<div class="time" style="width: 19.565217391304%"></div>
+<pre>
+    by destruct (path_ishprop C1 D1),
+                (path_ishprop C2 D2),
+                (path_ishprop C3 D3).</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 2.1739130434783%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 70
+Time: 0.002s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+
+End congruence.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A homomorphism [f : forall s, A s -&gt; B s] is compatible
+    with a congruence [Φ] iff [Φ s x y] implies [f s x = f s y]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 2.1739130434783%"></div>
+<pre>Definition HomCompatible {σ : Signature} {A B : Algebra σ}
+  (Φ : forall s, Relation (A s)) `{!IsCongruence A Φ}
+  (f : forall s, A s -&gt; B s) `{!IsHomomorphism f}
+  : Type
+  := forall s (x y : A s), Φ s x y -&gt; f s x = f s y.</pre>
+</div>
+<div class="code" title="File: Congruence.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

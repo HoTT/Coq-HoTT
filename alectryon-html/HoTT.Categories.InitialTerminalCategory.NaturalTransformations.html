@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>NaturalTransformations.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Natural transformations between functors from initial categories and to terminal categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="naturaltransformations-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="naturaltransformations-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core NaturalTransformation.Paths.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> InitialTerminalCategory.Core InitialTerminalCategory.Functors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Contractible.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">NaturalTransformations</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">from_initial</span>
+             `{@IsInitialCategory zero} (F G : Functor zero C)
+  : NaturalTransformation F G
+    := Build_NaturalTransformation
+         F G
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; initial_category_ind _ x)
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; initial_category_ind _ x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="naturaltransformations-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="naturaltransformations-v-chk1">#[export] <span class="kn">Instance</span> <span class="nf">trunc_from_initial</span>
+         `{Funext}
+         `{@IsInitialCategory zero} (F G : Functor zero C)
+  : Contr (NaturalTransformation F G).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>zero</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsInitialCategory zero</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor zero C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (NaturalTransformation F G)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="naturaltransformations-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="naturaltransformations-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>zero</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsInitialCategory zero</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor zero C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (NaturalTransformation F G)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="naturaltransformations-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="naturaltransformations-v-chk3"><span class="nb">refine</span> (Build_Contr _ (from_initial F G) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>zero</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsInitialCategory zero</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor zero C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : NaturalTransformation F G,
+from_initial F G = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (
+        <span class="nb">intros</span>;
+        <span class="nb">apply</span> path_natural_transformation;
+        <span class="nb">intro</span> x;
+        <span class="bp">exact</span> (initial_category_ind _ x)
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Existing Instance</span> <span class="nf">Functors</span>.to_initial_category_empty.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">trunc_to_initial</span>
+         `{Funext}
+         `{@IsInitialCategory zero}
+         (F G : Functor zero C)
+  : Contr (NaturalTransformation F G)
+    := trunc_from_initial F G.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">to_terminal</span>
+             `{@IsTerminalCategory one H1 H2} (F G : Functor C one)
+  : NaturalTransformation F G
+    := Build_NaturalTransformation
+         F G
+         (<span class="kr">fun</span> <span class="nv">x</span> =&gt; center _)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; path_contr _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="naturaltransformations-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="naturaltransformations-v-chk4">#[export] <span class="kn">Instance</span> <span class="nf">trunc_to_terminal</span>
+         `{Funext}
+         `{@IsTerminalCategory one H1 H2} (F G : Functor C one)
+  : Contr (NaturalTransformation F G).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>Contr one</span></span></span><br><span><var>H2</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : one, Contr (morphism one s d)</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory one</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C one</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (NaturalTransformation F G)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="naturaltransformations-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="naturaltransformations-v-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>Contr one</span></span></span><br><span><var>H2</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : one, Contr (morphism one s d)</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory one</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C one</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr (NaturalTransformation F G)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="naturaltransformations-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="naturaltransformations-v-chk6"><span class="nb">refine</span> (Build_Contr _ (to_terminal F G) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>one</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>Contr one</span></span></span><br><span><var>H2</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : one, Contr (morphism one s d)</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsTerminalCategory one</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C one</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : NaturalTransformation F G,
+to_terminal F G = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (path_natural_transformation; <span class="bp">exact</span> (contr _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">NaturalTransformations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,239 @@
+<html>
+<head>
+<title>Functorish.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Functorish.v</h1>
+
+<div class="code" title="File: Functorish.v
+Line: 1
+Time: 0.032s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics Types.Universe.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Functorish.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* We do not need composition to be preserved. *)</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 7
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Class Functorish (F : Type -&gt; Type) := {
+  fmap {A B} (f : A -&gt; B) : F A -&gt; F B ;
+  fmap_idmap (A:Type) : fmap (idmap : A -&gt; A) = idmap
+}.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Arguments fmap F {FF} {A B} f _ : rename.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Arguments fmap_idmap F {FF A} : rename.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Context (F : Type -&gt; Type).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context {FF : Functorish F}.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition isequiv_fmap {A B} (f : A -&gt; B) `{IsEquiv _ _ f}
+  : IsEquiv (fmap F f).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  refine (equiv_induction (fun A' e =&gt; IsEquiv (fmap F e)) _ _ (Build_Equiv _ _ f _)).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (transport _ (fmap_idmap F)^ _).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition fmap_agrees_with_univalence {A B} (f : A -&gt; B) `{IsEquiv _ _ f}
+  : fmap F f = equiv_path _ _ (ap F (path_universe f)).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 27
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  refine (equiv_induction
+    (fun A' e =&gt; fmap F e = equiv_path _ _ (ap F (path_universe e)))
+    _ _ (Build_Equiv _ _ f _)).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (idmap : F A -&gt; F A).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply fmap_idmap.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (equiv_idmap A) with (equiv_path A A 1).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (@eta_path_universe _ A A 1).</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact 1.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Functorish.</pre>
+</div>
+<div class="code" title="File: Functorish.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

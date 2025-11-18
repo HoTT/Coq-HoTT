@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Classes.interfaces.ua_setalgebra</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Classes.interfaces.ua_setalgebra</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+This file defines <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#SetAlgebra"><span class="id" title="record">SetAlgebra</span></a></span>, a specialized <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Algebra"><span class="id" title="record">Algebra</span></a></span> where
+    the carriers are always sets. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#"><span class="id" title="library">HoTT.Classes.interfaces.ua_algebra</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="SetAlgebra" class="idref" href="#SetAlgebra"><span class="id" title="definition, record"><span id="SetAlgebra_rect" class="id"><span id="SetAlgebra_ind" class="id"><span id="SetAlgebra_rec" class="id"><span id="SetAlgebra_sind" class="id">SetAlgebra</span></span></span></span></span></a> {<a id="037d1dbc1a02d6ef6874dcc89df346e1" class="idref" href="#037d1dbc1a02d6ef6874dcc89df346e1"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Signature"><span class="id" title="record">Signature</span></a>} : <span class="id" title="keyword">Type</span> := <span class="id" title="var">BuildSetAlgebra</span><br/>
+&nbsp;&nbsp;{ <a id="algebra_setalgebra" class="idref" href="#algebra_setalgebra"><span class="id" title="projection">algebra_setalgebra</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Algebra"><span class="id" title="record">Algebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#037d1dbc1a02d6ef6874dcc89df346e1"><span class="id" title="variable">σ</span></a><br/>
+&nbsp;&nbsp;; <a id="is_hset_algebra_setalgebra" class="idref" href="#is_hset_algebra_setalgebra"><span class="id" title="projection">is_hset_algebra_setalgebra</span></a> :: <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#IsHSetAlgebra"><span class="id" title="abbreviation">IsHSetAlgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra:3"><span class="id" title="method">algebra_setalgebra</span></a> }.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#SetAlgebra"><span class="id" title="record">SetAlgebra</span></a> : <span class="id" title="tactic">clear</span> <span class="id" title="var">implicits</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Global Coercion</span> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">algebra_setalgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">:</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">SetAlgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">Algebra</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+To find a path <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> between set algebras <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#SetAlgebra"><span class="id" title="record">SetAlgebra</span></a></span> <span class="inlinecode">σ</span>,
+    it is enough to find a path between the defining algebras,
+    <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">algebra_setalgebra</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">algebra_setalgebra</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="path_setalgebra" class="idref" href="#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a> `{<a id="H:5" class="idref" href="#H:5"><span class="id" title="binder">Funext</span></a>} {<a id="f0835817faaba90db49f1e400f4a8926" class="idref" href="#f0835817faaba90db49f1e400f4a8926"><span class="id" title="binder">σ</span></a>} (<a id="A:7" class="idref" href="#A:7"><span class="id" title="binder">A</span></a> <a id="B:8" class="idref" href="#B:8"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#SetAlgebra"><span class="id" title="record">SetAlgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#f0835817faaba90db49f1e400f4a8926"><span class="id" title="variable">σ</span></a>)<br/>
+&nbsp;&nbsp;(<a id="p:9" class="idref" href="#p:9"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">algebra_setalgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#A:7"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">algebra_setalgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#B:8"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#A:7"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#B:8"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">A</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">A</span> <span class="id" title="var">AH</span>], <span class="id" title="var">B</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">B</span> <span class="id" title="var">BH</span>]. <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> ×.<br/>
+&nbsp;&nbsp;<span class="id" title="var">transparent</span> <span class="id" title="tactic">assert</span> (<span class="id" title="var">a</span> : (<span class="id" title="var">p</span><a class="idref" href="HoTT.Basics.Overture.html#2b82354f12c687608f5c1ade3e7ee37d"><span class="id" title="notation">#</span></a><span class="id" title="var">AH</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">BH</span>)) <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="var">path_induction</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The id path is mapped to the id path by <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="path_setalgebra_1" class="idref" href="#path_setalgebra_1"><span class="id" title="lemma">path_setalgebra_1</span></a> `{<a id="H:10" class="idref" href="#H:10"><span class="id" title="binder">Funext</span></a>} {<a id="303c62d4b554442e1659318da8f8db12" class="idref" href="#303c62d4b554442e1659318da8f8db12"><span class="id" title="binder">σ</span></a>} (<a id="A:12" class="idref" href="#A:12"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#SetAlgebra"><span class="id" title="record">SetAlgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#303c62d4b554442e1659318da8f8db12"><span class="id" title="variable">σ</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#A:12"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#A:12"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">transparent</span> <span class="id" title="tactic">assert</span> (<span class="id" title="var">p</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Utf8Minimal.html#e15f3fa8414cf45e36c73a91b3f5f2c2"><span class="id" title="notation">∀</span></a> <a id="I:13" class="idref" href="#I:13"><span class="id" title="binder"><span id="I:14" class="id">I</span></span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#IsHSetAlgebra"><span class="id" title="abbreviation">IsHSetAlgebra</span></a> <span class="id" title="var">A</span><a class="idref" href="HoTT.Utf8Minimal.html#e15f3fa8414cf45e36c73a91b3f5f2c2"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#I:13"><span class="id" title="variable">I</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#I:13"><span class="id" title="variable">I</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a>. <span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The function <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> is an equivalence with inverse
+    <span class="inlinecode"><a class="idref" href="HoTT.Tactics.EquivalenceInduction.html#ap"><span class="id" title="section">ap</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">algebra_setalgebra</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="isequiv_path_setalgebra" class="idref" href="#isequiv_path_setalgebra"><span class="id" title="instance">isequiv_path_setalgebra</span></a> `{<a id="H:15" class="idref" href="#H:15"><span class="id" title="binder">Funext</span></a>} {<a id="dd0f8ee13b043696963f589a3a566f8e" class="idref" href="#dd0f8ee13b043696963f589a3a566f8e"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_algebra.html#Signature"><span class="id" title="record">Signature</span></a>}<br/>
+&nbsp;&nbsp;(<a id="A:17" class="idref" href="#A:17"><span class="id" title="binder">A</span></a> <a id="B:18" class="idref" href="#B:18"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#SetAlgebra"><span class="id" title="record">SetAlgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#dd0f8ee13b043696963f589a3a566f8e"><span class="id" title="variable">σ</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsEquiv"><span class="id" title="class">IsEquiv</span></a> (<a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#A:17"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#B:18"><span class="id" title="variable">B</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<a class="idref" href="HoTT.Basics.Equivalences.html#isequiv_adjointify"><span class="id" title="definition">isequiv_adjointify</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#algebra_setalgebra"><span class="id" title="projection">algebra_setalgebra</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">abstract</span> (<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra_1"><span class="id" title="lemma">path_setalgebra_1</span></a>).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">abstract</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">e</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">A</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">A</span> <span class="id" title="var">AH</span>], <span class="id" title="var">B</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">B</span> <span class="id" title="var">BH</span>];<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">e</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">e</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="HoTT.Classes.interfaces.ua_setalgebra.html#path_setalgebra"><span class="id" title="lemma">path_setalgebra</span></a>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
