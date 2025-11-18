@@ -10,14 +10,22 @@ Local Unset Elimination Schemes.
 (* Homogeneous squares *)
 
 (* 
-        x00 ----pi0---- x01
+        a00 ----p0i---- a01
          |               |
+         |         >     |
+        pi0      =     pi1
+         |     =         |
          |               |
-        p0i     ==>     p1i
-         |               |
-         |               |
-        x01-----pi1-----x11
- *)
+        a10-----p1i-----a11
+ 
+Indexing of points in a square follows the convention for matrices,
+first a row index, then a column index. Unless stated otherwise,
+paths are oriented in the direction of increasing index i (or x, etc).
+In PathSquare below, the order of the paths is: left, right, top, bottom.
+The stylized 2-path on the antidiagonal goes from pi0 @ p1i to p0i @ pi1,
+complying with the definition of equiv_sq_path below.
+
+*)
 
 (** Contents:
 
