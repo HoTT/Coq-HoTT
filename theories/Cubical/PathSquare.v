@@ -80,7 +80,6 @@ Definition equiv_sq_path {A} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
   {p0x : a00 = a01} {p1x : a10 = a11}
   : px0 @ p1x = p0x @ px1 <~> PathSquare px0 px1 p0x p1x.
-
 Proof.
   snapply Build_Equiv.
   { destruct p0x, p1x.
