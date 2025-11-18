@@ -71,6 +71,42 @@ Defined.
 Class HasPullbacks (A : Type) `{Is1Cat A}
   := has_pullbacks :: forall {a b c} (f : a $-> c) (g : b $-> c), CatPullback f g.
 
+(** ** Symmetry of pullbacks *)
+
+Definition flip_cat_pb_corec_inv {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  (pb : A) (pra : pb $-> a) (prb : pb $-> b) (glue : f $o pra $== g $o prb)
+  (z : A)
+  : cate_flip_pullback_0gpd _ _ $o
+      cat_pb_corec_inv f g pb pra prb glue z $==
+      cat_pb_corec_inv g f pb prb pra (glue^$) z.
+Proof.
+  intro h; cbn.
+  split; reflexivity.
+Defined.
+
+Definition flip_cat_pb {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  (pb : CatPullback f g)
+  : CatPullback g f.
+Proof.
+  napply (Build_CatPullback' g f).
+  intro z.
+  rapply (catie_homotopic _ (flip_cat_pb_corec_inv f g _ _ _ _ z)).
+Defined.
+
+Definition flip_cat_pb_pr1_pr2 {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  (pb : CatPullback f g)
+  : (flip_cat_pb f g pb).(cat_pb_pr1) $== cat_pb_pr2
+  := Id _.
+
+Definition flip_pullback_pr2_pr1 {A : Type} `{Is1Cat A}
+  {a b c : A} (f : a $-> c) (g : b $-> c)
+  (pb : CatPullback f g)
+  : (flip_cat_pb f g pb).(cat_pb_pr2) $== cat_pb_pr1
+  := Id _.
+
 (** ** Examples *)
 
 (** These examples are here for dependency reasons. *)

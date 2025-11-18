@@ -279,3 +279,26 @@ Section ZeroGpdPullback.
     := fun z => (p1 z, p2 z).
 
 End ZeroGpdPullback.
+
+(** Taking pullbacks of 0-groupoids is symmetric. *)
+Definition flip_pullback_0gpd {G H K : ZeroGpd} (g : G $-> K) (h : H $-> K)
+  : pullback_0gpd g h $-> pullback_0gpd h g.
+Proof.
+  snapply Build_Fun01'.
+  - intros [x [y p]]; exact (y; (x; p^$)).
+  - cbn. intros ? ? [q1 q2]; exact (q2, q1).
+Defined.
+
+Definition involutive_flip_pullback_0gpd {G H K : ZeroGpd} (g : G $-> K) (h : H $-> K)
+  : flip_pullback_0gpd g h $o flip_pullback_0gpd h g $== Id _.
+Proof.
+  intros ?; cbn; split; reflexivity.
+Defined.
+
+Definition cate_flip_pullback_0gpd {G H K : ZeroGpd} (g : G $-> K) (h : H $-> K)
+  : pullback_0gpd g h $<~> pullback_0gpd h g.
+Proof.
+  snapply cate_adjointify.
+  1,2: apply flip_pullback_0gpd.
+  1,2: apply involutive_flip_pullback_0gpd.
+Defined.
