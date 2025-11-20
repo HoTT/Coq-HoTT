@@ -4,8 +4,8 @@
     to additive category theory.
 *)
 
-From HoTT Require Import Basics Types.
-From HoTT.Categories Require Import Category Functor.
+From HoTT Require Import Basics.Overture.
+From HoTT.Categories Require Import Category.Core.
 From HoTT.Categories.Additive Require Import ZeroObjects.
 
 Local Notation fst_type := Basics.Overture.fst.
