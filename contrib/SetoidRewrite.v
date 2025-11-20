@@ -89,8 +89,8 @@ Proof.
   intros a b Rab x y R'yx. apply H1; [ assumption | symmetry; assumption ].
 Defined.
 
-#[export] Instance IsProper_fmap {A B : Type} `{Is1Cat A}
-  `{Is1Cat A} (F : A -> B) `{Is1Functor _ _ F} (a b : A)
+#[export] Instance IsProper_fmap {A B : Type}
+  (F : A -> B) `{Is1Functor _ _ F} (a b : A)
   : CMorphisms.Proper (GpdHom ==> GpdHom) (@fmap _ _ _ _ F _ a b)
   := fun _ _ => fmap2 F.
 
