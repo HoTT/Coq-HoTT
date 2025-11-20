@@ -400,8 +400,6 @@ Section PathSquareConcat.
     1,2: apply inverse, concat_p1.
   Defined.
 
-  Infix "@@h" := sq_concat_h : square_scope.
-
   (* Vertical concatenation of squares *)
   Definition sq_concat_v {a20 a21 : A}
     {py0 : a10 = a20} {py1 : a11 = a21} {p2x : a20 = a21}
@@ -414,9 +412,10 @@ Section PathSquareConcat.
     1,2: apply inverse, concat_p1.
   Defined.
 
-  Infix "@@v" := sq_concat_v : square_scope.
-
 End PathSquareConcat.
+
+Infix "@@h" := sq_concat_h : square_scope.
+Infix "@@v" := sq_concat_v : square_scope.
 
 (* Horizontal groupoid laws for concatenation *)
 Section GroupoidLawsH.
